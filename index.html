@@ -1,1 +1,124 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Tenshi Systems Engineering</title><meta name="description" content="Innovative engineering solutions from Osaka, Japan."><link rel="stylesheet" href="styles.css"></head><body><header><nav class="navbar"><div class="logo">TENSHI</div><ul class="nav-links"><li><a href="#home" data-key="nav_home">Home</a></li><li><a href="#services" data-key="nav_services">Services</a></li><li><a href="#about" data-key="nav_about">About</a></li><li><a href="#contact" data-key="nav_contact">Contact</a></li></ul><select id="languageSelector"><option value="en">🇺🇸 English</option><option value="ja">🇯🇵 日本語</option></select></nav></header><section id="home" class="hero"><div class="hero-content"><h1 data-key="hero_title">Engineering Reliable Solutions for Tomorrow</h1><p data-key="hero_desc">Tenshi Systems Engineering delivers innovative and dependable engineering solutions.</p><a href="#contact" class="btn"><span data-key="cta_btn">Request Consultation</span></a></div></section><section id="services"><h2 data-key="services_title">What We Do</h2><div class="service-grid"><div class="card"><h3 data-key="service1_title">Systems Engineering</h3><p data-key="service1_desc">Designing scalable and dependable systems.</p></div><div class="card"><h3 data-key="service2_title">Technology Consulting</h3><p data-key="service2_desc">Helping organizations modernize technology.</p></div><div class="card"><h3 data-key="service3_title">Infrastructure Solutions</h3><p data-key="service3_desc">Supporting mission critical operations.</p></div></div></section><section id="about"><h2 data-key="about_title">About Tenshi Systems Engineering</h2><p data-key="about_desc">We transform complex challenges into dependable engineering solutions.</p></section><section id="contact" class="contact"><h2 data-key="contact_title">Let's Build What's Next</h2><a href="mailto:info@tenshi-systems.com" class="btn"><span data-key="contact_button">Contact Us</span></a></section><footer><p>Tenshi Systems Engineering<br>Osaka, Japan</p></footer><script src="translations.js"></script><script src="app.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#c1121f">
+  <meta name="description" content="Tenshi Systems Engineering provides reliable systems engineering, technology consulting, and infrastructure solutions from Osaka, Japan.">
+  <title>Tenshi Systems Engineering</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <nav class="navbar" aria-label="Primary navigation">
+      <a class="brand" href="#home" aria-label="Tenshi Systems Engineering home">
+        <img class="brand-logo" src="logo.png" alt="Tenshi Systems Engineering logo" width="56" height="56">
+        <span class="brand-name"><span class="brand-full">Tenshi Systems Engineering</span><span class="brand-short">Tenshi</span></span>
+      </a>
+      <div class="nav-actions">
+        <ul class="nav-links">
+          <li><a href="#home" data-key="nav_home">Home</a></li>
+          <li><a href="#services" data-key="nav_services">Services</a></li>
+          <li><a href="#about" data-key="nav_about">About</a></li>
+          <li><a href="#contact" data-key="nav_contact">Contact</a></li>
+        </ul>
+        <label class="language-control" for="languageSelector">
+          <span class="sr-only">Language</span>
+          <select id="languageSelector" aria-label="Select language">
+            <option value="en">EN</option>
+            <option value="ja">日本語</option>
+          </select>
+        </label>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <section id="home" class="hero">
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="hero-content">
+        <img class="hero-logo" src="logo.png" alt="Tenshi Systems Engineering logo" width="220" height="220">
+        <p class="eyebrow" data-key="hero_eyebrow">Systems Engineering · Osaka, Japan</p>
+        <h1 data-key="hero_title">Engineering Reliable Solutions for Tomorrow</h1>
+        <p class="hero-description" data-key="hero_desc">Supporting innovation through precision engineering, dependable systems, and long-term technical partnership.</p>
+        <div class="hero-actions">
+          <a href="#contact" class="button button-primary"><span data-key="cta_btn">Request Consultation</span><span aria-hidden="true">→</span></a>
+          <a href="#services" class="button button-secondary" data-key="explore_services">Explore Services</a>
+        </div>
+      </div>
+      <div class="hero-location" aria-hidden="true"><span>大阪</span><span>OSAKA</span></div>
+    </section>
+
+    <section id="services" class="section services-section">
+      <div class="section-heading">
+        <p class="eyebrow" data-key="services_eyebrow">Our Capabilities</p>
+        <h2 data-key="services_title">Engineering Built on Precision</h2>
+        <p data-key="services_intro">Practical expertise for complex systems, modernization programs, and mission-critical infrastructure.</p>
+      </div>
+      <div class="service-grid">
+        <article class="card">
+          <span class="card-number">01</span>
+          <h3 data-key="service1_title">Systems Engineering</h3>
+          <p data-key="service1_desc">Designing scalable, secure, and dependable systems around real operational requirements.</p>
+          <span class="card-mark" aria-hidden="true">T</span>
+        </article>
+        <article class="card">
+          <span class="card-number">02</span>
+          <h3 data-key="service2_title">Technology Consulting</h3>
+          <p data-key="service2_desc">Helping organizations modernize technology with clear strategy and disciplined execution.</p>
+          <span class="card-mark" aria-hidden="true">T</span>
+        </article>
+        <article class="card">
+          <span class="card-number">03</span>
+          <h3 data-key="service3_title">Infrastructure Solutions</h3>
+          <p data-key="service3_desc">Building resilient foundations that support mission-critical operations and sustainable growth.</p>
+          <span class="card-mark" aria-hidden="true">T</span>
+        </article>
+      </div>
+    </section>
+
+    <section id="about" class="section about-section">
+      <div class="about-copy">
+        <p class="eyebrow" data-key="about_eyebrow">About Tenshi</p>
+        <h2 data-key="about_title">Japanese Precision. Global Perspective.</h2>
+        <p data-key="about_desc">Based in Osaka, Tenshi Systems Engineering transforms complex challenges into dependable engineering solutions. We combine rigorous technical thinking, clear communication, and lasting client commitment.</p>
+        <div class="about-detail">
+          <span class="detail-label" data-key="headquarters_label">Headquarters</span>
+          <strong data-key="headquarters_value">Osaka, Japan</strong>
+        </div>
+      </div>
+      <div class="stats-grid" aria-label="Company principles">
+        <div class="stat"><strong>100%</strong><span data-key="stat_commitment">Client Commitment</span></div>
+        <div class="stat"><strong>24/7</strong><span data-key="stat_reliability">Reliability</span></div>
+        <div class="stat"><strong data-key="stat_future_value">Future</strong><span data-key="stat_future">Ready</span></div>
+        <div class="stat"><strong data-key="stat_modern_value">Modern</strong><span data-key="stat_modern">Engineering</span></div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact-section">
+      <div class="contact-pattern" aria-hidden="true"></div>
+      <div class="contact-content">
+        <p class="eyebrow eyebrow-light" data-key="contact_eyebrow">Start a Conversation</p>
+        <h2 data-key="contact_title">Let's Engineer What Comes Next.</h2>
+        <p data-key="contact_desc">Discuss your systems, infrastructure, or technology consulting requirements with our team.</p>
+        <a href="mailto:info@tenshi-systems.com" class="button button-light"><span data-key="contact_button">Contact Us</span><span aria-hidden="true">→</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-brand">
+      <img src="logo.png" alt="" width="48" height="48">
+      <div><strong>Tenshi Systems Engineering</strong><span data-key="footer_location">Osaka, Japan</span></div>
+    </div>
+    <p>© <span id="currentYear"></span> Tenshi Systems Engineering. <span data-key="footer_rights">All rights reserved.</span></p>
+  </footer>
+
+  <script src="translations.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
