@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 140" preserveAspectRatio="xMinYMid slice">
+  <defs>
+    <pattern id="lines" width="8" height="6" patternUnits="userSpaceOnUse"><path d="M0 1H8" stroke="#fff" stroke-opacity=".22" stroke-width="1.6"/></pattern>
+    <linearGradient id="fade" x1="0" x2="1"><stop offset="0" stop-color="#fff"/><stop offset=".7" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <mask id="m"><rect width="560" height="140" fill="url(#fade)"/></mask>
+  </defs>
+  <g mask="url(#m)">
+    <path d="M0 0H70L140 70L70 140H0L70 70Z" fill="#7e0a1b" fill-opacity=".35"/>
+    <path d="M0 0H70L140 70L70 140H0L70 70Z" fill="url(#lines)"/>
+    <path d="M130 0H210L280 70L210 140H130L200 70Z" fill="#7e0a1b" fill-opacity=".28"/>
+    <path d="M130 0H210L280 70L210 140H130L200 70Z" fill="url(#lines)"/>
+    <path d="M270 0H340L410 70L340 140H270L340 70Z" fill="#7e0a1b" fill-opacity=".18"/>
+    <path d="M270 0H340L410 70L340 140H270L340 70Z" fill="url(#lines)"/>
+    <path d="M400 0H450L520 70L450 140H400L470 70Z" fill="url(#lines)" opacity=".7"/>
+  </g>
+</svg>

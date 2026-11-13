@@ -2,120 +2,179 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#c1121f">
-  <meta name="description" content="Tenshi Systems Engineering provides reliable systems engineering, technology consulting, and infrastructure solutions from Osaka, Japan.">
-  <title>Tenshi Systems Engineering</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tenshi Systems Engineering | Osaka, Japan</title>
+  <meta name="description" content="Tenshi Systems Engineering delivers innovative, dependable, and scalable engineering solutions from Osaka, Japan.">
+  <meta name="theme-color" content="#c8102e">
+  <meta property="og:title" content="Tenshi Systems Engineering">
+  <meta property="og:description" content="Engineering Reliable Solutions for Tomorrow, from Osaka, Japan.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="alternate icon" href="logo.png" type="image/png">
+  <link rel="apple-touch-icon" href="logo.png">
+  <link rel="preload" href="img/skylines/osaka.svg" as="image" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <a class="skip-link" href="#main-content">Skip to content</a>
+  <!-- The logo, drawn once and reused below -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="logo" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="14" fill="#c8102e"/>
+      <rect x="9" y="9" width="82" height="82" rx="3" fill="#fff"/>
+      <g fill="none" stroke="#c8102e" stroke-width="5" stroke-linecap="square">
+        <path d="M9 24H38V91"/>
+        <path d="M50 9V64H62V91"/>
+        <path d="M58 40H91"/>
+        <path d="M72 52H91"/>
+        <path d="M72 52V91"/>
+      </g>
+      <text x="23.5" y="50" font-size="16" font-weight="700" fill="#c8102e" text-anchor="middle" font-family="'Yu Gothic','Hiragino Sans','Noto Sans JP','Meiryo',sans-serif">天</text>
+      <text x="23.5" y="71" font-size="16" font-weight="700" fill="#c8102e" text-anchor="middle" font-family="'Yu Gothic','Hiragino Sans','Noto Sans JP','Meiryo',sans-serif">使</text>
+      <path d="M88 62H79V84H88M79 73H86" fill="none" stroke="#c8102e" stroke-width="4"/>
+    </symbol>
+  </svg>
+
+  <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
+
   <header class="site-header">
-    <nav class="navbar" aria-label="Primary navigation">
-      <a class="brand" href="#home" aria-label="Tenshi Systems Engineering home">
-        <img class="brand-logo" src="logo-mark.png" alt="Tenshi Systems Engineering logo" width="56" height="56">
-        <span class="brand-name"><span class="brand-full">Tenshi Systems Engineering</span><span class="brand-short">Tenshi</span></span>
+    <div class="header-inner">
+      <a class="brand" href="#top" aria-label="Tenshi Systems Engineering, top of page" data-i18n-attr="aria-label:brandLabel">
+        <svg class="brand-logo" viewBox="0 0 100 100" aria-hidden="true"><use href="#logo"/></svg>
+        <span class="brand-text">
+          <span class="brand-en">Tenshi Systems Engineering</span>
+          <span class="brand-ja" lang="ja">天使システムズエンジニアリング</span>
+        </span>
       </a>
-      <div class="nav-actions">
-        <ul class="nav-links">
-          <li><a href="#home" data-key="nav_home">Home</a></li>
-          <li><a href="#services" data-key="nav_services">Services</a></li>
-          <li><a href="#about" data-key="nav_about">About</a></li>
-          <li><a href="#contact" data-key="nav_contact">Contact</a></li>
-        </ul>
-        <label class="language-control" for="languageSelector">
-          <span class="sr-only">Language</span>
-          <select id="languageSelector" aria-label="Select language">
-            <option value="en">EN</option>
-            <option value="ja">日本語</option>
-          </select>
-        </label>
+      <div class="lang-switch" role="group" aria-label="Language" data-i18n-attr="aria-label:langLabel">
+        <button type="button" data-lang="en" lang="en" aria-pressed="true">EN</button>
+        <span class="lang-sep" aria-hidden="true">|</span>
+        <button type="button" data-lang="ja" lang="ja" aria-pressed="false">日本語</button>
       </div>
-    </nav>
+    </div>
   </header>
 
-  <main id="main-content">
-    <section id="home" class="hero">
-      <div class="hero-grid" aria-hidden="true"></div>
-      <div class="hero-content">
-        <img class="hero-logo" src="logo-mark.png" alt="Tenshi Systems Engineering logo" width="220" height="220">
-        <p class="eyebrow" data-key="hero_eyebrow">Systems Engineering · Osaka, Japan</p>
-        <h1 data-key="hero_title">Engineering Reliable Solutions for Tomorrow</h1>
-        <p class="hero-description" data-key="hero_desc">Supporting innovation through precision engineering, dependable systems, and long-term technical partnership.</p>
-        <div class="hero-actions">
-          <a href="#contact" class="button button-primary"><span data-key="cta_btn">Request Consultation</span><span aria-hidden="true">→</span></a>
-          <a href="#services" class="button button-secondary" data-key="explore_services">Explore Services</a>
+  <main id="main">
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="hero-slides" aria-hidden="true">
+        <div class="slide is-active" data-src="img/skylines/osaka.svg"></div>
+        <div class="slide" data-src="img/skylines/tokyo.svg"></div>
+        <div class="slide" data-src="img/skylines/kyoto.svg"></div>
+        <div class="slide" data-src="img/skylines/yokohama.svg"></div>
+        <div class="slide" data-src="img/skylines/kobe.svg"></div>
+      </div>
+      <div class="hero-wash" aria-hidden="true"></div>
+      <div class="hero-blueprint" aria-hidden="true"></div>
+      <div class="hero-stripes hero-stripes--left" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div class="hero-stripes hero-stripes--right" aria-hidden="true"><span></span><span></span><span></span></div>
+
+      <div class="hero-card">
+        <svg class="hero-logo" viewBox="0 0 100 100" role="img" aria-label="Tenshi Systems Engineering logo" data-i18n-attr="aria-label:logoLabel"><use href="#logo"/></svg>
+        <h1 id="hero-title" data-i18n="heroTitle">Engineering Reliable Solutions for Tomorrow</h1>
+        <p class="hero-lead" data-i18n="heroLead">Tenshi Systems Engineering delivers innovative, dependable, and scalable engineering solutions from Osaka, Japan.</p>
+        <a class="btn btn-primary" href="#contact" data-i18n="cta">Request Consultation</a>
+      </div>
+
+      <div class="slide-controls">
+        <p class="slide-caption" aria-live="polite"><span class="sr-only" data-i18n="nowShowing">Skyline:</span> <span id="slide-city">Osaka</span></p>
+        <div class="slide-dots" role="group" aria-label="Choose a skyline" data-i18n-attr="aria-label:dotsLabel">
+          <button type="button" class="dot" data-slide="0" aria-current="true"><span class="sr-only" data-i18n="city0">Osaka</span></button>
+          <button type="button" class="dot" data-slide="1"><span class="sr-only" data-i18n="city1">Tokyo</span></button>
+          <button type="button" class="dot" data-slide="2"><span class="sr-only" data-i18n="city2">Kyoto</span></button>
+          <button type="button" class="dot" data-slide="3"><span class="sr-only" data-i18n="city3">Yokohama</span></button>
+          <button type="button" class="dot" data-slide="4"><span class="sr-only" data-i18n="city4">Kobe</span></button>
         </div>
+        <button type="button" class="slide-pause" aria-pressed="false">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path class="i-pause" d="M4 3h3v10H4zM9 3h3v10H9z"/><path class="i-play" d="M5 3l8 5-8 5z"/></svg>
+          <span class="sr-only" data-i18n="pause">Pause slideshow</span>
+        </button>
       </div>
-      <div class="hero-location" aria-hidden="true"><span>大阪</span><span>OSAKA</span></div>
     </section>
 
-    <section id="services" class="section services-section">
-      <div class="section-heading">
-        <p class="eyebrow" data-key="services_eyebrow">Our Capabilities</p>
-        <h2 data-key="services_title">Engineering Built on Precision</h2>
-        <p data-key="services_intro">Practical expertise for complex systems, modernization programs, and mission-critical infrastructure.</p>
-      </div>
-      <div class="service-grid">
-        <article class="card">
-          <span class="card-number">01</span>
-          <h3 data-key="service1_title">Systems Engineering</h3>
-          <p data-key="service1_desc">Designing scalable, secure, and dependable systems around real operational requirements.</p>
-          <span class="card-mark" aria-hidden="true">T</span>
+    <section class="band" aria-label="Our motto" data-i18n-attr="aria-label:mottoLabel">
+      <p class="band-text" data-i18n="motto">Together Best Cooperation</p>
+    </section>
+
+    <section class="services" aria-labelledby="services-title">
+      <h2 id="services-title" class="sr-only" data-i18n="servicesTitle">Our services</h2>
+      <div class="services-grid">
+        <article class="service-card">
+          <h3 data-i18n="s1Title">Systems Engineering</h3>
+          <p data-i18n="s1Text">Dependable and scalable engineering solutions built around reliability, performance, and long-term support.</p>
         </article>
-        <article class="card">
-          <span class="card-number">02</span>
-          <h3 data-key="service2_title">Technology Consulting</h3>
-          <p data-key="service2_desc">Helping organizations modernize technology with clear strategy and disciplined execution.</p>
-          <span class="card-mark" aria-hidden="true">T</span>
+        <article class="service-card">
+          <h3 data-i18n="s2Title">Technology Consulting</h3>
+          <p data-i18n="s2Text">Strategic guidance for digital transformation, modernization, and emerging technologies.</p>
         </article>
-        <article class="card">
-          <span class="card-number">03</span>
-          <h3 data-key="service3_title">Infrastructure Solutions</h3>
-          <p data-key="service3_desc">Building resilient foundations that support mission-critical operations and sustainable growth.</p>
-          <span class="card-mark" aria-hidden="true">T</span>
+        <article class="service-card">
+          <h3 data-i18n="s3Title">Infrastructure Solutions</h3>
+          <p data-i18n="s3Text">Mission-critical infrastructure design, deployment, maintenance, and support.</p>
         </article>
       </div>
     </section>
 
-    <section id="about" class="section about-section">
-      <div class="about-copy">
-        <p class="eyebrow" data-key="about_eyebrow">About Tenshi</p>
-        <h2 data-key="about_title">Japanese Precision. Global Perspective.</h2>
-        <p data-key="about_desc">Based in Osaka, Tenshi Systems Engineering transforms complex challenges into dependable engineering solutions. We combine rigorous technical thinking, clear communication, and lasting client commitment.</p>
-        <div class="about-detail">
-          <span class="detail-label" data-key="headquarters_label">Headquarters</span>
-          <strong data-key="headquarters_value">Osaka, Japan</strong>
+    <section class="contact" id="contact" aria-labelledby="contact-title" tabindex="-1">
+      <div class="contact-inner">
+        <div class="contact-intro">
+          <p class="eyebrow" data-i18n="contactEyebrow">Contact</p>
+          <h2 id="contact-title" data-i18n="contactTitle">Request a Consultation</h2>
+          <p data-i18n="contactLead">Tell us about your project and what you need. When you press Send, your email app opens with your message ready to go.</p>
+          <p class="contact-direct"><span data-i18n="contactDirect">Prefer to write directly?</span> <a class="contact-email" href="#contact"></a></p>
         </div>
-      </div>
-      <div class="stats-grid" aria-label="Company principles">
-        <div class="stat"><strong>100%</strong><span data-key="stat_commitment">Client Commitment</span></div>
-        <div class="stat"><strong>24/7</strong><span data-key="stat_reliability">Reliability</span></div>
-        <div class="stat"><strong data-key="stat_future_value">Future</strong><span data-key="stat_future">Ready</span></div>
-        <div class="stat"><strong data-key="stat_modern_value">Modern</strong><span data-key="stat_modern">Engineering</span></div>
-      </div>
-    </section>
 
-    <section id="contact" class="contact-section">
-      <div class="contact-pattern" aria-hidden="true"></div>
-      <div class="contact-content">
-        <p class="eyebrow eyebrow-light" data-key="contact_eyebrow">Start a Conversation</p>
-        <h2 data-key="contact_title">Let's Engineer What Comes Next.</h2>
-        <p data-key="contact_desc">Discuss your systems, infrastructure, or technology consulting requirements with our team.</p>
-        <a href="mailto:info@tenshi-systems.com" class="button button-light"><span data-key="contact_button">Contact Us</span><span aria-hidden="true">→</span></a>
+        <form class="contact-form" novalidate>
+          <div class="field">
+            <label for="f-name"><span data-i18n="fName">Name</span> <span class="req" aria-hidden="true">*</span></label>
+            <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="e-name">
+            <p class="error" id="e-name"></p>
+          </div>
+          <div class="field">
+            <label for="f-company"><span data-i18n="fCompany">Company</span> <span class="optional" data-i18n="optional">(optional)</span></label>
+            <input id="f-company" name="company" type="text" autocomplete="organization">
+          </div>
+          <div class="field">
+            <label for="f-email"><span data-i18n="fEmail">Email</span> <span class="req" aria-hidden="true">*</span></label>
+            <input id="f-email" name="email" type="email" autocomplete="email" required aria-describedby="e-email">
+            <p class="error" id="e-email"></p>
+          </div>
+          <div class="field">
+            <label for="f-phone"><span data-i18n="fPhone">Phone</span> <span class="optional" data-i18n="optional">(optional)</span></label>
+            <input id="f-phone" name="phone" type="tel" autocomplete="tel">
+          </div>
+          <div class="field field-wide">
+            <label for="f-topic" data-i18n="fTopic">What can we help with?</label>
+            <select id="f-topic" name="topic">
+              <option value="s1Title" data-i18n="s1Title">Systems Engineering</option>
+              <option value="s2Title" data-i18n="s2Title">Technology Consulting</option>
+              <option value="s3Title" data-i18n="s3Title">Infrastructure Solutions</option>
+              <option value="topicOther" data-i18n="topicOther">Something else</option>
+            </select>
+          </div>
+          <div class="field field-wide">
+            <label for="f-message"><span data-i18n="fMessage">Message</span> <span class="req" aria-hidden="true">*</span></label>
+            <textarea id="f-message" name="message" rows="6" required aria-describedby="e-message"></textarea>
+            <p class="error" id="e-message"></p>
+          </div>
+          <div class="form-actions field-wide">
+            <p class="req-note"><span aria-hidden="true">*</span> <span data-i18n="required">Required</span></p>
+            <button class="btn btn-primary" type="submit" data-i18n="send">Send</button>
+          </div>
+          <p class="form-status field-wide" role="status"></p>
+        </form>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <div class="footer-brand">
-      <img src="logo-mark.png" alt="" width="48" height="48">
-      <div><strong>Tenshi Systems Engineering</strong><span data-key="footer_location">Osaka, Japan</span></div>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <svg class="footer-logo" viewBox="0 0 100 100" aria-hidden="true"><use href="#logo"/></svg>
+        <div>
+          <strong>Tenshi Systems Engineering</strong>
+          <span lang="ja">天使システムズエンジニアリング</span>
+        </div>
+      </div>
+      <p class="footer-meta"><span data-i18n="location">Osaka, Japan</span> · © <span id="year">2026</span> Tenshi Systems Engineering</p>
     </div>
-    <p>© <span id="currentYear"></span> Tenshi Systems Engineering. <span data-key="footer_rights">All rights reserved.</span></p>
   </footer>
 
   <script src="translations.js"></script>
