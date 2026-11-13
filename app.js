@@ -33,12 +33,74 @@ const CONTACT_EMAIL = "jcali0351@gmail.com";
 
     updateCaption();
     updatePauseLabel();
+    if (bandReady) showBandLine(bandIndex);
     // Re-show any visible error messages in the new language.
     $$(".field.has-error").forEach((f) => validateField($("input, textarea", f)));
     store.set("tse-lang", lang);
   }
 
   $$(".lang-switch [data-lang]").forEach((b) => b.addEventListener("click", () => setLanguage(b.dataset.lang)));
+
+  /* ---------- Red band: the slogan, then the taglines, written in word by word ---------- */
+  const BAND_LINES = ["motto", "tag1", "tag2", "tag3", "tag4"];
+  const BAND_HOLD = 5200;   // how long each line stays, in milliseconds
+  const band = $(".band");
+  const stage = $(".band-stage");
+  const bandLine = $(".band-line");
+  const sheen = $(".band-sheen");
+  const bandStill = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let bandIndex = 0;
+  let bandTimer = null;
+  let bandHeld = false;   // paused while the pointer or keyboard focus is on the band
+  let bandReady = false;
+
+  function restart(el) { el.classList.remove("is-on"); void el.offsetWidth; el.classList.add("is-on"); }
+
+  function showBandLine(i) {
+    bandIndex = i % BAND_LINES.length;
+    const text = t(BAND_LINES[bandIndex]);
+    // English goes in word by word. Japanese has no spaces, so the browser finds the words (whole words never break
+    // across lines); browsers without that go character by character.
+    const units = lang !== "ja" ? text.split(" ")
+      : window.Intl && Intl.Segmenter ? Array.from(new Intl.Segmenter("ja", { granularity: "word" }).segment(text), (s) => s.segment)
+      : Array.from(text);
+    stage.style.setProperty("--step", lang === "ja" ? "40ms" : "90ms");
+    stage.classList.remove("is-out");
+    stage.classList.toggle("is-tag", bandIndex > 0);
+    stage.replaceChildren(...units.map((u, k) => {
+      const s = document.createElement("span");
+      s.className = "band-unit";
+      s.style.setProperty("--i", k);
+      s.textContent = u;
+      return s;
+    }));
+    restart(bandLine);
+    restart(sheen);
+  }
+
+  function nextBandLine() {
+    stage.classList.add("is-out");
+    setTimeout(() => showBandLine(bandIndex + 1), 650);
+  }
+
+  function runBand() {
+    clearInterval(bandTimer);
+    bandTimer = null;
+    if (!bandReady || bandHeld || document.hidden) return;
+    bandTimer = setInterval(nextBandLine, BAND_HOLD);
+  }
+
+  function setupBand() {
+    bandReady = !bandStill.matches;
+    document.documentElement.classList.toggle("band-anim", bandReady);
+    if (bandReady) showBandLine(bandIndex);
+    runBand();
+  }
+
+  band.addEventListener("mouseenter", () => { bandHeld = true; runBand(); });
+  band.addEventListener("mouseleave", () => { bandHeld = false; runBand(); });
+  document.addEventListener("visibilitychange", runBand);
+  bandStill.addEventListener("change", setupBand);
 
   /* ---------- Skyline slideshow ---------- */
   const slides = $$(".hero-slides .slide");
@@ -171,5 +233,6 @@ const CONTACT_EMAIL = "jcali0351@gmail.com";
   const params = new URLSearchParams(location.search);
   const browserJa = (navigator.language || "").toLowerCase().startsWith("ja");
   setLanguage(params.get("lang") || store.get("tse-lang") || (browserJa ? "ja" : "en"));
+  setupBand();
   start();
 })();

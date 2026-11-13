@@ -72,7 +72,18 @@
     </section>
 
     <section class="band" aria-label="Our motto" data-i18n-attr="aria-label:mottoLabel">
-      <p class="band-text" data-i18n="motto">Together Best Cooperation</p>
+      <div class="band-sheen" aria-hidden="true"></div>
+      <!-- The animated slogan: app.js writes each line in, word by word -->
+      <p class="band-stage band-text" aria-hidden="true"></p>
+      <span class="band-line" aria-hidden="true"></span>
+      <!-- Every line as plain text: read by screen readers, and shown instead of the animation for reduced motion or without JavaScript -->
+      <ul class="band-list">
+        <li class="band-text" data-i18n="motto">Together Best Cooperation</li>
+        <li data-i18n="tag1">Advanced Interactive Design Solutions</li>
+        <li data-i18n="tag2">Professional Internet Monitor Protocols</li>
+        <li data-i18n="tag3">Web Assisted Networking Group</li>
+        <li data-i18n="tag4">Proper Enterprise Network Integrated Services</li>
+      </ul>
     </section>
 
     <section class="services" aria-labelledby="services-title">

@@ -215,6 +215,53 @@ html:lang(ja) .slide-caption { letter-spacing: .2em; }
 }
 html:lang(ja) .band-text { font-family: var(--font-ja); letter-spacing: .12em; }
 
+/* Still version (reduced motion, no JavaScript): the slogan with the taglines in a row beneath it */
+.band { grid-auto-flow: row; gap: 14px; }
+.band-list { position: relative; z-index: 1; list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 0; max-width: 980px; }
+.band-list li:not(.band-text) {
+  color: rgba(255, 255, 255, .9); font-size: .78rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; padding: 0 14px;
+}
+.band-list li:not(.band-text) + li:not(.band-text) { border-left: 1px solid rgba(255, 255, 255, .45); }
+html:lang(ja) .band-list li:not(.band-text) { letter-spacing: .06em; text-transform: none; }
+.band-list .band-text { flex-basis: 100%; margin-bottom: 8px; }
+.band-stage, .band-line, .band-sheen { display: none; }
+
+/* Animated version: one line at a time, written in word by word */
+.band-anim .band-list { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.band-anim .band-stage {
+  display: flex; flex-wrap: wrap; justify-content: center; align-content: center; gap: 0 .3em;
+  min-height: 3.4rem; max-width: 1000px; margin: 0; perspective: 600px;
+}
+html:lang(ja).band-anim .band-stage { gap: 0; }
+.band-anim .band-stage.is-tag { font-size: clamp(1.35rem, 2.9vw, 2.15rem); letter-spacing: .02em; }
+.band-unit {
+  display: inline-block; opacity: 0; transform-origin: 50% 100%;
+  animation: unit-in .9s cubic-bezier(.2, .75, .2, 1) forwards;
+  animation-delay: calc(var(--i) * var(--step, 90ms));
+}
+.band-stage.is-out .band-unit { opacity: 1; animation: unit-out .55s ease-in forwards; animation-delay: calc(var(--i) * 25ms); }
+@keyframes unit-in {
+  from { opacity: 0; transform: translateY(.55em) rotateX(-70deg); filter: blur(8px); }
+  to { opacity: 1; transform: none; filter: blur(0); }
+}
+@keyframes unit-out { to { opacity: 0; transform: translateY(-.4em); filter: blur(6px); } }
+
+.band-anim .band-line {
+  display: block; position: relative; z-index: 1; width: 72px; height: 2px; border-radius: 2px;
+  background: linear-gradient(90deg, transparent, #fff, transparent); box-shadow: 0 0 12px rgba(255, 255, 255, .8);
+  transform: scaleX(0);
+}
+.band-anim .band-line.is-on { animation: line-grow 1.2s .3s cubic-bezier(.2, .75, .2, 1) forwards; }
+@keyframes line-grow { to { transform: scaleX(1); } }
+
+.band-anim .band-sheen {
+  display: block; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, .22) 50%, transparent 65%);
+  transform: translateX(-100%);
+}
+.band-anim .band-sheen.is-on { animation: sheen 1.6s ease-out; }
+@keyframes sheen { to { transform: translateX(100%); } }
+
 /* ---------- Services ---------- */
 .services {
   position: relative; overflow: hidden;
@@ -321,6 +368,9 @@ html:lang(ja) .band-text { font-family: var(--font-ja); letter-spacing: .12em; }
   .slide-controls { right: 50%; transform: translateX(50%); bottom: 18px; }
   .contact-form { grid-template-columns: 1fr; }
   .band { min-height: 112px; padding: 28px var(--gutter); }
+  .band-anim .band-stage { min-height: 4.6rem; }
+  .band-anim .band-stage.is-tag { font-size: 1.3rem; }
+  .band-list li:not(.band-text) { font-size: .7rem; padding: 0 10px; }
   .footer-inner { flex-direction: column; align-items: flex-start; }
 }
 @media (max-width: 360px) {
