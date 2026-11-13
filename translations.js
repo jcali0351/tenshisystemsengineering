@@ -46,7 +46,8 @@ window.TRANSLATIONS = {
     sent: "Your email app should open now with your message. If it doesn't, write to us at {email}.",
     mailSubject: "Consultation request: {topic}",
     mailName: "Name", mailCompany: "Company", mailEmail: "Email", mailPhone: "Phone", mailTopic: "Topic",
-    location: "Osaka, Japan"
+    location: "Osaka, Japan",
+    photoCredits: "Skyline photos from Wikimedia Commons, resized and tinted:"
   },
   ja: {
     pageTitle: "天使システムズエンジニアリング｜大阪",
@@ -93,6 +94,7 @@ window.TRANSLATIONS = {
     sent: "メールアプリが開き、メッセージが作成されます。開かない場合は {email} までご連絡ください。",
     mailSubject: "ご相談のお申し込み：{topic}",
     mailName: "お名前", mailCompany: "会社名", mailEmail: "メールアドレス", mailPhone: "電話番号", mailTopic: "ご相談内容",
-    location: "日本・大阪"
+    location: "日本・大阪",
+    photoCredits: "街並みの写真：ウィキメディア・コモンズ（サイズ変更・色調補正済み）"
   }
 };

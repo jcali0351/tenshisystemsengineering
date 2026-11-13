@@ -7,10 +7,10 @@ A plain static site for GitHub Pages: no build step.
 - `styles.css` – all styling
 - `translations.js` – every piece of text in English and Japanese (edit wording here)
 - `app.js` – language switch, skyline slideshow, consultation form. The form's email address is `CONTACT_EMAIL` at the top.
-- `img/skylines/` – the five hero skylines (Osaka, Tokyo, Kyoto, Yokohama, Kobe), original SVG illustrations
+- `img/photos/` – the five hero skyline photos (Osaka, Tokyo, Kyoto, Yokohama, Kobe) from Wikimedia Commons, 1920px; their credits are in the footer of index.html and must stay there
 - `img/blueprint.svg`, `img/chevrons.svg`, `img/mech.svg` – background line art and patterns
-- `favicon.svg`, `logo.png` – tab icon
-- `tools/make-skylines.mjs` – redraws the skylines and line art (`node tools/make-skylines.mjs img`)
+- `logo.png` – the company logo (header, hero, footer and tab icon)
+- `tools/make-skylines.mjs` – redraws the background line art (`node tools/make-skylines.mjs img`; it also writes drawn skylines to img/skylines, which the page no longer uses)
 
 The consultation form opens the visitor's own email app with their message filled in (GitHub Pages has no server to send mail).
 Add `?lang=ja` or `?lang=en` to the address to open the site in a given language.
