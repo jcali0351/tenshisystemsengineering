@@ -91,7 +91,7 @@ const card = (s, pad, prefix) => `${pad}<article class="service-card">
 ${pad}  <h3 data-i18n="${k(s, "title")}">${tx(k(s, "title"))}</h3>
 ${pad}  <img class="service-pic" src="${prefix}img/services/${s.img}" alt="${tx(k(s, "alt"))}" data-i18n-attr="alt:${k(s, "alt")}" width="${s.w}" height="${s.h}" loading="lazy">
 ${pad}  <p data-i18n="${k(s, "short")}">${tx(k(s, "short"))}</p>
-${pad}  <a class="btn-more" href="${prefix}services/${s.slug}.html"><span data-i18n="more">${tx("more")}</span><span class="sr-only">: <span data-i18n="${k(s, "title")}">${tx(k(s, "title"))}</span></span><span class="btn-more-arrow" aria-hidden="true">→</span></a>
+${pad}  <a class="btn-more" href="${prefix}services/${s.slug}.html"><span data-i18n="more">${tx("more")}</span><span class="sr-only">: <span data-i18n="${k(s, "title")}">${tx(k(s, "title"))}</span></span></a>
 ${pad}</article>`;
 
 const sets = [0, 1, 2].map((n) => SERVICES.slice(n * 3, n * 3 + 3));
@@ -549,8 +549,8 @@ const PICON = {
 };
 const pIcon = (n) => `<svg class="prj-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${PICON[n]}</svg>`;
 const logoPic = (p, prefix, cls, size) => `<picture><source srcset="${prefix}img/projects/${p.logo}.webp" type="image/webp"><img class="${cls}" src="${prefix}img/projects/${p.logo}.png" alt="${tx(pk(p, "logoAlt"))}" data-i18n-attr="alt:${pk(p, "logoAlt")}" width="${size}" height="${size}"${cls === "prj-card-logo" ? ' loading="lazy"' : ""}></picture>`;
-const dlButton = (e, prefix) => `<a class="btn prj-btn prj-btn-dl" href="${prefix}downloads/${e.zip}" download>${pIcon("download")}<span data-i18n="projDownload">${tx("projDownload")}</span> <span class="prj-btn-note">${e.zip}</span></a>`;
-const cfButton = (e) => e.cf ? `<a class="btn prj-btn prj-btn-cf" href="${e.cf}" target="_blank" rel="noopener">${pIcon("forge")}<span data-i18n="projCurseForge">${tx("projCurseForge")}</span><span class="sr-only"> (${esc(e.game)}, <span data-i18n="techNewTab">${tx("techNewTab")}</span>)</span></a>` : "";
+const dlButton = (e, prefix) => `<a class="btn prj-btn prj-btn-dl" href="${prefix}downloads/${e.zip}" download><span data-i18n="projDownload">${tx("projDownload")}</span> <span class="prj-btn-note">${e.zip}</span></a>`;
+const cfButton = (e) => e.cf ? `<a class="btn prj-btn prj-btn-cf" href="${e.cf}" target="_blank" rel="noopener"><span data-i18n="projCurseForge">${tx("projCurseForge")}</span><span class="sr-only"> (${esc(e.game)}, <span data-i18n="techNewTab">${tx("techNewTab")}</span>)</span></a>` : "";
 
 const projCard = (p, prefix) => `          <article class="prj-card">
             <a class="prj-card-media" href="${prefix}projects/${p.slug}.html" tabindex="-1" aria-hidden="true">${logoPic(p, prefix, "prj-card-logo", 160)}</a>
@@ -564,7 +564,7 @@ ${p.editions.map((e) => `                <li class="prj-chip">${esc(e.game)}</li
                 <li class="prj-chip"><code>${p.editions[0].cmd}</code></li>
               </ul>
               <div class="prj-card-actions">
-                <a class="btn prj-btn prj-btn-view" href="${prefix}projects/${p.slug}.html"><span data-i18n="projView">${tx("projView")}</span>${pIcon("arrow")}</a>
+                <a class="btn prj-btn prj-btn-view" href="${prefix}projects/${p.slug}.html"><span data-i18n="projView">${tx("projView")}</span></a>
 ${cfButton(p.editions[0]) ? "                " + cfButton(p.editions[0]) + "\n" : ""}              </div>
             </div>
           </article>`;

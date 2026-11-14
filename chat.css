@@ -208,3 +208,6 @@ html:lang(ja) .tk-launch, html:lang(ko) .tk-launch { letter-spacing: .02em; text
 .tk-err { color: #ff8fa0; }
 .tk-form-actions button { background: linear-gradient(135deg, #c8102e, #7e0a1b); border-color: #ff4d67; color: #fbe9ec; }
 .tk-form-actions .tk-copy { background: #1a070b; color: #ffb3bf; border-color: #7e0a1b; }
+
+/* Link buttons in the chat: text only, centred */
+.tk-links a { justify-content: center; text-align: center; }

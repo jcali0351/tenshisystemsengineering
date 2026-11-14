@@ -1602,3 +1602,7 @@ html[dir="rtl"] .prj-btn-view .prj-ico { transform: scaleX(-1); }
 .svc-tech-logo--color img { width: 38px; height: 38px; object-fit: contain; transition: transform .25s; }
 .svc-tech:hover .svc-tech-logo--color img { transform: scale(1.1); }
 @media (prefers-reduced-motion: reduce) { .svc-tech-logo--color img { transition: none; } .svc-tech:hover .svc-tech-logo--color img { transform: none; } }
+
+/* Buttons are text only, centred (no icons or arrows) */
+.btn, .btn-more, .prj-btn { justify-content: center; text-align: center; }
+.prj-btn { flex-wrap: wrap; column-gap: .45em; row-gap: 0; }

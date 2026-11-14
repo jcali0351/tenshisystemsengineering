@@ -981,7 +981,7 @@
     if (m.r === "intro") return '<div class="tk-intro">' + BADGE.replace('class="tk-badge"', 'class="tk-badge tk-badge-lg"') +
       '<div class="tk-intro-cap"><b>TANAKA MATSUMOTO</b><span>' + esc(u("introRole")) + "</span><em>" + esc(u("introNote")) + "</em></div></div>";
     var links = (m.links || []).map(function (l) {
-      return '<a href="' + esc(BASE + l.href) + '">' + esc(l.label) + "<i>→</i></a>";
+      return '<a href="' + esc(BASE + l.href) + '">' + esc(l.label) + "</a>";
     }).join("");
     var ava = m.r === "bot" ? '<span class="tk-mini">' + BADGE + "</span>" : "";
     return '<div class="tk-row ' + m.r + (cont ? " cont" : "") + '">' + ava + '<div class="tk-bub">' + md(m.text) +
