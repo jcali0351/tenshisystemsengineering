@@ -82,6 +82,38 @@ const CONTACT_EMAIL = "jcali0351@gmail.com";
     picker.addEventListener("focusout", (e) => { if (!menu.hidden && e.relatedTarget && !picker.contains(e.relatedTarget)) close(false); });
   }
 
+  /* ---------- Header fit: the menu moves to its own row whenever the name and menu don't fit side by side ----------
+     Ten languages have very different word lengths, so this measures instead of guessing a screen width. */
+  const headerInner = $(".header-inner");
+  const fitHeader = () => {
+    if (!headerInner) return;
+    const header = headerInner.closest(".site-header");
+    const nav = $(".main-nav", headerInner), brand = $(".brand-text", headerInner), picker = $(".lang-picker", headerInner);
+    if (!nav || !brand || !picker) return;
+    const fits = () => {
+      const b = brand.getBoundingClientRect(), n = nav.getBoundingClientRect(), p = picker.getBoundingClientRect();
+      const links = $$("a", nav).map((a) => a.getBoundingClientRect());
+      if (Math.abs(n.top - b.top) >= b.height) return false;   // the menu has already wrapped below
+      const rtl = document.documentElement.dir === "rtl";
+      const L = Math.min(...links.map((r) => r.left)), R = Math.max(...links.map((r) => r.right));
+      const roomy = rtl ? (b.left - R >= 20 && L - p.right >= 14) : (L - b.right >= 20 && p.left - R >= 14);
+      return roomy && headerInner.scrollWidth <= headerInner.clientWidth + 1 && !links.some((r) => r.height > 60);
+    };
+    // Try the full size first, then two tighter sizes, and only then give the menu its own row.
+    const steps = [[], ["is-compact"], ["is-compact", "is-tight"], ["is-compact", "is-tight", "is-stacked"]];
+    for (const step of steps) {
+      header.classList.remove("is-compact", "is-tight", "is-stacked");
+      if (step.length) header.classList.add(...step);
+      if (step.includes("is-stacked") || fits()) break;
+    }
+  };
+  if (headerInner) {
+    onLanguage.push(() => { fitHeader(); requestAnimationFrame(fitHeader); });
+    window.addEventListener("load", fitHeader);
+    window.addEventListener("resize", () => requestAnimationFrame(fitHeader));
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitHeader);
+  }
+
   /* ---------- Red band: the slogan, then the taglines, written in word by word ---------- */
   const band = $(".band");
   let setupBand = () => {};
@@ -237,6 +269,7 @@ const CONTACT_EMAIL = "jcali0351@gmail.com";
       const target = (to + sets.length) % sets.length;
       if (target === current) return;
       const leaving = sets[current];
+      carousel.classList.add("has-moved");
       leaving.classList.remove("is-active");
       leaving.classList.add("is-leaving");
       leaving.inert = true;

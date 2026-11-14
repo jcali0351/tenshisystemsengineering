@@ -1181,12 +1181,21 @@
     });
     panel.addEventListener("submit", function (e) { if (e.target.classList.contains("tk-form")) { e.preventDefault(); sendHuman(e.target); } });
     // The site's language switch: relabel the chat and redraw its messages' own wording.
+    // A new language starts a fresh conversation in that language, so old and new languages never mix.
+    var chatLang = lang();
     document.addEventListener("tse:lang", function () {
       labels();
+      if (lang() === chatLang) return;
+      chatLang = lang();
+      var hadChat = state.msgs.some(function (m) { return m.r === "me" || m.r === "bot"; });
+      state.msgs = []; state.fun = false; save();
       if (!panel.hidden) {
-        renderAll();
-        var last = state.msgs[state.msgs.length - 1];
-        if (!(last && last.handoff && !last.done)) setChips(moreChips(), true);
+        log.innerHTML = "";
+        push({ r: "intro", text: "" });
+        push({ r: "bot", text: u("greet") });
+        setChips(u("chips"), true);
+      } else if (!hadChat) {
+        log.innerHTML = "";
       }
     });
   }

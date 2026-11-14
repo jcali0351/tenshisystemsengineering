@@ -677,8 +677,9 @@ html:lang(de) :is(h1, h2, h3) { hyphens: auto; overflow-wrap: break-word; }
   .main-nav a { padding: 10px 12px; font-size: .98rem; }
   .main-nav a::after { left: 12px; right: 12px; }
 }
-/* Narrower screens: the menu gets its own row under the logo and language button. */
-@media (max-width: 1240px) {
+/* Tablets and phones: the menu gets its own row under the logo and language button (above this, app.js tightens the
+   header in steps and only stacks it if it still does not fit). */
+@media (max-width: 860px) {
   .header-inner { flex-wrap: wrap; row-gap: 6px; }
   .main-nav { order: 3; width: 100%; margin: 0; border-top: 1px solid var(--line); padding-top: 6px; }
   .main-nav ul { justify-content: space-between; }
@@ -1236,3 +1237,74 @@ html:lang(ja) .band-stage, html:lang(zh) .band-stage, html:lang(ko) .band-stage 
 .band-text { text-shadow: 0 2px 0 rgba(90, 0, 14, .35), 0 6px 24px rgba(80, 0, 12, .35); }
 /* Japanese and Chinese lines (shown first in every language) are set solid, with no gaps between words. */
 .band-anim .band-stage:is([lang="ja"], [lang="zh"]) { gap: 0; font-weight: 700; letter-spacing: .02em; }
+
+/* When the header measures that the name and menu don't fit side by side (app.js, fitHeader), the menu takes its
+   own row under the logo and language button, exactly as on narrower screens. */
+.site-header.is-stacked .header-inner { flex-wrap: wrap; row-gap: 6px; }
+.site-header.is-stacked .main-nav { order: 3; width: 100%; margin: 0; border-top: 1px solid var(--line); padding-top: 6px; }
+.site-header.is-stacked .main-nav ul { justify-content: space-between; }
+.site-header.is-stacked .main-nav li { flex: 1; text-align: center; }
+.site-header.is-stacked .lang-picker { margin-inline-start: auto; }
+.main-nav a { white-space: nowrap; }
+/* The name keeps its natural width, so the header's fit check measures what is actually on screen. */
+.brand, .brand-text { flex-shrink: 0; }
+@media (max-width: 400px) { .brand, .brand-text { flex-shrink: 1; } }
+/* Phones: the name may wrap onto two lines again, so it always fits beside the language button. */
+@media (max-width: 600px) {
+  .brand, .brand-text { flex-shrink: 1; min-width: 0; }
+  .brand-en { white-space: normal; }
+  .brand-ja { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
+@media (max-width: 380px) {
+  .lang-current { gap: 5px; padding: 6px 8px; }
+  .lang-current .flag { width: 26px; }
+  .brand-logo { width: 42px; }
+}
+/* Small phones: menu items wrap onto a second centred line instead of running off the edge (long German words). */
+@media (max-width: 620px) {
+  .main-nav ul, .site-header.is-stacked .main-nav ul { flex-wrap: wrap; justify-content: center; gap: 0 4px; }
+  .main-nav li, .site-header.is-stacked .main-nav li { flex: 0 1 auto; }
+  .main-nav a { padding: 9px 8px; }
+  .main-nav a::after { left: 8px; right: 8px; }
+}
+
+/* ======================================================================
+   Header sizes chosen by app.js (fitHeader): full size, compact, tight, then the menu on its own row.
+   ====================================================================== */
+.site-header.is-compact .header-inner { padding-top: 10px; padding-bottom: 10px; gap: 18px; }
+.site-header.is-compact .brand { gap: 12px; }
+.site-header.is-compact .brand-logo { width: 62px; }
+.site-header.is-compact .brand-en { font-size: 1.3rem; }
+.site-header.is-compact .brand-ja { font-size: .88rem; }
+.site-header.is-compact .main-nav ul { gap: 2px; }
+.site-header.is-compact .main-nav a { padding: 9px 10px; font-size: .92rem; letter-spacing: 0; }
+.site-header.is-compact .main-nav a::after { left: 10px; right: 10px; }
+.site-header.is-compact .lang-current { min-height: 46px; gap: 9px; padding: 6px 12px 6px 9px; font-size: 1rem; }
+.site-header.is-compact .lang-current .flag { width: 32px; }
+
+.site-header.is-tight .brand-logo { width: 52px; }
+.site-header.is-tight .brand-en { font-size: 1.12rem; }
+.site-header.is-tight .brand-ja { font-size: .76rem; }
+.site-header.is-tight .main-nav a { padding: 8px 7px; font-size: .84rem; }
+.site-header.is-tight .main-nav a::after { left: 7px; right: 7px; }
+.site-header.is-tight .lang-current { min-height: 42px; padding: 5px 10px 5px 8px; font-size: .92rem; }
+.site-header.is-tight .lang-current .flag { width: 28px; }
+
+/* When the menu needs its own row: a compact, centred row instead of items spread across the width. */
+.site-header.is-stacked .header-inner { row-gap: 2px; padding-bottom: 6px; }
+.site-header.is-stacked .main-nav { padding-top: 4px; }
+.site-header.is-stacked .main-nav ul { justify-content: center; flex-wrap: wrap; gap: 0 6px; }
+.site-header.is-stacked .main-nav li { flex: 0 1 auto; }
+
+/* ======================================================================
+   Service cards: the old set leaves first, then the new set slides in (no overlapping cards).
+   ====================================================================== */
+.svc-js .svc-set.is-leaving .service-card { animation: card-out .32s ease-in both; animation-delay: 0s !important; }
+.svc-js .svc-set.is-active .service-card { animation-delay: .34s; }
+.svc-js .svc-set.is-active .service-card:nth-child(2) { animation-delay: .44s; }
+.svc-js .svc-set.is-active .service-card:nth-child(3) { animation-delay: .54s; }
+@keyframes card-out { to { opacity: 0; transform: translateX(-40px); } }
+/* The very first set on page load needs no wait. */
+.svc-js:not(.has-moved) .svc-set.is-active .service-card { animation-delay: 0s; }
+.svc-js:not(.has-moved) .svc-set.is-active .service-card:nth-child(2) { animation-delay: .1s; }
+.svc-js:not(.has-moved) .svc-set.is-active .service-card:nth-child(3) { animation-delay: .2s; }
