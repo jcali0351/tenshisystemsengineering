@@ -1515,75 +1515,10 @@ html[dir="rtl"] .prj-btn-view .prj-ico { transform: scaleX(-1); }
   .prj-card:hover, .prj-card:hover .prj-card-logo { transform: none; }
 }
 
-/* ======================================================================
-   Razzle dazzle on the company logo (header on every page, homepage card).
-   The logo stays fully visible; every effect layer is drawn at 50% opacity.
-   ====================================================================== */
-.logo-dazzle { position: relative; display: inline-flex; flex: none; isolation: isolate; }
+/* Company logo wrapper (header on every page, homepage card). No animation. */
+.logo-dazzle { position: relative; display: inline-flex; flex: none; }
 .logo-dazzle--hero { display: flex; width: fit-content; margin: 0 auto 25.3px; }
-.logo-dazzle--hero .hero-logo { margin: 0; animation: dz-float 5s ease-in-out infinite; }
-.logo-dazzle--brand .brand-logo { animation: dz-pulse 4s ease-in-out infinite; }
-.dz-fx { position: absolute; inset: 0; pointer-events: none; opacity: .5; }
-.dz-fx > * { position: absolute; }
-
-/* A turning ring of red and gold light behind the logo */
-.dz-halo {
-  inset: -22%; z-index: -1; border-radius: 50%;
-  background: conic-gradient(from 0deg, transparent, #ff2d4b, #ffd36b, transparent 35%, transparent 50%, #ff2d4b, #fff2c2, transparent 85%);
-  filter: blur(10px); animation: dz-spin 6s linear infinite;
-}
-.logo-dazzle--brand .dz-halo { inset: -18%; filter: blur(6px); }
-/* Soft light rays fanning out behind the homepage logo */
-.dz-rays {
-  inset: -45%; z-index: -2; border-radius: 50%;
-  background: repeating-conic-gradient(from 0deg, rgba(255, 45, 75, .55) 0 6deg, transparent 6deg 20deg);
-  -webkit-mask: radial-gradient(circle, #000 25%, transparent 68%); mask: radial-gradient(circle, #000 25%, transparent 68%);
-  animation: dz-spin 24s linear infinite reverse;
-}
-/* A bright sheen that sweeps across the logo itself (masked to the logo's shape) */
-.dz-shine {
-  inset: 0; z-index: 1;
-  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, .95) 47%, #ffe7a3 50%, rgba(255, 255, 255, .95) 53%, transparent 65%) no-repeat;
-  background-size: 250% 100%; background-position: 150% 0;
-  -webkit-mask: url("brand/tenshi-mark.svg") center / contain no-repeat; mask: url("brand/tenshi-mark.svg") center / contain no-repeat;
-  mix-blend-mode: screen; animation: dz-sweep 3.6s ease-in-out infinite;
-}
-.logo-dazzle--brand .dz-shine { animation-duration: 4.8s; animation-delay: 1.2s; }
-/* Twinkling four-pointed stars around the edge */
-.dz-star {
-  z-index: 2; width: 16px; height: 16px; margin: -8px 0 0 -8px;
-  background: radial-gradient(circle, #fff 0 18%, transparent 20%),
-    linear-gradient(#fff, #fff) center / 2px 100% no-repeat,
-    linear-gradient(#fff, #fff) center / 100% 2px no-repeat;
-  filter: drop-shadow(0 0 4px #ff2d4b) drop-shadow(0 0 8px #ffd36b);
-  transform: scale(0) rotate(0deg); animation: dz-twinkle 2.4s ease-in-out infinite;
-  animation-delay: calc(var(--i) * .37s);
-}
-.dz-star:nth-child(4n + 1) { left: 2%; top: 10%; }
-.dz-star:nth-child(4n + 2) { left: 98%; top: 18%; }
-.dz-star:nth-child(4n + 3) { left: 92%; top: 94%; }
-.dz-star:nth-child(4n + 4) { left: 6%; top: 86%; }
-.dz-star:nth-child(n + 7):nth-child(4n + 1) { left: 50%; top: -6%; }
-.dz-star:nth-child(n + 7):nth-child(4n + 2) { left: 104%; top: 55%; }
-.dz-star:nth-child(n + 7):nth-child(4n + 3) { left: 48%; top: 106%; }
-.dz-star:nth-child(n + 7):nth-child(4n + 4) { left: -4%; top: 50%; }
-.logo-dazzle--hero .dz-star { width: 22px; height: 22px; margin: -11px 0 0 -11px; }
-.logo-dazzle--brand .dz-star { width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px; }
-
-@keyframes dz-spin { to { transform: rotate(360deg); } }
-@keyframes dz-sweep { 0%, 15% { background-position: 150% 0; } 70%, 100% { background-position: -60% 0; } }
-@keyframes dz-twinkle {
-  0%, 100% { transform: scale(0) rotate(0deg); opacity: 0; }
-  45% { transform: scale(1.15) rotate(45deg); opacity: 1; }
-  70% { transform: scale(.6) rotate(90deg); opacity: .6; }
-}
-@keyframes dz-float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-6px) rotate(-1.5deg); } }
-@keyframes dz-pulse { 0%, 100% { transform: none; } 50% { transform: scale(1.04); } }
-
-@media (prefers-reduced-motion: reduce) {
-  .logo-dazzle .brand-logo, .logo-dazzle .hero-logo, .dz-halo, .dz-rays, .dz-shine { animation: none; }
-  .dz-star { display: none; }
-}
+.logo-dazzle--hero .hero-logo { margin: 0; }
 
 /* Hero card: half-transparent white over the skyline, frosted so the text stays readable */
 .hero-card { background: rgba(255, 255, 255, .5); -webkit-backdrop-filter: blur(10px) saturate(1.2); backdrop-filter: blur(10px) saturate(1.2); border: 1px solid rgba(255, 255, 255, .6); }

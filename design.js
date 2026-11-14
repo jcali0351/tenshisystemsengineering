@@ -44,11 +44,6 @@
     cue.className = "hero-scroll"; cue.setAttribute("aria-hidden", "true");
     cue.innerHTML = "SCROLL<i></i>";
     hero.appendChild(cue);
-    var dazzle = hero.querySelector(".logo-dazzle--hero");
-    if (dazzle) {
-      dazzle.insertAdjacentHTML("afterbegin",
-        '<svg class="enso" viewBox="0 0 200 200" aria-hidden="true"><path d="M150 46C128 26 92 22 64 38 34 56 24 96 38 128c14 32 52 50 86 42 34-8 56-40 52-74-2-18-10-34-22-46"/></svg>');
-    }
   }
 
   /* Page banners: a hanko seal beside the title */
