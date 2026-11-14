@@ -1208,3 +1208,15 @@ html[dir="rtl"] .brand-en, html[dir="rtl"] .tech-name { text-align: right; }
 .ld-option:not(:has(.ld-english)) .ld-native { grid-row: span 2; }
 @media (min-width: 640px) { .lang-dialog { width: min(620px, calc(100vw - 32px)); } }
 @media (max-width: 420px) { .ld-option { min-height: 62px; padding: 8px 10px; } .ld-option .ld-flag { width: 32px; } }
+
+/* Mid-sized screens: the name and logo shrink a little so they never run into the menu. */
+@media (min-width: 1241px) and (max-width: 1500px) {
+  .brand-logo { width: clamp(64px, 6vw, 96px); }
+  .brand { gap: 14px; }
+  .brand-en { font-size: clamp(1.25rem, 1.75vw, 1.9rem); }
+  .brand-ja { font-size: clamp(.85rem, 1.15vw, 1.36rem); }
+  .main-nav a { padding: 10px 11px; font-size: clamp(.9rem, 1.05vw, 1.05rem); }
+  .main-nav a::after { left: 11px; right: 11px; }
+  .lang-current { min-height: 54px; padding: 8px 14px 8px 10px; font-size: 1.1rem; }
+  .lang-current .flag { width: 38px; }
+}
