@@ -177,6 +177,9 @@
     '<text x="24" y="30.5" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-weight="800" font-size="17" fill="#fff" letter-spacing=".5">TM</text>' +
     '<path d="M36.5 9.5l1.2 2.8 2.8 1.2-2.8 1.2-1.2 2.8-1.2-2.8-2.8-1.2 2.8-1.2z" fill="#fff"/></svg>';
 
+  // His illustrated portrait (img/tanaka.svg) replaces the monogram wherever it appears.
+  BADGE = '<img class="tk-badge" src="' + BASE + 'img/tanaka.svg" alt="" width="200" height="200">';
+
   /* ---------- answers from the site's own text ---------- */
   var KEYS = {
     webdesign: /web ?design|website design|site design|ui|ux|ウェブデザイン|サイトデザイン|웹 ?디자인|webdesign/,

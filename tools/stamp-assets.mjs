@@ -1,12 +1,12 @@
 // Stamps every page's links to styles.css, translations.js, app.js and rain.js with a short hash of each file's
 // contents (e.g. styles.css?v=1a2b3c4d), so visitors' browsers fetch the new copy as soon as a file changes.
-// Covers index.html and the service pages in services/ (whose links start with ../).
+// Covers every page in the main folder and the service pages in services/ (whose links start with ../).
 // Run from the repository folder after changing any of those files: node tools/stamp-assets.mjs
 import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
 import { createHash } from "node:crypto";
 
 const files = ["styles.css", "chat.css", "translations.js", "app.js", "rain.js", "chat.js"].filter((f) => existsSync(f));
-const pages = ["index.html", ...(existsSync("services") ? readdirSync("services").filter((f) => f.endsWith(".html")).map((f) => "services/" + f) : [])];
+const pages = [...readdirSync(".").filter((f) => f.endsWith(".html")), ...(existsSync("services") ? readdirSync("services").filter((f) => f.endsWith(".html")).map((f) => "services/" + f) : [])];
 const versions = Object.fromEntries(files.map((f) => [f, createHash("sha256").update(readFileSync(f)).digest("hex").slice(0, 8)]));
 
 for (const p of pages) {

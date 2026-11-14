@@ -11,11 +11,11 @@
   <meta property="og:type" content="website">
   <link rel="icon" href="../logo.png" type="image/png">
   <link rel="apple-touch-icon" href="../logo.png">
-  <link rel="stylesheet" href="../styles.css?v=e51160f6">
-  <link rel="stylesheet" href="../chat.css?v=58b1c406">
+  <link rel="stylesheet" href="../styles.css?v=bffb0ec5">
+  <link rel="stylesheet" href="../chat.css?v=e1a855b7">
 </head>
 <body class="svc-page" data-title-key="svc_branding_title" data-desc-key="svc_branding_short">
-  <!-- Written by tools/build-services.mjs: edit translations.js and the script, not this file. -->
+  <!-- Written by tools/build-pages.mjs: edit translations.js and the script, not this file. -->
   <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
 
   <header class="site-header">
@@ -27,6 +27,14 @@
           <span class="brand-ja" lang="ja">天使システムズエンジニアリング</span>
         </span>
       </a>
+      <nav class="main-nav" aria-label="Main menu" data-i18n-attr="aria-label:navLabel">
+        <ul>
+          <li><a href="../index.html" data-nav="home" data-i18n="navHome">Home</a></li>
+          <li><a href="../about.html" data-nav="about" data-i18n="navAbout">About</a></li>
+          <li><a href="../services.html" aria-current="page" data-nav="services" data-i18n="navServices">Services</a></li>
+          <li><a href="../contact.html" data-nav="contact" data-i18n="navContact">Contact</a></li>
+        </ul>
+      </nav>
       <div class="lang-picker">
         <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
           <symbol id="flag-en" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect y="0" width="30" height="1.54" fill="#b22234"/><rect y="3.08" width="30" height="1.54" fill="#b22234"/><rect y="6.15" width="30" height="1.54" fill="#b22234"/><rect y="9.23" width="30" height="1.54" fill="#b22234"/><rect y="12.31" width="30" height="1.54" fill="#b22234"/><rect y="15.38" width="30" height="1.54" fill="#b22234"/><rect y="18.46" width="30" height="1.54" fill="#b22234"/><rect width="12" height="10.77" fill="#3c3b6e"/><circle cx="1" cy="1" r=".45" fill="#fff"/><circle cx="3" cy="1" r=".45" fill="#fff"/><circle cx="5" cy="1" r=".45" fill="#fff"/><circle cx="7" cy="1" r=".45" fill="#fff"/><circle cx="9" cy="1" r=".45" fill="#fff"/><circle cx="11" cy="1" r=".45" fill="#fff"/><circle cx="2" cy="3.15" r=".45" fill="#fff"/><circle cx="4" cy="3.15" r=".45" fill="#fff"/><circle cx="6" cy="3.15" r=".45" fill="#fff"/><circle cx="8" cy="3.15" r=".45" fill="#fff"/><circle cx="10" cy="3.15" r=".45" fill="#fff"/><circle cx="1" cy="5.3" r=".45" fill="#fff"/><circle cx="3" cy="5.3" r=".45" fill="#fff"/><circle cx="5" cy="5.3" r=".45" fill="#fff"/><circle cx="7" cy="5.3" r=".45" fill="#fff"/><circle cx="9" cy="5.3" r=".45" fill="#fff"/><circle cx="11" cy="5.3" r=".45" fill="#fff"/><circle cx="2" cy="7.45" r=".45" fill="#fff"/><circle cx="4" cy="7.45" r=".45" fill="#fff"/><circle cx="6" cy="7.45" r=".45" fill="#fff"/><circle cx="8" cy="7.45" r=".45" fill="#fff"/><circle cx="10" cy="7.45" r=".45" fill="#fff"/><circle cx="1" cy="9.6" r=".45" fill="#fff"/><circle cx="3" cy="9.6" r=".45" fill="#fff"/><circle cx="5" cy="9.6" r=".45" fill="#fff"/><circle cx="7" cy="9.6" r=".45" fill="#fff"/><circle cx="9" cy="9.6" r=".45" fill="#fff"/><circle cx="11" cy="9.6" r=".45" fill="#fff"/></symbol>
@@ -50,15 +58,17 @@
   <main id="main">
     <section class="svc-hero">
       <div class="svc-hero-inner">
-        <nav class="crumbs" aria-label="Breadcrumb" data-i18n-attr="aria-label:crumbLabel">
-          <ol>
-            <li><a href="../index.html" data-i18n="crumbHome">Home</a></li>
-            <li><a href="../index.html#services" data-i18n="crumbServices">Services</a></li>
-            <li aria-current="page" data-i18n="svc_branding_title">Branding</li>
-          </ol>
-        </nav>
-        <h1 data-i18n="svc_branding_title">Branding</h1>
-        <p class="svc-hero-lead" data-i18n="svc_branding_short">Logos, color, typography, and brand guidelines that give your business a clear, consistent identity.</p>
+        <div class="svc-hero-text">
+          <nav class="crumbs" aria-label="Breadcrumb" data-i18n-attr="aria-label:crumbLabel">
+            <ol>
+              <li><a href="../index.html" data-i18n="crumbHome">Home</a></li>
+              <li><a href="../services.html" data-i18n="crumbServices">Services</a></li>
+              <li aria-current="page" data-i18n="svc_branding_title">Branding</li>
+            </ol>
+          </nav>
+          <h1 data-i18n="svc_branding_title">Branding</h1>
+          <p class="svc-hero-lead" data-i18n="svc_branding_short">Logos, color, typography, and brand guidelines that give your business a clear, consistent identity.</p>
+        </div>
       </div>
     </section>
 
@@ -74,7 +84,7 @@
             <li data-i18n="svc_branding_o4">Business cards and stationery</li>
             <li data-i18n="svc_branding_o5">Templates for documents and social media</li>
           </ul>
-          <a class="btn btn-primary" href="../index.html?topic=svc_branding_title#contact" data-i18n="cta">Request Consultation</a>
+          <a class="btn btn-primary" href="../contact.html?topic=svc_branding_title" data-i18n="cta">Request Consultation</a>
         </div>
         <figure class="svc-figure">
           <img src="../img/services/branding.jpg" alt="A desk with brand sketches, pencils, a laptop, and a phone" data-i18n-attr="alt:svc_branding_alt" width="960" height="644">
@@ -113,7 +123,7 @@
     <section class="svc-cta" aria-labelledby="cta-title">
       <h2 id="cta-title" data-i18n="ctaTitle">Let's talk about your project</h2>
       <p data-i18n="ctaText">Tell us what you need. The consultation form takes about a minute.</p>
-      <a class="btn btn-light" href="../index.html?topic=svc_branding_title#contact" data-i18n="cta">Request Consultation</a>
+      <a class="btn btn-light" href="../contact.html?topic=svc_branding_title" data-i18n="cta">Request Consultation</a>
     </section>
 
     <section class="svc-others" aria-labelledby="others-title">
@@ -153,7 +163,7 @@
             <span data-i18n="svc_cms_title">Content Management</span>
           </a></li>
         </ul>
-        <p class="svc-back"><a href="../index.html" data-i18n="backHome">Back to the homepage</a></p>
+        <p class="svc-back"><a href="../services.html" data-i18n="seeAll">See all services</a></p>
       </div>
     </section>
   </main>
@@ -167,12 +177,20 @@
           <span lang="ja">天使システムズエンジニアリング</span>
         </div>
       </div>
+      <nav class="footer-nav" aria-label="Main menu" data-i18n-attr="aria-label:navLabel">
+          <ul>
+            <li><a href="../index.html" data-nav="home" data-i18n="navHome">Home</a></li>
+            <li><a href="../about.html" data-nav="about" data-i18n="navAbout">About</a></li>
+            <li><a href="../services.html" aria-current="page" data-nav="services" data-i18n="navServices">Services</a></li>
+            <li><a href="../contact.html" data-nav="contact" data-i18n="navContact">Contact</a></li>
+          </ul>
+      </nav>
       <p class="footer-meta"><span data-i18n="location">Osaka, Japan</span> · © <span id="year">2026</span> Tenshi Systems Engineering</p>
     </div>
   </footer>
 
-  <script src="../translations.js?v=4a7658cc"></script>
-  <script src="../app.js?v=9db2118e"></script>
-  <script src="../chat.js?v=e63962da"></script>
+  <script src="../translations.js?v=a535e40a"></script>
+  <script src="../app.js?v=42971452"></script>
+  <script src="../chat.js?v=a7c9f532"></script>
 </body>
 </html>

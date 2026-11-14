@@ -1,5 +1,5 @@
 /* Tanaka Matsumoto, the AI assistant (chat.js). White and crimson, like the rest of the site. */
-.tk-badge { display: block; width: 100%; height: 100%; }
+.tk-badge { display: block; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
 
 .tk-launch {
   position: fixed; right: 22px; bottom: 22px; z-index: 900;

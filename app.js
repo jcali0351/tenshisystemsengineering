@@ -86,7 +86,7 @@ const CONTACT_EMAIL = "jcali0351@gmail.com";
   let setupBand = () => {};
   if (band) {
     const BAND_LINES = ["motto", "tag1", "tag2", "tag3", "tag4"];
-    const BAND_HOLD = 5200;   // how long each line stays, in milliseconds
+    const BAND_HOLD = 7000;   // how long each line stays (Japanese first, then the visitor's language), in milliseconds
     const stage = $(".band-stage");
     const bandLine = $(".band-line");
     const sheen = $(".band-sheen");
@@ -94,17 +94,16 @@ const CONTACT_EMAIL = "jcali0351@gmail.com";
 
     const restart = (el) => { el.classList.remove("is-on"); void el.offsetWidth; el.classList.add("is-on"); };
 
-    const showBandLine = (i) => {
-      bandIndex = i % BAND_LINES.length;
-      const text = t(BAND_LINES[bandIndex]);
-      // English goes in word by word. Japanese has no spaces, so the browser finds the words (whole words never break
-      // across lines); browsers without that go character by character.
-      const units = lang !== "ja" ? text.split(" ")
+    // Writes one line into the band in the given language.
+    // English, Korean and German go in word by word. Japanese has no spaces, so the browser finds the words (whole
+    // words never break across lines); browsers without that go character by character.
+    const writeLine = (text, inLang) => {
+      const units = inLang !== "ja" ? text.split(" ")
         : window.Intl && Intl.Segmenter ? Array.from(new Intl.Segmenter("ja", { granularity: "word" }).segment(text), (s) => s.segment)
         : Array.from(text);
-      stage.style.setProperty("--step", lang === "ja" ? "40ms" : "90ms");
+      stage.setAttribute("lang", inLang);
+      stage.style.setProperty("--step", inLang === "ja" ? "40ms" : "90ms");
       stage.classList.remove("is-out");
-      stage.classList.toggle("is-tag", bandIndex > 0);
       stage.replaceChildren(...units.map((u, k) => {
         const s = document.createElement("span");
         s.className = "band-unit";
@@ -112,8 +111,30 @@ const CONTACT_EMAIL = "jcali0351@gmail.com";
         s.textContent = u;
         return s;
       }));
+    };
+
+    // Each line appears in Japanese first; for visitors in another language it then dissolves and rewrites itself
+    // in their language.
+    const JA_HOLD = 1900;   // how long the Japanese stays before switching, in milliseconds
+    let switchTimer = null;
+    const showBandLine = (i) => {
+      clearTimeout(switchTimer);
+      bandIndex = i % BAND_LINES.length;
+      const key = BAND_LINES[bandIndex];
+      stage.classList.toggle("is-tag", bandIndex > 0);
+      writeLine(T.ja[key], "ja");
       restart(bandLine);
       restart(sheen);
+      if (lang === "ja") return;
+      const shownIndex = bandIndex;
+      switchTimer = setTimeout(() => {
+        stage.classList.add("is-out");
+        switchTimer = setTimeout(() => {
+          if (bandIndex !== shownIndex) return;
+          writeLine(t(key), lang);
+          restart(sheen);
+        }, 520);
+      }, JA_HOLD);
     };
 
     const nextBandLine = () => { stage.classList.add("is-out"); setTimeout(() => showBandLine(bandIndex + 1), 650); };
@@ -319,9 +340,63 @@ const CONTACT_EMAIL = "jcali0351@gmail.com";
   const year = $("#year");
   if (year) year.textContent = new Date().getFullYear();
   const params = new URLSearchParams(location.search);
-  // First visit: use the browser's language if the site has it (Japanese, Korean, German), otherwise English.
-  const browserLang = (navigator.language || "").toLowerCase().slice(0, 2);
-  setLanguage(params.get("lang") || store.get("tse-lang") || (T[browserLang] ? browserLang : "en"));
+  // The site opens in Japanese. On a first visit (no saved choice, no ?lang= in the address) a pop-up asks which
+  // language to use; the choice is remembered, so it only appears once.
+  const saved = store.get("tse-lang");
+  setLanguage(params.get("lang") || saved || "ja");
+  if (!saved && !params.get("lang")) {
+    try { localStorage.removeItem("tse-lang"); } catch (e) { /* storage blocked: fine */ }   // not chosen yet
+    askLanguage();
+  }
+
+  function askLanguage() {
+    const LANGS = [
+      ["ja", "日本語", "Japanese"], ["en", "English", "English"],
+      ["ko", "한국어", "Korean"], ["de", "Deutsch", "German"]
+    ];
+    const logo = $(".brand-logo");
+    const dlg = document.createElement("dialog");
+    dlg.className = "lang-dialog";
+    dlg.setAttribute("aria-labelledby", "lang-dialog-title");
+    dlg.innerHTML = `
+      <div class="ld-top">
+        <img class="ld-logo" src="${logo ? logo.getAttribute("src") : "logo.png"}" alt="" width="228" height="205">
+        <p class="ld-brand">Tenshi Systems Engineering<span lang="ja">天使システムズエンジニアリング</span></p>
+        <button type="button" class="ld-close" aria-label="閉じる / Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      </div>
+      <div class="ld-body">
+        <h2 id="lang-dialog-title" class="ld-title">
+          <span lang="ja">言語を選択してください</span>
+          <span lang="en">Choose your language</span>
+          <span lang="ko">언어를 선택하세요</span>
+          <span lang="de">Sprache wählen</span>
+        </h2>
+        <ul class="ld-options">
+          ${LANGS.map(([code, native, english]) => `<li><button type="button" class="ld-option" data-pick="${code}" lang="${code}">
+            <svg class="ld-flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-${code}"/></svg>
+            <span class="ld-native">${native}</span>
+            ${native !== english ? `<span class="ld-english" lang="en">${english}</span>` : ""}
+          </button></li>`).join("")}
+        </ul>
+        <p class="ld-note"><span lang="ja">あとから画面上部の国旗ボタンでいつでも変更できます。</span> <span lang="en">You can change it any time with the flag button at the top.</span></p>
+      </div>`;
+    document.body.appendChild(dlg);
+    const finish = (code) => {
+      setLanguage(code);   // also saves the choice, so the pop-up won't come back
+      dlg.classList.add("is-closing");
+      setTimeout(() => { if (dlg.open) dlg.close(); dlg.remove(); }, reduceMotion.matches ? 0 : 200);
+    };
+    $$(".ld-option", dlg).forEach((b) => b.addEventListener("click", () => finish(b.dataset.pick)));
+    $(".ld-close", dlg).addEventListener("click", () => finish(lang));
+    dlg.addEventListener("cancel", (e) => { e.preventDefault(); finish(lang); });   // Escape keeps Japanese
+    dlg.addEventListener("click", (e) => { if (e.target === dlg) finish(lang); });  // a click outside the card
+    // Wait a moment so the page shows behind the pop-up.
+    setTimeout(() => {
+      if (typeof dlg.showModal === "function") dlg.showModal(); else dlg.setAttribute("open", "");
+      const first = $(".ld-option", dlg);
+      if (first) first.focus();
+    }, 500);
+  }
   setupBand();
   startSlides();
   startCards();
