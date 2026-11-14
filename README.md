@@ -14,3 +14,4 @@ A plain static site for GitHub Pages: no build step.
 
 The consultation form opens the visitor's own email app with their message filled in (GitHub Pages has no server to send mail).
 Add `?lang=ja` or `?lang=en` to the address to open the site in a given language.
+- `tools/stamp-assets.mjs` – after changing styles.css, translations.js or app.js, run `node tools/stamp-assets.mjs` so visitors get the new copy at once
