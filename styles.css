@@ -1,5 +1,16 @@
 /* Tenshi Systems Engineering */
 
+/* Lato (Google Fonts, SIL Open Font License; files and LICENSE in fonts/lato/), hosted with the site. It has no Japanese
+   or Korean letters, so those fall back to the system's Japanese and Korean fonts. */
+@font-face { font-family: "Lato"; font-style: normal; font-weight: 300; font-display: swap; src: url(fonts/lato/lato-300-normal.woff2) format("woff2"); }
+@font-face { font-family: "Lato"; font-style: italic; font-weight: 300; font-display: swap; src: url(fonts/lato/lato-300-italic.woff2) format("woff2"); }
+@font-face { font-family: "Lato"; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/lato/lato-400-normal.woff2) format("woff2"); }
+@font-face { font-family: "Lato"; font-style: italic; font-weight: 400; font-display: swap; src: url(fonts/lato/lato-400-italic.woff2) format("woff2"); }
+@font-face { font-family: "Lato"; font-style: normal; font-weight: 700; font-display: swap; src: url(fonts/lato/lato-700-normal.woff2) format("woff2"); }
+@font-face { font-family: "Lato"; font-style: italic; font-weight: 700; font-display: swap; src: url(fonts/lato/lato-700-italic.woff2) format("woff2"); }
+@font-face { font-family: "Lato"; font-style: normal; font-weight: 900; font-display: swap; src: url(fonts/lato/lato-900-normal.woff2) format("woff2"); }
+@font-face { font-family: "Lato"; font-style: italic; font-weight: 900; font-display: swap; src: url(fonts/lato/lato-900-italic.woff2) format("woff2"); }
+
 :root {
   --red: #c8102e;
   --red-deep: #9e0c22;
@@ -12,8 +23,8 @@
   --white: #fff;
   --radius: 11.5px;
   --shadow: 0 20.7px 57.5px rgba(22, 32, 48, .14), 0 2px 9.2px rgba(22, 32, 48, .06);
-  --font: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif;
-  --font-ja: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Yu Gothic", Meiryo, "Noto Sans JP", system-ui, sans-serif;
+  --font: "Lato", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif;
+  --font-ja: "Lato", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Yu Gothic", Meiryo, "Noto Sans JP", system-ui, sans-serif;
   --gutter: clamp(16px, 4vw, 32px);
 }
 html:lang(ja) { --font: var(--font-ja); }
@@ -205,7 +216,7 @@ html:lang(ja) .slide-caption { letter-spacing: .2em; }
   position: relative; z-index: 1;
   color: #fff; font-weight: 300; font-size: clamp(1.7rem, 4.14vw, 2.6rem); letter-spacing: .01em; line-height: 1.25;
   text-shadow: 0 2px 13.8px rgba(80, 0, 12, .35);
-  font-family: "Segoe UI Light", "Segoe UI", "Helvetica Neue", system-ui, var(--font-ja), sans-serif;
+  font-family: var(--font);
 }
 html:lang(ja) .band-text { font-family: var(--font-ja); letter-spacing: .12em; }
 
@@ -537,7 +548,7 @@ html:lang(ja) .svc-hero h1, html:lang(ko) .svc-hero h1 { letter-spacing: .02em; 
    Language picker (flags) and Korean / German type
    ====================================================================== */
 html:lang(ko) {
-  --font: "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", "Nanum Gothic", system-ui, sans-serif;
+  --font: "Lato", "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", "Nanum Gothic", system-ui, sans-serif;
 }
 html:lang(ko) :is(h1, h2, h3, .hero-lead, .band-text, .service-card p, .svc-intro, .svc-hero-lead) { word-break: keep-all; overflow-wrap: anywhere; }
 html:lang(de) :is(h1, h2, h3) { hyphens: auto; overflow-wrap: break-word; }
@@ -667,7 +678,7 @@ html:lang(de) :is(h1, h2, h3) { hyphens: auto; overflow-wrap: break-word; }
   .main-nav a::after { left: 12px; right: 12px; }
 }
 /* Narrower screens: the menu gets its own row under the logo and language button. */
-@media (max-width: 980px) {
+@media (max-width: 1240px) {
   .header-inner { flex-wrap: wrap; row-gap: 6px; }
   .main-nav { order: 3; width: 100%; margin: 0; border-top: 1px solid var(--line); padding-top: 6px; }
   .main-nav ul { justify-content: space-between; }
@@ -883,3 +894,317 @@ html:lang(ja) .info-list b, html:lang(ko) .info-list b { letter-spacing: .02em; 
 .band-anim .band-stage.is-tag { letter-spacing: .1em; }
 .band-list li:not(.band-text) { text-transform: uppercase; }
 html:lang(ja) .band-stage, html:lang(ko) .band-stage, html:lang(ja) .band-list .band-text, html:lang(ko) .band-list .band-text { letter-spacing: .12em; }
+
+/* ======================================================================
+   Homepage consultation form: black and reds, no white
+   ====================================================================== */
+.contact:not(.page-section) .contact-form {
+  position: relative; border-top: 0; border-radius: 16px;
+  background:
+    radial-gradient(420px 220px at 100% 0%, rgba(200, 16, 46, .22), transparent 70%),
+    linear-gradient(160deg, #1a080c 0%, #0d0406 100%);
+  border: 1px solid rgba(255, 70, 95, .28);
+  box-shadow: 0 30px 70px rgba(10, 0, 3, .6), 0 0 0 1px rgba(0, 0, 0, .4), inset 0 1px 0 rgba(255, 110, 130, .12);
+}
+.contact:not(.page-section) .contact-form::before {
+  content: ""; position: absolute; left: 18px; right: 18px; top: -1px; height: 3px; border-radius: 0 0 3px 3px;
+  background: linear-gradient(90deg, transparent, #ff2d4f, #c8102e, #ff2d4f, transparent);
+  box-shadow: 0 0 18px rgba(255, 45, 79, .6);
+}
+.contact:not(.page-section) .field label { color: #f3d6db; }
+.contact:not(.page-section) .req { color: #ff4d67; }
+.contact:not(.page-section) .optional { color: #b98790; }
+.contact:not(.page-section) .field input,
+.contact:not(.page-section) .field select,
+.contact:not(.page-section) .field textarea {
+  background: #22090f; color: #fbe9ec; border: 1px solid #5a1622; border-radius: 9px;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, .35);
+}
+.contact:not(.page-section) .field input::placeholder,
+.contact:not(.page-section) .field textarea::placeholder { color: #8f5c66; }
+.contact:not(.page-section) .field input:hover,
+.contact:not(.page-section) .field select:hover,
+.contact:not(.page-section) .field textarea:hover { border-color: #8e1a2c; }
+.contact:not(.page-section) .field input:focus,
+.contact:not(.page-section) .field select:focus,
+.contact:not(.page-section) .field textarea:focus {
+  background: #2a0b12; border-color: #ff2d4f; box-shadow: 0 0 0 3px rgba(255, 45, 79, .25), 0 0 18px rgba(255, 45, 79, .25);
+}
+/* The service list: a red arrow instead of the browser's own, and dark options. */
+.contact:not(.page-section) .field select {
+  appearance: none; -webkit-appearance: none; padding-right: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%23ff4d67' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center; background-size: 16px;
+  color-scheme: dark;
+}
+.contact:not(.page-section) .field select option { background: #1a080c; color: #fbe9ec; }
+.contact:not(.page-section) .field.has-error input,
+.contact:not(.page-section) .field.has-error textarea { background: #2e0a12; border-color: #ff4d67; }
+.contact:not(.page-section) .error { color: #ff8fa0; }
+.contact:not(.page-section) .req-note { color: #b98790; }
+.contact:not(.page-section) .req-note span:first-child { color: #ff4d67; }
+.contact:not(.page-section) .form-status.is-ok { color: #ffb3bf; }
+.contact:not(.page-section) .form-status.is-error { color: #ff8fa0; }
+.contact:not(.page-section) .contact-form .btn-primary {
+  min-width: 132px; border: 1px solid #ff4d67; color: #fff;
+  background: linear-gradient(135deg, #e0263f 0%, #a10c23 60%, #6e0818 100%);
+  box-shadow: 0 8px 22px rgba(200, 16, 46, .45), 0 0 0 1px rgba(0, 0, 0, .35);
+  letter-spacing: .08em; text-transform: uppercase;
+}
+.contact:not(.page-section) .contact-form .btn-primary:hover {
+  background: linear-gradient(135deg, #ff3b55 0%, #c8102e 60%, #7e0a1b 100%);
+  box-shadow: 0 12px 28px rgba(255, 45, 79, .5);
+}
+.contact:not(.page-section) .contact-form .btn-primary:focus-visible { outline: 3px solid #ff4d67; outline-offset: 3px; }
+html:lang(ja) .contact:not(.page-section) .contact-form .btn-primary,
+html:lang(ko) .contact:not(.page-section) .contact-form .btn-primary { letter-spacing: .04em; }
+/* Browser autofill would otherwise paint the fields pale yellow or white. */
+.contact:not(.page-section) .field input:-webkit-autofill {
+  -webkit-text-fill-color: #fbe9ec; box-shadow: 0 0 0 1000px #22090f inset; caret-color: #fbe9ec;
+}
+
+/* ======================================================================
+   Team page (team.html) and the About page's "Meet the team"
+   ====================================================================== */
+.team-section {
+  color: #f6dfe3;
+  background:
+    radial-gradient(ellipse 50% 60% at 15% 20%, rgba(200, 16, 46, .35), transparent 70%),
+    radial-gradient(ellipse 40% 50% at 90% 90%, rgba(200, 16, 46, .25), transparent 70%),
+    linear-gradient(160deg, #1a070b 0%, #0d0406 100%);
+}
+.team-section .section-intro { color: #f3d6db; }
+.team-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px; }
+.team-card {
+  --rx: 0deg; --ry: 0deg; --gx: 50%; --gy: 30%;
+  position: relative; display: flex; flex-direction: column; width: 100%; height: 100%; padding: 0; overflow: hidden; cursor: pointer; text-align: left;
+  border: 1px solid rgba(255, 70, 95, .3); border-radius: 16px; color: #f6dfe3; font: inherit;
+  background: linear-gradient(160deg, #2a0a10, #12050a);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .45);
+  transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform .2s ease-out, box-shadow .3s, border-color .3s;
+}
+.team-card::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .3s;
+  background: radial-gradient(260px 220px at var(--gx) var(--gy), rgba(255, 90, 115, .28), transparent 70%);
+}
+.team-card:hover, .team-card:focus-visible { border-color: #ff4d67; box-shadow: 0 26px 54px rgba(0, 0, 0, .55), 0 0 30px rgba(255, 45, 79, .25); }
+.team-card:hover::after, .team-card:focus-visible::after { opacity: 1; }
+.team-card:focus-visible { outline: 3px solid #ff4d67; outline-offset: 4px; }
+.team-photo { display: block; overflow: hidden; aspect-ratio: 5 / 6; }
+.team-photo img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+.team-card:hover .team-photo img { transform: scale(1.05); }
+.team-text { display: grid; gap: 4px; padding: 18px 18px 20px; border-top: 3px solid #c8102e; }
+.team-name { font-size: 1.1rem; font-weight: 900; color: #fbe9ec; }
+.team-role { font-size: .88rem; color: #ffb3bf; }
+.team-view { margin-top: 10px; font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #ff8fa0; }
+html:lang(ja) .team-view, html:lang(ko) .team-view { letter-spacing: .02em; }
+.team-card:hover .team-view span[aria-hidden] { display: inline-block; transform: translateX(3px); transition: transform .2s; }
+.team-note { margin-top: 26px; text-align: center; font-size: .88rem; color: #b98790; }
+
+/* The profile window */
+.team-dialog {
+  width: min(860px, calc(100vw - 32px)); max-height: calc(100vh - 32px); padding: 0; border: 1px solid rgba(255, 70, 95, .35); border-radius: 20px; overflow: auto;
+  color: #f6dfe3; background: radial-gradient(420px 260px at 100% 0%, rgba(200, 16, 46, .3), transparent 70%), linear-gradient(160deg, #1a070b, #0d0406);
+  box-shadow: 0 40px 100px rgba(0, 0, 0, .7), 0 0 50px rgba(200, 16, 46, .2);
+  animation: ld-in .35s cubic-bezier(.2, .9, .3, 1.15) both;
+}
+.team-dialog::backdrop { background: rgba(10, 0, 3, .7); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); animation: ld-fade .3s ease both; }
+.team-dialog.is-closing { animation: ld-out .18s ease-in both; }
+.td-close {
+  position: absolute; z-index: 2; top: 14px; right: 14px; width: 42px; height: 42px; border-radius: 50%; cursor: pointer; display: grid; place-items: center;
+  border: 1px solid rgba(255, 77, 103, .5); background: rgba(13, 4, 6, .6); color: #f6dfe3;
+}
+.td-close:hover { background: rgba(200, 16, 46, .5); }
+.td-close svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; }
+.td-body { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); }
+.td-body.is-in { animation: td-swap .35s ease-out both; }
+@keyframes td-swap { from { opacity: 0; transform: translateX(16px); } }
+.td-photo { display: block; width: 100%; height: 100%; min-height: 320px; object-fit: cover; }
+.td-text { padding: 40px 34px 30px; }
+.td-role { margin: 0 0 6px; color: #ff8fa0; font-size: .8rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+html:lang(ja) .td-role, html:lang(ko) .td-role { letter-spacing: .04em; }
+.td-name { color: #fbe9ec; font-size: clamp(1.6rem, 3.4vw, 2.2rem); font-weight: 900; margin-bottom: 14px; }
+.td-bio { color: #f3d6db; margin: 0 0 22px; }
+.td-skills-title { margin: 0 0 10px; font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #b98790; }
+.td-skills { list-style: none; margin: 0 0 24px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.td-skills a {
+  display: inline-block; padding: 7px 13px; border-radius: 999px; text-decoration: none; font-size: .85rem; font-weight: 700;
+  color: #ffd0d7; background: #2a0a10; border: 1px solid rgba(255, 77, 103, .45); transition: background-color .2s, border-color .2s;
+}
+.td-skills a:hover { background: #4a0f1a; border-color: #ff4d67; }
+.td-contact.btn-primary { background: linear-gradient(135deg, #e0263f, #7e0a1b); border-color: #ff4d67; }
+.td-nav { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 14px; border-top: 1px solid rgba(255, 70, 95, .2); }
+.td-nav button {
+  width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+  border: 1px solid rgba(255, 77, 103, .5); background: #1a070b; color: #ffb3bf;
+}
+.td-nav button:hover { background: #3a0c15; color: #ffd0d7; }
+.td-nav svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.td-count { min-width: 60px; text-align: center; font-weight: 700; color: #b98790; font-size: .9rem; }
+.team-dialog :focus-visible { outline: 3px solid #ff4d67; outline-offset: 2px; }
+
+/* About page: a row of faces leading to the team page */
+.team-teaser { background: var(--pale); border-top: 1px solid var(--line); }
+.teaser-inner { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: clamp(28px, 5vw, 56px); align-items: center; }
+.teaser-faces { list-style: none; margin: 0; padding: 0; display: flex; }
+.teaser-faces li { width: 96px; height: 96px; border-radius: 50%; overflow: hidden; border: 4px solid #fff; box-shadow: 0 8px 20px rgba(22, 32, 48, .18); }
+.teaser-faces li + li { margin-left: -22px; }
+.teaser-faces img { width: 100%; height: 100%; object-fit: cover; }
+
+@media (max-width: 980px) {
+  .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 680px) {
+  .td-body { grid-template-columns: minmax(0, 1fr); }
+  .td-photo { min-height: 0; max-height: 300px; }
+  .td-text { padding: 26px 22px 22px; }
+  .teaser-inner { grid-template-columns: minmax(0, 1fr); }
+  .teaser-faces li { width: 76px; height: 76px; }
+}
+@media (max-width: 420px) {
+  .team-grid { grid-template-columns: minmax(0, 1fr); max-width: 320px; margin: 0 auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .team-card, .team-photo img, .team-card::after { transition: none; transform: none; }
+  .team-dialog, .team-dialog::backdrop, .td-body.is-in, .team-dialog.is-closing { animation: none; }
+}
+
+/* ======================================================================
+   Technology page (technology.html)
+   ====================================================================== */
+.tech-section {
+  color: #f6dfe3;
+  background:
+    radial-gradient(ellipse 50% 40% at 85% 10%, rgba(200, 16, 46, .3), transparent 70%),
+    radial-gradient(ellipse 40% 40% at 10% 60%, rgba(200, 16, 46, .2), transparent 70%),
+    linear-gradient(170deg, #1a070b 0%, #0d0406 100%);
+}
+.tech-filter { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 40px; }
+.tech-filter button {
+  min-height: 44px; padding: 10px 18px; border-radius: 999px; cursor: pointer; font: 700 .9rem/1 var(--font);
+  color: #ffb3bf; background: #22090f; border: 1px solid rgba(255, 77, 103, .4); transition: background-color .2s, color .2s, border-color .2s;
+}
+.tech-filter button:hover { background: #3a0c15; color: #ffd0d7; border-color: #ff4d67; }
+.tech-filter button[aria-pressed="true"] { color: #fbe9ec; background: linear-gradient(135deg, #e0263f, #7e0a1b); border-color: #ff4d67; box-shadow: 0 6px 18px rgba(200, 16, 46, .35); }
+.tech-filter button:focus-visible { outline: 3px solid #ff4d67; outline-offset: 2px; }
+
+.tech-group + .tech-group { margin-top: 56px; }
+.tech-group.is-in { animation: td-swap .4s ease-out both; }
+.tech-group-head { display: flex; align-items: center; gap: 20px; margin-bottom: 22px; }
+.tech-group-pic { width: 120px; height: 80px; flex: none; object-fit: cover; border-radius: 12px; border: 1px solid rgba(255, 70, 95, .35); box-shadow: 0 10px 24px rgba(0, 0, 0, .4); }
+.tech-group-title { color: #fbe9ec; font-size: clamp(1.3rem, 2.6vw, 1.7rem); font-weight: 900; }
+.tech-group-text { margin: 4px 0 0; color: #d9a9b2; }
+
+.tech-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
+.tech-card {
+  position: relative; display: flex; flex-direction: column; padding: 22px 20px 18px; border-radius: 14px;
+  background: linear-gradient(160deg, #2a0a10, #14060a); border: 1px solid rgba(255, 70, 95, .25);
+  transition: transform .25s, border-color .25s, box-shadow .25s;
+}
+.tech-card:hover { transform: translateY(-4px); border-color: #ff4d67; box-shadow: 0 16px 34px rgba(0, 0, 0, .45), 0 0 24px rgba(255, 45, 79, .2); }
+/* Each logo is drawn in the site's pink-red through a mask, so they all share one colour. */
+.tech-logo {
+  display: block; width: 52px; height: 52px; margin-bottom: 16px; border-radius: 12px; position: relative;
+  background: #1a070b; border: 1px solid rgba(255, 77, 103, .35);
+}
+.tech-logo::before {
+  content: ""; position: absolute; inset: 11px; background: #ff6a80;
+  -webkit-mask: var(--logo) center / contain no-repeat; mask: var(--logo) center / contain no-repeat;
+  transition: background-color .25s;
+}
+.tech-card:hover .tech-logo::before { background: #ffd0d7; }
+.tech-card:hover .tech-logo { box-shadow: 0 0 18px rgba(255, 45, 79, .45); }
+.tech-name { color: #fbe9ec; font-size: 1.05rem; font-weight: 900; margin-bottom: 6px; }
+.tech-desc { color: #e3bcc3; font-size: .9rem; line-height: 1.55; margin: 0 0 16px; }
+.tech-link { margin-top: auto; align-self: flex-start; color: #ff8fa0; font-size: .82rem; font-weight: 700; text-decoration: none; letter-spacing: .04em; }
+.tech-link:hover { color: #ffd0d7; text-decoration: underline; text-underline-offset: 3px; }
+.tech-link:focus-visible { outline: 3px solid #ff4d67; outline-offset: 3px; border-radius: 4px; }
+.tech-note { margin-top: 48px; text-align: center; font-size: .8rem; color: #b98790; }
+
+@media (max-width: 560px) {
+  .tech-group-head { gap: 14px; }
+  .tech-group-pic { width: 84px; height: 60px; }
+  .tech-grid { grid-template-columns: minmax(0, 1fr); }
+  .tech-filter button { padding: 9px 14px; font-size: .82rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tech-card, .tech-logo::before, .tech-filter button { transition: none; }
+  .tech-card:hover { transform: none; }
+  .tech-group.is-in { animation: none; }
+}
+/* Five menu items: a little tighter on small phones. */
+@media (max-width: 420px) {
+  .main-nav a { padding: 10px 2px; font-size: .76rem; }
+}
+
+.brand-en { white-space: nowrap; }
+@media (max-width: 400px) { .brand-en { white-space: normal; } }
+
+/* Service cards: dark red with white text (homepage and Services page) */
+.service-card {
+  background: linear-gradient(160deg, #8e0b20 0%, #6e0818 55%, #4a0510 100%);
+  border-top: 3px solid #ff4d67; color: #fff;
+  box-shadow: 0 14px 34px rgba(40, 0, 8, .45), inset 0 1px 0 rgba(255, 140, 155, .15);
+}
+.service-card h3 { color: #fff; }
+.service-card p { color: rgba(255, 255, 255, .9); }
+.service-pic { filter: saturate(.9); box-shadow: 0 6px 16px rgba(0, 0, 0, .3); }
+.btn-more { background: #1a070b; border: 1px solid #ff4d67; color: #fff; box-shadow: 0 4px 12px rgba(0, 0, 0, .35); }
+.btn-more:hover { background: #0d0406; box-shadow: 0 8px 18px rgba(0, 0, 0, .45), 0 0 14px rgba(255, 45, 79, .3); }
+.btn-more:focus-visible { outline-color: #fff; }
+
+/* ======================================================================
+   Chinese, Arabic and Farsi type, and the right-to-left layout (Arabic, Farsi)
+   ====================================================================== */
+html:lang(zh) { --font: "Lato", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", "Hiragino Sans GB", system-ui, sans-serif; }
+html:lang(ar) { --font: "Segoe UI", "Noto Naskh Arabic", "Noto Sans Arabic", Tahoma, "Geeza Pro", system-ui, sans-serif; }
+html:lang(fa) { --font: "Segoe UI", "Vazirmatn", "Noto Naskh Arabic", "Noto Sans Arabic", Tahoma, system-ui, sans-serif; }
+.lang-menu button[lang="zh"] { font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+.lang-menu button[dir="rtl"], .ld-option[dir="rtl"] .ld-native { font-family: "Segoe UI", "Noto Naskh Arabic", Tahoma, sans-serif; }
+html:lang(zh) :is(h1, h2, h3, .hero-lead, .band-text, .service-card p) { word-break: auto-phrase; }
+/* Arabic script has no capitals and its letters join, so no wide letter spacing or forced capitals. */
+html:lang(ar), html:lang(fa) { --rtl: 1; }
+html[dir="rtl"] :is(.band-stage, .band-text, .btn-more, .eyebrow, .td-role, .td-skills-title, .team-view, .info-list b, .ld-english, .tech-link, .tk-intro-cap b, .tk-intro-cap em) { letter-spacing: 0 !important; text-transform: none; }
+html[dir="rtl"] .band-anim .band-stage { gap: 0 .35em; }
+
+/* Mirror what was placed on the left or right. */
+html[dir="rtl"] body { text-align: right; }
+html[dir="rtl"] .svc-hero { text-align: right; }
+html[dir="rtl"] .hero-card, html[dir="rtl"] .section-title.center, html[dir="rtl"] .section-intro, html[dir="rtl"] .svc-cta, html[dir="rtl"] .ld-title, html[dir="rtl"] .ld-note, html[dir="rtl"] .tech-note, html[dir="rtl"] .team-note { text-align: center; }
+html[dir="rtl"] .section-title::after, html[dir="rtl"] .contact-intro h2::after { left: auto; right: 0; }
+html[dir="rtl"] .section-title.center::after { right: 50%; transform: translateX(50%); }
+html[dir="rtl"] .main-nav { margin-left: 0; margin-right: auto; }
+html[dir="rtl"] .main-nav a::after { transform-origin: right; }
+html[dir="rtl"] .lang-picker { margin-left: 0; }
+html[dir="rtl"] .lang-menu { right: auto; left: 0; transform-origin: top left; }
+html[dir="rtl"] .lang-menu::before { right: auto; left: 22px; }
+html[dir="rtl"] .lang-menu button { text-align: right; }
+html[dir="rtl"] .crumbs li + li::before { content: "\\"; }
+html[dir="rtl"] .svc-offers li { padding-left: 0; padding-right: 26px; }
+html[dir="rtl"] .svc-offers li::before { left: auto; right: 2px; }
+html[dir="rtl"] .faq summary { padding: 18px 20px 18px 52px; }
+html[dir="rtl"] .faq summary::after { right: auto; left: 22px; }
+html[dir="rtl"] .btn-more-arrow, html[dir="rtl"] .team-view span[aria-hidden], html[dir="rtl"] .tk-links a i { display: inline-block; transform: scaleX(-1); }
+html[dir="rtl"] .btn-more:hover .btn-more-arrow { transform: scaleX(-1) translateX(3px); }
+html[dir="rtl"] .contact:not(.page-section) .field select { background-position: left 14px center; padding-right: 12px; padding-left: 40px; }
+html[dir="rtl"] .contact:not(.page-section)::before { left: auto; right: 0; transform: scaleX(-1); }
+html[dir="rtl"] .svc-hero::after { right: auto; left: 0; transform: none; }
+html[dir="rtl"] .teaser-faces li + li { margin-left: 0; margin-right: -22px; }
+html[dir="rtl"] .td-close { right: auto; left: 14px; }
+html[dir="rtl"] .ld-close { right: auto; left: 14px; }
+html[dir="rtl"] .ld-top { padding: 22px 24px 22px 60px; }
+html[dir="rtl"] .td-nav { flex-direction: row-reverse; }
+html[dir="rtl"] .tech-group-head, html[dir="rtl"] .info-list li { text-align: right; }
+/* Email addresses, code-like names and the company's English name stay left to right inside Arabic text. */
+html[dir="rtl"] :is(.contact-email, .tech-name, .brand-en, input[type="email"], input[type="tel"]) { direction: ltr; unicode-bidi: isolate; }
+html[dir="rtl"] .brand-en, html[dir="rtl"] .tech-name { text-align: right; }
+
+/* The language pop-up holds ten languages: a tighter grid. */
+.ld-options { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.ld-option { min-height: 74px; grid-template-columns: auto 1fr; justify-items: start; align-items: center; column-gap: 12px; row-gap: 0; padding: 10px 14px; text-align: start; }
+.ld-option .ld-flag { grid-row: span 2; width: 40px; }
+.ld-native { font-size: 1rem; }
+.ld-option:not(:has(.ld-english)) .ld-native { grid-row: span 2; }
+@media (min-width: 640px) { .lang-dialog { width: min(620px, calc(100vw - 32px)); } }
+@media (max-width: 420px) { .ld-option { min-height: 62px; padding: 8px 10px; } .ld-option .ld-flag { width: 32px; } }

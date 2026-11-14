@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Technology | Tenshi Systems Engineering</title>
+  <meta name="description" content="The tools and technologies we use to design, build and run your projects.">
+  <meta name="theme-color" content="#c8102e">
+  <meta property="og:title" content="Technology | Tenshi Systems Engineering">
+  <meta property="og:description" content="The tools and technologies we use to design, build and run your projects.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="logo.png" type="image/png">
+  <link rel="apple-touch-icon" href="logo.png">
+  <link rel="stylesheet" href="styles.css?v=ecf72fe0">
+  <link rel="stylesheet" href="chat.css?v=c97c61fb">
+</head>
+<body class="page tech-page" data-title-key="techTitle" data-desc-key="techLead">
+  <!-- Written by tools/build-pages.mjs: edit translations.js and the script, not this file. -->
+  <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html" aria-label="Tenshi Systems Engineering, top of page" data-i18n-attr="aria-label:brandLabel">
+        <img class="brand-logo" src="logo.png" alt="" width="228" height="205">
+        <span class="brand-text">
+          <span class="brand-en">Tenshi Systems Engineering</span>
+          <span class="brand-ja" lang="ja">天使システムズエンジニアリング</span>
+        </span>
+      </a>
+      <nav class="main-nav" aria-label="Main menu" data-i18n-attr="aria-label:navLabel">
+        <ul>
+          <li><a href="index.html" data-nav="home" data-i18n="navHome">Home</a></li>
+          <li><a href="about.html" data-nav="about" data-i18n="navAbout">About</a></li>
+          <li><a href="services.html" data-nav="services" data-i18n="navServices">Services</a></li>
+          <li><a href="technology.html" aria-current="page" data-nav="technology" data-i18n="navTech">Technology</a></li>
+          <li><a href="contact.html" data-nav="contact" data-i18n="navContact">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="lang-picker">
+        <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+          <symbol id="flag-en" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect y="0" width="30" height="1.54" fill="#b22234"/><rect y="3.08" width="30" height="1.54" fill="#b22234"/><rect y="6.15" width="30" height="1.54" fill="#b22234"/><rect y="9.23" width="30" height="1.54" fill="#b22234"/><rect y="12.31" width="30" height="1.54" fill="#b22234"/><rect y="15.38" width="30" height="1.54" fill="#b22234"/><rect y="18.46" width="30" height="1.54" fill="#b22234"/><rect width="12" height="10.77" fill="#3c3b6e"/><circle cx="1" cy="1" r=".45" fill="#fff"/><circle cx="3" cy="1" r=".45" fill="#fff"/><circle cx="5" cy="1" r=".45" fill="#fff"/><circle cx="7" cy="1" r=".45" fill="#fff"/><circle cx="9" cy="1" r=".45" fill="#fff"/><circle cx="11" cy="1" r=".45" fill="#fff"/><circle cx="2" cy="3.15" r=".45" fill="#fff"/><circle cx="4" cy="3.15" r=".45" fill="#fff"/><circle cx="6" cy="3.15" r=".45" fill="#fff"/><circle cx="8" cy="3.15" r=".45" fill="#fff"/><circle cx="10" cy="3.15" r=".45" fill="#fff"/><circle cx="1" cy="5.3" r=".45" fill="#fff"/><circle cx="3" cy="5.3" r=".45" fill="#fff"/><circle cx="5" cy="5.3" r=".45" fill="#fff"/><circle cx="7" cy="5.3" r=".45" fill="#fff"/><circle cx="9" cy="5.3" r=".45" fill="#fff"/><circle cx="11" cy="5.3" r=".45" fill="#fff"/><circle cx="2" cy="7.45" r=".45" fill="#fff"/><circle cx="4" cy="7.45" r=".45" fill="#fff"/><circle cx="6" cy="7.45" r=".45" fill="#fff"/><circle cx="8" cy="7.45" r=".45" fill="#fff"/><circle cx="10" cy="7.45" r=".45" fill="#fff"/><circle cx="1" cy="9.6" r=".45" fill="#fff"/><circle cx="3" cy="9.6" r=".45" fill="#fff"/><circle cx="5" cy="9.6" r=".45" fill="#fff"/><circle cx="7" cy="9.6" r=".45" fill="#fff"/><circle cx="9" cy="9.6" r=".45" fill="#fff"/><circle cx="11" cy="9.6" r=".45" fill="#fff"/></symbol>
+          <symbol id="flag-ja" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><circle cx="15" cy="10" r="6" fill="#bc002d"/></symbol>
+          <symbol id="flag-ko" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><g transform="rotate(33.69 15 10)"><circle cx="15" cy="10" r="5" fill="#cd2e3a"/><path d="M10 10a5 5 0 0 0 10 0a2.5 2.5 0 0 0-5 0a2.5 2.5 0 0 1-5 0z" fill="#0047a0"/></g><g transform="rotate(-56.31 6.7 4.5)" fill="#000"><rect x="4.7" y="2.95" width="4" height=".75"/><rect x="4.7" y="4.05" width="4" height=".75"/><rect x="4.7" y="5.15" width="4" height=".75"/></g><g transform="rotate(-56.31 23.3 15.5)" fill="#000"><rect x="21.3" y="13.95" width="1.7" height=".75"/><rect x="23.6" y="13.95" width="1.7" height=".75"/><rect x="21.3" y="15.05" width="1.7" height=".75"/><rect x="23.6" y="15.05" width="1.7" height=".75"/><rect x="21.3" y="16.15" width="1.7" height=".75"/><rect x="23.6" y="16.15" width="1.7" height=".75"/></g><g transform="rotate(56.31 23.3 4.5)" fill="#000"><rect x="21.3" y="2.95" width="1.7" height=".75"/><rect x="23.6" y="2.95" width="1.7" height=".75"/><rect x="21.3" y="4.05" width="4" height=".75"/><rect x="21.3" y="5.15" width="1.7" height=".75"/><rect x="23.6" y="5.15" width="1.7" height=".75"/></g><g transform="rotate(56.31 6.7 15.5)" fill="#000"><rect x="4.7" y="13.95" width="4" height=".75"/><rect x="4.7" y="15.05" width="1.7" height=".75"/><rect x="7" y="15.05" width="1.7" height=".75"/><rect x="4.7" y="16.15" width="4" height=".75"/></g></symbol>
+          <symbol id="flag-de" viewBox="0 0 30 20"><rect width="30" height="6.67" fill="#000"/><rect y="6.67" width="30" height="6.67" fill="#dd0000"/><rect y="13.33" width="30" height="6.67" fill="#ffce00"/></symbol>
+          <symbol id="flag-zh" viewBox="0 0 30 20"><rect width="30" height="20" fill="#ee1c25"/><polygon points="5,2 5.67,4.07 7.85,4.07 6.09,5.35 6.76,7.43 5,6.15 3.24,7.43 3.91,5.35 2.15,4.07 4.33,4.07" fill="#ffde00"/><polygon points="10.39,1.08 10.33,1.8 11,2.09 10.29,2.25 10.22,2.97 9.85,2.35 9.14,2.52 9.62,1.97 9.25,1.34 9.91,1.63" fill="#ffde00"/><polygon points="12.72,3.31 12.38,3.95 12.88,4.47 12.17,4.34 11.83,4.98 11.73,4.27 11.01,4.14 11.66,3.82 11.56,3.1 12.07,3.62" fill="#ffde00"/><polygon points="12.94,6.66 12.37,7.11 12.62,7.79 12.01,7.38 11.44,7.83 11.64,7.13 11.04,6.72 11.76,6.7 11.97,6 12.21,6.68" fill="#ffde00"/><polygon points="10.36,8.07 10.32,8.79 11,9.05 10.3,9.24 10.26,9.97 9.86,9.36 9.16,9.54 9.62,8.98 9.22,8.37 9.9,8.63" fill="#ffde00"/></symbol>
+          <symbol id="flag-es" viewBox="0 0 30 20"><rect width="30" height="20" fill="#aa151b"/><rect y="5" width="30" height="10" fill="#f1bf00"/></symbol>
+          <symbol id="flag-pl" viewBox="0 0 30 20"><rect width="30" height="10" fill="#fff"/><rect y="10" width="30" height="10" fill="#dc143c"/></symbol>
+          <symbol id="flag-pcm" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect width="10" height="20" fill="#008751"/><rect x="20" width="10" height="20" fill="#008751"/></symbol>
+          <symbol id="flag-ar" viewBox="0 0 30 20"><rect width="30" height="20" fill="#1a7a4c"/><text x="15" y="15" text-anchor="middle" font-size="14" font-weight="700" fill="#fff" font-family="Segoe UI, Tahoma, Arial, sans-serif">ع</text></symbol>
+          <symbol id="flag-fa" viewBox="0 0 30 20"><rect width="30" height="6.67" fill="#239f40"/><rect y="6.67" width="30" height="6.67" fill="#fff"/><rect y="13.33" width="30" height="6.67" fill="#da0000"/></symbol>
+        </svg>
+        <button type="button" class="lang-current" aria-haspopup="true" aria-expanded="false" aria-controls="lang-menu" aria-label="Choose language" data-i18n-attr="aria-label:langMenu">
+          <svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-en"/></svg><span class="lang-code">EN</span><svg class="lang-caret" viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+        </button>
+        <ul class="lang-menu" id="lang-menu" hidden>
+            <li><button type="button" data-lang="en" lang="en" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-en"/></svg><span>English</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="ja" lang="ja" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-ja"/></svg><span>日本語</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="ko" lang="ko" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-ko"/></svg><span>한국어</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="de" lang="de" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-de"/></svg><span>Deutsch</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="zh" lang="zh" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-zh"/></svg><span>中文</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="es" lang="es" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-es"/></svg><span>Español</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="pl" lang="pl" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-pl"/></svg><span>Polski</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="pcm" lang="pcm" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-pcm"/></svg><span>Naijá (Pidgin)</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="ar" lang="ar" dir="rtl" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-ar"/></svg><span>العربية</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="fa" lang="fa" dir="rtl" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-fa"/></svg><span>فارسی</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="svc-hero has-art">
+      <div class="svc-hero-inner">
+        <div class="svc-hero-text">
+          <nav class="crumbs" aria-label="Breadcrumb" data-i18n-attr="aria-label:crumbLabel">
+            <ol>
+              <li><a href="index.html" data-i18n="crumbHome">Home</a></li>
+              <li aria-current="page" data-i18n="navTech">Technology</li>
+            </ol>
+          </nav>
+          <h1 data-i18n="techTitle">Technology</h1>
+          <p class="svc-hero-lead" data-i18n="techLead">The tools and technologies we use to design, build and run your projects.</p>
+        </div>
+        <svg class="page-art" viewBox="0 0 320 220" aria-hidden="true" fill="none" stroke="#fff">
+      <rect x="86" y="32" width="42" height="42" rx="9" stroke-opacity="0.75" stroke-width="2"/><rect x="138" y="32" width="42" height="42" rx="9" stroke-opacity="0.45" stroke-width="2"/><rect x="190" y="32" width="42" height="42" rx="9" stroke-opacity="0.75" stroke-width="2"/><rect x="86" y="84" width="42" height="42" rx="9" stroke-opacity="0.45" stroke-width="2"/><rect x="138" y="84" width="42" height="42" rx="9" stroke-opacity="0.75" stroke-width="2" fill="#fff" fill-opacity=".9"/><rect x="190" y="84" width="42" height="42" rx="9" stroke-opacity="0.45" stroke-width="2"/><rect x="86" y="136" width="42" height="42" rx="9" stroke-opacity="0.75" stroke-width="2"/><rect x="138" y="136" width="42" height="42" rx="9" stroke-opacity="0.45" stroke-width="2"/><rect x="190" y="136" width="42" height="42" rx="9" stroke-opacity="0.75" stroke-width="2"/>
+      <path d="M40 60h30M40 110h30M40 160h30M250 60h30M250 110h30M250 160h30" stroke-opacity=".3" stroke-width="1.5" stroke-dasharray="3 6"/>
+    </svg>
+      </div>
+    </section>
+
+    <section class="page-section tech-section" aria-labelledby="tech-list-title">
+      <div class="page-inner">
+        <h2 id="tech-list-title" class="sr-only" data-i18n="techTitle">Technology</h2>
+        <div class="tech-filter" role="group" aria-label="Show technologies by category" data-i18n-attr="aria-label:techFilterLabel">
+          <button type="button" data-filter="all" aria-pressed="true" data-i18n="techAll">All</button>
+          <button type="button" data-filter="1" aria-pressed="false" data-i18n="techG1Title">Design &amp; media</button>
+          <button type="button" data-filter="2" aria-pressed="false" data-i18n="techG2Title">Front-end</button>
+          <button type="button" data-filter="3" aria-pressed="false" data-i18n="techG3Title">Back-end &amp; data</button>
+          <button type="button" data-filter="4" aria-pressed="false" data-i18n="techG4Title">Content &amp; commerce</button>
+          <button type="button" data-filter="5" aria-pressed="false" data-i18n="techG5Title">Hosting &amp; DevOps</button>
+          <button type="button" data-filter="6" aria-pressed="false" data-i18n="techG6Title">AI</button>
+        </div>
+        <section class="tech-group" data-group="1" aria-labelledby="tech-g1">
+          <div class="tech-group-head">
+            <img class="tech-group-pic" src="img/services/design.jpg" alt="" width="960" height="640" loading="lazy">
+            <div>
+              <h3 id="tech-g1" class="tech-group-title" data-i18n="techG1Title">Design &amp; media</h3>
+              <p class="tech-group-text" data-i18n="techG1Text">Tools for interfaces, graphics, video and 3D.</p>
+            </div>
+          </div>
+          <ul class="tech-grid">
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/figma.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">Figma</h4>
+              <p class="tech-desc" data-i18n="tech_figma">Collaborative interface design and prototyping in the browser.</p>
+              <a class="tech-link" href="https://www.figma.com" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: Figma <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/adobephotoshop.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">Adobe Photoshop</h4>
+              <p class="tech-desc" data-i18n="tech_adobephotoshop">Photo editing, retouching and image compositing.</p>
+              <a class="tech-link" href="https://www.adobe.com/products/photoshop.html" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: Adobe Photoshop <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/adobeillustrator.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">Adobe Illustrator</h4>
+              <p class="tech-desc" data-i18n="tech_adobeillustrator">Vector graphics for logos, icons and illustrations.</p>
+              <a class="tech-link" href="https://www.adobe.com/products/illustrator.html" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: Adobe Illustrator <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/adobeaftereffects.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">Adobe After Effects</h4>
+              <p class="tech-desc" data-i18n="tech_adobeaftereffects">Motion graphics and visual effects.</p>
+              <a class="tech-link" href="https://www.adobe.com/products/aftereffects.html" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: Adobe After Effects <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/adobepremierepro.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">Adobe Premiere Pro</h4>
+              <p class="tech-desc" data-i18n="tech_adobepremierepro">Professional video editing.</p>
+              <a class="tech-link" href="https://www.adobe.com/products/premiere.html" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: Adobe Premiere Pro <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/blender.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">Blender</h4>
+              <p class="tech-desc" data-i18n="tech_blender">Open-source 3D modelling, rendering and animation.</p>
+              <a class="tech-link" href="https://www.blender.org" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: Blender <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+          </ul>
+        </section>
+        <section class="tech-group" data-group="2" aria-labelledby="tech-g2">
+          <div class="tech-group-head">
+            <img class="tech-group-pic" src="img/services/webdev.jpg" alt="" width="960" height="640" loading="lazy">
+            <div>
+              <h3 id="tech-g2" class="tech-group-title" data-i18n="techG2Title">Front-end</h3>
+              <p class="tech-group-text" data-i18n="techG2Text">What visitors see and use in the browser.</p>
+            </div>
+          </div>
+          <ul class="tech-grid">
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/html5.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">HTML5</h4>
+              <p class="tech-desc" data-i18n="tech_html5">The structure of every web page, written with accessibility in mind.</p>
+              <a class="tech-link" href="https://developer.mozilla.org/docs/Web/HTML" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: HTML5 <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/css3.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">CSS</h4>
+              <p class="tech-desc" data-i18n="tech_css3">Layout, colour and animation for every screen size.</p>
+              <a class="tech-link" href="https://developer.mozilla.org/docs/Web/CSS" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: CSS <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/javascript.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">JavaScript</h4>
+              <p class="tech-desc" data-i18n="tech_javascript">Interactive features that run in every browser.</p>
+              <a class="tech-link" href="https://developer.mozilla.org/docs/Web/JavaScript" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: JavaScript <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/typescript.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">TypeScript</h4>
+              <p class="tech-desc" data-i18n="tech_typescript">JavaScript with types, for larger and safer codebases.</p>
+              <a class="tech-link" href="https://www.typescriptlang.org" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: TypeScript <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/react.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">React</h4>
+              <p class="tech-desc" data-i18n="tech_react">Component-based user interfaces for web applications.</p>
+              <a class="tech-link" href="https://react.dev" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: React <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/vuedotjs.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">Vue.js</h4>
+              <p class="tech-desc" data-i18n="tech_vuedotjs">A progressive framework for approachable, fast interfaces.</p>
+              <a class="tech-link" href="https://vuejs.org" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: Vue.js <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/nextdotjs.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">Next.js</h4>
+              <p class="tech-desc" data-i18n="tech_nextdotjs">React framework for fast, search-friendly websites.</p>
+              <a class="tech-link" href="https://nextjs.org" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: Next.js <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/tailwindcss.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">Tailwind CSS</h4>
+              <p class="tech-desc" data-i18n="tech_tailwindcss">Utility-first CSS for consistent, custom designs.</p>
+              <a class="tech-link" href="https://tailwindcss.com" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: Tailwind CSS <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/sass.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">Sass</h4>
+              <p class="tech-desc" data-i18n="tech_sass">Organised, maintainable stylesheets.</p>
+              <a class="tech-link" href="https://sass-lang.com" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: Sass <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+          </ul>
+        </section>
+        <section class="tech-group" data-group="3" aria-labelledby="tech-g3">
+          <div class="tech-group-head">
+            <img class="tech-group-pic" src="img/services/software.jpg" alt="" width="960" height="640" loading="lazy">
+            <div>
+              <h3 id="tech-g3" class="tech-group-title" data-i18n="techG3Title">Back-end &amp; data</h3>
+              <p class="tech-group-text" data-i18n="techG3Text">Servers, APIs and databases behind the scenes.</p>
+            </div>
+          </div>
+          <ul class="tech-grid">
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/nodedotjs.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">Node.js</h4>
+              <p class="tech-desc" data-i18n="tech_nodedotjs">Fast JavaScript servers and APIs.</p>
+              <a class="tech-link" href="https://nodejs.org" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: Node.js <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/python.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">Python</h4>
+              <p class="tech-desc" data-i18n="tech_python">Automation, data processing and AI integration.</p>
+              <a class="tech-link" href="https://www.python.org" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: Python <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/php.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">PHP</h4>
+              <p class="tech-desc" data-i18n="tech_php">The server-side language behind WordPress and many websites.</p>
+              <a class="tech-link" href="https://www.php.net" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: PHP <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/postgresql.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">PostgreSQL</h4>
+              <p class="tech-desc" data-i18n="tech_postgresql">A powerful, reliable open-source database.</p>
+              <a class="tech-link" href="https://www.postgresql.org" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: PostgreSQL <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/mysql.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">MySQL</h4>
+              <p class="tech-desc" data-i18n="tech_mysql">A widely used database for websites and applications.</p>
+              <a class="tech-link" href="https://www.mysql.com" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: MySQL <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+          </ul>
+        </section>
+        <section class="tech-group" data-group="4" aria-labelledby="tech-g4">
+          <div class="tech-group-head">
+            <img class="tech-group-pic" src="img/services/cms.jpg" alt="" width="960" height="640" loading="lazy">
+            <div>
+              <h3 id="tech-g4" class="tech-group-title" data-i18n="techG4Title">Content &amp; commerce</h3>
+              <p class="tech-group-text" data-i18n="techG4Text">Systems your team can update without code.</p>
+            </div>
+          </div>
+          <ul class="tech-grid">
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/wordpress.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">WordPress</h4>
+              <p class="tech-desc" data-i18n="tech_wordpress">The world's most popular content management system.</p>
+              <a class="tech-link" href="https://wordpress.org" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: WordPress <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/shopify.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">Shopify</h4>
+              <p class="tech-desc" data-i18n="tech_shopify">Online stores with secure checkout and payments.</p>
+              <a class="tech-link" href="https://www.shopify.com" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: Shopify <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/strapi.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">Strapi</h4>
+              <p class="tech-desc" data-i18n="tech_strapi">A headless CMS for content shared across websites and apps.</p>
+              <a class="tech-link" href="https://strapi.io" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: Strapi <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+          </ul>
+        </section>
+        <section class="tech-group" data-group="5" aria-labelledby="tech-g5">
+          <div class="tech-group-head">
+            <img class="tech-group-pic" src="img/services/hosting.jpg" alt="" width="960" height="640" loading="lazy">
+            <div>
+              <h3 id="tech-g5" class="tech-group-title" data-i18n="techG5Title">Hosting &amp; DevOps</h3>
+              <p class="tech-group-text" data-i18n="techG5Text">Keeping websites fast, secure and online.</p>
+            </div>
+          </div>
+          <ul class="tech-grid">
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/github.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">GitHub</h4>
+              <p class="tech-desc" data-i18n="tech_github">Version control, code review and automated deployments.</p>
+              <a class="tech-link" href="https://github.com" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: GitHub <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/docker.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">Docker</h4>
+              <p class="tech-desc" data-i18n="tech_docker">Containers that run the same everywhere.</p>
+              <a class="tech-link" href="https://www.docker.com" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: Docker <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/cloudflare.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">Cloudflare</h4>
+              <p class="tech-desc" data-i18n="tech_cloudflare">Fast, secure delivery, DNS and protection for websites.</p>
+              <a class="tech-link" href="https://www.cloudflare.com" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: Cloudflare <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/googlecloud.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">Google Cloud</h4>
+              <p class="tech-desc" data-i18n="tech_googlecloud">Scalable cloud hosting, storage and data services.</p>
+              <a class="tech-link" href="https://cloud.google.com" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: Google Cloud <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/vercel.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">Vercel</h4>
+              <p class="tech-desc" data-i18n="tech_vercel">Hosting and instant previews for modern web apps.</p>
+              <a class="tech-link" href="https://vercel.com" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: Vercel <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+          </ul>
+        </section>
+        <section class="tech-group" data-group="6" aria-labelledby="tech-g6">
+          <div class="tech-group-head">
+            <img class="tech-group-pic" src="img/services/ai.jpg" alt="" width="960" height="640" loading="lazy">
+            <div>
+              <h3 id="tech-g6" class="tech-group-title" data-i18n="techG6Title">AI</h3>
+              <p class="tech-group-text" data-i18n="techG6Text">Practical AI built into your workflows.</p>
+            </div>
+          </div>
+          <ul class="tech-grid">
+            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/claude.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">Claude</h4>
+              <p class="tech-desc" data-i18n="tech_claude">Anthropic's AI assistant, for chat assistants and smart automation.</p>
+              <a class="tech-link" href="https://www.anthropic.com/claude" target="_blank" rel="noopener"><span data-i18n="techVisit">Official site</span><span class="sr-only">: Claude <span data-i18n="techNewTab">(opens in a new tab)</span></span> <span aria-hidden="true">↗</span></a>
+            </li>
+          </ul>
+        </section>
+        <p class="tech-note" data-i18n="techNote">Product names and logos are trademarks of their respective owners.</p>
+      </div>
+    </section>
+
+    <section class="svc-cta" aria-labelledby="cta-title">
+      <h2 id="cta-title" data-i18n="ctaTitle">Let's talk about your project</h2>
+      <p data-i18n="ctaText">Tell us what you need. The consultation form takes about a minute.</p>
+      <a class="btn btn-light" href="contact.html" data-i18n="cta">Request Consultation</a>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img class="footer-logo" src="logo.png" alt="" width="228" height="205">
+        <div>
+          <strong>Tenshi Systems Engineering</strong>
+          <span lang="ja">天使システムズエンジニアリング</span>
+        </div>
+      </div>
+      <nav class="footer-nav" aria-label="Main menu" data-i18n-attr="aria-label:navLabel">
+          <ul>
+            <li><a href="index.html" data-nav="home" data-i18n="navHome">Home</a></li>
+            <li><a href="about.html" data-nav="about" data-i18n="navAbout">About</a></li>
+            <li><a href="team.html" data-nav="team" data-i18n="navTeam">Team</a></li>
+            <li><a href="services.html" data-nav="services" data-i18n="navServices">Services</a></li>
+            <li><a href="technology.html" aria-current="page" data-nav="technology" data-i18n="navTech">Technology</a></li>
+            <li><a href="contact.html" data-nav="contact" data-i18n="navContact">Contact</a></li>
+          </ul>
+      </nav>
+      <p class="footer-meta"><span data-i18n="location">Osaka, Japan</span> · © <span id="year">2026</span> Tenshi Systems Engineering</p>
+    </div>
+  </footer>
+
+  <script src="translations.js?v=71bd7f0d"></script>
+  <script src="app.js?v=fe219390"></script>
+  <script src="chat.js?v=0d6db8a8"></script>
+</body>
+</html>

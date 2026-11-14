@@ -21,6 +21,7 @@ const CONTACT_EMAIL = "jcali0351@gmail.com";
   function setLanguage(next) {
     lang = T[next] ? next : "en";
     document.documentElement.lang = lang;
+    document.documentElement.dir = lang === "ar" || lang === "fa" ? "rtl" : "ltr";   // Arabic and Farsi read right to left
     // Service pages name themselves (data-title-key); the homepage uses pageTitle.
     const titleKey = document.body.dataset.titleKey;
     document.title = titleKey ? `${t(titleKey)} | ${t("brandName")}` : t("pageTitle");
@@ -38,7 +39,7 @@ const CONTACT_EMAIL = "jcali0351@gmail.com";
     const current = $(".lang-current");
     if (current) {
       $("use", current).setAttribute("href", "#flag-" + lang);
-      $(".lang-code", current).textContent = lang.toUpperCase();
+      $(".lang-code", current).textContent = lang === "pcm" ? "NG" : lang.toUpperCase();
     }
     onLanguage.forEach((fn) => fn());
     document.dispatchEvent(new CustomEvent("tse:lang", { detail: lang }));   // chat.js listens
@@ -98,11 +99,13 @@ const CONTACT_EMAIL = "jcali0351@gmail.com";
     // English, Korean and German go in word by word. Japanese has no spaces, so the browser finds the words (whole
     // words never break across lines); browsers without that go character by character.
     const writeLine = (text, inLang) => {
-      const units = inLang !== "ja" ? text.split(" ")
-        : window.Intl && Intl.Segmenter ? Array.from(new Intl.Segmenter("ja", { granularity: "word" }).segment(text), (s) => s.segment)
+      const noSpaces = inLang === "ja" || inLang === "zh";   // Japanese and Chinese are written without spaces
+      const units = !noSpaces ? text.split(" ")
+        : window.Intl && Intl.Segmenter ? Array.from(new Intl.Segmenter(inLang, { granularity: "word" }).segment(text), (s) => s.segment)
         : Array.from(text);
       stage.setAttribute("lang", inLang);
-      stage.style.setProperty("--step", inLang === "ja" ? "40ms" : "90ms");
+      stage.style.setProperty("--step", noSpaces ? "40ms" : "90ms");
+      stage.setAttribute("dir", inLang === "ar" || inLang === "fa" ? "rtl" : "ltr");
       stage.classList.remove("is-out");
       stage.replaceChildren(...units.map((u, k) => {
         const s = document.createElement("span");
@@ -259,6 +262,84 @@ const CONTACT_EMAIL = "jcali0351@gmail.com";
     onLanguage.push(label);
   }
 
+  /* ---------- Team page: cards tilt toward the pointer; a click opens the full profile ---------- */
+  const teamCards = $$(".team-card");
+  if (teamCards.length) {
+    if (!reduceMotion.matches) teamCards.forEach((card) => {
+      card.addEventListener("pointermove", (e) => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+        card.style.setProperty("--ry", (x * 12).toFixed(2) + "deg");
+        card.style.setProperty("--rx", (-y * 12).toFixed(2) + "deg");
+        card.style.setProperty("--gx", ((x + 0.5) * 100).toFixed(1) + "%");
+        card.style.setProperty("--gy", ((y + 0.5) * 100).toFixed(1) + "%");
+      });
+      card.addEventListener("pointerleave", () => { card.style.setProperty("--rx", "0deg"); card.style.setProperty("--ry", "0deg"); });
+    });
+
+    const dlg = document.createElement("dialog");
+    dlg.className = "team-dialog";
+    dlg.innerHTML = `
+      <button type="button" class="td-close"><span class="sr-only" data-i18n="teamClose"></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      <div class="td-body"></div>
+      <div class="td-nav">
+        <button type="button" class="td-prev"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg><span class="sr-only" data-i18n="teamPrev"></span></button>
+        <span class="td-count" aria-hidden="true"></span>
+        <button type="button" class="td-next"><span class="sr-only" data-i18n="teamNext"></span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5"/></svg></button>
+      </div>`;
+    document.body.appendChild(dlg);
+    $$("[data-i18n]", dlg).forEach((el) => { el.textContent = t(el.dataset.i18n); });
+    let shown = 0, opener = null;
+
+    const show = (i) => {
+      shown = (i + teamCards.length) % teamCards.length;
+      const detail = document.getElementById("member-" + teamCards[shown].dataset.member);
+      const body = $(".td-body", dlg);
+      body.innerHTML = detail.innerHTML;
+      body.classList.remove("is-in"); void body.offsetWidth; body.classList.add("is-in");
+      const name = $(".td-name", body);
+      name.id = "team-dialog-name";
+      dlg.setAttribute("aria-labelledby", "team-dialog-name");
+      $(".td-count", dlg).textContent = (shown + 1) + " / " + teamCards.length;
+    };
+    const close = () => {
+      dlg.classList.add("is-closing");
+      setTimeout(() => { dlg.classList.remove("is-closing"); if (dlg.open) dlg.close(); if (opener) opener.focus(); }, reduceMotion.matches ? 0 : 180);
+    };
+
+    teamCards.forEach((card, i) => card.addEventListener("click", () => {
+      opener = card;
+      show(i);
+      if (typeof dlg.showModal === "function") dlg.showModal(); else dlg.setAttribute("open", "");
+      $(".td-close", dlg).focus();
+    }));
+    $(".td-close", dlg).addEventListener("click", close);
+    $(".td-prev", dlg).addEventListener("click", () => show(shown - 1));
+    $(".td-next", dlg).addEventListener("click", () => show(shown + 1));
+    dlg.addEventListener("cancel", (e) => { e.preventDefault(); close(); });
+    dlg.addEventListener("click", (e) => { if (e.target === dlg) close(); });
+    dlg.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") show(shown + 1);
+      if (e.key === "ArrowLeft") show(shown - 1);
+    });
+  }
+
+  /* ---------- Technology page: show one category or all ---------- */
+  const techFilter = $(".tech-filter");
+  if (techFilter) {
+    const buttons = $$("button", techFilter);
+    const groups = $$(".tech-group");
+    buttons.forEach((b) => b.addEventListener("click", () => {
+      const pick = b.dataset.filter;
+      buttons.forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+      groups.forEach((g) => {
+        const show = pick === "all" || g.dataset.group === pick;
+        g.hidden = !show;
+        if (show && !reduceMotion.matches) { g.classList.remove("is-in"); void g.offsetWidth; g.classList.add("is-in"); }
+      });
+    }));
+  }
+
   /* ---------- Consultation form ---------- */
   const form = $(".contact-form");
   if (form) {
@@ -352,7 +433,10 @@ const CONTACT_EMAIL = "jcali0351@gmail.com";
   function askLanguage() {
     const LANGS = [
       ["ja", "日本語", "Japanese"], ["en", "English", "English"],
-      ["ko", "한국어", "Korean"], ["de", "Deutsch", "German"]
+      ["ko", "한국어", "Korean"], ["zh", "中文", "Chinese"],
+      ["es", "Español", "Spanish"], ["de", "Deutsch", "German"],
+      ["pl", "Polski", "Polish"], ["pcm", "Naijá", "Nigerian Pidgin"],
+      ["ar", "العربية", "Arabic"], ["fa", "فارسی", "Farsi"]
     ];
     const logo = $(".brand-logo");
     const dlg = document.createElement("dialog");
@@ -372,7 +456,7 @@ const CONTACT_EMAIL = "jcali0351@gmail.com";
           <span lang="de">Sprache wählen</span>
         </h2>
         <ul class="ld-options">
-          ${LANGS.map(([code, native, english]) => `<li><button type="button" class="ld-option" data-pick="${code}" lang="${code}">
+          ${LANGS.map(([code, native, english]) => `<li><button type="button" class="ld-option" data-pick="${code}" lang="${code}"${code === "ar" || code === "fa" ? " dir=\"rtl\"" : ""}>
             <svg class="ld-flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-${code}"/></svg>
             <span class="ld-native">${native}</span>
             ${native !== english ? `<span class="ld-english" lang="en">${english}</span>` : ""}

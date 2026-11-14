@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 480" role="img" aria-label="Placeholder photo">
+  <!-- Placeholder: replace with the team member's photo (same name, .jpg, 400 x 480 or larger, then update tools/build-pages.mjs). -->
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a10c23"/><stop offset="1" stop-color="#1a070b"/></linearGradient>
+    <radialGradient id="l" cx=".5" cy=".3" r=".6"><stop offset="0" stop-color="#ff6a80" stop-opacity=".35"/><stop offset="1" stop-color="#ff6a80" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="400" height="480" fill="url(#g)"/>
+  <rect width="400" height="480" fill="url(#l)"/>
+  <g fill="#0d0406" fill-opacity=".55">
+    <circle cx="200" cy="190" r="78"/>
+    <path d="M60 480c8-104 66-160 140-160s132 56 140 160z"/>
+  </g>
+  <g fill="none" stroke="#ffb3bf" stroke-opacity=".6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" transform="translate(338 34)">
+    <path d="M6 10h8l4-6h12l4 6h8v24H6z"/><circle cx="24" cy="21" r="7"/>
+  </g>
+</svg>

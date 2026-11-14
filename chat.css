@@ -145,3 +145,66 @@ html:lang(ja) .tk-launch, html:lang(ko) .tk-launch { letter-spacing: .02em; text
 @media (prefers-reduced-motion: reduce) {
   .tk-launch, .tk-panel.tk-in, .tk-panel.tk-out, .tk-row, .tk-intro, .tk-typing i { animation: none !important; }
 }
+
+/* ======================================================================
+   Black and reds only: no white backgrounds. Text is a pale pink (#f6dfe3) so it stays easy to read.
+   ====================================================================== */
+.tk-launch { color: #f6dfe3; border-color: rgba(255, 77, 103, .55); background: linear-gradient(135deg, #c8102e 0%, #7e0a1b 55%, #1a070b 100%); }
+.tk-launch:focus-visible { outline-color: #ff4d67; }
+.tk-orb { box-shadow: 0 0 0 2px #ff4d67; }
+.tk-dot { border-color: #1a070b; }
+
+.tk-panel {
+  background: #0d0406; color: #f6dfe3;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .6), 0 0 0 1px rgba(255, 70, 95, .3), 0 0 40px rgba(200, 16, 46, .18);
+}
+.tk-head {
+  color: #f6dfe3; border-bottom: 1px solid rgba(255, 70, 95, .3);
+  background: radial-gradient(360px 120px at 0% 0%, rgba(255, 45, 79, .35), transparent 70%), linear-gradient(135deg, #a10c23, #3a050d 70%, #1a070b);
+}
+.tk-ava { box-shadow: 0 0 0 2px #ff4d67; }
+.tk-ava::after { border-color: #2a060c; }
+.tk-who b { color: #fbe9ec; }
+.tk-hbtn { color: #f6dfe3; border-color: rgba(255, 77, 103, .45); background: rgba(13, 4, 6, .4); }
+.tk-hbtn:hover { background: rgba(200, 16, 46, .45); }
+.tk-hbtn:focus-visible { outline-color: #ff4d67; }
+
+.tk-log {
+  background: radial-gradient(420px 280px at 100% 100%, rgba(126, 10, 27, .35), transparent 70%), linear-gradient(180deg, #120507, #0d0406);
+  scrollbar-color: #5a1622 transparent;
+}
+.tk-intro {
+  color: #f6dfe3; border: 1px solid rgba(255, 70, 95, .35);
+  background: radial-gradient(260px 120px at 100% 0%, rgba(255, 45, 79, .35), transparent 70%), linear-gradient(135deg, #7e0a1b, #2a060c);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, .45);
+}
+.tk-badge-lg { box-shadow: 0 0 0 3px #ff4d67; }
+.tk-row.bot .tk-bub { background: linear-gradient(160deg, #2a0a10, #1a070b); border: 1px solid rgba(255, 70, 95, .28); color: #f6dfe3; box-shadow: none; }
+.tk-row.me .tk-bub { background: linear-gradient(135deg, #c8102e, #7e0a1b); color: #fbe9ec; box-shadow: 0 6px 16px rgba(200, 16, 46, .3); }
+.tk-bub a { color: #ff8fa0; }
+.tk-row.me .tk-bub a { color: #ffd0d7; }
+.tk-links a { background: #22090f; border-color: rgba(255, 70, 95, .35); color: #ff8fa0; }
+.tk-links a:hover { background: #3a0c15; border-color: #ff4d67; color: #ffd0d7; }
+.tk-typing i { background: #ff4d67; }
+
+.tk-chips { background: #0d0406; }
+.tk-chips button { background: #22090f; border-color: rgba(255, 77, 103, .45); color: #ffb3bf; }
+.tk-chips button:hover { background: #3a0c15; border-color: #ff4d67; color: #ffd0d7; }
+.tk-chips button.human { background: #1a070b; border-color: #7e0a1b; color: #f6dfe3; }
+
+.tk-input { background: #0d0406; border-top: 1px solid rgba(255, 70, 95, .22); }
+.tk-input textarea { background: #22090f; border-color: #5a1622; color: #fbe9ec; }
+.tk-input textarea::placeholder { color: #8f5c66; }
+.tk-input textarea:focus { background: #2a0b12; border-color: #ff2d4f; box-shadow: 0 0 0 3px rgba(255, 45, 79, .25); }
+.tk-send { color: #fbe9ec; background: linear-gradient(135deg, #e0263f, #7e0a1b); box-shadow: 0 6px 16px rgba(200, 16, 46, .4); }
+.tk-send:focus-visible { outline-color: #ff4d67; }
+.tk-foot { background: #0d0406; color: #b98790; }
+.tk-foot button { color: #ff8fa0; }
+
+.tk-form label { color: #f3d6db; }
+.tk-form textarea { background: #22090f; border-color: #5a1622; color: #fbe9ec; }
+.tk-form textarea:focus { border-color: #ff2d4f; box-shadow: 0 0 0 3px rgba(255, 45, 79, .25); }
+.tk-form .tk-check input { accent-color: #c8102e; }
+.tk-err { color: #ff8fa0; }
+.tk-form-actions button { background: linear-gradient(135deg, #c8102e, #7e0a1b); border-color: #ff4d67; color: #fbe9ec; }
+.tk-form-actions .tk-copy { background: #1a070b; color: #ffb3bf; border-color: #7e0a1b; }

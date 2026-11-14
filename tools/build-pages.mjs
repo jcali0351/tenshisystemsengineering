@@ -22,6 +22,26 @@ const SERVICES = [
 ];
 const OFFERS = 5;
 
+// The Technology page: groups (pictures from img/services) and the tools in each, with their logos (img/tech, from
+// Simple Icons, CC0) and official sites. Descriptions are in translations.js (tech_<slug>, techG<n>Title/Text).
+const TECH_GROUPS = [
+  { n: 1, img: "design.jpg", items: [["figma", "Figma", "https://www.figma.com"], ["adobephotoshop", "Adobe Photoshop", "https://www.adobe.com/products/photoshop.html"], ["adobeillustrator", "Adobe Illustrator", "https://www.adobe.com/products/illustrator.html"], ["adobeaftereffects", "Adobe After Effects", "https://www.adobe.com/products/aftereffects.html"], ["adobepremierepro", "Adobe Premiere Pro", "https://www.adobe.com/products/premiere.html"], ["blender", "Blender", "https://www.blender.org"]] },
+  { n: 2, img: "webdev.jpg", items: [["html5", "HTML5", "https://developer.mozilla.org/docs/Web/HTML"], ["css3", "CSS", "https://developer.mozilla.org/docs/Web/CSS"], ["javascript", "JavaScript", "https://developer.mozilla.org/docs/Web/JavaScript"], ["typescript", "TypeScript", "https://www.typescriptlang.org"], ["react", "React", "https://react.dev"], ["vuedotjs", "Vue.js", "https://vuejs.org"], ["nextdotjs", "Next.js", "https://nextjs.org"], ["tailwindcss", "Tailwind CSS", "https://tailwindcss.com"], ["sass", "Sass", "https://sass-lang.com"]] },
+  { n: 3, img: "software.jpg", items: [["nodedotjs", "Node.js", "https://nodejs.org"], ["python", "Python", "https://www.python.org"], ["php", "PHP", "https://www.php.net"], ["postgresql", "PostgreSQL", "https://www.postgresql.org"], ["mysql", "MySQL", "https://www.mysql.com"]] },
+  { n: 4, img: "cms.jpg", items: [["wordpress", "WordPress", "https://wordpress.org"], ["shopify", "Shopify", "https://www.shopify.com"], ["strapi", "Strapi", "https://strapi.io"]] },
+  { n: 5, img: "hosting.jpg", items: [["github", "GitHub", "https://github.com"], ["docker", "Docker", "https://www.docker.com"], ["cloudflare", "Cloudflare", "https://www.cloudflare.com"], ["googlecloud", "Google Cloud", "https://cloud.google.com"], ["vercel", "Vercel", "https://vercel.com"]] },
+  { n: 6, img: "ai.jpg", items: [["claude", "Claude", "https://www.anthropic.com/claude"]] },
+];
+
+// The team page. To use real photos, put them in img/team/ and change img here; names, roles and bios are in
+// translations.js (staff1Name, staff1Role, staff1Bio …).
+const TEAM = [
+  { n: 1, img: "placeholder-1.svg", skills: ["software", "webdev", "cms"] },
+  { n: 2, img: "placeholder-2.svg", skills: ["consulting", "ai", "hosting"] },
+  { n: 3, img: "placeholder-3.svg", skills: ["webdesign", "media", "branding"] },
+  { n: 4, img: "placeholder-4.svg", skills: ["ai", "hosting", "software"] },
+];
+
 const sandbox = { window: {} };
 vm.runInNewContext(readFileSync("translations.js", "utf8"), sandbox);
 const EN = sandbox.window.TRANSLATIONS.en;
@@ -87,9 +107,9 @@ const between = (html, name, body) => {
   if (!re.test(html)) throw new Error(`Marker ${name} not found in index.html`);
   return html.replace(re, (m, a, b) => a + body + b);
 };
-const markCurrent = (html, current) => html
-  .replace(/ aria-current="page"(?= data-nav=)/g, "")
-  .replace(new RegExp(`(<a [^>]*?)( data-nav="${current}")`, "g"), `$1 aria-current="page"$2`);
+const markCurrent = (html, current) => [].concat(current).reduce((h, c) =>
+  h.replace(new RegExp(`(<a [^>]*?)( data-nav="${c}")`, "g"), `$1 aria-current="page"$2`),
+  html.replace(/ aria-current="page"(?= data-nav=)/g, ""));
 index = between(index, "services", carousel);
 index = between(index, "topics", topics);
 index = markCurrent(index, "home");
@@ -105,7 +125,7 @@ function chrome(html, prefix, current) {
   return markCurrent(html, current)
     .replace('href="#top"', `href="${prefix}index.html"`)
     .replace(/src="logo\.png"/g, `src="${prefix}logo.png"`)
-    .replace(/href="(index|about|services|contact)\.html"/g, `href="${prefix}$1.html"`);
+    .replace(/href="(index|about|services|contact|team|technology)\.html"/g, `href="${prefix}$1.html"`);
 }
 
 function frame({ prefix, current, titleKey, descKey, bodyClass, main, photoCredits = "" }) {
@@ -231,9 +251,64 @@ ${[["reliability", 1], ["craft", 2], ["partner", 3], ["clarity", 4]].map(([ic, n
       </div>
     </section>
 
+    <section class="page-section team-teaser" aria-labelledby="meet-title">
+      <div class="page-inner teaser-inner">
+        <ul class="teaser-faces" aria-hidden="true">
+${TEAM.map((m) => `          <li><img src="img/team/${m.img}" alt="" width="400" height="480" loading="lazy"></li>`).join("\n")}
+        </ul>
+        <div>
+          <h2 id="meet-title" class="section-title" data-i18n="aboutTeamTitle">${tx("aboutTeamTitle")}</h2>
+          ${t("p", "aboutTeamText", 'class="page-lead"')}
+          <a class="btn btn-primary" href="team.html" data-i18n="aboutTeamBtn">${tx("aboutTeamBtn")}</a>
+        </div>
+      </div>
+    </section>
+
 ${cta("contact.html")}`,
 });
 writeFileSync("about.html", about);
+
+/* ---------- Team ---------- */
+const teamPage = frame({
+  prefix: "", current: ["about", "team"], titleKey: "teamTitle", descKey: "teamLead", bodyClass: "page team-page",
+  main: `${banner("", [{ key: "navAbout", href: "about.html" }, { key: "navTeam" }], "teamTitle", "teamLead")}
+
+    <section class="page-section team-section" aria-labelledby="team-list-title">
+      <div class="page-inner">
+        <h2 id="team-list-title" class="sr-only" data-i18n="teamTitle">${tx("teamTitle")}</h2>
+        ${t("p", "teamIntro", 'class="section-intro"')}
+        <ul class="team-grid">
+${TEAM.map((m) => `          <li>
+            <button type="button" class="team-card" data-member="${m.n}" aria-haspopup="dialog">
+              <span class="team-photo"><img src="img/team/${m.img}" alt="${tx("teamPhotoAlt")}" data-i18n-attr="alt:teamPhotoAlt" width="400" height="480"></span>
+              <span class="team-text">
+                <span class="team-name" data-i18n="staff${m.n}Name">${tx(`staff${m.n}Name`)}</span>
+                <span class="team-role" data-i18n="staff${m.n}Role">${tx(`staff${m.n}Role`)}</span>
+                <span class="team-view"><span data-i18n="teamView">${tx("teamView")}</span> <span aria-hidden="true">→</span></span>
+              </span>
+            </button>
+            <div class="team-detail" id="member-${m.n}" hidden>
+              <img class="td-photo" src="img/team/${m.img}" alt="${tx("teamPhotoAlt")}" data-i18n-attr="alt:teamPhotoAlt" width="400" height="480">
+              <div class="td-text">
+                <p class="td-role" data-i18n="staff${m.n}Role">${tx(`staff${m.n}Role`)}</p>
+                <h3 class="td-name" data-i18n="staff${m.n}Name">${tx(`staff${m.n}Name`)}</h3>
+                <p class="td-bio" data-i18n="staff${m.n}Bio">${tx(`staff${m.n}Bio`)}</p>
+                <p class="td-skills-title" data-i18n="teamSkills">${tx("teamSkills")}</p>
+                <ul class="td-skills">
+${m.skills.map((id) => { const s = SERVICES.find((x) => x.id === id); return `                  <li><a href="services/${s.slug}.html" data-i18n="${k(s, "title")}">${tx(k(s, "title"))}</a></li>`; }).join("\n")}
+                </ul>
+                <a class="btn btn-primary td-contact" href="contact.html" data-i18n="teamContact">${tx("teamContact")}</a>
+              </div>
+            </div>
+          </li>`).join("\n")}
+        </ul>
+        ${t("p", "teamPlaceholder", 'class="team-note"')}
+      </div>
+    </section>
+
+${cta("contact.html")}`,
+});
+writeFileSync("team.html", teamPage);
 
 /* ---------- Services overview ---------- */
 const servicesPage = frame({
@@ -255,6 +330,43 @@ ${process()}
 ${cta("contact.html")}`,
 });
 writeFileSync("services.html", servicesPage);
+
+/* ---------- Technology ---------- */
+const techPage = frame({
+  prefix: "", current: "technology", titleKey: "techTitle", descKey: "techLead", bodyClass: "page tech-page",
+  main: `${banner("", [{ key: "navTech" }], "techTitle", "techLead", ART.services)}
+
+    <section class="page-section tech-section" aria-labelledby="tech-list-title">
+      <div class="page-inner">
+        <h2 id="tech-list-title" class="sr-only" data-i18n="techTitle">${tx("techTitle")}</h2>
+        <div class="tech-filter" role="group" aria-label="${tx("techFilterLabel")}" data-i18n-attr="aria-label:techFilterLabel">
+          <button type="button" data-filter="all" aria-pressed="true" data-i18n="techAll">${tx("techAll")}</button>
+${TECH_GROUPS.map((gr) => `          <button type="button" data-filter="${gr.n}" aria-pressed="false" data-i18n="techG${gr.n}Title">${tx(`techG${gr.n}Title`)}</button>`).join("\n")}
+        </div>
+${TECH_GROUPS.map((gr) => `        <section class="tech-group" data-group="${gr.n}" aria-labelledby="tech-g${gr.n}">
+          <div class="tech-group-head">
+            <img class="tech-group-pic" src="img/services/${gr.img}" alt="" width="960" height="640" loading="lazy">
+            <div>
+              <h3 id="tech-g${gr.n}" class="tech-group-title" data-i18n="techG${gr.n}Title">${tx(`techG${gr.n}Title`)}</h3>
+              <p class="tech-group-text" data-i18n="techG${gr.n}Text">${tx(`techG${gr.n}Text`)}</p>
+            </div>
+          </div>
+          <ul class="tech-grid">
+${gr.items.map(([slug, name, url]) => `            <li class="tech-card">
+              <span class="tech-logo" style="--logo: url(img/tech/${slug}.svg)" aria-hidden="true"></span>
+              <h4 class="tech-name">${name}</h4>
+              <p class="tech-desc" data-i18n="tech_${slug}">${tx(`tech_${slug}`)}</p>
+              <a class="tech-link" href="${url}" target="_blank" rel="noopener"><span data-i18n="techVisit">${tx("techVisit")}</span><span class="sr-only">: ${name} <span data-i18n="techNewTab">${tx("techNewTab")}</span></span> <span aria-hidden="true">↗</span></a>
+            </li>`).join("\n")}
+          </ul>
+        </section>`).join("\n")}
+        ${t("p", "techNote", 'class="tech-note"')}
+      </div>
+    </section>
+
+${cta("contact.html")}`,
+});
+writeFileSync("technology.html", techPage);
 
 /* ---------- Contact ---------- */
 const contactPage = frame({
@@ -344,4 +456,4 @@ ${others.map((o) => `          <li><a class="svc-other" href="${o.slug}.html">
 }
 mkdirSync("services", { recursive: true });
 for (const s of SERVICES) writeFileSync(`services/${s.slug}.html`, servicePage(s));
-console.log(`index.html updated; about.html, services.html, contact.html and ${SERVICES.length} service pages written`);
+console.log(`index.html updated; about.html, team.html, services.html, technology.html, contact.html and ${SERVICES.length} service pages written`);

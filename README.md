@@ -1,13 +1,13 @@
 # Tenshi Systems Engineering
 
-Corporate website for Tenshi Systems Engineering, Osaka, Japan, in English, Japanese, Korean and German.
+Corporate website for Tenshi Systems Engineering, Osaka, Japan, in ten languages: English, Japanese, Korean, Chinese (Simplified), Spanish, German, Polish, Nigerian Pidgin, Arabic and Farsi. Arabic and Farsi switch the layout to right to left.
 A plain static site for GitHub Pages.
 
 - `index.html` – the homepage (its header and footer, including the Home / About / Services / Contact menu, are copied to every other page)
 - `about.html`, `services.html`, `contact.html` and `services/*.html` – generated pages, see below
 - `styles.css` – all styling
-- `translations.js` – every piece of text in English (en), Japanese (ja), Korean (ko) and German (de). Edit wording here,
-  in all four languages; every language must have the same keys.
+- `translations.js` – every piece of text in all ten languages (en, ja, ko, de, es, zh, ar, pl, pcm, fa). Edit wording here,
+  in every language; every language must have the same keys. Tanaka's own chat wording is in chat.js (UI and FUN).
 - `app.js` – language picker (flags), skyline slideshow, red band animation, service card carousel, consultation form.
   The form's email address is `CONTACT_EMAIL` at the top.
 - `rain.js` – the falling Japanese characters behind the service cards
@@ -19,6 +19,8 @@ A plain static site for GitHub Pages.
   their credits are in the footer of index.html and must stay there
 - `img/services/` – the nine service photos (Wikimedia Commons Unsplash imports and rawpixel, all CC0: no credit required)
 - `img/chevrons.svg` – the red band's chevron pattern
+- `img/team/` – placeholder team photos; `img/tech/` – technology logos from Simple Icons (CC0; the logos are their owners' trademarks)
+- `fonts/lato/` – the Lato font (Google Fonts, SIL Open Font License), hosted with the site
 - `logo.png` – the company logo (header, hero, footer and tab icon)
 - `img/tanaka.svg` – Tanaka Matsumoto's illustrated portrait (an original drawing, not a photo of a real person)
 
@@ -34,5 +36,5 @@ A plain static site for GitHub Pages.
 
 The consultation form opens the visitor's own email app with their message filled in (GitHub Pages has no server to send mail).
 The site opens in Japanese; first-time visitors choose a language in a pop-up, and the choice is remembered.
-Add `?lang=en`, `?lang=ja`, `?lang=ko` or `?lang=de` to an address to open it in that language.
+Add `?lang=` and a code (en, ja, ko, de, es, zh, ar, pl, pcm, fa) to an address to open it in that language.
 `tools/make-skylines.mjs` is the script that drew the earlier skyline, blueprint and machine drawings (no longer used).
