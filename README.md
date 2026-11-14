@@ -11,6 +11,10 @@ A plain static site for GitHub Pages.
 - `app.js` – language picker (flags), skyline slideshow, red band animation, service card carousel, consultation form.
   The form's email address is `CONTACT_EMAIL` at the top.
 - `rain.js` – the falling Japanese characters behind the service cards
+- `chat.js`, `chat.css` – Tanaka Matsumoto, the AI chat assistant (bottom right on every page). He answers from the site's own
+  text in all four languages; with `endpoint` set in chat.js he answers with Claude through the Cloudflare Worker in
+  `tools/chat-worker/` (setup in its README; the API key is a Worker secret, never in the repository). "Talk to a person"
+  opens the visitor's email app addressed to CONTACT_EMAIL.
 - `img/photos/` – the five hero skyline photos (Osaka, Tokyo, Kyoto, Yokohama, Kobe) from Wikimedia Commons, 1920px;
   their credits are in the footer of index.html and must stay there
 - `img/services/` – the nine service photos (Wikimedia Commons Unsplash imports and rawpixel, all CC0: no credit required)

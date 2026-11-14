@@ -41,6 +41,7 @@ const CONTACT_EMAIL = "jcali0351@gmail.com";
       $(".lang-code", current).textContent = lang.toUpperCase();
     }
     onLanguage.forEach((fn) => fn());
+    document.dispatchEvent(new CustomEvent("tse:lang", { detail: lang }));   // chat.js listens
     store.set("tse-lang", lang);
   }
 
@@ -195,56 +196,40 @@ const CONTACT_EMAIL = "jcali0351@gmail.com";
   }
 
   /* ---------- Service cards: three at a time, new sets slide in from the right ---------- */
+  // No buttons: the sets change on their own and hold still while someone hovers over or tabs into them.
+  // For reduced motion all nine cards simply show, three per row.
   const carousel = $(".svc-carousel");
   let startCards = () => {};
-  if (carousel) {
+  if (carousel && !reduceMotion.matches) {
     const sets = $$(".svc-set", carousel);
-    const dots = $$(".svc-dot", carousel);
-    const prev = $(".svc-prev", carousel);
-    const next = $(".svc-next", carousel);
-    const pause = $(".svc-pause", carousel);
     const HOLD = 8000;   // how long each set of three stays, in milliseconds
-    let current = 0, timer = null, held = false, userPaused = reduceMotion.matches;
+    let current = 0, timer = null, held = false;
 
     carousel.classList.add("svc-js");
-    $(".svc-controls", carousel).hidden = false;
 
-    const label = () => {
-      sets.forEach((s, n) => s.setAttribute("aria-label", t("svcGroup").replace("{n}", n + 1)));
-      dots.forEach((d, n) => { $(".sr-only", d).textContent = t("svcGroup").replace("{n}", n + 1); });
-      $(".sr-only", pause).textContent = t(userPaused ? "svcPlay" : "svcPause");
-      pause.setAttribute("aria-pressed", String(userPaused));
-      pause.classList.toggle("is-paused", userPaused);
-    };
+    const label = () => sets.forEach((s, n) => s.setAttribute("aria-label", t("svcGroup").replace("{n}", n + 1)));
 
-    const go = (to, back = false) => {
+    const go = (to) => {
       const target = (to + sets.length) % sets.length;
       if (target === current) return;
       const leaving = sets[current];
-      carousel.classList.toggle("is-back", back);
       leaving.classList.remove("is-active");
       leaving.classList.add("is-leaving");
       leaving.inert = true;
-      setTimeout(() => leaving.classList.remove("is-leaving"), reduceMotion.matches ? 0 : 600);
+      setTimeout(() => leaving.classList.remove("is-leaving"), 600);
       sets[target].classList.add("is-active");
       sets[target].inert = false;
-      dots.forEach((d, n) => (n === target ? d.setAttribute("aria-current", "true") : d.removeAttribute("aria-current")));
       current = target;
     };
 
     startCards = () => {
       clearInterval(timer);
       timer = null;
-      if (userPaused || held || document.hidden) return;
+      if (held || document.hidden) return;
       timer = setInterval(() => go(current + 1), HOLD);
     };
 
     sets.forEach((s, n) => { s.inert = n !== 0; });
-    prev.addEventListener("click", () => { go(current - 1, true); startCards(); });
-    next.addEventListener("click", () => { go(current + 1); startCards(); });
-    dots.forEach((d, n) => d.addEventListener("click", () => { go(n, n < current); startCards(); }));
-    pause.addEventListener("click", () => { userPaused = !userPaused; label(); startCards(); });
-    // Hold still while someone is reading or using the cards.
     carousel.addEventListener("mouseenter", () => { held = true; startCards(); });
     carousel.addEventListener("mouseleave", () => { held = false; startCards(); });
     carousel.addEventListener("focusin", () => { held = true; startCards(); });

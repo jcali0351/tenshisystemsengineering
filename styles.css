@@ -383,7 +383,7 @@ html:lang(ja).band-anim .band-stage { gap: 0; }
 /* ======================================================================
    Service cards: nine in three sets, falling characters behind them
    ====================================================================== */
-.svc-rain { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.svc-rain { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: .8; }
 .services { isolation: isolate; }
 .svc-carousel { position: relative; z-index: 1; max-width: 943px; margin: 0 auto; }
 
@@ -409,17 +409,18 @@ html:lang(ja).band-anim .band-stage { gap: 0; }
 .service-card { display: flex; flex-direction: column; }
 .service-card p { margin-bottom: 18.4px; }
 .btn-more {
-  display: inline-flex; align-items: center; justify-content: center; gap: 10px; align-self: flex-start;
-  margin-top: auto; min-height: 44px; padding: 10px 22px; border-radius: 6.9px;
-  background: #111; color: #fff; text-decoration: none;
-  font: 800 .78rem/1 var(--font); letter-spacing: .16em; text-transform: uppercase;
-  transition: background-color .2s, transform .2s;
+  display: flex; align-items: center; justify-content: center; gap: 10px; align-self: stretch;
+  margin-top: auto; min-height: 46px; padding: 11px 20px; border-radius: 6.9px;
+  background: var(--red-dark); color: #fff; text-decoration: none; text-align: center;
+  font: 700 .82rem/1 var(--font); letter-spacing: .12em; text-transform: uppercase;
+  box-shadow: 0 4px 12px rgba(126, 10, 27, .25);
+  transition: background-color .2s, transform .2s, box-shadow .2s;
 }
-html:lang(ja) .btn-more, html:lang(ko) .btn-more { letter-spacing: .06em; }
-.btn-more:hover { background: #000; transform: translateY(-1px); }
+html:lang(ja) .btn-more, html:lang(ko) .btn-more { letter-spacing: .04em; }
+.btn-more:hover { background: #650816; transform: translateY(-1px); box-shadow: 0 8px 18px rgba(126, 10, 27, .32); }
 .btn-more-arrow { transition: transform .2s; }
 .btn-more:hover .btn-more-arrow { transform: translateX(3px); }
-.btn-more:focus-visible { outline: 3px solid #111; outline-offset: 3px; }
+.btn-more:focus-visible { outline: 3px solid var(--red-dark); outline-offset: 3px; }
 
 .svc-controls { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 26px; }
 .svc-controls[hidden] { display: none; }

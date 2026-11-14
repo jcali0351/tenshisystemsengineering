@@ -5,7 +5,7 @@
 import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
 import { createHash } from "node:crypto";
 
-const files = ["styles.css", "translations.js", "app.js", "rain.js"].filter((f) => existsSync(f));
+const files = ["styles.css", "chat.css", "translations.js", "app.js", "rain.js", "chat.js"].filter((f) => existsSync(f));
 const pages = ["index.html", ...(existsSync("services") ? readdirSync("services").filter((f) => f.endsWith(".html")).map((f) => "services/" + f) : [])];
 const versions = Object.fromEntries(files.map((f) => [f, createHash("sha256").update(readFileSync(f)).digest("hex").slice(0, 8)]));
 

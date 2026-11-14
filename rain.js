@@ -1,4 +1,4 @@
-// Falling Japanese characters behind the service cards, in shades of red.
+// Falling Japanese characters behind the service cards, in subtle shades of red (no white).
 // Draws on <canvas class="svc-rain"> inside .services. Runs only while the section is on screen and the tab is visible;
 // visitors who prefer reduced motion get one still frame.
 (function () {
@@ -51,14 +51,11 @@
       const y = drops[i] * size;
       if (y > 0) {
         const x = i * size + size / 2;
-        // A pale head with a soft glow, then a deeper red character just behind it.
-        ctx.fillStyle = "rgba(122, 6, 24, 0.85)";
+        // Only reds, close to the background: a slightly lighter red head and a slightly deeper red just behind it.
+        ctx.fillStyle = "rgba(140, 8, 30, 0.5)";
         ctx.fillText(pick(), x, y - size);
-        ctx.shadowColor = "rgba(255, 210, 218, 0.9)";
-        ctx.shadowBlur = 8;
-        ctx.fillStyle = "rgba(255, 196, 206, 0.95)";
+        ctx.fillStyle = "rgba(236, 70, 96, 0.62)";
         ctx.fillText(pick(), x, y);
-        ctx.shadowBlur = 0;
       }
       drops[i] += speeds[i];
       if (y > h + size * 4 && Math.random() > 0.975) {

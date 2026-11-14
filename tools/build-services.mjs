@@ -41,14 +41,6 @@ ${sets.map((set, n) => `          <div class="svc-set${n === 0 ? " is-active" : 
 ${set.map((s) => card(s, "            ")).join("\n")}
           </div>`).join("\n")}
         </div>
-        <div class="svc-controls" hidden>
-          <button type="button" class="svc-arrow svc-prev"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg><span class="sr-only" data-i18n="svcPrev">${tx("svcPrev")}</span></button>
-          <div class="svc-dots" role="group" aria-label="${tx("svcGroups")}" data-i18n-attr="aria-label:svcGroups">
-${[0, 1, 2].map((n) => `            <button type="button" class="svc-dot" data-set="${n}"${n === 0 ? ' aria-current="true"' : ""}><span class="sr-only"></span></button>`).join("\n")}
-          </div>
-          <button type="button" class="svc-arrow svc-next"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5"/></svg><span class="sr-only" data-i18n="svcNext">${tx("svcNext")}</span></button>
-          <button type="button" class="svc-arrow svc-pause" aria-pressed="false"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="i-pause" d="M5 3v10M11 3v10"/><path class="i-play" d="M5 3l8 5-8 5z"/></svg><span class="sr-only" data-i18n="svcPause">${tx("svcPause")}</span></button>
-        </div>
       </div>`;
 
 const topics = SERVICES.map((s) => `              <option value="${k(s, "title")}" data-i18n="${k(s, "title")}">${tx(k(s, "title"))}</option>`).join("\n");
@@ -98,6 +90,7 @@ function page(s) {
   <link rel="icon" href="../logo.png" type="image/png">
   <link rel="apple-touch-icon" href="../logo.png">
   <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../chat.css">
 </head>
 <body class="svc-page" data-title-key="${k(s, "title")}" data-desc-key="${k(s, "short")}">
   <!-- Written by tools/build-services.mjs: edit translations.js and the script, not this file. -->
@@ -166,6 +159,7 @@ ${footer}
 
   <script src="../translations.js"></script>
   <script src="../app.js"></script>
+  <script src="../chat.js"></script>
 </body>
 </html>
 `;
