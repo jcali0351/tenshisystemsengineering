@@ -1545,7 +1545,7 @@ html[dir="rtl"] .prj-btn-view .prj-ico { transform: scaleX(-1); }
   inset: 0; z-index: 1;
   background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, .95) 47%, #ffe7a3 50%, rgba(255, 255, 255, .95) 53%, transparent 65%) no-repeat;
   background-size: 250% 100%; background-position: 150% 0;
-  -webkit-mask: url("logo.png") center / contain no-repeat; mask: url("logo.png") center / contain no-repeat;
+  -webkit-mask: url("brand/tenshi-mark.svg") center / contain no-repeat; mask: url("brand/tenshi-mark.svg") center / contain no-repeat;
   mix-blend-mode: screen; animation: dz-sweep 3.6s ease-in-out infinite;
 }
 .logo-dazzle--brand .dz-shine { animation-duration: 4.8s; animation-delay: 1.2s; }

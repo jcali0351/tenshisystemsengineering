@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 240" width="820" height="240" role="img" aria-labelledby="t">
+  <title id="t">Tenshi Systems Engineering</title>
+  <g>
+  
+  <defs>
+    <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff3b55"/>
+      <stop offset=".45" stop-color="#d0122f"/>
+      <stop offset="1" stop-color="#7a0718"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".55"/>
+      <stop offset=".35" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="core" cx=".62" cy=".38" r=".85">
+      <stop offset="0" stop-color="#2a0910"/>
+      <stop offset="1" stop-color="#0b0306"/>
+    </radialGradient>
+    <pattern id="grid" width="12" height="12" patternUnits="userSpaceOnUse">
+      <path d="M12 0H0V12" fill="none" stroke="#ff3b55" stroke-width=".6" stroke-opacity=".16"/>
+    </pattern>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3.2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="panel"><rect x="34" y="34" width="172" height="172" rx="18"/></clipPath>
+  </defs>
+  <style>
+    .pulse { stroke-dasharray: 14 220; animation: run 3.2s linear infinite; }
+    .pulse.b { animation-delay: -1.1s; animation-duration: 2.7s; }
+    .pulse.c { animation-delay: -2s; animation-duration: 3.6s; }
+    .node { animation: blink 2.4s ease-in-out infinite; }
+    .node:nth-of-type(2n) { animation-delay: -1.2s; }
+    .scan { animation: scan 4.5s ease-in-out infinite; }
+    @keyframes run { from { stroke-dashoffset: 234; } to { stroke-dashoffset: 0; } }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
+    @keyframes scan { 0% { transform: translateY(-40px); opacity: 0; } 15%, 75% { opacity: .5; } 100% { transform: translateY(210px); opacity: 0; } }
+    @media (prefers-reduced-motion: reduce) { .pulse, .node, .scan { animation: none; } .pulse { display: none; } .scan { opacity: 0; } }
+  </style>
+
+  <!-- Outer red frame with a glass rim -->
+  <rect x="10" y="10" width="220" height="220" rx="40" fill="url(#frame)"/>
+  <rect x="10" y="10" width="220" height="220" rx="40" fill="url(#rim)"/>
+  <rect x="11.5" y="11.5" width="217" height="217" rx="38.5" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="1.5"/>
+
+  <!-- Dark glass panel with a fine grid and a passing scan line -->
+  <rect x="34" y="34" width="172" height="172" rx="18" fill="url(#core)"/>
+  <g clip-path="url(#panel)">
+    <rect x="34" y="34" width="172" height="172" fill="url(#grid)"/>
+    <rect class="scan" x="34" y="34" width="172" height="10" fill="#ff5c74" opacity="0"/>
+  </g>
+  <rect x="34.75" y="34.75" width="170.5" height="170.5" rx="17.25" fill="none" stroke="#ff3b55" stroke-opacity=".5" stroke-width="1.5"/>
+
+  <!-- The 天使 panel (as in the original mark), lit from within -->
+  <rect x="48" y="98" width="46" height="94" rx="7" fill="#c8102e" fill-opacity=".18" stroke="#ff3b55" stroke-width="2.5" filter="url(#glow)"/>
+  <text x="71" y="137" text-anchor="middle" font-family="'Noto Sans JP','Yu Gothic','Hiragino Sans','Meiryo',sans-serif" font-size="31" font-weight="700" fill="#fff">天</text>
+  <text x="71" y="178" text-anchor="middle" font-family="'Noto Sans JP','Yu Gothic','Hiragino Sans','Meiryo',sans-serif" font-size="31" font-weight="700" fill="#fff">使</text>
+
+  <!-- Circuit traces: the original maze, redrawn as routed connections -->
+  <g fill="none" stroke="#ff3b55" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)">
+    <path d="M110 48V114H164V158H192"/>
+    <path d="M132 48V92H192"/>
+    <path d="M110 140V192H164"/>
+    <path d="M48 76H86V48"/>
+  </g>
+  <!-- Light pulses travelling along the traces -->
+  <g fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path class="pulse" d="M110 48V114H164V158H192"/>
+    <path class="pulse b" d="M132 48V92H192"/>
+    <path class="pulse c" d="M110 140V192H164"/>
+  </g>
+  <!-- Connection nodes -->
+  <g fill="#fff" stroke="#ff3b55" stroke-width="3">
+    <circle class="node" cx="110" cy="48" r="5.5"/>
+    <circle class="node" cx="132" cy="48" r="5.5"/>
+    <circle class="node" cx="192" cy="92" r="5.5"/>
+    <circle class="node" cx="192" cy="158" r="5.5"/>
+    <circle class="node" cx="110" cy="140" r="5.5"/>
+    <circle class="node" cx="164" cy="192" r="5.5"/>
+    <circle class="node" cx="86" cy="48" r="5.5"/>
+  </g>
+  <!-- Chip pins on the frame edge -->
+  <g fill="#fff" fill-opacity=".75">
+    <rect x="104" y="18" width="12" height="4" rx="2"/><rect x="126" y="18" width="12" height="4" rx="2"/>
+    <rect x="218" y="86" width="4" height="12" rx="2"/><rect x="218" y="152" width="4" height="12" rx="2"/>
+    <rect x="158" y="218" width="12" height="4" rx="2"/>
+  </g>
+</g>
+  <g font-family="Lato, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+    <text x="276" y="124" font-size="110" font-weight="900" fill="#ffffff" textLength="500" lengthAdjust="spacing">TENSHI</text>
+    <text x="278" y="166" font-size="27" font-weight="700" fill="#ff5c74" textLength="498" lengthAdjust="spacing">SYSTEMS ENGINEERING</text>
+  </g>
+  <g>
+    <path d="M276 186H762" stroke="#ff3b55" stroke-width="3" stroke-linecap="round"/>
+    <path class="pulse" d="M276 186H762" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none" style="stroke-dasharray:18 520;animation:wire 3s linear infinite"/>
+    <circle cx="770" cy="186" r="6" fill="#fff" stroke="#ff3b55" stroke-width="3"/>
+    <rect x="276" y="182" width="8" height="8" rx="1.5" fill="#ff3b55"/>
+  </g>
+  <text x="278" y="222" font-family="'Noto Sans JP','Yu Gothic','Hiragino Sans','Meiryo',sans-serif" font-size="22" font-weight="700" fill="#f3c9d0" textLength="498" lengthAdjust="spacing">天使システムズエンジニアリング</text>
+  <style>@keyframes wire { from { stroke-dashoffset: 538; } to { stroke-dashoffset: 0; } } @media (prefers-reduced-motion: reduce) { .pulse { display: none; } }</style>
+</svg>

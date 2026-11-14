@@ -477,7 +477,7 @@ const CONTACT_EMAIL = "jcali0351@gmail.com";
     dlg.setAttribute("aria-labelledby", "lang-dialog-title");
     dlg.innerHTML = `
       <div class="ld-top">
-        <img class="ld-logo" src="${logo ? logo.getAttribute("src") : "logo.png"}" alt="" width="228" height="205">
+        <img class="ld-logo" src="${logo ? logo.getAttribute("src") : "brand/tenshi-mark.svg"}" alt="" width="240" height="240">
         <p class="ld-brand">Tenshi Systems Engineering<span lang="ja">天使システムズエンジニアリング</span></p>
         <button type="button" class="ld-close" aria-label="閉じる / Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
       </div>

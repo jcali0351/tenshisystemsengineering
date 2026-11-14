@@ -127,7 +127,7 @@ const FORM = index.match(/        <form class="contact-form"[\s\S]*?<\/form>/)[0
 function chrome(html, prefix, current) {
   return markCurrent(html, current)
     .replace('href="#top"', `href="${prefix}index.html"`)
-    .replace(/src="logo\.png"/g, `src="${prefix}logo.png"`)
+    .replace(/src="(brand\/[\w.-]+)"/g, `src="${prefix}$1"`)
     .replace(/href="((?:index|about|services|contact|team|technology|projects)\.html|projects\/[a-z-]+\.html)"/g, `href="${prefix}$1"`);
 }
 
@@ -143,8 +143,9 @@ function frame({ prefix, current, titleKey, descKey, bodyClass, main, photoCredi
   <meta property="og:title" content="${tx(titleKey)} | ${tx("brandName")}">
   <meta property="og:description" content="${tx(descKey)}">
   <meta property="og:type" content="website">
-  <link rel="icon" href="${prefix}logo.png" type="image/png">
-  <link rel="apple-touch-icon" href="${prefix}logo.png">
+  <link rel="icon" href="${prefix}brand/tenshi-favicon.svg" type="image/svg+xml">
+  <link rel="alternate icon" href="${prefix}brand/tenshi-apple-touch-icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="${prefix}brand/tenshi-apple-touch-icon.png">
   <link rel="stylesheet" href="${prefix}styles.css">
   <link rel="stylesheet" href="${prefix}chat.css">
 </head>
