@@ -147,6 +147,7 @@ function frame({ prefix, current, titleKey, descKey, bodyClass, main, photoCredi
   <link rel="alternate icon" href="${prefix}brand/tenshi-apple-touch-icon.png" type="image/png">
   <link rel="apple-touch-icon" href="${prefix}brand/tenshi-apple-touch-icon.png">
   <link rel="stylesheet" href="${prefix}styles.css">
+  <link rel="stylesheet" href="${prefix}design.css">
   <link rel="stylesheet" href="${prefix}chat.css">
 </head>
 <body class="${bodyClass}" data-title-key="${titleKey}" data-desc-key="${descKey}">
@@ -163,6 +164,7 @@ ${chrome(FOOTER, prefix, current).replace("    </div>\n  </footer>", photoCredit
 
   <script src="${prefix}translations.js"></script>
   <script src="${prefix}app.js"></script>
+  <script src="${prefix}design.js"></script>
   <script src="${prefix}chat.js"></script>
 </body>
 </html>
@@ -485,6 +487,67 @@ ${cta("contact.html")}`,
 });
 writeFileSync("services.html", servicesPage);
 
+/* ---------- Technology: the Japanese robotics patent explorer (live searches of public patent databases) ---------- */
+const GP = "https://patents.google.com/";
+const gp = (q, extra = "") => `${GP}?q=${encodeURIComponent(q)}&amp;country=JP${extra}`;
+const PAT_TOPICS = [
+  ['("industrial robot" arm)', '<path d="M4 20h8M8 20v-4l4-6 5 2"/><circle cx="12" cy="10" r="1.6"/><circle cx="8" cy="16" r="1.6"/><path d="M17 12l2-3M17 12l3 1"/>'],
+  ['("robot hand" OR gripper)', '<path d="M7 21v-6l-2-4V6M10 11V4M13 11V3.5M16 11V5M19 13V8"/><path d="M5 11h14v2a6 6 0 0 1-6 6h-2"/>'],
+  ['("collaborative robot")', '<circle cx="8" cy="7" r="3"/><path d="M3 20c0-3 2.2-5.5 5-5.5"/><path d="M14 20v-5l3-4 3 1"/><circle cx="17" cy="11" r="1.4"/>'],
+  ['("humanoid robot")', '<rect x="8" y="3" width="8" height="6" rx="2"/><path d="M10.5 6h.01M13.5 6h.01M12 9v2"/><rect x="7" y="11" width="10" height="6" rx="1.5"/><path d="M9 17v4M15 17v4M7 13l-3 3M17 13l3 3"/>'],
+  ['("legged robot" OR "walking robot")', '<rect x="6" y="7" width="12" height="5" rx="2"/><path d="M8 12l-2 4 2 4M16 12l2 4-2 4M12 7V4"/>'],
+  ['("surgical robot")', '<path d="M5 20h6M8 20v-6l5-5"/><path d="M13 9l4-4 2 2-4 4"/><path d="M17 11l3 3"/>'],
+  ['("nursing care" robot)', '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/><path d="M9 11h6M12 8v6"/>'],
+  ['(exoskeleton OR "power assist suit")', '<circle cx="12" cy="4" r="2"/><path d="M12 6v7M8 9h8M9 21l3-8 3 8"/><path d="M7 9v5M17 9v5"/>'],
+  ['(robot "vision sensor")', '<path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M12 9V7M15 12h2"/>'],
+  ['("robot controller" servo)', '<circle cx="12" cy="12" r="7"/><path d="M12 5v3M12 16v3M5 12h3M16 12h3"/><circle cx="12" cy="12" r="2"/>'],
+  ['("autonomous mobile robot")', '<rect x="4" y="9" width="16" height="7" rx="2"/><circle cx="8" cy="18" r="2"/><circle cx="16" cy="18" r="2"/><path d="M12 9V5M9 5h6"/>'],
+  ['(robot "machine learning")', '<rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/><path d="M10 12h4M12 10v4"/>'],
+];
+const PAT_CO = ["Fanuc", "Yaskawa Electric", "Kawasaki Heavy Industries", "Denso", "Honda Motor", "Toyota Motor", "Sony", "Panasonic", "Omron", "Mitsubishi Electric", "Seiko Epson", "Cyberdyne"];
+const patIcon = (p) => `<span class="pat-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${p}</svg></span>`;
+const newTab = `<span class="sr-only"> (<span data-i18n="techNewTab">${tx("techNewTab")}</span>)</span>`;
+const patentSection = () => `    <section class="page-section pat-section" id="patents" aria-labelledby="pat-title">
+      <div class="page-inner">
+        <h2 id="pat-title" class="section-title light" data-i18n="patTitle">${tx("patTitle")}</h2>
+        <p class="pat-intro" data-i18n="patIntro">${tx("patIntro")}</p>
+        <form class="pat-search" action="${GP}" method="get" target="_blank" role="search">
+          <label for="pat-q" class="pat-label" data-i18n="patSearchLabel">${tx("patSearchLabel")}</label>
+          <div class="pat-row">
+            <input id="pat-q" name="q" type="search" required autocomplete="off" placeholder="${tx("patPlaceholder")}" data-i18n-attr="placeholder:patPlaceholder">
+            <input type="hidden" name="country" value="JP">
+            <button class="btn btn-primary" type="submit" data-i18n="patBtn">${tx("patBtn")}</button>
+          </div>
+          <label class="pat-check"><input type="checkbox" name="sort" value="new"> <span data-i18n="patNewest">${tx("patNewest")}</span></label>
+        </form>
+        <h3 class="pat-sub" data-i18n="patTopicsTitle">${tx("patTopicsTitle")}</h3>
+        <ul class="pat-grid">
+${PAT_TOPICS.map(([q, ic], i) => `          <li><a class="pat-card" href="${gp(q)}" target="_blank" rel="noopener">
+            ${patIcon(ic)}
+            <span class="pat-num" aria-hidden="true">${String(i + 1).padStart(2, "0")}</span>
+            <b data-i18n="pt${i + 1}">${tx("pt" + (i + 1))}</b>
+            <span class="pat-desc" data-i18n="pt${i + 1}d">${tx("pt" + (i + 1) + "d")}</span>
+            <span class="pat-go"><span data-i18n="patOpen">${tx("patOpen")}</span> <span aria-hidden="true">↗</span>${newTab}</span>
+          </a></li>`).join("\n")}
+        </ul>
+        <h3 class="pat-sub" data-i18n="patCoTitle">${tx("patCoTitle")}</h3>
+        <p class="pat-co-intro" data-i18n="patCoIntro">${tx("patCoIntro")}</p>
+        <ul class="pat-co">
+${PAT_CO.map((c) => `          <li><a href="${gp("(robot)", "&amp;assignee=" + encodeURIComponent(c) + "&amp;sort=new")}" target="_blank" rel="noopener">${esc(c)}${newTab}</a></li>`).join("\n")}
+        </ul>
+        <div class="pat-sources">
+          <h3 class="pat-sub" data-i18n="patSourcesTitle">${tx("patSourcesTitle")}</h3>
+          <ul>
+            <li><a href="https://www.j-platpat.inpit.go.jp/" target="_blank" rel="noopener"><b>J-PlatPat</b></a> · <span data-i18n="patJplat">${tx("patJplat")}</span></li>
+            <li><a href="${GP}?country=JP" target="_blank" rel="noopener"><b>Google Patents</b></a> · <span data-i18n="patGoogle">${tx("patGoogle")}</span></li>
+          </ul>
+          <p class="pat-note" data-i18n="patNote">${tx("patNote")}</p>
+        </div>
+      </div>
+    </section>
+
+`;
+
 /* ---------- Technology ---------- */
 const techPage = frame({
   prefix: "", current: "technology", titleKey: "techTitle", descKey: "techLead", bodyClass: "page tech-page",
@@ -518,7 +581,7 @@ ${gr.items.map(([slug, name, url]) => `            <li class="tech-card">
       </div>
     </section>
 
-${cta("contact.html")}`,
+${patentSection()}${cta("contact.html")}`,
 });
 writeFileSync("technology.html", techPage);
 

@@ -1,0 +1,213 @@
+/* ==========================================================================
+   墨と朱 · Ink and vermilion: the Tenshi design layer
+   Loaded after styles.css on every page. It refines rather than replaces:
+   washi paper, sumi ink and a single vermilion accent; generous ma (negative
+   space); hairlines instead of heavy boxes; Mincho accents, vertical writing,
+   kanji section numbers, hanko seals, seigaiha waves and quiet motion.
+   Remove the <link> to design.css (and the design.js script) to undo it all.
+   ========================================================================== */
+:root {
+  --washi: #faf8f4;
+  --washi-2: #f3efe8;
+  --sumi: #131315;
+  --shu: #c8102e;
+  --kin: #b48a4e;
+  --pale: #f3efe8;
+  --line: #e6dfd4;
+  --radius: 6px;
+  --mincho: "Shippori Mincho", "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Noto Serif JP", "MS PMincho", serif;
+  --ease: cubic-bezier(.2, .7, .1, 1);
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .38 0 0 0 0 .3 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+  --seigaiha: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='24' viewBox='0 0 48 24'%3E%3Cg fill='none' stroke='%23fff' stroke-width='1'%3E%3Cpath d='M0 24a24 24 0 0 1 48 0M6 24a18 18 0 0 1 36 0M12 24a12 12 0 0 1 24 0M18 24a6 6 0 0 1 12 0'/%3E%3Cpath d='M-24 12a24 24 0 0 1 48 0M-18 12a18 18 0 0 1 36 0M-12 12a12 12 0 0 1 24 0M-6 12a6 6 0 0 1 12 0M24 12a24 24 0 0 1 48 0M30 12a18 18 0 0 1 36 0M36 12a12 12 0 0 1 24 0M42 12a6 6 0 0 1 12 0'/%3E%3C/g%3E%3C/svg%3E");
+  --brush: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 12' preserveAspectRatio='none'%3E%3Cpath d='M2 7.5C14 4 30 3.2 48 3.6c22 .5 44 1.2 68 .4 1.6 0 2.4 1.4 1.4 2.4-1.2 1.2-6 1.6-12 2-24 1.4-48 2.2-72 2.4-12 .1-23 0-30-.6-2-.2-2.6-1.6-.4-2.7z'/%3E%3C/svg%3E");
+}
+
+/* ---------- Paper, ink and type ---------- */
+body { background: var(--washi); color: #3b3f45; }
+body::before { /* the faint fibres of washi paper */
+  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .5;
+  background: var(--grain);
+}
+::selection { background: var(--shu); color: #fff; }
+h1, h2, h3 { color: var(--sumi); letter-spacing: -.01em; }
+html:lang(ja) :is(h1, h2, h3, p, li), html:lang(zh) :is(h1, h2, h3) { font-feature-settings: "palt"; letter-spacing: .03em; }
+html { scrollbar-color: var(--shu) var(--washi-2); }
+
+/* The brush stroke under section titles, in place of the flat bar */
+.section-title { padding-bottom: 18px; }
+.section-title::after {
+  width: 84px; height: 9px; bottom: 0; background: var(--shu);
+  -webkit-mask: var(--brush) center / 100% 100% no-repeat; mask: var(--brush) center / 100% 100% no-repeat;
+}
+.section-title.light::after { background: #ff6b80; }
+
+/* Kanji section numbers: 一 二 三 …, set by design.js on each section title */
+.section-title[data-kan]::before {
+  content: attr(data-kan); display: flex; align-items: center; gap: 14px; margin-bottom: 14px;
+  font: 600 1rem/1 var(--mincho); letter-spacing: .3em; color: var(--shu);
+}
+.section-title.center[data-kan]::before { justify-content: center; }
+.section-title[data-kan]:not(.center)::before { width: max-content; }
+.section-title.light[data-kan]::before { color: #ffb3bf; }
+.section-title[data-kan]::before { background: linear-gradient(90deg, currentColor, currentColor) no-repeat right 0 center / 0 1px; }
+.section-title[data-kan]:not(.center)::before { padding-inline-end: 64px; background-size: 48px 1px; }
+html[dir="rtl"] .section-title[data-kan]:not(.center)::before { background-position: left 0 center; }
+
+/* ---------- Ma: calmer sections, hairlines, crisper corners ---------- */
+.page-section { padding-top: clamp(64px, 9vw, 120px); padding-bottom: clamp(64px, 9vw, 120px); }
+.page-section.tinted, .svc-offer-section, .svc-process, .svc-detail-section, .prj-more { background: var(--washi-2); border-color: var(--line); }
+:is(.service-card, .offer-card, .benefit-card, .svc-tech, .tech-card, .value-card, .ab-step, .ab-std-card, .ab-focus, .ab-mv-card,
+    .svc-detail, .prj-card, .prj-ed, .svc-step, .contact-pitch, .pitch-next li, .svc-for, .chat-card, .name-card, .faq details,
+    .contact-form, .svc-detail-pic img, .page-photo img, .svc-figure img, .tech-group-pic, .service-pic) { border-radius: var(--radius); }
+:is(.offer-card, .value-card, .ab-step, .ab-std-card, .ab-mv-card, .svc-detail, .svc-tech, .svc-step) {
+  background: #fffdf9; border-color: var(--line); box-shadow: 0 1px 0 rgba(19, 19, 21, .03), 0 18px 40px -28px rgba(70, 40, 20, .25);
+}
+:is(.offer-card, .value-card, .ab-step, .ab-std-card, .svc-tech):hover { border-color: var(--shu); box-shadow: 0 24px 48px -26px rgba(126, 10, 27, .35); }
+.offer-num, .ab-step-num, .svc-step-num { font-family: var(--mincho); font-weight: 600; letter-spacing: .02em; }
+
+/* ---------- Buttons: ink sweeps across vermilion ---------- */
+.btn { border-radius: 2px; letter-spacing: .08em; }
+.btn-primary {
+  background: linear-gradient(var(--sumi), var(--sumi)) no-repeat left / 0% 100%, var(--shu);
+  transition: background-size .45s var(--ease), transform .2s, box-shadow .2s;
+}
+.btn-primary:hover { background-color: var(--shu); background-size: 100% 100%; }
+html[dir="rtl"] .btn-primary { background-position: right; }
+.btn-more { border-radius: 2px; letter-spacing: .16em; }
+
+/* ---------- Header: rice paper glass that settles as you scroll ---------- */
+.site-header {
+  background: rgba(250, 248, 244, .8); border-bottom: 1px solid var(--line);
+  box-shadow: inset 0 -2px 0 var(--shu); transition: box-shadow .35s, background-color .35s;
+}
+.site-header.is-scrolled { background: rgba(250, 248, 244, .92); box-shadow: inset 0 -2px 0 var(--shu), 0 10px 30px -18px rgba(19, 19, 21, .35); }
+.main-nav a[aria-current="page"] { color: var(--shu); }
+.scroll-line { position: fixed; top: 0; left: 0; right: 0; z-index: 70; height: 2px; pointer-events: none; transform-origin: 0 50%; transform: scaleX(var(--p, 0)); background: linear-gradient(90deg, var(--shu), #ff5c74 70%, var(--kin)); }
+html[dir="rtl"] .scroll-line { transform-origin: 100% 50%; }
+
+/* ---------- Homepage hero: cinematic, calm, vertical writing ---------- */
+.hero { min-height: clamp(680px, 82vh, 900px); }
+.hero-stripes { display: none; }
+.hero-wash { background: radial-gradient(ellipse 55% 60% at 50% 46%, rgba(250, 248, 244, .55), transparent 72%), linear-gradient(180deg, rgba(250, 248, 244, .5) 0%, rgba(250, 248, 244, .12) 40%, rgba(19, 19, 21, .28) 100%); }
+.hero-card { border: 1px solid rgba(255, 255, 255, .7); border-radius: 4px; box-shadow: 0 40px 80px -40px rgba(19, 19, 21, .45); }
+.hero-card h1 { letter-spacing: -.02em; }
+.hero-tate {
+  position: absolute; z-index: 1; inset-block: 0; inset-inline-end: clamp(18px, 4vw, 64px); display: flex; align-items: center; gap: 18px; pointer-events: none;
+  writing-mode: vertical-rl; font: 600 clamp(1.05rem, 1.5vw, 1.35rem)/1.9 var(--mincho); letter-spacing: .5em; color: #fff;
+  text-shadow: 0 2px 18px rgba(19, 19, 21, .55);
+}
+.hero-tate::after { content: ""; width: 1px; height: 120px; background: linear-gradient(var(--shu), transparent); }
+.hero-tate b { font-weight: 600; color: #fff; }
+.hero-seal { /* hanko under the vertical line */
+  writing-mode: vertical-rl; display: grid; place-items: center; width: 34px; padding: 6px 0; border-radius: 4px;
+  background: var(--shu); color: #fff; font: 700 .9rem/1.15 var(--mincho); letter-spacing: .1em; text-shadow: none;
+  box-shadow: 0 6px 16px rgba(126, 10, 27, .4); transform: rotate(3deg);
+}
+.hero-scroll {
+  position: absolute; z-index: 1; left: 50%; bottom: 22px; transform: translateX(-50%); display: grid; justify-items: center; gap: 10px;
+  font: 700 .62rem/1 var(--font); letter-spacing: .4em; color: #fff; text-shadow: 0 1px 8px rgba(0, 0, 0, .5); pointer-events: none;
+}
+.hero-scroll i { width: 1px; height: 46px; background: rgba(255, 255, 255, .35); position: relative; overflow: hidden; }
+.hero-scroll i::after { content: ""; position: absolute; left: 0; top: -40%; width: 1px; height: 40%; background: #fff; animation: dz-drip 2.2s var(--ease) infinite; }
+@keyframes dz-drip { to { top: 100%; } }
+/* Ensō: a brush circle drawn around the logo */
+.enso { position: absolute; inset: -46%; z-index: -1; pointer-events: none; }
+.enso path { fill: none; stroke: var(--shu); stroke-width: 7; stroke-linecap: round; opacity: .55; stroke-dasharray: 560; stroke-dashoffset: 560; animation: enso-draw 2.6s var(--ease) .4s forwards; }
+@keyframes enso-draw { to { stroke-dashoffset: 30; } }
+
+/* ---------- Page banners: seigaiha waves and a hanko seal ---------- */
+.svc-hero::before { content: ""; position: absolute; inset: 0; background: var(--seigaiha); opacity: .09; pointer-events: none; -webkit-mask: linear-gradient(90deg, transparent 30%, #000); mask: linear-gradient(90deg, transparent 30%, #000); }
+html[dir="rtl"] .svc-hero::before { -webkit-mask: linear-gradient(270deg, transparent 30%, #000); mask: linear-gradient(270deg, transparent 30%, #000); }
+.svc-hero h1 { letter-spacing: -.025em; }
+.page-seal {
+  display: inline-grid; place-items: center; vertical-align: middle; margin-inline-start: 18px; width: 46px; height: 46px; border-radius: 6px;
+  background: #fff; color: var(--shu); font: 700 .78rem/1.05 var(--mincho); text-align: center; letter-spacing: .04em;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(255, 255, 255, .35), 0 10px 22px rgba(60, 0, 10, .35); transform: rotate(-4deg) translateY(-6px);
+  animation: seal-in .7s var(--ease) .3s both;
+}
+@keyframes seal-in { from { opacity: 0; transform: rotate(-24deg) scale(1.8) translateY(-6px); } }
+
+/* ---------- Footer: sumi ink, seigaiha waves and a quiet 天使 ---------- */
+.site-footer { position: relative; overflow: hidden; background: var(--sumi); border-top: 2px solid var(--shu); }
+.site-footer::before { content: ""; position: absolute; inset: 0; background: var(--seigaiha); opacity: .05; pointer-events: none; }
+.site-footer::after {
+  content: "天使"; position: absolute; inset-inline-end: 2%; top: 50%; transform: translateY(-50%); writing-mode: vertical-rl; pointer-events: none;
+  font: 700 clamp(4rem, 9vw, 7rem)/1 var(--mincho); color: #fff; opacity: .04; letter-spacing: .1em;
+}
+.footer-inner { position: relative; z-index: 1; }
+
+/* ---------- Quiet reveals as you scroll (design.js adds .rv-on only when motion is welcome) ---------- */
+html.rv-on .rv { opacity: 0; transform: translate3d(0, 26px, 0); transition: opacity .9s var(--ease), transform .9s var(--ease); transition-delay: var(--rv-d, 0s); }
+html.rv-on .rv.rv-in { opacity: 1; transform: none; }
+
+/* ---------- Phones ---------- */
+@media (max-width: 760px) {
+  .hero-tate, .hero-scroll { display: none; }
+  .hero { min-height: auto; }
+  .page-seal { width: 38px; height: 38px; font-size: .66rem; margin-inline-start: 10px; }
+  .site-footer::after { display: none; }
+}
+
+/* ---------- Reduced motion: everything still, nothing hidden ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .enso path { animation: none; stroke-dashoffset: 30; }
+  .hero-scroll i::after, .page-seal { animation: none; }
+  .btn-primary { transition: none; }
+}
+
+/* Pin the vertical tagline to the edge (other hero rules position its children) and lift the enso above the glow */
+.hero .hero-tate { top: 0; bottom: 0; left: auto; right: clamp(18px, 4vw, 64px); width: auto; justify-content: center; }
+html[dir="rtl"] .hero .hero-tate { right: auto; left: clamp(18px, 4vw, 64px); }
+.logo-dazzle .enso { z-index: 0; }
+
+/* The hanko seal sits on the title line; the footer watermark is pinned to the physical right */
+.svc-hero h1 { display: inline-block; vertical-align: middle; }
+.site-footer::after { inset-inline-end: auto; right: 2%; }
+html[dir="rtl"] .site-footer::after { right: auto; left: 2%; }
+
+/* ---------- Japanese Robotics Patent Explorer (technology.html#patents) ---------- */
+.pat-section { position: relative; overflow: hidden; color: #fff; background: radial-gradient(ellipse 60% 50% at 85% 0%, rgba(200, 16, 46, .35), transparent 70%), linear-gradient(160deg, #1a0a0e, var(--sumi) 60%); }
+.pat-section::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .5;
+  background: linear-gradient(rgba(255, 92, 116, .07) 1px, transparent 1px) 0 0 / 40px 40px, linear-gradient(90deg, rgba(255, 92, 116, .07) 1px, transparent 1px) 0 0 / 40px 40px;
+  -webkit-mask: radial-gradient(ellipse at 70% 20%, #000, transparent 75%); mask: radial-gradient(ellipse at 70% 20%, #000, transparent 75%); }
+.pat-section::after { content: "特許"; position: absolute; top: 40px; right: 3%; writing-mode: vertical-rl; font: 700 clamp(4rem, 9vw, 7.5rem)/1 var(--mincho); color: #fff; opacity: .05; pointer-events: none; }
+html[dir="rtl"] .pat-section::after { right: auto; left: 3%; }
+.pat-section .page-inner { position: relative; z-index: 1; }
+.pat-intro { max-width: 76ch; color: rgba(255, 255, 255, .85); font-size: 1.08rem; line-height: 1.75; margin-bottom: 30px; }
+.pat-search { padding: 22px; border-radius: var(--radius); background: rgba(255, 255, 255, .05); border: 1px solid rgba(255, 92, 116, .35); box-shadow: 0 0 0 1px rgba(255, 255, 255, .03), 0 30px 60px -30px rgba(0, 0, 0, .6); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.pat-label { display: block; font-size: .78rem; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; color: #ff8fa0; margin-bottom: 10px; }
+html[dir="rtl"] .pat-label, html:lang(ja) .pat-label, html:lang(zh) .pat-label, html:lang(ko) .pat-label { letter-spacing: .03em; }
+.pat-row { display: flex; gap: 10px; }
+.pat-row input[type="search"] { flex: 1; min-width: 0; min-height: 52px; padding: 12px 16px; border-radius: 2px; border: 1px solid rgba(255, 255, 255, .25); background: rgba(10, 4, 6, .6); color: #fff; font: inherit; }
+.pat-row input[type="search"]::placeholder { color: rgba(255, 255, 255, .45); }
+.pat-row input[type="search"]:focus { outline: none; border-color: #ff4d67; box-shadow: 0 0 0 3px rgba(255, 77, 103, .3); }
+.pat-check { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; font-size: .92rem; color: rgba(255, 255, 255, .8); cursor: pointer; }
+.pat-check input { accent-color: var(--shu); width: 18px; height: 18px; }
+.pat-sub { color: #fff; font-size: 1.3rem; font-weight: 900; margin: 44px 0 18px; display: flex; align-items: center; gap: 12px; }
+.pat-sub::before { content: ""; width: 26px; height: 2px; background: var(--shu); }
+.pat-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.pat-card { position: relative; display: grid; gap: 8px; height: 100%; padding: 20px 18px 18px; border-radius: var(--radius); text-decoration: none; color: #fff;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .02)); border: 1px solid rgba(255, 255, 255, .1);
+  transition: transform .3s var(--ease), border-color .3s, background-color .3s, box-shadow .3s; }
+.pat-card:hover, .pat-card:focus-visible { transform: translateY(-4px); border-color: #ff4d67; background-color: rgba(200, 16, 46, .14); box-shadow: 0 18px 40px -20px rgba(255, 45, 79, .5); }
+.pat-ico { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 10px; color: #ff6b80; background: rgba(200, 16, 46, .15); border: 1px solid rgba(255, 92, 116, .35); }
+.pat-ico svg { width: 26px; height: 26px; }
+.pat-num { position: absolute; top: 16px; right: 16px; font: 600 .8rem/1 var(--mincho); color: rgba(255, 255, 255, .35); letter-spacing: .1em; }
+html[dir="rtl"] .pat-num { right: auto; left: 16px; }
+.pat-card b { font-size: 1.02rem; font-weight: 900; line-height: 1.3; }
+.pat-desc { font-size: .88rem; line-height: 1.5; color: rgba(255, 255, 255, .7); }
+.pat-go { margin-top: auto; padding-top: 6px; font-size: .8rem; font-weight: 900; letter-spacing: .08em; color: #ff8fa0; }
+.pat-co-intro { color: rgba(255, 255, 255, .75); margin: -6px 0 16px; }
+.pat-co { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.pat-co a { display: inline-block; padding: 9px 16px; border-radius: 2px; border: 1px solid rgba(255, 255, 255, .2); color: #fff; text-decoration: none; font-weight: 700; font-size: .92rem; transition: border-color .2s, background-color .2s; }
+.pat-co a:hover, .pat-co a:focus-visible { border-color: #ff4d67; background: rgba(200, 16, 46, .2); }
+.pat-sources ul { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 10px; color: rgba(255, 255, 255, .8); }
+.pat-sources a { color: #ff8fa0; }
+.pat-note { font-size: .86rem; color: rgba(255, 255, 255, .55); max-width: 80ch; }
+@media (max-width: 1000px) { .pat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) {
+  .pat-grid { grid-template-columns: minmax(0, 1fr); }
+  .pat-row { flex-direction: column; }
+  .pat-section::after { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .pat-card { transition: none; } .pat-card:hover { transform: none; } }
