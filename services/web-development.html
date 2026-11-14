@@ -11,7 +11,7 @@
   <meta property="og:type" content="website">
   <link rel="icon" href="../logo.png" type="image/png">
   <link rel="apple-touch-icon" href="../logo.png">
-  <link rel="stylesheet" href="../styles.css?v=9e587451">
+  <link rel="stylesheet" href="../styles.css?v=2933e18a">
   <link rel="stylesheet" href="../chat.css?v=c97c61fb">
 </head>
 <body class="svc-page" data-title-key="svc_webdev_title" data-desc-key="svc_webdev_short">
@@ -33,6 +33,12 @@
           <li><a href="../about.html" data-nav="about" data-i18n="navAbout">About</a></li>
           <li><a href="../services.html" aria-current="page" data-nav="services" data-i18n="navServices">Services</a></li>
           <li><a href="../technology.html" data-nav="technology" data-i18n="navTech">Technology</a></li>
+          <li class="has-sub"><a href="../projects.html" data-nav="projects" data-i18n="navProjects">Projects</a>
+            <ul class="sub-nav">
+              <li><a href="../projects/storycaster.html" data-nav="p-storycaster">StoryCaster</a></li>
+              <li><a href="../projects/master-baiter-pro.html" data-nav="p-master-baiter-pro">Master Baiter Pro</a></li>
+            </ul>
+          </li>
           <li><a href="../contact.html" data-nav="contact" data-i18n="navContact">Contact</a></li>
         </ul>
       </nav>
@@ -85,23 +91,121 @@
       </div>
     </section>
 
-    <section class="svc-body" aria-labelledby="offer-title">
+    <section class="svc-body" aria-labelledby="intro-title">
       <div class="svc-body-inner">
         <div class="svc-copy">
+          <h2 id="intro-title" class="sr-only" data-i18n="svc_webdev_title">Web Development</h2>
           <p class="svc-intro" data-i18n="svc_webdev_intro">We turn designs into fast, secure, standards-based websites and web applications. Clean code keeps your site quick to load, easy to update, and ready to grow.</p>
-          <h2 id="offer-title" data-i18n="offerTitle">What we offer</h2>
-          <ul class="svc-offers">
-            <li data-i18n="svc_webdev_o1">Front-end development (HTML, CSS, JavaScript)</li>
-            <li data-i18n="svc_webdev_o2">Web applications and customer portals</li>
-            <li data-i18n="svc_webdev_o3">Online stores and booking systems</li>
-            <li data-i18n="svc_webdev_o4">Speed and search engine optimization</li>
-            <li data-i18n="svc_webdev_o5">Security updates and ongoing support</li>
-          </ul>
+          <div class="svc-for">
+            <h3 data-i18n="forTitle">Who it's for</h3>
+            <p data-i18n="svc_webdev_for">Businesses that need a fast, secure website or web application built properly, from small sites to customer portals.</p>
+          </div>
           <a class="btn btn-primary" href="../contact.html?topic=svc_webdev_title" data-i18n="cta">Request Consultation</a>
         </div>
         <figure class="svc-figure">
           <img src="../img/services/webdev.jpg" alt="A laptop on a desk showing website code" data-i18n-attr="alt:svc_webdev_alt" width="1024" height="678">
         </figure>
+      </div>
+    </section>
+
+    <section class="svc-offer-section" aria-labelledby="offer-title">
+      <div class="svc-wide">
+        <h2 id="offer-title" class="section-title" data-i18n="offerTitle">What we offer</h2>
+        <ul class="offer-grid">
+          <li class="offer-card">
+            <span class="offer-num" aria-hidden="true">01</span>
+            <h3 data-i18n="svc_webdev_o1">Front-end development (HTML, CSS, JavaScript)</h3>
+            <p data-i18n="svc_webdev_d1">Hand-built pages in HTML, CSS and JavaScript that load quickly and work in every browser.</p>
+          </li>
+          <li class="offer-card">
+            <span class="offer-num" aria-hidden="true">02</span>
+            <h3 data-i18n="svc_webdev_o2">Web applications and customer portals</h3>
+            <p data-i18n="svc_webdev_d2">Secure portals where customers can log in, track orders or manage their accounts.</p>
+          </li>
+          <li class="offer-card">
+            <span class="offer-num" aria-hidden="true">03</span>
+            <h3 data-i18n="svc_webdev_o3">Online stores and booking systems</h3>
+            <p data-i18n="svc_webdev_d3">Online shops and booking systems with secure payments and simple management.</p>
+          </li>
+          <li class="offer-card">
+            <span class="offer-num" aria-hidden="true">04</span>
+            <h3 data-i18n="svc_webdev_o4">Speed and search engine optimization</h3>
+            <p data-i18n="svc_webdev_d4">Faster loading and a search-friendly structure, so more people find your site.</p>
+          </li>
+          <li class="offer-card">
+            <span class="offer-num" aria-hidden="true">05</span>
+            <h3 data-i18n="svc_webdev_o5">Security updates and ongoing support</h3>
+            <p data-i18n="svc_webdev_d5">Regular security updates, backups and fixes, so your site stays safe and working.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="svc-benefits" aria-labelledby="benefits-title">
+      <div class="svc-wide">
+        <h2 id="benefits-title" class="section-title light" data-i18n="benefitsTitle">Why it matters</h2>
+        <ul class="benefit-grid">
+          <li class="benefit-card">
+            <span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span>
+            <h3 data-i18n="svc_webdev_b1t">Speed</h3>
+            <p data-i18n="svc_webdev_b1">Fast pages keep visitors on your site.</p>
+          </li>
+          <li class="benefit-card">
+            <span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg></span>
+            <h3 data-i18n="svc_webdev_b2t">Security</h3>
+            <p data-i18n="svc_webdev_b2">Protection against common attacks and data leaks.</p>
+          </li>
+          <li class="benefit-card">
+            <span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></span>
+            <h3 data-i18n="svc_webdev_b3t">Search visibility</h3>
+            <p data-i18n="svc_webdev_b3">A clean structure that search engines can read easily.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="svc-tech-section" aria-labelledby="tech-used-title">
+      <div class="svc-wide">
+        <h2 id="tech-used-title" class="section-title" data-i18n="techUsedTitle">Technologies we use</h2>
+        <ul class="svc-tech-grid">
+          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/html5.svg); --brand: #E34F26" aria-hidden="true"></span>
+            <span class="svc-tech-name">HTML5</span>
+          </a></li>
+          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/css3.svg); --brand: #1572B6" aria-hidden="true"></span>
+            <span class="svc-tech-name">CSS</span>
+          </a></li>
+          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/javascript.svg); --brand: #F7DF1E" aria-hidden="true"></span>
+            <span class="svc-tech-name">JavaScript</span>
+          </a></li>
+          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/typescript.svg); --brand: #3178C6" aria-hidden="true"></span>
+            <span class="svc-tech-name">TypeScript</span>
+          </a></li>
+          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/react.svg); --brand: #61DAFB" aria-hidden="true"></span>
+            <span class="svc-tech-name">React</span>
+          </a></li>
+          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/vuedotjs.svg); --brand: #4FC08D" aria-hidden="true"></span>
+            <span class="svc-tech-name">Vue.js</span>
+          </a></li>
+          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/nextdotjs.svg); --brand: #000000" aria-hidden="true"></span>
+            <span class="svc-tech-name">Next.js</span>
+          </a></li>
+          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/nodedotjs.svg); --brand: #5FA04E" aria-hidden="true"></span>
+            <span class="svc-tech-name">Node.js</span>
+          </a></li>
+          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/php.svg); --brand: #777BB4" aria-hidden="true"></span>
+            <span class="svc-tech-name">PHP</span>
+          </a></li>
+        </ul>
+        <p class="svc-tech-more"><a href="../technology.html"><span data-i18n="techUsedMore">See all technologies</span> <span aria-hidden="true">→</span></a></p>
       </div>
     </section>
 
@@ -197,6 +301,7 @@
             <li><a href="../team.html" data-nav="team" data-i18n="navTeam">Team</a></li>
             <li><a href="../services.html" aria-current="page" data-nav="services" data-i18n="navServices">Services</a></li>
             <li><a href="../technology.html" data-nav="technology" data-i18n="navTech">Technology</a></li>
+            <li><a href="../projects.html" data-nav="projects" data-i18n="navProjects">Projects</a></li>
             <li><a href="../contact.html" data-nav="contact" data-i18n="navContact">Contact</a></li>
           </ul>
       </nav>
@@ -204,8 +309,8 @@
     </div>
   </footer>
 
-  <script src="../translations.js?v=71bd7f0d"></script>
-  <script src="../app.js?v=1f39c61a"></script>
+  <script src="../translations.js?v=7fe431da"></script>
+  <script src="../app.js?v=6928c58a"></script>
   <script src="../chat.js?v=520f9752"></script>
 </body>
 </html>

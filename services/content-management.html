@@ -11,7 +11,7 @@
   <meta property="og:type" content="website">
   <link rel="icon" href="../logo.png" type="image/png">
   <link rel="apple-touch-icon" href="../logo.png">
-  <link rel="stylesheet" href="../styles.css?v=9e587451">
+  <link rel="stylesheet" href="../styles.css?v=2933e18a">
   <link rel="stylesheet" href="../chat.css?v=c97c61fb">
 </head>
 <body class="svc-page" data-title-key="svc_cms_title" data-desc-key="svc_cms_short">
@@ -33,6 +33,12 @@
           <li><a href="../about.html" data-nav="about" data-i18n="navAbout">About</a></li>
           <li><a href="../services.html" aria-current="page" data-nav="services" data-i18n="navServices">Services</a></li>
           <li><a href="../technology.html" data-nav="technology" data-i18n="navTech">Technology</a></li>
+          <li class="has-sub"><a href="../projects.html" data-nav="projects" data-i18n="navProjects">Projects</a>
+            <ul class="sub-nav">
+              <li><a href="../projects/storycaster.html" data-nav="p-storycaster">StoryCaster</a></li>
+              <li><a href="../projects/master-baiter-pro.html" data-nav="p-master-baiter-pro">Master Baiter Pro</a></li>
+            </ul>
+          </li>
           <li><a href="../contact.html" data-nav="contact" data-i18n="navContact">Contact</a></li>
         </ul>
       </nav>
@@ -85,23 +91,105 @@
       </div>
     </section>
 
-    <section class="svc-body" aria-labelledby="offer-title">
+    <section class="svc-body" aria-labelledby="intro-title">
       <div class="svc-body-inner">
         <div class="svc-copy">
+          <h2 id="intro-title" class="sr-only" data-i18n="svc_cms_title">Content Management</h2>
           <p class="svc-intro" data-i18n="svc_cms_intro">Your team should be able to update the website without waiting on a developer. We set up content management systems that make editing pages, news, and images simple, with the right permissions for each person.</p>
-          <h2 id="offer-title" data-i18n="offerTitle">What we offer</h2>
-          <ul class="svc-offers">
-            <li data-i18n="svc_cms_o1">CMS setup and configuration</li>
-            <li data-i18n="svc_cms_o2">Custom page templates and content blocks</li>
-            <li data-i18n="svc_cms_o3">Moving content from your current website</li>
-            <li data-i18n="svc_cms_o4">Multilingual content (Japanese and English)</li>
-            <li data-i18n="svc_cms_o5">Staff training and editing guides</li>
-          </ul>
+          <div class="svc-for">
+            <h3 data-i18n="forTitle">Who it's for</h3>
+            <p data-i18n="svc_cms_for">Teams that publish news, update pages or manage content often and want to do it themselves.</p>
+          </div>
           <a class="btn btn-primary" href="../contact.html?topic=svc_cms_title" data-i18n="cta">Request Consultation</a>
         </div>
         <figure class="svc-figure">
           <img src="../img/services/cms.jpg" alt="Hands typing on a laptop keyboard" data-i18n-attr="alt:svc_cms_alt" width="960" height="640">
         </figure>
+      </div>
+    </section>
+
+    <section class="svc-offer-section" aria-labelledby="offer-title">
+      <div class="svc-wide">
+        <h2 id="offer-title" class="section-title" data-i18n="offerTitle">What we offer</h2>
+        <ul class="offer-grid">
+          <li class="offer-card">
+            <span class="offer-num" aria-hidden="true">01</span>
+            <h3 data-i18n="svc_cms_o1">CMS setup and configuration</h3>
+            <p data-i18n="svc_cms_d1">Installing and configuring a content management system suited to your team and site.</p>
+          </li>
+          <li class="offer-card">
+            <span class="offer-num" aria-hidden="true">02</span>
+            <h3 data-i18n="svc_cms_o2">Custom page templates and content blocks</h3>
+            <p data-i18n="svc_cms_d2">Custom templates and content blocks, so new pages always look on-brand.</p>
+          </li>
+          <li class="offer-card">
+            <span class="offer-num" aria-hidden="true">03</span>
+            <h3 data-i18n="svc_cms_o3">Moving content from your current website</h3>
+            <p data-i18n="svc_cms_d3">Moving your existing pages, images and posts across without losing content or search rankings.</p>
+          </li>
+          <li class="offer-card">
+            <span class="offer-num" aria-hidden="true">04</span>
+            <h3 data-i18n="svc_cms_o4">Multilingual content (Japanese and English)</h3>
+            <p data-i18n="svc_cms_d4">Managing content in several languages from one place.</p>
+          </li>
+          <li class="offer-card">
+            <span class="offer-num" aria-hidden="true">05</span>
+            <h3 data-i18n="svc_cms_o5">Staff training and editing guides</h3>
+            <p data-i18n="svc_cms_d5">Hands-on training and simple written guides for everyone who edits the site.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="svc-benefits" aria-labelledby="benefits-title">
+      <div class="svc-wide">
+        <h2 id="benefits-title" class="section-title light" data-i18n="benefitsTitle">Why it matters</h2>
+        <ul class="benefit-grid">
+          <li class="benefit-card">
+            <span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span>
+            <h3 data-i18n="svc_cms_b1t">Independence</h3>
+            <p data-i18n="svc_cms_b1">Update your site without waiting for a developer.</p>
+          </li>
+          <li class="benefit-card">
+            <span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg></span>
+            <h3 data-i18n="svc_cms_b2t">Consistency</h3>
+            <p data-i18n="svc_cms_b2">Templates keep every page on-brand.</p>
+          </li>
+          <li class="benefit-card">
+            <span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></span>
+            <h3 data-i18n="svc_cms_b3t">Control</h3>
+            <p data-i18n="svc_cms_b3">Permissions decide who can edit and publish.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="svc-tech-section" aria-labelledby="tech-used-title">
+      <div class="svc-wide">
+        <h2 id="tech-used-title" class="section-title" data-i18n="techUsedTitle">Technologies we use</h2>
+        <ul class="svc-tech-grid">
+          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/wordpress.svg); --brand: #21759B" aria-hidden="true"></span>
+            <span class="svc-tech-name">WordPress</span>
+          </a></li>
+          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/strapi.svg); --brand: #4945FF" aria-hidden="true"></span>
+            <span class="svc-tech-name">Strapi</span>
+          </a></li>
+          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/shopify.svg); --brand: #7AB55C" aria-hidden="true"></span>
+            <span class="svc-tech-name">Shopify</span>
+          </a></li>
+          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/php.svg); --brand: #777BB4" aria-hidden="true"></span>
+            <span class="svc-tech-name">PHP</span>
+          </a></li>
+          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/mysql.svg); --brand: #4479A1" aria-hidden="true"></span>
+            <span class="svc-tech-name">MySQL</span>
+          </a></li>
+        </ul>
+        <p class="svc-tech-more"><a href="../technology.html"><span data-i18n="techUsedMore">See all technologies</span> <span aria-hidden="true">→</span></a></p>
       </div>
     </section>
 
@@ -197,6 +285,7 @@
             <li><a href="../team.html" data-nav="team" data-i18n="navTeam">Team</a></li>
             <li><a href="../services.html" aria-current="page" data-nav="services" data-i18n="navServices">Services</a></li>
             <li><a href="../technology.html" data-nav="technology" data-i18n="navTech">Technology</a></li>
+            <li><a href="../projects.html" data-nav="projects" data-i18n="navProjects">Projects</a></li>
             <li><a href="../contact.html" data-nav="contact" data-i18n="navContact">Contact</a></li>
           </ul>
       </nav>
@@ -204,8 +293,8 @@
     </div>
   </footer>
 
-  <script src="../translations.js?v=71bd7f0d"></script>
-  <script src="../app.js?v=1f39c61a"></script>
+  <script src="../translations.js?v=7fe431da"></script>
+  <script src="../app.js?v=6928c58a"></script>
   <script src="../chat.js?v=520f9752"></script>
 </body>
 </html>

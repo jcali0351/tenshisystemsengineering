@@ -11,7 +11,7 @@
   <meta property="og:type" content="website">
   <link rel="icon" href="../logo.png" type="image/png">
   <link rel="apple-touch-icon" href="../logo.png">
-  <link rel="stylesheet" href="../styles.css?v=9e587451">
+  <link rel="stylesheet" href="../styles.css?v=2933e18a">
   <link rel="stylesheet" href="../chat.css?v=c97c61fb">
 </head>
 <body class="svc-page" data-title-key="svc_software_title" data-desc-key="svc_software_short">
@@ -33,6 +33,12 @@
           <li><a href="../about.html" data-nav="about" data-i18n="navAbout">About</a></li>
           <li><a href="../services.html" aria-current="page" data-nav="services" data-i18n="navServices">Services</a></li>
           <li><a href="../technology.html" data-nav="technology" data-i18n="navTech">Technology</a></li>
+          <li class="has-sub"><a href="../projects.html" data-nav="projects" data-i18n="navProjects">Projects</a>
+            <ul class="sub-nav">
+              <li><a href="../projects/storycaster.html" data-nav="p-storycaster">StoryCaster</a></li>
+              <li><a href="../projects/master-baiter-pro.html" data-nav="p-master-baiter-pro">Master Baiter Pro</a></li>
+            </ul>
+          </li>
           <li><a href="../contact.html" data-nav="contact" data-i18n="navContact">Contact</a></li>
         </ul>
       </nav>
@@ -85,23 +91,109 @@
       </div>
     </section>
 
-    <section class="svc-body" aria-labelledby="offer-title">
+    <section class="svc-body" aria-labelledby="intro-title">
       <div class="svc-body-inner">
         <div class="svc-copy">
+          <h2 id="intro-title" class="sr-only" data-i18n="svc_software_title">Software Development</h2>
           <p class="svc-intro" data-i18n="svc_software_intro">We design and build software around how your business actually works: desktop and web applications, internal tools, and connections between the systems you already use. Every project is planned for reliability and for the people who will maintain it after launch.</p>
-          <h2 id="offer-title" data-i18n="offerTitle">What we offer</h2>
-          <ul class="svc-offers">
-            <li data-i18n="svc_software_o1">Custom business applications</li>
-            <li data-i18n="svc_software_o2">Web and desktop applications</li>
-            <li data-i18n="svc_software_o3">API and system integration</li>
-            <li data-i18n="svc_software_o4">Modernizing older software</li>
-            <li data-i18n="svc_software_o5">Testing, documentation, and long-term maintenance</li>
-          </ul>
+          <div class="svc-for">
+            <h3 data-i18n="forTitle">Who it's for</h3>
+            <p data-i18n="svc_software_for">Businesses that have outgrown spreadsheets or off-the-shelf tools, and teams that need their systems to work together.</p>
+          </div>
           <a class="btn btn-primary" href="../contact.html?topic=svc_software_title" data-i18n="cta">Request Consultation</a>
         </div>
         <figure class="svc-figure">
           <img src="../img/services/software.jpg" alt="A laptop screen showing lines of program code" data-i18n-attr="alt:svc_software_alt" width="960" height="640">
         </figure>
+      </div>
+    </section>
+
+    <section class="svc-offer-section" aria-labelledby="offer-title">
+      <div class="svc-wide">
+        <h2 id="offer-title" class="section-title" data-i18n="offerTitle">What we offer</h2>
+        <ul class="offer-grid">
+          <li class="offer-card">
+            <span class="offer-num" aria-hidden="true">01</span>
+            <h3 data-i18n="svc_software_o1">Custom business applications</h3>
+            <p data-i18n="svc_software_d1">Applications built around your exact processes, so your team stops working around the software.</p>
+          </li>
+          <li class="offer-card">
+            <span class="offer-num" aria-hidden="true">02</span>
+            <h3 data-i18n="svc_software_o2">Web and desktop applications</h3>
+            <p data-i18n="svc_software_d2">Browser-based tools your staff can use anywhere, and desktop apps where speed or offline use matters.</p>
+          </li>
+          <li class="offer-card">
+            <span class="offer-num" aria-hidden="true">03</span>
+            <h3 data-i18n="svc_software_o3">API and system integration</h3>
+            <p data-i18n="svc_software_d3">We connect your CRM, accounting, inventory and other systems so data flows without copying and pasting.</p>
+          </li>
+          <li class="offer-card">
+            <span class="offer-num" aria-hidden="true">04</span>
+            <h3 data-i18n="svc_software_o4">Modernizing older software</h3>
+            <p data-i18n="svc_software_d4">We update ageing systems step by step, keeping your business running while we move it to modern technology.</p>
+          </li>
+          <li class="offer-card">
+            <span class="offer-num" aria-hidden="true">05</span>
+            <h3 data-i18n="svc_software_o5">Testing, documentation, and long-term maintenance</h3>
+            <p data-i18n="svc_software_d5">Automated tests, clear documentation and ongoing updates keep your software dependable for years.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="svc-benefits" aria-labelledby="benefits-title">
+      <div class="svc-wide">
+        <h2 id="benefits-title" class="section-title light" data-i18n="benefitsTitle">Why it matters</h2>
+        <ul class="benefit-grid">
+          <li class="benefit-card">
+            <span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span>
+            <h3 data-i18n="svc_software_b1t">Fewer manual tasks</h3>
+            <p data-i18n="svc_software_b1">Automating repetitive work frees your team for the work that matters.</p>
+          </li>
+          <li class="benefit-card">
+            <span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg></span>
+            <h3 data-i18n="svc_software_b2t">Built to last</h3>
+            <p data-i18n="svc_software_b2">Clean, documented code that any qualified developer can maintain.</p>
+          </li>
+          <li class="benefit-card">
+            <span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></span>
+            <h3 data-i18n="svc_software_b3t">Room to grow</h3>
+            <p data-i18n="svc_software_b3">Systems designed to handle more users, data and features as you expand.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="svc-tech-section" aria-labelledby="tech-used-title">
+      <div class="svc-wide">
+        <h2 id="tech-used-title" class="section-title" data-i18n="techUsedTitle">Technologies we use</h2>
+        <ul class="svc-tech-grid">
+          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/python.svg); --brand: #3776AB" aria-hidden="true"></span>
+            <span class="svc-tech-name">Python</span>
+          </a></li>
+          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/nodedotjs.svg); --brand: #5FA04E" aria-hidden="true"></span>
+            <span class="svc-tech-name">Node.js</span>
+          </a></li>
+          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/typescript.svg); --brand: #3178C6" aria-hidden="true"></span>
+            <span class="svc-tech-name">TypeScript</span>
+          </a></li>
+          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/postgresql.svg); --brand: #4169E1" aria-hidden="true"></span>
+            <span class="svc-tech-name">PostgreSQL</span>
+          </a></li>
+          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/docker.svg); --brand: #2496ED" aria-hidden="true"></span>
+            <span class="svc-tech-name">Docker</span>
+          </a></li>
+          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/github.svg); --brand: #181717" aria-hidden="true"></span>
+            <span class="svc-tech-name">GitHub</span>
+          </a></li>
+        </ul>
+        <p class="svc-tech-more"><a href="../technology.html"><span data-i18n="techUsedMore">See all technologies</span> <span aria-hidden="true">→</span></a></p>
       </div>
     </section>
 
@@ -197,6 +289,7 @@
             <li><a href="../team.html" data-nav="team" data-i18n="navTeam">Team</a></li>
             <li><a href="../services.html" aria-current="page" data-nav="services" data-i18n="navServices">Services</a></li>
             <li><a href="../technology.html" data-nav="technology" data-i18n="navTech">Technology</a></li>
+            <li><a href="../projects.html" data-nav="projects" data-i18n="navProjects">Projects</a></li>
             <li><a href="../contact.html" data-nav="contact" data-i18n="navContact">Contact</a></li>
           </ul>
       </nav>
@@ -204,8 +297,8 @@
     </div>
   </footer>
 
-  <script src="../translations.js?v=71bd7f0d"></script>
-  <script src="../app.js?v=1f39c61a"></script>
+  <script src="../translations.js?v=7fe431da"></script>
+  <script src="../app.js?v=6928c58a"></script>
   <script src="../chat.js?v=520f9752"></script>
 </body>
 </html>

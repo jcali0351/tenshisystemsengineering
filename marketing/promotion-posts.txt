@@ -1,0 +1,360 @@
+TENSHI SYSTEMS ENGINEERING: COPY-AND-PASTE PROMOTION POSTS
+===========================================================
+
+Ready-made posts for the website, the services and the Projects (StoryCaster, Master Baiter Pro,
+Master Bait Forever). Every post below already fits its platform's length limit and rules.
+Copy the text between the lines. Replace nothing unless a post says [like this].
+
+Links
+  Website ............ https://jcali0351.github.io/tenshisystemsengineering/
+  Projects ........... https://jcali0351.github.io/tenshisystemsengineering/projects.html
+  StoryCaster page ... https://jcali0351.github.io/tenshisystemsengineering/projects/storycaster.html
+  Master Baiter page . https://jcali0351.github.io/tenshisystemsengineering/projects/master-baiter-pro.html
+  Services ........... https://jcali0351.github.io/tenshisystemsengineering/services.html
+  Contact ............ https://jcali0351.github.io/tenshisystemsengineering/contact.html
+  CurseForge
+    StoryCaster (Midnight) ..... https://www.curseforge.com/wow/addons/storycaster
+    StoryCaster (WoW Forever) .. https://www.curseforge.com/wow/addons/storycaster-wow-forever
+    Master Baiter Pro .......... https://www.curseforge.com/wow/addons/master-baiter-pro
+
+
+-----------------------------------------------------------
+POSTING RULES: READ ONCE BEFORE YOU POST
+-----------------------------------------------------------
+Everywhere
+  - Say who you are. When you post about your own add-on or company, say so ("I made this",
+    "our team built"). Hidden self-promotion breaks the rules of Reddit, Discord servers and
+    most forums, and can get the account banned.
+  - Don't post the same text again and again. X, Reddit and Facebook treat repeated identical
+    posts as spam. Space posts out (one platform a day is plenty) and vary the wording; there
+    are two or three versions of most posts below for that reason.
+  - Never buy likes, follows, upvotes or reviews, and never ask people to upvote.
+  - No paid ads with these texts without checking the ad rules first (see the next point).
+  - "Master Baiter Pro" is a fishing pun. It's fine in gaming spaces (it's the add-on's real
+    CurseForge name), but keep it out of LinkedIn and out of paid ads: ad review on Meta and
+    Google often rejects the name. For LinkedIn, the posts below say "our fishing add-on".
+  - World of Warcraft is a trademark of Blizzard Entertainment. Don't use Blizzard's logos or
+    game art in posts, and never suggest Blizzard made or endorses the add-ons. Our screenshots,
+    logos and the add-on names are fine.
+  - The add-ons are free. Never put a price, a donation demand or "pay for early access" next
+    to them: Blizzard's add-on policy forbids charging for add-ons.
+  - Only post in-game add-on news in places that allow it (see Reddit and Discord below).
+
+X (Twitter)
+  - 280 characters max. Every link counts as 23 characters, however long it really is.
+  - One or two hashtags at most; more looks like spam.
+  - Attach a picture from img/projects/ (logos or screenshots). Posts with a picture get seen more.
+
+Reddit
+  - r/wow allows add-on posts but they must be marked with the right flair (look for "Discussion"
+    or "Add-on" flair in the subreddit's rules) and you must say you're the author.
+  - r/WowUI is the best home for add-on posts: show a screenshot, explain what it does.
+  - Reddit's own guideline: most of your activity should be normal participation, not links to
+    your own things. Reply to comments on your post.
+  - Never post the same thread in several subreddits on the same day.
+  - Read each subreddit's sidebar rules before posting; some ban self-promotion on certain days.
+
+Discord
+  - Only post in channels made for it (#self-promo, #addons, #share-your-stuff). Never DM people
+    you don't know with links: it is against most servers' rules and Discord's spam policy.
+
+Facebook / Instagram
+  - Instagram captions can't hold clickable links: say "link in bio" and put the link in the bio.
+  - Up to about 5 hashtags on Instagram reads naturally; Facebook needs one or two at most.
+
+LinkedIn
+  - Business tone. Talk about the company, the work and the people. Skip game puns.
+
+
+===========================================================
+1. THE COMPANY AND THE WEBSITE
+===========================================================
+
+--- X: website launch (version A) ---
+Tenshi Systems Engineering is online. From Osaka to the world: software, infrastructure, web, AI and media design, in 10 languages.
+
+Together Best Cooperation.
+
+https://jcali0351.github.io/tenshisystemsengineering/
+-------------------------------------
+
+--- X: website launch (version B) ---
+Our new website speaks 10 languages, from Japanese to Polish to Nigerian Pidgin, and you can ask our AI assistant Tanaka anything about our work.
+
+Say hello: https://jcali0351.github.io/tenshisystemsengineering/
+-------------------------------------
+
+--- X: website launch, Japanese ---
+天使システムズエンジニアリングのウェブサイトを公開しました。大阪から世界へ。ソフトウェア開発、インフラ、ウェブ、AI、メディアデザインを10言語でご紹介しています。
+
+https://jcali0351.github.io/tenshisystemsengineering/
+-------------------------------------
+
+--- LinkedIn: website launch ---
+We're proud to launch the new Tenshi Systems Engineering website.
+
+Based in Osaka and working with clients around the world, we build reliable software, infrastructure and digital experiences. The new site covers our nine services in detail:
+
+• Software Development
+• Technology Consulting
+• Media Design
+• Web Design
+• Web Development
+• Hosting
+• AI Services
+• Content Management
+• Branding
+
+It's available in ten languages, including Japanese, English, Korean, German, Spanish, Chinese, Arabic, Polish, Nigerian Pidgin and Farsi, because good cooperation starts with speaking each other's language. You can also ask Tanaka, our AI assistant, about any of our services.
+
+Together Best Cooperation.
+
+https://jcali0351.github.io/tenshisystemsengineering/
+
+#SoftwareEngineering #Osaka
+-------------------------------------
+
+--- Facebook: website launch ---
+Our new website is live! 🎉
+
+Tenshi Systems Engineering builds software, infrastructure, websites, AI tools and media design from Osaka for clients around the world. Explore our services in ten languages, or ask our AI assistant Tanaka a question.
+
+👉 https://jcali0351.github.io/tenshisystemsengineering/
+
+Together Best Cooperation.
+-------------------------------------
+
+--- Instagram: website launch ---
+From Osaka to the world. 🌏
+
+Our new website is live, in ten languages: software, infrastructure, web, AI and media design, built to last.
+
+Together Best Cooperation.
+
+Link in bio.
+
+#TenshiSystems #Osaka #WebDevelopment #SoftwareEngineering #Design
+-------------------------------------
+
+
+===========================================================
+2. SERVICES (one at a time, a week apart works well)
+===========================================================
+
+--- X: Web Development ---
+Fast, accessible websites that work in every language and on every screen. That's what we build.
+
+Web development at Tenshi Systems Engineering:
+https://jcali0351.github.io/tenshisystemsengineering/services/web-development.html
+-------------------------------------
+
+--- X: AI Services ---
+AI that helps your team instead of getting in its way: assistants, document search and automation, built carefully and tested properly.
+
+https://jcali0351.github.io/tenshisystemsengineering/services.html
+-------------------------------------
+
+--- X: Media Design ---
+Brand videos, motion graphics, illustration and photography, made with the same care as our code.
+
+Media design at Tenshi Systems Engineering:
+https://jcali0351.github.io/tenshisystemsengineering/services.html
+-------------------------------------
+
+--- LinkedIn: services overview ---
+What does a systems engineering company do all day?
+
+At Tenshi Systems Engineering it's nine things: software development, technology consulting, media design, web design, web development, hosting, AI services, content management and branding.
+
+Every service page on our site now explains what we offer, who it's for, the benefits and the tools we use, from Python and TypeScript to Figma and Cloudflare.
+
+If one of them is the thing your project is missing, we'd be glad to talk.
+
+https://jcali0351.github.io/tenshisystemsengineering/services.html
+-------------------------------------
+
+
+===========================================================
+3. PROJECTS (our own software)
+===========================================================
+
+--- X: Projects section (version A) ---
+Client work is half of what we do. The other half: our own projects.
+
+Our first ones are free add-ons for World of Warcraft, used by players around the world.
+
+https://jcali0351.github.io/tenshisystemsengineering/projects.html
+-------------------------------------
+
+--- X: Projects section (version B) ---
+New on our site: Projects. Software we design, write, test and support ourselves, free for anyone. Starting with StoryCaster and Master Baiter Pro for World of Warcraft. #Warcraft
+
+https://jcali0351.github.io/tenshisystemsengineering/projects.html
+-------------------------------------
+
+--- LinkedIn: Projects section ---
+Alongside client work, our team builds and maintains its own software.
+
+Our new Projects page starts with two free add-ons for World of Warcraft: StoryCaster, a roleplay tool that turns written scenes into animated performances, and our fishing add-on, which brings live market prices and a shared leaderboard to the game. Both are used by players worldwide and updated with every game patch.
+
+Projects like these are where we try new ideas and sharpen our craft: interface design, real-time networking between thousands of players, and careful performance work inside a game engine.
+
+https://jcali0351.github.io/tenshisystemsengineering/projects.html
+-------------------------------------
+
+
+===========================================================
+4. STORYCASTER
+===========================================================
+
+--- X: StoryCaster (version A) ---
+Write your own roleplay and StoryCaster performs it: emotes on a timer, real character animations, duets, scenes and 60+ ready-made scripts.
+
+Free for WoW Midnight and Forever. #Warcraft
+
+https://www.curseforge.com/wow/addons/storycaster
+-------------------------------------
+
+--- X: StoryCaster (version B) ---
+Roleplayers: stop typing in the middle of your big moment.
+
+Paste your scene into StoryCaster, press play, and your character acts it out line by line. Free on CurseForge. #WoWRP
+
+https://www.curseforge.com/wow/addons/storycaster
+-------------------------------------
+
+--- X: StoryCaster (version C, Pirate theme) ---
+Arr. StoryCaster now has 701 pirate lines and a pirate accent that turns everything you say into pirate speak. 🏴‍☠️
+
+Free roleplay add-on for World of Warcraft: https://www.curseforge.com/wow/addons/storycaster
+-------------------------------------
+
+--- X: StoryCaster, Japanese ---
+自分で書いたロールプレイを、キャラクターの動き付きで演じるWoWアドオン「StoryCaster」。デュエット、シーン、60以上の台本つき。無料です。
+
+https://www.curseforge.com/wow/addons/storycaster
+-------------------------------------
+
+--- Reddit (r/WowUI or r/wow with the add-on flair): StoryCaster ---
+Title:
+[Add-on] I made StoryCaster, a free roleplay add-on that performs your written scenes as emotes with animations
+
+Body:
+Hi all, I'm the developer of StoryCaster (made by our small studio, Tenshi Systems Engineering). It's a free roleplay add-on for Midnight and WoW Forever.
+
+What it does:
+- You paste your roleplay (a story, a speech, a whole scene) and it plays out as /emote lines on a timer, or one line at a time with a single key, while your character does the matching animation (bow, wave, laugh, kneel...).
+- A Lore Library with 60+ ready-made scripts for every class, race, faction, profession and holiday.
+- Duets: split a script between players and it stays in sync.
+- Scenes, moods and choose-your-path branches.
+- Themes: Pirate (with a pirate accent), Love, War, Peace and quick Dungeon group phrases.
+- Player Focus weaves another player into your lines, and the Ideas tab reads their TRP3 or MRP profile for opening lines.
+
+It never posts faster than one line every 15 seconds (four a minute), so it stays inside the chat rules.
+
+CurseForge (Midnight): https://www.curseforge.com/wow/addons/storycaster
+CurseForge (Forever): https://www.curseforge.com/wow/addons/storycaster-wow-forever
+Screenshots and full guide: https://jcali0351.github.io/tenshisystemsengineering/projects/storycaster.html
+
+Happy to answer questions or take feature requests in the comments.
+-------------------------------------
+
+--- Discord (#addons / #self-promo channels only): StoryCaster ---
+**StoryCaster**: free roleplay add-on for WoW Midnight and Forever 🎭
+I made this one. Paste your roleplay and it performs it as emotes on a timer with real character animations. Duets, scenes, moods, branching choices and 60+ ready-made scripts for every class and race.
+CurseForge: https://www.curseforge.com/wow/addons/storycaster
+More: https://jcali0351.github.io/tenshisystemsengineering/projects/storycaster.html
+-------------------------------------
+
+--- Facebook / Instagram: StoryCaster ---
+Your words. Your timing. Your character's performance. 🎭
+
+StoryCaster is our free roleplay add-on for World of Warcraft: paste a scene and your character acts it out, line by line, with real animations. Duets, scenes, 60+ ready-made scripts, and yes, a pirate accent.
+
+Free on CurseForge (Facebook: https://www.curseforge.com/wow/addons/storycaster / Instagram: link in bio)
+
+#WorldofWarcraft #WoWRP #Roleplay #Gaming
+-------------------------------------
+
+
+===========================================================
+5. MASTER BAITER PRO and MASTER BAIT FOREVER
+(gaming spaces only; not for LinkedIn or paid ads, see the rules above)
+===========================================================
+
+--- X: Master Baiter Pro (version A) ---
+One key casts. The same key hooks. Every fish pops up with its auction house price, and a live leaderboard shows who's fishing right now.
+
+Master Baiter Pro, free for WoW Midnight. 🎣
+
+https://www.curseforge.com/wow/addons/master-baiter-pro
+-------------------------------------
+
+--- X: Master Baiter Pro (version B) ---
+How much gold is your fishing really worth? Master Baiter Pro prices every catch, tracks gold per hour and ranks you against every other angler on your realm. 🐟
+
+Free: https://www.curseforge.com/wow/addons/master-baiter-pro
+-------------------------------------
+
+--- X: Master Bait Forever ---
+Fishing on WoW Forever? Master Bait Forever is our one-key fishing add-on rebuilt for it, with auction prices and its own leaderboard. Free. 🎣
+
+https://jcali0351.github.io/tenshisystemsengineering/projects/master-baiter-pro.html
+-------------------------------------
+
+--- Reddit (r/WowUI or r/wow with the add-on flair): Master Baiter Pro ---
+Title:
+[Add-on] Master Baiter Pro: free one-key fishing helper with live AH prices and a realm leaderboard (I'm the dev)
+
+Body:
+Hi! I'm the developer. Master Baiter Pro is a free fishing add-on for Midnight (there's also Master Bait Forever for WoW Forever).
+
+- One key casts, the same key hooks on the splash. It's a helper, not a bot: every action starts with your own key press, it never moves your character and never reads game memory.
+- It looks up the auction house price of everything you catch (or uses Auctionator/TSM prices) and shows your haul and gold per hour as you fish.
+- Your top five catches sit on the panel as icons.
+- A live leaderboard finds every other angler running it on your realm and connected realms and ranks everyone by catches, best catch, this week and gold per hour. You can turn the network off.
+- Records, streaks and an alert when something rare bites.
+
+CurseForge: https://www.curseforge.com/wow/addons/master-baiter-pro
+Page with screenshots: https://jcali0351.github.io/tenshisystemsengineering/projects/master-baiter-pro.html
+
+Feedback very welcome, especially fish it prices wrong.
+-------------------------------------
+
+--- Discord (#addons / #self-promo channels only): Master Baiter Pro ---
+**Master Baiter Pro**: free one-key fishing for WoW Midnight 🎣
+I made this. One key casts and hooks, every catch shows its auction house price, gold per hour, top five catches and a live leaderboard of everyone fishing on your realm. No botting: you press every key.
+CurseForge: https://www.curseforge.com/wow/addons/master-baiter-pro
+WoW Forever version (Master Bait Forever): https://jcali0351.github.io/tenshisystemsengineering/projects/master-baiter-pro.html
+-------------------------------------
+
+--- Facebook / Instagram: Master Baiter Pro ---
+Fishing, but every fish has a price tag. 🎣💰
+
+Master Baiter Pro is our free World of Warcraft fishing add-on: one key to cast and hook, live auction house prices, gold per hour and a leaderboard of every angler on your realm.
+
+Free on CurseForge (Facebook: https://www.curseforge.com/wow/addons/master-baiter-pro / Instagram: link in bio)
+
+#WorldofWarcraft #WoWFishing #Gaming
+-------------------------------------
+
+
+===========================================================
+6. UPDATE ANNOUNCEMENT TEMPLATE (for new versions)
+===========================================================
+
+--- X: update ---
+[Add-on name] [version] is out: [one-line summary of the best new thing].
+
+Update with the CurseForge app, or download it here: [CurseForge link]
+-------------------------------------
+
+--- Discord / Reddit comment: update ---
+**[Add-on name] [version]**
+New:
+- [change]
+- [change]
+Fixed:
+- [fix]
+Update through the CurseForge app (it does it for you) or grab the zip from [project page link].
+-------------------------------------

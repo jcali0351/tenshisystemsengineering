@@ -11,7 +11,7 @@
   <meta property="og:type" content="website">
   <link rel="icon" href="../logo.png" type="image/png">
   <link rel="apple-touch-icon" href="../logo.png">
-  <link rel="stylesheet" href="../styles.css?v=9e587451">
+  <link rel="stylesheet" href="../styles.css?v=2933e18a">
   <link rel="stylesheet" href="../chat.css?v=c97c61fb">
 </head>
 <body class="svc-page" data-title-key="svc_webdesign_title" data-desc-key="svc_webdesign_short">
@@ -33,6 +33,12 @@
           <li><a href="../about.html" data-nav="about" data-i18n="navAbout">About</a></li>
           <li><a href="../services.html" aria-current="page" data-nav="services" data-i18n="navServices">Services</a></li>
           <li><a href="../technology.html" data-nav="technology" data-i18n="navTech">Technology</a></li>
+          <li class="has-sub"><a href="../projects.html" data-nav="projects" data-i18n="navProjects">Projects</a>
+            <ul class="sub-nav">
+              <li><a href="../projects/storycaster.html" data-nav="p-storycaster">StoryCaster</a></li>
+              <li><a href="../projects/master-baiter-pro.html" data-nav="p-master-baiter-pro">Master Baiter Pro</a></li>
+            </ul>
+          </li>
           <li><a href="../contact.html" data-nav="contact" data-i18n="navContact">Contact</a></li>
         </ul>
       </nav>
@@ -85,23 +91,109 @@
       </div>
     </section>
 
-    <section class="svc-body" aria-labelledby="offer-title">
+    <section class="svc-body" aria-labelledby="intro-title">
       <div class="svc-body-inner">
         <div class="svc-copy">
+          <h2 id="intro-title" class="sr-only" data-i18n="svc_webdesign_title">Web Design</h2>
           <p class="svc-intro" data-i18n="svc_webdesign_intro">Your website is often the first impression of your business. We design sites that are clear, welcoming, and easy to use on phones, tablets, and computers, with layouts built around what your visitors came to do.</p>
-          <h2 id="offer-title" data-i18n="offerTitle">What we offer</h2>
-          <ul class="svc-offers">
-            <li data-i18n="svc_webdesign_o1">Responsive layouts for every screen</li>
-            <li data-i18n="svc_webdesign_o2">Wireframes and interactive prototypes</li>
-            <li data-i18n="svc_webdesign_o3">User experience (UX) planning</li>
-            <li data-i18n="svc_webdesign_o4">Accessible, easy-to-read design</li>
-            <li data-i18n="svc_webdesign_o5">Redesigns of existing websites</li>
-          </ul>
+          <div class="svc-for">
+            <h3 data-i18n="forTitle">Who it's for</h3>
+            <p data-i18n="svc_webdesign_for">Companies launching a new website, refreshing an outdated one, or improving how visitors find what they need.</p>
+          </div>
           <a class="btn btn-primary" href="../contact.html?topic=svc_webdesign_title" data-i18n="cta">Request Consultation</a>
         </div>
         <figure class="svc-figure">
           <img src="../img/services/webdesign.jpg" alt="Hands on a laptop working on a website layout" data-i18n-attr="alt:svc_webdesign_alt" width="1024" height="683">
         </figure>
+      </div>
+    </section>
+
+    <section class="svc-offer-section" aria-labelledby="offer-title">
+      <div class="svc-wide">
+        <h2 id="offer-title" class="section-title" data-i18n="offerTitle">What we offer</h2>
+        <ul class="offer-grid">
+          <li class="offer-card">
+            <span class="offer-num" aria-hidden="true">01</span>
+            <h3 data-i18n="svc_webdesign_o1">Responsive layouts for every screen</h3>
+            <p data-i18n="svc_webdesign_d1">Layouts that adapt smoothly to phones, tablets and large screens.</p>
+          </li>
+          <li class="offer-card">
+            <span class="offer-num" aria-hidden="true">02</span>
+            <h3 data-i18n="svc_webdesign_o2">Wireframes and interactive prototypes</h3>
+            <p data-i18n="svc_webdesign_d2">Page plans and clickable prototypes, so you can try the site before it is built.</p>
+          </li>
+          <li class="offer-card">
+            <span class="offer-num" aria-hidden="true">03</span>
+            <h3 data-i18n="svc_webdesign_o3">User experience (UX) planning</h3>
+            <p data-i18n="svc_webdesign_d3">Research into what visitors need, turned into clear navigation and page structure.</p>
+          </li>
+          <li class="offer-card">
+            <span class="offer-num" aria-hidden="true">04</span>
+            <h3 data-i18n="svc_webdesign_o4">Accessible, easy-to-read design</h3>
+            <p data-i18n="svc_webdesign_d4">Readable text, good contrast and keyboard-friendly design, so everyone can use your site.</p>
+          </li>
+          <li class="offer-card">
+            <span class="offer-num" aria-hidden="true">05</span>
+            <h3 data-i18n="svc_webdesign_o5">Redesigns of existing websites</h3>
+            <p data-i18n="svc_webdesign_d5">A modern redesign of your existing site, keeping what works and improving what doesn't.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="svc-benefits" aria-labelledby="benefits-title">
+      <div class="svc-wide">
+        <h2 id="benefits-title" class="section-title light" data-i18n="benefitsTitle">Why it matters</h2>
+        <ul class="benefit-grid">
+          <li class="benefit-card">
+            <span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span>
+            <h3 data-i18n="svc_webdesign_b1t">Strong first impression</h3>
+            <p data-i18n="svc_webdesign_b1">A professional look that builds trust from the first visit.</p>
+          </li>
+          <li class="benefit-card">
+            <span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg></span>
+            <h3 data-i18n="svc_webdesign_b2t">Easier to use</h3>
+            <p data-i18n="svc_webdesign_b2">Visitors find what they need in fewer clicks.</p>
+          </li>
+          <li class="benefit-card">
+            <span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></span>
+            <h3 data-i18n="svc_webdesign_b3t">More enquiries</h3>
+            <p data-i18n="svc_webdesign_b3">Clear calls to action turn visitors into customers.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="svc-tech-section" aria-labelledby="tech-used-title">
+      <div class="svc-wide">
+        <h2 id="tech-used-title" class="section-title" data-i18n="techUsedTitle">Technologies we use</h2>
+        <ul class="svc-tech-grid">
+          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/figma.svg); --brand: #F24E1E" aria-hidden="true"></span>
+            <span class="svc-tech-name">Figma</span>
+          </a></li>
+          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/adobeillustrator.svg); --brand: #FF9A00" aria-hidden="true"></span>
+            <span class="svc-tech-name">Adobe Illustrator</span>
+          </a></li>
+          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/adobephotoshop.svg); --brand: #31A8FF" aria-hidden="true"></span>
+            <span class="svc-tech-name">Adobe Photoshop</span>
+          </a></li>
+          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/html5.svg); --brand: #E34F26" aria-hidden="true"></span>
+            <span class="svc-tech-name">HTML5</span>
+          </a></li>
+          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/css3.svg); --brand: #1572B6" aria-hidden="true"></span>
+            <span class="svc-tech-name">CSS</span>
+          </a></li>
+          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/tailwindcss.svg); --brand: #06B6D4" aria-hidden="true"></span>
+            <span class="svc-tech-name">Tailwind CSS</span>
+          </a></li>
+        </ul>
+        <p class="svc-tech-more"><a href="../technology.html"><span data-i18n="techUsedMore">See all technologies</span> <span aria-hidden="true">→</span></a></p>
       </div>
     </section>
 
@@ -197,6 +289,7 @@
             <li><a href="../team.html" data-nav="team" data-i18n="navTeam">Team</a></li>
             <li><a href="../services.html" aria-current="page" data-nav="services" data-i18n="navServices">Services</a></li>
             <li><a href="../technology.html" data-nav="technology" data-i18n="navTech">Technology</a></li>
+            <li><a href="../projects.html" data-nav="projects" data-i18n="navProjects">Projects</a></li>
             <li><a href="../contact.html" data-nav="contact" data-i18n="navContact">Contact</a></li>
           </ul>
       </nav>
@@ -204,8 +297,8 @@
     </div>
   </footer>
 
-  <script src="../translations.js?v=71bd7f0d"></script>
-  <script src="../app.js?v=1f39c61a"></script>
+  <script src="../translations.js?v=7fe431da"></script>
+  <script src="../app.js?v=6928c58a"></script>
   <script src="../chat.js?v=520f9752"></script>
 </body>
 </html>

@@ -32,6 +32,9 @@ const TECH_GROUPS = [
   { n: 5, img: "hosting.jpg", items: [["github", "GitHub", "https://github.com"], ["docker", "Docker", "https://www.docker.com"], ["cloudflare", "Cloudflare", "https://www.cloudflare.com"], ["googlecloud", "Google Cloud", "https://cloud.google.com"], ["vercel", "Vercel", "https://vercel.com"]] },
   { n: 6, img: "ai.jpg", items: [["claude", "Claude", "https://www.anthropic.com/claude"]] },
 ];
+// Product logos (img/tech, Simple Icons, CC0) shown on the Technology and service pages, in each brand's official colour.
+const BRAND = {"adobeaftereffects":"#9999FF","adobeillustrator":"#FF9A00","adobephotoshop":"#31A8FF","adobepremierepro":"#9999FF","blender":"#E87D0D","claude":"#D97757","cloudflare":"#F38020","css3":"#1572B6","docker":"#2496ED","figma":"#F24E1E","github":"#181717","googlecloud":"#4285F4","html5":"#E34F26","javascript":"#F7DF1E","mysql":"#4479A1","nextdotjs":"#000000","nodedotjs":"#5FA04E","php":"#777BB4","postgresql":"#4169E1","python":"#3776AB","react":"#61DAFB","sass":"#CC6699","shopify":"#7AB55C","strapi":"#4945FF","tailwindcss":"#06B6D4","typescript":"#3178C6","vercel":"#000000","vuedotjs":"#4FC08D","wordpress":"#21759B"};
+
 
 // The team page. To use real photos, put them in img/team/ and change img here; names, roles and bios are in
 // translations.js (staff1Name, staff1Role, staff1Bio …).
@@ -125,7 +128,7 @@ function chrome(html, prefix, current) {
   return markCurrent(html, current)
     .replace('href="#top"', `href="${prefix}index.html"`)
     .replace(/src="logo\.png"/g, `src="${prefix}logo.png"`)
-    .replace(/href="(index|about|services|contact|team|technology)\.html"/g, `href="${prefix}$1.html"`);
+    .replace(/href="((?:index|about|services|contact|team|technology|projects)\.html|projects\/[a-z-]+\.html)"/g, `href="${prefix}$1"`);
 }
 
 function frame({ prefix, current, titleKey, descKey, bodyClass, main, photoCredits = "" }) {
@@ -353,7 +356,7 @@ ${TECH_GROUPS.map((gr) => `        <section class="tech-group" data-group="${gr.
           </div>
           <ul class="tech-grid">
 ${gr.items.map(([slug, name, url]) => `            <li class="tech-card">
-              <span class="tech-logo" style="--logo: url(img/tech/${slug}.svg)" aria-hidden="true"></span>
+              <span class="tech-logo" style="--logo: url(img/tech/${slug}.svg); --brand: ${BRAND[slug]}" aria-hidden="true"></span>
               <h4 class="tech-name">${name}</h4>
               <p class="tech-desc" data-i18n="tech_${slug}">${tx(`tech_${slug}`)}</p>
               <a class="tech-link" href="${url}" target="_blank" rel="noopener"><span data-i18n="techVisit">${tx("techVisit")}</span><span class="sr-only">: ${name} <span data-i18n="techNewTab">${tx("techNewTab")}</span></span> <span aria-hidden="true">↗</span></a>
@@ -412,27 +415,87 @@ ${[1, 2, 3, 4].map((n) => `          <details>
 writeFileSync("contact.html", contactPage);
 
 /* ---------- one page per service ---------- */
+const SERVICE_TECH = {
+  software: ["python", "nodedotjs", "typescript", "postgresql", "docker", "github"],
+  consulting: ["googlecloud", "cloudflare", "github", "docker", "claude"],
+  media: ["adobephotoshop", "adobeillustrator", "adobeaftereffects", "adobepremierepro", "blender", "figma"],
+  webdesign: ["figma", "adobeillustrator", "adobephotoshop", "html5", "css3", "tailwindcss"],
+  webdev: ["html5", "css3", "javascript", "typescript", "react", "vuedotjs", "nextdotjs", "nodedotjs", "php"],
+  hosting: ["cloudflare", "googlecloud", "vercel", "docker", "github"],
+  ai: ["claude", "python", "nodedotjs", "postgresql"],
+  cms: ["wordpress", "strapi", "shopify", "php", "mysql"],
+  branding: ["adobeillustrator", "adobephotoshop", "figma"],
+};
+const TECH_NAME = Object.fromEntries(TECH_GROUPS.flatMap((g) => g.items.map(([slug, name]) => [slug, name])));
+const BENEFIT_ICON = [
+  '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+  '<path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/>',
+  '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
+];
+
 function servicePage(s) {
   const others = SERVICES.filter((o) => o !== s);
-  const offers = Array.from({ length: OFFERS }, (_, i) => `            <li data-i18n="${k(s, "o" + (i + 1))}">${tx(k(s, "o" + (i + 1)))}</li>`).join("\n");
   const ask = `../contact.html?topic=${k(s, "title")}`;
+  const offers = Array.from({ length: OFFERS }, (_, i) => `          <li class="offer-card">
+            <span class="offer-num" aria-hidden="true">0${i + 1}</span>
+            <h3 data-i18n="${k(s, "o" + (i + 1))}">${tx(k(s, "o" + (i + 1)))}</h3>
+            <p data-i18n="${k(s, "d" + (i + 1))}">${tx(k(s, "d" + (i + 1)))}</p>
+          </li>`).join("\n");
+  const benefits = [1, 2, 3].map((n) => `          <li class="benefit-card">
+            <span class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${BENEFIT_ICON[n - 1]}</svg></span>
+            <h3 data-i18n="${k(s, "b" + n + "t")}">${tx(k(s, "b" + n + "t"))}</h3>
+            <p data-i18n="${k(s, "b" + n)}">${tx(k(s, "b" + n))}</p>
+          </li>`).join("\n");
+  const tech = (SERVICE_TECH[s.id] || []).map((slug) => `          <li><a class="svc-tech" href="../technology.html">
+            <span class="svc-tech-logo" style="--logo: url(../img/tech/${slug}.svg); --brand: ${BRAND[slug]}" aria-hidden="true"></span>
+            <span class="svc-tech-name">${TECH_NAME[slug]}</span>
+          </a></li>`).join("\n");
   return frame({
     prefix: "../", current: "services", titleKey: k(s, "title"), descKey: k(s, "short"), bodyClass: "svc-page",
     main: `${banner("../", [{ key: "crumbServices", href: "../services.html" }, { key: k(s, "title") }], k(s, "title"), k(s, "short"))}
 
-    <section class="svc-body" aria-labelledby="offer-title">
+    <section class="svc-body" aria-labelledby="intro-title">
       <div class="svc-body-inner">
         <div class="svc-copy">
+          <h2 id="intro-title" class="sr-only" data-i18n="${k(s, "title")}">${tx(k(s, "title"))}</h2>
           <p class="svc-intro" data-i18n="${k(s, "intro")}">${tx(k(s, "intro"))}</p>
-          <h2 id="offer-title" data-i18n="offerTitle">${tx("offerTitle")}</h2>
-          <ul class="svc-offers">
-${offers}
-          </ul>
+          <div class="svc-for">
+            <h3 data-i18n="forTitle">${tx("forTitle")}</h3>
+            <p data-i18n="${k(s, "for")}">${tx(k(s, "for"))}</p>
+          </div>
           <a class="btn btn-primary" href="${ask}" data-i18n="cta">${tx("cta")}</a>
         </div>
         <figure class="svc-figure">
           <img src="../img/services/${s.img}" alt="${tx(k(s, "alt"))}" data-i18n-attr="alt:${k(s, "alt")}" width="${s.w}" height="${s.h}">
         </figure>
+      </div>
+    </section>
+
+    <section class="svc-offer-section" aria-labelledby="offer-title">
+      <div class="svc-wide">
+        <h2 id="offer-title" class="section-title" data-i18n="offerTitle">${tx("offerTitle")}</h2>
+        <ul class="offer-grid">
+${offers}
+        </ul>
+      </div>
+    </section>
+
+    <section class="svc-benefits" aria-labelledby="benefits-title">
+      <div class="svc-wide">
+        <h2 id="benefits-title" class="section-title light" data-i18n="benefitsTitle">${tx("benefitsTitle")}</h2>
+        <ul class="benefit-grid">
+${benefits}
+        </ul>
+      </div>
+    </section>
+
+    <section class="svc-tech-section" aria-labelledby="tech-used-title">
+      <div class="svc-wide">
+        <h2 id="tech-used-title" class="section-title" data-i18n="techUsedTitle">${tx("techUsedTitle")}</h2>
+        <ul class="svc-tech-grid">
+${tech}
+        </ul>
+        <p class="svc-tech-more"><a href="../technology.html"><span data-i18n="techUsedMore">${tx("techUsedMore")}</span> <span aria-hidden="true">→</span></a></p>
       </div>
     </section>
 
@@ -456,4 +519,186 @@ ${others.map((o) => `          <li><a class="svc-other" href="${o.slug}.html">
 }
 mkdirSync("services", { recursive: true });
 for (const s of SERVICES) writeFileSync(`services/${s.slug}.html`, servicePage(s));
-console.log(`index.html updated; about.html, team.html, services.html, technology.html, contact.html and ${SERVICES.length} service pages written`);
+/* ---------- Projects: our own software (World of Warcraft add-ons) ---------- */
+const CF = "https://www.curseforge.com/wow/addons/";
+const PROJECTS = [
+  {
+    id: "sc", slug: "storycaster", logo: "storycaster-logo",
+    shots: [["storycaster-console.jpg", 1150, 860], ["storycaster-lore.jpg", 1150, 830], ["storycaster-pirate.jpg", 1000, 610], ["storycaster-ideas.jpg", 1150, 730]],
+    editions: [
+      { name: "StoryCaster", game: "Midnight", ed: "projEdMidnight", ver: "2.0.1", zip: "StoryCaster.zip", cf: CF + "storycaster", cmd: "/story" },
+      { name: "StoryCaster", game: "WoW Forever", ed: "projEdForever", ver: "2.0.1", zip: "StoryCaster-Forever.zip", cf: CF + "storycaster-wow-forever", cmd: "/story" },
+    ],
+  },
+  {
+    id: "mbp", slug: "master-baiter-pro", logo: "master-baiter-pro-logo",
+    shots: [["master-baiter-pro-panel.jpg", 880, 560]],
+    editions: [
+      { name: "Master Baiter Pro", game: "Midnight", ed: "projEdMidnight", ver: "2.3.1", zip: "MasterBaiterPro.zip", cf: CF + "master-baiter-pro", cmd: "/mbp" },
+      { name: "Master Bait Forever", game: "WoW Forever", ed: "projEdForever", ver: "1.1.1", zip: "MasterBaitForever.zip", cf: "", cmd: "/mbf" },
+    ],
+  },
+];
+const pk = (p, f) => `prj_${p.id}_${f}`;
+const PICON = {
+  game: '<rect x="2.5" y="7" width="19" height="11" rx="5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.5" r=".9" fill="currentColor"/><circle cx="17.8" cy="13.8" r=".9" fill="currentColor"/>',
+  download: '<path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/>',
+  forge: '<path d="M4 9h11l3-3h2v4a4 4 0 0 1-4 4h-1l1 4H8l1-4H7a3 3 0 0 1-3-3z"/>',
+  shield: '<path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/>',
+  arrow: '<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>',
+};
+const pIcon = (n) => `<svg class="prj-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${PICON[n]}</svg>`;
+const logoPic = (p, prefix, cls, size) => `<picture><source srcset="${prefix}img/projects/${p.logo}.webp" type="image/webp"><img class="${cls}" src="${prefix}img/projects/${p.logo}.png" alt="${tx(pk(p, "logoAlt"))}" data-i18n-attr="alt:${pk(p, "logoAlt")}" width="${size}" height="${size}"${cls === "prj-card-logo" ? ' loading="lazy"' : ""}></picture>`;
+const dlButton = (e, prefix) => `<a class="btn prj-btn prj-btn-dl" href="${prefix}downloads/${e.zip}" download>${pIcon("download")}<span data-i18n="projDownload">${tx("projDownload")}</span> <span class="prj-btn-note">${e.zip}</span></a>`;
+const cfButton = (e) => e.cf ? `<a class="btn prj-btn prj-btn-cf" href="${e.cf}" target="_blank" rel="noopener">${pIcon("forge")}<span data-i18n="projCurseForge">${tx("projCurseForge")}</span><span class="sr-only"> (${esc(e.game)}, <span data-i18n="techNewTab">${tx("techNewTab")}</span>)</span></a>` : "";
+
+const projCard = (p, prefix) => `          <article class="prj-card">
+            <a class="prj-card-media" href="${prefix}projects/${p.slug}.html" tabindex="-1" aria-hidden="true">${logoPic(p, prefix, "prj-card-logo", 160)}</a>
+            <div class="prj-card-body">
+              <p class="prj-kicker">${pIcon("game")}<span data-i18n="projGameTag">${tx("projGameTag")}</span></p>
+              <h3><a href="${prefix}projects/${p.slug}.html" data-i18n="${pk(p, "name")}">${tx(pk(p, "name"))}</a></h3>
+              <p class="prj-card-tag" data-i18n="${pk(p, "tag")}">${tx(pk(p, "tag"))}</p>
+              <ul class="prj-chips">
+                <li class="prj-chip prj-chip-free" data-i18n="projFree">${tx("projFree")}</li>
+${p.editions.map((e) => `                <li class="prj-chip">${esc(e.game)}</li>`).join("\n")}
+                <li class="prj-chip"><code>${p.editions[0].cmd}</code></li>
+              </ul>
+              <div class="prj-card-actions">
+                <a class="btn prj-btn prj-btn-view" href="${prefix}projects/${p.slug}.html"><span data-i18n="projView">${tx("projView")}</span>${pIcon("arrow")}</a>
+${cfButton(p.editions[0]) ? "                " + cfButton(p.editions[0]) + "\n" : ""}              </div>
+            </div>
+          </article>`;
+
+const projectsPage = frame({
+  prefix: "", current: "projects", titleKey: "navProjects", descKey: "projectsLead", bodyClass: "page projects-page",
+  main: `${banner("", [{ key: "navProjects" }], "projectsTitle", "projectsLead", `<div class="prj-hero-logos" aria-hidden="true">${PROJECTS.map((p) => `<img src="img/projects/${p.logo}.webp" alt="" width="150" height="150">`).join("")}</div>`)}
+
+    <section class="page-section prj-section" aria-labelledby="games-title">
+      <div class="page-inner">
+        ${t("p", "projectsIntro", 'class="section-intro prj-intro"')}
+        <div class="prj-group-head">
+          <span class="prj-group-icon">${pIcon("game")}</span>
+          <div>
+            <h2 id="games-title" class="prj-group-title" data-i18n="projGamesTitle">${tx("projGamesTitle")}</h2>
+            <p data-i18n="projGamesText">${tx("projGamesText")}</p>
+          </div>
+        </div>
+        <div class="prj-grid">
+${PROJECTS.map((p) => projCard(p, "")).join("\n")}
+        </div>
+      </div>
+    </section>
+
+${cta("contact.html")}`,
+});
+writeFileSync("projects.html", projectsPage);
+
+function projectPage(p) {
+  const others = PROJECTS.filter((o) => o !== p);
+  const [first, ...rest] = p.shots;
+  const shot = ([file, w, h], n, lazy) => `<img src="../img/projects/${file}" alt="${tx(pk(p, "alt" + n))}" data-i18n-attr="alt:${pk(p, "alt" + n)}" width="${w}" height="${h}"${lazy ? ' loading="lazy"' : ""}>`;
+  return frame({
+    prefix: "../", current: ["projects", "p-" + p.slug], titleKey: pk(p, "name"), descKey: pk(p, "tag"), bodyClass: "page prj-page",
+    main: `${banner("../", [{ key: "navProjects", href: "../projects.html" }, { key: pk(p, "name") }], pk(p, "name"), pk(p, "tag"), `<div class="prj-hero-logo">${logoPic(p, "../", "prj-logo", 220)}</div>`)}
+
+    <section class="svc-body prj-body" aria-labelledby="intro-title">
+      <div class="svc-body-inner">
+        <div class="svc-copy">
+          <h2 id="intro-title" class="sr-only" data-i18n="${pk(p, "name")}">${tx(pk(p, "name"))}</h2>
+          <p class="prj-kicker">${pIcon("game")}<span data-i18n="projGameTag">${tx("projGameTag")}</span></p>
+          <p class="svc-intro" data-i18n="${pk(p, "intro")}">${tx(pk(p, "intro"))}</p>
+          <ul class="prj-chips">
+            <li class="prj-chip prj-chip-free" data-i18n="projFree">${tx("projFree")}</li>
+            <li class="prj-chip"><span data-i18n="projVersion">${tx("projVersion")}</span> ${p.editions[0].ver}</li>
+            <li class="prj-chip"><span data-i18n="projCommand">${tx("projCommand")}</span> <code>${p.editions[0].cmd}</code></li>
+          </ul>
+          <div class="prj-actions">
+            ${dlButton(p.editions[0], "../")}
+${cfButton(p.editions[0]) ? "            " + cfButton(p.editions[0]) + "\n" : ""}          </div>
+        </div>
+        <figure class="svc-figure prj-shot">
+          ${shot(first, 1, false)}
+        </figure>
+      </div>
+    </section>
+
+    <section class="svc-offer-section" aria-labelledby="feat-title">
+      <div class="svc-wide">
+        <h2 id="feat-title" class="section-title" data-i18n="projFeaturesTitle">${tx("projFeaturesTitle")}</h2>
+        <ul class="offer-grid">
+${[1, 2, 3, 4, 5, 6].map((n) => `          <li class="offer-card">
+            <span class="offer-num" aria-hidden="true">0${n}</span>
+            <h3 data-i18n="${pk(p, "f" + n + "t")}">${tx(pk(p, "f" + n + "t"))}</h3>
+            <p data-i18n="${pk(p, "f" + n)}">${tx(pk(p, "f" + n))}</p>
+          </li>`).join("\n")}
+        </ul>
+      </div>
+    </section>
+
+    <section class="svc-benefits prj-editions" aria-labelledby="ed-title">
+      <div class="svc-wide">
+        <h2 id="ed-title" class="section-title light" data-i18n="projEditionsTitle">${tx("projEditionsTitle")}</h2>
+        <ul class="prj-ed-grid">
+${p.editions.map((e) => `          <li class="prj-ed">
+            <p class="prj-ed-game">${esc(e.game)}</p>
+            <h3>${esc(e.name)}</h3>
+            <p data-i18n="${e.ed}">${tx(e.ed)}</p>
+            <p class="prj-ed-meta"><span data-i18n="projVersion">${tx("projVersion")}</span> ${e.ver} · <code>${e.cmd}</code></p>
+            <div class="prj-actions">
+              ${dlButton(e, "../")}
+${cfButton(e) ? "              " + cfButton(e) + "\n" : ""}            </div>
+          </li>`).join("\n")}
+        </ul>
+${p.editions.some((e) => e.cf) ? `        <p class="prj-cf-note" data-i18n="projCurseText">${tx("projCurseText")}</p>\n` : ""}      </div>
+    </section>
+${rest.length ? `
+    <section class="svc-tech-section prj-gallery" aria-labelledby="shots-title">
+      <div class="svc-wide">
+        <h2 id="shots-title" class="section-title" data-i18n="projShotsTitle">${tx("projShotsTitle")}</h2>
+        <div class="prj-shots">
+${rest.map((s, i) => `          <figure class="prj-shot-fig">
+            ${shot(s, i + 2, true)}
+            <figcaption data-i18n="${pk(p, "alt" + (i + 2))}">${tx(pk(p, "alt" + (i + 2)))}</figcaption>
+          </figure>`).join("\n")}
+        </div>
+      </div>
+    </section>
+` : ""}
+    <section class="svc-process" aria-labelledby="install-title">
+      <div class="svc-process-inner">
+        <h2 id="install-title" data-i18n="projInstallTitle">${tx("projInstallTitle")}</h2>
+        <ol class="svc-steps">
+${[1, 2, 3, 4].map((n) => `          <li class="svc-step">
+            <span class="svc-step-num" aria-hidden="true">0${n}</span>
+            <p data-i18n="projInstall${n}">${tx("projInstall" + n)}</p>
+          </li>`).join("\n")}
+        </ol>
+      </div>
+    </section>
+
+    <section class="prj-fair" aria-labelledby="fair-title">
+      <div class="svc-wide prj-fair-inner">
+        <span class="benefit-icon">${pIcon("shield")}</span>
+        <div>
+          <h2 id="fair-title" data-i18n="projFairTitle">${tx("projFairTitle")}</h2>
+          <p data-i18n="${pk(p, "fair")}">${tx(pk(p, "fair"))}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section prj-section prj-more" aria-labelledby="more-title">
+      <div class="page-inner">
+        <h2 id="more-title" class="prj-group-title" data-i18n="projMore">${tx("projMore")}</h2>
+        <div class="prj-grid">
+${others.map((o) => projCard(o, "../")).join("\n")}
+        </div>
+        <p class="svc-back"><a href="../projects.html" data-i18n="projAll">${tx("projAll")}</a></p>
+      </div>
+    </section>
+
+${cta("../contact.html")}`,
+  });
+}
+mkdirSync("projects", { recursive: true });
+for (const p of PROJECTS) writeFileSync(`projects/${p.slug}.html`, projectPage(p));
+console.log(`index.html updated; about.html, team.html, services.html, technology.html, projects.html, contact.html, ${SERVICES.length} service pages and ${PROJECTS.length} project pages written`);

@@ -92,7 +92,7 @@ const CONTACT_EMAIL = "jcali0351@gmail.com";
     if (!nav || !brand || !picker) return;
     const fits = () => {
       const b = brand.getBoundingClientRect(), n = nav.getBoundingClientRect(), p = picker.getBoundingClientRect();
-      const links = $$("a", nav).map((a) => a.getBoundingClientRect());
+      const links = $$(":scope > ul > li > a", nav).map((a) => a.getBoundingClientRect());   // top-level items only
       if (Math.abs(n.top - b.top) >= b.height) return false;   // the menu has already wrapped below
       const rtl = document.documentElement.dir === "rtl";
       const L = Math.min(...links.map((r) => r.left)), R = Math.max(...links.map((r) => r.right));
