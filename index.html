@@ -12,7 +12,7 @@
   <link rel="icon" href="logo.png" type="image/png">
   <link rel="apple-touch-icon" href="logo.png">
   <link rel="preload" href="img/photos/osaka.jpg" as="image" type="image/jpeg">
-  <link rel="stylesheet" href="styles.css?v=0bf96f43">
+  <link rel="stylesheet" href="styles.css?v=3c8139e8">
 </head>
 <body>
   <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
@@ -26,10 +26,22 @@
           <span class="brand-ja" lang="ja">天使システムズエンジニアリング</span>
         </span>
       </a>
-      <div class="lang-switch" role="group" aria-label="Language" data-i18n-attr="aria-label:langLabel">
-        <button type="button" data-lang="en" lang="en" aria-pressed="true">EN</button>
-        <span class="lang-sep" aria-hidden="true">|</span>
-        <button type="button" data-lang="ja" lang="ja" aria-pressed="false">日本語</button>
+      <div class="lang-picker">
+        <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+          <symbol id="flag-en" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect y="0" width="30" height="1.54" fill="#b22234"/><rect y="3.08" width="30" height="1.54" fill="#b22234"/><rect y="6.15" width="30" height="1.54" fill="#b22234"/><rect y="9.23" width="30" height="1.54" fill="#b22234"/><rect y="12.31" width="30" height="1.54" fill="#b22234"/><rect y="15.38" width="30" height="1.54" fill="#b22234"/><rect y="18.46" width="30" height="1.54" fill="#b22234"/><rect width="12" height="10.77" fill="#3c3b6e"/><circle cx="1" cy="1" r=".45" fill="#fff"/><circle cx="3" cy="1" r=".45" fill="#fff"/><circle cx="5" cy="1" r=".45" fill="#fff"/><circle cx="7" cy="1" r=".45" fill="#fff"/><circle cx="9" cy="1" r=".45" fill="#fff"/><circle cx="11" cy="1" r=".45" fill="#fff"/><circle cx="2" cy="3.15" r=".45" fill="#fff"/><circle cx="4" cy="3.15" r=".45" fill="#fff"/><circle cx="6" cy="3.15" r=".45" fill="#fff"/><circle cx="8" cy="3.15" r=".45" fill="#fff"/><circle cx="10" cy="3.15" r=".45" fill="#fff"/><circle cx="1" cy="5.3" r=".45" fill="#fff"/><circle cx="3" cy="5.3" r=".45" fill="#fff"/><circle cx="5" cy="5.3" r=".45" fill="#fff"/><circle cx="7" cy="5.3" r=".45" fill="#fff"/><circle cx="9" cy="5.3" r=".45" fill="#fff"/><circle cx="11" cy="5.3" r=".45" fill="#fff"/><circle cx="2" cy="7.45" r=".45" fill="#fff"/><circle cx="4" cy="7.45" r=".45" fill="#fff"/><circle cx="6" cy="7.45" r=".45" fill="#fff"/><circle cx="8" cy="7.45" r=".45" fill="#fff"/><circle cx="10" cy="7.45" r=".45" fill="#fff"/><circle cx="1" cy="9.6" r=".45" fill="#fff"/><circle cx="3" cy="9.6" r=".45" fill="#fff"/><circle cx="5" cy="9.6" r=".45" fill="#fff"/><circle cx="7" cy="9.6" r=".45" fill="#fff"/><circle cx="9" cy="9.6" r=".45" fill="#fff"/><circle cx="11" cy="9.6" r=".45" fill="#fff"/></symbol>
+          <symbol id="flag-ja" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><circle cx="15" cy="10" r="6" fill="#bc002d"/></symbol>
+          <symbol id="flag-ko" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><g transform="rotate(33.69 15 10)"><circle cx="15" cy="10" r="5" fill="#cd2e3a"/><path d="M10 10a5 5 0 0 0 10 0a2.5 2.5 0 0 0-5 0a2.5 2.5 0 0 1-5 0z" fill="#0047a0"/></g><g transform="rotate(-56.31 6.7 4.5)" fill="#000"><rect x="4.7" y="2.95" width="4" height=".75"/><rect x="4.7" y="4.05" width="4" height=".75"/><rect x="4.7" y="5.15" width="4" height=".75"/></g><g transform="rotate(-56.31 23.3 15.5)" fill="#000"><rect x="21.3" y="13.95" width="1.7" height=".75"/><rect x="23.6" y="13.95" width="1.7" height=".75"/><rect x="21.3" y="15.05" width="1.7" height=".75"/><rect x="23.6" y="15.05" width="1.7" height=".75"/><rect x="21.3" y="16.15" width="1.7" height=".75"/><rect x="23.6" y="16.15" width="1.7" height=".75"/></g><g transform="rotate(56.31 23.3 4.5)" fill="#000"><rect x="21.3" y="2.95" width="1.7" height=".75"/><rect x="23.6" y="2.95" width="1.7" height=".75"/><rect x="21.3" y="4.05" width="4" height=".75"/><rect x="21.3" y="5.15" width="1.7" height=".75"/><rect x="23.6" y="5.15" width="1.7" height=".75"/></g><g transform="rotate(56.31 6.7 15.5)" fill="#000"><rect x="4.7" y="13.95" width="4" height=".75"/><rect x="4.7" y="15.05" width="1.7" height=".75"/><rect x="7" y="15.05" width="1.7" height=".75"/><rect x="4.7" y="16.15" width="4" height=".75"/></g></symbol>
+          <symbol id="flag-de" viewBox="0 0 30 20"><rect width="30" height="6.67" fill="#000"/><rect y="6.67" width="30" height="6.67" fill="#dd0000"/><rect y="13.33" width="30" height="6.67" fill="#ffce00"/></symbol>
+        </svg>
+        <button type="button" class="lang-current" aria-haspopup="true" aria-expanded="false" aria-controls="lang-menu" aria-label="Choose language" data-i18n-attr="aria-label:langMenu">
+          <svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-en"/></svg><span class="lang-code">EN</span><svg class="lang-caret" viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+        </button>
+        <ul class="lang-menu" id="lang-menu" hidden>
+            <li><button type="button" data-lang="en" lang="en" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-en"/></svg><span>English</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="ja" lang="ja" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-ja"/></svg><span>日本語</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="ko" lang="ko" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-ko"/></svg><span>한국어</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="de" lang="de" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-de"/></svg><span>Deutsch</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+        </ul>
       </div>
     </div>
   </header>
@@ -85,25 +97,84 @@
       </ul>
     </section>
 
-    <section class="services" aria-labelledby="services-title">
+    <section class="services" id="services" aria-labelledby="services-title">
+      <canvas class="svc-rain" aria-hidden="true"></canvas>
       <h2 id="services-title" class="sr-only" data-i18n="servicesTitle">Our services</h2>
-      <div class="services-grid">
-        <article class="service-card">
-          <h3 data-i18n="s1Title">Software Development</h3>
-          <img class="service-pic" src="img/services/software.jpg" alt="A laptop screen showing lines of program code" data-i18n-attr="alt:s1Alt" width="960" height="640" loading="lazy">
-          <p data-i18n="s1Text">Custom software built for reliability, performance, and long-term support, from first prototype to production.</p>
-        </article>
-        <article class="service-card">
-          <h3 data-i18n="s2Title">Technology Consulting</h3>
-          <img class="service-pic" src="img/services/consulting.jpg" alt="A bright, minimalist meeting room with a long table" data-i18n-attr="alt:s2Alt" width="960" height="640" loading="lazy">
-          <p data-i18n="s2Text">Strategic guidance for digital transformation, modernization, and emerging technologies.</p>
-        </article>
-        <article class="service-card">
-          <h3 data-i18n="s3Title">Media Design</h3>
-          <img class="service-pic" src="img/services/design.jpg" alt="A designer sketching website layouts by hand" data-i18n-attr="alt:s3Alt" width="960" height="640" loading="lazy">
-          <p data-i18n="s3Text">Brand identity, websites, video, and digital media designed to communicate clearly and leave a lasting impression.</p>
-        </article>
-      </div>
+      <!-- services:start (written by tools/build-services.mjs; edit the text in translations.js) -->
+      <div class="svc-carousel">
+        <div class="svc-sets">
+          <div class="svc-set is-active" data-set="0" role="group">
+            <article class="service-card">
+              <h3 data-i18n="svc_software_title">Software Development</h3>
+              <img class="service-pic" src="img/services/software.jpg" alt="A laptop screen showing lines of program code" data-i18n-attr="alt:svc_software_alt" width="960" height="640" loading="lazy">
+              <p data-i18n="svc_software_short">Custom software built for reliability, performance, and long-term support, from first prototype to production.</p>
+              <a class="btn-more" href="services/software-development.html"><span data-i18n="more">MORE</span><span class="sr-only">: <span data-i18n="svc_software_title">Software Development</span></span><span class="btn-more-arrow" aria-hidden="true">→</span></a>
+            </article>
+            <article class="service-card">
+              <h3 data-i18n="svc_consulting_title">Technology Consulting</h3>
+              <img class="service-pic" src="img/services/consulting.jpg" alt="A bright, minimalist meeting room with a long table" data-i18n-attr="alt:svc_consulting_alt" width="960" height="640" loading="lazy">
+              <p data-i18n="svc_consulting_short">Strategic guidance for digital transformation, modernization, and emerging technologies.</p>
+              <a class="btn-more" href="services/technology-consulting.html"><span data-i18n="more">MORE</span><span class="sr-only">: <span data-i18n="svc_consulting_title">Technology Consulting</span></span><span class="btn-more-arrow" aria-hidden="true">→</span></a>
+            </article>
+            <article class="service-card">
+              <h3 data-i18n="svc_media_title">Media Design</h3>
+              <img class="service-pic" src="img/services/design.jpg" alt="A designer sketching website layouts by hand" data-i18n-attr="alt:svc_media_alt" width="960" height="640" loading="lazy">
+              <p data-i18n="svc_media_short">Brand identity, websites, video, and digital media designed to communicate clearly and leave a lasting impression.</p>
+              <a class="btn-more" href="services/media-design.html"><span data-i18n="more">MORE</span><span class="sr-only">: <span data-i18n="svc_media_title">Media Design</span></span><span class="btn-more-arrow" aria-hidden="true">→</span></a>
+            </article>
+          </div>
+          <div class="svc-set" data-set="1" role="group">
+            <article class="service-card">
+              <h3 data-i18n="svc_webdesign_title">Web Design</h3>
+              <img class="service-pic" src="img/services/webdesign.jpg" alt="Hands on a laptop working on a website layout" data-i18n-attr="alt:svc_webdesign_alt" width="1024" height="683" loading="lazy">
+              <p data-i18n="svc_webdesign_short">Clean, responsive websites designed around your brand and your visitors, on every screen.</p>
+              <a class="btn-more" href="services/web-design.html"><span data-i18n="more">MORE</span><span class="sr-only">: <span data-i18n="svc_webdesign_title">Web Design</span></span><span class="btn-more-arrow" aria-hidden="true">→</span></a>
+            </article>
+            <article class="service-card">
+              <h3 data-i18n="svc_webdev_title">Web Development</h3>
+              <img class="service-pic" src="img/services/webdev.jpg" alt="A laptop on a desk showing website code" data-i18n-attr="alt:svc_webdev_alt" width="1024" height="678" loading="lazy">
+              <p data-i18n="svc_webdev_short">Fast, secure websites and web applications built on modern, maintainable code.</p>
+              <a class="btn-more" href="services/web-development.html"><span data-i18n="more">MORE</span><span class="sr-only">: <span data-i18n="svc_webdev_title">Web Development</span></span><span class="btn-more-arrow" aria-hidden="true">→</span></a>
+            </article>
+            <article class="service-card">
+              <h3 data-i18n="svc_hosting_title">Hosting</h3>
+              <img class="service-pic" src="img/services/hosting.jpg" alt="Rows of servers glowing blue in a data center" data-i18n-attr="alt:svc_hosting_alt" width="1024" height="576" loading="lazy">
+              <p data-i18n="svc_hosting_short">Reliable hosting, domains, SSL, and backups, monitored and maintained so your site stays online.</p>
+              <a class="btn-more" href="services/hosting.html"><span data-i18n="more">MORE</span><span class="sr-only">: <span data-i18n="svc_hosting_title">Hosting</span></span><span class="btn-more-arrow" aria-hidden="true">→</span></a>
+            </article>
+          </div>
+          <div class="svc-set" data-set="2" role="group">
+            <article class="service-card">
+              <h3 data-i18n="svc_ai_title">AI Services</h3>
+              <img class="service-pic" src="img/services/ai.jpg" alt="A wireframe drawing of a human head" data-i18n-attr="alt:svc_ai_alt" width="1024" height="1024" loading="lazy">
+              <p data-i18n="svc_ai_short">Practical AI solutions, from chat assistants to automation, that save time and support your team.</p>
+              <a class="btn-more" href="services/ai-services.html"><span data-i18n="more">MORE</span><span class="sr-only">: <span data-i18n="svc_ai_title">AI Services</span></span><span class="btn-more-arrow" aria-hidden="true">→</span></a>
+            </article>
+            <article class="service-card">
+              <h3 data-i18n="svc_cms_title">Content Management</h3>
+              <img class="service-pic" src="img/services/cms.jpg" alt="Hands typing on a laptop keyboard" data-i18n-attr="alt:svc_cms_alt" width="960" height="640" loading="lazy">
+              <p data-i18n="svc_cms_short">Easy-to-use content management so your team can update pages, news, and media without code.</p>
+              <a class="btn-more" href="services/content-management.html"><span data-i18n="more">MORE</span><span class="sr-only">: <span data-i18n="svc_cms_title">Content Management</span></span><span class="btn-more-arrow" aria-hidden="true">→</span></a>
+            </article>
+            <article class="service-card">
+              <h3 data-i18n="svc_branding_title">Branding</h3>
+              <img class="service-pic" src="img/services/branding.jpg" alt="A desk with brand sketches, pencils, a laptop, and a phone" data-i18n-attr="alt:svc_branding_alt" width="960" height="644" loading="lazy">
+              <p data-i18n="svc_branding_short">Logos, color, typography, and brand guidelines that give your business a clear, consistent identity.</p>
+              <a class="btn-more" href="services/branding.html"><span data-i18n="more">MORE</span><span class="sr-only">: <span data-i18n="svc_branding_title">Branding</span></span><span class="btn-more-arrow" aria-hidden="true">→</span></a>
+            </article>
+          </div>
+        </div>
+        <div class="svc-controls" hidden>
+          <button type="button" class="svc-arrow svc-prev"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg><span class="sr-only" data-i18n="svcPrev">Previous services</span></button>
+          <div class="svc-dots" role="group" aria-label="Service groups" data-i18n-attr="aria-label:svcGroups">
+            <button type="button" class="svc-dot" data-set="0" aria-current="true"><span class="sr-only"></span></button>
+            <button type="button" class="svc-dot" data-set="1"><span class="sr-only"></span></button>
+            <button type="button" class="svc-dot" data-set="2"><span class="sr-only"></span></button>
+          </div>
+          <button type="button" class="svc-arrow svc-next"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5"/></svg><span class="sr-only" data-i18n="svcNext">Next services</span></button>
+          <button type="button" class="svc-arrow svc-pause" aria-pressed="false"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="i-pause" d="M5 3v10M11 3v10"/><path class="i-play" d="M5 3l8 5-8 5z"/></svg><span class="sr-only" data-i18n="svcPause">Pause the service cards</span></button>
+        </div>
+      </div>      <!-- services:end -->
     </section>
 
     <section class="contact" id="contact" aria-labelledby="contact-title" tabindex="-1">
@@ -137,9 +208,16 @@
           <div class="field field-wide">
             <label for="f-topic" data-i18n="fTopic">What can we help with?</label>
             <select id="f-topic" name="topic">
-              <option value="s1Title" data-i18n="s1Title">Software Development</option>
-              <option value="s2Title" data-i18n="s2Title">Technology Consulting</option>
-              <option value="s3Title" data-i18n="s3Title">Media Design</option>
+              <!-- topics:start -->
+              <option value="svc_software_title" data-i18n="svc_software_title">Software Development</option>
+              <option value="svc_consulting_title" data-i18n="svc_consulting_title">Technology Consulting</option>
+              <option value="svc_media_title" data-i18n="svc_media_title">Media Design</option>
+              <option value="svc_webdesign_title" data-i18n="svc_webdesign_title">Web Design</option>
+              <option value="svc_webdev_title" data-i18n="svc_webdev_title">Web Development</option>
+              <option value="svc_hosting_title" data-i18n="svc_hosting_title">Hosting</option>
+              <option value="svc_ai_title" data-i18n="svc_ai_title">AI Services</option>
+              <option value="svc_cms_title" data-i18n="svc_cms_title">Content Management</option>
+              <option value="svc_branding_title" data-i18n="svc_branding_title">Branding</option>              <!-- topics:end -->
               <option value="topicOther" data-i18n="topicOther">Something else</option>
             </select>
           </div>
@@ -189,7 +267,8 @@
     </div>
   </footer>
 
-  <script src="translations.js?v=a4c3a963"></script>
-  <script src="app.js?v=686d8a8e"></script>
+  <script src="translations.js?v=4a7658cc"></script>
+  <script src="app.js?v=e9d8c192"></script>
+  <script src="rain.js?v=91feae2f"></script>
 </body>
 </html>
