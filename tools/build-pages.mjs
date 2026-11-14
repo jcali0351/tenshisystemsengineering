@@ -313,6 +313,56 @@ ${cta("contact.html")}`,
 });
 writeFileSync("team.html", teamPage);
 
+// A drawn line icon for each service (24 x 24, stroke), used in the detailed descriptions.
+const SVC_ICON = {
+  software: '<path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="m13.5 5-3 14"/>',
+  consulting: '<circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/><circle cx="12" cy="12" r=".6" fill="currentColor"/>',
+  media: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/><path d="M3 9h2M3 15h2M19 9h2M19 15h2"/>',
+  webdesign: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/><path d="M12.5 13h5M12.5 16h3"/>',
+  webdev: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 8h18"/><circle cx="5.8" cy="6" r=".5" fill="currentColor"/><circle cx="7.8" cy="6" r=".5" fill="currentColor"/><path d="m10 12-2 2 2 2M14 12l2 2-2 2"/>',
+  hosting: '<rect x="4" y="3" width="16" height="6" rx="1.5"/><rect x="4" y="11" width="16" height="6" rx="1.5"/><path d="M7.5 6h.01M7.5 14h.01M11 6h5M11 14h5M12 17v4M8 21h8"/>',
+  ai: '<rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/><path d="m12 9 .9 2.1L15 12l-2.1.9L12 15l-.9-2.1L9 12l2.1-.9z"/>',
+  cms: '<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/><path d="m9 17 .6-2.4 5-5 1.8 1.8-5 5z"/>',
+  branding: '<path d="M6 3h12l3 6-9 12L3 9z"/><path d="M3 9h18M9 3l3 18 3-18"/>',
+};
+const svcIcon = (s, cls = "svc-icon") => `<span class="${cls}" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${SVC_ICON[s.id]}</svg></span>`;
+const detailSection = (prefix) => `    <section class="page-section svc-detail-section" aria-labelledby="detail-title">
+      <div class="page-inner">
+        <h2 id="detail-title" class="section-title" data-i18n="detailTitle">${tx("detailTitle")}</h2>
+        ${t("p", "detailIntro", 'class="section-intro"')}
+        <div class="svc-detail-list">
+${SERVICES.map((s) => `          <article class="svc-detail" id="${s.slug}">
+            <figure class="svc-detail-pic">
+              <img src="${prefix}img/services/${s.img}" alt="${tx(k(s, "alt"))}" data-i18n-attr="alt:${k(s, "alt")}" width="${s.w}" height="${s.h}" loading="lazy">
+              ${svcIcon(s, "svc-icon svc-icon-badge")}
+            </figure>
+            <div class="svc-detail-body">
+              <h3 class="svc-detail-title">${svcIcon(s)}<span data-i18n="${k(s, "title")}">${tx(k(s, "title"))}</span></h3>
+              <p class="svc-detail-short" data-i18n="${k(s, "short")}">${tx(k(s, "short"))}</p>
+              <p data-i18n="${k(s, "long1")}">${tx(k(s, "long1"))}</p>
+              <p data-i18n="${k(s, "long2")}">${tx(k(s, "long2"))}</p>
+              <ul class="svc-detail-tags">
+${[1, 2, 3, 4, 5].map((n) => `                <li data-i18n="${k(s, "o" + n)}">${tx(k(s, "o" + n))}</li>`).join("\n")}
+              </ul>
+              <a class="btn btn-primary" href="${prefix}services/${s.slug}.html"><span data-i18n="more">${tx("more")}</span><span class="sr-only">: <span data-i18n="${k(s, "title")}">${tx(k(s, "title"))}</span></span></a>
+            </div>
+          </article>`).join("\n")}
+        </div>
+      </div>
+    </section>`;
+const depthSection = (s) => `    <section class="svc-depth" aria-labelledby="depth-title">
+      <div class="svc-wide svc-depth-inner">
+        ${svcIcon(s, "svc-icon svc-icon-lg")}
+        <div>
+          <h2 id="depth-title" class="section-title" data-i18n="depthTitle">${tx("depthTitle")}</h2>
+          <p data-i18n="${k(s, "long1")}">${tx(k(s, "long1"))}</p>
+          <p data-i18n="${k(s, "long2")}">${tx(k(s, "long2"))}</p>
+        </div>
+      </div>
+    </section>
+
+`;
+
 /* ---------- Services overview ---------- */
 const servicesPage = frame({
   prefix: "", current: "services", titleKey: "navServices", descKey: "servicesLead", bodyClass: "page services-page",
@@ -327,6 +377,8 @@ ${SERVICES.map((s) => card(s, "          ", "")).join("\n")}
         </div>
       </div>
     </section>
+
+${detailSection("")}
 
 ${process()}
 
@@ -471,7 +523,7 @@ function servicePage(s) {
       </div>
     </section>
 
-    <section class="svc-offer-section" aria-labelledby="offer-title">
+${depthSection(s)}    <section class="svc-offer-section" aria-labelledby="offer-title">
       <div class="svc-wide">
         <h2 id="offer-title" class="section-title" data-i18n="offerTitle">${tx("offerTitle")}</h2>
         <ul class="offer-grid">
