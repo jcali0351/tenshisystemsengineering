@@ -1220,3 +1220,19 @@ html[dir="rtl"] .brand-en, html[dir="rtl"] .tech-name { text-align: right; }
   .lang-current { min-height: 54px; padding: 8px 14px 8px 10px; font-size: 1.1rem; }
   .lang-current .flag { width: 38px; }
 }
+
+/* Band capitals: even tracking, clear gaps between words, and the line kept centred. */
+.band-stage, .band-list .band-text { letter-spacing: .07em; }
+.band-anim .band-stage { gap: .12em .42em; }
+.band-anim .band-stage.is-tag { letter-spacing: .06em; }
+.band-unit:last-child { margin-inline-end: -.07em; }   /* the last letter's tracking would push the line off centre */
+html:lang(ja) .band-stage, html:lang(zh) .band-stage, html:lang(ko) .band-stage { gap: 0; }
+
+/* Band: tight, heavy capitals (Lato Black) instead of light and airy. */
+.band-stage, .band-list .band-text { font-weight: 900; letter-spacing: .012em; line-height: 1.08; }
+.band-anim .band-stage { gap: .08em .24em; }
+.band-anim .band-stage.is-tag { letter-spacing: .008em; }
+.band-unit:last-child { margin-inline-end: 0; }
+.band-text { text-shadow: 0 2px 0 rgba(90, 0, 14, .35), 0 6px 24px rgba(80, 0, 12, .35); }
+/* Japanese and Chinese lines (shown first in every language) are set solid, with no gaps between words. */
+.band-anim .band-stage:is([lang="ja"], [lang="zh"]) { gap: 0; font-weight: 700; letter-spacing: .02em; }
