@@ -1650,3 +1650,62 @@ html[dir="rtl"] .svc-icon-badge { left: auto; right: 16px; }
   .svc-depth-inner { flex-direction: column; }
   .svc-detail-title .svc-icon { width: 40px; height: 40px; }
 }
+
+/* ======================================================================
+   Consultation section: a flight of chevrons
+   Seven striped arrows leave the static chevrons on the left, glide across the whole section
+   with a glowing leading edge, drift, soften into a blur and dissolve. Staggered so the motion
+   never stops but never crowds; they pass behind the text and form.
+   ====================================================================== */
+.contact:not(.page-section)::before { opacity: .28; }
+.chev-flight { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+html[dir="rtl"] .chev-flight { transform: scaleX(-1); }
+.chev {
+  --h: 62%; --top: 19%; --dur: 13s; --o: .55; --drift: 0px;
+  position: absolute; left: 0; top: var(--top); height: var(--h); aspect-ratio: 1 / 1;
+  clip-path: polygon(0 0, 50% 0, 100% 50%, 50% 100%, 0 100%, 50% 50%);
+  background:
+    linear-gradient(90deg, transparent 0 40%, rgba(255, 150, 168, .38) 78%, rgba(255, 225, 230, .7) 100%),
+    repeating-linear-gradient(180deg, rgba(255, 255, 255, .26) 0 1.6px, transparent 1.6px 6px),
+    rgba(126, 10, 27, .32);
+  opacity: 0; transform: translate3d(-110%, 0, 0);
+  animation: chev-fly var(--dur) cubic-bezier(.45, .05, .35, 1) infinite;
+  animation-delay: calc(var(--i) * var(--dur) / -7 - 1s);
+  will-change: transform, opacity, filter;
+}
+/* Each arrow its own size, height, speed, strength and drift */
+.chev:nth-child(1) { --h: 86%; --top: 7%;  --dur: 15s;  --o: .5;  --drift: -18px; }
+.chev:nth-child(2) { --h: 44%; --top: 10%; --dur: 11s;  --o: .6;  --drift: 14px; }
+.chev:nth-child(3) { --h: 62%; --top: 34%; --dur: 13s;  --o: .45; --drift: -10px; }
+.chev:nth-child(4) { --h: 30%; --top: 62%; --dur: 9.5s; --o: .65; --drift: 20px; }
+.chev:nth-child(5) { --h: 72%; --top: 22%; --dur: 17s;  --o: .35; --drift: 8px; }
+.chev:nth-child(6) { --h: 38%; --top: 54%; --dur: 12s;  --o: .55; --drift: -16px; }
+.chev:nth-child(7) { --h: 24%; --top: 18%; --dur: 10.5s; --o: .6; --drift: 12px; }
+@keyframes chev-fly {
+  0%   { opacity: 0;                         transform: translate3d(-110%, 0, 0) scale(.92); filter: blur(0); }
+  10%  { opacity: var(--o); }
+  55%  { opacity: calc(var(--o) * .8);       filter: blur(0); }
+  85%  { opacity: calc(var(--o) * .25);      filter: blur(2px); }
+  100% { opacity: 0;                         transform: translate3d(calc(100vw + 10%), var(--drift), 0) scale(1.12); filter: blur(5px); }
+}
+/* A soft light that sweeps behind the flight now and then */
+.chev-flight::after {
+  content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 38%;
+  background: linear-gradient(90deg, transparent, rgba(255, 92, 116, .14), transparent);
+  transform: translateX(-100%); animation: chev-sweep 9s ease-in-out infinite 2s;
+}
+@keyframes chev-sweep { 0% { transform: translateX(-100%); opacity: 0; } 20% { opacity: 1; } 70%, 100% { transform: translateX(300%); opacity: 0; } }
+
+/* Phones: fewer, lighter arrows */
+@media (max-width: 700px) {
+  .chev:nth-child(n + 5) { display: none; }
+  .chev { --o: .35; }
+}
+/* Reduced motion: the original still chevrons only */
+@media (prefers-reduced-motion: reduce) {
+  .chev-flight { display: none; }
+  .contact:not(.page-section)::before { opacity: .5; }
+}
+
+/* More breathing room between each service card picture and its text */
+.service-card .service-pic { margin-bottom: 28px; }
