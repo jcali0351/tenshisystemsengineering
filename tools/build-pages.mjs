@@ -356,7 +356,7 @@ ${TECH_GROUPS.map((gr) => `        <section class="tech-group" data-group="${gr.
           </div>
           <ul class="tech-grid">
 ${gr.items.map(([slug, name, url]) => `            <li class="tech-card">
-              <span class="tech-logo" style="--logo: url(img/tech/${slug}.svg); --brand: ${BRAND[slug]}" aria-hidden="true"></span>
+              <span class="tech-logo tech-logo--color" style="--brand: ${BRAND[slug]}" aria-hidden="true"><img src="img/tech-color/${slug}.svg" alt="" width="36" height="36" loading="lazy"></span>
               <h4 class="tech-name">${name}</h4>
               <p class="tech-desc" data-i18n="tech_${slug}">${tx(`tech_${slug}`)}</p>
               <a class="tech-link" href="${url}" target="_blank" rel="noopener"><span data-i18n="techVisit">${tx("techVisit")}</span><span class="sr-only">: ${name} <span data-i18n="techNewTab">${tx("techNewTab")}</span></span> <span aria-hidden="true">↗</span></a>
@@ -447,7 +447,7 @@ function servicePage(s) {
             <p data-i18n="${k(s, "b" + n)}">${tx(k(s, "b" + n))}</p>
           </li>`).join("\n");
   const tech = (SERVICE_TECH[s.id] || []).map((slug) => `          <li><a class="svc-tech" href="../technology.html">
-            <span class="svc-tech-logo" style="--logo: url(../img/tech/${slug}.svg); --brand: ${BRAND[slug]}" aria-hidden="true"></span>
+            <span class="svc-tech-logo svc-tech-logo--color" style="--brand: ${BRAND[slug]}" aria-hidden="true"><img src="../img/tech-color/${slug}.svg" alt="" width="38" height="38" loading="lazy"></span>
             <span class="svc-tech-name">${TECH_NAME[slug]}</span>
           </a></li>`).join("\n");
   return frame({

@@ -1,0 +1,4 @@
+Full-colour product logos.
+Most come from Devicon 2.16.0 (https://devicon.dev), MIT License, Copyright (c) 2015 konpa.
+claude.svg, shopify.svg and strapi.svg are Simple Icons shapes (CC0, https://simpleicons.org) filled with each brand's colour.
+Every logo is a trademark of its owner and is shown only to name the technology; no endorsement is implied.
