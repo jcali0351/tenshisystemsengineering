@@ -287,6 +287,12 @@ html:lang(ja).band-anim .band-stage { gap: 0; }
 }
 .service-card:hover { transform: translateY(-3px); box-shadow: 0 16.1px 39.1px rgba(22, 32, 48, .13); }
 .service-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 13.8px; }
+.service-pic {
+  display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover;
+  margin: 0 0 16.1px; border-radius: 4.6px; background: var(--pale);
+  filter: saturate(.85); transition: filter .3s, transform .4s;
+}
+.service-card:hover .service-pic { filter: saturate(1); }
 .service-card p { font-size: .84rem; line-height: 1.65; color: var(--muted); }
 
 /* ---------- Contact ---------- */

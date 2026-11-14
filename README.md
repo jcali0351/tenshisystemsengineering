@@ -8,6 +8,7 @@ A plain static site for GitHub Pages: no build step.
 - `translations.js` – every piece of text in English and Japanese (edit wording here)
 - `app.js` – language switch, skyline slideshow, consultation form. The form's email address is `CONTACT_EMAIL` at the top.
 - `img/photos/` – the five hero skyline photos (Osaka, Tokyo, Kyoto, Yokohama, Kobe) from Wikimedia Commons, 1920px; their credits are in the footer of index.html and must stay there
+- `img/services/` – the three service-card photos (Wikimedia Commons, Unsplash imports, CC0: no credit required)
 - `img/blueprint.svg`, `img/chevrons.svg`, `img/mech.svg` – background line art and patterns
 - `logo.png` – the company logo (header, hero, footer and tab icon)
 - `tools/make-skylines.mjs` – redraws the background line art (`node tools/make-skylines.mjs img`; it also writes drawn skylines to img/skylines, which the page no longer uses)
