@@ -203,6 +203,103 @@ const cta = (href) => `    <section class="svc-cta" aria-labelledby="cta-title">
       <a class="btn btn-light" href="${href}" data-i18n="cta">${tx("cta")}</a>
     </section>`;
 
+/* ---------- About: the web speciality, journey, standards and the Osaka minimap ---------- */
+const AB_ICON = {
+  design: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/><path d="M12.5 13h5M12.5 16h3"/>',
+  dev: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 8h18"/><path d="m10 12-2 2 2 2M14 12l2 2-2 2"/>',
+  host: '<rect x="4" y="3" width="16" height="6" rx="1.5"/><rect x="4" y="11" width="16" height="6" rx="1.5"/><path d="M7.5 6h.01M7.5 14h.01M11 6h5M11 14h5M12 17v4M8 21h8"/>',
+  mission: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/>',
+  vision: '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  phone: '<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/>',
+  access: '<circle cx="12" cy="4.5" r="2"/><path d="M5 8.5l7 1.5 7-1.5M12 10v5l-3 6M12 15l3 6"/>',
+  lock: '<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><path d="M12 15v2"/>',
+  bolt: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+  globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/>',
+  check: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+};
+const abIcon = (n, cls = "ab-icon") => `<span class="${cls}" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${AB_ICON[n]}</svg></span>`;
+const MAP = { lat: 34.69375, lon: 135.5025, bbox: "135.4920,34.6890,135.5130,34.6985" };
+const focusBlock = (key, ic, list) => `          <article class="ab-focus">
+            <div class="ab-focus-head">${abIcon(ic, "ab-icon ab-icon-lg")}<h3 data-i18n="${key}T">${tx(key + "T")}</h3></div>
+            <p data-i18n="${key}1">${tx(key + "1")}</p>
+            <p data-i18n="${key}2">${tx(key + "2")}</p>
+            <ul class="ab-checks">
+${list.map((k2) => `              <li>${abIcon("check", "ab-check")}<span data-i18n="${k2}">${tx(k2)}</span></li>`).join("\n")}
+            </ul>
+          </article>`;
+const aboutWeb = () => `    <section class="page-section ab-mv" aria-label="${tx("aboutMissionTitle")}" data-i18n-attr="aria-label:aboutMissionTitle">
+      <div class="page-inner ab-mv-grid">
+        <div class="ab-mv-card">${abIcon("mission")}<h2 data-i18n="aboutMissionTitle">${tx("aboutMissionTitle")}</h2><p data-i18n="aboutMission">${tx("aboutMission")}</p></div>
+        <div class="ab-mv-card">${abIcon("vision")}<h2 data-i18n="aboutVisionTitle">${tx("aboutVisionTitle")}</h2><p data-i18n="aboutVision">${tx("aboutVision")}</p></div>
+      </div>
+    </section>
+
+    <section class="page-section ab-web" aria-labelledby="focus-title">
+      <div class="page-inner">
+        <h2 id="focus-title" class="section-title light" data-i18n="aboutFocusTitle">${tx("aboutFocusTitle")}</h2>
+        <p class="section-intro ab-web-intro" data-i18n="aboutFocusIntro">${tx("aboutFocusIntro")}</p>
+        <div class="ab-focus-grid">
+${focusBlock("focusDesign", "design", ["fd1", "fd2", "fd3", "fd4"])}
+${focusBlock("focusDev", "dev", ["fdv1", "fdv2", "fdv3", "fdv4"])}
+${focusBlock("focusHost", "host", ["fh1", "fh2", "fh3", "fh4"])}
+        </div>
+      </div>
+    </section>
+
+`;
+const aboutJourney = () => `    <section class="page-section ab-journey" aria-labelledby="journey-title">
+      <div class="page-inner">
+        <h2 id="journey-title" class="section-title center" data-i18n="aboutJourneyTitle">${tx("aboutJourneyTitle")}</h2>
+        <p class="section-intro center" data-i18n="aboutJourneyIntro">${tx("aboutJourneyIntro")}</p>
+        <ol class="ab-steps">
+${[1, 2, 3, 4, 5, 6].map((n) => `          <li class="ab-step"><span class="ab-step-num" aria-hidden="true">0${n}</span><h3 data-i18n="jr${n}T">${tx(`jr${n}T`)}</h3><p data-i18n="jr${n}">${tx(`jr${n}`)}</p></li>`).join("\n")}
+        </ol>
+      </div>
+    </section>
+
+    <section class="page-section tinted ab-std" aria-labelledby="std-title">
+      <div class="page-inner">
+        <h2 id="std-title" class="section-title center" data-i18n="aboutStdTitle">${tx("aboutStdTitle")}</h2>
+        <ul class="ab-std-grid">
+${[["phone", 1], ["access", 2], ["lock", 3], ["bolt", 4]].map(([ic, n]) => `          <li class="ab-std-card">${abIcon(ic)}<h3 data-i18n="std${n}T">${tx(`std${n}T`)}</h3><p data-i18n="std${n}">${tx(`std${n}`)}</p></li>`).join("\n")}
+        </ul>
+      </div>
+    </section>
+
+`;
+const aboutFind = () => `
+    <section class="page-section ab-find" aria-labelledby="find-title">
+      <div class="page-inner ab-find-grid">
+        <div class="ab-find-text">
+          <h2 id="find-title" class="section-title" data-i18n="aboutFindTitle">${tx("aboutFindTitle")}</h2>
+          <p class="page-lead" data-i18n="aboutFindIntro">${tx("aboutFindIntro")}</p>
+          <dl class="ab-facts">
+            <div><dt>${abIcon("globe", "ab-dt-icon")}<span data-i18n="infoLocation">${tx("infoLocation")}</span></dt><dd><b data-i18n="aboutArea">${tx("aboutArea")}</b><span data-i18n="aboutAreaText">${tx("aboutAreaText")}</span></dd></div>
+            <div><dt>${abIcon("host", "ab-dt-icon")}<span data-i18n="aboutNearTitle">${tx("aboutNearTitle")}</span></dt><dd data-i18n="aboutNear">${tx("aboutNear")}</dd></div>
+            <div><dt>${abIcon("vision", "ab-dt-icon")}<span data-i18n="aboutVisitTitle">${tx("aboutVisitTitle")}</span></dt><dd data-i18n="aboutVisit">${tx("aboutVisit")}</dd></div>
+          </dl>
+        </div>
+        <figure class="minimap">
+          <div class="minimap-frame">
+            <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=${MAP.bbox}&amp;layer=mapnik&amp;marker=${MAP.lat}%2C${MAP.lon}" title="${tx("aboutMapLabel")}" data-i18n-attr="title:aboutMapLabel" loading="lazy" referrerpolicy="no-referrer"></iframe>
+            <span class="minimap-ping" aria-hidden="true"></span>
+            <span class="minimap-compass" aria-hidden="true">N</span>
+            <span class="minimap-corners" aria-hidden="true"></span>
+            <span class="minimap-coords" aria-hidden="true">34.6938° N · 135.5025° E</span>
+          </div>
+          <figcaption><span data-i18n="aboutArea">${tx("aboutArea")}</span> · <a href="https://www.openstreetmap.org/?mlat=${MAP.lat}&amp;mlon=${MAP.lon}#map=16/${MAP.lat}/${MAP.lon}" target="_blank" rel="noopener"><span data-i18n="aboutMapOpen">${tx("aboutMapOpen")}</span> <span aria-hidden="true">↗</span></a> · © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="ab-global" aria-labelledby="global-title">
+      <div class="page-inner ab-global-inner">
+        ${abIcon("globe", "ab-icon ab-icon-lg")}
+        <div><h2 id="global-title" data-i18n="aboutGlobalTitle">${tx("aboutGlobalTitle")}</h2><p data-i18n="aboutGlobal">${tx("aboutGlobal")}</p></div>
+      </div>
+    </section>
+`;
+
 /* ---------- About ---------- */
 const about = frame({
   prefix: "", current: "about", titleKey: "aboutTitle", descKey: "aboutLead", bodyClass: "page about-page",
@@ -227,7 +324,7 @@ const about = frame({
       </div>
     </section>
 
-    <section class="page-section tinted" aria-labelledby="values-title">
+${aboutWeb()}    <section class="page-section tinted" aria-labelledby="values-title">
       <div class="page-inner">
         <h2 id="values-title" class="section-title center" data-i18n="aboutValuesTitle">${tx("aboutValuesTitle")}</h2>
         <ul class="value-grid">
@@ -240,7 +337,7 @@ ${[["reliability", 1], ["craft", 2], ["partner", 3], ["clarity", 4]].map(([ic, n
       </div>
     </section>
 
-    <section class="page-section" aria-labelledby="osaka-title">
+${aboutJourney()}    <section class="page-section" aria-labelledby="osaka-title">
       <div class="page-inner split media-split">
         <figure class="page-photo">
           <img src="img/photos/osaka.jpg" alt="${tx("aboutPhotoAlt")}" data-i18n-attr="alt:aboutPhotoAlt" width="1920" height="1080" loading="lazy">
@@ -255,6 +352,7 @@ ${[["reliability", 1], ["craft", 2], ["partner", 3], ["clarity", 4]].map(([ic, n
       </div>
     </section>
 
+${aboutFind()}
     <section class="page-section team-teaser" aria-labelledby="meet-title">
       <div class="page-inner teaser-inner">
         <ul class="teaser-faces" aria-hidden="true">
@@ -437,6 +535,24 @@ const contactPage = frame({
 ${FORM}
         </div>
         <aside class="contact-aside" aria-labelledby="info-title">
+          <article class="contact-pitch" aria-labelledby="pitch-title">
+            <p class="pitch-kicker" data-i18n="pitchKicker">${tx("pitchKicker")}</p>
+            <h2 id="pitch-title" class="pitch-title" data-i18n="pitchTitle">${tx("pitchTitle")}</h2>
+            <p class="pitch-lead" data-i18n="pitchLead">${tx("pitchLead")}</p>
+            <p data-i18n="pitchP1">${tx("pitchP1")}</p>
+            <h3 data-i18n="pitchWhyTitle">${tx("pitchWhyTitle")}</h3>
+            <ul class="pitch-why">
+${[1, 2, 3, 4].map((n) => `              <li data-i18n="pitchWhy${n}">${tx("pitchWhy" + n)}</li>`).join("\n")}
+            </ul>
+            <p data-i18n="pitchP4">${tx("pitchP4")}</p>
+            <h3 data-i18n="pitchNextTitle">${tx("pitchNextTitle")}</h3>
+            <ol class="pitch-next">
+${[1, 2, 3].map((n) => `              <li data-i18n="pitchNext${n}">${tx("pitchNext" + n)}</li>`).join("\n")}
+            </ol>
+            <p data-i18n="pitchP2">${tx("pitchP2")}</p>
+            <p class="pitch-omote" data-i18n="pitchP3">${tx("pitchP3")}</p>
+            <p class="pitch-sign"><span data-i18n="pitchSign">${tx("pitchSign")}</span><b data-i18n="pitchTeam">${tx("pitchTeam")}</b></p>
+          </article>
           <h2 id="info-title" class="aside-title" data-i18n="infoTitle">${tx("infoTitle")}</h2>
           <ul class="info-list">
             <li>${icon("mail", "info-icon")}<div><b data-i18n="infoEmail">${tx("infoEmail")}</b><a class="contact-email" href="#contact"></a></div></li>
