@@ -39,10 +39,10 @@ const BRAND = {"adobeaftereffects":"#9999FF","adobeillustrator":"#FF9A00","adobe
 // The team page. To use real photos, put them in img/team/ and change img here; names, roles and bios are in
 // translations.js (staff1Name, staff1Role, staff1Bio …).
 const TEAM = [
-  { n: 1, img: "placeholder-1.svg", skills: ["software", "webdev", "cms"] },
-  { n: 2, img: "placeholder-2.svg", skills: ["consulting", "ai", "hosting"] },
-  { n: 3, img: "placeholder-3.svg", skills: ["webdesign", "media", "branding"] },
-  { n: 4, img: "placeholder-4.svg", skills: ["ai", "hosting", "software"] },
+  { n: 1, img: "illustrated-1.svg", skills: ["software", "webdev", "cms"] },
+  { n: 2, img: "illustrated-2.svg", skills: ["consulting", "ai", "hosting"] },
+  { n: 3, img: "illustrated-3.svg", skills: ["webdesign", "media", "branding"] },
+  { n: 4, img: "illustrated-4.svg", skills: ["ai", "hosting", "software"] },
 ];
 
 const sandbox = { window: {} };
@@ -374,7 +374,7 @@ writeFileSync("about.html", about);
 
 /* ---------- Team ---------- */
 const teamPage = frame({
-  prefix: "", current: ["about", "team"], titleKey: "teamTitle", descKey: "teamLead", bodyClass: "page team-page",
+  prefix: "", current: "team", titleKey: "teamTitle", descKey: "teamLead", bodyClass: "page team-page",
   main: `${banner("", [{ key: "navAbout", href: "about.html" }, { key: "navTeam" }], "teamTitle", "teamLead")}
 
     <section class="page-section team-section" aria-labelledby="team-list-title">
