@@ -179,6 +179,7 @@ function frame({ prefix, current, titleKey, descKey, bodyClass, main, photoCredi
   <link rel="stylesheet" href="${prefix}styles.css">
   <link rel="stylesheet" href="${prefix}design.css">
   <link rel="stylesheet" href="${prefix}chat.css">
+  <link rel="stylesheet" href="${prefix}site-theme.css">
 </head>
 <body class="${bodyClass}" data-title-key="${titleKey}" data-desc-key="${descKey}">
   <!-- Written by tools/build-pages.mjs: edit translations.js and the script, not this file. -->

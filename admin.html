@@ -7,6 +7,7 @@
   <title>Tenshi Editor</title>
   <link rel="icon" href="brand/tenshi-logo.png" type="image/png">
   <link rel="stylesheet" href="admin/admin.css">
+  <link rel="stylesheet" href="fonts/catalog.css">
 </head>
 <body>
   <header class="ed-bar">
@@ -52,6 +53,7 @@
       <button type="button" role="tab" data-tab="pages" aria-selected="true">Pages</button>
       <button type="button" role="tab" data-tab="text" aria-selected="false">All text</button>
       <button type="button" role="tab" data-tab="images" aria-selected="false">Images</button>
+      <button type="button" role="tab" data-tab="design" aria-selected="false">Design</button>
       <button type="button" role="tab" data-tab="bots" aria-selected="false">Content bots</button>
     </nav>
 
@@ -82,6 +84,87 @@
         <p class="ed-tip">Click a picture to replace it. New pictures are resized and compressed in your browser before they're saved.</p>
       </div>
       <ul class="ed-imgs" id="ed-imgs"></ul>
+    </section>
+    <!-- Design: fonts, typography, colors and motion (writes site-theme.css) -->
+    <section class="ed-panel ed-design" data-panel="design" hidden>
+      <form class="ed-design-controls" id="dz-form" autocomplete="off">
+        <div class="dz-actions">
+          <button type="button" class="ed-btn" id="dz-save" disabled>Save design</button>
+          <button type="button" class="ed-btn ed-btn--ghost" id="dz-reset">Reset to defaults</button>
+          <p class="ed-msg" id="dz-msg" role="status"></p>
+        </div>
+
+        <fieldset>
+          <legend>Fonts</legend>
+          <label class="ed-field"><span>Headings</span><select data-k="headingFont" class="dz-font"></select></label>
+          <p class="dz-sample" id="dz-sample-h">Engineering reliable solutions</p>
+          <label class="ed-field"><span>Heading weight</span><select data-k="headingWeight" class="dz-weight" data-for="headingFont"></select></label>
+          <label class="ed-field"><span>Body text</span><select data-k="bodyFont" class="dz-font"></select></label>
+          <p class="dz-sample dz-sample--body" id="dz-sample-b">Good design makes a business easy to understand and easy to trust.</p>
+          <label class="ed-field"><span>Body weight</span><select data-k="bodyWeight" class="dz-weight" data-for="bodyFont"></select></label>
+          <p class="ed-note">All 63 fonts are stored on the site itself (no Google requests) and are free to use on the web: SIL Open Font License, Apache 2.0 or (Ubuntu) the Ubuntu Font Licence. Each font's license is in its folder.</p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Heading letter spacing</legend>
+          <p class="ed-note">Negative values pull characters closer together. Japanese, Chinese, Korean, Arabic and Farsi headings keep normal spacing.</p>
+          <label class="dz-range"><span>Main titles (H1)</span><input type="range" data-k="h1Spacing" min="-0.12" max="0.15" step="0.005"><output></output></label>
+          <label class="dz-range"><span>Section headings (H2)</span><input type="range" data-k="h2Spacing" min="-0.12" max="0.15" step="0.005"><output></output></label>
+          <label class="dz-range"><span>Card headings (H3)</span><input type="range" data-k="h3Spacing" min="-0.12" max="0.15" step="0.005"><output></output></label>
+          <label class="dz-range"><span>Small headings (H4–H6)</span><input type="range" data-k="h4Spacing" min="-0.12" max="0.15" step="0.005"><output></output></label>
+          <label class="dz-range"><span>Heading line height</span><input type="range" data-k="headingLine" min="0.85" max="1.5" step="0.01"><output></output></label>
+          <label class="ed-field"><span>Heading capitals</span><select data-k="headingCase"><option value="none">As written</option><option value="capitalize">Capitalize Each Word</option><option value="uppercase">ALL CAPITALS</option></select></label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Sizes</legend>
+          <p class="ed-note">Sizes on a wide screen; phones scale them down smoothly.</p>
+          <label class="dz-range"><span>Whole-site text size</span><input type="range" data-k="rootSize" min="14" max="22" step="0.1"><output></output></label>
+          <label class="dz-range"><span>Homepage headline</span><input type="range" data-k="heroSize" min="40" max="140" step="1"><output></output></label>
+          <label class="dz-range"><span>Page titles</span><input type="range" data-k="pageTitleSize" min="32" max="120" step="1"><output></output></label>
+          <label class="dz-range"><span>Section headings</span><input type="range" data-k="sectionSize" min="24" max="96" step="1"><output></output></label>
+          <label class="dz-range"><span>Feature headings (homepage)</span><input type="range" data-k="featureSize" min="24" max="100" step="1"><output></output></label>
+          <label class="dz-range"><span>Card headings</span><input type="range" data-k="cardSize" min="14" max="32" step="0.5"><output></output></label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Body text</legend>
+          <label class="dz-range"><span>Letter spacing</span><input type="range" data-k="bodySpacing" min="-0.04" max="0.1" step="0.005"><output></output></label>
+          <label class="dz-range"><span>Line height</span><input type="range" data-k="bodyLine" min="1.2" max="2.2" step="0.05"><output></output></label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Colors</legend>
+          <label class="dz-color"><span>Headings</span><input type="color" data-k="headingColor"><output></output></label>
+          <label class="dz-color"><span>Body text</span><input type="color" data-k="textColor"><output></output></label>
+          <label class="dz-color"><span>Secondary text</span><input type="color" data-k="mutedColor"><output></output></label>
+          <label class="dz-color"><span>Accent (buttons, links)</span><input type="color" data-k="accentColor"><output></output></label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Motion</legend>
+          <label class="ed-check"><input type="checkbox" data-k="motion"> Animate the site as visitors scroll</label>
+          <label class="ed-check"><input type="checkbox" data-k="motionChars"> Headings appear character by character</label>
+          <label class="ed-check"><input type="checkbox" data-k="motionText"> Text slides in from alternating sides</label>
+          <label class="ed-check"><input type="checkbox" data-k="motionImages"> Pictures fade and rise</label>
+          <label class="ed-check"><input type="checkbox" data-k="motionCards"> Cards rise one after another</label>
+          <label class="ed-check"><input type="checkbox" data-k="motionColor"> Pictures start black and white and turn to full color</label>
+          <label class="dz-range"><span>Black and white to color</span><input type="range" data-k="colorDuration" min="0.4" max="5" step="0.1"><output></output></label>
+          <label class="dz-range"><span>Duration (× normal)</span><input type="range" data-k="motionSpeed" min="0.4" max="2.5" step="0.1"><output></output></label>
+          <label class="dz-range"><span>Slide distance, computers</span><input type="range" data-k="motionDistance" min="0" max="160" step="2"><output></output></label>
+          <label class="dz-range"><span>Slide distance, phones</span><input type="range" data-k="motionDistanceMobile" min="0" max="80" step="2"><output></output></label>
+          <label class="dz-range"><span>Delay between characters</span><input type="range" data-k="charDelay" min="5" max="90" step="1"><output></output></label>
+          <p class="ed-note">Visitors whose device asks for reduced motion always see a still site.</p>
+        </fieldset>
+      </form>
+      <div class="ed-design-preview">
+        <div class="ed-toolbar">
+          <label class="ed-inline"><span>Preview</span> <select id="dz-page"></select></label>
+          <label class="ed-inline"><span>Width</span> <select id="dz-width"><option value="100%">Full</option><option value="768px">Tablet</option><option value="390px">Phone</option></select></label>
+          <button type="button" class="ed-btn ed-btn--ghost ed-btn--small" id="dz-replay">Replay animations</button>
+        </div>
+        <div class="dz-frame-wrap"><iframe id="dz-frame" title="Design preview"></iframe></div>
+      </div>
     </section>
     <!-- Content bots -->
     <section class="ed-panel" data-panel="bots" hidden>
@@ -144,6 +227,7 @@
   <div class="ed-toast" id="ed-toast" role="status" aria-live="polite"></div>
 
   <script src="admin/tr.js"></script>
+  <script src="admin/theme.js"></script>
   <script src="admin/admin.js"></script>
 </body>
 </html>

@@ -237,6 +237,7 @@
     if (name === "text") renderText();
     if (name === "images") renderImages();
     if (name === "bots") loadBots();
+    if (name === "design") loadDesign();
   }
 
   /* ================================================================== PAGES (click to edit) */
@@ -686,4 +687,97 @@
   }
   $("#bot-news-run").addEventListener("click", function () { runBot("news"); });
   $("#bot-blog-run").addEventListener("click", function () { runBot("blog"); });
+
+  /* ================================================================== DESIGN (fonts, typography, colors, motion)
+     Every control maps to one setting in admin/theme.js. Changes show at once in the preview; Save writes
+     site-theme.css (the settings ride along in its first line), and the site updates about a minute later. */
+  var TH = window.TenshiTheme, dz = { fonts: null, saved: null, cur: null, ready: false };
+  var DZ_UNITS = { rootSize: "px", heroSize: "px", pageTitleSize: "px", sectionSize: "px", featureSize: "px", cardSize: "px",
+    h1Spacing: "em", h2Spacing: "em", h3Spacing: "em", h4Spacing: "em", bodySpacing: "em", motionDistance: "px", motionDistanceMobile: "px", charDelay: "ms", motionSpeed: "×", colorDuration: "s" };
+  function dzFontOptions() {
+    var groups = { sans: "Sans serif", serif: "Serif", display: "Display", script: "Script", mono: "Monospace" };
+    return Object.keys(groups).map(function (g) {
+      return '<optgroup label="' + groups[g] + '">' + dz.fonts.filter(function (f) { return f.cat === g; }).map(function (f) {
+        return '<option value="' + esc(f.slug) + '">' + esc(f.name) + "</option>";
+      }).join("") + "</optgroup>";
+    }).join("");
+  }
+  function dzFamily(slug) { for (var i = 0; i < dz.fonts.length; i++) if (dz.fonts[i].slug === slug) return dz.fonts[i]; return null; }
+  function dzWeights(sel) {
+    var f = dzFamily(dz.cur[sel.dataset.for]);
+    var ws = f ? f.faces.filter(function (x) { return x.s === "normal"; }).map(function (x) { return x.w; }) : [400];
+    ws = ws.filter(function (w, i) { return ws.indexOf(w) === i; }).sort();
+    var names = { 100: "Thin", 200: "Extra light", 300: "Light", 400: "Regular", 500: "Medium", 600: "Semibold", 700: "Bold", 800: "Extra bold", 900: "Black" };
+    sel.innerHTML = ws.map(function (w) { return '<option value="' + w + '">' + (names[w] || w) + " (" + w + ")</option>"; }).join("");
+    sel.value = String(TH.nearest(f || { faces: [] }, dz.cur[sel.dataset.k]));
+  }
+  function dzShow() {
+    $$("#dz-form [data-k]").forEach(function (el) {
+      var k = el.dataset.k, v = dz.cur[k];
+      if (el.type === "checkbox") el.checked = !!v;
+      else if (!el.classList.contains("dz-weight")) el.value = v;
+      var out = el.parentNode.querySelector("output");
+      if (out) out.textContent = el.type === "color" ? String(v).toUpperCase() : (k === "motionSpeed" ? "×" + v : v + (DZ_UNITS[k] || ""));
+    });
+    $$(".dz-weight").forEach(dzWeights);
+    var hf = dzFamily(dz.cur.headingFont), bf = dzFamily(dz.cur.bodyFont);
+    $("#dz-sample-h").style.cssText = "font-family:" + (hf ? '"' + hf.name + '"' : "inherit") + ";font-weight:" + dz.cur.headingWeight + ";letter-spacing:" + dz.cur.h1Spacing + "em";
+    $("#dz-sample-b").style.cssText = "font-family:" + (bf ? '"' + bf.name + '"' : "inherit") + ";font-weight:" + dz.cur.bodyWeight + ";letter-spacing:" + dz.cur.bodySpacing + "em;line-height:" + dz.cur.bodyLine;
+    $$("#dz-form [data-k^=motion]:not([data-k=motion]), #dz-form [data-k=charDelay], #dz-form [data-k=colorDuration]").forEach(function (el) { el.disabled = !dz.cur.motion; });
+    $("#dz-save").disabled = JSON.stringify(dz.cur) === JSON.stringify(dz.saved);
+  }
+  /* The preview frame picks this up: design.js in the frame reads it before measuring the motion settings */
+  function dzLive() {
+    var css = TH.css(dz.cur, dz.fonts);
+    window.__tseLiveCss = css;
+    var doc = $("#dz-frame").contentDocument;
+    if (!doc || !doc.head) return;
+    var st = doc.getElementById("tse-live-theme");
+    if (!st) { st = doc.createElement("style"); st.id = "tse-live-theme"; doc.head.appendChild(st); }
+    st.textContent = css;
+  }
+  function dzLoadFrame() {
+    window.__tseLiveCss = TH.css(dz.cur, dz.fonts);
+    $("#dz-frame").src = SITE + $("#dz-page").value + "?lang=en&motion=1&t=" + Date.now();
+  }
+  $("#dz-frame").addEventListener("load", dzLive);
+  function loadDesign() {
+    if (dz.ready) { dzShow(); return; }
+    Promise.all([
+      fetch(SITE + "fonts/fonts.json", { cache: "no-cache" }).then(function (r) { return r.json(); }),
+      tree.has("site-theme.css") ? readText("site-theme.css") : Promise.resolve("")
+    ]).then(function (r) {
+      dz.fonts = r[0]; dz.saved = TH.parse(r[1]); dz.cur = JSON.parse(JSON.stringify(dz.saved)); dz.ready = true;
+      $$(".dz-font").forEach(function (s) { s.innerHTML = dzFontOptions(); });
+      // The preview covers top-level pages (fonts load from the site root)
+      $("#dz-page").innerHTML = pages.filter(function (p) { return p.indexOf("/") < 0; }).map(function (p) { return '<option value="' + esc(p) + '">' + esc(prettyPage(p)) + "</option>"; }).join("");
+      dzShow(); dzLoadFrame();
+    }).catch(function (e) { $("#dz-msg").className = "ed-msg err"; $("#dz-msg").textContent = "Couldn't load the design settings: " + e.message; });
+  }
+  $("#dz-form").addEventListener("input", function (e) {
+    var el = e.target, k = el.dataset && el.dataset.k;
+    if (!k || !dz.ready) return;
+    dz.cur[k] = el.type === "checkbox" ? el.checked : (el.type === "range" || el.classList.contains("dz-weight") ? parseFloat(el.value) : el.value);
+    if (k === "headingFont" || k === "bodyFont") { var w = $('.dz-weight[data-for="' + k + '"]'); dz.cur[w.dataset.k] = TH.nearest(dzFamily(dz.cur[k]) || { faces: [] }, dz.cur[w.dataset.k]); }
+    dz.cur = TH.clean(dz.cur);
+    dzShow(); dzLive();
+    if (/^motion|charDelay|colorDuration/.test(k)) { clearTimeout(dz.replay); dz.replay = setTimeout(dzLoadFrame, 700); }
+  });
+  $("#dz-page").addEventListener("change", dzLoadFrame);
+  $("#dz-replay").addEventListener("click", dzLoadFrame);
+  $("#dz-width").addEventListener("change", function () { $("#dz-frame").style.width = this.value; });
+  $("#dz-reset").addEventListener("click", function () {
+    dz.cur = TH.clean({}); dzShow(); dzLive(); dzLoadFrame();
+    $("#dz-msg").className = "ed-msg"; $("#dz-msg").textContent = "Defaults loaded. Save to put them on the site.";
+  });
+  $("#dz-save").addEventListener("click", function () {
+    var btn = this, msg = $("#dz-msg");
+    busy(btn, true, "Saving…");
+    commit([{ path: "site-theme.css", text: TH.css(dz.cur, dz.fonts) }], "Design: update fonts, typography, colors and motion").then(function () {
+      dz.saved = JSON.parse(JSON.stringify(dz.cur));
+      busy(btn, false); dzShow();
+      msg.className = "ed-msg ok"; msg.textContent = "Saved. The live site shows the new design in about a minute.";
+      toast("Design saved.");
+    }).catch(function (e) { busy(btn, false); msg.className = "ed-msg err"; msg.textContent = e.message; });
+  });
 })();

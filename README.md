@@ -93,3 +93,15 @@ All three run on GitHub Actions, because a static site can't fetch other website
   fallback) go into `data/ticker.json`; `app.js` shows them in the scrolling bar at the top of every page.
 
 `tools/build-pages.mjs` builds news.html and blog.html from the two data files.
+
+## Design tab: fonts, typography, colors and motion
+
+The Tenshi Editor's **Design** tab sets the site's fonts (63 families stored in `fonts/`, catalog in `fonts/fonts.json`,
+the same library as the Xal'Reth site), heading and body weights, sizes, line heights, letter spacing for each heading
+level and for body text, colors, and every motion setting, with a live preview. Saving writes `site-theme.css`
+(built by `admin/theme.js`; the settings ride along in its first line). Every page loads it last.
+
+Motion (`design.js`, styles at the end of `design.css`): headings appear character by character (word by word in
+Arabic and Farsi), text slides in from alternating sides, pictures fade and rise, cards rise one after another, and
+every picture starts black and white and turns to full color as it comes into view. Each can be switched off or
+re-timed in the Design tab. Visitors who ask their device for reduced motion get a still site.
