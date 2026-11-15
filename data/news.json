@@ -1,90 +1,210 @@
 {
-  "generatedAt": "2026-11-15T21:00:00.000Z",
-  "generator": "Tenshi Scraper (first set, gathered by hand)",
+  "generatedAt": "2026-11-15T22:03:29.361Z",
+  "generator": "Tenshi Scraper",
   "categories": [
     {
       "id": "tech",
       "key": "newsCatTech",
       "items": [
         {
-          "title": "Hoya reportedly can't cover all of Samsung's 2027 EUV mask blank order",
-          "url": "https://www.digitimes.com/news/a20261112VL210/hoya-euv-photomask-samsung-2027.html",
-          "source": "DigiTimes Asia",
-          "sourceUrl": "https://www.digitimes.com",
-          "date": "2026-11-15T12:00:00.000Z",
-          "summary": "The Tokyo optics maker is said to have told Samsung it will struggle to supply the extra extreme-ultraviolet mask blanks the chipmaker wants for 2027, a sign of how tight Japan's chip-material supply has become."
+          "title": "AI helps cosmetic giants overcome perfume's nasal 'paradoxes'",
+          "url": "https://japantoday.com/category/tech/ai-helps-cosmetic-giants-overcome-perfume%27s-nasal-%27paradoxes%27",
+          "source": "Japan Today",
+          "sourceUrl": "https://japantoday.com",
+          "date": "2026-11-15T21:21:43.000Z",
+          "excerpt": "There may be a hint of bergamot in the top notes and sweet iris as a follow-up, but there is a noticeable dose of Artificial Intelligence emerging in…",
+          "image": {
+            "src": "img/stories/2211d546feaf6957.jpg",
+            "query": "server room",
+            "creator": "Leonardo Rizzi",
+            "creatorUrl": "https://www.flickr.com/photos/29479498@N05",
+            "license": "CC BY-SA 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+            "page": "https://www.flickr.com/photos/29479498@N05/2759159448",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/720cb108-319f-47e2-8c7a-c110bc9af59f/thumb/"
+          }
         },
         {
-          "title": "Sharp sells its Mie LCD color filter plant to Nitto Denko for ¥22.2 billion",
-          "url": "https://www.digitimes.com/news/a20261112PD232/sharp-plant-nitto-denko-lcd-business.html",
-          "source": "DigiTimes Asia",
-          "sourceUrl": "https://www.digitimes.com",
-          "date": "2026-11-12T12:00:00.000Z",
-          "summary": "Sharp is offloading its Hisai plant in Tsu, Mie Prefecture, as it moves faster to fix its loss-making display components business."
+          "title": "SpaceX Starship returns to Earth in dramatic catch by launch pad arms, in photos",
+          "url": "https://japantoday.com/category/tech/spacex-starship-returns-to-earth-in-dramatic-catch-by-launch-pad-arms-in-photos",
+          "source": "Japan Today",
+          "sourceUrl": "https://japantoday.com",
+          "date": "2026-11-15T21:21:32.000Z",
+          "excerpt": "SpaceX’s Starship made a triumphant return to Earth on Saturday, caught in midair by giant mechanical arms where its journey began 22 hours earlier. It was the grand…",
+          "image": {
+            "src": "img/stories/a2367b1844274ed1.jpg",
+            "query": "rocket launch",
+            "creator": "jurvetson",
+            "creatorUrl": "https://www.flickr.com/photos/44124348109@N01",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/44124348109@N01/510985651",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/f5268a8a-d127-490f-9880-5c4ea6267ce4/thumb/"
+          }
         },
         {
-          "title": "Mitsui Kinzoku puts ¥190 billion into a new copper foil plant in Malaysia",
-          "url": "https://www.digitimes.com/news/a20261111PD248/mitsui-kinzoku-copper-foil-malaysia-plant-capacity-equipment.html",
-          "source": "DigiTimes Asia",
-          "sourceUrl": "https://www.digitimes.com",
-          "date": "2026-11-12T12:00:00.000Z",
-          "summary": "The materials maker will build roughly US$1.2 billion of new capacity next to its existing Malaysian site, aimed at the ultrathin foil used in optical communications gear for AI data centers."
+          "title": "Japan’s Defense Chief Says AI Guidelines Land Late November",
+          "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxOVTJiZWdOOVJIcXJCUTFJeTg0dWp0bmpjbnNPM0Z0TjFBeEpOeEFtZnNnM2VVaWE2WmNZQzhUZElfQWp6ZkZMemU1UDEzczJvTHlNekxTQ3dFWUlEQlF3ZmNmbWdzc0JER1c1cHNRSGg4Q3NpREVCOW9NZ2dXMWpEQURJQ2xHT1JVV2R4alplNm5hZ3BtaWJGaERlR3JJZw?oc=5",
+          "source": "JournalArta",
+          "sourceUrl": "https://journalarta.com",
+          "date": "2026-11-15T18:41:06.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/f6096264dc4eb654.jpg",
+            "query": "server room",
+            "creator": "torkildr",
+            "creatorUrl": "https://www.flickr.com/photos/8718930@N07",
+            "license": "CC BY-SA 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+            "page": "https://www.flickr.com/photos/8718930@N07/3462606643",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/aef051e9-0ab2-48b1-a38e-c99ffc4b3431/thumb/"
+          }
         },
         {
-          "title": "SoftBank books a ¥768 billion AI-related hit and rethinks its equipment plans",
-          "url": "https://www.digitimes.com/news/a20261111PD245/equipment-loss-2026-market.html",
-          "source": "DigiTimes Asia",
-          "sourceUrl": "https://www.digitimes.com",
-          "date": "2026-11-12T12:00:00.000Z",
-          "summary": "SoftBank is reconsidering its strategy for AI equipment after taking a loss of about ¥768 billion tied to its artificial intelligence bets."
+          "title": "Japan Material Stock And 2 More Grid Technology Stocks To Own",
+          "url": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxQX0dmV2ZlQU9JRExnUkpiZ2d1RVdOd293RG5ySHl0RXpPMndrVUNkTVR3NEY0NjBObnZzdGVEUUxBQ1hxSzVmMWQ0NF85ckliS19yLXZRbVo4X1R3MkdsR2RQLTNXNllwbmxCWE5hOFM5MmxPQ29DVG5qYU1KWjdtQnJQRjdHY2c5aGkySHF0NUlvNnR5Si12RUFWcXJPVVVzdG4ybFJtZVpfWmtLYmtyUnQ0Rkh1MmZGVTBBMnZDNEdGZ2tydkZYakR0LWJ6dEZCV0pWcVdZZFp0Q2_SAeABQVVfeXFMT09Cd3JIS0M1a2dDZDc1YzdSc2ktR0l0T2RzZVFCLXRING1GVEt6cklaSHpsZUJLWFVSVUt3Z3cwd3BpUXNnaFY5WHphX00yOEo5SVBEa1Y0dUltVVU3R0dQdzBjeTd3WVVvSUFoSFp1TXdnNTI4amZKcDBSRVBKUGxSUlNZZElwQUs2a0tLaF9CUTdLbTE3bTRveWlTRmdmbTd3ZTJMMmhXVWtfQkRiWDJsUklMRE1KNGRVT2JadHN1VzN2Q2Y3UmtXWU1JcWNPM1lXc29XVVJZYlY1VVlRUUo?oc=5",
+          "source": "Simply Wall St",
+          "sourceUrl": "https://simplywall.st",
+          "date": "2026-11-15T12:19:47.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/e295fb06d24459f0.jpg",
+            "query": "stock market board",
+            "creator": "wsilver",
+            "creatorUrl": "https://www.flickr.com/photos/24949967@N08",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/24949967@N08/2952050268",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/c7ae4eae-2c78-4422-8e16-569d6f98d26f/thumb/"
+          }
         },
         {
-          "title": "Toyota will build and sell Japanese light-duty trucks in the United States",
-          "url": "https://www.digitimes.com/news/a20261111PD271/toyota-vehicle-usa-sales-2027.html",
-          "source": "DigiTimes Asia",
-          "sourceUrl": "https://www.digitimes.com",
-          "date": "2026-11-12T12:00:00.000Z",
-          "summary": "Toyota plans to assemble its Japanese light-duty trucks in the US, with American sales due to start in the second half of 2027."
+          "title": "TSMC Receives Record NT$167.6 Billion in Government Aid From US, Japan, Germany and China",
+          "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxOMHVXT3RoMGp0VVhSMlBEcnZxYTVfRVpuakRCX0dhRmVhdzdxd2FjSnU0cFE4c2hKZjNWV1hNSC1PTkNUS2MtNW9YU01DSC10ZmlPWldXU3hNbEpaeWVHYWZaZzVSR1ltbkctR0lBR0dsU1JxejBYVUt4RkxPaWxhT3JmQlktY0NVSHhjc1JjOWxlRlNVLVRnS0R1VXpXaGJkcjNjOEpaaEpjVTBj?oc=5",
+          "source": "TechStory",
+          "sourceUrl": "https://techstory.in",
+          "date": "2026-11-15T09:51:10.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/ed26bdd57d1b53fb.jpg",
+            "query": "circuit board",
+            "creator": "Twechie",
+            "creatorUrl": "https://www.flickr.com/photos/46385325@N06",
+            "license": "CC BY-SA 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+            "page": "https://www.flickr.com/photos/46385325@N06/5233558496",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/cbdf8913-3d6a-4aa5-8720-31c601180934/thumb/"
+          }
         },
         {
-          "title": "Rapidus reportedly behind schedule on 2nm chip production",
-          "url": "https://www.digitimes.com/news/a20261111VL204/rapidus-2nm-production-manufacturing-development.html",
-          "source": "DigiTimes Asia",
-          "sourceUrl": "https://www.digitimes.com",
-          "date": "2026-11-11T12:00:00.000Z",
-          "summary": "Japan's state-backed chipmaker faces technical hurdles that could push back its target of mass-producing 2-nanometer chips by March 2028, raising questions about the country's chip ambitions."
+          "title": "Japan firms thrive on AI boom, but uncertainty grows",
+          "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxPRjI4cnVXOGE1eFloUXdYS29VYWN5MFhmWnI0ZzZPS0RWeldoYzZBaGdDcUtWdGtGMzlRNEJOaDh3R1NjcHZCb0VQaGVuNkE4VWZBdEE0SjRmNlN3OWN1LWpxeHppUkt5UzJ2bzZvM3lpWTBkaWp1dFBmMWRzUWprSUg5S0pkdw?oc=5",
+          "source": "The Japan Times",
+          "sourceUrl": "https://www.japantimes.co.jp",
+          "date": "2026-11-15T00:34:00.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/aa771d9677b6cd9d.jpg",
+            "query": "server room",
+            "creator": "torkildr",
+            "creatorUrl": "https://www.flickr.com/photos/8718930@N07",
+            "license": "CC BY-SA 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+            "page": "https://www.flickr.com/photos/8718930@N07/3462607995",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/70aeec43-476c-4a72-ad86-0b35aa6f39be/thumb/"
+          }
         },
         {
-          "title": "Mitsui Chemicals to buy JSR in a deal worth about US$11.6 billion",
-          "url": "https://www.digitimes.com/news/a20261110VL201/mitsui-chemicals-jsr-acquisition-materials-business-growth.html",
-          "source": "DigiTimes Asia",
-          "sourceUrl": "https://www.digitimes.com",
-          "date": "2026-11-10T12:00:00.000Z",
-          "summary": "Including assumed debt, the ¥1.84 trillion acquisition of the photoresist maker would give Mitsui Chemicals a much larger stake in semiconductor materials."
+          "title": "Anthropic CEO sells investors on safety, 'no jerks' culture",
+          "url": "https://japantoday.com/category/tech/anthropic-ceo-sells-investors-on-safety-%27no-jerks%27-culture",
+          "source": "Japan Today",
+          "sourceUrl": "https://japantoday.com",
+          "date": "2026-11-14T21:30:01.000Z",
+          "excerpt": "Anthropic chief executive Dario Amodei pitched investors on safety and a strict hiring culture on Friday, days before the AI company's stock market debut. \"We're very paranoid\" about…",
+          "image": {
+            "src": "img/stories/f2bcc40c0c65a68d.jpg",
+            "query": "server room",
+            "creator": "cobaltfish",
+            "creatorUrl": "https://www.flickr.com/photos/23765024@N05",
+            "license": "CC BY-SA 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+            "page": "https://www.flickr.com/photos/23765024@N05/7932122714",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/c8f7758e-65a7-4c76-9283-2461c8926999/thumb/"
+          }
         },
         {
-          "title": "Rapidus plans three more Hokkaido plants, modeled on Taiwan's chip clusters",
-          "url": "https://www.digitimes.com/news/a20261109PD245/rapidus-taiwan-ibm-plant-production.html",
-          "source": "DigiTimes Asia",
-          "sourceUrl": "https://www.digitimes.com",
-          "date": "2026-11-10T12:00:00.000Z",
-          "summary": "Rapidus says it will use Taiwan as its model for building a semiconductor industry cluster around its Hokkaido base, with IBM Japan also setting up there."
+          "title": "Japan mulls penalties for AI firms over safety risks",
+          "url": "https://japantoday.com/category/tech/japan-mulls-penalties-for-ai-firms-over-safety-risks",
+          "source": "Japan Today",
+          "sourceUrl": "https://japantoday.com",
+          "date": "2026-11-14T07:16:59.000Z",
+          "excerpt": "The Japanese government is considering requiring artificial intelligence-related businesses to take measures to ensure safety, with penalties for violations, a source familiar with the matter said, as it…",
+          "image": {
+            "src": "img/stories/cc66456cba9902bc.jpg",
+            "query": "server room",
+            "creator": "torkildr",
+            "creatorUrl": "https://www.flickr.com/photos/8718930@N07",
+            "license": "CC BY-SA 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+            "page": "https://www.flickr.com/photos/8718930@N07/3463419826",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/5af0ec2b-7409-457d-94a2-7c3b992c2881/thumb/"
+          }
         },
         {
-          "title": "Toyota launches Toyota Robotics, built on its factory data",
-          "url": "https://www.digitimes.com/news/a20261109PD201/toyota-data-manufacturing-growth-worldwide.html",
-          "source": "DigiTimes Asia",
-          "sourceUrl": "https://www.digitimes.com",
-          "date": "2026-11-09T12:00:00.000Z",
-          "summary": "Toyota Motor has set up a dedicated robotics division, joining global rivals in robotics development and drawing on data from its own manufacturing sites."
+          "title": "Microsoft outage means no incessant email chimes or message pings, but still we stayed online",
+          "url": "https://japantoday.com/category/tech/the-microsoft-outage-means-no-incessant-email-chimes-or-message-pings-but-still-we-stayed-online",
+          "source": "Japan Today",
+          "sourceUrl": "https://japantoday.com",
+          "date": "2026-11-14T03:01:53.000Z",
+          "excerpt": "It was the sound of e-silence. No Microsoft Outlook email chimes, no Teams message pings, no new notifications and, very possibly, no work getting done. Microsoft 365 teetered…",
+          "image": {
+            "src": "img/stories/face21189ba4aac9.jpg",
+            "query": "circuit board",
+            "creator": "Twechie",
+            "creatorUrl": "https://www.flickr.com/photos/46385325@N06",
+            "license": "CC BY-SA 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+            "page": "https://www.flickr.com/photos/46385325@N06/5233562056",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/038b4e9f-96e8-4e80-b550-f2886fd8fe0b/thumb/"
+          }
         },
         {
-          "title": "Osaka heads to Singapore FinTech Festival 2026 in search of global partners",
-          "url": "https://www.mynewsdesk.com/osaka-prefecture/latest_news",
-          "source": "Osaka Prefecture",
-          "sourceUrl": "https://www.mynewsdesk.com",
-          "date": "2026-11-05T12:00:00.000Z",
-          "summary": "Osaka Prefecture and Osaka City will exhibit in Singapore from November 18 to 20, together with two Osaka companies chosen through an open call."
+          "title": "GlobalFoundries starts New York expansion with U.S.-Japan fab",
+          "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxNLTJyaXphS1dnR083alppT0hQWS1MN0ZqUi1naUZGUTB6OHZVN2N3ZEtOeVhGclM3dEdRbHZYdHJvSWM4NzdCQ1V5WlhCUmRWVGlaWFNZb3o3ZElpU3lZN3FkMWlicjVCVEFSNHlwR0hoR1k0YmVLbHpXbk12TXpkSEdzY1VGUkZNdTN1dFdJSjZDOGZSUnoxNjhOV1B0S191bGl2ekE3T1c5d3BEUlhlN1JGWDIzUTI5SmNJ?oc=5",
+          "source": "Spectrum News",
+          "sourceUrl": "https://spectrumlocalnews.com",
+          "date": "2026-11-13T23:07:00.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/9980620f8dd75c46.jpg",
+            "query": "circuit board",
+            "creator": "Creativity103",
+            "creatorUrl": "https://www.flickr.com/photos/36894712@N04",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/36894712@N04/5227842611",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/efbd6747-894b-4c18-b7e3-ea5baf06c3a5/thumb/"
+          }
         }
       ]
     },
@@ -93,84 +213,204 @@
       "key": "newsCatBusiness",
       "items": [
         {
-          "title": "Japan to back Vietnam's small-reactor push",
-          "url": "https://asia.nikkei.com/business/energy/japan-to-back-vietnam-s-small-reactor-push-in-revived-nuclear-cooperation",
-          "source": "Nikkei Asia",
-          "sourceUrl": "https://asia.nikkei.com",
-          "date": "2026-11-06T12:00:00.000Z",
-          "summary": "Japan and Vietnam plan cooperation on small modular reactors, alongside energy infrastructure and AI projects."
+          "title": "Hybrids make gains in U.S. auto market amid high gasoline prices",
+          "url": "https://japantoday.com/category/business/hybrids-make-gains-in-us-auto-market-amid-high-gasoline-prices",
+          "source": "Japan Today",
+          "sourceUrl": "https://japantoday.com",
+          "date": "2026-11-15T21:34:33.000Z",
+          "excerpt": "Electric vehicle growth has hit a speed bump in the United States, but hybrid autos are gaining market share thanks to the jump in fuel prices due to…",
+          "image": {
+            "src": "img/stories/25abd6806fd7395b.jpg",
+            "query": "car assembly line",
+            "creator": "jurvetson",
+            "creatorUrl": "https://www.flickr.com/photos/44124348109@N01",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/44124348109@N01/6858583426",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/878b6887-a64f-442a-8756-e1e7b996f1d1/thumb/"
+          }
         },
         {
-          "title": "Toyota aims to win back market share in China",
-          "url": "https://asia.nikkei.com/business/automobiles/toyota-ready-to-regain-market-share-in-china-on-expanded-local-sourcing",
-          "source": "Nikkei Asia",
-          "sourceUrl": "https://asia.nikkei.com",
-          "date": "2026-11-05T12:00:00.000Z",
-          "summary": "Toyota plans more local sourcing and China-specific EVs, and raised its full-year net profit forecast despite a 25% drop in China sales."
+          "title": "Iconic Hands Shibuya store closes doors, ending 48-year history",
+          "url": "https://japantoday.com/category/business/iconic-hands-shibuya-store-closes-doors-ends-48-year-history",
+          "source": "Japan Today",
+          "sourceUrl": "https://japantoday.com",
+          "date": "2026-11-15T21:34:20.000Z",
+          "excerpt": "The Hands Shibuya store, an iconic general shop that had everything from cosmetics to DIY tools, closed Sunday, after more than 48 years in business. The store, which…",
+          "image": {
+            "src": "img/stories/4c5fea77a7f4bf6f.jpg",
+            "query": "tokyo office buildings",
+            "creator": "jasonbrush",
+            "creatorUrl": "https://www.flickr.com/photos/76731208@N00",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/76731208@N00/3176271399",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/587fa38a-fe5f-45ce-ab3f-a1a9d9701b32/thumb/"
+          }
         },
         {
-          "title": "JBIC leads $600 million credit line for Petronas decarbonization",
-          "url": "https://asia.nikkei.com/business/energy/japan-lender-leads-600m-credit-line-to-help-malaysia-s-petronas-cut-co2",
-          "source": "Nikkei Asia",
-          "sourceUrl": "https://asia.nikkei.com",
-          "date": "2026-11-05T12:00:00.000Z",
-          "summary": "Japan's state lender will lead financing for Petronas projects in carbon capture, biofuels and other emissions cuts."
+          "title": "Japan Defense Ministry to Release AI Guidelines at End-Nov.",
+          "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE1uUTE1T2JtajVuX1pJUmtXcmlScmllbGhWSTQ2QkxBSlU0eGVNVzlaWjFnRDVkZDZ2Mi15RnZMN3ZJaUV4a2dIRTIxcWxHSWkwanNnTw?oc=5",
+          "source": "Nippon.com",
+          "sourceUrl": "https://www.nippon.com",
+          "date": "2026-11-15T12:26:33.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/5cbcde3424aaed37.jpg",
+            "query": "server room",
+            "creator": "Donovan Henneberg-Verity",
+            "creatorUrl": "https://www.flickr.com/photos/46891752@N02",
+            "license": "CC BY-SA 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+            "page": "https://www.flickr.com/photos/46891752@N02/4453099608",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/9211ce75-f941-4da7-bece-3902bd14ae6c/thumb/"
+          }
         },
         {
-          "title": "IHI wins key role in Poland's first nuclear plant",
-          "url": "https://asia.nikkei.com/business/energy/japan-s-ihi-wins-key-role-in-westinghouse-s-new-poland-nuclear-plant",
-          "source": "Nikkei Asia",
-          "sourceUrl": "https://asia.nikkei.com",
-          "date": "2026-11-03T12:00:00.000Z",
-          "summary": "IHI secured a preliminary Westinghouse contract to supply key equipment, with manufacturing in Japan due to start in 2028."
+          "title": "Japan's Economy Faces Major Tests as GDP, Trade and Inflation Data Loom",
+          "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFB2d0dveTk2d1FRNlMtdmtMT3drVkdUSnB3OWpISnU2X2tCVW91ckxLUk5QWUlncEpMZVZfaUtQb1NuYl9yRzJLdlgzODNZbUgwVjFrdQ?oc=5",
+          "source": "News On Japan",
+          "sourceUrl": "https://newsonjapan.com",
+          "date": "2026-11-15T12:06:43.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/b41671ac8730ca79.jpg",
+            "query": "tokyo office buildings",
+            "creator": "Chalky Lives",
+            "creatorUrl": "https://www.flickr.com/photos/90556839@N00",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/90556839@N00/201627863",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/e31e4f11-97e4-4253-9cec-c42d4656fe55/thumb/"
+          }
         },
         {
-          "title": "Aisin develops an AI chip that cuts energy use by 98%",
-          "url": "https://asia.nikkei.com/business/tech/semiconductors/japan-s-aisin-develops-new-type-of-ai-chip-that-cuts-energy-use-98",
-          "source": "Nikkei Asia",
-          "sourceUrl": "https://asia.nikkei.com",
-          "date": "2026-11-03T12:00:00.000Z",
-          "summary": "Aisin and Tohoku University built an MRAM-based chip for in-car AI that uses far less power and speeds up image recognition."
+          "title": "Luxurious sightseeing train unveiled in Hokkaido | NHK WORLD-JAPAN News",
+          "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE9ocjY4dzJOTmVtODNpN1ZOYmVJVE1TdUNpa3QzUTBRZllFNlZfUVlNSFgxQXowMlRjcXc2Vk5WQmt2NEN2ejN1UnpKdHFodHVQTDd3Y3hOaDdDOXVPUjBxSUE3aw?oc=5",
+          "source": "NHKニュース",
+          "sourceUrl": "https://www3.nhk.or.jp",
+          "date": "2026-11-15T10:34:29.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/f73cf7eb7d072aff.jpg",
+            "query": "rain umbrella street",
+            "creator": "perriscope",
+            "creatorUrl": "https://www.flickr.com/photos/104368365@N05",
+            "license": "CC BY-SA 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+            "page": "https://www.flickr.com/photos/104368365@N05/20079350720",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/18d242c1-1b20-4c73-b71b-b9c7aeb8fab4/thumb/"
+          }
         },
         {
-          "title": "Mitsubishi Heavy expands US gas turbine production",
-          "url": "https://asia.nikkei.com/business/energy/mitsubishi-heavy-gears-up-to-boost-us-gas-turbine-production",
-          "source": "Nikkei Asia",
-          "sourceUrl": "https://asia.nikkei.com",
-          "date": "2026-11-02T12:00:00.000Z",
-          "summary": "MHI plans a $490 million expansion of its Georgia turbine plant to meet rising US power demand."
+          "title": "Cambodia Takes Bakong Global, Connecting ASEAN with Japan and Africa",
+          "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxNOHVRelBiVmt5enlrbkpWLTM3WkI1NlBSYU5DN2E4eXJYcS1JVTlmMnpRZlBHS19hYng2RDdMMnZxYWlJM1hHUW1HaG5kWk1xWUV4OUJUcEdhTjQ4WHFlQXd1M1BJYU9qdDZjR0xOZTlGMFNRV2lZUkhZcUpQQlJVUXlINXJOZ2ZnVFlYVG5DRHBSLS04R21BVWl3UFNtYnhIWG52Rk93cEhLLUo0NlBGdDJTdEw?oc=5",
+          "source": "Thailand Business News",
+          "sourceUrl": "https://www.thailand-business-news.com",
+          "date": "2026-11-15T10:00:00.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/f8cd2e4d77205231.jpg",
+            "query": "tokyo office buildings",
+            "creator": "doronko",
+            "creatorUrl": "https://www.flickr.com/photos/25962965@N04",
+            "license": "CC BY-SA 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+            "page": "https://www.flickr.com/photos/25962965@N04/3109891557",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/fa061062-bcd0-4377-b1c0-2bd169709b95/thumb/"
+          }
         },
         {
-          "title": "Samsung and Japanese firms team up at Yokohama chip R&D hub",
-          "url": "https://www.asahi.com/ajw/articles/16889266",
-          "source": "The Asahi Shimbun",
-          "sourceUrl": "https://www.asahi.com",
-          "date": "2026-11-01T12:00:00.000Z",
-          "summary": "Samsung's ¥40 billion semiconductor research center in Yokohama is already working with at least 50 Japanese companies on advanced packaging."
+          "title": "Japan business delegation to seek loan of giant panda from China",
+          "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxOQTV6bkhQalNmSHlrRFJBSlZab3B5aDdSWWtpbGRBd0p6Qk9XWTR6SUJsRjZGbThyZlBic01yV2tOUUtEczZ6TUxURm1wSFVsNTJnWDVwQW5FRDBPc2tZWjAxT2RPWDJwZXptLTBOWHVqbVk3V3h0Z1lMSVpvaUEyQjR2ZGJ1QzRXbE42M3VKNUI5aGtoRndvNzFLTksyaGczQlRQbGZMTm4tcms4YXBnY0FVQUhpbHIwdzdGS0RMV01ob0xwVkE?oc=5",
+          "source": "The Star",
+          "sourceUrl": "https://www.thestar.com.my",
+          "date": "2026-11-15T07:13:00.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/ff12f44c516a2274.jpg",
+            "query": "tokyo office buildings",
+            "creator": "Yoshikazu TAKADA",
+            "creatorUrl": "https://www.flickr.com/photos/34530295@N06",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/34530295@N06/10903553874",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/92e5fcd6-3b0d-4a33-8258-0a5856229557/thumb/"
+          }
         },
         {
-          "title": "Toyota and Waymo to launch driverless robotaxis in Japan in 2027",
-          "url": "https://asia.nikkei.com/business/transportation/toyota-and-waymo-to-roll-out-driverless-robotaxis-in-japan-in-2027",
+          "title": "Gaming emerges as a new corporate networking tool in Japan",
+          "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxPU3ZkbmxobWtRV0J3bEdrTnpPMGJmWHlhb3ZyTVpEcS0xQklkZnNVTkFWSFlscFRmb0N0eTBacmEzQmNHczNYamhKd3FFTWw5RFllT044TkMtRU9ZcFJLaVhLSlF2bVVZSm5qaWV6dUpQbTFuLTZfQTlfMVJsdWY0WFVnd1I3QlRIbWY3MVNhQkVLTUdhRWlaVEZjaVRTanN3NnNoZTFjcERxVUE?oc=5",
           "source": "Nikkei Asia",
           "sourceUrl": "https://asia.nikkei.com",
-          "date": "2026-10-31T12:00:00.000Z",
-          "summary": "The partners plan Level 4 robotaxi services starting with a small fleet of Toyota bZ4X vehicles."
+          "date": "2026-11-15T04:24:00.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/153d42e1ac4ab055.jpg",
+            "query": "tokyo office buildings",
+            "creator": "y entonces",
+            "creatorUrl": "https://www.flickr.com/photos/86896868@N00",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/86896868@N00/6160671910",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/cda02d8c-b6a2-4a54-99a3-48459f2eb503/thumb/"
+          }
         },
         {
-          "title": "Murata to invest ¥1 trillion in capacitors for AI",
-          "url": "https://asia.nikkei.com/spotlight/supply-chain/japan-s-murata-to-invest-6.3bn-in-capacitor-production-for-ai-over-5-years",
-          "source": "Nikkei Asia",
-          "sourceUrl": "https://asia.nikkei.com",
-          "date": "2026-10-31T12:00:00.000Z",
-          "summary": "Murata will expand production of multilayer ceramic capacitors for AI data centers over five years, in Japan and overseas."
+          "title": "Japan's sole steam locomotive maker awaits orders with desire to preserve skills",
+          "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTE9rblU2TUJqWUY1eW1DZ2w5RTRPOHVqQXVwNWNIN3dCT0lXRnhzbGRBZ2JLeVlEa19YM0t4SGlCd1E5UDBieHVicnd2TjFZdWpQRWRWZlVPYnJ5R1hfVC04emlxSzVCWVpFREI5RnZjekVlNm8?oc=5",
+          "source": "毎日新聞",
+          "sourceUrl": "https://mainichi.jp",
+          "date": "2026-11-15T04:01:19.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/1321c84b562aecf8.jpg",
+            "query": "tokyo office buildings",
+            "creator": "heiwa4126",
+            "creatorUrl": "https://www.flickr.com/photos/57552634@N00",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/57552634@N00/3458601119",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/b1f83d04-88b1-4571-a6f2-e94c352b1a8d/thumb/"
+          }
         },
         {
-          "title": "Sojitz to import rare earth yttrium from Malaysia",
-          "url": "https://asia.nikkei.com/spotlight/supply-chain/japan-s-sojitz-to-import-rare-earth-yttrium-from-malaysia",
-          "source": "Nikkei Asia",
-          "sourceUrl": "https://asia.nikkei.com",
-          "date": "2026-10-31T12:00:00.000Z",
-          "summary": "Working with Lynas, Sojitz plans to source medium and heavy rare earths from Malaysia as early as 2027 to cut reliance on China."
+          "title": "Japan, ADB to support nuclear plant introduction in Asia",
+          "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE5nUlpHcmlPWndEVUhDVEJVbWgtaVY5MzdSWDB2aG02dU96QkJOZVRYd1dJTjE5djh5Z0ljV0Z6aVN1ZFlILXlROXM2cFp3eTdPX1VqclVIWGVrQlZkQXVQbVRFOA?oc=5",
+          "source": "NHKニュース",
+          "sourceUrl": "https://www3.nhk.or.jp",
+          "date": "2026-11-14T23:35:43.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/634736e2da27c350.jpg",
+            "query": "power plant",
+            "creator": "archer10 (Dennis)",
+            "creatorUrl": "https://www.flickr.com/photos/22490717@N02",
+            "license": "CC BY-SA 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+            "page": "https://www.flickr.com/photos/22490717@N02/4385217493",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/1ded3970-1265-4172-92ec-06f819c3a2b1/thumb/"
+          }
         }
       ]
     },
@@ -179,84 +419,204 @@
       "key": "newsCatStocks",
       "items": [
         {
-          "title": "Nikkei climbs back above 61,000 as chip stocks recover",
-          "url": "https://www.vantagemarkets.com/market-analysis/why-nikkei-225-climbed-chip-stocks-recovered-jp225-november-13-2026/",
-          "source": "Vantage Markets",
-          "sourceUrl": "https://www.vantagemarkets.com",
-          "date": "2026-11-13T12:00:00.000Z",
-          "summary": "A week after entering a bear market, the Nikkei 225 had recovered roughly 8% from its November 6 low."
-        },
-        {
-          "title": "Nikkei slips 0.7% to 60,819 after three days of gains",
-          "url": "https://www.vantagemarkets.com/market-analysis/why-nikkei-225-climbed-chip-stocks-recovered-jp225-november-13-2026/",
-          "source": "Vantage Markets",
-          "sourceUrl": "https://www.vantagemarkets.com",
-          "date": "2026-11-12T12:00:00.000Z",
-          "summary": "The index gave back about 429 points on November 12, ending a three-session rebound."
-        },
-        {
-          "title": "Nikkei rises to 61,248 for a third straight gain",
-          "url": "https://www.bbntimes.com/financial/nikkei-225-rises-to-61-248-59-for-a-third-straight-gain-as-chip-stocks-rally",
-          "source": "BBN Times",
-          "sourceUrl": "https://www.bbntimes.com",
-          "date": "2026-11-11T12:00:00.000Z",
-          "summary": "Chip stocks rallied on CoreWeave's results and reports of an Anthropic listing, while SoftBank Group lagged after a surprise loss."
-        },
-        {
-          "title": "Nikkei reclaims 60,000 as SoftBank soars 14%",
-          "url": "https://www.bbntimes.com/companies/nikkei-225-surges-to-60-459-58-reclaiming-60-000-as-softbank-soars-14",
-          "source": "BBN Times",
-          "sourceUrl": "https://www.bbntimes.com",
-          "date": "2026-11-10T12:00:00.000Z",
-          "summary": "SoftBank Group, Advantest and Tokyo Electron made up more than half of the day's 1,684-point gain."
-        },
-        {
-          "title": "Tokyo rebounds 2.33% after bear-market plunge",
-          "url": "https://www.bbntimes.com/financial/nikkei-225-today-tokyo-rebounds-2-33-to-58-775-50-after-last-week-s-bear-market-plunge",
-          "source": "BBN Times",
-          "sourceUrl": "https://www.bbntimes.com",
-          "date": "2026-11-09T12:00:00.000Z",
-          "summary": "The Nikkei closed at 58,775.50, recovering part of the previous week's losses as 208 of its 225 members rose."
-        },
-        {
-          "title": "Nikkei loses 9.25% in a week and enters a bear market",
-          "url": "https://www.bbntimes.com/global-economy/nikkei-225-weekly-review-nikkei-plunges-9-25-to-57-434-77-and-enters-a-bear-market",
-          "source": "BBN Times",
-          "sourceUrl": "https://www.bbntimes.com",
-          "date": "2026-11-06T12:00:00.000Z",
-          "summary": "A 5.96% fall on Friday left the index more than 20% below its June record, its worst week since March 2020."
-        },
-        {
-          "title": "Nikkei falls while the broader TOPIX rises",
-          "url": "https://www.bbntimes.com/companies/nikkei-225-falls-to-61-077-90-as-advantest-and-tokyo-electron-plunge-while-topix-rises",
-          "source": "BBN Times",
-          "sourceUrl": "https://www.bbntimes.com",
-          "date": "2026-11-05T12:00:00.000Z",
-          "summary": "Chip-equipment heavyweights pulled the Nikkei down 1.79% even as the TOPIX gained 1.16%, a rare split between the two indexes."
-        },
-        {
-          "title": "Tokyo closed for Culture Day with the yen near 158",
-          "url": "https://www.bbntimes.com/financial/nikkei-225-today-tokyo-closed-for-culture-day-index-holds-at-63-081-86-as-yen-hovers-near-158",
-          "source": "BBN Times",
-          "sourceUrl": "https://www.bbntimes.com",
-          "date": "2026-11-03T12:00:00.000Z",
-          "summary": "Markets shut for the national holiday, leaving the Nikkei at Monday's close of 63,081.86, about 13% below its 52-week high."
-        },
-        {
-          "title": "WHI on track for Japan's largest IPO of 2026",
-          "url": "https://asia.nikkei.com/business",
+          "title": "Asian investors chase indirect access to Anthropic shares amid IPO fever",
+          "url": "https://news.google.com/rss/articles/CBMixAFBVV95cUxOOHRmdnFxRElCVVhhQ2Y0d2VkMVZyNkdaQ0J2U2h6WThfc2ZPTThmSFFTZU1VT19Pbm9aZ2xwTzI2eUdTMDhXYXBlRnA0NEdneU1Yamhqa0JCa1lfRWhaNlh3bU9GVmRIQ01Bdi1sSTM2d1B4UmM3bXZYX2o4VXA4ZGZ5SnJYQjU5eUZMNi1FRUh3U1ExcC1RTldvV3BiNDcyV1l1S1hTcG1qNUZFQmd6YWJJSlRHTWRqS25RZG80ZkpyNDdL?oc=5",
           "source": "Nikkei Asia",
           "sourceUrl": "https://asia.nikkei.com",
-          "date": "2026-11-14T12:00:00.000Z",
-          "summary": "Nikkei Asia reports that the Bain- and GIC-backed company is heading for the year's biggest listing in Japan."
+          "date": "2026-11-15T21:00:00.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/15fc0c18d9ba0694.jpg",
+            "query": "stock market board",
+            "creator": "Enokson",
+            "creatorUrl": "https://www.flickr.com/photos/47823583@N03",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/47823583@N03/4546461946",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/6c077682-615e-43e0-b975-586046aebb09/thumb/"
+          }
         },
         {
-          "title": "Growth beyond AI puts corporate Japan on track for a 20% profit gain",
-          "url": "https://asia.nikkei.com/business",
-          "source": "Nikkei Asia",
-          "sourceUrl": "https://asia.nikkei.com",
-          "date": "2026-11-13T12:00:00.000Z",
-          "summary": "Nikkei Asia reports that Japanese companies are heading for strong profit growth that isn't driven by AI alone."
+          "title": "Washington Spent $497 Million Propping Up the Japanese Yen in July",
+          "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxNQW10eU1CYmJjVGU0MWZNcVptS0t6RXdQV2dKckFNR1pITEZaaUNNZFlGc3BkeFdwR3ZlNHdUSUxtanI4Qjl0M1BuTFMyY3ZCMld3UGxBRWZmRk9pV3UyMWU2cHBRR0pqQVBCckdIeXJvektNNFE2TVNsdGFnQ3F2VXJBM1ZqZ2F6ekFkVnQ3VzVubGV1VnQybF85MF82WGY0V3BuTWVEaEV2ck1ZeXc?oc=5",
+          "source": "24/7 Wall St.",
+          "sourceUrl": "https://247wallst.com",
+          "date": "2026-11-13T15:36:00.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/e98963bd92301c96.jpg",
+            "query": "japanese yen",
+            "creator": "Japanexperterna.se",
+            "creatorUrl": "https://www.flickr.com/photos/68532869@N08",
+            "license": "CC BY-SA 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+            "page": "https://www.flickr.com/photos/68532869@N08/15838939830",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/335abda3-e852-4e03-9100-d109882a89e2/thumb/"
+          }
+        },
+        {
+          "title": "Dollar Firms with Weaker Stocks and Higher T-Note Yields",
+          "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNc0hVdTZpeGstVnJsVUtRdl93cS1CMUlhS2RfYVZaSnhyTE5XSFRjekJmSkhnV2Z4VzNBZzgweTNFRkxZTXV1NTJfRmxCU0tJS0pST2ZmcGdXb2NrSFEtUzNBMTFrWklCY0VNa3lmZkFGQzJqeXV6emM1d3k0cmlHeWJFTWYzM21RT3UtWTRISGx5cW0zYUF0YzZ3bkloQWZ4ME5kVjc5MGNfSGl2akE3a1Q2a1doUQ?oc=5",
+          "source": "TradingView",
+          "sourceUrl": "https://www.tradingview.com",
+          "date": "2026-11-13T15:28:25.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/dea22632a2181d51.jpg",
+            "query": "stock market board",
+            "creator": "Nicola since 1972",
+            "creatorUrl": "https://www.flickr.com/photos/15216811@N06",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/15216811@N06/9346328949",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/f19a60c4-3a1a-4e48-81fc-721fec15230a/thumb/"
+          }
+        },
+        {
+          "title": "Nikkei Posts Best Weekly Performance in 5 Months Despite Nvidia Jitters",
+          "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE8tVFQ3d3Y1dkd1TUh3QTdJUHVMc2hiRDIybTNUdDA4X1E3TkhjWWh5X0FUekMwaEhhLWctTGlqSTBSTk9IM3gyOVQ3RC1obUNNNFhMbEhlOG1jOUpfVXhfbTFWeXdhLTdidDFZRHl3?oc=5",
+          "source": "صحيفة مال",
+          "sourceUrl": "https://maaal.com",
+          "date": "2026-11-13T13:43:59.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/8f465f705ece5d68.jpg",
+            "query": "stock market board",
+            "creator": "jurvetson",
+            "creatorUrl": "https://www.flickr.com/photos/44124348109@N01",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/44124348109@N01/13939682899",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/18fd1a03-9913-48e6-ae19-bcf98350369d/thumb/"
+          }
+        },
+        {
+          "title": "Tokyo stocks rebound on renewed hopes for AI industry growth",
+          "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTE1YWXhIWHpFc3NMUDZNdHRycm5fN1pFT3ZsZk9LaFp0ODJRajBQNnF0NTByWG9CWlZYajZOVkFFcGpNcUtlOWlQbmlPdUN0V3FMV2FNLW9oeklfX0Jrbjk5a1I0TTAxaUR1c25td29mRnBPSE0?oc=5",
+          "source": "毎日新聞",
+          "sourceUrl": "https://mainichi.jp",
+          "date": "2026-11-13T13:19:46.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/6b42323156a37e72.jpg",
+            "query": "server room",
+            "creator": "viagallery.com",
+            "creatorUrl": "https://www.flickr.com/photos/15932083@N05",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/15932083@N05/2293424530",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/53679f32-eeef-4a8e-a393-6a4ab98e1c57/thumb/"
+          }
+        },
+        {
+          "title": "Japan's Nikkei Average Rebounds 322 Yen; Zensho Holdings Hits Record High, Mercari Falls 8.9%",
+          "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE91X201Yi1WZDdma0ZIUzNnSW1fcy1UakxSXzVqNnBuQkJpQ1dlYllKeDJXejJrYjEzekd3Z0Exd0doaGlLVDI3dTdqeEQzb2FOSWtheGpqeF9ieGxkVzJKSm1DWl93bDdVVHl0dmRMTTdsSnVlcGc?oc=5",
+          "source": "BigGo Finance",
+          "sourceUrl": "https://finance.biggo.com",
+          "date": "2026-11-13T11:35:00.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/1acd1f07b33c9dfb.jpg",
+            "query": "car assembly line",
+            "creator": "simonov",
+            "creatorUrl": "https://www.flickr.com/photos/26209464@N00",
+            "license": "CC BY-SA 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+            "page": "https://www.flickr.com/photos/26209464@N00/376986006",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/5a623f39-16a0-4667-a1ef-f73f8b3320d0/thumb/"
+          }
+        },
+        {
+          "title": "Nikkei Soars 6.46% in a Week, Sharpest in Five Months, as Earnings Cheer Dispels Jensen Huang Resignation Gloom",
+          "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTFBYcEhSZXBkdFlLZ2twYmFfWnVrMTEwUm5uMkRxVVZNSG9Lbm8tQXVXVUpHSUJmUGJHSVlrUWxwQXBVbmhCc2lFRWFodnduY0JQcWFaTFVnT2psUHNlbnNVR2EzcWY3dWt6eEM4QkRyS2pPeHlOaEE?oc=5",
+          "source": "BigGo Finance",
+          "sourceUrl": "https://finance.biggo.com",
+          "date": "2026-11-13T09:55:00.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/bb099c8c5ac21a6e.jpg",
+            "query": "stock market board",
+            "creator": "Bellafaye Garden",
+            "creatorUrl": "https://www.flickr.com/photos/51796626@N03",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/51796626@N03/6699360101",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/8ac6f7f2-42ba-4955-ae72-fe0ecebb7410/thumb/"
+          }
+        },
+        {
+          "title": "Japan's Nikkei posts best week in 5 months despite Nvidia turmoil",
+          "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxQekhMcjM5LXd6VlJLQnhRUTZTb3dLVk5fLU1RdzZObzRDbHZWS1duREV4bjk2alpKQmI4R2U0RUxjeG0xZTdzZTlkWXI3QmtFS183VUxOVWVOdEQ1aVE1d3czNDRSaUZXUUN0bGVILTJxVnBmaV9pM1ZOZkFzaWZGd2NwbllZU0RzTktGZVZSQkg5X0xzRHNod1lEWkVXMEZ6TkVDTjRFcXVuYW1xYllJX0JtWVFyUQ?oc=5",
+          "source": "KLSE Screener",
+          "sourceUrl": "https://www.klsescreener.com",
+          "date": "2026-11-13T08:36:27.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/8fab8298f114a775.jpg",
+            "query": "power lines sunset",
+            "creator": "tvdxer",
+            "creatorUrl": "https://www.flickr.com/photos/50711561@N00",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/50711561@N00/13683167993",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/d58c59e5-9c10-4c6f-bf1a-57a9eb215094/thumb/"
+          }
+        },
+        {
+          "title": "Nikkei Stock Average Rises 3,707 Points for the Week; Nvidia Earnings and Anthropic Listing in Focus Next Week",
+          "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5uTGM2M2hmQUROcW9aRFdrQVF6MmpyeGdtV0xsSU9nUE1MX3I4TEl5aW1VanExandfWGpDLUN4ZjFMVVVsMXlhekRrbE05MXJwV00yOEQ2MUdzNXBzNHI1WU1XLU9oV0VqLVhub3k3Q1piVVU2Ync?oc=5",
+          "source": "BigGo Finance",
+          "sourceUrl": "https://finance.biggo.com",
+          "date": "2026-11-13T08:26:00.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/fc0b32e94935d9f0.jpg",
+            "query": "stock market board",
+            "creator": "Dan Zen",
+            "creatorUrl": "https://www.flickr.com/photos/16077535@N00",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/16077535@N00/2137046246",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/34f0d0bb-d9ae-4a52-bb37-49b43e784be2/thumb/"
+          }
+        },
+        {
+          "title": "Japan's Nikkei Set for Best Weekly Performance in Five Months",
+          "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxOanh2dXpxQ254SFhVZVZTUzRCT2h4T0RYcUVraHlyb1NTQUhpSHozanNUeTNET0Z3bTdlZjJGRTB3LWhPUnNKM3YxQlZHMHA4ZWNzcDQtOS1hejdFWlVFMTJUakY4SV9EaHlMby1VRkJRWDFSZzBRbjRLaTRCTk5KRUpTXzRQNE9ZQnItelBfUDVSZjhSZnRxbFRjaTBnVTVWZkFSSGlrZ1ZqRzFK?oc=5",
+          "source": "Qatar news agency",
+          "sourceUrl": "https://qna.org.qa",
+          "date": "2026-11-13T08:05:44.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/c923749144bf475e.jpg",
+            "query": "stock market board",
+            "creator": "*rboed*",
+            "creatorUrl": "https://www.flickr.com/photos/92082510@N04",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/92082510@N04/14675744526",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/93b20477-384e-4f2b-b537-bb59bd47e6e7/thumb/"
+          }
         }
       ]
     },
@@ -265,84 +625,204 @@
       "key": "newsCatWeather",
       "items": [
         {
-          "title": "Rain nationwide on the 18th, with risk of severe winds in the north",
-          "url": "https://www.sunny-spot.net/english/topics.html?area=0",
-          "source": "Sunny Spot",
-          "sourceUrl": "https://www.sunny-spot.net",
-          "date": "2026-11-15T12:00:00.000Z",
-          "summary": "The weekly outlook calls for rain across Japan on Wednesday and possible strong winds in northern Japan on the 19th."
+          "title": "Agoda names five quieter corners of Asia to catch the snow this season",
+          "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxOWWZ2VVlsaURQbE1VWnFVbVNBQ2o1WWVkWW1ZYm9SVTBGaW1fTWpvanhtN2lOYzFiOFdPS2IxbWdOOEFIaVhETEZ0eFZubmcxZFpBZGJsZ29JZFJfSEV2dDNvdk82RFFhWmF1NUFsMk5RTXpTUXRUS3N6X25TdEMzbmhoUV9EUm9HVjRVM0lHaTd5RUkwLTRpdmUwLXZzSDhHcU04clE3WUFCTTJrNnlNYWFhTkJscWswcUE?oc=5",
+          "source": "Japan Today",
+          "sourceUrl": "https://japantoday.com",
+          "date": "2026-11-15T21:10:00.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/ad3d4ffadd7c61de.jpg",
+            "query": "snow japan",
+            "creator": "skyseeker",
+            "creatorUrl": "https://www.flickr.com/photos/40422902@N00",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/40422902@N00/3374522237",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/8fd75636-f493-4094-bd81-dc4fe971d4e5/thumb/"
+          }
         },
         {
-          "title": "Sunday: midday rain in Tokyo, high of 14°C",
-          "url": "https://weathernews.com/news/en/japan/2026/11/14/weather-134/",
-          "source": "Weathernews",
-          "sourceUrl": "https://weathernews.com",
-          "date": "2026-11-14T12:00:00.000Z",
-          "summary": "Rain is expected in Tokyo around noon, in Osaka and Fukuoka in the morning and in Sapporo in the afternoon."
+          "title": "Snow Crab Eating Contest Gives Contestants Just 5 Minutes",
+          "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE9tUGt1ZlpuVjdiVE91Yll3UXVWaFlQVVlDdWs4TUFWT0YtdWtSa2sxR3V0XzEzdDd2V0lDOUpGLW90WXNSOEtlNGlUVU4zMjR6NFpiNw?oc=5",
+          "source": "News On Japan",
+          "sourceUrl": "https://newsonjapan.com",
+          "date": "2026-11-15T20:58:07.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/89ff34da4d411a92.jpg",
+            "query": "snow japan",
+            "creator": "skyseeker",
+            "creatorUrl": "https://www.flickr.com/photos/40422902@N00",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/40422902@N00/2847898457",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/9dda69be-e109-4f29-a074-21dc7bc2dd1f/thumb/"
+          }
         },
         {
-          "title": "Weekly forecast: unsettled in the north, sunnier in the east later",
-          "url": "https://weathernews.com/news/en/japan/2026/11/14/weather-010/",
-          "source": "Weathernews",
-          "sourceUrl": "https://weathernews.com",
-          "date": "2026-11-14T12:00:00.000Z",
-          "summary": "Northern Japan faces rain or snow most days, while eastern Japan clears later in the week."
+          "title": "Weak mag. 2.1 earthquake - North Pacific Ocean, 98 km east of Kuji, Iwate, Japan, on Monday, Nov 16, 2026, at 12:51 am (GMT +10)",
+          "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPVE05Mk9QSzhXcTdSQklBSFNEVDZSRW5VSWtaeG9uTGM2TVk4WktuNWtWUVVUQ1ItRE12Yzd3Vkl1WnhJdlk0N1RKdklaOXgzNWZ6anV4UkJMN0VTaVpBZ2pBSGY5Y3B4c3F0MDNlLXBTUjN4bGdPWUJYelhETXlucnNtZnJXcXRYZWdMLThNMTY0UTVpQVk2b1VyZEJwdDZRNG0xaWU1dmxsanpKZjBvbWpBLXdZQQ?oc=5",
+          "source": "Volcano Discovery",
+          "sourceUrl": "https://www.volcanodiscovery.com",
+          "date": "2026-11-15T18:19:25.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/e70bcdc5eafab841.jpg",
+            "query": "seismograph",
+            "creator": "Ken Lund",
+            "creatorUrl": "https://www.flickr.com/photos/75683070@N00",
+            "license": "CC BY-SA 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+            "page": "https://www.flickr.com/photos/75683070@N00/4529366202",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/cf2c0d84-8708-4b27-9288-15ba3a96ef61/thumb/"
+          }
         },
         {
-          "title": "Heavy thunderstorms possible in Kyushu and Shikoku on Sunday",
-          "url": "https://www.sunny-spot.net/english/topics.html?area=0",
-          "source": "Sunny Spot",
-          "sourceUrl": "https://www.sunny-spot.net",
-          "date": "2026-11-14T12:00:00.000Z",
-          "summary": "A low and a front moving east could bring intense thunderstorms to southwestern Japan."
+          "title": "When Is The Best Time To Visit Japan? For Cherry Blossoms, Snow & More Check Deets Here!",
+          "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxNZzhhZ2F5Wi1iVkhhcVA0UWZSQ3p6eW95UEJNOFdJUjc4RWdrY2o1STc5S3Q0V3NabjBicW9jSzE5SHA0U3dDQVlxMl9rZ2FxODVhNG1WOXJ0QXVhVTJBVVlCa0ZWT1BSRDlWZHRjdENDSnp6OTViRnJMUjIwaXgtekNwNF9JWFVpVGF6bmFqVkphX2VYY25WclpDcWMyM3Z3U2xZNlZZZ1NHWlh3QW5qU2pOdjk?oc=5",
+          "source": "Curly Tales",
+          "sourceUrl": "https://curlytales.com",
+          "date": "2026-11-15T17:27:56.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/65fe65b1eaf83959.jpg",
+            "query": "snow japan",
+            "creator": "skyseeker",
+            "creatorUrl": "https://www.flickr.com/photos/40422902@N00",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/40422902@N00/34401660201",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/d3878150-1e4d-4e98-865c-bd2843114771/thumb/"
+          }
         },
         {
-          "title": "October was the warmest on record worldwide",
-          "url": "https://weathernews.com/news/en/japan/2026/11/14/climate-449/",
-          "source": "Weathernews",
-          "sourceUrl": "https://weathernews.com",
-          "date": "2026-11-14T12:00:00.000Z",
-          "summary": "Citing NOAA, the report says 2026 is expected to be the second-warmest year on record, behind 2024."
+          "title": "Oxfordshire weather forecast: Light rain and cool temperatures expected today, November 15, 2026",
+          "url": "https://news.google.com/rss/articles/CBMi-gFBVV95cUxObVRIb2dzV2M4a1g4Wi1pR2pUNW1IM25KWG5TcjV2OVVxY2Z2YkdBeklMOEZhMjY5bktBQUFQYmxURDZjNGpTd2dVVmdaNU9FeUF3VW52LXdxNS1acmRvc19VQWZhMmh0cW4wNDZVbURJZnZIUEIwYnJkeFR5Z3d4TXprY1N1aHVnU0NDOW9XVWVKN0NIQS1yLUs1dzZsX3hGcW1fd0tlRjZlU3B3N3lkMXNuSk9oOGdTZkkyY1JFUUtrblJPMTJDRkVqSFV2VXd4c1VHVlFnNm9PVjNxNWMyRG9jUkdOSkJ6WjVFc1VES3ItMDBkdEs1SU9n?oc=5",
+          "source": "The Times of India",
+          "sourceUrl": "https://timesofindia.indiatimes.com",
+          "date": "2026-11-15T05:23:00.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/7277b97bd2d12d2b.jpg",
+            "query": "rain umbrella street",
+            "creator": "frankieleon",
+            "creatorUrl": "https://www.flickr.com/photos/23307937@N04",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/23307937@N04/27430318754",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/4f1985d3-3763-4b81-bdc5-f0e99e2d7dbb/thumb/"
+          }
         },
         {
-          "title": "Strong cold air may bring severe weather and snow by midweek",
-          "url": "https://www.sunny-spot.net/english/topics.html?area=0",
-          "source": "Sunny Spot",
-          "sourceUrl": "https://www.sunny-spot.net",
-          "date": "2026-11-13T12:00:00.000Z",
-          "summary": "A rapidly deepening low could bring strong northerly winds and snow across Japan by the 19th."
+          "title": "Edinburgh weather forecast: Light rain and brisk temperatures expected on November 15, 2026",
+          "url": "https://news.google.com/rss/articles/CBMi9AFBVV95cUxNY2RpOTlLRmttV2RJdWJjNkNrMUhXVHNNeFRsS0MweTFDQTNzMl9QdHhMcmRwT2M5Mnk5a2NrUUNsNVBoLWh2R3RXcTlsWHBuY0FsWTNRUnp3VTgyWG92Ykg2QjJCZ1VFT2s3RTJ0YWRGWDQ3WU1vN01DMFh2UmVoV2VfSFhPaHdVTm9zUzg1Y0ltMjNwNFdCR1E5V0xuRENZUzd5TzJwblpwczhITzRmb2lrSjRZald1bnJRT3RDMFJ2WXBpN2VKdkh0cUctVUNoSUxvNExxWFJnVURLam8tNXNZNVB1R08zMDNqSHliWVNnUEpo?oc=5",
+          "source": "The Times of India",
+          "sourceUrl": "https://timesofindia.indiatimes.com",
+          "date": "2026-11-15T05:22:00.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/412d511b04931612.jpg",
+            "query": "rain umbrella street",
+            "creator": "Colin Davis Studio",
+            "creatorUrl": "https://www.flickr.com/photos/87506973@N00",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/87506973@N00/2473248707",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/9315eabf-c1c2-4c47-99f6-d63b36baad05/thumb/"
+          }
         },
         {
-          "title": "Saturday: rain from around noon in Fukuoka",
-          "url": "https://weathernews.com/news/en/japan/2026/11/13/weather-552/",
-          "source": "Weathernews",
-          "sourceUrl": "https://weathernews.com",
-          "date": "2026-11-13T12:00:00.000Z",
-          "summary": "Tokyo and Osaka were forecast to reach 19°C and 20°C, while Sapporo stays sunny with a high of 11°C."
+          "title": "Japan defeats Brazil in soccer friendly | NHK WORLD-JAPAN News",
+          "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE9SUC13eXIzQVhjMzRhOUhKcFY2VmtKNFN1UHZmby1BZ3I0dThjSWF2ZjQ0QUpOdjhXakdFYU1BMGVVZmtVUUE0bFJXUTB5aTRhRmQ1NG5iT0xob2pNX3YzcUdwbw?oc=5",
+          "source": "NHKニュース",
+          "sourceUrl": "https://www3.nhk.or.jp",
+          "date": "2026-11-15T04:26:26.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/177bfc9da9230568.jpg",
+            "query": "soccer ball grass",
+            "creator": "Unknown",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/5911893/image-public-domain-free-grass",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/28845e54-d759-4e9d-9031-7eb116906a79/thumb/"
+          }
         },
         {
-          "title": "Rain across Japan on November 15 and 18",
-          "url": "https://weathernews.com/news/en/japan/2026/11/13/weather-769/",
-          "source": "Weathernews",
-          "sourceUrl": "https://weathernews.com",
-          "date": "2026-11-13T12:00:00.000Z",
-          "summary": "Eastern Japan is expected to turn sunny from Thursday, November 19."
+          "title": "Volcano Earthquake Report for Sunday, 15 November 2026",
+          "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxNUzhKRXJUZlhSaXJpYWVZVHd0dXRmck1zc2RMczZma0FWY0UxM1ktWkNNYkVLYVZodUlicDBMOUt6R2JIcEhKRU1YX1Q2NzJyT2NIWl9rOUdIT3FSQVdObnlKQ0pzVW13ckxBd1piampxam1VYkZRVEZ5dERVaU0tb3dLVDh5MVRadDRNTzRyTDdObkxMYV9TM1ZuVlNyc1RiM1RTdUlCeTJlbGdy?oc=5",
+          "source": "Volcano Discovery",
+          "sourceUrl": "https://www.volcanodiscovery.com",
+          "date": "2026-11-15T00:54:41.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/8eed878ca2d3cbd5.jpg",
+            "query": "seismograph",
+            "creator": "kencf0618",
+            "creatorUrl": "https://www.flickr.com/photos/30801900@N00",
+            "license": "CC BY-SA 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+            "page": "https://www.flickr.com/photos/30801900@N00/8863075230",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/1ad0c9c3-ee9a-47b4-af87-cea78bdf0cec/thumb/"
+          }
         },
         {
-          "title": "Typhoon No. 32 passes the Ogasawara Islands and heads east",
-          "url": "https://www.sunny-spot.net/english/topics.html?area=0",
-          "source": "Sunny Spot",
-          "sourceUrl": "https://www.sunny-spot.net",
-          "date": "2026-11-11T12:00:00.000Z",
-          "summary": "After approaching the islands with very strong intensity, the typhoon was moving away to the east of Japan."
+          "title": "Weak mag. 2.1 earthquake - Japan: Far E Off North Honshu on Sunday, Nov 15, 2026, at 03:37 am (GMT +10)",
+          "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPMVlSeEl4MGFoVFpZRm5MS0E0UFFqQ01NNmhBU3RhVy1Na3ktVVFCRE9jSEttdGszLTh1RFlDQzVzenNoR2xINmV0TEJZNnRWeGp4RWxoMExvak5aVjgzVjZsSlFSWUk4XzRvck8zeFV3MS1xMEI4YjZsWlU1LXVXNDROZVFDSHdpQWlRWkNjbXY5NFJpRFBNUXJjbWF3VHd0WmJETHMzcF9nNUxoQUhxNGdQVm5wemZmanpvcg?oc=5",
+          "source": "Volcano Discovery",
+          "sourceUrl": "https://www.volcanodiscovery.com",
+          "date": "2026-11-14T23:25:49.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/09a2b859710cf2d8.jpg",
+            "query": "seismograph",
+            "creator": "Michael Cornelius",
+            "creatorUrl": "https://www.flickr.com/photos/90791262@N00",
+            "license": "CC BY-SA 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+            "page": "https://www.flickr.com/photos/90791262@N00/3590838299",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/dd8d8b62-b4fc-4568-aba6-e2244000f68c/thumb/"
+          }
         },
         {
-          "title": "Autumn leaves running late as November stays warm",
-          "url": "https://www.japannakama.co.uk/travel/discover-japan-in-november-unmissable-events-and-festivals/",
-          "source": "Japan Nakama",
-          "sourceUrl": "https://www.japannakama.co.uk",
-          "date": "2026-11-03T12:00:00.000Z",
-          "summary": "The Japan Weather Association expects maples to peak at the usual time or later, with Kyoto's Arashiyama at its best from mid-November."
+          "title": "SnowBrains Forecast: Hokkaido Leads Japan’s Early-Week Snowfall",
+          "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxQWG1odXltOGJTZGNENDVGWjZQQnE3U2NSRjJjcmdxLUx4NThiOXVIUDNUX3YzVTJma0NBSFJyV0o0TThEalJZMG1KSWhIUUIwNld5TWp1TDVZcnN4TXdBZWRPRXJkdHRsT2VGbENYYUsxTGp6ckNkU0wxeDhGZjhmcklfeWRETTlWUWNNN2lR?oc=5",
+          "source": "SnowBrains",
+          "sourceUrl": "https://snowbrains.com",
+          "date": "2026-11-14T14:05:00.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/811618498908681e.jpg",
+            "query": "snow japan",
+            "creator": "emrank",
+            "creatorUrl": "https://www.flickr.com/photos/15622795@N05",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/15622795@N05/3175399759",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/d996ac9a-3080-4877-8369-6ec726d06751/thumb/"
+          }
         }
       ]
     },
@@ -351,84 +831,204 @@
       "key": "newsCatSports",
       "items": [
         {
-          "title": "FC Tokyo beat Kashima 2-0 to equal the J1 clean-sheet record",
-          "url": "https://www.jleague.jp/en/news/article/35308/",
-          "source": "J.League",
-          "sourceUrl": "https://www.jleague.jp",
-          "date": "2026-11-07T12:00:00.000Z",
-          "summary": "The leaders kept a ninth straight clean sheet, equalling the J1 record."
+          "title": "Chinese Taipei@Japan - WBSC U-23 Baseball World Cup 2026 presented by RAXUS",
+          "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxPbXRKdnVCeFhMN2xkNEd5Y1hVOFdncUxyT0V1bU5BODlBNTlpb2Y2Yml5SlNseWQxdWE5THdvUGtMUXQzVl9PQUZ6YVJGVzZIa29XTWRNRG1VYVBDRlR5WjFNM1R6WEVqQ3lMSm8yQUxMblI4YXhSb1pVNjFvdG9acHVQaGhDZkd6V1JtVUQweHFPR0RzX1hQWmtkNG1ObEcyZEJ6aU1WTDA?oc=5",
+          "source": "World Baseball Softball Confederation (WBSC)",
+          "sourceUrl": "https://www.wbsc.org",
+          "date": "2026-11-15T21:31:24.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/f51086417913cd26.jpg",
+            "query": "baseball stadium",
+            "creator": "City of Fayetteville, NC Government",
+            "creatorUrl": "https://www.flickr.com/photos/161404054@N07",
+            "license": "Public domain",
+            "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+            "page": "https://www.flickr.com/photos/161404054@N07/42057940514",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/85245c0c-6256-481f-9fe7-b36665a92786/thumb/"
+          }
         },
         {
-          "title": "Japan face Brazil in a World Cup rematch in Singapore",
-          "url": "https://www.flashscore.com/news/japan-to-face-world-cup-vanquishers-at-november-friendly-tournament-in-singapore/htnq7RHb/",
-          "source": "Flashscore",
-          "sourceUrl": "https://www.flashscore.com",
-          "date": "2026-11-06T12:00:00.000Z",
-          "summary": "Japan meet Brazil on November 14 and Paraguay on November 17 in the four-team Mizuho Blue Challenge."
+          "title": "United States blanks Finland 5-0 to reach women’s hockey worlds final",
+          "url": "https://japantoday.com/category/sports/united-states-blanks-finland-5-0-to-reach-women%E2%80%99s-hockey-worlds-final",
+          "source": "Japan Today",
+          "sourceUrl": "https://japantoday.com",
+          "date": "2026-11-15T21:22:57.000Z",
+          "excerpt": "The United States shut out Finland 5-0 on Sunday to advance to the final of the women’s ice hockey worlds. The defending champion will face the winner of…",
+          "image": {
+            "src": "img/stories/b5132bab0f75fac3.jpg",
+            "query": "stadium lights",
+            "creator": "Sworldguy",
+            "creatorUrl": "https://www.flickr.com/photos/64233859@N06",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/64233859@N06/15291983331",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/6e2d1c99-fdeb-4c79-b713-05dd5880cbfd/thumb/"
+          }
         },
         {
-          "title": "FC Tokyo go top of J1 after an unbeaten October",
-          "url": "https://www.jleague.jp/en/news/article/35275/",
-          "source": "J.League",
-          "sourceUrl": "https://www.jleague.jp",
-          "date": "2026-11-03T12:00:00.000Z",
-          "summary": "Four wins and five clean sheets in October lifted FC Tokyo to the top of the table."
+          "title": "India wins fifth New Zealand ODI to seal tight series",
+          "url": "https://japantoday.com/category/sports/india-win-fifth-new-zealand-odi-to-seal-tight-series",
+          "source": "Japan Today",
+          "sourceUrl": "https://japantoday.com",
+          "date": "2026-11-15T21:22:46.000Z",
+          "excerpt": "Paceman Arshdeep Singh took three wickets as India won a tense fifth and final one-day international against New Zealand by 22 runs on Sunday to clinch the series…",
+          "image": {
+            "src": "img/stories/9b27fc538278fbd5.jpg",
+            "query": "stadium lights",
+            "creator": "Yoshikazu TAKADA",
+            "creatorUrl": "https://www.flickr.com/photos/34530295@N06",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/34530295@N06/15348345818",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/35c4411f-f98c-42d9-b168-6b78e354c6f9/thumb/"
+          }
         },
         {
-          "title": "Ohtani named an NL MVP finalist for a sixth straight season",
-          "url": "https://www.mlb.com/news/shohei-ohtani-finalist-for-2026-nl-mvp-award",
-          "source": "MLB.com",
-          "sourceUrl": "https://www.mlb.com",
-          "date": "2026-11-02T12:00:00.000Z",
-          "summary": "Despite injuries, Shohei Ohtani hit 30 home runs and posted a 1.79 ERA as a pitcher."
+          "title": "Scotland beats Australia in Nations Championship rugby",
+          "url": "https://japantoday.com/category/sports/scotland-beats-australia-in-nations-championship-rugby-in-latest-big-win-for-the-northern-hemisphere",
+          "source": "Japan Today",
+          "sourceUrl": "https://japantoday.com",
+          "date": "2026-11-15T21:22:40.000Z",
+          "excerpt": "Scotland struck another big blow for the northern hemisphere in Nations Championship rugby by beating Australia 15-12 in an attritional test match at Murrayfield on Sunday. It came…",
+          "image": {
+            "src": "img/stories/f77e244ff2318cfd.jpg",
+            "query": "car assembly line",
+            "creator": "aldenjewell",
+            "creatorUrl": "https://www.flickr.com/photos/31411679@N08",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/31411679@N08/19510743619",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/54ede5e3-2609-4152-a67e-d9d6ba55ac4b/thumb/"
+          }
         },
         {
-          "title": "Nishikawa equals J1's all-time appearance record",
-          "url": "https://www.jleague.jp/en/news/article/35249/",
-          "source": "J.League",
-          "sourceUrl": "https://www.jleague.jp",
-          "date": "2026-10-31T12:00:00.000Z",
-          "summary": "Urawa goalkeeper Shusaku Nishikawa made his 672nd J1 appearance as Kashiwa won 4-0."
+          "title": "Yamaguchi wins Kumamoto Masters badminton with An absent",
+          "url": "https://japantoday.com/category/sports/yamaguchi-wins-kumamoto-masters-with-an-absent",
+          "source": "Japan Today",
+          "sourceUrl": "https://japantoday.com",
+          "date": "2026-11-15T21:22:26.000Z",
+          "excerpt": "Japan's Akane Yamaguchi beat China's Wang Zhiyi to win the Kumamoto Masters title on home soil on Sunday, with all-conquering world number one An Se-young not competing at…",
+          "image": {
+            "src": "img/stories/68fedec2f47fddba.jpg",
+            "query": "power lines sunset",
+            "creator": "Paul O'Keefe",
+            "creatorUrl": "https://www.flickr.com/photos/23556723@N07",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/23556723@N07/8895953881",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/d64266fe-0f4a-4de6-943c-df10c6c32c4c/thumb/"
+          }
         },
         {
-          "title": "SoftBank Hawks win the 2026 Japan Series",
-          "url": "https://www.starnewskorea.com/en/sports/2026/10/29/2026102910344976522",
-          "source": "Star News Korea",
-          "sourceUrl": "https://www.starnewskorea.com",
-          "date": "2026-10-29T12:00:00.000Z",
-          "summary": "The Hawks beat Yokohama 4-2 in Game 4, finishing the postseason with seven straight wins, all comebacks."
+          "title": "Young cycle sensation Seixas ends stunning year with Japan win",
+          "url": "https://japantoday.com/category/sports/young-cycle-sensation-seixas-ends-stunning-year-with-japan-win",
+          "source": "Japan Today",
+          "sourceUrl": "https://japantoday.com",
+          "date": "2026-11-15T21:22:20.000Z",
+          "excerpt": "Cycling prodigy Paul Seixas ended his spectacular breakout year with another win in Japan on Sunday, finishing ahead of world champion Brandon McNulty in the Tour de France's…",
+          "image": {
+            "src": "img/stories/bce8963a8b4e2c96.jpg",
+            "query": "design studio desk",
+            "creator": "juhansonin",
+            "creatorUrl": "https://www.flickr.com/photos/38869431@N00",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/38869431@N00/8682730703",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/13668fbc-1b6e-4e1b-b168-55f6fd880f66/thumb/"
+          }
         },
         {
-          "title": "Kyushu Grand Sumo Tournament runs November 8 to 22",
-          "url": "https://www.haveagood-holiday.com/en/articles/kyushu-grand-sumo-tournament-tabiwa-viewing-plan-2026",
-          "source": "Have a Good Holiday",
-          "sourceUrl": "https://www.haveagood-holiday.com",
-          "date": "2026-10-28T12:00:00.000Z",
-          "summary": "The year's final sumo tournament takes place at Fukuoka Kokusai Center."
+          "title": "Zverev opens ATP Finals with convincing win over Jodar. Shelton vs. Fils up next",
+          "url": "https://japantoday.com/category/sports/zverev-opens-atp-finals-with-convincing-win-over-jodar.-shelton-vs.-fils-up-next",
+          "source": "Japan Today",
+          "sourceUrl": "https://japantoday.com",
+          "date": "2026-11-15T21:22:14.000Z",
+          "excerpt": "Aiming to punctuate the best year of his career with another big title, top-ranked Alexander Zverev got his ATP Finals campaign off to a strong start with a…",
+          "image": {
+            "src": "img/stories/7370a9b84f74d45d.jpg",
+            "query": "car assembly line",
+            "creator": "crackdog",
+            "creatorUrl": "https://www.flickr.com/photos/88645472@N00",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/88645472@N00/5325395447",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/60ae628a-428d-4325-86b2-a9457d3bcf32/thumb/"
+          }
         },
         {
-          "title": "Rizin 55 held at LaLa Arena Tokyo-Bay",
-          "url": "https://en.wikipedia.org/wiki/2026_in_Rizin_Fighting_Federation",
-          "source": "Wikipedia",
-          "sourceUrl": "https://en.wikipedia.org",
-          "date": "2026-11-08T12:00:00.000Z",
-          "summary": "The mixed martial arts promotion staged its ninth event of 2026 in Funabashi, with a New Year's Eve show in Nagoya to come."
+          "title": "'Couldn't get worse': Klopp calls for change in FIFA leadership",
+          "url": "https://japantoday.com/category/sports/%27couldn%27t-get-worse%27-klopp-calls-for-change-in-fifa-leadership",
+          "source": "Japan Today",
+          "sourceUrl": "https://japantoday.com",
+          "date": "2026-11-15T21:22:06.000Z",
+          "excerpt": "Germany coach Jurgen Klopp called on Sunday for an end to Gianni Infantino's time as FIFA president, saying he \"did not think things could get worse after Sepp…",
+          "image": {
+            "src": "img/stories/66303267af9d4814.jpg",
+            "query": "stadium lights",
+            "creator": "chrismetcalfTV",
+            "creatorUrl": "https://www.flickr.com/photos/73207064@N00",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/73207064@N00/4548754699",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/2a14de9f-1459-42e3-a3d5-8ecf0515582c/thumb/"
+          }
         },
         {
-          "title": "Tokyo sets out its 'Sports Vision 2028+'",
-          "url": "https://en.sports-tokyo-info.metro.tokyo.lg.jp/topics/oshirase.php",
-          "source": "Tokyo Metropolitan Government",
-          "sourceUrl": "https://en.sports-tokyo-info.metro.tokyo.lg.jp",
-          "date": "2026-11-13T12:00:00.000Z",
-          "summary": "The city also announced the Tokyo International Youth Sports Games at Komazawa Olympic Park on November 28 and 29."
+          "title": "Japan can be world's best, says outgoing soccer coach Moriyasu",
+          "url": "https://japantoday.com/category/sports/japan-can-be-world%27s-best-says-outgoing-coach-moriyasu",
+          "source": "Japan Today",
+          "sourceUrl": "https://japantoday.com",
+          "date": "2026-11-15T21:21:59.000Z",
+          "excerpt": "Coach Hajime Moriyasu said Japan can become the best in the world after beating Brazil for a second time, as he prepares to step down after eight years…",
+          "image": {
+            "src": "img/stories/b39cf4738ef818d0.jpg",
+            "query": "soccer ball grass",
+            "creator": "Unknown",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/5916861/image-public-domain-green-free",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/6abecaff-d8f3-4721-b111-94dfdc4ee97a/thumb/"
+          }
         },
         {
-          "title": "Japan Golf Tour heads into its final weeks",
-          "url": "https://en.wikipedia.org/wiki/2026_Japan_Golf_Tour",
-          "source": "Wikipedia",
-          "sourceUrl": "https://en.wikipedia.org",
-          "date": "2026-11-03T12:00:00.000Z",
-          "summary": "The 2026 season runs until December 6; Yusaku Hosono won the Japan Open in October."
+          "title": "Asian baseball champs",
+          "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE5rbERyVklqclFpdUtsNG1zZjQwUkJpSGZLcWVKZkxaOGNXWHJrazZ0MUtpZjRucm9DVUR1NFM3eElKR1ZneEFCMGdxTTdZVVJWWkZmclFKTjd2c0daZE1rQk9wbFJ4WFJnMEl6ckZTYVp2NlFXTG9hSlplajI?oc=5",
+          "source": "Japan Today",
+          "sourceUrl": "https://japantoday.com",
+          "date": "2026-11-15T21:17:31.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/e36380baa98cab3e.jpg",
+            "query": "baseball stadium",
+            "creator": "City of Fayetteville, NC Government",
+            "creatorUrl": "https://www.flickr.com/photos/161404054@N07",
+            "license": "Public domain",
+            "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+            "page": "https://www.flickr.com/photos/161404054@N07/42057941164",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/94893476-a54b-4431-bbd7-305b3bd89065/thumb/"
+          }
         }
       ]
     },
@@ -437,87 +1037,212 @@
       "key": "newsCatHealth",
       "items": [
         {
-          "title": "Japan's big four drug wholesalers see profits slip despite higher sales",
-          "url": "https://pj.jiho.jp/article/256921",
-          "source": "Pharma Japan",
-          "sourceUrl": "https://pj.jiho.jp",
-          "date": "2026-11-13T12:00:00.000Z",
-          "summary": "Rising procurement and other costs trimmed combined operating profit in the first half of fiscal 2026."
+          "title": "Japan's 1982 'shinrin-yoku' technique explained for mental and physical health benefits. What happens to y",
+          "url": "https://news.google.com/rss/articles/CBMiwgJBVV95cUxNUlhTa3VYMWh4bTk0ZVFwLUcxSDU5VFNPYi1rX2p2ZFMxOUdIWlpLUHYwV0RURW1SLWJhYnZkSkdiM0pFZW9ZcnRqZXJUTWxmTk5RYUhDbkhad0EtVF9JbnZNc2dDQ19pb0lWUElDcUc1S25WOG05S3BVVmI3Um5xUElmVnNBNGRjU0tmSGRuLWcyczV1N3lFeWpSNFdQWVc0WVd5Wm5wM0RJcFZqUFVUSkFoWFlvMzR3VTlTVmFjUXp2WFlKUEVEWDR1cVdRdFVBME00cVFYY01BaFp2WklhSG5uZlRHUGQ0TE45RUlBSU5LUk9oUHhvemxmelh0cm1Qa0FSS2s2THNQbEQwTmhKWHlZTm5uaDNjVnFpVVVTOE9rZXl4N1pJV0huRDNONGRPbF81azNqRFY1MEpCQkNVb0Z30gHHAkFVX3lxTE1fZnNibmthZE15Q0ZoQmlneFZkeXNzNGRiYVAtcWtwZVFIelAxLXdQM0Z4R3MxMlJVdlBCQllCSUt0a2tLaTJlTVdhMVFBVk1oajNHMEFoWk5lUGpad1lUUzBMMmVLakctM3Mydjg5VlptRk5mdV9aWFptaWVZZUlBem03YzF5X1d5TmJTUmVvZEF0MEU2c2tteGVFQk4zUDB6T0MwTDBxSERERVRLeGJ1V1VuOE5PMkFoOFdCUF9xQTZkTFg4M201ZUFITzJDN0UtRWQzUHFwVThiOGpNXzVPRzN1eG5ZdHdCYUx1ZFFKLUFXRnl5VWxael9CdTNCMFRlTEk4akdmM2tIbmlrei1BWlFPakhaUTJacDRQTjY2UG8yVWd5cVhsTGpEc1hieC1tUEVDQ2VtVERRRkY0U0FDQWF4V05hRQ?oc=5",
+          "source": "The Economic Times",
+          "sourceUrl": "https://m.economictimes.com",
+          "date": "2026-11-15T15:30:22.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/4b7f95da9ae6714e.jpg",
+            "query": "stethoscope",
+            "creator": "401(K) 2013",
+            "creatorUrl": "https://www.flickr.com/photos/68751915@N05",
+            "license": "CC BY-SA 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+            "page": "https://www.flickr.com/photos/68751915@N05/6793819699",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/0ec9d4f0-ee00-435a-9f52-246890937f89/thumb/"
+          }
         },
         {
-          "title": "Pfizer files Litfulo for vitiligo in Japan",
-          "url": "https://pj.jiho.jp/article/256914",
-          "source": "Pharma Japan",
-          "sourceUrl": "https://pj.jiho.jp",
-          "date": "2026-11-13T12:00:00.000Z",
-          "summary": "Pfizer wants to add nonsegmental vitiligo to the drug's uses; it is already approved for alopecia areata."
+          "title": "BREAKING NEWS: 68.6% worried about Japan's fiscal health due to consumption tax cut",
+          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5aYWNNT1FidnV2MGZYczdrS2ZCREwwdFRONUJvT1VadDFtdWluNDd5QWJHV29jeWpuOHUxUUJ5UnlwajUydnVCV25oTm1JaDB4MHN2NkJHN09mQQ?oc=5",
+          "source": "Japan Wire by Kyodo News",
+          "sourceUrl": "https://english.kyodonews.net",
+          "date": "2026-11-15T07:47:00.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/d0911d978ea2270a.jpg",
+            "query": "stethoscope",
+            "creator": "jasleen_kaur",
+            "creatorUrl": "https://www.flickr.com/photos/25384802@N08",
+            "license": "CC BY-SA 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+            "page": "https://www.flickr.com/photos/25384802@N08/4952166117",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/cbf16fe3-b540-4dca-b3af-793c369156a4/thumb/"
+          }
         },
         {
-          "title": "Takeda launches narcolepsy drug Orzeyful in the US",
-          "url": "https://pj.jiho.jp/article/256915",
-          "source": "Pharma Japan",
-          "sourceUrl": "https://pj.jiho.jp",
-          "date": "2026-11-13T12:00:00.000Z",
-          "summary": "The US launch follows earlier rollouts in Japan and China."
+          "title": "U.S. loses measles elimination status as cases break records",
+          "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxNN1FKYjdIUkI2cEtyOHpqN1l0X3dobTNrdXg5TUF2UEtNWWdQQzg5T3BoMUVuTEx1Z2pGNzdxUEp6Z1VfMTl4aHdsZ1haZTB2aExoVHlRTU9PY1VYY3BjX2ZJTkRMMkUxMkItNTNCaDdkeWM3Wm13OEdRdjROTDc5RzdEcDB0ZGM0eHRlQ0J6MGN1OVR4elNrQjhyeWFoc0ZBTGUyOA?oc=5",
+          "source": "The Japan Times",
+          "sourceUrl": "https://www.japantimes.co.jp",
+          "date": "2026-11-14T23:54:00.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/a3001c73852a73d2.jpg",
+            "query": "stethoscope",
+            "creator": "medisave",
+            "creatorUrl": "https://www.flickr.com/photos/107621760@N03",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/107621760@N03/10668839543",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/9b9546b5-ba70-47ca-b728-671f59300a6c/thumb/"
+          }
         },
         {
-          "title": "Keytruda stays Japan's top seller as Mounjaro climbs to second",
-          "url": "https://pj.jiho.jp/article/256903",
-          "source": "Pharma Japan",
-          "sourceUrl": "https://pj.jiho.jp",
-          "date": "2026-11-13T12:00:00.000Z",
-          "summary": "IQVIA data for July to September show Mounjaro up from eighth place a year earlier."
+          "title": "Japan contributes US$ 1.97 million to strengthen the health response in the Gaza Strip",
+          "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxOOGdWMGVjUVhiYmZhdTdNQXhWb05TSUY1bVQySzlrWGZKQ3ZYU0tRTm1JcVRFZWZhM0pKRU14bHEwZm1NZ1hnMFRyUjc1NHBva1ZJak9PUVJEWkE1d28ybGgxSG5abGwzUWE2OHA1Z25raGJ4cUQwSHpxd3BGNFNPS2tIdXBqWmQ5eG1JQUtNUjBHbW1vaGFDOW9XNEdhNWZVaGx4d2xFal9tM253SEpPd3czTkhvUUdnZDM4bFJ0bjZ2Zw?oc=5",
+          "source": "World Health Organization (WHO)",
+          "sourceUrl": "https://www.emro.who.int",
+          "date": "2026-11-14T21:45:37.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/09550233f7d845d7.jpg",
+            "query": "stethoscope",
+            "creator": "medisave",
+            "creatorUrl": "https://www.flickr.com/photos/107621760@N03",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/107621760@N03/10668580195",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/85a44afa-8440-490c-817e-400aa7d0ab80/thumb/"
+          }
         },
         {
-          "title": "Keytruda SC leads Japan's latest round of 16 new drug listings",
-          "url": "https://pj.jiho.jp/article/256838",
-          "source": "Pharma Japan",
-          "sourceUrl": "https://pj.jiho.jp",
-          "date": "2026-11-13T12:00:00.000Z",
-          "summary": "Japan added 16 new drugs to its national price list on November 13, including a subcutaneous form of Keytruda."
+          "title": "Japan eyes ¥60 tril for 5-year defense buildup without major tax hike",
+          "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxQcmNjclpqSllVMmc3dmR6X05vNUNfUVVmakczUHBPaVk0eHFPeHhLaTFxblFIbmRKT3hqWlpsU3pXYTg3TTVvUXVtUExjcnJBZmY1TUlMOWdqbUl2QUVRc2hOamNrZHhQQnctWnBDQlJheU81MFd1WGl0ZjR2b3NCM2JJMm5Dd3V5Sy1jeFZqVWlKaDJJeWtzZFFRSkRzLWkxZnVrYW1NRlJRWmJoSFJQZ3lTOHpOYzBSbkwyTw?oc=5",
+          "source": "Japan Today",
+          "sourceUrl": "https://japantoday.com",
+          "date": "2026-11-14T11:13:00.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/d815708bf53cd348.jpg",
+            "query": "stethoscope",
+            "creator": "medisave",
+            "creatorUrl": "https://www.flickr.com/photos/107621760@N03",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/107621760@N03/10668618426",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/1302d929-dec7-41fc-8535-f8e914135ed5/thumb/"
+          }
         },
         {
-          "title": "Pharmacy group renews call to scrap off-year drug price revisions",
-          "url": "https://pj.jiho.jp/article/256922",
-          "source": "Pharma Japan",
-          "sourceUrl": "https://pj.jiho.jp",
-          "date": "2026-11-13T12:00:00.000Z",
-          "summary": "Japan's pharmacy association again urged the government to end the annual price cuts between regular revisions."
+          "title": "Japan to Subsidize Domestic Production of Immunoglobulin",
+          "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxNYkNObnhIcnNXU1RMUWlaRWNOcTBjVVc4RTJuZS1wZDROUGhhbzlFM1VQcHhTeS1GQ2NGdmR0QV9yZGxjVmFUZzdGWm5wbTNSeWJXNjZVaVBMVi04QkVfeWJudGtyUE5ydlo3LU03Umt4aDl5dnZuSEJNdS1FRFZrRm16aw?oc=5",
+          "source": "The Japan News",
+          "sourceUrl": "https://japannews.yomiuri.co.jp",
+          "date": "2026-11-14T05:49:00.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/0e4b855da9d39139.jpg",
+            "query": "stethoscope",
+            "creator": "medisave",
+            "creatorUrl": "https://www.flickr.com/photos/107621760@N03",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/107621760@N03/10668840843",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/fcc95d96-99ea-43e8-bec2-54e187c1970a/thumb/"
+          }
         },
         {
-          "title": "3D printers create realistic sushi for elderly patients",
-          "url": "https://japannews24.com/japan-73/",
-          "source": "JapanNews24",
-          "sourceUrl": "https://japannews24.com",
-          "date": "2026-11-12T12:00:00.000Z",
-          "summary": "Printed sushi aims to make meals easier and more appealing for older people who struggle to eat."
+          "title": "Japan Publishes Generic Drug Ratings for First Time, Withholds 83 Lowest-Rated Makers",
+          "url": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxOR3Q4RVBlU2ZmUk1Bc0xXSnNMSFVYYVpTOUFrdEFBb0FYcjhZb3pKNGhmT284VTNwV1JNaEJqMWdiaUNDbEJ3OTZLRmVCV0ZLWkp5UWtjajEtd3hMNVhSWnpvNTZfbGczMlBvTExTOEh1QUUtYk9rOFdlT1hKblpGZnUxWmxfZll3VFJBZGdqOXR1Yl9MazgzTTBENmx2UmZmWC03UlRwVGlVUndFTFB0LWkwV1dTUnNPcHlmSnF6bHR1UF8zLW5KYVZ0ZUtSVE5n?oc=5",
+          "source": "Tech Times",
+          "sourceUrl": "https://www.techtimes.com",
+          "date": "2026-11-13T17:49:35.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/85fa4c6c6efb585d.jpg",
+            "query": "medicine pills",
+            "creator": "Chemist 4 U",
+            "creatorUrl": "https://www.flickr.com/photos/170378439@N03",
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+            "page": "https://www.flickr.com/photos/170378439@N03/47486289321",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/0c2d210f-73e5-4cb1-b934-f3ac2def2438/thumb/"
+          }
         },
         {
-          "title": "Alzheimer's drug Kisunla's price to be cut 3.93%",
-          "url": "https://pj.jiho.jp/",
-          "source": "Pharma Japan",
-          "sourceUrl": "https://pj.jiho.jp",
-          "date": "2026-11-06T12:00:00.000Z",
-          "summary": "The cost-effectiveness review cut takes effect on February 1, 2027."
+          "title": "Deputy PM urges stronger Viet Nam–Kanagawa cooperation in preventative healthcare",
+          "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxOTXpYSlNBYUwzTTdRcERpSHRDODNpZGVnbFJXUzBrMG1EUVNlbi11RVd5LVVnNVdlbnBuVWd6dmtEMUlDWjhwbFJtTklMVF9YRDVoQ3pwUXdoZnZib3pJZ1gyMFNTYlhiZGtSR3BjZi04NWp4SUdOYUxLR29XQnVYZDQ1aEtwR0NDSTBrMG0wRUZLWTVlbFBuWFlhSDNnaTdDbUs2TFA2T0J6cnlwR29NLUg3VFg4Q2tOUUE?oc=5",
+          "source": "Nhan Dan Online",
+          "sourceUrl": "https://en.nhandan.vn",
+          "date": "2026-11-13T14:21:04.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/5540f3d892ed2b5a.jpg",
+            "query": "car assembly line",
+            "creator": "Aero7MY",
+            "creatorUrl": "https://www.flickr.com/photos/60373961@N04",
+            "license": "CC BY-SA 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+            "page": "https://www.flickr.com/photos/60373961@N04/15234195103",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/0c3e9d56-d94f-46c3-a555-2a616ff56974/thumb/"
+          }
         },
         {
-          "title": "Regeneron files multiple myeloma drug linvoseltamab in Japan",
-          "url": "https://pj.jiho.jp/",
-          "source": "Pharma Japan",
-          "sourceUrl": "https://pj.jiho.jp",
-          "date": "2026-11-06T12:00:00.000Z",
-          "summary": "The filing covers adults whose disease has returned after at least three earlier therapies."
+          "title": "Healthcare Built on Trust: Opening Japan’s Doors to the World",
+          "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxNVGZTWEktZUJDb2Y1NmNtUk8tVDFfUFJzZmlidnJiYlE0NzI3LTlNaG9lUERmUFk5amRLM2g3T1l5MFpWZi14U1hVLUZmUTJBdkt1ckR4UmxuRU9JWGVwNGx3djFuWDNuck5vS1BCb3FvaFA4aTVLWXRIaTlGZ25kWVVlOEM5TmlNVHJfMGxvMHI1Ql9kNzJmWlFuUEk4T0xYM1JzT0ZvWEsyVm8?oc=5",
+          "source": "Medical Tourism Magazine",
+          "sourceUrl": "https://www.magazine.medicaltourism.com",
+          "date": "2026-11-13T14:14:58.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/4cd0d52d9bf9b910.jpg",
+            "query": "car assembly line",
+            "creator": "Aero7MY",
+            "creatorUrl": "https://www.flickr.com/photos/60373961@N04",
+            "license": "CC BY-SA 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+            "page": "https://www.flickr.com/photos/60373961@N04/15480621239",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/cd98c165-6cf7-48cf-9a3c-fd4bc263dcad/thumb/"
+          }
         },
         {
-          "title": "Fuji Pharma recalls Eylea biosimilar lots over faulty finger grips",
-          "url": "https://pj.jiho.jp/",
-          "source": "Pharma Japan",
-          "sourceUrl": "https://pj.jiho.jp",
-          "date": "2026-11-06T12:00:00.000Z",
-          "summary": "The recall concerns a manufacturing problem with the product's finger grips."
+          "title": "MEJ Launches Japan International Healthcare, an Official Portal for International Patients Seeking Care in Japan",
+          "url": "https://news.google.com/rss/articles/CBMi_AFBVV95cUxOZllhVk9PNmN0UjdHVWhPQ3RjWWUweXU3UHZZVThOVURwYlRGT0VGc3pkVy1oemhxQVdqNEhnU04zY3IycWZrb3llWWozdzZCblZqZElzTnA0cGZjZnpDanFJbXp0czN2RnRZSWg1bnloRzZiM25fM3owZGEtdlV1NnFINGZ4YXZMSVVoeHBjQkN2UVg1VXd1VGNOdHpwUEEzRU1DT3Rua3I0ZkNPZW41ZzlxVHRNenhKeF8yVm90X2Uxblp4VUFGemtXSXJUYmdFMG4yMVBMV01UYmlSaTcyZ0ltaXJZeVE2S19aNFU0TWdXRXFCM0F1RE5aUDE?oc=5",
+          "source": "Business Wire",
+          "sourceUrl": "https://www.businesswire.com",
+          "date": "2026-11-13T14:00:00.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/f61bcc7da2a814f3.jpg",
+            "query": "car assembly line",
+            "creator": "Aero7MY",
+            "creatorUrl": "https://www.flickr.com/photos/60373961@N04",
+            "license": "CC BY-SA 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+            "page": "https://www.flickr.com/photos/60373961@N04/15046526154",
+            "provider": "flickr",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/d190d3e1-1bfb-4708-a6dc-b87ad7454b98/thumb/"
+          }
         }
       ]
     }
   ],
-  "lastRun": null
+  "lastRun": {
+    "at": "2026-11-15T22:03:29.361Z",
+    "ok": true,
+    "newStories": 60,
+    "message": "Found 60 new stories."
+  }
 }

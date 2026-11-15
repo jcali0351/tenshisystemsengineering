@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-15T22:01:53.077Z",
+  "updatedAt": "2026-11-15T22:04:32.548Z",
   "delayed": true,
   "quotes": [
     {
@@ -13,13 +13,23 @@
       "source": "Yahoo Finance"
     },
     {
+      "name": "TOPIX ETF",
+      "code": "1306",
+      "kind": "stock",
+      "price": 415.5,
+      "change": 13.4,
+      "pct": 3.33,
+      "time": "2026-11-13T06:30:00.000Z",
+      "source": "Yahoo Finance"
+    },
+    {
       "name": "USD/JPY",
       "code": null,
       "kind": "fx",
-      "price": 159.62,
-      "change": 1.32,
-      "pct": 0.84,
-      "time": "2026-11-15T21:53:00.000Z",
+      "price": 159.59,
+      "change": 1.3,
+      "pct": 0.82,
+      "time": "2026-11-15T22:04:03.000Z",
       "source": "Yahoo Finance"
     },
     {
