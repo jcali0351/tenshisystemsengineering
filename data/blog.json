@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-15T22:07:56.457Z",
+  "generatedAt": "2026-11-15T22:16:22.013Z",
   "posts": [
     {
       "id": "placeholder-10",
@@ -13,7 +13,19 @@
         "Next comes a single, obvious call to action, honest photos of your real work, plain-language service pages and a contact form that never asks for more than it needs."
       ],
       "placeholder": true,
-      "sources": []
+      "sources": [],
+      "image": {
+        "src": "img/stories/4b625bce2162dce7.jpg",
+        "query": "laptop desk workspace",
+        "creator": "energepic.com",
+        "creatorUrl": "https://stocksnap.io/author/31875",
+        "license": "CC0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "page": "https://stocksnap.io/photo/office-work-42H3JH8QI5",
+        "provider": "stocksnap",
+        "via": "Openverse",
+        "file": "https://api.openverse.org/v1/images/66dc98ae-ee48-4946-959f-e9ecbee09411/thumb/"
+      }
     },
     {
       "id": "placeholder-9",
@@ -27,7 +39,19 @@
         "The result is that adding a page takes minutes, not days, and nobody has to hunt through HTML to fix a typo."
       ],
       "placeholder": true,
-      "sources": []
+      "sources": [],
+      "image": {
+        "src": "img/stories/c48074c31a903ee9.jpg",
+        "query": "web design laptop",
+        "creator": "Unknown",
+        "creatorUrl": null,
+        "license": "CC0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "page": "https://www.rawpixel.com/image/5966952/macbook-css-code-web-design-desk",
+        "provider": "rawpixel",
+        "via": "Openverse",
+        "file": "https://api.openverse.org/v1/images/2a22061d-99eb-4ac1-9fdf-3420fb465851/thumb/"
+      }
     },
     {
       "id": "placeholder-8",
@@ -41,7 +65,19 @@
         "Keep API keys on a server, never in the browser, and review conversations regularly to see what visitors actually ask."
       ],
       "placeholder": true,
-      "sources": []
+      "sources": [],
+      "image": {
+        "src": "img/stories/cbd6c172436e674d.jpg",
+        "query": "server room",
+        "creator": "Unknown",
+        "creatorUrl": null,
+        "license": "CC0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "page": "https://www.rawpixel.com/image/6042704/photo-image-public-domain-free",
+        "provider": "rawpixel",
+        "via": "Openverse",
+        "file": "https://api.openverse.org/v1/images/c580cdaf-7228-4c08-92cf-1401c43a5d84/thumb/"
+      }
     },
     {
       "id": "placeholder-7",
@@ -55,7 +91,19 @@
         "Pair it with a simple editor and you still get easy updates, without the plugin treadmill."
       ],
       "placeholder": true,
-      "sources": []
+      "sources": [],
+      "image": {
+        "src": "img/stories/21fdcffe2a5bc00b.jpg",
+        "query": "web design laptop",
+        "creator": "André Karwath aka Aka",
+        "creatorUrl": null,
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+        "page": "https://commons.wikimedia.org/wiki/File:IBM_Thinkpad_R51.jpg",
+        "provider": "Wikimedia Commons",
+        "via": "Wikimedia Commons",
+        "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0e/IBM_Thinkpad_R51.jpg/960px-IBM_Thinkpad_R51.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      }
     },
     {
       "id": "placeholder-6",
@@ -69,7 +117,19 @@
         "Then pick two colors and one typeface, and use them everywhere for a year before you change anything."
       ],
       "placeholder": true,
-      "sources": []
+      "sources": [],
+      "image": {
+        "src": "img/stories/ab63ed5c0eab8b5d.jpg",
+        "query": "design studio desk",
+        "creator": "Burst",
+        "creatorUrl": "https://burst.shopify.com",
+        "license": "CC0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "page": "https://stocksnap.io/photo/paint-supplies-TCHBOFXNQ1",
+        "provider": "stocksnap",
+        "via": "Openverse",
+        "file": "https://api.openverse.org/v1/images/acacd593-029f-4d5c-96aa-331a819a8d68/thumb/"
+      }
     },
     {
       "id": "placeholder-5",
@@ -83,7 +143,19 @@
         "A progressive web app can sit in between, installable from the browser at a fraction of the cost."
       ],
       "placeholder": true,
-      "sources": []
+      "sources": [],
+      "image": {
+        "src": "img/stories/db484b9bcd4da965.jpg",
+        "query": "web design laptop",
+        "creator": "VIA Technologies",
+        "creatorUrl": null,
+        "license": "CC BY 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+        "page": "https://commons.wikimedia.org/wiki/File:VIA_OpenBook_CAD.jpg",
+        "provider": "Wikimedia Commons",
+        "via": "Wikimedia Commons",
+        "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e5/VIA_OpenBook_CAD.jpg/960px-VIA_OpenBook_CAD.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+      }
     },
     {
       "id": "placeholder-4",
@@ -97,7 +169,19 @@
         "And the food is better. We will not be taking questions on that."
       ],
       "placeholder": true,
-      "sources": []
+      "sources": [],
+      "image": {
+        "src": "img/stories/edda3044b202ab28.jpg",
+        "query": "programming code screen",
+        "creator": "Lorenzo Cafaro",
+        "creatorUrl": "https://stocksnap.io/author/38205",
+        "license": "CC0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "page": "https://stocksnap.io/photo/code-coding-TIV258VG3N",
+        "provider": "stocksnap",
+        "via": "Openverse",
+        "file": "https://api.openverse.org/v1/images/a4d252c0-c7ab-4400-9b78-7c4466f01c4e/thumb/"
+      }
     },
     {
       "id": "placeholder-3",
@@ -111,7 +195,19 @@
         "Batch-write in quiet weeks, schedule ahead, and reuse each post as a newsletter and a few social updates."
       ],
       "placeholder": true,
-      "sources": []
+      "sources": [],
+      "image": {
+        "src": "img/stories/1608d664b871ca69.jpg",
+        "query": "laptop desk workspace",
+        "creator": "Negative Space",
+        "creatorUrl": "https://stocksnap.io/author/4440",
+        "license": "CC0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "page": "https://stocksnap.io/photo/office-work-8P6GFHP0LU",
+        "provider": "stocksnap",
+        "via": "Openverse",
+        "file": "https://api.openverse.org/v1/images/4754c62f-38ec-42c9-870d-2f1b22d2930c/thumb/"
+      }
     },
     {
       "id": "placeholder-2",
@@ -125,7 +221,19 @@
         "Add alt text that says what an image shows, and never rely on color alone to carry meaning."
       ],
       "placeholder": true,
-      "sources": []
+      "sources": [],
+      "image": {
+        "src": "img/stories/458c4bba45ed1a27.jpg",
+        "query": "keyboard laptop",
+        "creator": "Erkan Utu",
+        "creatorUrl": "https://stocksnap.io/author/37665",
+        "license": "CC0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "page": "https://stocksnap.io/photo/keyboard-laptop-0URTT0POJV",
+        "provider": "stocksnap",
+        "via": "Openverse",
+        "file": "https://api.openverse.org/v1/images/050c44a3-305c-47b2-8303-584d18d89711/thumb/"
+      }
     },
     {
       "id": "placeholder-1",
@@ -139,11 +247,23 @@
         "If there is a topic you would like us to cover, the contact page is the quickest way to tell us."
       ],
       "placeholder": true,
-      "sources": []
+      "sources": [],
+      "image": {
+        "src": "img/stories/2c38544e55fedbf3.jpg",
+        "query": "laptop desk workspace",
+        "creator": "Ch%E2u%20Th%F4ng%20Phan",
+        "creatorUrl": "https://stocksnap.io/author/31913",
+        "license": "CC0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "page": "https://stocksnap.io/photo/office-work-I9INCIK831",
+        "provider": "stocksnap",
+        "via": "Openverse",
+        "file": "https://api.openverse.org/v1/images/49ccbf8f-de7b-45f4-802b-5dce908fd553/thumb/"
+      }
     }
   ],
   "lastRun": {
-    "at": "2026-11-15T22:07:56.457Z",
+    "at": "2026-11-15T22:16:22.013Z",
     "ok": false,
     "message": "The Blog Writer needs an ANTHROPIC_API_KEY secret on GitHub before it can write posts. Nothing was changed."
   }
