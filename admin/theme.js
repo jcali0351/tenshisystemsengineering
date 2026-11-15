@@ -12,7 +12,7 @@
     headingFont: "roboto", bodyFont: "lato", headingWeight: 900, bodyWeight: 400,
     rootSize: 18.4,                       // px: the base every rem size is measured from (whole-site text size)
     heroSize: 92, pageTitleSize: 74, sectionSize: 54, featureSize: 58, cardSize: 20,   // px at full width; phones scale down
-    h1Spacing: -0.045, h2Spacing: -0.035, h3Spacing: -0.02, h4Spacing: -0.01,          // em: negative is tighter
+    h1Spacing: -1, h2Spacing: -1, h3Spacing: -1, h4Spacing: -1, headingSpacingUnit: "px", // negative is tighter
     headingLine: 1.04, headingCase: "none",
     bodySpacing: 0, bodyLine: 1.65,
     headingColor: "#3d4249", textColor: "#5b616a", mutedColor: "#6e757e", accentColor: "#c8102e",
@@ -24,12 +24,15 @@
   function clean(s) {
     var o = {}, k;
     s = s || {};
+    // Themes saved before the unit choice existed were in em
+    if (s.headingSpacingUnit === undefined && s.h1Spacing !== undefined) s = Object.assign({}, s, { headingSpacingUnit: "em" });
     for (k in DEFAULTS) o[k] = s[k] === undefined || s[k] === null || s[k] === "" ? DEFAULTS[k] : s[k];
     ["headingWeight", "bodyWeight", "rootSize", "heroSize", "pageTitleSize", "sectionSize", "featureSize", "cardSize", "h1Spacing", "h2Spacing", "h3Spacing",
       "h4Spacing", "headingLine", "bodySpacing", "bodyLine", "motionSpeed", "motionDistance", "motionDistanceMobile", "charDelay", "colorDuration"].forEach(function (k) { o[k] = num(o[k], DEFAULTS[k]); });
     ["motion", "motionChars", "motionText", "motionImages", "motionCards", "motionColor"].forEach(function (k) { o[k] = o[k] === true || o[k] === "true" || o[k] === 1; });
     ["headingColor", "textColor", "mutedColor", "accentColor"].forEach(function (k) { if (!/^#[0-9a-f]{6}$/i.test(o[k])) o[k] = DEFAULTS[k]; });
     if (["none", "uppercase", "capitalize"].indexOf(o.headingCase) < 0) o.headingCase = "none";
+    if (o.headingSpacingUnit !== "em") o.headingSpacingUnit = "px";
     return o;
   }
 
@@ -83,10 +86,10 @@
     out += ":is(p,li,dd,blockquote,td)" + H + "{letter-spacing:" + s.bodySpacing + "em}\n";
     out += ":is(h1,h2,h3,h4,h5,h6)" + H + "{font-family:var(--font-heading)!important;font-weight:" + hw + "!important;color:var(--ink);text-transform:" + s.headingCase + "}\n";
     out += ":is(h1,h2)" + H + "{line-height:" + s.headingLine + "!important}\n";
-    out += "h1" + H + "{letter-spacing:" + s.h1Spacing + "em!important}\n";
-    out += "h2" + H + "{letter-spacing:" + s.h2Spacing + "em!important}\n";
-    out += "h3" + H + "{letter-spacing:" + s.h3Spacing + "em!important}\n";
-    out += ":is(h4,h5,h6)" + H + "{letter-spacing:" + s.h4Spacing + "em!important}\n";
+    out += "h1" + H + "{letter-spacing:" + s.h1Spacing + s.headingSpacingUnit + "!important}\n";
+    out += "h2" + H + "{letter-spacing:" + s.h2Spacing + s.headingSpacingUnit + "!important}\n";
+    out += "h3" + H + "{letter-spacing:" + s.h3Spacing + s.headingSpacingUnit + "!important}\n";
+    out += ":is(h4,h5,h6)" + H + "{letter-spacing:" + s.h4Spacing + s.headingSpacingUnit + "!important}\n";
     out += ".hero-card h1" + H + "{font-size:" + fluid(s.heroSize) + "!important}\n";
     out += ".svc-hero h1" + H + "{font-size:" + fluid(s.pageTitleSize) + "!important}\n";
     out += ":is(.section-title,.contact-intro h2,.prj-group-title)" + H + "{font-size:" + fluid(s.sectionSize) + "!important}\n";

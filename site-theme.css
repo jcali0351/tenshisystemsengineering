@@ -1,4 +1,4 @@
-/* tse-theme {"headingFont":"roboto","bodyFont":"lato","headingWeight":900,"bodyWeight":400,"rootSize":18.4,"heroSize":92,"pageTitleSize":74,"sectionSize":54,"featureSize":58,"cardSize":20,"h1Spacing":-0.045,"h2Spacing":-0.035,"h3Spacing":-0.02,"h4Spacing":-0.01,"headingLine":1.04,"headingCase":"none","bodySpacing":0,"bodyLine":1.65,"headingColor":"#3d4249","textColor":"#5b616a","mutedColor":"#6e757e","accentColor":"#c8102e","motion":true,"motionChars":true,"motionText":true,"motionImages":true,"motionCards":true,"motionColor":true,"colorDuration":1.8,"motionSpeed":1,"motionDistance":56,"motionDistanceMobile":26,"charDelay":26} */
+/* tse-theme {"headingFont":"roboto","bodyFont":"lato","headingWeight":900,"bodyWeight":400,"rootSize":18.4,"heroSize":92,"pageTitleSize":74,"sectionSize":54,"featureSize":58,"cardSize":20,"h1Spacing":-1,"h2Spacing":-1,"h3Spacing":-1,"h4Spacing":-1,"headingSpacingUnit":"px","headingLine":1.04,"headingCase":"none","bodySpacing":0,"bodyLine":1.65,"headingColor":"#3d4249","textColor":"#5b616a","mutedColor":"#6e757e","accentColor":"#c8102e","motion":true,"motionChars":true,"motionText":true,"motionImages":true,"motionCards":true,"motionColor":true,"colorDuration":1.8,"motionSpeed":1,"motionDistance":56,"motionDistanceMobile":26,"charDelay":26} */
 /* Site theme, set in the Tenshi Editor (admin.html › Design), which rewrites this file. Loaded after every other stylesheet.
    Fonts live in fonts/<name>/ (see fonts/fonts.json); free to use: SIL Open Font License, Apache 2.0 or the Ubuntu Font Licence (each folder has its LICENSE). */
 @font-face{font-family:"Roboto";font-style:italic;font-weight:300;font-display:swap;src:url("fonts/roboto/roboto-300-italic.woff2") format("woff2")}
@@ -24,10 +24,10 @@ body:not(#_){font-family:var(--font);font-weight:400;letter-spacing:0em;line-hei
 :is(p,li,dd,blockquote,td):not(#_){letter-spacing:0em}
 :is(h1,h2,h3,h4,h5,h6):not(#_){font-family:var(--font-heading)!important;font-weight:900!important;color:var(--ink);text-transform:none}
 :is(h1,h2):not(#_){line-height:1.04!important}
-h1:not(#_){letter-spacing:-0.045em!important}
-h2:not(#_){letter-spacing:-0.035em!important}
-h3:not(#_){letter-spacing:-0.02em!important}
-:is(h4,h5,h6):not(#_){letter-spacing:-0.01em!important}
+h1:not(#_){letter-spacing:-1px!important}
+h2:not(#_){letter-spacing:-1px!important}
+h3:not(#_){letter-spacing:-1px!important}
+:is(h4,h5,h6):not(#_){letter-spacing:-1px!important}
 .hero-card h1:not(#_){font-size:clamp(53.36px, 6.97vw, 92px)!important}
 .svc-hero h1:not(#_){font-size:clamp(42.92px, 5.61vw, 74px)!important}
 :is(.section-title,.contact-intro h2,.prj-group-title):not(#_){font-size:clamp(31.32px, 4.09vw, 54px)!important}

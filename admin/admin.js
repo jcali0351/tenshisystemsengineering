@@ -693,7 +693,7 @@
      site-theme.css (the settings ride along in its first line), and the site updates about a minute later. */
   var TH = window.TenshiTheme, dz = { fonts: null, saved: null, cur: null, ready: false };
   var DZ_UNITS = { rootSize: "px", heroSize: "px", pageTitleSize: "px", sectionSize: "px", featureSize: "px", cardSize: "px",
-    h1Spacing: "em", h2Spacing: "em", h3Spacing: "em", h4Spacing: "em", bodySpacing: "em", motionDistance: "px", motionDistanceMobile: "px", charDelay: "ms", motionSpeed: "×", colorDuration: "s" };
+    bodySpacing: "em", motionDistance: "px", motionDistanceMobile: "px", charDelay: "ms", motionSpeed: "×", colorDuration: "s" };
   function dzFontOptions() {
     var groups = { sans: "Sans serif", serif: "Serif", display: "Display", script: "Script", mono: "Monospace" };
     return Object.keys(groups).map(function (g) {
@@ -712,16 +712,23 @@
     sel.value = String(TH.nearest(f || { faces: [] }, dz.cur[sel.dataset.k]));
   }
   function dzShow() {
+    // Heading letter-spacing sliders follow the chosen unit
+    var px = dz.cur.headingSpacingUnit === "px";
+    ["h1Spacing", "h2Spacing", "h3Spacing", "h4Spacing"].forEach(function (k) {
+      var r = $('#dz-form [data-k="' + k + '"]');
+      r.min = px ? -8 : -0.12; r.max = px ? 8 : 0.15; r.step = px ? 0.1 : 0.005;
+    });
     $$("#dz-form [data-k]").forEach(function (el) {
       var k = el.dataset.k, v = dz.cur[k];
       if (el.type === "checkbox") el.checked = !!v;
       else if (!el.classList.contains("dz-weight")) el.value = v;
       var out = el.parentNode.querySelector("output");
-      if (out) out.textContent = el.type === "color" ? String(v).toUpperCase() : (k === "motionSpeed" ? "×" + v : v + (DZ_UNITS[k] || ""));
+      var unit = /^h\dSpacing$/.test(k) ? dz.cur.headingSpacingUnit : (DZ_UNITS[k] || "");
+      if (out) out.textContent = el.type === "color" ? String(v).toUpperCase() : (k === "motionSpeed" ? "×" + v : v + unit);
     });
     $$(".dz-weight").forEach(dzWeights);
     var hf = dzFamily(dz.cur.headingFont), bf = dzFamily(dz.cur.bodyFont);
-    $("#dz-sample-h").style.cssText = "font-family:" + (hf ? '"' + hf.name + '"' : "inherit") + ";font-weight:" + dz.cur.headingWeight + ";letter-spacing:" + dz.cur.h1Spacing + "em";
+    $("#dz-sample-h").style.cssText = "font-family:" + (hf ? '"' + hf.name + '"' : "inherit") + ";font-weight:" + dz.cur.headingWeight + ";letter-spacing:" + dz.cur.h1Spacing + dz.cur.headingSpacingUnit;
     $("#dz-sample-b").style.cssText = "font-family:" + (bf ? '"' + bf.name + '"' : "inherit") + ";font-weight:" + dz.cur.bodyWeight + ";letter-spacing:" + dz.cur.bodySpacing + "em;line-height:" + dz.cur.bodyLine;
     $$("#dz-form [data-k^=motion]:not([data-k=motion]), #dz-form [data-k=charDelay], #dz-form [data-k=colorDuration]").forEach(function (el) { el.disabled = !dz.cur.motion; });
     $("#dz-save").disabled = JSON.stringify(dz.cur) === JSON.stringify(dz.saved);
@@ -758,6 +765,9 @@
     var el = e.target, k = el.dataset && el.dataset.k;
     if (!k || !dz.ready) return;
     dz.cur[k] = el.type === "checkbox" ? el.checked : (el.type === "range" || el.classList.contains("dz-weight") ? parseFloat(el.value) : el.value);
+    if (k === "headingSpacingUnit") ["h1Spacing", "h2Spacing", "h3Spacing", "h4Spacing"].forEach(function (h) {
+      dz.cur[h] = el.value === "px" ? Math.round(dz.cur[h] * 16 * 10) / 10 : Math.round(dz.cur[h] / 16 * 1000) / 1000;
+    });
     if (k === "headingFont" || k === "bodyFont") { var w = $('.dz-weight[data-for="' + k + '"]'); dz.cur[w.dataset.k] = TH.nearest(dzFamily(dz.cur[k]) || { faces: [] }, dz.cur[w.dataset.k]); }
     dz.cur = TH.clean(dz.cur);
     dzShow(); dzLive();
