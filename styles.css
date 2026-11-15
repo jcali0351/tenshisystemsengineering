@@ -1872,3 +1872,10 @@ html:not([dir="rtl"]):not(:lang(ja)):not(:lang(zh)):not(:lang(ko)) .pitch-lead::
 @media (max-width: 760px) {
   .feature--left .feature-figure { float: none; margin: 0 0 28px; }
 }
+
+/* Hero: the frosted white panel runs the full width of the screen; its content stays in a centred column. */
+.hero-card {
+  width: calc(100% + 2 * var(--gutter)); max-width: none; margin-inline: calc(-1 * var(--gutter));
+  border-radius: 0; border-left: 0; border-right: 0;
+  padding-inline: max(var(--gutter), calc((100% - 736px) / 2));
+}

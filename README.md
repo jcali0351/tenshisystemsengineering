@@ -38,3 +38,20 @@ The consultation form opens the visitor's own email app with their message fille
 The site opens in Japanese; first-time visitors choose a language in a pop-up, and the choice is remembered.
 Add `?lang=` and a code (en, ja, ko, de, es, zh, ar, pl, pcm, fa) to an address to open it in that language.
 `tools/make-skylines.mjs` is the script that drew the earlier skyline, blueprint and machine drawings (no longer used).
+
+## Editing the site without code: the Tenshi Editor
+
+Open `admin.html` on the live site (https://jcali0351.github.io/tenshisystemsengineering/admin.html) and sign in with a
+GitHub fine-grained key (only this repository, Contents: read and write; the sign-in page explains how to make one).
+
+- **Pages**: the real page; click any text or picture to change it.
+- **All text**: every piece of text, searchable and filterable by page, in all ten languages.
+- **Images**: every picture; click one to replace it (resized and compressed in the browser).
+- **Save** commits the changes to `main`. When English text changes, desktop Chrome's built-in translator fills in the
+  other languages (Nigerian Pidgin, and any language Chrome can't do, gets the English to fix by hand). Text typed by
+  hand in another language is kept.
+- After a save, `.github/workflows/cms-rebuild.yml` runs `tools/build-pages.mjs` and `tools/stamp-assets.mjs` and commits
+  the rebuilt pages. The site updates about a minute later.
+
+Files: `admin.html`, `admin/admin.js`, `admin/admin.css`, and `admin/tr.js` (reads and edits `translations.js` one entry
+at a time, keeping its layout; also usable from Node).

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Tenshi Editor</title>
+  <link rel="icon" href="brand/tenshi-logo.png" type="image/png">
+  <link rel="stylesheet" href="admin/admin.css">
+</head>
+<body>
+  <header class="ed-bar">
+    <a class="ed-brand" href="./" target="_blank" rel="noopener"><img src="brand/tenshi-logo.png" alt="" width="32" height="31"> Tenshi Editor</a>
+    <div class="ed-who" hidden>
+      <span class="ed-user"></span>
+      <span class="ed-pending" id="ed-pending" hidden></span>
+      <button type="button" class="ed-btn ed-btn--ghost" id="ed-discard" hidden>Discard changes</button>
+      <button type="button" class="ed-btn" id="ed-save" disabled>Save</button>
+      <button type="button" class="ed-btn ed-btn--ghost" id="ed-signout">Sign out</button>
+    </div>
+  </header>
+
+  <!-- Sign in -->
+  <main id="ed-login" class="ed-login" hidden>
+    <section class="ed-card">
+      <h1>Sign in to edit the site</h1>
+      <p class="ed-hint">The site lives on GitHub, so a GitHub key is your login. Everything you save goes to the live site, which updates about a minute later.</p>
+      <form id="ed-login-form" autocomplete="off">
+        <label class="ed-field"><span>GitHub key</span>
+          <input type="password" id="ed-token" placeholder="github_pat_…" autocomplete="off" spellcheck="false" required></label>
+        <label class="ed-check"><input type="checkbox" id="ed-remember"> Keep me signed in on this device <small>(only on your own computer)</small></label>
+        <button class="ed-btn" type="submit">Sign in</button>
+        <p class="ed-msg" id="ed-login-msg" role="status"></p>
+      </form>
+      <details class="ed-help">
+        <summary>How do I get a GitHub key?</summary>
+        <ol>
+          <li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com › Settings › Fine-grained tokens › Generate new token</a>.</li>
+          <li>Name it <b>Tenshi Editor</b> and pick an expiry (90 days is a good balance).</li>
+          <li>Repository access: <b>Only select repositories</b> › <b>tenshisystemsengineering</b>.</li>
+          <li>Permissions › Repository permissions › <b>Contents</b>: <b>Read and write</b>. Nothing else is needed.</li>
+          <li>Generate the token, copy it and paste it above. GitHub shows it only once.</li>
+        </ol>
+        <p>The key stays in this browser. It's never saved in the website's files.</p>
+      </details>
+    </section>
+  </main>
+
+  <!-- The editor -->
+  <main id="ed-app" class="ed-app" hidden>
+    <nav class="ed-tabs" role="tablist" aria-label="Editor sections">
+      <button type="button" role="tab" data-tab="pages" aria-selected="true">Pages</button>
+      <button type="button" role="tab" data-tab="text" aria-selected="false">All text</button>
+      <button type="button" role="tab" data-tab="images" aria-selected="false">Images</button>
+    </nav>
+
+    <!-- Pages: the real page, click to edit -->
+    <section class="ed-panel" data-panel="pages">
+      <div class="ed-toolbar">
+        <label class="ed-inline"><span>Page</span> <select id="ed-page"></select></label>
+        <label class="ed-inline"><span>Show in</span> <select id="ed-page-lang"></select></label>
+        <p class="ed-tip">Click any text or picture on the page to change it. Links don't open while you edit.</p>
+      </div>
+      <div class="ed-frame-wrap"><iframe id="ed-frame" title="Page preview"></iframe></div>
+    </section>
+
+    <!-- All text -->
+    <section class="ed-panel" data-panel="text" hidden>
+      <div class="ed-toolbar">
+        <label class="ed-inline ed-grow"><span>Search</span> <input type="search" id="ed-search" placeholder="Words on the site or a text name"></label>
+        <label class="ed-inline"><span>Page</span> <select id="ed-text-page"></select></label>
+      </div>
+      <p class="ed-count" id="ed-text-count"></p>
+      <ul class="ed-textlist" id="ed-textlist"></ul>
+    </section>
+
+    <!-- Images -->
+    <section class="ed-panel" data-panel="images" hidden>
+      <div class="ed-toolbar">
+        <label class="ed-inline"><span>Folder</span> <select id="ed-img-folder"></select></label>
+        <p class="ed-tip">Click a picture to replace it. New pictures are resized and compressed in your browser before they're saved.</p>
+      </div>
+      <ul class="ed-imgs" id="ed-imgs"></ul>
+    </section>
+  </main>
+
+  <!-- Text editor drawer -->
+  <aside class="ed-drawer" id="ed-drawer" hidden aria-labelledby="ed-drawer-title">
+    <div class="ed-drawer-head">
+      <h2 id="ed-drawer-title">Edit text</h2>
+      <button type="button" class="ed-x" id="ed-drawer-close" aria-label="Close">×</button>
+    </div>
+    <div class="ed-drawer-body" id="ed-drawer-body"></div>
+  </aside>
+
+  <!-- Image dialog -->
+  <dialog class="ed-dialog" id="ed-imgdlg">
+    <form method="dialog">
+      <h2>Replace picture</h2>
+      <p class="ed-path" id="ed-imgdlg-path"></p>
+      <div class="ed-compare">
+        <figure><img id="ed-imgdlg-old" alt=""><figcaption>Now</figcaption></figure>
+        <figure><img id="ed-imgdlg-new" alt=""><figcaption>New</figcaption></figure>
+      </div>
+      <label class="ed-field"><span>Choose a picture</span><input type="file" id="ed-imgdlg-file" accept="image/*"></label>
+      <p class="ed-msg" id="ed-imgdlg-msg" role="status"></p>
+      <div class="ed-actions">
+        <button class="ed-btn ed-btn--ghost" value="cancel">Cancel</button>
+        <button class="ed-btn" value="ok" id="ed-imgdlg-ok" disabled>Use this picture</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="ed-toast" id="ed-toast" role="status" aria-live="polite"></div>
+
+  <script src="admin/tr.js"></script>
+  <script src="admin/admin.js"></script>
+</body>
+</html>
