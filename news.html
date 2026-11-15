@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>News from Japan | Tenshi Systems Engineering</title>
+  <meta name="description" content="Company updates and the stories shaping technology and business in Japan.">
+  <meta name="theme-color" content="#c8102e">
+  <meta property="og:title" content="News from Japan | Tenshi Systems Engineering">
+  <meta property="og:description" content="Company updates and the stories shaping technology and business in Japan.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="brand/tenshi-logo.png" type="image/png">
+  <link rel="alternate icon" href="brand/tenshi-apple-touch-icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="brand/tenshi-apple-touch-icon.png">
+  <link rel="stylesheet" href="tailwind.css?v=7e0d162a">
+  <link rel="stylesheet" href="styles.css?v=846c6e53">
+  <link rel="stylesheet" href="design.css?v=cd4394f3">
+  <link rel="stylesheet" href="chat.css?v=8097383f">
+</head>
+<body class="page news-page" data-title-key="newsTitle" data-desc-key="newsLead">
+  <!-- Written by tools/build-pages.mjs: edit translations.js and the script, not this file. -->
+  <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html" aria-label="Tenshi Systems Engineering, top of page" data-i18n-attr="aria-label:brandLabel">
+        <span class="logo-dazzle logo-dazzle--brand"><img class="brand-logo" src="brand/tenshi-logo.png" alt="" width="225" height="217"></span>
+        <span class="brand-text">
+          <span class="brand-en">Tenshi Systems Engineering</span>
+          <span class="brand-ja" lang="ja">天使システムズエンジニアリング</span>
+        </span>
+      </a>
+      <nav class="main-nav" aria-label="Main menu" data-i18n-attr="aria-label:navLabel">
+        <ul>
+          <li><a href="index.html" data-nav="home" data-i18n="navHome">Home</a></li>
+          <li><a href="about.html" data-nav="about" data-i18n="navAbout">About</a></li>
+          <li><a href="team.html" data-nav="team" data-i18n="navTeam">Team</a></li>
+          <li><a href="services.html" data-nav="services" data-i18n="navServices">Services</a></li>
+          <li><a href="technology.html" data-nav="technology" data-i18n="navTech">Technology</a></li>
+          <li class="has-sub"><a href="projects.html" data-nav="projects" data-i18n="navProjects">Projects</a>
+            <ul class="sub-nav">
+              <li><a href="projects/storycaster.html" data-nav="p-storycaster">StoryCaster</a></li>
+              <li><a href="projects/master-baiter-pro.html" data-nav="p-master-baiter-pro">Master Baiter Pro</a></li>
+            </ul>
+          </li>
+          <li><a href="news.html" aria-current="page" data-nav="news" data-i18n="navNews">News</a></li>
+          <li><a href="blog.html" data-nav="blog" data-i18n="navBlog">Blog</a></li>
+          <li><a href="contact.html" data-nav="contact" data-i18n="navContact">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="lang-picker">
+        <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+          <symbol id="flag-en" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect y="0" width="30" height="1.54" fill="#b22234"/><rect y="3.08" width="30" height="1.54" fill="#b22234"/><rect y="6.15" width="30" height="1.54" fill="#b22234"/><rect y="9.23" width="30" height="1.54" fill="#b22234"/><rect y="12.31" width="30" height="1.54" fill="#b22234"/><rect y="15.38" width="30" height="1.54" fill="#b22234"/><rect y="18.46" width="30" height="1.54" fill="#b22234"/><rect width="12" height="10.77" fill="#3c3b6e"/><circle cx="1" cy="1" r=".45" fill="#fff"/><circle cx="3" cy="1" r=".45" fill="#fff"/><circle cx="5" cy="1" r=".45" fill="#fff"/><circle cx="7" cy="1" r=".45" fill="#fff"/><circle cx="9" cy="1" r=".45" fill="#fff"/><circle cx="11" cy="1" r=".45" fill="#fff"/><circle cx="2" cy="3.15" r=".45" fill="#fff"/><circle cx="4" cy="3.15" r=".45" fill="#fff"/><circle cx="6" cy="3.15" r=".45" fill="#fff"/><circle cx="8" cy="3.15" r=".45" fill="#fff"/><circle cx="10" cy="3.15" r=".45" fill="#fff"/><circle cx="1" cy="5.3" r=".45" fill="#fff"/><circle cx="3" cy="5.3" r=".45" fill="#fff"/><circle cx="5" cy="5.3" r=".45" fill="#fff"/><circle cx="7" cy="5.3" r=".45" fill="#fff"/><circle cx="9" cy="5.3" r=".45" fill="#fff"/><circle cx="11" cy="5.3" r=".45" fill="#fff"/><circle cx="2" cy="7.45" r=".45" fill="#fff"/><circle cx="4" cy="7.45" r=".45" fill="#fff"/><circle cx="6" cy="7.45" r=".45" fill="#fff"/><circle cx="8" cy="7.45" r=".45" fill="#fff"/><circle cx="10" cy="7.45" r=".45" fill="#fff"/><circle cx="1" cy="9.6" r=".45" fill="#fff"/><circle cx="3" cy="9.6" r=".45" fill="#fff"/><circle cx="5" cy="9.6" r=".45" fill="#fff"/><circle cx="7" cy="9.6" r=".45" fill="#fff"/><circle cx="9" cy="9.6" r=".45" fill="#fff"/><circle cx="11" cy="9.6" r=".45" fill="#fff"/></symbol>
+          <symbol id="flag-ja" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><circle cx="15" cy="10" r="6" fill="#bc002d"/></symbol>
+          <symbol id="flag-ko" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><g transform="rotate(33.69 15 10)"><circle cx="15" cy="10" r="5" fill="#cd2e3a"/><path d="M10 10a5 5 0 0 0 10 0a2.5 2.5 0 0 0-5 0a2.5 2.5 0 0 1-5 0z" fill="#0047a0"/></g><g transform="rotate(-56.31 6.7 4.5)" fill="#000"><rect x="4.7" y="2.95" width="4" height=".75"/><rect x="4.7" y="4.05" width="4" height=".75"/><rect x="4.7" y="5.15" width="4" height=".75"/></g><g transform="rotate(-56.31 23.3 15.5)" fill="#000"><rect x="21.3" y="13.95" width="1.7" height=".75"/><rect x="23.6" y="13.95" width="1.7" height=".75"/><rect x="21.3" y="15.05" width="1.7" height=".75"/><rect x="23.6" y="15.05" width="1.7" height=".75"/><rect x="21.3" y="16.15" width="1.7" height=".75"/><rect x="23.6" y="16.15" width="1.7" height=".75"/></g><g transform="rotate(56.31 23.3 4.5)" fill="#000"><rect x="21.3" y="2.95" width="1.7" height=".75"/><rect x="23.6" y="2.95" width="1.7" height=".75"/><rect x="21.3" y="4.05" width="4" height=".75"/><rect x="21.3" y="5.15" width="1.7" height=".75"/><rect x="23.6" y="5.15" width="1.7" height=".75"/></g><g transform="rotate(56.31 6.7 15.5)" fill="#000"><rect x="4.7" y="13.95" width="4" height=".75"/><rect x="4.7" y="15.05" width="1.7" height=".75"/><rect x="7" y="15.05" width="1.7" height=".75"/><rect x="4.7" y="16.15" width="4" height=".75"/></g></symbol>
+          <symbol id="flag-de" viewBox="0 0 30 20"><rect width="30" height="6.67" fill="#000"/><rect y="6.67" width="30" height="6.67" fill="#dd0000"/><rect y="13.33" width="30" height="6.67" fill="#ffce00"/></symbol>
+          <symbol id="flag-zh" viewBox="0 0 30 20"><rect width="30" height="20" fill="#ee1c25"/><polygon points="5,2 5.67,4.07 7.85,4.07 6.09,5.35 6.76,7.43 5,6.15 3.24,7.43 3.91,5.35 2.15,4.07 4.33,4.07" fill="#ffde00"/><polygon points="10.39,1.08 10.33,1.8 11,2.09 10.29,2.25 10.22,2.97 9.85,2.35 9.14,2.52 9.62,1.97 9.25,1.34 9.91,1.63" fill="#ffde00"/><polygon points="12.72,3.31 12.38,3.95 12.88,4.47 12.17,4.34 11.83,4.98 11.73,4.27 11.01,4.14 11.66,3.82 11.56,3.1 12.07,3.62" fill="#ffde00"/><polygon points="12.94,6.66 12.37,7.11 12.62,7.79 12.01,7.38 11.44,7.83 11.64,7.13 11.04,6.72 11.76,6.7 11.97,6 12.21,6.68" fill="#ffde00"/><polygon points="10.36,8.07 10.32,8.79 11,9.05 10.3,9.24 10.26,9.97 9.86,9.36 9.16,9.54 9.62,8.98 9.22,8.37 9.9,8.63" fill="#ffde00"/></symbol>
+          <symbol id="flag-es" viewBox="0 0 30 20"><rect width="30" height="20" fill="#aa151b"/><rect y="5" width="30" height="10" fill="#f1bf00"/></symbol>
+          <symbol id="flag-pl" viewBox="0 0 30 20"><rect width="30" height="10" fill="#fff"/><rect y="10" width="30" height="10" fill="#dc143c"/></symbol>
+          <symbol id="flag-pcm" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect width="10" height="20" fill="#008751"/><rect x="20" width="10" height="20" fill="#008751"/></symbol>
+          <symbol id="flag-ar" viewBox="0 0 30 20"><rect width="30" height="20" fill="#1a7a4c"/><text x="15" y="15" text-anchor="middle" font-size="14" font-weight="700" fill="#fff" font-family="Segoe UI, Tahoma, Arial, sans-serif">ع</text></symbol>
+          <symbol id="flag-fa" viewBox="0 0 30 20"><rect width="30" height="6.67" fill="#239f40"/><rect y="6.67" width="30" height="6.67" fill="#fff"/><rect y="13.33" width="30" height="6.67" fill="#da0000"/></symbol>
+        </svg>
+        <button type="button" class="lang-current" aria-haspopup="true" aria-expanded="false" aria-controls="lang-menu" aria-label="Choose language" data-i18n-attr="aria-label:langMenu">
+          <svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-en"/></svg><span class="lang-code">EN</span><svg class="lang-caret" viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+        </button>
+        <ul class="lang-menu" id="lang-menu" hidden>
+            <li><button type="button" data-lang="en" lang="en" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-en"/></svg><span>English</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="ja" lang="ja" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-ja"/></svg><span>日本語</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="ko" lang="ko" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-ko"/></svg><span>한국어</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="de" lang="de" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-de"/></svg><span>Deutsch</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="zh" lang="zh" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-zh"/></svg><span>中文</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="es" lang="es" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-es"/></svg><span>Español</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="pl" lang="pl" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-pl"/></svg><span>Polski</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="pcm" lang="pcm" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-pcm"/></svg><span>Naijá (Pidgin)</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="ar" lang="ar" dir="rtl" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-ar"/></svg><span>العربية</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="fa" lang="fa" dir="rtl" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-fa"/></svg><span>فارسی</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="svc-hero has-art">
+      <div class="svc-hero-inner">
+        <div class="svc-hero-text">
+          <nav class="crumbs" aria-label="Breadcrumb" data-i18n-attr="aria-label:crumbLabel">
+            <ol>
+              <li><a href="index.html" data-i18n="crumbHome">Home</a></li>
+              <li aria-current="page" data-i18n="navNews">News</li>
+            </ol>
+          </nav>
+          <h1 data-i18n="newsTitle">News from Japan</h1>
+          <p class="svc-hero-lead" data-i18n="newsLead">Company updates and the stories shaping technology and business in Japan.</p>
+        </div>
+        <svg class="page-art" viewBox="0 0 320 220" aria-hidden="true" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="64" y="46" width="160" height="128" rx="10" stroke-opacity=".85" stroke-width="2.5"/><path d="M224 74h20a10 10 0 0 1 10 10v74a16 16 0 0 1-32 0" stroke-opacity=".55" stroke-width="2.5"/>
+      <rect x="84" y="66" width="56" height="44" rx="5" fill="#fff" fill-opacity=".9" stroke="none"/>
+      <path d="M156 70h48M156 86h48M156 102h34M84 128h120M84 146h96" stroke-opacity=".6" stroke-width="2.5"/>
+      <path d="M262 38a30 30 0 0 1 22 22M262 22a46 46 0 0 1 38 38" stroke-opacity=".35" stroke-width="1.5"/>
+    </svg>
+      </div>
+    </section>
+
+    <section class="page-section news-updates" aria-labelledby="updates-title">
+      <div class="page-inner narrow">
+        <h2 id="updates-title" class="section-title" data-i18n="newsUpdatesTitle">Company updates</h2>
+        <div class="news-copy">
+          <p data-i18n="newsP1">This is placeholder text for company news. Soon this space will carry announcements from our Osaka studio: new projects we have launched, services we have added and the people who have joined the team.</p>
+          <p data-i18n="newsP2">Until then, think of this as a notice board waiting for its first pins. Each update will be short and to the point, with links to the work it talks about, so you can see what changed and why it matters.</p>
+          <p data-i18n="newsP3">Below the updates you will find ten recent stories from Japan's technology and business news, picked because they touch the work we do every day: chips, robotics, manufacturing and the digital economy.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section tinted news-stories" aria-labelledby="stories-title">
+      <div class="page-inner">
+        <h2 id="stories-title" class="section-title" data-i18n="newsHeadTitle">Latest from Japan</h2>
+        <p class="news-head-text" data-i18n="newsHeadText">Ten recent stories from Japan's technology and business news, with a link to each original report.</p>
+        <ol class="news-list">
+          <li class="news-item is-lead">
+            <p class="news-meta"><span class="news-topic">Semiconductors</span> <time datetime="2026-11-15">Nov 15, 2026</time></p>
+            <h3><a href="https://www.digitimes.com/news/a20261112VL210/hoya-euv-photomask-samsung-2027.html" target="_blank" rel="noopener">Hoya reportedly can't cover all of Samsung's 2027 EUV mask blank order<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+            <p class="news-text">The Tokyo optics maker is said to have told Samsung it will struggle to supply the extra extreme-ultraviolet mask blanks the chipmaker wants for 2027, a sign of how tight Japan's chip-material supply has become.</p>
+            <p class="news-source">DigiTimes Asia · <a href="https://www.digitimes.com/news/a20261112VL210/hoya-euv-photomask-samsung-2027.html" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span data-i18n="newsReadMore">Read the full story</span> ↗</a></p>
+          </li>
+          <li class="news-item">
+            <p class="news-meta"><span class="news-topic">Manufacturing</span> <time datetime="2026-11-12">Nov 12, 2026</time></p>
+            <h3><a href="https://www.digitimes.com/news/a20261112PD232/sharp-plant-nitto-denko-lcd-business.html" target="_blank" rel="noopener">Sharp sells its Mie LCD color filter plant to Nitto Denko for ¥22.2 billion<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+            <p class="news-text">Sharp is offloading its Hisai plant in Tsu, Mie Prefecture, as it moves faster to fix its loss-making display components business.</p>
+            <p class="news-source">DigiTimes Asia · <a href="https://www.digitimes.com/news/a20261112PD232/sharp-plant-nitto-denko-lcd-business.html" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span data-i18n="newsReadMore">Read the full story</span> ↗</a></p>
+          </li>
+          <li class="news-item">
+            <p class="news-meta"><span class="news-topic">AI hardware</span> <time datetime="2026-11-12">Nov 12, 2026</time></p>
+            <h3><a href="https://www.digitimes.com/news/a20261111PD248/mitsui-kinzoku-copper-foil-malaysia-plant-capacity-equipment.html" target="_blank" rel="noopener">Mitsui Kinzoku puts ¥190 billion into a new copper foil plant in Malaysia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+            <p class="news-text">The materials maker will build roughly US$1.2 billion of new capacity next to its existing Malaysian site, aimed at the ultrathin foil used in optical communications gear for AI data centers.</p>
+            <p class="news-source">DigiTimes Asia · <a href="https://www.digitimes.com/news/a20261111PD248/mitsui-kinzoku-copper-foil-malaysia-plant-capacity-equipment.html" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span data-i18n="newsReadMore">Read the full story</span> ↗</a></p>
+          </li>
+          <li class="news-item">
+            <p class="news-meta"><span class="news-topic">AI &amp; investment</span> <time datetime="2026-11-12">Nov 12, 2026</time></p>
+            <h3><a href="https://www.digitimes.com/news/a20261111PD245/equipment-loss-2026-market.html" target="_blank" rel="noopener">SoftBank books a ¥768 billion AI-related hit and rethinks its equipment plans<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+            <p class="news-text">SoftBank is reconsidering its strategy for AI equipment after taking a loss of about ¥768 billion tied to its artificial intelligence bets.</p>
+            <p class="news-source">DigiTimes Asia · <a href="https://www.digitimes.com/news/a20261111PD245/equipment-loss-2026-market.html" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span data-i18n="newsReadMore">Read the full story</span> ↗</a></p>
+          </li>
+          <li class="news-item">
+            <p class="news-meta"><span class="news-topic">Automotive</span> <time datetime="2026-11-12">Nov 12, 2026</time></p>
+            <h3><a href="https://www.digitimes.com/news/a20261111PD271/toyota-vehicle-usa-sales-2027.html" target="_blank" rel="noopener">Toyota will build and sell Japanese light-duty trucks in the United States<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+            <p class="news-text">Toyota plans to assemble its Japanese light-duty trucks in the US, with American sales due to start in the second half of 2027.</p>
+            <p class="news-source">DigiTimes Asia · <a href="https://www.digitimes.com/news/a20261111PD271/toyota-vehicle-usa-sales-2027.html" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span data-i18n="newsReadMore">Read the full story</span> ↗</a></p>
+          </li>
+          <li class="news-item">
+            <p class="news-meta"><span class="news-topic">Semiconductors</span> <time datetime="2026-11-11">Nov 11, 2026</time></p>
+            <h3><a href="https://www.digitimes.com/news/a20261111VL204/rapidus-2nm-production-manufacturing-development.html" target="_blank" rel="noopener">Rapidus reportedly behind schedule on 2nm chip production<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+            <p class="news-text">Japan's state-backed chipmaker faces technical hurdles that could push back its target of mass-producing 2-nanometer chips by March 2028, raising questions about the country's chip ambitions.</p>
+            <p class="news-source">DigiTimes Asia · <a href="https://www.digitimes.com/news/a20261111VL204/rapidus-2nm-production-manufacturing-development.html" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span data-i18n="newsReadMore">Read the full story</span> ↗</a></p>
+          </li>
+          <li class="news-item">
+            <p class="news-meta"><span class="news-topic">Semiconductors</span> <time datetime="2026-11-10">Nov 10, 2026</time></p>
+            <h3><a href="https://www.digitimes.com/news/a20261110VL201/mitsui-chemicals-jsr-acquisition-materials-business-growth.html" target="_blank" rel="noopener">Mitsui Chemicals to buy JSR in a deal worth about US$11.6 billion<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+            <p class="news-text">Including assumed debt, the ¥1.84 trillion acquisition of the photoresist maker would give Mitsui Chemicals a much larger stake in semiconductor materials.</p>
+            <p class="news-source">DigiTimes Asia · <a href="https://www.digitimes.com/news/a20261110VL201/mitsui-chemicals-jsr-acquisition-materials-business-growth.html" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span data-i18n="newsReadMore">Read the full story</span> ↗</a></p>
+          </li>
+          <li class="news-item">
+            <p class="news-meta"><span class="news-topic">Semiconductors</span> <time datetime="2026-11-10">Nov 10, 2026</time></p>
+            <h3><a href="https://www.digitimes.com/news/a20261109PD245/rapidus-taiwan-ibm-plant-production.html" target="_blank" rel="noopener">Rapidus plans three more Hokkaido plants, modeled on Taiwan's chip clusters<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+            <p class="news-text">Rapidus says it will use Taiwan as its model for building a semiconductor industry cluster around its Hokkaido base, with IBM Japan also setting up there.</p>
+            <p class="news-source">DigiTimes Asia · <a href="https://www.digitimes.com/news/a20261109PD245/rapidus-taiwan-ibm-plant-production.html" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span data-i18n="newsReadMore">Read the full story</span> ↗</a></p>
+          </li>
+          <li class="news-item">
+            <p class="news-meta"><span class="news-topic">Robotics</span> <time datetime="2026-11-09">Nov 9, 2026</time></p>
+            <h3><a href="https://www.digitimes.com/news/a20261109PD201/toyota-data-manufacturing-growth-worldwide.html" target="_blank" rel="noopener">Toyota launches Toyota Robotics, built on its factory data<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+            <p class="news-text">Toyota Motor has set up a dedicated robotics division, joining global rivals in robotics development and drawing on data from its own manufacturing sites.</p>
+            <p class="news-source">DigiTimes Asia · <a href="https://www.digitimes.com/news/a20261109PD201/toyota-data-manufacturing-growth-worldwide.html" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span data-i18n="newsReadMore">Read the full story</span> ↗</a></p>
+          </li>
+          <li class="news-item">
+            <p class="news-meta"><span class="news-topic">Osaka</span> <time datetime="2026-11-05">Nov 5, 2026</time></p>
+            <h3><a href="https://www.mynewsdesk.com/osaka-prefecture/latest_news" target="_blank" rel="noopener">Osaka heads to Singapore FinTech Festival 2026 in search of global partners<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+            <p class="news-text">Osaka Prefecture and Osaka City will exhibit in Singapore from November 18 to 20, together with two Osaka companies chosen through an open call.</p>
+            <p class="news-source">Osaka Prefecture · <a href="https://www.mynewsdesk.com/osaka-prefecture/latest_news" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span data-i18n="newsReadMore">Read the full story</span> ↗</a></p>
+          </li>
+        </ol>
+        <p class="news-note" data-i18n="newsSourceNote">Summaries are our own; each story belongs to its original publisher.</p>
+      </div>
+    </section>
+
+    <section class="svc-cta" aria-labelledby="cta-title">
+      <h2 id="cta-title" data-i18n="ctaTitle">Let's talk about your project</h2>
+      <p data-i18n="ctaText">Tell us what you need. The consultation form takes about a minute.</p>
+      <a class="btn btn-light" href="contact.html" data-i18n="cta">Request Consultation</a>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img class="footer-logo" src="brand/tenshi-logo.png" alt="" width="225" height="217">
+        <div>
+          <strong>Tenshi Systems Engineering</strong>
+          <span lang="ja">天使システムズエンジニアリング</span>
+        </div>
+      </div>
+      <nav class="footer-nav" aria-label="Main menu" data-i18n-attr="aria-label:navLabel">
+          <ul>
+            <li><a href="index.html" data-nav="home" data-i18n="navHome">Home</a></li>
+            <li><a href="about.html" data-nav="about" data-i18n="navAbout">About</a></li>
+            <li><a href="team.html" data-nav="team" data-i18n="navTeam">Team</a></li>
+            <li><a href="services.html" data-nav="services" data-i18n="navServices">Services</a></li>
+            <li><a href="technology.html" data-nav="technology" data-i18n="navTech">Technology</a></li>
+            <li><a href="projects.html" data-nav="projects" data-i18n="navProjects">Projects</a></li>
+            <li><a href="news.html" aria-current="page" data-nav="news" data-i18n="navNews">News</a></li>
+            <li><a href="blog.html" data-nav="blog" data-i18n="navBlog">Blog</a></li>
+            <li><a href="contact.html" data-nav="contact" data-i18n="navContact">Contact</a></li>
+          </ul>
+      </nav>
+      <p class="footer-meta"><span data-i18n="location">Osaka, Japan</span> · © <span id="year">2026</span> Tenshi Systems Engineering</p>
+    </div>
+  </footer>
+
+  <script src="translations.js?v=0f9e9041"></script>
+  <script src="app.js?v=45c6c601"></script>
+  <script src="design.js?v=11100b2c"></script>
+  <script src="chat.js?v=e6aee4be"></script>
+</body>
+</html>

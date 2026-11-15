@@ -1,6 +1,6 @@
 // Builds every generated part of the site from translations.js and the homepage's header and footer:
 //   - index.html: the nine service cards, the form's topic list, the current menu item
-//   - about.html, services.html, contact.html
+//   - about.html, services.html, contact.html, news.html, blog.html
 //   - services/<slug>.html, one full page per service
 // All wording lives in translations.js. The header and footer are copied from index.html, so change them there.
 // Run from the repository folder after changing text, services, the header or the footer, then stamp the versions:
@@ -84,6 +84,19 @@ const ART = {
       <path d="M232 52h58v40h-34l-14 12V92h-10z" fill="#fff" fill-opacity=".9" stroke="none"/><path d="M246 66h30M246 78h20" stroke="#c8102e" stroke-width="3"/>
       <path d="M30 150c20-30 30-60 70-80" stroke-opacity=".35" stroke-width="1.5" stroke-dasharray="4 7"/>
     </svg>`,
+  // A folded newspaper with a signal going out.
+  news: `<svg class="page-art" viewBox="0 0 320 220" aria-hidden="true" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="64" y="46" width="160" height="128" rx="10" stroke-opacity=".85" stroke-width="2.5"/><path d="M224 74h20a10 10 0 0 1 10 10v74a16 16 0 0 1-32 0" stroke-opacity=".55" stroke-width="2.5"/>
+      <rect x="84" y="66" width="56" height="44" rx="5" fill="#fff" fill-opacity=".9" stroke="none"/>
+      <path d="M156 70h48M156 86h48M156 102h34M84 128h120M84 146h96" stroke-opacity=".6" stroke-width="2.5"/>
+      <path d="M262 38a30 30 0 0 1 22 22M262 22a46 46 0 0 1 38 38" stroke-opacity=".35" stroke-width="1.5"/>
+    </svg>`,
+  // An open notebook and a pen.
+  blog: `<svg class="page-art" viewBox="0 0 320 220" aria-hidden="true" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M50 54c30-10 70-10 100 8v120c-30-18-70-18-100-8z" stroke-opacity=".85" stroke-width="2.5"/><path d="M250 54c-30-10-70-10-100 8v120c30-18 70-18 100-8z" stroke-opacity=".85" stroke-width="2.5"/>
+      <path d="M70 84c20-5 42-4 62 4M70 108c20-5 42-4 62 4M70 132c20-5 42-4 62 4M168 88c20-8 42-9 62-4M168 112c20-8 42-9 62-4" stroke-opacity=".45" stroke-width="2"/>
+      <path d="M256 168 292 70l14 6-36 98-16 10z" fill="#fff" fill-opacity=".9" stroke="none"/>
+    </svg>`,
 };
 
 /* ---------- homepage: cards in three sets, the form's topic list, the current menu item ---------- */
@@ -144,7 +157,7 @@ function chrome(html, prefix, current) {
   return markCurrent(html, current)
     .replace('href="#top"', `href="${prefix}index.html"`)
     .replace(/src="(brand\/[\w.-]+)"/g, `src="${prefix}$1"`)
-    .replace(/href="((?:index|about|services|contact|team|technology|projects)\.html|projects\/[a-z-]+\.html)"/g, `href="${prefix}$1"`);
+    .replace(/href="((?:index|about|services|contact|team|technology|projects|news|blog)\.html|projects\/[a-z-]+\.html)"/g, `href="${prefix}$1"`);
 }
 
 function frame({ prefix, current, titleKey, descKey, bodyClass, main, photoCredits = "" }) {
@@ -948,6 +961,138 @@ ${others.map((o) => projCard(o, "../")).join("\n")}
 ${cta("../contact.html")}`,
   });
 }
+/* ---------- News: company updates (placeholder text in translations.js) and ten stories from Japan ----------
+   The stories are summaries in our own words with a link to each original report. To refresh them, change this list
+   (newest first) and run the build. */
+const NEWS = [
+  { date: "2026-11-15", source: "DigiTimes Asia", topic: "Semiconductors", url: "https://www.digitimes.com/news/a20261112VL210/hoya-euv-photomask-samsung-2027.html",
+    title: "Hoya reportedly can't cover all of Samsung's 2027 EUV mask blank order",
+    text: "The Tokyo optics maker is said to have told Samsung it will struggle to supply the extra extreme-ultraviolet mask blanks the chipmaker wants for 2027, a sign of how tight Japan's chip-material supply has become." },
+  { date: "2026-11-12", source: "DigiTimes Asia", topic: "Manufacturing", url: "https://www.digitimes.com/news/a20261112PD232/sharp-plant-nitto-denko-lcd-business.html",
+    title: "Sharp sells its Mie LCD color filter plant to Nitto Denko for ¥22.2 billion",
+    text: "Sharp is offloading its Hisai plant in Tsu, Mie Prefecture, as it moves faster to fix its loss-making display components business." },
+  { date: "2026-11-12", source: "DigiTimes Asia", topic: "AI hardware", url: "https://www.digitimes.com/news/a20261111PD248/mitsui-kinzoku-copper-foil-malaysia-plant-capacity-equipment.html",
+    title: "Mitsui Kinzoku puts ¥190 billion into a new copper foil plant in Malaysia",
+    text: "The materials maker will build roughly US$1.2 billion of new capacity next to its existing Malaysian site, aimed at the ultrathin foil used in optical communications gear for AI data centers." },
+  { date: "2026-11-12", source: "DigiTimes Asia", topic: "AI & investment", url: "https://www.digitimes.com/news/a20261111PD245/equipment-loss-2026-market.html",
+    title: "SoftBank books a ¥768 billion AI-related hit and rethinks its equipment plans",
+    text: "SoftBank is reconsidering its strategy for AI equipment after taking a loss of about ¥768 billion tied to its artificial intelligence bets." },
+  { date: "2026-11-12", source: "DigiTimes Asia", topic: "Automotive", url: "https://www.digitimes.com/news/a20261111PD271/toyota-vehicle-usa-sales-2027.html",
+    title: "Toyota will build and sell Japanese light-duty trucks in the United States",
+    text: "Toyota plans to assemble its Japanese light-duty trucks in the US, with American sales due to start in the second half of 2027." },
+  { date: "2026-11-11", source: "DigiTimes Asia", topic: "Semiconductors", url: "https://www.digitimes.com/news/a20261111VL204/rapidus-2nm-production-manufacturing-development.html",
+    title: "Rapidus reportedly behind schedule on 2nm chip production",
+    text: "Japan's state-backed chipmaker faces technical hurdles that could push back its target of mass-producing 2-nanometer chips by March 2028, raising questions about the country's chip ambitions." },
+  { date: "2026-11-10", source: "DigiTimes Asia", topic: "Semiconductors", url: "https://www.digitimes.com/news/a20261110VL201/mitsui-chemicals-jsr-acquisition-materials-business-growth.html",
+    title: "Mitsui Chemicals to buy JSR in a deal worth about US$11.6 billion",
+    text: "Including assumed debt, the ¥1.84 trillion acquisition of the photoresist maker would give Mitsui Chemicals a much larger stake in semiconductor materials." },
+  { date: "2026-11-10", source: "DigiTimes Asia", topic: "Semiconductors", url: "https://www.digitimes.com/news/a20261109PD245/rapidus-taiwan-ibm-plant-production.html",
+    title: "Rapidus plans three more Hokkaido plants, modeled on Taiwan's chip clusters",
+    text: "Rapidus says it will use Taiwan as its model for building a semiconductor industry cluster around its Hokkaido base, with IBM Japan also setting up there." },
+  { date: "2026-11-09", source: "DigiTimes Asia", topic: "Robotics", url: "https://www.digitimes.com/news/a20261109PD201/toyota-data-manufacturing-growth-worldwide.html",
+    title: "Toyota launches Toyota Robotics, built on its factory data",
+    text: "Toyota Motor has set up a dedicated robotics division, joining global rivals in robotics development and drawing on data from its own manufacturing sites." },
+  { date: "2026-11-05", source: "Osaka Prefecture", topic: "Osaka", url: "https://www.mynewsdesk.com/osaka-prefecture/latest_news",
+    title: "Osaka heads to Singapore FinTech Festival 2026 in search of global partners",
+    text: "Osaka Prefecture and Osaka City will exhibit in Singapore from November 18 to 20, together with two Osaka companies chosen through an open call." },
+];
+const fmtDate = (d) => new Date(d + "T12:00:00Z").toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
+
+const newsPage = frame({
+  prefix: "", current: "news", titleKey: "newsTitle", descKey: "newsLead", bodyClass: "page news-page",
+  main: `${banner("", [{ key: "navNews" }], "newsTitle", "newsLead", ART.news)}
+
+    <section class="page-section news-updates" aria-labelledby="updates-title">
+      <div class="page-inner narrow">
+        <h2 id="updates-title" class="section-title" data-i18n="newsUpdatesTitle">${tx("newsUpdatesTitle")}</h2>
+        <div class="news-copy">
+          ${t("p", "newsP1")}
+          ${t("p", "newsP2")}
+          ${t("p", "newsP3")}
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section tinted news-stories" aria-labelledby="stories-title">
+      <div class="page-inner">
+        <h2 id="stories-title" class="section-title" data-i18n="newsHeadTitle">${tx("newsHeadTitle")}</h2>
+        ${t("p", "newsHeadText", 'class="news-head-text"')}
+        <ol class="news-list">
+${NEWS.map((n, i) => `          <li class="news-item${i === 0 ? " is-lead" : ""}">
+            <p class="news-meta"><span class="news-topic">${esc(n.topic)}</span> <time datetime="${n.date}">${fmtDate(n.date)}</time></p>
+            <h3><a href="${n.url}" target="_blank" rel="noopener">${esc(n.title)}<span class="sr-only"> <span data-i18n="techNewTab">${tx("techNewTab")}</span></span></a></h3>
+            <p class="news-text">${esc(n.text)}</p>
+            <p class="news-source">${esc(n.source)} · <a href="${n.url}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span data-i18n="newsReadMore">${tx("newsReadMore")}</span> ↗</a></p>
+          </li>`).join("\n")}
+        </ol>
+        ${t("p", "newsSourceNote", 'class="news-note"')}
+      </div>
+    </section>
+
+${cta("contact.html")}`,
+});
+writeFileSync("news.html", newsPage);
+
+/* ---------- Blog: ten placeholder posts (English only for now), newest first ---------- */
+const BLOG = [
+  { date: "2026-11-13", cat: "Web design", min: 4, title: "Five things every small business site needs in 2027",
+    intro: "A fast homepage, a clear way to get in touch and pages that read well on a phone still matter more than any trend. Here is the short list we start every project with.",
+    body: ["Placeholder text: start with speed. A page that loads in under two seconds keeps visitors around long enough to read what you offer.", "Next comes a single, obvious call to action, honest photos of your real work, plain-language service pages and a contact form that never asks for more than it needs."] },
+  { date: "2026-11-06", cat: "Engineering", min: 6, title: "How we keep a ten-language website in sync",
+    intro: "Every word on our own site lives in one file, in ten languages. This is how we stop a menu item in Polish from drifting out of step with the English one.",
+    body: ["Placeholder text: one source of truth for wording, a build step that writes every page from it, and a check that fails when any language is missing a key.", "The result is that adding a page takes minutes, not days, and nobody has to hunt through HTML to fix a typo."] },
+  { date: "2026-10-30", cat: "AI", min: 5, title: "Putting an AI assistant on your website without the risk",
+    intro: "A chat assistant can answer the same ten questions your team hears every day. Done carelessly, it can also make things up. Here is where we draw the lines.",
+    body: ["Placeholder text: keep the assistant's answers grounded in your own pages, give it a polite way to say it doesn't know, and always offer a route to a real person.", "Keep API keys on a server, never in the browser, and review conversations regularly to see what visitors actually ask."] },
+  { date: "2026-10-23", cat: "Hosting", min: 3, title: "Static sites are back, and they are fast",
+    intro: "Not every website needs a database. For brochure sites and portfolios, plain files on a global network are cheaper, safer and quicker.",
+    body: ["Placeholder text: with no server code to attack, a static site removes a whole category of security worries.", "Pair it with a simple editor and you still get easy updates, without the plugin treadmill."] },
+  { date: "2026-10-16", cat: "Branding", min: 4, title: "What a logo can't do on its own",
+    intro: "A logo is a signature, not a brand. The colors, words and habits around it are what people actually remember.",
+    body: ["Placeholder text: decide how you sound before you decide how you look. A short list of words you would and wouldn't use goes a long way.", "Then pick two colors and one typeface, and use them everywhere for a year before you change anything."] },
+  { date: "2026-10-09", cat: "Software", min: 7, title: "Choosing between an app and a website",
+    intro: "Clients often ask for an app when a well-built website would serve them better. Here are the questions we ask before writing a line of code.",
+    body: ["Placeholder text: does it need the camera, offline use or push notifications? Will people open it every week? If not, a mobile-friendly website is usually the answer.", "A progressive web app can sit in between, installable from the browser at a fraction of the cost."] },
+  { date: "2026-10-02", cat: "Osaka", min: 3, title: "Why we build in Osaka",
+    intro: "Tokyo gets the headlines, but Osaka's mix of manufacturers, shops and startups makes it a great place to build practical software.",
+    body: ["Placeholder text: our clients make things, sell things and fix things. Working close to them keeps our ideas grounded.", "And the food is better. We will not be taking questions on that."] },
+  { date: "2026-09-25", cat: "Content", min: 5, title: "A content calendar you will actually keep",
+    intro: "Most business blogs die after three posts. A small, realistic plan beats an ambitious one you abandon.",
+    body: ["Placeholder text: one post a month, written from questions customers already ask, is enough to show you are active and knowledgeable.", "Batch-write in quiet weeks, schedule ahead, and reuse each post as a newsletter and a few social updates."] },
+  { date: "2026-09-18", cat: "Accessibility", min: 6, title: "Accessibility is just good design",
+    intro: "Clear contrast, real buttons and text that resizes properly help everyone, not only people who use screen readers.",
+    body: ["Placeholder text: test with your keyboard alone. If you can't reach and use every part of the page, neither can many of your visitors.", "Add alt text that says what an image shows, and never rely on color alone to carry meaning."] },
+  { date: "2026-09-11", cat: "Studio", min: 2, title: "Hello from Tenshi Systems Engineering",
+    intro: "Welcome to our blog. We will use it to share how we work, what we are learning and the projects we are proud of.",
+    body: ["Placeholder text: expect practical notes rather than buzzwords, written by the people doing the work.", "If there is a topic you would like us to cover, the contact page is the quickest way to tell us."] },
+];
+
+const blogPage = frame({
+  prefix: "", current: "blog", titleKey: "blogTitle", descKey: "blogLead", bodyClass: "page blog-page",
+  main: `${banner("", [{ key: "navBlog" }], "blogTitle", "blogLead", ART.blog)}
+
+    <section class="page-section blog-section" aria-labelledby="posts-title">
+      <div class="page-inner">
+        <h2 id="posts-title" class="section-title" data-i18n="blogPostsTitle">${tx("blogPostsTitle")}</h2>
+        ${t("p", "blogFiller", 'class="blog-note"')}
+        <div class="blog-grid">
+${BLOG.map((b, i) => `          <article class="blog-card${i === 0 ? " is-feature" : ""}" id="post-${BLOG.length - i}" aria-labelledby="post-${BLOG.length - i}-title">
+            <p class="blog-meta"><span class="blog-cat">${esc(b.cat)}</span> <time datetime="${b.date}">${fmtDate(b.date)}</time> · ${b.min} <span data-i18n="blogMin">${tx("blogMin")}</span></p>
+            <h3 id="post-${BLOG.length - i}-title">${esc(b.title)}</h3>
+            <p class="blog-intro">${esc(b.intro)}</p>
+            <details class="blog-more">
+              <summary><span class="blog-open" data-i18n="blogReadMore">${tx("blogReadMore")}</span><span class="blog-close" data-i18n="blogShowLess">${tx("blogShowLess")}</span></summary>
+${b.body.map((p) => `              <p>${esc(p)}</p>`).join("\n")}
+            </details>
+          </article>`).join("\n")}
+        </div>
+      </div>
+    </section>
+
+${cta("contact.html")}`,
+});
+writeFileSync("blog.html", blogPage);
+
 mkdirSync("projects", { recursive: true });
 for (const p of PROJECTS) writeFileSync(`projects/${p.slug}.html`, projectPage(p));
-console.log(`index.html updated; about.html, team.html, services.html, technology.html, projects.html, contact.html, ${SERVICES.length} service pages and ${PROJECTS.length} project pages written`);
+console.log(`index.html updated; about.html, team.html, services.html, technology.html, projects.html, contact.html, ${SERVICES.length} service pages and ${PROJECTS.length} project pages written; news.html and blog.html written`);
