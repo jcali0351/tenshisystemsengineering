@@ -1,5 +1,5 @@
 // The address the consultation form writes to. Change it here if the company email changes.
-const CONTACT_EMAIL = "jcali0351@gmail.com";
+const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
 
 // Used by the homepage and the service pages; each part below only runs if its section is on the page.
 (function () {
