@@ -1,0 +1,146 @@
+{
+  "generatedAt": null,
+  "posts": [
+    {
+      "id": "placeholder-10",
+      "date": "2026-11-13",
+      "cat": "Web design",
+      "min": 4,
+      "title": "Five things every small business site needs in 2027",
+      "intro": "A fast homepage, a clear way to get in touch and pages that read well on a phone still matter more than any trend. Here is the short list we start every project with.",
+      "body": [
+        "Placeholder text: start with speed. A page that loads in under two seconds keeps visitors around long enough to read what you offer.",
+        "Next comes a single, obvious call to action, honest photos of your real work, plain-language service pages and a contact form that never asks for more than it needs."
+      ],
+      "placeholder": true,
+      "sources": []
+    },
+    {
+      "id": "placeholder-9",
+      "date": "2026-11-06",
+      "cat": "Engineering",
+      "min": 6,
+      "title": "How we keep a ten-language website in sync",
+      "intro": "Every word on our own site lives in one file, in ten languages. This is how we stop a menu item in Polish from drifting out of step with the English one.",
+      "body": [
+        "Placeholder text: one source of truth for wording, a build step that writes every page from it, and a check that fails when any language is missing a key.",
+        "The result is that adding a page takes minutes, not days, and nobody has to hunt through HTML to fix a typo."
+      ],
+      "placeholder": true,
+      "sources": []
+    },
+    {
+      "id": "placeholder-8",
+      "date": "2026-10-30",
+      "cat": "AI",
+      "min": 5,
+      "title": "Putting an AI assistant on your website without the risk",
+      "intro": "A chat assistant can answer the same ten questions your team hears every day. Done carelessly, it can also make things up. Here is where we draw the lines.",
+      "body": [
+        "Placeholder text: keep the assistant's answers grounded in your own pages, give it a polite way to say it doesn't know, and always offer a route to a real person.",
+        "Keep API keys on a server, never in the browser, and review conversations regularly to see what visitors actually ask."
+      ],
+      "placeholder": true,
+      "sources": []
+    },
+    {
+      "id": "placeholder-7",
+      "date": "2026-10-23",
+      "cat": "Hosting",
+      "min": 3,
+      "title": "Static sites are back, and they are fast",
+      "intro": "Not every website needs a database. For brochure sites and portfolios, plain files on a global network are cheaper, safer and quicker.",
+      "body": [
+        "Placeholder text: with no server code to attack, a static site removes a whole category of security worries.",
+        "Pair it with a simple editor and you still get easy updates, without the plugin treadmill."
+      ],
+      "placeholder": true,
+      "sources": []
+    },
+    {
+      "id": "placeholder-6",
+      "date": "2026-10-16",
+      "cat": "Branding",
+      "min": 4,
+      "title": "What a logo can't do on its own",
+      "intro": "A logo is a signature, not a brand. The colors, words and habits around it are what people actually remember.",
+      "body": [
+        "Placeholder text: decide how you sound before you decide how you look. A short list of words you would and wouldn't use goes a long way.",
+        "Then pick two colors and one typeface, and use them everywhere for a year before you change anything."
+      ],
+      "placeholder": true,
+      "sources": []
+    },
+    {
+      "id": "placeholder-5",
+      "date": "2026-10-09",
+      "cat": "Software",
+      "min": 7,
+      "title": "Choosing between an app and a website",
+      "intro": "Clients often ask for an app when a well-built website would serve them better. Here are the questions we ask before writing a line of code.",
+      "body": [
+        "Placeholder text: does it need the camera, offline use or push notifications? Will people open it every week? If not, a mobile-friendly website is usually the answer.",
+        "A progressive web app can sit in between, installable from the browser at a fraction of the cost."
+      ],
+      "placeholder": true,
+      "sources": []
+    },
+    {
+      "id": "placeholder-4",
+      "date": "2026-10-02",
+      "cat": "Osaka",
+      "min": 3,
+      "title": "Why we build in Osaka",
+      "intro": "Tokyo gets the headlines, but Osaka's mix of manufacturers, shops and startups makes it a great place to build practical software.",
+      "body": [
+        "Placeholder text: our clients make things, sell things and fix things. Working close to them keeps our ideas grounded.",
+        "And the food is better. We will not be taking questions on that."
+      ],
+      "placeholder": true,
+      "sources": []
+    },
+    {
+      "id": "placeholder-3",
+      "date": "2026-09-25",
+      "cat": "Content",
+      "min": 5,
+      "title": "A content calendar you will actually keep",
+      "intro": "Most business blogs die after three posts. A small, realistic plan beats an ambitious one you abandon.",
+      "body": [
+        "Placeholder text: one post a month, written from questions customers already ask, is enough to show you are active and knowledgeable.",
+        "Batch-write in quiet weeks, schedule ahead, and reuse each post as a newsletter and a few social updates."
+      ],
+      "placeholder": true,
+      "sources": []
+    },
+    {
+      "id": "placeholder-2",
+      "date": "2026-09-18",
+      "cat": "Accessibility",
+      "min": 6,
+      "title": "Accessibility is just good design",
+      "intro": "Clear contrast, real buttons and text that resizes properly help everyone, not only people who use screen readers.",
+      "body": [
+        "Placeholder text: test with your keyboard alone. If you can't reach and use every part of the page, neither can many of your visitors.",
+        "Add alt text that says what an image shows, and never rely on color alone to carry meaning."
+      ],
+      "placeholder": true,
+      "sources": []
+    },
+    {
+      "id": "placeholder-1",
+      "date": "2026-09-11",
+      "cat": "Studio",
+      "min": 2,
+      "title": "Hello from Tenshi Systems Engineering",
+      "intro": "Welcome to our blog. We will use it to share how we work, what we are learning and the projects we are proud of.",
+      "body": [
+        "Placeholder text: expect practical notes rather than buzzwords, written by the people doing the work.",
+        "If there is a topic you would like us to cover, the contact page is the quickest way to tell us."
+      ],
+      "placeholder": true,
+      "sources": []
+    }
+  ],
+  "lastRun": null
+}

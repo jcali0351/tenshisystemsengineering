@@ -236,6 +236,7 @@
     if (name === "pages" && !$("#ed-frame").getAttribute("src")) loadFrame();
     if (name === "text") renderText();
     if (name === "images") renderImages();
+    if (name === "bots") loadBots();
   }
 
   /* ================================================================== PAGES (click to edit) */
@@ -598,4 +599,91 @@
   }
   if (token) signIn().catch(function (e) { clearToken(); token = ""; showLogin(e.message); });
   else showLogin();
+
+  /* ================================================================== CONTENT BOTS
+     Each button saves a small request file (data/scrape-request.json or data/blog-request.json). Saving it starts
+     the matching GitHub job (.github/workflows/news-scraper.yml or blog-writer.yml), which gathers the content,
+     finds feature images, rebuilds the pages and commits. This page then watches data/news.json or data/blog.json
+     until the job has written its result. The editor key needs no extra permissions for this. */
+  var BOTS = {
+    news: { data: "data/news.json", request: "data/scrape-request.json", name: "Tenshi Scraper", label: "Run Tenshi Scraper" },
+    blog: { data: "data/blog.json", request: "data/blog-request.json", name: "Tenshi Blog Writer", label: "Run Tenshi Blog Writer" }
+  };
+  var botWatch = {};
+  function readLive(path) {
+    return gh(R + "/contents/" + path + "?ref=" + BRANCH).then(function (f) {
+      if (f.content) return JSON.parse(b64ToText(f.content.replace(/\s/g, "")));
+      return gh(R + "/git/blobs/" + f.sha).then(function (b) { return JSON.parse(b64ToText(b.content.replace(/\s/g, ""))); });
+    }).catch(function (e) { if (e.status === 404) return null; throw e; });
+  }
+  function when(iso) {
+    if (!iso) return "never";
+    var d = new Date(iso);
+    return isNaN(d) ? "never" : d.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
+  }
+  function stat(label, value) { return "<div><dt>" + esc(label) + "</dt><dd>" + value + "</dd></div>"; }
+  function renderBot(kind, d) {
+    if (kind === "news") {
+      var cats = (d && d.categories) || [], total = 0, photos = 0;
+      cats.forEach(function (c) { c.items.forEach(function (s) { total++; if (s.image && !s.image.generated && s.image.src) photos++; }); });
+      $("#bot-news-stats").innerHTML = stat("Last updated", esc(when(d && d.generatedAt))) +
+        stat("Stories", total + " in " + cats.length + " categories") +
+        stat("Feature images", photos + " free photos, " + (total - photos) + " Tenshi covers") +
+        (d && d.lastRun ? stat("Last run", (d.lastRun.ok ? "✓ " : "⚠ ") + esc(d.lastRun.message)) : "");
+      $("#bot-news-list").innerHTML = cats.map(function (c) {
+        var s = c.items[0];
+        return s ? "<li><b>" + esc(c.id.charAt(0).toUpperCase() + c.id.slice(1)) + ":</b> " + esc(s.title) + ' <span class="ed-src">— ' + esc(s.source) + "</span></li>" : "";
+      }).join("");
+    } else {
+      var posts = (d && d.posts) || [], real = posts.filter(function (p) { return !p.placeholder; });
+      $("#bot-blog-stats").innerHTML = stat("Last run", d && d.lastRun ? (d.lastRun.ok ? "✓ " : "⚠ ") + esc(when(d.lastRun.at)) + ": " + esc(d.lastRun.message) : "never") +
+        stat("Posts", real.length + " written by the bot" + (posts.length > real.length ? ", " + (posts.length - real.length) + " placeholders" : ""));
+      $("#bot-blog-list").innerHTML = posts.slice(0, 6).map(function (p) {
+        return "<li>" + esc(p.title) + ' <span class="ed-src">— ' + (p.placeholder ? "placeholder" : esc(when(p.date)) + ", " + (p.sources || []).length + " sources") + "</span></li>";
+      }).join("");
+    }
+  }
+  function loadBots() {
+    ["news", "blog"].forEach(function (kind) {
+      if (botWatch[kind]) return;
+      readLive(BOTS[kind].data).then(function (d) { renderBot(kind, d); })
+        .catch(function (e) { $("#bot-" + kind + "-msg").textContent = e.message; });
+    });
+  }
+  function runBot(kind) {
+    var bot = BOTS[kind], btn = $("#bot-" + kind + "-run"), msg = $("#bot-" + kind + "-msg");
+    var asked = new Date().toISOString();
+    var req = { requestedAt: asked, by: ($(".ed-user").textContent || "").trim() || "Tenshi Editor" };
+    if (kind === "blog") req.posts = parseInt($("#bot-blog-count").value, 10) || 3;
+    busy(btn, true, "Starting…");
+    msg.className = "ed-msg";
+    var reset = function () { btn.classList.remove("busy"); btn.textContent = bot.label; };
+    commit([{ path: bot.request, text: JSON.stringify(req, null, 2) + "\n" }], bot.name + ": run requested").then(function () {
+      msg.textContent = bot.name + " is running on GitHub. It usually takes 1 to 4 minutes; you can keep editing meanwhile.";
+      btn.textContent = "Running…";
+      var started = Date.now();
+      botWatch[kind] = setInterval(function () {
+        readLive(bot.data).then(function (d) {
+          var done = d && ((d.lastRun && d.lastRun.at > asked) || (kind === "news" && d.generatedAt > asked));
+          if (done) {
+            clearInterval(botWatch[kind]); botWatch[kind] = null;
+            renderBot(kind, d); reset();
+            var ok = !d.lastRun || d.lastRun.ok;
+            msg.className = "ed-msg " + (ok ? "ok" : "err");
+            msg.textContent = (d.lastRun ? d.lastRun.message + " " : "") + (ok ? "The live site shows it about a minute from now." : "");
+            toast(bot.name + (ok ? " finished." : " finished with a note."), !ok);
+          } else if (Date.now() - started > 12 * 60 * 1000) {
+            clearInterval(botWatch[kind]); botWatch[kind] = null; reset();
+            msg.className = "ed-msg err";
+            msg.textContent = "No result after 12 minutes. Open “See runs on GitHub” to check what happened.";
+          }
+        }).catch(function () { /* try again on the next tick */ });
+      }, 15000);
+    }).catch(function (e) {
+      reset();
+      msg.className = "ed-msg err"; msg.textContent = e.message;
+    });
+  }
+  $("#bot-news-run").addEventListener("click", function () { runBot("news"); });
+  $("#bot-blog-run").addEventListener("click", function () { runBot("blog"); });
 })();

@@ -52,6 +52,7 @@
       <button type="button" role="tab" data-tab="pages" aria-selected="true">Pages</button>
       <button type="button" role="tab" data-tab="text" aria-selected="false">All text</button>
       <button type="button" role="tab" data-tab="images" aria-selected="false">Images</button>
+      <button type="button" role="tab" data-tab="bots" aria-selected="false">Content bots</button>
     </nav>
 
     <!-- Pages: the real page, click to edit -->
@@ -81,6 +82,35 @@
         <p class="ed-tip">Click a picture to replace it. New pictures are resized and compressed in your browser before they're saved.</p>
       </div>
       <ul class="ed-imgs" id="ed-imgs"></ul>
+    </section>
+    <!-- Content bots -->
+    <section class="ed-panel" data-panel="bots" hidden>
+      <div class="ed-bots">
+        <article class="ed-bot" aria-labelledby="bot-news-title">
+          <h2 id="bot-news-title">Tenshi Scraper <span class="ed-bot-tag">News</span></h2>
+          <p class="ed-tip">Searches public news feeds for the latest stories from Japan and keeps 10 for each News category: Technology, Business, Stock Exchange, Weather, Sports and Health. Every story shows its publisher and links to the original. Each gets a free-to-use feature photo with its credit (or a Tenshi cover if none fits), and the stock ticker is refreshed too.</p>
+          <dl class="ed-bot-stats" id="bot-news-stats"><div><dt>Status</dt><dd>Loading…</dd></div></dl>
+          <div class="ed-actions ed-actions--left">
+            <button type="button" class="ed-btn" id="bot-news-run">Run Tenshi Scraper</button>
+            <a class="ed-link" href="https://github.com/jcali0351/tenshisystemsengineering/actions/workflows/news-scraper.yml" target="_blank" rel="noopener">See runs on GitHub</a>
+          </div>
+          <p class="ed-msg" id="bot-news-msg" role="status"></p>
+          <ul class="ed-bot-list" id="bot-news-list"></ul>
+        </article>
+        <article class="ed-bot" aria-labelledby="bot-blog-title">
+          <h2 id="bot-blog-title">Tenshi Blog Writer <span class="ed-bot-tag">Blog</span></h2>
+          <p class="ed-tip">Reads the week's news about web design, software, AI and technology in Japan, then writes new posts in Tenshi's voice, in its own words. Each post lists and links the reports it used, says it was written with AI help, and gets a free-to-use feature photo with its credit. The first run also removes the placeholder posts.</p>
+          <p class="ed-note">Needs an Anthropic API key saved on GitHub as the secret <code>ANTHROPIC_API_KEY</code> (<a href="https://github.com/jcali0351/tenshisystemsengineering/settings/secrets/actions/new" target="_blank" rel="noopener">add it here</a>). With the key, the Scraper also writes a one-line summary for each story.</p>
+          <dl class="ed-bot-stats" id="bot-blog-stats"><div><dt>Status</dt><dd>Loading…</dd></div></dl>
+          <div class="ed-actions ed-actions--left">
+            <label class="ed-inline"><span>Posts</span> <select id="bot-blog-count"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select></label>
+            <button type="button" class="ed-btn" id="bot-blog-run">Run Tenshi Blog Writer</button>
+            <a class="ed-link" href="https://github.com/jcali0351/tenshisystemsengineering/actions/workflows/blog-writer.yml" target="_blank" rel="noopener">See runs on GitHub</a>
+          </div>
+          <p class="ed-msg" id="bot-blog-msg" role="status"></p>
+          <ul class="ed-bot-list" id="bot-blog-list"></ul>
+        </article>
+      </div>
     </section>
   </main>
 

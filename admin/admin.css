@@ -120,3 +120,19 @@ select { width: auto; }
   .ed-compare { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) { .ed-toast { transition: none; } }
+
+/* content bots (Tenshi Scraper, Tenshi Blog Writer) */
+.ed-panel[data-panel=bots] { overflow: auto; }
+.ed-bots { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 18px; padding: 18px; }
+.ed-bot { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px; }
+.ed-bot h2 { margin: 0; font-size: 1.25rem; display: flex; align-items: center; gap: 10px; }
+.ed-bot-tag { font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; background: rgba(200, 16, 46, .25); color: #ff9aaa; border-radius: 999px; padding: 3px 10px; }
+.ed-bot code { background: #0b0305; border: 1px solid var(--line-2); border-radius: 4px; padding: 1px 5px; }
+.ed-bot-stats { margin: 0; display: grid; gap: 6px; background: var(--panel-2); border-radius: 8px; padding: 12px 14px; }
+.ed-bot-stats div { display: grid; grid-template-columns: 120px 1fr; gap: 10px; }
+.ed-bot-stats dt { color: var(--muted); font-size: .85rem; }
+.ed-bot-stats dd { margin: 0; font-size: .9rem; }
+.ed-actions--left { justify-content: flex-start; align-items: center; flex-wrap: wrap; margin: 0; }
+.ed-link { font-size: .88rem; }
+.ed-bot-list { margin: 0; padding-left: 18px; color: var(--text); font-size: .86rem; display: grid; gap: 5px; }
+.ed-src { color: var(--muted); }

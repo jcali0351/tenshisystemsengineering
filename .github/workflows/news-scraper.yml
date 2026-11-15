@@ -32,6 +32,8 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node tools/news-scraper.mjs
+      - name: Find feature images (free photos with credit, or a generated cover)
+        run: node tools/add-images.mjs
       - name: Refresh stock prices
         run: node tools/ticker.mjs || echo "Ticker skipped"
       - name: Rebuild pages
@@ -40,7 +42,7 @@ jobs:
         run: |
           git config user.name "tenshi-scraper-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A -- data/news.json data/ticker.json '*.html' tailwind.css
+          git add -A -- data/news.json data/ticker.json data/image-cache.json img/stories '*.html' tailwind.css
           if git diff --cached --quiet; then echo "Nothing changed."; exit 0; fi
           git commit -m "Tenshi Scraper: refresh news stories"
           for i in 1 2 3 4; do

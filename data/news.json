@@ -1,0 +1,523 @@
+{
+  "generatedAt": "2026-11-15T21:00:00.000Z",
+  "generator": "Tenshi Scraper (first set, gathered by hand)",
+  "categories": [
+    {
+      "id": "tech",
+      "key": "newsCatTech",
+      "items": [
+        {
+          "title": "Hoya reportedly can't cover all of Samsung's 2027 EUV mask blank order",
+          "url": "https://www.digitimes.com/news/a20261112VL210/hoya-euv-photomask-samsung-2027.html",
+          "source": "DigiTimes Asia",
+          "sourceUrl": "https://www.digitimes.com",
+          "date": "2026-11-15T12:00:00.000Z",
+          "summary": "The Tokyo optics maker is said to have told Samsung it will struggle to supply the extra extreme-ultraviolet mask blanks the chipmaker wants for 2027, a sign of how tight Japan's chip-material supply has become."
+        },
+        {
+          "title": "Sharp sells its Mie LCD color filter plant to Nitto Denko for ¥22.2 billion",
+          "url": "https://www.digitimes.com/news/a20261112PD232/sharp-plant-nitto-denko-lcd-business.html",
+          "source": "DigiTimes Asia",
+          "sourceUrl": "https://www.digitimes.com",
+          "date": "2026-11-12T12:00:00.000Z",
+          "summary": "Sharp is offloading its Hisai plant in Tsu, Mie Prefecture, as it moves faster to fix its loss-making display components business."
+        },
+        {
+          "title": "Mitsui Kinzoku puts ¥190 billion into a new copper foil plant in Malaysia",
+          "url": "https://www.digitimes.com/news/a20261111PD248/mitsui-kinzoku-copper-foil-malaysia-plant-capacity-equipment.html",
+          "source": "DigiTimes Asia",
+          "sourceUrl": "https://www.digitimes.com",
+          "date": "2026-11-12T12:00:00.000Z",
+          "summary": "The materials maker will build roughly US$1.2 billion of new capacity next to its existing Malaysian site, aimed at the ultrathin foil used in optical communications gear for AI data centers."
+        },
+        {
+          "title": "SoftBank books a ¥768 billion AI-related hit and rethinks its equipment plans",
+          "url": "https://www.digitimes.com/news/a20261111PD245/equipment-loss-2026-market.html",
+          "source": "DigiTimes Asia",
+          "sourceUrl": "https://www.digitimes.com",
+          "date": "2026-11-12T12:00:00.000Z",
+          "summary": "SoftBank is reconsidering its strategy for AI equipment after taking a loss of about ¥768 billion tied to its artificial intelligence bets."
+        },
+        {
+          "title": "Toyota will build and sell Japanese light-duty trucks in the United States",
+          "url": "https://www.digitimes.com/news/a20261111PD271/toyota-vehicle-usa-sales-2027.html",
+          "source": "DigiTimes Asia",
+          "sourceUrl": "https://www.digitimes.com",
+          "date": "2026-11-12T12:00:00.000Z",
+          "summary": "Toyota plans to assemble its Japanese light-duty trucks in the US, with American sales due to start in the second half of 2027."
+        },
+        {
+          "title": "Rapidus reportedly behind schedule on 2nm chip production",
+          "url": "https://www.digitimes.com/news/a20261111VL204/rapidus-2nm-production-manufacturing-development.html",
+          "source": "DigiTimes Asia",
+          "sourceUrl": "https://www.digitimes.com",
+          "date": "2026-11-11T12:00:00.000Z",
+          "summary": "Japan's state-backed chipmaker faces technical hurdles that could push back its target of mass-producing 2-nanometer chips by March 2028, raising questions about the country's chip ambitions."
+        },
+        {
+          "title": "Mitsui Chemicals to buy JSR in a deal worth about US$11.6 billion",
+          "url": "https://www.digitimes.com/news/a20261110VL201/mitsui-chemicals-jsr-acquisition-materials-business-growth.html",
+          "source": "DigiTimes Asia",
+          "sourceUrl": "https://www.digitimes.com",
+          "date": "2026-11-10T12:00:00.000Z",
+          "summary": "Including assumed debt, the ¥1.84 trillion acquisition of the photoresist maker would give Mitsui Chemicals a much larger stake in semiconductor materials."
+        },
+        {
+          "title": "Rapidus plans three more Hokkaido plants, modeled on Taiwan's chip clusters",
+          "url": "https://www.digitimes.com/news/a20261109PD245/rapidus-taiwan-ibm-plant-production.html",
+          "source": "DigiTimes Asia",
+          "sourceUrl": "https://www.digitimes.com",
+          "date": "2026-11-10T12:00:00.000Z",
+          "summary": "Rapidus says it will use Taiwan as its model for building a semiconductor industry cluster around its Hokkaido base, with IBM Japan also setting up there."
+        },
+        {
+          "title": "Toyota launches Toyota Robotics, built on its factory data",
+          "url": "https://www.digitimes.com/news/a20261109PD201/toyota-data-manufacturing-growth-worldwide.html",
+          "source": "DigiTimes Asia",
+          "sourceUrl": "https://www.digitimes.com",
+          "date": "2026-11-09T12:00:00.000Z",
+          "summary": "Toyota Motor has set up a dedicated robotics division, joining global rivals in robotics development and drawing on data from its own manufacturing sites."
+        },
+        {
+          "title": "Osaka heads to Singapore FinTech Festival 2026 in search of global partners",
+          "url": "https://www.mynewsdesk.com/osaka-prefecture/latest_news",
+          "source": "Osaka Prefecture",
+          "sourceUrl": "https://www.mynewsdesk.com",
+          "date": "2026-11-05T12:00:00.000Z",
+          "summary": "Osaka Prefecture and Osaka City will exhibit in Singapore from November 18 to 20, together with two Osaka companies chosen through an open call."
+        }
+      ]
+    },
+    {
+      "id": "business",
+      "key": "newsCatBusiness",
+      "items": [
+        {
+          "title": "Japan to back Vietnam's small-reactor push",
+          "url": "https://asia.nikkei.com/business/energy/japan-to-back-vietnam-s-small-reactor-push-in-revived-nuclear-cooperation",
+          "source": "Nikkei Asia",
+          "sourceUrl": "https://asia.nikkei.com",
+          "date": "2026-11-06T12:00:00.000Z",
+          "summary": "Japan and Vietnam plan cooperation on small modular reactors, alongside energy infrastructure and AI projects."
+        },
+        {
+          "title": "Toyota aims to win back market share in China",
+          "url": "https://asia.nikkei.com/business/automobiles/toyota-ready-to-regain-market-share-in-china-on-expanded-local-sourcing",
+          "source": "Nikkei Asia",
+          "sourceUrl": "https://asia.nikkei.com",
+          "date": "2026-11-05T12:00:00.000Z",
+          "summary": "Toyota plans more local sourcing and China-specific EVs, and raised its full-year net profit forecast despite a 25% drop in China sales."
+        },
+        {
+          "title": "JBIC leads $600 million credit line for Petronas decarbonization",
+          "url": "https://asia.nikkei.com/business/energy/japan-lender-leads-600m-credit-line-to-help-malaysia-s-petronas-cut-co2",
+          "source": "Nikkei Asia",
+          "sourceUrl": "https://asia.nikkei.com",
+          "date": "2026-11-05T12:00:00.000Z",
+          "summary": "Japan's state lender will lead financing for Petronas projects in carbon capture, biofuels and other emissions cuts."
+        },
+        {
+          "title": "IHI wins key role in Poland's first nuclear plant",
+          "url": "https://asia.nikkei.com/business/energy/japan-s-ihi-wins-key-role-in-westinghouse-s-new-poland-nuclear-plant",
+          "source": "Nikkei Asia",
+          "sourceUrl": "https://asia.nikkei.com",
+          "date": "2026-11-03T12:00:00.000Z",
+          "summary": "IHI secured a preliminary Westinghouse contract to supply key equipment, with manufacturing in Japan due to start in 2028."
+        },
+        {
+          "title": "Aisin develops an AI chip that cuts energy use by 98%",
+          "url": "https://asia.nikkei.com/business/tech/semiconductors/japan-s-aisin-develops-new-type-of-ai-chip-that-cuts-energy-use-98",
+          "source": "Nikkei Asia",
+          "sourceUrl": "https://asia.nikkei.com",
+          "date": "2026-11-03T12:00:00.000Z",
+          "summary": "Aisin and Tohoku University built an MRAM-based chip for in-car AI that uses far less power and speeds up image recognition."
+        },
+        {
+          "title": "Mitsubishi Heavy expands US gas turbine production",
+          "url": "https://asia.nikkei.com/business/energy/mitsubishi-heavy-gears-up-to-boost-us-gas-turbine-production",
+          "source": "Nikkei Asia",
+          "sourceUrl": "https://asia.nikkei.com",
+          "date": "2026-11-02T12:00:00.000Z",
+          "summary": "MHI plans a $490 million expansion of its Georgia turbine plant to meet rising US power demand."
+        },
+        {
+          "title": "Samsung and Japanese firms team up at Yokohama chip R&D hub",
+          "url": "https://www.asahi.com/ajw/articles/16889266",
+          "source": "The Asahi Shimbun",
+          "sourceUrl": "https://www.asahi.com",
+          "date": "2026-11-01T12:00:00.000Z",
+          "summary": "Samsung's ¥40 billion semiconductor research center in Yokohama is already working with at least 50 Japanese companies on advanced packaging."
+        },
+        {
+          "title": "Toyota and Waymo to launch driverless robotaxis in Japan in 2027",
+          "url": "https://asia.nikkei.com/business/transportation/toyota-and-waymo-to-roll-out-driverless-robotaxis-in-japan-in-2027",
+          "source": "Nikkei Asia",
+          "sourceUrl": "https://asia.nikkei.com",
+          "date": "2026-10-31T12:00:00.000Z",
+          "summary": "The partners plan Level 4 robotaxi services starting with a small fleet of Toyota bZ4X vehicles."
+        },
+        {
+          "title": "Murata to invest ¥1 trillion in capacitors for AI",
+          "url": "https://asia.nikkei.com/spotlight/supply-chain/japan-s-murata-to-invest-6.3bn-in-capacitor-production-for-ai-over-5-years",
+          "source": "Nikkei Asia",
+          "sourceUrl": "https://asia.nikkei.com",
+          "date": "2026-10-31T12:00:00.000Z",
+          "summary": "Murata will expand production of multilayer ceramic capacitors for AI data centers over five years, in Japan and overseas."
+        },
+        {
+          "title": "Sojitz to import rare earth yttrium from Malaysia",
+          "url": "https://asia.nikkei.com/spotlight/supply-chain/japan-s-sojitz-to-import-rare-earth-yttrium-from-malaysia",
+          "source": "Nikkei Asia",
+          "sourceUrl": "https://asia.nikkei.com",
+          "date": "2026-10-31T12:00:00.000Z",
+          "summary": "Working with Lynas, Sojitz plans to source medium and heavy rare earths from Malaysia as early as 2027 to cut reliance on China."
+        }
+      ]
+    },
+    {
+      "id": "stocks",
+      "key": "newsCatStocks",
+      "items": [
+        {
+          "title": "Nikkei climbs back above 61,000 as chip stocks recover",
+          "url": "https://www.vantagemarkets.com/market-analysis/why-nikkei-225-climbed-chip-stocks-recovered-jp225-november-13-2026/",
+          "source": "Vantage Markets",
+          "sourceUrl": "https://www.vantagemarkets.com",
+          "date": "2026-11-13T12:00:00.000Z",
+          "summary": "A week after entering a bear market, the Nikkei 225 had recovered roughly 8% from its November 6 low."
+        },
+        {
+          "title": "Nikkei slips 0.7% to 60,819 after three days of gains",
+          "url": "https://www.vantagemarkets.com/market-analysis/why-nikkei-225-climbed-chip-stocks-recovered-jp225-november-13-2026/",
+          "source": "Vantage Markets",
+          "sourceUrl": "https://www.vantagemarkets.com",
+          "date": "2026-11-12T12:00:00.000Z",
+          "summary": "The index gave back about 429 points on November 12, ending a three-session rebound."
+        },
+        {
+          "title": "Nikkei rises to 61,248 for a third straight gain",
+          "url": "https://www.bbntimes.com/financial/nikkei-225-rises-to-61-248-59-for-a-third-straight-gain-as-chip-stocks-rally",
+          "source": "BBN Times",
+          "sourceUrl": "https://www.bbntimes.com",
+          "date": "2026-11-11T12:00:00.000Z",
+          "summary": "Chip stocks rallied on CoreWeave's results and reports of an Anthropic listing, while SoftBank Group lagged after a surprise loss."
+        },
+        {
+          "title": "Nikkei reclaims 60,000 as SoftBank soars 14%",
+          "url": "https://www.bbntimes.com/companies/nikkei-225-surges-to-60-459-58-reclaiming-60-000-as-softbank-soars-14",
+          "source": "BBN Times",
+          "sourceUrl": "https://www.bbntimes.com",
+          "date": "2026-11-10T12:00:00.000Z",
+          "summary": "SoftBank Group, Advantest and Tokyo Electron made up more than half of the day's 1,684-point gain."
+        },
+        {
+          "title": "Tokyo rebounds 2.33% after bear-market plunge",
+          "url": "https://www.bbntimes.com/financial/nikkei-225-today-tokyo-rebounds-2-33-to-58-775-50-after-last-week-s-bear-market-plunge",
+          "source": "BBN Times",
+          "sourceUrl": "https://www.bbntimes.com",
+          "date": "2026-11-09T12:00:00.000Z",
+          "summary": "The Nikkei closed at 58,775.50, recovering part of the previous week's losses as 208 of its 225 members rose."
+        },
+        {
+          "title": "Nikkei loses 9.25% in a week and enters a bear market",
+          "url": "https://www.bbntimes.com/global-economy/nikkei-225-weekly-review-nikkei-plunges-9-25-to-57-434-77-and-enters-a-bear-market",
+          "source": "BBN Times",
+          "sourceUrl": "https://www.bbntimes.com",
+          "date": "2026-11-06T12:00:00.000Z",
+          "summary": "A 5.96% fall on Friday left the index more than 20% below its June record, its worst week since March 2020."
+        },
+        {
+          "title": "Nikkei falls while the broader TOPIX rises",
+          "url": "https://www.bbntimes.com/companies/nikkei-225-falls-to-61-077-90-as-advantest-and-tokyo-electron-plunge-while-topix-rises",
+          "source": "BBN Times",
+          "sourceUrl": "https://www.bbntimes.com",
+          "date": "2026-11-05T12:00:00.000Z",
+          "summary": "Chip-equipment heavyweights pulled the Nikkei down 1.79% even as the TOPIX gained 1.16%, a rare split between the two indexes."
+        },
+        {
+          "title": "Tokyo closed for Culture Day with the yen near 158",
+          "url": "https://www.bbntimes.com/financial/nikkei-225-today-tokyo-closed-for-culture-day-index-holds-at-63-081-86-as-yen-hovers-near-158",
+          "source": "BBN Times",
+          "sourceUrl": "https://www.bbntimes.com",
+          "date": "2026-11-03T12:00:00.000Z",
+          "summary": "Markets shut for the national holiday, leaving the Nikkei at Monday's close of 63,081.86, about 13% below its 52-week high."
+        },
+        {
+          "title": "WHI on track for Japan's largest IPO of 2026",
+          "url": "https://asia.nikkei.com/business",
+          "source": "Nikkei Asia",
+          "sourceUrl": "https://asia.nikkei.com",
+          "date": "2026-11-14T12:00:00.000Z",
+          "summary": "Nikkei Asia reports that the Bain- and GIC-backed company is heading for the year's biggest listing in Japan."
+        },
+        {
+          "title": "Growth beyond AI puts corporate Japan on track for a 20% profit gain",
+          "url": "https://asia.nikkei.com/business",
+          "source": "Nikkei Asia",
+          "sourceUrl": "https://asia.nikkei.com",
+          "date": "2026-11-13T12:00:00.000Z",
+          "summary": "Nikkei Asia reports that Japanese companies are heading for strong profit growth that isn't driven by AI alone."
+        }
+      ]
+    },
+    {
+      "id": "weather",
+      "key": "newsCatWeather",
+      "items": [
+        {
+          "title": "Rain nationwide on the 18th, with risk of severe winds in the north",
+          "url": "https://www.sunny-spot.net/english/topics.html?area=0",
+          "source": "Sunny Spot",
+          "sourceUrl": "https://www.sunny-spot.net",
+          "date": "2026-11-15T12:00:00.000Z",
+          "summary": "The weekly outlook calls for rain across Japan on Wednesday and possible strong winds in northern Japan on the 19th."
+        },
+        {
+          "title": "Sunday: midday rain in Tokyo, high of 14°C",
+          "url": "https://weathernews.com/news/en/japan/2026/11/14/weather-134/",
+          "source": "Weathernews",
+          "sourceUrl": "https://weathernews.com",
+          "date": "2026-11-14T12:00:00.000Z",
+          "summary": "Rain is expected in Tokyo around noon, in Osaka and Fukuoka in the morning and in Sapporo in the afternoon."
+        },
+        {
+          "title": "Weekly forecast: unsettled in the north, sunnier in the east later",
+          "url": "https://weathernews.com/news/en/japan/2026/11/14/weather-010/",
+          "source": "Weathernews",
+          "sourceUrl": "https://weathernews.com",
+          "date": "2026-11-14T12:00:00.000Z",
+          "summary": "Northern Japan faces rain or snow most days, while eastern Japan clears later in the week."
+        },
+        {
+          "title": "Heavy thunderstorms possible in Kyushu and Shikoku on Sunday",
+          "url": "https://www.sunny-spot.net/english/topics.html?area=0",
+          "source": "Sunny Spot",
+          "sourceUrl": "https://www.sunny-spot.net",
+          "date": "2026-11-14T12:00:00.000Z",
+          "summary": "A low and a front moving east could bring intense thunderstorms to southwestern Japan."
+        },
+        {
+          "title": "October was the warmest on record worldwide",
+          "url": "https://weathernews.com/news/en/japan/2026/11/14/climate-449/",
+          "source": "Weathernews",
+          "sourceUrl": "https://weathernews.com",
+          "date": "2026-11-14T12:00:00.000Z",
+          "summary": "Citing NOAA, the report says 2026 is expected to be the second-warmest year on record, behind 2024."
+        },
+        {
+          "title": "Strong cold air may bring severe weather and snow by midweek",
+          "url": "https://www.sunny-spot.net/english/topics.html?area=0",
+          "source": "Sunny Spot",
+          "sourceUrl": "https://www.sunny-spot.net",
+          "date": "2026-11-13T12:00:00.000Z",
+          "summary": "A rapidly deepening low could bring strong northerly winds and snow across Japan by the 19th."
+        },
+        {
+          "title": "Saturday: rain from around noon in Fukuoka",
+          "url": "https://weathernews.com/news/en/japan/2026/11/13/weather-552/",
+          "source": "Weathernews",
+          "sourceUrl": "https://weathernews.com",
+          "date": "2026-11-13T12:00:00.000Z",
+          "summary": "Tokyo and Osaka were forecast to reach 19°C and 20°C, while Sapporo stays sunny with a high of 11°C."
+        },
+        {
+          "title": "Rain across Japan on November 15 and 18",
+          "url": "https://weathernews.com/news/en/japan/2026/11/13/weather-769/",
+          "source": "Weathernews",
+          "sourceUrl": "https://weathernews.com",
+          "date": "2026-11-13T12:00:00.000Z",
+          "summary": "Eastern Japan is expected to turn sunny from Thursday, November 19."
+        },
+        {
+          "title": "Typhoon No. 32 passes the Ogasawara Islands and heads east",
+          "url": "https://www.sunny-spot.net/english/topics.html?area=0",
+          "source": "Sunny Spot",
+          "sourceUrl": "https://www.sunny-spot.net",
+          "date": "2026-11-11T12:00:00.000Z",
+          "summary": "After approaching the islands with very strong intensity, the typhoon was moving away to the east of Japan."
+        },
+        {
+          "title": "Autumn leaves running late as November stays warm",
+          "url": "https://www.japannakama.co.uk/travel/discover-japan-in-november-unmissable-events-and-festivals/",
+          "source": "Japan Nakama",
+          "sourceUrl": "https://www.japannakama.co.uk",
+          "date": "2026-11-03T12:00:00.000Z",
+          "summary": "The Japan Weather Association expects maples to peak at the usual time or later, with Kyoto's Arashiyama at its best from mid-November."
+        }
+      ]
+    },
+    {
+      "id": "sports",
+      "key": "newsCatSports",
+      "items": [
+        {
+          "title": "FC Tokyo beat Kashima 2-0 to equal the J1 clean-sheet record",
+          "url": "https://www.jleague.jp/en/news/article/35308/",
+          "source": "J.League",
+          "sourceUrl": "https://www.jleague.jp",
+          "date": "2026-11-07T12:00:00.000Z",
+          "summary": "The leaders kept a ninth straight clean sheet, equalling the J1 record."
+        },
+        {
+          "title": "Japan face Brazil in a World Cup rematch in Singapore",
+          "url": "https://www.flashscore.com/news/japan-to-face-world-cup-vanquishers-at-november-friendly-tournament-in-singapore/htnq7RHb/",
+          "source": "Flashscore",
+          "sourceUrl": "https://www.flashscore.com",
+          "date": "2026-11-06T12:00:00.000Z",
+          "summary": "Japan meet Brazil on November 14 and Paraguay on November 17 in the four-team Mizuho Blue Challenge."
+        },
+        {
+          "title": "FC Tokyo go top of J1 after an unbeaten October",
+          "url": "https://www.jleague.jp/en/news/article/35275/",
+          "source": "J.League",
+          "sourceUrl": "https://www.jleague.jp",
+          "date": "2026-11-03T12:00:00.000Z",
+          "summary": "Four wins and five clean sheets in October lifted FC Tokyo to the top of the table."
+        },
+        {
+          "title": "Ohtani named an NL MVP finalist for a sixth straight season",
+          "url": "https://www.mlb.com/news/shohei-ohtani-finalist-for-2026-nl-mvp-award",
+          "source": "MLB.com",
+          "sourceUrl": "https://www.mlb.com",
+          "date": "2026-11-02T12:00:00.000Z",
+          "summary": "Despite injuries, Shohei Ohtani hit 30 home runs and posted a 1.79 ERA as a pitcher."
+        },
+        {
+          "title": "Nishikawa equals J1's all-time appearance record",
+          "url": "https://www.jleague.jp/en/news/article/35249/",
+          "source": "J.League",
+          "sourceUrl": "https://www.jleague.jp",
+          "date": "2026-10-31T12:00:00.000Z",
+          "summary": "Urawa goalkeeper Shusaku Nishikawa made his 672nd J1 appearance as Kashiwa won 4-0."
+        },
+        {
+          "title": "SoftBank Hawks win the 2026 Japan Series",
+          "url": "https://www.starnewskorea.com/en/sports/2026/10/29/2026102910344976522",
+          "source": "Star News Korea",
+          "sourceUrl": "https://www.starnewskorea.com",
+          "date": "2026-10-29T12:00:00.000Z",
+          "summary": "The Hawks beat Yokohama 4-2 in Game 4, finishing the postseason with seven straight wins, all comebacks."
+        },
+        {
+          "title": "Kyushu Grand Sumo Tournament runs November 8 to 22",
+          "url": "https://www.haveagood-holiday.com/en/articles/kyushu-grand-sumo-tournament-tabiwa-viewing-plan-2026",
+          "source": "Have a Good Holiday",
+          "sourceUrl": "https://www.haveagood-holiday.com",
+          "date": "2026-10-28T12:00:00.000Z",
+          "summary": "The year's final sumo tournament takes place at Fukuoka Kokusai Center."
+        },
+        {
+          "title": "Rizin 55 held at LaLa Arena Tokyo-Bay",
+          "url": "https://en.wikipedia.org/wiki/2026_in_Rizin_Fighting_Federation",
+          "source": "Wikipedia",
+          "sourceUrl": "https://en.wikipedia.org",
+          "date": "2026-11-08T12:00:00.000Z",
+          "summary": "The mixed martial arts promotion staged its ninth event of 2026 in Funabashi, with a New Year's Eve show in Nagoya to come."
+        },
+        {
+          "title": "Tokyo sets out its 'Sports Vision 2028+'",
+          "url": "https://en.sports-tokyo-info.metro.tokyo.lg.jp/topics/oshirase.php",
+          "source": "Tokyo Metropolitan Government",
+          "sourceUrl": "https://en.sports-tokyo-info.metro.tokyo.lg.jp",
+          "date": "2026-11-13T12:00:00.000Z",
+          "summary": "The city also announced the Tokyo International Youth Sports Games at Komazawa Olympic Park on November 28 and 29."
+        },
+        {
+          "title": "Japan Golf Tour heads into its final weeks",
+          "url": "https://en.wikipedia.org/wiki/2026_Japan_Golf_Tour",
+          "source": "Wikipedia",
+          "sourceUrl": "https://en.wikipedia.org",
+          "date": "2026-11-03T12:00:00.000Z",
+          "summary": "The 2026 season runs until December 6; Yusaku Hosono won the Japan Open in October."
+        }
+      ]
+    },
+    {
+      "id": "health",
+      "key": "newsCatHealth",
+      "items": [
+        {
+          "title": "Japan's big four drug wholesalers see profits slip despite higher sales",
+          "url": "https://pj.jiho.jp/article/256921",
+          "source": "Pharma Japan",
+          "sourceUrl": "https://pj.jiho.jp",
+          "date": "2026-11-13T12:00:00.000Z",
+          "summary": "Rising procurement and other costs trimmed combined operating profit in the first half of fiscal 2026."
+        },
+        {
+          "title": "Pfizer files Litfulo for vitiligo in Japan",
+          "url": "https://pj.jiho.jp/article/256914",
+          "source": "Pharma Japan",
+          "sourceUrl": "https://pj.jiho.jp",
+          "date": "2026-11-13T12:00:00.000Z",
+          "summary": "Pfizer wants to add nonsegmental vitiligo to the drug's uses; it is already approved for alopecia areata."
+        },
+        {
+          "title": "Takeda launches narcolepsy drug Orzeyful in the US",
+          "url": "https://pj.jiho.jp/article/256915",
+          "source": "Pharma Japan",
+          "sourceUrl": "https://pj.jiho.jp",
+          "date": "2026-11-13T12:00:00.000Z",
+          "summary": "The US launch follows earlier rollouts in Japan and China."
+        },
+        {
+          "title": "Keytruda stays Japan's top seller as Mounjaro climbs to second",
+          "url": "https://pj.jiho.jp/article/256903",
+          "source": "Pharma Japan",
+          "sourceUrl": "https://pj.jiho.jp",
+          "date": "2026-11-13T12:00:00.000Z",
+          "summary": "IQVIA data for July to September show Mounjaro up from eighth place a year earlier."
+        },
+        {
+          "title": "Keytruda SC leads Japan's latest round of 16 new drug listings",
+          "url": "https://pj.jiho.jp/article/256838",
+          "source": "Pharma Japan",
+          "sourceUrl": "https://pj.jiho.jp",
+          "date": "2026-11-13T12:00:00.000Z",
+          "summary": "Japan added 16 new drugs to its national price list on November 13, including a subcutaneous form of Keytruda."
+        },
+        {
+          "title": "Pharmacy group renews call to scrap off-year drug price revisions",
+          "url": "https://pj.jiho.jp/article/256922",
+          "source": "Pharma Japan",
+          "sourceUrl": "https://pj.jiho.jp",
+          "date": "2026-11-13T12:00:00.000Z",
+          "summary": "Japan's pharmacy association again urged the government to end the annual price cuts between regular revisions."
+        },
+        {
+          "title": "3D printers create realistic sushi for elderly patients",
+          "url": "https://japannews24.com/japan-73/",
+          "source": "JapanNews24",
+          "sourceUrl": "https://japannews24.com",
+          "date": "2026-11-12T12:00:00.000Z",
+          "summary": "Printed sushi aims to make meals easier and more appealing for older people who struggle to eat."
+        },
+        {
+          "title": "Alzheimer's drug Kisunla's price to be cut 3.93%",
+          "url": "https://pj.jiho.jp/",
+          "source": "Pharma Japan",
+          "sourceUrl": "https://pj.jiho.jp",
+          "date": "2026-11-06T12:00:00.000Z",
+          "summary": "The cost-effectiveness review cut takes effect on February 1, 2027."
+        },
+        {
+          "title": "Regeneron files multiple myeloma drug linvoseltamab in Japan",
+          "url": "https://pj.jiho.jp/",
+          "source": "Pharma Japan",
+          "sourceUrl": "https://pj.jiho.jp",
+          "date": "2026-11-06T12:00:00.000Z",
+          "summary": "The filing covers adults whose disease has returned after at least three earlier therapies."
+        },
+        {
+          "title": "Fuji Pharma recalls Eylea biosimilar lots over faulty finger grips",
+          "url": "https://pj.jiho.jp/",
+          "source": "Pharma Japan",
+          "sourceUrl": "https://pj.jiho.jp",
+          "date": "2026-11-06T12:00:00.000Z",
+          "summary": "The recall concerns a manufacturing problem with the product's finger grips."
+        }
+      ]
+    }
+  ],
+  "lastRun": null
+}

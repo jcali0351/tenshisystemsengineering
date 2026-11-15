@@ -12,6 +12,7 @@ const CONTACT_EMAIL = "jcali0351@gmail.com";
     set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* storage blocked: fine */ } }
   };
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const SCRIPT_BASE = (document.currentScript && document.currentScript.src) || location.href;
   const onLanguage = [];   // parts that need to redo their text when the language changes
 
   let lang = "en";
@@ -517,4 +518,64 @@ const CONTACT_EMAIL = "jcali0351@gmail.com";
   setupBand();
   startSlides();
   startCards();
+  setupNewsTabs();
+  setupTicker();
+
+  /* ---------- News page: one tab per category (Technology, Business, Stock Exchange, Weather, Sports, Health) ---------- */
+  function setupNewsTabs() {
+    const list = $(".news-tabs");
+    if (!list) return;
+    const tabs = $$("[role=tab]", list);
+    const show = (tab, focus) => {
+      tabs.forEach((t) => {
+        const on = t === tab;
+        t.setAttribute("aria-selected", String(on));
+        t.tabIndex = on ? 0 : -1;
+        const panel = document.getElementById(t.getAttribute("aria-controls"));
+        if (panel) panel.hidden = !on;
+      });
+      if (focus) tab.focus();
+      if (history.replaceState) history.replaceState(null, "", "#" + tab.dataset.cat);
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener("click", () => show(t));
+      t.addEventListener("keydown", (e) => {
+        const step = { ArrowRight: 1, ArrowLeft: -1, Home: -i, End: tabs.length - 1 - i }[e.key];
+        if (step === undefined) return;
+        e.preventDefault();
+        show(tabs[(i + step + tabs.length) % tabs.length], true);
+      });
+    });
+    const fromHash = tabs.find((t) => "#" + t.dataset.cat === location.hash);
+    if (fromHash) { show(fromHash); const s = document.getElementById("stories"); if (s) s.scrollIntoView(); }
+  }
+
+  /* ---------- Stock ticker: delayed Japan market prices from data/ticker.json (refreshed by a GitHub job) ---------- */
+  function setupTicker() {
+    const box = $("[data-ticker]");
+    if (!box) return;
+    const url = new URL("data/ticker.json", SCRIPT_BASE).href;
+    const fmt = (n, d) => n.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+    const load = () => fetch(url, { cache: "no-cache" }).then((r) => (r.ok ? r.json() : null)).then((data) => {
+      if (!data || !data.quotes || !data.quotes.length) return;
+      const items = data.quotes.map((q) => {
+        const up = q.change > 0, down = q.change < 0;
+        const cls = up ? "up" : down ? "down" : "flat";
+        const sign = up ? "▲" : down ? "▼" : "";
+        const change = q.change == null ? "" : `<span class="tk-chg ${cls}">${sign} ${fmt(Math.abs(q.change), 2)} (${q.pct > 0 ? "+" : ""}${fmt(q.pct, 2)}%)</span>`;
+        const label = q.code ? `${q.name} <span class="tk-code">${q.code}</span>` : q.name;
+        return `<li class="tk-item"><span class="tk-name">${label}</span> <span class="tk-price">${q.kind === "fx" ? fmt(q.price, 2) : (q.kind === "index" ? "" : "¥") + fmt(q.price, q.price < 1000 ? 1 : 0)}</span> ${change}</li>`;
+      }).join("");
+      const track = $(".ticker-track", box);
+      // Two copies side by side make the loop seamless; the copy is hidden from screen readers.
+      track.innerHTML = items + items.replace(/<li /g, '<li aria-hidden="true" ');
+      const latest = data.quotes.map((q) => q.time).filter(Boolean).sort().pop() || data.updatedAt;
+      const when = new Date(latest);
+      $(".ticker-time", box).textContent = isNaN(when) ? "" : when.toLocaleString(document.documentElement.lang || "en", { timeZone: "Asia/Tokyo", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) + " JST";
+      box.hidden = false;
+      track.style.setProperty("--tk-duration", Math.max(30, data.quotes.length * 4.5) + "s");
+    }).catch(() => {});
+    load();
+    setInterval(load, 10 * 60 * 1000);   // pick up new prices without a reload
+  }
 })();

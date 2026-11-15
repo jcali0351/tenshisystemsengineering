@@ -13,7 +13,7 @@
   <link rel="alternate icon" href="brand/tenshi-apple-touch-icon.png" type="image/png">
   <link rel="apple-touch-icon" href="brand/tenshi-apple-touch-icon.png">
   <link rel="stylesheet" href="tailwind.css?v=119fa3c5">
-  <link rel="stylesheet" href="styles.css?v=846c6e53">
+  <link rel="stylesheet" href="styles.css?v=7bdeef8c">
   <link rel="stylesheet" href="design.css?v=cd4394f3">
   <link rel="stylesheet" href="chat.css?v=8097383f">
 </head>
@@ -22,6 +22,11 @@
   <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
 
   <header class="site-header">
+    <div class="ticker" data-ticker hidden>
+      <p class="ticker-label"><span data-i18n="tickerLabel">Japan markets</span> <small data-i18n="tickerDelayed">Delayed prices</small></p>
+      <div class="ticker-window"><ul class="ticker-track"></ul></div>
+      <p class="ticker-time"></p>
+    </div>
     <div class="header-inner">
       <a class="brand" href="index.html" aria-label="Tenshi Systems Engineering, top of page" data-i18n-attr="aria-label:brandLabel">
         <span class="logo-dazzle logo-dazzle--brand"><img class="brand-logo" src="brand/tenshi-logo.png" alt="" width="225" height="217"></span>
@@ -108,78 +113,714 @@
         <div class="news-copy">
           <p data-i18n="newsP1">This is placeholder text for company news. Soon this space will carry announcements from our Osaka studio: new projects we have launched, services we have added and the people who have joined the team.</p>
           <p data-i18n="newsP2">Until then, think of this as a notice board waiting for its first pins. Each update will be short and to the point, with links to the work it talks about, so you can see what changed and why it matters.</p>
-          <p data-i18n="newsP3">Below the updates you will find ten recent stories from Japan's technology and business news, picked because they touch the work we do every day: chips, robotics, manufacturing and the digital economy.</p>
+          <p data-i18n="newsP3">Below the updates you will find recent stories from Japan in six categories: technology, business, the stock market, weather, sports and health.</p>
         </div>
       </div>
     </section>
 
-    <section class="page-section tinted news-stories" aria-labelledby="stories-title">
+    <section class="page-section tinted news-stories" id="stories" aria-labelledby="stories-title">
       <div class="page-inner">
         <h2 id="stories-title" class="section-title" data-i18n="newsHeadTitle">Latest from Japan</h2>
-        <p class="news-head-text" data-i18n="newsHeadText">Ten recent stories from Japan's technology and business news, with a link to each original report.</p>
-        <ol class="news-list">
-          <li class="news-item is-lead">
-            <p class="news-meta"><span class="news-topic">Semiconductors</span> <time datetime="2026-11-15">Nov 15, 2026</time></p>
-            <h3><a href="https://www.digitimes.com/news/a20261112VL210/hoya-euv-photomask-samsung-2027.html" target="_blank" rel="noopener">Hoya reportedly can't cover all of Samsung's 2027 EUV mask blank order<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
-            <p class="news-text">The Tokyo optics maker is said to have told Samsung it will struggle to supply the extra extreme-ultraviolet mask blanks the chipmaker wants for 2027, a sign of how tight Japan's chip-material supply has become.</p>
-            <p class="news-source">DigiTimes Asia · <a href="https://www.digitimes.com/news/a20261112VL210/hoya-euv-photomask-samsung-2027.html" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span data-i18n="newsReadMore">Read the full story</span> ↗</a></p>
+        <p class="news-head-text" data-i18n="newsHeadText">Recent stories from Japan in six categories, each with a link to the original report.</p>
+        <div class="news-tabs" role="tablist" aria-label="News categories" data-i18n-attr="aria-label:newsCatLabel">
+          <button type="button" role="tab" id="tab-tech" aria-controls="panel-tech" aria-selected="true" tabindex="0" data-cat="tech"><span data-i18n="newsCatTech">Technology</span> <span class="news-tab-count">10</span></button>
+          <button type="button" role="tab" id="tab-business" aria-controls="panel-business" aria-selected="false" tabindex="-1" data-cat="business"><span data-i18n="newsCatBusiness">Business</span> <span class="news-tab-count">10</span></button>
+          <button type="button" role="tab" id="tab-stocks" aria-controls="panel-stocks" aria-selected="false" tabindex="-1" data-cat="stocks"><span data-i18n="newsCatStocks">Stock Exchange</span> <span class="news-tab-count">10</span></button>
+          <button type="button" role="tab" id="tab-weather" aria-controls="panel-weather" aria-selected="false" tabindex="-1" data-cat="weather"><span data-i18n="newsCatWeather">Weather</span> <span class="news-tab-count">10</span></button>
+          <button type="button" role="tab" id="tab-sports" aria-controls="panel-sports" aria-selected="false" tabindex="-1" data-cat="sports"><span data-i18n="newsCatSports">Sports</span> <span class="news-tab-count">10</span></button>
+          <button type="button" role="tab" id="tab-health" aria-controls="panel-health" aria-selected="false" tabindex="-1" data-cat="health"><span data-i18n="newsCatHealth">Health</span> <span class="news-tab-count">10</span></button>
+        </div>
+        <div class="news-panel" id="panel-tech" role="tabpanel" aria-labelledby="tab-tech" tabindex="0">
+          <h3 class="sr-only" data-i18n="newsCatTech">Technology</h3>
+          <ol class="news-list">
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/tech.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-15">Nov 15, 2026</time></p>
+              <h3><a href="https://www.digitimes.com/news/a20261112VL210/hoya-euv-photomask-samsung-2027.html" target="_blank" rel="noopener">Hoya reportedly can't cover all of Samsung's 2027 EUV mask blank order<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">The Tokyo optics maker is said to have told Samsung it will struggle to supply the extra extreme-ultraviolet mask blanks the chipmaker wants for 2027, a sign of how tight Japan's chip-material supply has become.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.digitimes.com" target="_blank" rel="noopener">DigiTimes Asia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.digitimes.com/news/a20261112VL210/hoya-euv-photomask-samsung-2027.html" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
           </li>
           <li class="news-item">
-            <p class="news-meta"><span class="news-topic">Manufacturing</span> <time datetime="2026-11-12">Nov 12, 2026</time></p>
-            <h3><a href="https://www.digitimes.com/news/a20261112PD232/sharp-plant-nitto-denko-lcd-business.html" target="_blank" rel="noopener">Sharp sells its Mie LCD color filter plant to Nitto Denko for ¥22.2 billion<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
-            <p class="news-text">Sharp is offloading its Hisai plant in Tsu, Mie Prefecture, as it moves faster to fix its loss-making display components business.</p>
-            <p class="news-source">DigiTimes Asia · <a href="https://www.digitimes.com/news/a20261112PD232/sharp-plant-nitto-denko-lcd-business.html" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span data-i18n="newsReadMore">Read the full story</span> ↗</a></p>
+            <figure class="news-fig">
+              <img src="img/covers/tech.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-12">Nov 12, 2026</time></p>
+              <h3><a href="https://www.digitimes.com/news/a20261112PD232/sharp-plant-nitto-denko-lcd-business.html" target="_blank" rel="noopener">Sharp sells its Mie LCD color filter plant to Nitto Denko for ¥22.2 billion<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Sharp is offloading its Hisai plant in Tsu, Mie Prefecture, as it moves faster to fix its loss-making display components business.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.digitimes.com" target="_blank" rel="noopener">DigiTimes Asia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.digitimes.com/news/a20261112PD232/sharp-plant-nitto-denko-lcd-business.html" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
           </li>
           <li class="news-item">
-            <p class="news-meta"><span class="news-topic">AI hardware</span> <time datetime="2026-11-12">Nov 12, 2026</time></p>
-            <h3><a href="https://www.digitimes.com/news/a20261111PD248/mitsui-kinzoku-copper-foil-malaysia-plant-capacity-equipment.html" target="_blank" rel="noopener">Mitsui Kinzoku puts ¥190 billion into a new copper foil plant in Malaysia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
-            <p class="news-text">The materials maker will build roughly US$1.2 billion of new capacity next to its existing Malaysian site, aimed at the ultrathin foil used in optical communications gear for AI data centers.</p>
-            <p class="news-source">DigiTimes Asia · <a href="https://www.digitimes.com/news/a20261111PD248/mitsui-kinzoku-copper-foil-malaysia-plant-capacity-equipment.html" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span data-i18n="newsReadMore">Read the full story</span> ↗</a></p>
+            <figure class="news-fig">
+              <img src="img/covers/tech.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-12">Nov 12, 2026</time></p>
+              <h3><a href="https://www.digitimes.com/news/a20261111PD248/mitsui-kinzoku-copper-foil-malaysia-plant-capacity-equipment.html" target="_blank" rel="noopener">Mitsui Kinzoku puts ¥190 billion into a new copper foil plant in Malaysia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">The materials maker will build roughly US$1.2 billion of new capacity next to its existing Malaysian site, aimed at the ultrathin foil used in optical communications gear for AI data centers.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.digitimes.com" target="_blank" rel="noopener">DigiTimes Asia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.digitimes.com/news/a20261111PD248/mitsui-kinzoku-copper-foil-malaysia-plant-capacity-equipment.html" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
           </li>
           <li class="news-item">
-            <p class="news-meta"><span class="news-topic">AI &amp; investment</span> <time datetime="2026-11-12">Nov 12, 2026</time></p>
-            <h3><a href="https://www.digitimes.com/news/a20261111PD245/equipment-loss-2026-market.html" target="_blank" rel="noopener">SoftBank books a ¥768 billion AI-related hit and rethinks its equipment plans<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
-            <p class="news-text">SoftBank is reconsidering its strategy for AI equipment after taking a loss of about ¥768 billion tied to its artificial intelligence bets.</p>
-            <p class="news-source">DigiTimes Asia · <a href="https://www.digitimes.com/news/a20261111PD245/equipment-loss-2026-market.html" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span data-i18n="newsReadMore">Read the full story</span> ↗</a></p>
+            <figure class="news-fig">
+              <img src="img/covers/tech.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-12">Nov 12, 2026</time></p>
+              <h3><a href="https://www.digitimes.com/news/a20261111PD245/equipment-loss-2026-market.html" target="_blank" rel="noopener">SoftBank books a ¥768 billion AI-related hit and rethinks its equipment plans<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">SoftBank is reconsidering its strategy for AI equipment after taking a loss of about ¥768 billion tied to its artificial intelligence bets.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.digitimes.com" target="_blank" rel="noopener">DigiTimes Asia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.digitimes.com/news/a20261111PD245/equipment-loss-2026-market.html" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
           </li>
           <li class="news-item">
-            <p class="news-meta"><span class="news-topic">Automotive</span> <time datetime="2026-11-12">Nov 12, 2026</time></p>
-            <h3><a href="https://www.digitimes.com/news/a20261111PD271/toyota-vehicle-usa-sales-2027.html" target="_blank" rel="noopener">Toyota will build and sell Japanese light-duty trucks in the United States<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
-            <p class="news-text">Toyota plans to assemble its Japanese light-duty trucks in the US, with American sales due to start in the second half of 2027.</p>
-            <p class="news-source">DigiTimes Asia · <a href="https://www.digitimes.com/news/a20261111PD271/toyota-vehicle-usa-sales-2027.html" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span data-i18n="newsReadMore">Read the full story</span> ↗</a></p>
+            <figure class="news-fig">
+              <img src="img/covers/tech.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-12">Nov 12, 2026</time></p>
+              <h3><a href="https://www.digitimes.com/news/a20261111PD271/toyota-vehicle-usa-sales-2027.html" target="_blank" rel="noopener">Toyota will build and sell Japanese light-duty trucks in the United States<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Toyota plans to assemble its Japanese light-duty trucks in the US, with American sales due to start in the second half of 2027.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.digitimes.com" target="_blank" rel="noopener">DigiTimes Asia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.digitimes.com/news/a20261111PD271/toyota-vehicle-usa-sales-2027.html" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
           </li>
           <li class="news-item">
-            <p class="news-meta"><span class="news-topic">Semiconductors</span> <time datetime="2026-11-11">Nov 11, 2026</time></p>
-            <h3><a href="https://www.digitimes.com/news/a20261111VL204/rapidus-2nm-production-manufacturing-development.html" target="_blank" rel="noopener">Rapidus reportedly behind schedule on 2nm chip production<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
-            <p class="news-text">Japan's state-backed chipmaker faces technical hurdles that could push back its target of mass-producing 2-nanometer chips by March 2028, raising questions about the country's chip ambitions.</p>
-            <p class="news-source">DigiTimes Asia · <a href="https://www.digitimes.com/news/a20261111VL204/rapidus-2nm-production-manufacturing-development.html" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span data-i18n="newsReadMore">Read the full story</span> ↗</a></p>
+            <figure class="news-fig">
+              <img src="img/covers/tech.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-11">Nov 11, 2026</time></p>
+              <h3><a href="https://www.digitimes.com/news/a20261111VL204/rapidus-2nm-production-manufacturing-development.html" target="_blank" rel="noopener">Rapidus reportedly behind schedule on 2nm chip production<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Japan's state-backed chipmaker faces technical hurdles that could push back its target of mass-producing 2-nanometer chips by March 2028, raising questions about the country's chip ambitions.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.digitimes.com" target="_blank" rel="noopener">DigiTimes Asia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.digitimes.com/news/a20261111VL204/rapidus-2nm-production-manufacturing-development.html" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
           </li>
           <li class="news-item">
-            <p class="news-meta"><span class="news-topic">Semiconductors</span> <time datetime="2026-11-10">Nov 10, 2026</time></p>
-            <h3><a href="https://www.digitimes.com/news/a20261110VL201/mitsui-chemicals-jsr-acquisition-materials-business-growth.html" target="_blank" rel="noopener">Mitsui Chemicals to buy JSR in a deal worth about US$11.6 billion<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
-            <p class="news-text">Including assumed debt, the ¥1.84 trillion acquisition of the photoresist maker would give Mitsui Chemicals a much larger stake in semiconductor materials.</p>
-            <p class="news-source">DigiTimes Asia · <a href="https://www.digitimes.com/news/a20261110VL201/mitsui-chemicals-jsr-acquisition-materials-business-growth.html" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span data-i18n="newsReadMore">Read the full story</span> ↗</a></p>
+            <figure class="news-fig">
+              <img src="img/covers/tech.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-10">Nov 10, 2026</time></p>
+              <h3><a href="https://www.digitimes.com/news/a20261110VL201/mitsui-chemicals-jsr-acquisition-materials-business-growth.html" target="_blank" rel="noopener">Mitsui Chemicals to buy JSR in a deal worth about US$11.6 billion<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Including assumed debt, the ¥1.84 trillion acquisition of the photoresist maker would give Mitsui Chemicals a much larger stake in semiconductor materials.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.digitimes.com" target="_blank" rel="noopener">DigiTimes Asia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.digitimes.com/news/a20261110VL201/mitsui-chemicals-jsr-acquisition-materials-business-growth.html" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
           </li>
           <li class="news-item">
-            <p class="news-meta"><span class="news-topic">Semiconductors</span> <time datetime="2026-11-10">Nov 10, 2026</time></p>
-            <h3><a href="https://www.digitimes.com/news/a20261109PD245/rapidus-taiwan-ibm-plant-production.html" target="_blank" rel="noopener">Rapidus plans three more Hokkaido plants, modeled on Taiwan's chip clusters<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
-            <p class="news-text">Rapidus says it will use Taiwan as its model for building a semiconductor industry cluster around its Hokkaido base, with IBM Japan also setting up there.</p>
-            <p class="news-source">DigiTimes Asia · <a href="https://www.digitimes.com/news/a20261109PD245/rapidus-taiwan-ibm-plant-production.html" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span data-i18n="newsReadMore">Read the full story</span> ↗</a></p>
+            <figure class="news-fig">
+              <img src="img/covers/tech.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-10">Nov 10, 2026</time></p>
+              <h3><a href="https://www.digitimes.com/news/a20261109PD245/rapidus-taiwan-ibm-plant-production.html" target="_blank" rel="noopener">Rapidus plans three more Hokkaido plants, modeled on Taiwan's chip clusters<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Rapidus says it will use Taiwan as its model for building a semiconductor industry cluster around its Hokkaido base, with IBM Japan also setting up there.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.digitimes.com" target="_blank" rel="noopener">DigiTimes Asia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.digitimes.com/news/a20261109PD245/rapidus-taiwan-ibm-plant-production.html" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
           </li>
           <li class="news-item">
-            <p class="news-meta"><span class="news-topic">Robotics</span> <time datetime="2026-11-09">Nov 9, 2026</time></p>
-            <h3><a href="https://www.digitimes.com/news/a20261109PD201/toyota-data-manufacturing-growth-worldwide.html" target="_blank" rel="noopener">Toyota launches Toyota Robotics, built on its factory data<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
-            <p class="news-text">Toyota Motor has set up a dedicated robotics division, joining global rivals in robotics development and drawing on data from its own manufacturing sites.</p>
-            <p class="news-source">DigiTimes Asia · <a href="https://www.digitimes.com/news/a20261109PD201/toyota-data-manufacturing-growth-worldwide.html" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span data-i18n="newsReadMore">Read the full story</span> ↗</a></p>
+            <figure class="news-fig">
+              <img src="img/covers/tech.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-09">Nov 9, 2026</time></p>
+              <h3><a href="https://www.digitimes.com/news/a20261109PD201/toyota-data-manufacturing-growth-worldwide.html" target="_blank" rel="noopener">Toyota launches Toyota Robotics, built on its factory data<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Toyota Motor has set up a dedicated robotics division, joining global rivals in robotics development and drawing on data from its own manufacturing sites.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.digitimes.com" target="_blank" rel="noopener">DigiTimes Asia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.digitimes.com/news/a20261109PD201/toyota-data-manufacturing-growth-worldwide.html" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
           </li>
           <li class="news-item">
-            <p class="news-meta"><span class="news-topic">Osaka</span> <time datetime="2026-11-05">Nov 5, 2026</time></p>
-            <h3><a href="https://www.mynewsdesk.com/osaka-prefecture/latest_news" target="_blank" rel="noopener">Osaka heads to Singapore FinTech Festival 2026 in search of global partners<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
-            <p class="news-text">Osaka Prefecture and Osaka City will exhibit in Singapore from November 18 to 20, together with two Osaka companies chosen through an open call.</p>
-            <p class="news-source">Osaka Prefecture · <a href="https://www.mynewsdesk.com/osaka-prefecture/latest_news" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><span data-i18n="newsReadMore">Read the full story</span> ↗</a></p>
+            <figure class="news-fig">
+              <img src="img/covers/tech.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-05">Nov 5, 2026</time></p>
+              <h3><a href="https://www.mynewsdesk.com/osaka-prefecture/latest_news" target="_blank" rel="noopener">Osaka heads to Singapore FinTech Festival 2026 in search of global partners<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Osaka Prefecture and Osaka City will exhibit in Singapore from November 18 to 20, together with two Osaka companies chosen through an open call.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.mynewsdesk.com" target="_blank" rel="noopener">Osaka Prefecture<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.mynewsdesk.com/osaka-prefecture/latest_news" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
           </li>
-        </ol>
-        <p class="news-note" data-i18n="newsSourceNote">Summaries are our own; each story belongs to its original publisher.</p>
+          </ol>
+        </div>
+        <div class="news-panel" id="panel-business" role="tabpanel" aria-labelledby="tab-business" tabindex="0" hidden>
+          <h3 class="sr-only" data-i18n="newsCatBusiness">Business</h3>
+          <ol class="news-list">
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/business.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-06">Nov 6, 2026</time></p>
+              <h3><a href="https://asia.nikkei.com/business/energy/japan-to-back-vietnam-s-small-reactor-push-in-revived-nuclear-cooperation" target="_blank" rel="noopener">Japan to back Vietnam's small-reactor push<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Japan and Vietnam plan cooperation on small modular reactors, alongside energy infrastructure and AI projects.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://asia.nikkei.com" target="_blank" rel="noopener">Nikkei Asia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://asia.nikkei.com/business/energy/japan-to-back-vietnam-s-small-reactor-push-in-revived-nuclear-cooperation" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/business.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-05">Nov 5, 2026</time></p>
+              <h3><a href="https://asia.nikkei.com/business/automobiles/toyota-ready-to-regain-market-share-in-china-on-expanded-local-sourcing" target="_blank" rel="noopener">Toyota aims to win back market share in China<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Toyota plans more local sourcing and China-specific EVs, and raised its full-year net profit forecast despite a 25% drop in China sales.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://asia.nikkei.com" target="_blank" rel="noopener">Nikkei Asia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://asia.nikkei.com/business/automobiles/toyota-ready-to-regain-market-share-in-china-on-expanded-local-sourcing" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/business.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-05">Nov 5, 2026</time></p>
+              <h3><a href="https://asia.nikkei.com/business/energy/japan-lender-leads-600m-credit-line-to-help-malaysia-s-petronas-cut-co2" target="_blank" rel="noopener">JBIC leads $600 million credit line for Petronas decarbonization<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Japan's state lender will lead financing for Petronas projects in carbon capture, biofuels and other emissions cuts.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://asia.nikkei.com" target="_blank" rel="noopener">Nikkei Asia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://asia.nikkei.com/business/energy/japan-lender-leads-600m-credit-line-to-help-malaysia-s-petronas-cut-co2" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/business.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-03">Nov 3, 2026</time></p>
+              <h3><a href="https://asia.nikkei.com/business/energy/japan-s-ihi-wins-key-role-in-westinghouse-s-new-poland-nuclear-plant" target="_blank" rel="noopener">IHI wins key role in Poland's first nuclear plant<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">IHI secured a preliminary Westinghouse contract to supply key equipment, with manufacturing in Japan due to start in 2028.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://asia.nikkei.com" target="_blank" rel="noopener">Nikkei Asia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://asia.nikkei.com/business/energy/japan-s-ihi-wins-key-role-in-westinghouse-s-new-poland-nuclear-plant" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/business.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-03">Nov 3, 2026</time></p>
+              <h3><a href="https://asia.nikkei.com/business/tech/semiconductors/japan-s-aisin-develops-new-type-of-ai-chip-that-cuts-energy-use-98" target="_blank" rel="noopener">Aisin develops an AI chip that cuts energy use by 98%<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Aisin and Tohoku University built an MRAM-based chip for in-car AI that uses far less power and speeds up image recognition.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://asia.nikkei.com" target="_blank" rel="noopener">Nikkei Asia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://asia.nikkei.com/business/tech/semiconductors/japan-s-aisin-develops-new-type-of-ai-chip-that-cuts-energy-use-98" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/business.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-02">Nov 2, 2026</time></p>
+              <h3><a href="https://asia.nikkei.com/business/energy/mitsubishi-heavy-gears-up-to-boost-us-gas-turbine-production" target="_blank" rel="noopener">Mitsubishi Heavy expands US gas turbine production<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">MHI plans a $490 million expansion of its Georgia turbine plant to meet rising US power demand.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://asia.nikkei.com" target="_blank" rel="noopener">Nikkei Asia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://asia.nikkei.com/business/energy/mitsubishi-heavy-gears-up-to-boost-us-gas-turbine-production" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/business.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-01">Nov 1, 2026</time></p>
+              <h3><a href="https://www.asahi.com/ajw/articles/16889266" target="_blank" rel="noopener">Samsung and Japanese firms team up at Yokohama chip R&amp;D hub<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Samsung's ¥40 billion semiconductor research center in Yokohama is already working with at least 50 Japanese companies on advanced packaging.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.asahi.com" target="_blank" rel="noopener">The Asahi Shimbun<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.asahi.com/ajw/articles/16889266" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/business.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-10-31">Oct 31, 2026</time></p>
+              <h3><a href="https://asia.nikkei.com/business/transportation/toyota-and-waymo-to-roll-out-driverless-robotaxis-in-japan-in-2027" target="_blank" rel="noopener">Toyota and Waymo to launch driverless robotaxis in Japan in 2027<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">The partners plan Level 4 robotaxi services starting with a small fleet of Toyota bZ4X vehicles.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://asia.nikkei.com" target="_blank" rel="noopener">Nikkei Asia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://asia.nikkei.com/business/transportation/toyota-and-waymo-to-roll-out-driverless-robotaxis-in-japan-in-2027" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/business.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-10-31">Oct 31, 2026</time></p>
+              <h3><a href="https://asia.nikkei.com/spotlight/supply-chain/japan-s-murata-to-invest-6.3bn-in-capacitor-production-for-ai-over-5-years" target="_blank" rel="noopener">Murata to invest ¥1 trillion in capacitors for AI<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Murata will expand production of multilayer ceramic capacitors for AI data centers over five years, in Japan and overseas.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://asia.nikkei.com" target="_blank" rel="noopener">Nikkei Asia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://asia.nikkei.com/spotlight/supply-chain/japan-s-murata-to-invest-6.3bn-in-capacitor-production-for-ai-over-5-years" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/business.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-10-31">Oct 31, 2026</time></p>
+              <h3><a href="https://asia.nikkei.com/spotlight/supply-chain/japan-s-sojitz-to-import-rare-earth-yttrium-from-malaysia" target="_blank" rel="noopener">Sojitz to import rare earth yttrium from Malaysia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Working with Lynas, Sojitz plans to source medium and heavy rare earths from Malaysia as early as 2027 to cut reliance on China.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://asia.nikkei.com" target="_blank" rel="noopener">Nikkei Asia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://asia.nikkei.com/spotlight/supply-chain/japan-s-sojitz-to-import-rare-earth-yttrium-from-malaysia" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          </ol>
+        </div>
+        <div class="news-panel" id="panel-stocks" role="tabpanel" aria-labelledby="tab-stocks" tabindex="0" hidden>
+          <h3 class="sr-only" data-i18n="newsCatStocks">Stock Exchange</h3>
+          <ol class="news-list">
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/stocks.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-13">Nov 13, 2026</time></p>
+              <h3><a href="https://www.vantagemarkets.com/market-analysis/why-nikkei-225-climbed-chip-stocks-recovered-jp225-november-13-2026/" target="_blank" rel="noopener">Nikkei climbs back above 61,000 as chip stocks recover<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">A week after entering a bear market, the Nikkei 225 had recovered roughly 8% from its November 6 low.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.vantagemarkets.com" target="_blank" rel="noopener">Vantage Markets<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.vantagemarkets.com/market-analysis/why-nikkei-225-climbed-chip-stocks-recovered-jp225-november-13-2026/" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/stocks.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-12">Nov 12, 2026</time></p>
+              <h3><a href="https://www.vantagemarkets.com/market-analysis/why-nikkei-225-climbed-chip-stocks-recovered-jp225-november-13-2026/" target="_blank" rel="noopener">Nikkei slips 0.7% to 60,819 after three days of gains<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">The index gave back about 429 points on November 12, ending a three-session rebound.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.vantagemarkets.com" target="_blank" rel="noopener">Vantage Markets<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.vantagemarkets.com/market-analysis/why-nikkei-225-climbed-chip-stocks-recovered-jp225-november-13-2026/" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/stocks.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-11">Nov 11, 2026</time></p>
+              <h3><a href="https://www.bbntimes.com/financial/nikkei-225-rises-to-61-248-59-for-a-third-straight-gain-as-chip-stocks-rally" target="_blank" rel="noopener">Nikkei rises to 61,248 for a third straight gain<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Chip stocks rallied on CoreWeave's results and reports of an Anthropic listing, while SoftBank Group lagged after a surprise loss.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.bbntimes.com" target="_blank" rel="noopener">BBN Times<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.bbntimes.com/financial/nikkei-225-rises-to-61-248-59-for-a-third-straight-gain-as-chip-stocks-rally" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/stocks.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-10">Nov 10, 2026</time></p>
+              <h3><a href="https://www.bbntimes.com/companies/nikkei-225-surges-to-60-459-58-reclaiming-60-000-as-softbank-soars-14" target="_blank" rel="noopener">Nikkei reclaims 60,000 as SoftBank soars 14%<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">SoftBank Group, Advantest and Tokyo Electron made up more than half of the day's 1,684-point gain.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.bbntimes.com" target="_blank" rel="noopener">BBN Times<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.bbntimes.com/companies/nikkei-225-surges-to-60-459-58-reclaiming-60-000-as-softbank-soars-14" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/stocks.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-09">Nov 9, 2026</time></p>
+              <h3><a href="https://www.bbntimes.com/financial/nikkei-225-today-tokyo-rebounds-2-33-to-58-775-50-after-last-week-s-bear-market-plunge" target="_blank" rel="noopener">Tokyo rebounds 2.33% after bear-market plunge<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">The Nikkei closed at 58,775.50, recovering part of the previous week's losses as 208 of its 225 members rose.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.bbntimes.com" target="_blank" rel="noopener">BBN Times<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.bbntimes.com/financial/nikkei-225-today-tokyo-rebounds-2-33-to-58-775-50-after-last-week-s-bear-market-plunge" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/stocks.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-06">Nov 6, 2026</time></p>
+              <h3><a href="https://www.bbntimes.com/global-economy/nikkei-225-weekly-review-nikkei-plunges-9-25-to-57-434-77-and-enters-a-bear-market" target="_blank" rel="noopener">Nikkei loses 9.25% in a week and enters a bear market<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">A 5.96% fall on Friday left the index more than 20% below its June record, its worst week since March 2020.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.bbntimes.com" target="_blank" rel="noopener">BBN Times<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.bbntimes.com/global-economy/nikkei-225-weekly-review-nikkei-plunges-9-25-to-57-434-77-and-enters-a-bear-market" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/stocks.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-05">Nov 5, 2026</time></p>
+              <h3><a href="https://www.bbntimes.com/companies/nikkei-225-falls-to-61-077-90-as-advantest-and-tokyo-electron-plunge-while-topix-rises" target="_blank" rel="noopener">Nikkei falls while the broader TOPIX rises<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Chip-equipment heavyweights pulled the Nikkei down 1.79% even as the TOPIX gained 1.16%, a rare split between the two indexes.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.bbntimes.com" target="_blank" rel="noopener">BBN Times<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.bbntimes.com/companies/nikkei-225-falls-to-61-077-90-as-advantest-and-tokyo-electron-plunge-while-topix-rises" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/stocks.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-03">Nov 3, 2026</time></p>
+              <h3><a href="https://www.bbntimes.com/financial/nikkei-225-today-tokyo-closed-for-culture-day-index-holds-at-63-081-86-as-yen-hovers-near-158" target="_blank" rel="noopener">Tokyo closed for Culture Day with the yen near 158<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Markets shut for the national holiday, leaving the Nikkei at Monday's close of 63,081.86, about 13% below its 52-week high.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.bbntimes.com" target="_blank" rel="noopener">BBN Times<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.bbntimes.com/financial/nikkei-225-today-tokyo-closed-for-culture-day-index-holds-at-63-081-86-as-yen-hovers-near-158" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/stocks.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-14">Nov 14, 2026</time></p>
+              <h3><a href="https://asia.nikkei.com/business" target="_blank" rel="noopener">WHI on track for Japan's largest IPO of 2026<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Nikkei Asia reports that the Bain- and GIC-backed company is heading for the year's biggest listing in Japan.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://asia.nikkei.com" target="_blank" rel="noopener">Nikkei Asia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://asia.nikkei.com/business" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/stocks.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-13">Nov 13, 2026</time></p>
+              <h3><a href="https://asia.nikkei.com/business" target="_blank" rel="noopener">Growth beyond AI puts corporate Japan on track for a 20% profit gain<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Nikkei Asia reports that Japanese companies are heading for strong profit growth that isn't driven by AI alone.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://asia.nikkei.com" target="_blank" rel="noopener">Nikkei Asia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://asia.nikkei.com/business" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          </ol>
+        </div>
+        <div class="news-panel" id="panel-weather" role="tabpanel" aria-labelledby="tab-weather" tabindex="0" hidden>
+          <h3 class="sr-only" data-i18n="newsCatWeather">Weather</h3>
+          <ol class="news-list">
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/weather.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-15">Nov 15, 2026</time></p>
+              <h3><a href="https://www.sunny-spot.net/english/topics.html?area=0" target="_blank" rel="noopener">Rain nationwide on the 18th, with risk of severe winds in the north<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">The weekly outlook calls for rain across Japan on Wednesday and possible strong winds in northern Japan on the 19th.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.sunny-spot.net" target="_blank" rel="noopener">Sunny Spot<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.sunny-spot.net/english/topics.html?area=0" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/weather.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-14">Nov 14, 2026</time></p>
+              <h3><a href="https://weathernews.com/news/en/japan/2026/11/14/weather-134/" target="_blank" rel="noopener">Sunday: midday rain in Tokyo, high of 14°C<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Rain is expected in Tokyo around noon, in Osaka and Fukuoka in the morning and in Sapporo in the afternoon.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://weathernews.com" target="_blank" rel="noopener">Weathernews<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://weathernews.com/news/en/japan/2026/11/14/weather-134/" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/weather.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-14">Nov 14, 2026</time></p>
+              <h3><a href="https://weathernews.com/news/en/japan/2026/11/14/weather-010/" target="_blank" rel="noopener">Weekly forecast: unsettled in the north, sunnier in the east later<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Northern Japan faces rain or snow most days, while eastern Japan clears later in the week.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://weathernews.com" target="_blank" rel="noopener">Weathernews<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://weathernews.com/news/en/japan/2026/11/14/weather-010/" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/weather.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-14">Nov 14, 2026</time></p>
+              <h3><a href="https://www.sunny-spot.net/english/topics.html?area=0" target="_blank" rel="noopener">Heavy thunderstorms possible in Kyushu and Shikoku on Sunday<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">A low and a front moving east could bring intense thunderstorms to southwestern Japan.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.sunny-spot.net" target="_blank" rel="noopener">Sunny Spot<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.sunny-spot.net/english/topics.html?area=0" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/weather.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-14">Nov 14, 2026</time></p>
+              <h3><a href="https://weathernews.com/news/en/japan/2026/11/14/climate-449/" target="_blank" rel="noopener">October was the warmest on record worldwide<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Citing NOAA, the report says 2026 is expected to be the second-warmest year on record, behind 2024.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://weathernews.com" target="_blank" rel="noopener">Weathernews<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://weathernews.com/news/en/japan/2026/11/14/climate-449/" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/weather.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-13">Nov 13, 2026</time></p>
+              <h3><a href="https://www.sunny-spot.net/english/topics.html?area=0" target="_blank" rel="noopener">Strong cold air may bring severe weather and snow by midweek<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">A rapidly deepening low could bring strong northerly winds and snow across Japan by the 19th.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.sunny-spot.net" target="_blank" rel="noopener">Sunny Spot<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.sunny-spot.net/english/topics.html?area=0" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/weather.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-13">Nov 13, 2026</time></p>
+              <h3><a href="https://weathernews.com/news/en/japan/2026/11/13/weather-552/" target="_blank" rel="noopener">Saturday: rain from around noon in Fukuoka<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Tokyo and Osaka were forecast to reach 19°C and 20°C, while Sapporo stays sunny with a high of 11°C.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://weathernews.com" target="_blank" rel="noopener">Weathernews<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://weathernews.com/news/en/japan/2026/11/13/weather-552/" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/weather.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-13">Nov 13, 2026</time></p>
+              <h3><a href="https://weathernews.com/news/en/japan/2026/11/13/weather-769/" target="_blank" rel="noopener">Rain across Japan on November 15 and 18<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Eastern Japan is expected to turn sunny from Thursday, November 19.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://weathernews.com" target="_blank" rel="noopener">Weathernews<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://weathernews.com/news/en/japan/2026/11/13/weather-769/" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/weather.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-11">Nov 11, 2026</time></p>
+              <h3><a href="https://www.sunny-spot.net/english/topics.html?area=0" target="_blank" rel="noopener">Typhoon No. 32 passes the Ogasawara Islands and heads east<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">After approaching the islands with very strong intensity, the typhoon was moving away to the east of Japan.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.sunny-spot.net" target="_blank" rel="noopener">Sunny Spot<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.sunny-spot.net/english/topics.html?area=0" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/weather.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-03">Nov 3, 2026</time></p>
+              <h3><a href="https://www.japannakama.co.uk/travel/discover-japan-in-november-unmissable-events-and-festivals/" target="_blank" rel="noopener">Autumn leaves running late as November stays warm<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">The Japan Weather Association expects maples to peak at the usual time or later, with Kyoto's Arashiyama at its best from mid-November.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.japannakama.co.uk" target="_blank" rel="noopener">Japan Nakama<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.japannakama.co.uk/travel/discover-japan-in-november-unmissable-events-and-festivals/" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          </ol>
+        </div>
+        <div class="news-panel" id="panel-sports" role="tabpanel" aria-labelledby="tab-sports" tabindex="0" hidden>
+          <h3 class="sr-only" data-i18n="newsCatSports">Sports</h3>
+          <ol class="news-list">
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/sports.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-07">Nov 7, 2026</time></p>
+              <h3><a href="https://www.jleague.jp/en/news/article/35308/" target="_blank" rel="noopener">FC Tokyo beat Kashima 2-0 to equal the J1 clean-sheet record<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">The leaders kept a ninth straight clean sheet, equalling the J1 record.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.jleague.jp" target="_blank" rel="noopener">J.League<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.jleague.jp/en/news/article/35308/" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/sports.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-06">Nov 6, 2026</time></p>
+              <h3><a href="https://www.flashscore.com/news/japan-to-face-world-cup-vanquishers-at-november-friendly-tournament-in-singapore/htnq7RHb/" target="_blank" rel="noopener">Japan face Brazil in a World Cup rematch in Singapore<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Japan meet Brazil on November 14 and Paraguay on November 17 in the four-team Mizuho Blue Challenge.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.flashscore.com" target="_blank" rel="noopener">Flashscore<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.flashscore.com/news/japan-to-face-world-cup-vanquishers-at-november-friendly-tournament-in-singapore/htnq7RHb/" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/sports.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-03">Nov 3, 2026</time></p>
+              <h3><a href="https://www.jleague.jp/en/news/article/35275/" target="_blank" rel="noopener">FC Tokyo go top of J1 after an unbeaten October<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Four wins and five clean sheets in October lifted FC Tokyo to the top of the table.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.jleague.jp" target="_blank" rel="noopener">J.League<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.jleague.jp/en/news/article/35275/" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/sports.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-02">Nov 2, 2026</time></p>
+              <h3><a href="https://www.mlb.com/news/shohei-ohtani-finalist-for-2026-nl-mvp-award" target="_blank" rel="noopener">Ohtani named an NL MVP finalist for a sixth straight season<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Despite injuries, Shohei Ohtani hit 30 home runs and posted a 1.79 ERA as a pitcher.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.mlb.com" target="_blank" rel="noopener">MLB.com<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.mlb.com/news/shohei-ohtani-finalist-for-2026-nl-mvp-award" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/sports.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-10-31">Oct 31, 2026</time></p>
+              <h3><a href="https://www.jleague.jp/en/news/article/35249/" target="_blank" rel="noopener">Nishikawa equals J1's all-time appearance record<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Urawa goalkeeper Shusaku Nishikawa made his 672nd J1 appearance as Kashiwa won 4-0.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.jleague.jp" target="_blank" rel="noopener">J.League<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.jleague.jp/en/news/article/35249/" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/sports.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-10-29">Oct 29, 2026</time></p>
+              <h3><a href="https://www.starnewskorea.com/en/sports/2026/10/29/2026102910344976522" target="_blank" rel="noopener">SoftBank Hawks win the 2026 Japan Series<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">The Hawks beat Yokohama 4-2 in Game 4, finishing the postseason with seven straight wins, all comebacks.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.starnewskorea.com" target="_blank" rel="noopener">Star News Korea<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.starnewskorea.com/en/sports/2026/10/29/2026102910344976522" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/sports.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-10-28">Oct 28, 2026</time></p>
+              <h3><a href="https://www.haveagood-holiday.com/en/articles/kyushu-grand-sumo-tournament-tabiwa-viewing-plan-2026" target="_blank" rel="noopener">Kyushu Grand Sumo Tournament runs November 8 to 22<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">The year's final sumo tournament takes place at Fukuoka Kokusai Center.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://www.haveagood-holiday.com" target="_blank" rel="noopener">Have a Good Holiday<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://www.haveagood-holiday.com/en/articles/kyushu-grand-sumo-tournament-tabiwa-viewing-plan-2026" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/sports.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-08">Nov 8, 2026</time></p>
+              <h3><a href="https://en.wikipedia.org/wiki/2026_in_Rizin_Fighting_Federation" target="_blank" rel="noopener">Rizin 55 held at LaLa Arena Tokyo-Bay<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">The mixed martial arts promotion staged its ninth event of 2026 in Funabashi, with a New Year's Eve show in Nagoya to come.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://en.wikipedia.org" target="_blank" rel="noopener">Wikipedia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://en.wikipedia.org/wiki/2026_in_Rizin_Fighting_Federation" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/sports.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-13">Nov 13, 2026</time></p>
+              <h3><a href="https://en.sports-tokyo-info.metro.tokyo.lg.jp/topics/oshirase.php" target="_blank" rel="noopener">Tokyo sets out its 'Sports Vision 2028+'<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">The city also announced the Tokyo International Youth Sports Games at Komazawa Olympic Park on November 28 and 29.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://en.sports-tokyo-info.metro.tokyo.lg.jp" target="_blank" rel="noopener">Tokyo Metropolitan Government<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://en.sports-tokyo-info.metro.tokyo.lg.jp/topics/oshirase.php" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/sports.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-03">Nov 3, 2026</time></p>
+              <h3><a href="https://en.wikipedia.org/wiki/2026_Japan_Golf_Tour" target="_blank" rel="noopener">Japan Golf Tour heads into its final weeks<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">The 2026 season runs until December 6; Yusaku Hosono won the Japan Open in October.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://en.wikipedia.org" target="_blank" rel="noopener">Wikipedia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://en.wikipedia.org/wiki/2026_Japan_Golf_Tour" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          </ol>
+        </div>
+        <div class="news-panel" id="panel-health" role="tabpanel" aria-labelledby="tab-health" tabindex="0" hidden>
+          <h3 class="sr-only" data-i18n="newsCatHealth">Health</h3>
+          <ol class="news-list">
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/health.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-13">Nov 13, 2026</time></p>
+              <h3><a href="https://pj.jiho.jp/article/256921" target="_blank" rel="noopener">Japan's big four drug wholesalers see profits slip despite higher sales<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Rising procurement and other costs trimmed combined operating profit in the first half of fiscal 2026.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://pj.jiho.jp" target="_blank" rel="noopener">Pharma Japan<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://pj.jiho.jp/article/256921" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/health.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-13">Nov 13, 2026</time></p>
+              <h3><a href="https://pj.jiho.jp/article/256914" target="_blank" rel="noopener">Pfizer files Litfulo for vitiligo in Japan<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Pfizer wants to add nonsegmental vitiligo to the drug's uses; it is already approved for alopecia areata.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://pj.jiho.jp" target="_blank" rel="noopener">Pharma Japan<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://pj.jiho.jp/article/256914" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/health.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-13">Nov 13, 2026</time></p>
+              <h3><a href="https://pj.jiho.jp/article/256915" target="_blank" rel="noopener">Takeda launches narcolepsy drug Orzeyful in the US<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">The US launch follows earlier rollouts in Japan and China.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://pj.jiho.jp" target="_blank" rel="noopener">Pharma Japan<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://pj.jiho.jp/article/256915" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/health.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-13">Nov 13, 2026</time></p>
+              <h3><a href="https://pj.jiho.jp/article/256903" target="_blank" rel="noopener">Keytruda stays Japan's top seller as Mounjaro climbs to second<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">IQVIA data for July to September show Mounjaro up from eighth place a year earlier.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://pj.jiho.jp" target="_blank" rel="noopener">Pharma Japan<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://pj.jiho.jp/article/256903" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/health.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-13">Nov 13, 2026</time></p>
+              <h3><a href="https://pj.jiho.jp/article/256838" target="_blank" rel="noopener">Keytruda SC leads Japan's latest round of 16 new drug listings<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Japan added 16 new drugs to its national price list on November 13, including a subcutaneous form of Keytruda.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://pj.jiho.jp" target="_blank" rel="noopener">Pharma Japan<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://pj.jiho.jp/article/256838" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/health.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-13">Nov 13, 2026</time></p>
+              <h3><a href="https://pj.jiho.jp/article/256922" target="_blank" rel="noopener">Pharmacy group renews call to scrap off-year drug price revisions<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Japan's pharmacy association again urged the government to end the annual price cuts between regular revisions.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://pj.jiho.jp" target="_blank" rel="noopener">Pharma Japan<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://pj.jiho.jp/article/256922" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/health.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-12">Nov 12, 2026</time></p>
+              <h3><a href="https://japannews24.com/japan-73/" target="_blank" rel="noopener">3D printers create realistic sushi for elderly patients<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">Printed sushi aims to make meals easier and more appealing for older people who struggle to eat.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://japannews24.com" target="_blank" rel="noopener">JapanNews24<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://japannews24.com/japan-73/" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/health.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-06">Nov 6, 2026</time></p>
+              <h3><a href="https://pj.jiho.jp/" target="_blank" rel="noopener">Alzheimer's drug Kisunla's price to be cut 3.93%<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">The cost-effectiveness review cut takes effect on February 1, 2027.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://pj.jiho.jp" target="_blank" rel="noopener">Pharma Japan<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://pj.jiho.jp/" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/health.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-06">Nov 6, 2026</time></p>
+              <h3><a href="https://pj.jiho.jp/" target="_blank" rel="noopener">Regeneron files multiple myeloma drug linvoseltamab in Japan<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">The filing covers adults whose disease has returned after at least three earlier therapies.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://pj.jiho.jp" target="_blank" rel="noopener">Pharma Japan<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://pj.jiho.jp/" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          <li class="news-item">
+            <figure class="news-fig">
+              <img src="img/covers/health.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+            <div class="news-body">
+              <p class="news-meta"><time datetime="2026-11-06">Nov 6, 2026</time></p>
+              <h3><a href="https://pj.jiho.jp/" target="_blank" rel="noopener">Fuji Pharma recalls Eylea biosimilar lots over faulty finger grips<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></h3>
+              <p class="news-text">The recall concerns a manufacturing problem with the product's finger grips.</p>
+              <p class="news-source"><span data-i18n="newsSourceLabel">Source</span>: <a href="https://pj.jiho.jp" target="_blank" rel="noopener">Pharma Japan<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a> · <a href="https://pj.jiho.jp/" target="_blank" rel="noopener"><span data-i18n="newsReadMore">Read the full story</span> ↗<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a></p>
+            </div>
+          </li>
+          </ol>
+        </div>
+        <p class="news-note"><span data-i18n="newsAutoNote">Stories are gathered by Tenshi Scraper from public news feeds. Headlines and excerpts belong to their publishers; follow each link to read the full story.</span> <span class="news-updated"><span data-i18n="newsUpdated">Updated</span>: <time datetime="2026-11-15T21:00:00.000Z">Nov 16, 2026</time></span></p>
       </div>
     </section>
 
@@ -216,8 +857,8 @@
     </div>
   </footer>
 
-  <script src="translations.js?v=0f9e9041"></script>
-  <script src="app.js?v=45c6c601"></script>
+  <script src="translations.js?v=22ed97e6"></script>
+  <script src="app.js?v=c7d6c058"></script>
   <script src="design.js?v=11100b2c"></script>
   <script src="chat.js?v=e6aee4be"></script>
 </body>

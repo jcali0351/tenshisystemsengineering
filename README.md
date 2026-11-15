@@ -69,3 +69,27 @@ Tailwind CSS (v4, through the Tailwind CLI, no Vite) is available on every page 
 - First time on a computer: `npm install`. After changing pages or classes: `npm run build`
   (page builder, Tailwind and asset stamps), or `npm run css` for Tailwind alone. The rebuild Action runs the same
   build on GitHub after every push that touches pages, text, pictures or styles.
+
+## Content bots: Tenshi Scraper (News), Tenshi Blog Writer (Blog) and the stock ticker
+
+All three run on GitHub Actions, because a static site can't fetch other websites from the browser.
+
+- **Tenshi Scraper** (`tools/news-scraper.mjs`, `.github/workflows/news-scraper.yml`): the "Run Tenshi Scraper" button
+  in the Tenshi Editor's **Content bots** tab saves `data/scrape-request.json`, which starts the job. It reads public
+  news feeds (Japan Today, The Japan Times, Google News searches; list at the top of the script) and keeps 10 stories
+  for each category (Technology, Business, Stock Exchange, Weather, Sports, Health) in `data/news.json`. Each story keeps
+  its headline, publisher, link and the publisher's own short teaser, shown as a credited quote.
+- **Tenshi Blog Writer** (`tools/blog-writer.mjs`, `.github/workflows/blog-writer.yml`): the "Run Tenshi Blog Writer"
+  button saves `data/blog-request.json`. It reads the week's tech news and has Claude write 1 to 5 new posts in its own
+  words into `data/blog.json`, each listing and linking its sources and marked as written with AI help.
+  Needs the repository secret `ANTHROPIC_API_KEY` (Settings › Secrets and variables › Actions). With the key, the
+  Scraper also writes a one-line summary for each story. Models: `NEWS_AI_MODEL`, `BLOG_AI_MODEL` (optional env).
+- **Feature images** (`tools/images.mjs`, `tools/add-images.mjs`): every story and post gets a free-to-use photo from
+  Openverse (CC0, public domain, CC BY, CC BY-SA) or Wikimedia Commons, saved in `img/stories/` with its creator,
+  license and source shown on the card. Searches name scenes and objects, never people. If no photo fits, the card
+  uses a generated Tenshi cover from `img/covers/`. Unused photos are deleted on the next run.
+- **Stock ticker** (`tools/ticker.mjs`, `.github/workflows/stock-ticker.yml`): every 30 minutes while the Tokyo market is
+  open, delayed prices for the Nikkei 225, TOPIX, USD/JPY and well-known Tokyo stocks (Yahoo Finance, Stooq as a
+  fallback) go into `data/ticker.json`; `app.js` shows them in the scrolling bar at the top of every page.
+
+`tools/build-pages.mjs` builds news.html and blog.html from the two data files.
