@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Portal | Tenshi Systems Engineering</title>
+  <meta name="description" content="Sign in to follow your project or to manage the website.">
+  <meta name="theme-color" content="#c8102e">
+  <meta property="og:title" content="Portal | Tenshi Systems Engineering">
+  <meta property="og:description" content="Sign in to follow your project or to manage the website.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="brand/tenshi-logo.png" type="image/png">
+  <link rel="alternate icon" href="brand/tenshi-apple-touch-icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="brand/tenshi-apple-touch-icon.png">
+  <link rel="stylesheet" href="tailwind.css?v=7e0d162a">
+  <link rel="stylesheet" href="styles.css?v=8eed3fa8">
+  <link rel="stylesheet" href="design.css?v=41ac096a">
+  <link rel="stylesheet" href="chat.css?v=8097383f">
+  <link rel="stylesheet" href="site-theme.css?v=35411480">
+</head>
+<body class="page portal-page" data-title-key="portalTitle" data-desc-key="portalLead">
+  <!-- Written by tools/build-pages.mjs: edit translations.js and the script, not this file. -->
+  <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
+
+  <header class="site-header">
+    <div class="ticker" data-ticker hidden>
+      <p class="ticker-label"><span data-i18n="tickerLabel">Japan markets</span> <small data-i18n="tickerDelayed">Delayed prices</small></p>
+      <div class="ticker-window"><ul class="ticker-track"></ul></div>
+      <p class="ticker-time"></p>
+    </div>
+    <div class="header-inner">
+      <a class="brand" href="index.html" aria-label="Tenshi Systems Engineering, top of page" data-i18n-attr="aria-label:brandLabel">
+        <span class="logo-dazzle logo-dazzle--brand"><img class="brand-logo" src="brand/tenshi-logo.png" alt="" width="225" height="217"></span>
+        <span class="brand-text">
+          <span class="brand-en">Tenshi Systems Engineering</span>
+          <span class="brand-ja" lang="ja">天使システムズエンジニアリング</span>
+        </span>
+      </a>
+      <nav class="main-nav" aria-label="Main menu" data-i18n-attr="aria-label:navLabel">
+        <ul>
+          <li><a href="index.html" data-nav="home" data-i18n="navHome">Home</a></li>
+          <li><a href="about.html" data-nav="about" data-i18n="navAbout">About</a></li>
+          <li><a href="team.html" data-nav="team" data-i18n="navTeam">Team</a></li>
+          <li><a href="services.html" data-nav="services" data-i18n="navServices">Services</a></li>
+          <li><a href="technology.html" data-nav="technology" data-i18n="navTech">Technology</a></li>
+          <li class="has-sub"><a href="projects.html" data-nav="projects" data-i18n="navProjects">Projects</a>
+            <ul class="sub-nav">
+              <li><a href="projects/storycaster.html" data-nav="p-storycaster">StoryCaster</a></li>
+              <li><a href="projects/master-baiter-pro.html" data-nav="p-master-baiter-pro">Master Baiter Pro</a></li>
+            </ul>
+          </li>
+          <li><a href="news.html" data-nav="news" data-i18n="navNews">News</a></li>
+          <li><a href="blog.html" data-nav="blog" data-i18n="navBlog">Blog</a></li>
+          <li><a href="contact.html" data-nav="contact" data-i18n="navContact">Contact</a></li>
+          <li><a href="portal.html" aria-current="page" data-nav="portal" data-i18n="navPortal">Portal</a></li>
+        </ul>
+      </nav>
+      <div class="lang-picker">
+        <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+          <symbol id="flag-en" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect y="0" width="30" height="1.54" fill="#b22234"/><rect y="3.08" width="30" height="1.54" fill="#b22234"/><rect y="6.15" width="30" height="1.54" fill="#b22234"/><rect y="9.23" width="30" height="1.54" fill="#b22234"/><rect y="12.31" width="30" height="1.54" fill="#b22234"/><rect y="15.38" width="30" height="1.54" fill="#b22234"/><rect y="18.46" width="30" height="1.54" fill="#b22234"/><rect width="12" height="10.77" fill="#3c3b6e"/><circle cx="1" cy="1" r=".45" fill="#fff"/><circle cx="3" cy="1" r=".45" fill="#fff"/><circle cx="5" cy="1" r=".45" fill="#fff"/><circle cx="7" cy="1" r=".45" fill="#fff"/><circle cx="9" cy="1" r=".45" fill="#fff"/><circle cx="11" cy="1" r=".45" fill="#fff"/><circle cx="2" cy="3.15" r=".45" fill="#fff"/><circle cx="4" cy="3.15" r=".45" fill="#fff"/><circle cx="6" cy="3.15" r=".45" fill="#fff"/><circle cx="8" cy="3.15" r=".45" fill="#fff"/><circle cx="10" cy="3.15" r=".45" fill="#fff"/><circle cx="1" cy="5.3" r=".45" fill="#fff"/><circle cx="3" cy="5.3" r=".45" fill="#fff"/><circle cx="5" cy="5.3" r=".45" fill="#fff"/><circle cx="7" cy="5.3" r=".45" fill="#fff"/><circle cx="9" cy="5.3" r=".45" fill="#fff"/><circle cx="11" cy="5.3" r=".45" fill="#fff"/><circle cx="2" cy="7.45" r=".45" fill="#fff"/><circle cx="4" cy="7.45" r=".45" fill="#fff"/><circle cx="6" cy="7.45" r=".45" fill="#fff"/><circle cx="8" cy="7.45" r=".45" fill="#fff"/><circle cx="10" cy="7.45" r=".45" fill="#fff"/><circle cx="1" cy="9.6" r=".45" fill="#fff"/><circle cx="3" cy="9.6" r=".45" fill="#fff"/><circle cx="5" cy="9.6" r=".45" fill="#fff"/><circle cx="7" cy="9.6" r=".45" fill="#fff"/><circle cx="9" cy="9.6" r=".45" fill="#fff"/><circle cx="11" cy="9.6" r=".45" fill="#fff"/></symbol>
+          <symbol id="flag-ja" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><circle cx="15" cy="10" r="6" fill="#bc002d"/></symbol>
+          <symbol id="flag-ko" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><g transform="rotate(33.69 15 10)"><circle cx="15" cy="10" r="5" fill="#cd2e3a"/><path d="M10 10a5 5 0 0 0 10 0a2.5 2.5 0 0 0-5 0a2.5 2.5 0 0 1-5 0z" fill="#0047a0"/></g><g transform="rotate(-56.31 6.7 4.5)" fill="#000"><rect x="4.7" y="2.95" width="4" height=".75"/><rect x="4.7" y="4.05" width="4" height=".75"/><rect x="4.7" y="5.15" width="4" height=".75"/></g><g transform="rotate(-56.31 23.3 15.5)" fill="#000"><rect x="21.3" y="13.95" width="1.7" height=".75"/><rect x="23.6" y="13.95" width="1.7" height=".75"/><rect x="21.3" y="15.05" width="1.7" height=".75"/><rect x="23.6" y="15.05" width="1.7" height=".75"/><rect x="21.3" y="16.15" width="1.7" height=".75"/><rect x="23.6" y="16.15" width="1.7" height=".75"/></g><g transform="rotate(56.31 23.3 4.5)" fill="#000"><rect x="21.3" y="2.95" width="1.7" height=".75"/><rect x="23.6" y="2.95" width="1.7" height=".75"/><rect x="21.3" y="4.05" width="4" height=".75"/><rect x="21.3" y="5.15" width="1.7" height=".75"/><rect x="23.6" y="5.15" width="1.7" height=".75"/></g><g transform="rotate(56.31 6.7 15.5)" fill="#000"><rect x="4.7" y="13.95" width="4" height=".75"/><rect x="4.7" y="15.05" width="1.7" height=".75"/><rect x="7" y="15.05" width="1.7" height=".75"/><rect x="4.7" y="16.15" width="4" height=".75"/></g></symbol>
+          <symbol id="flag-de" viewBox="0 0 30 20"><rect width="30" height="6.67" fill="#000"/><rect y="6.67" width="30" height="6.67" fill="#dd0000"/><rect y="13.33" width="30" height="6.67" fill="#ffce00"/></symbol>
+          <symbol id="flag-zh" viewBox="0 0 30 20"><rect width="30" height="20" fill="#ee1c25"/><polygon points="5,2 5.67,4.07 7.85,4.07 6.09,5.35 6.76,7.43 5,6.15 3.24,7.43 3.91,5.35 2.15,4.07 4.33,4.07" fill="#ffde00"/><polygon points="10.39,1.08 10.33,1.8 11,2.09 10.29,2.25 10.22,2.97 9.85,2.35 9.14,2.52 9.62,1.97 9.25,1.34 9.91,1.63" fill="#ffde00"/><polygon points="12.72,3.31 12.38,3.95 12.88,4.47 12.17,4.34 11.83,4.98 11.73,4.27 11.01,4.14 11.66,3.82 11.56,3.1 12.07,3.62" fill="#ffde00"/><polygon points="12.94,6.66 12.37,7.11 12.62,7.79 12.01,7.38 11.44,7.83 11.64,7.13 11.04,6.72 11.76,6.7 11.97,6 12.21,6.68" fill="#ffde00"/><polygon points="10.36,8.07 10.32,8.79 11,9.05 10.3,9.24 10.26,9.97 9.86,9.36 9.16,9.54 9.62,8.98 9.22,8.37 9.9,8.63" fill="#ffde00"/></symbol>
+          <symbol id="flag-es" viewBox="0 0 30 20"><rect width="30" height="20" fill="#aa151b"/><rect y="5" width="30" height="10" fill="#f1bf00"/></symbol>
+          <symbol id="flag-pl" viewBox="0 0 30 20"><rect width="30" height="10" fill="#fff"/><rect y="10" width="30" height="10" fill="#dc143c"/></symbol>
+          <symbol id="flag-pcm" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect width="10" height="20" fill="#008751"/><rect x="20" width="10" height="20" fill="#008751"/></symbol>
+          <symbol id="flag-ar" viewBox="0 0 30 20"><rect width="30" height="20" fill="#1a7a4c"/><text x="15" y="15" text-anchor="middle" font-size="14" font-weight="700" fill="#fff" font-family="Segoe UI, Tahoma, Arial, sans-serif">ع</text></symbol>
+          <symbol id="flag-fa" viewBox="0 0 30 20"><rect width="30" height="6.67" fill="#239f40"/><rect y="6.67" width="30" height="6.67" fill="#fff"/><rect y="13.33" width="30" height="6.67" fill="#da0000"/></symbol>
+        </svg>
+        <button type="button" class="lang-current" aria-haspopup="true" aria-expanded="false" aria-controls="lang-menu" aria-label="Choose language" data-i18n-attr="aria-label:langMenu">
+          <svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-en"/></svg><span class="lang-code">EN</span><svg class="lang-caret" viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+        </button>
+        <ul class="lang-menu" id="lang-menu" hidden>
+            <li><button type="button" data-lang="en" lang="en" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-en"/></svg><span>English</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="ja" lang="ja" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-ja"/></svg><span>日本語</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="ko" lang="ko" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-ko"/></svg><span>한국어</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="de" lang="de" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-de"/></svg><span>Deutsch</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="zh" lang="zh" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-zh"/></svg><span>中文</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="es" lang="es" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-es"/></svg><span>Español</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="pl" lang="pl" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-pl"/></svg><span>Polski</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="pcm" lang="pcm" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-pcm"/></svg><span>Naijá (Pidgin)</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="ar" lang="ar" dir="rtl" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-ar"/></svg><span>العربية</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="fa" lang="fa" dir="rtl" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-fa"/></svg><span>فارسی</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="svc-hero has-art">
+      <div class="svc-hero-inner">
+        <div class="svc-hero-text">
+          <nav class="crumbs" aria-label="Breadcrumb" data-i18n-attr="aria-label:crumbLabel">
+            <ol>
+              <li><a href="index.html" data-i18n="crumbHome">Home</a></li>
+              <li aria-current="page" data-i18n="navPortal">Portal</li>
+            </ol>
+          </nav>
+          <h1 data-i18n="portalTitle">Portal</h1>
+          <p class="svc-hero-lead" data-i18n="portalLead">Sign in to follow your project or to manage the website.</p>
+        </div>
+        <svg class="page-art" viewBox="0 0 320 220" aria-hidden="true" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="62" y="44" width="86" height="140" rx="10" stroke-opacity=".85" stroke-width="2.5"/><rect x="172" y="44" width="86" height="140" rx="10" stroke-opacity=".85" stroke-width="2.5"/>
+      <circle cx="132" cy="118" r="5" fill="#fff" stroke="none"/><circle cx="242" cy="118" r="5" fill="#fff" stroke="none"/>
+      <path d="M86 78a19 19 0 1 1 38 0M84 150h42" stroke-opacity=".55" stroke-width="2.5"/><rect x="196" y="70" width="38" height="28" rx="4" fill="#fff" fill-opacity=".9" stroke="none"/><path d="M196 140h38M196 154h26" stroke-opacity=".55" stroke-width="2.5"/>
+    </svg>
+      </div>
+    </section>
+
+    <section class="page-section portal-section" aria-labelledby="portal-choose">
+      <div class="page-inner">
+        <h2 id="portal-choose" class="sr-only" data-i18n="portalTitle">Portal</h2>
+        <div class="portal-grid">
+          <article class="portal-card" aria-labelledby="portal-client-title">
+            <span class="portal-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c1.2-4 4.1-6 7.5-6s6.3 2 7.5 6"/></svg></span>
+            <p class="portal-state" data-i18n="portalClientSoon">Coming soon</p>
+            <h3 id="portal-client-title" data-i18n="portalClientTitle">Client portal</h3>
+            <p data-i18n="portalClientText">Follow your project's progress, share files and see your invoices in one place. Client accounts are opening soon; until then, our team is happy to send you an update.</p>
+            <a class="btn btn-primary" href="contact.html" data-i18n="portalClientBtn">Ask for a project update</a>
+          </article>
+          <article class="portal-card portal-card--admin" aria-labelledby="portal-admin-title">
+            <span class="portal-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18"/><path d="M7 13h6M7 16h10"/><circle cx="6" cy="6.5" r=".6" fill="currentColor"/><circle cx="8.3" cy="6.5" r=".6" fill="currentColor"/></svg></span>
+            <h3 id="portal-admin-title" data-i18n="portalAdminTitle">Admin portal</h3>
+            <p data-i18n="portalAdminText">For the Tenshi team: edit every page, picture and translation, change the design and run the news and blog bots.</p>
+            <a class="btn btn-primary" href="admin.html" data-i18n="portalAdminBtn">Open the admin portal</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img class="footer-logo" src="brand/tenshi-logo.png" alt="" width="225" height="217">
+        <div>
+          <strong>Tenshi Systems Engineering</strong>
+          <span lang="ja">天使システムズエンジニアリング</span>
+        </div>
+      </div>
+      <nav class="footer-nav" aria-label="Main menu" data-i18n-attr="aria-label:navLabel">
+          <ul>
+            <li><a href="index.html" data-nav="home" data-i18n="navHome">Home</a></li>
+            <li><a href="about.html" data-nav="about" data-i18n="navAbout">About</a></li>
+            <li><a href="team.html" data-nav="team" data-i18n="navTeam">Team</a></li>
+            <li><a href="services.html" data-nav="services" data-i18n="navServices">Services</a></li>
+            <li><a href="technology.html" data-nav="technology" data-i18n="navTech">Technology</a></li>
+            <li><a href="projects.html" data-nav="projects" data-i18n="navProjects">Projects</a></li>
+            <li><a href="news.html" data-nav="news" data-i18n="navNews">News</a></li>
+            <li><a href="blog.html" data-nav="blog" data-i18n="navBlog">Blog</a></li>
+            <li><a href="contact.html" data-nav="contact" data-i18n="navContact">Contact</a></li>
+            <li><a href="portal.html" aria-current="page" data-nav="portal" data-i18n="navPortal">Portal</a></li>
+          </ul>
+      </nav>
+      <p class="footer-meta"><span data-i18n="location">Osaka, Japan</span> · © <span id="year">2026</span> Tenshi Systems Engineering</p>
+    </div>
+  </footer>
+
+  <script src="translations.js?v=502fca5d"></script>
+  <script src="app.js?v=21056cff"></script>
+  <script src="design.js?v=284e2ec5"></script>
+  <script src="chat.js?v=e6aee4be"></script>
+</body>
+</html>

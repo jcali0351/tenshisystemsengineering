@@ -654,7 +654,17 @@ window.TRANSLATIONS = {
     blogSources: "Sources",
     blogAiNote: "Written with AI assistance from the reports listed below.",
     tickerLabel: "Japan markets",
-    tickerDelayed: "Delayed prices"
+    tickerDelayed: "Delayed prices",
+    navPortal: "Portal",
+    portalTitle: "Portal",
+    portalLead: "Sign in to follow your project or to manage the website.",
+    portalClientTitle: "Client portal",
+    portalClientText: "Follow your project's progress, share files and see your invoices in one place. Client accounts are opening soon; until then, our team is happy to send you an update.",
+    portalClientSoon: "Coming soon",
+    portalClientBtn: "Ask for a project update",
+    portalAdminTitle: "Admin portal",
+    portalAdminText: "For the Tenshi team: edit every page, picture and translation, change the design and run the news and blog bots.",
+    portalAdminBtn: "Open the admin portal"
   },
   ja: {
     patTitle: "日本のロボット特許エクスプローラー",
@@ -1309,7 +1319,17 @@ window.TRANSLATIONS = {
     blogSources: "出典",
     blogAiNote: "以下の報道をもとに、AIの支援を受けて執筆しました。",
     tickerLabel: "日本の市場",
-    tickerDelayed: "遅延値"
+    tickerDelayed: "遅延値",
+    navPortal: "ポータル",
+    portalTitle: "ポータル",
+    portalLead: "プロジェクトの確認やウェブサイトの管理はこちらからログインしてください。",
+    portalClientTitle: "クライアントポータル",
+    portalClientText: "プロジェクトの進捗確認、ファイルの共有、請求書の確認をひとつの場所で。クライアントアカウントはまもなく開設予定です。それまではチームから最新状況をお送りします。",
+    portalClientSoon: "近日公開",
+    portalClientBtn: "進捗を問い合わせる",
+    portalAdminTitle: "管理者ポータル",
+    portalAdminText: "Tenshiチーム向け：すべてのページ、画像、翻訳の編集、デザインの変更、ニュースとブログのボットの実行ができます。",
+    portalAdminBtn: "管理者ポータルを開く"
   },
   ko: {
     patTitle: "일본 로봇 특허 탐색기",
@@ -1972,7 +1992,17 @@ window.TRANSLATIONS = {
     blogSources: "출처",
     blogAiNote: "아래 보도를 바탕으로 AI의 도움을 받아 작성했습니다.",
     tickerLabel: "일본 시장",
-    tickerDelayed: "지연 시세"
+    tickerDelayed: "지연 시세",
+    navPortal: "포털",
+    portalTitle: "포털",
+    portalLead: "프로젝트를 확인하거나 웹사이트를 관리하려면 로그인하세요.",
+    portalClientTitle: "고객 포털",
+    portalClientText: "프로젝트 진행 상황 확인, 파일 공유, 청구서 확인을 한곳에서. 고객 계정은 곧 열립니다. 그때까지는 저희 팀이 진행 상황을 보내 드립니다.",
+    portalClientSoon: "곧 공개",
+    portalClientBtn: "진행 상황 문의하기",
+    portalAdminTitle: "관리자 포털",
+    portalAdminText: "Tenshi 팀 전용: 모든 페이지와 이미지, 번역을 편집하고 디자인을 바꾸고 뉴스·블로그 봇을 실행합니다.",
+    portalAdminBtn: "관리자 포털 열기"
   },
   de: {
     patTitle: "Japanischer Robotik-Patentexplorer",
@@ -2635,7 +2665,17 @@ window.TRANSLATIONS = {
     blogSources: "Quellen",
     blogAiNote: "Mit KI-Unterstützung auf Grundlage der unten genannten Berichte verfasst.",
     tickerLabel: "Märkte in Japan",
-    tickerDelayed: "Verzögerte Kurse"
+    tickerDelayed: "Verzögerte Kurse",
+    navPortal: "Portal",
+    portalTitle: "Portal",
+    portalLead: "Melden Sie sich an, um Ihr Projekt zu verfolgen oder die Website zu verwalten.",
+    portalClientTitle: "Kundenportal",
+    portalClientText: "Projektfortschritt, Dateien und Rechnungen an einem Ort. Kundenkonten starten in Kürze; bis dahin schickt Ihnen unser Team gern ein Update.",
+    portalClientSoon: "Demnächst",
+    portalClientBtn: "Projekt-Update anfragen",
+    portalAdminTitle: "Admin-Portal",
+    portalAdminText: "Für das Tenshi-Team: Seiten, Bilder und Übersetzungen bearbeiten, das Design ändern und die News- und Blog-Bots starten.",
+    portalAdminBtn: "Admin-Portal öffnen"
   },
   es: {
     patTitle: "Explorador de patentes japonesas de robótica",
@@ -3298,7 +3338,17 @@ window.TRANSLATIONS = {
     blogSources: "Fuentes",
     blogAiNote: "Escrito con ayuda de IA a partir de los artículos citados abajo.",
     tickerLabel: "Mercados de Japón",
-    tickerDelayed: "Precios con retraso"
+    tickerDelayed: "Precios con retraso",
+    navPortal: "Portal",
+    portalTitle: "Portal",
+    portalLead: "Inicia sesión para seguir tu proyecto o gestionar el sitio web.",
+    portalClientTitle: "Portal de clientes",
+    portalClientText: "Sigue el avance de tu proyecto, comparte archivos y consulta tus facturas en un solo lugar. Las cuentas de clientes llegan pronto; mientras tanto, nuestro equipo te envía una actualización con gusto.",
+    portalClientSoon: "Próximamente",
+    portalClientBtn: "Pedir una actualización",
+    portalAdminTitle: "Portal de administración",
+    portalAdminText: "Para el equipo de Tenshi: edita páginas, imágenes y traducciones, cambia el diseño y ejecuta los bots de noticias y blog.",
+    portalAdminBtn: "Abrir el portal de administración"
   },
   zh: {
     patTitle: "日本机器人专利探索",
@@ -3961,7 +4011,17 @@ window.TRANSLATIONS = {
     blogSources: "来源",
     blogAiNote: "本文借助 AI，根据下列报道撰写。",
     tickerLabel: "日本市场",
-    tickerDelayed: "延迟报价"
+    tickerDelayed: "延迟报价",
+    navPortal: "门户",
+    portalTitle: "门户",
+    portalLead: "登录以跟进您的项目或管理网站。",
+    portalClientTitle: "客户门户",
+    portalClientText: "在一个地方查看项目进度、共享文件和查看发票。客户账户即将开放，在此之前，我们的团队乐意为您发送最新进展。",
+    portalClientSoon: "即将推出",
+    portalClientBtn: "询问项目进展",
+    portalAdminTitle: "管理员门户",
+    portalAdminText: "供 Tenshi 团队使用：编辑所有页面、图片和翻译，更改设计，运行新闻和博客机器人。",
+    portalAdminBtn: "打开管理员门户"
   },
   ar: {
     patTitle: "مستكشف براءات الروبوتات اليابانية",
@@ -4624,7 +4684,17 @@ window.TRANSLATIONS = {
     blogSources: "المصادر",
     blogAiNote: "كُتب بمساعدة الذكاء الاصطناعي استناداً إلى التقارير المذكورة أدناه.",
     tickerLabel: "أسواق اليابان",
-    tickerDelayed: "أسعار متأخرة"
+    tickerDelayed: "أسعار متأخرة",
+    navPortal: "البوابة",
+    portalTitle: "البوابة",
+    portalLead: "سجّل الدخول لمتابعة مشروعك أو لإدارة الموقع.",
+    portalClientTitle: "بوابة العملاء",
+    portalClientText: "تابع تقدّم مشروعك وشارك الملفات واطّلع على فواتيرك في مكان واحد. حسابات العملاء ستُفتح قريباً، وحتى ذلك الحين يسعد فريقنا بإرسال آخر المستجدات إليك.",
+    portalClientSoon: "قريباً",
+    portalClientBtn: "اطلب تحديثاً عن مشروعك",
+    portalAdminTitle: "بوابة الإدارة",
+    portalAdminText: "لفريق Tenshi: تحرير كل الصفحات والصور والترجمات وتغيير التصميم وتشغيل روبوتات الأخبار والمدونة.",
+    portalAdminBtn: "افتح بوابة الإدارة"
   },
   pl: {
     patTitle: "Eksplorator japońskich patentów robotycznych",
@@ -5287,7 +5357,17 @@ window.TRANSLATIONS = {
     blogSources: "Źródła",
     blogAiNote: "Napisano z pomocą AI na podstawie poniższych artykułów.",
     tickerLabel: "Rynki w Japonii",
-    tickerDelayed: "Notowania opóźnione"
+    tickerDelayed: "Notowania opóźnione",
+    navPortal: "Portal",
+    portalTitle: "Portal",
+    portalLead: "Zaloguj się, aby śledzić swój projekt lub zarządzać stroną.",
+    portalClientTitle: "Portal klienta",
+    portalClientText: "Postępy projektu, pliki i faktury w jednym miejscu. Konta klientów ruszą wkrótce; do tego czasu nasz zespół chętnie prześle Ci aktualizację.",
+    portalClientSoon: "Wkrótce",
+    portalClientBtn: "Poproś o aktualizację",
+    portalAdminTitle: "Portal administratora",
+    portalAdminText: "Dla zespołu Tenshi: edycja stron, zdjęć i tłumaczeń, zmiana wyglądu oraz uruchamianie botów wiadomości i bloga.",
+    portalAdminBtn: "Otwórz portal administratora"
   },
   pcm: {
     patTitle: "Japanese Robotics Patent Explorer",
@@ -5950,7 +6030,17 @@ window.TRANSLATIONS = {
     blogSources: "Sources",
     blogAiNote: "We write am with AI help from di reports wey dey below.",
     tickerLabel: "Japan markets",
-    tickerDelayed: "Delayed prices"
+    tickerDelayed: "Delayed prices",
+    navPortal: "Portal",
+    portalTitle: "Portal",
+    portalLead: "Sign in to follow your project or to manage di website.",
+    portalClientTitle: "Client portal",
+    portalClientText: "Follow how your project dey go, share files and see your invoice for one place. Client accounts go open soon; till then, our team go happily send you update.",
+    portalClientSoon: "E dey come soon",
+    portalClientBtn: "Ask for project update",
+    portalAdminTitle: "Admin portal",
+    portalAdminText: "For Tenshi team: edit every page, picture and translation, change di design and run di news and blog bots.",
+    portalAdminBtn: "Open admin portal"
   },
   fa: {
     patTitle: "کاوشگر پتنت‌های رباتیک ژاپن",
@@ -6613,6 +6703,16 @@ window.TRANSLATIONS = {
     blogSources: "منابع",
     blogAiNote: "با کمک هوش مصنوعی و بر پایه گزارش‌های زیر نوشته شده است.",
     tickerLabel: "بازارهای ژاپن",
-    tickerDelayed: "قیمت‌های با تأخیر"
+    tickerDelayed: "قیمت‌های با تأخیر",
+    navPortal: "پورتال",
+    portalTitle: "پورتال",
+    portalLead: "برای پیگیری پروژه یا مدیریت وب‌سایت وارد شوید.",
+    portalClientTitle: "پورتال مشتریان",
+    portalClientText: "پیشرفت پروژه، اشتراک فایل‌ها و فاکتورها در یک جا. حساب‌های مشتریان به‌زودی باز می‌شود؛ تا آن زمان تیم ما با کمال میل آخرین وضعیت را برایتان می‌فرستد.",
+    portalClientSoon: "به‌زودی",
+    portalClientBtn: "درخواست گزارش پروژه",
+    portalAdminTitle: "پورتال مدیریت",
+    portalAdminText: "برای تیم Tenshi: ویرایش همه صفحه‌ها، تصویرها و ترجمه‌ها، تغییر طراحی و اجرای ربات‌های خبر و وبلاگ.",
+    portalAdminBtn: "ورود به پورتال مدیریت"
   }
 };

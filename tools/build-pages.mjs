@@ -84,6 +84,12 @@ const ART = {
       <path d="M232 52h58v40h-34l-14 12V92h-10z" fill="#fff" fill-opacity=".9" stroke="none"/><path d="M246 66h30M246 78h20" stroke="#c8102e" stroke-width="3"/>
       <path d="M30 150c20-30 30-60 70-80" stroke-opacity=".35" stroke-width="1.5" stroke-dasharray="4 7"/>
     </svg>`,
+  // Two doors: one for clients, one for the team.
+  portal: `<svg class="page-art" viewBox="0 0 320 220" aria-hidden="true" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="62" y="44" width="86" height="140" rx="10" stroke-opacity=".85" stroke-width="2.5"/><rect x="172" y="44" width="86" height="140" rx="10" stroke-opacity=".85" stroke-width="2.5"/>
+      <circle cx="132" cy="118" r="5" fill="#fff" stroke="none"/><circle cx="242" cy="118" r="5" fill="#fff" stroke="none"/>
+      <path d="M86 78a19 19 0 1 1 38 0M84 150h42" stroke-opacity=".55" stroke-width="2.5"/><rect x="196" y="70" width="38" height="28" rx="4" fill="#fff" fill-opacity=".9" stroke="none"/><path d="M196 140h38M196 154h26" stroke-opacity=".55" stroke-width="2.5"/>
+    </svg>`,
   // A folded newspaper with a signal going out.
   news: `<svg class="page-art" viewBox="0 0 320 220" aria-hidden="true" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round">
       <rect x="64" y="46" width="160" height="128" rx="10" stroke-opacity=".85" stroke-width="2.5"/><path d="M224 74h20a10 10 0 0 1 10 10v74a16 16 0 0 1-32 0" stroke-opacity=".55" stroke-width="2.5"/>
@@ -157,7 +163,7 @@ function chrome(html, prefix, current) {
   return markCurrent(html, current)
     .replace('href="#top"', `href="${prefix}index.html"`)
     .replace(/src="(brand\/[\w.-]+)"/g, `src="${prefix}$1"`)
-    .replace(/href="((?:index|about|services|contact|team|technology|projects|news|blog)\.html|projects\/[a-z-]+\.html)"/g, `href="${prefix}$1"`);
+    .replace(/href="((?:index|about|services|contact|team|technology|projects|news|blog|portal)\.html|projects\/[a-z-]+\.html)"/g, `href="${prefix}$1"`);
 }
 
 function frame({ prefix, current, titleKey, descKey, bodyClass, main, photoCredits = "" }) {
@@ -1064,6 +1070,40 @@ ${cta("contact.html")}`,
 });
 writeFileSync("blog.html", blogPage);
 
+/* ---------- Portal: the way in for clients and for the Tenshi team (admin.html, the Tenshi Editor) ---------- */
+const PORTAL_ICON = {
+  client: '<circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c1.2-4 4.1-6 7.5-6s6.3 2 7.5 6"/>',
+  admin: '<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18"/><path d="M7 13h6M7 16h10"/><circle cx="6" cy="6.5" r=".6" fill="currentColor"/><circle cx="8.3" cy="6.5" r=".6" fill="currentColor"/>',
+};
+const portalIcon = (n) => `<span class="portal-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${PORTAL_ICON[n]}</svg></span>`;
+const portalPage = frame({
+  prefix: "", current: "portal", titleKey: "portalTitle", descKey: "portalLead", bodyClass: "page portal-page",
+  main: `${banner("", [{ key: "navPortal" }], "portalTitle", "portalLead", ART.portal)}
+
+    <section class="page-section portal-section" aria-labelledby="portal-choose">
+      <div class="page-inner">
+        <h2 id="portal-choose" class="sr-only" data-i18n="portalTitle">${tx("portalTitle")}</h2>
+        <div class="portal-grid">
+          <article class="portal-card" aria-labelledby="portal-client-title">
+            ${portalIcon("client")}
+            <p class="portal-state" data-i18n="portalClientSoon">${tx("portalClientSoon")}</p>
+            <h3 id="portal-client-title" data-i18n="portalClientTitle">${tx("portalClientTitle")}</h3>
+            <p data-i18n="portalClientText">${tx("portalClientText")}</p>
+            <a class="btn btn-primary" href="contact.html" data-i18n="portalClientBtn">${tx("portalClientBtn")}</a>
+          </article>
+          <article class="portal-card portal-card--admin" aria-labelledby="portal-admin-title">
+            ${portalIcon("admin")}
+            <h3 id="portal-admin-title" data-i18n="portalAdminTitle">${tx("portalAdminTitle")}</h3>
+            <p data-i18n="portalAdminText">${tx("portalAdminText")}</p>
+            <a class="btn btn-primary" href="admin.html" data-i18n="portalAdminBtn">${tx("portalAdminBtn")}</a>
+          </article>
+        </div>
+      </div>
+    </section>
+`,
+});
+writeFileSync("portal.html", portalPage);
+
 mkdirSync("projects", { recursive: true });
 for (const p of PROJECTS) writeFileSync(`projects/${p.slug}.html`, projectPage(p));
-console.log(`index.html updated; about.html, team.html, services.html, technology.html, projects.html, contact.html, ${SERVICES.length} service pages and ${PROJECTS.length} project pages written; news.html and blog.html written`);
+console.log(`index.html updated; about.html, team.html, services.html, technology.html, projects.html, contact.html, ${SERVICES.length} service pages and ${PROJECTS.length} project pages written; news.html, blog.html and portal.html written`);

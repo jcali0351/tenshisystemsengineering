@@ -2078,3 +2078,19 @@ section.band :is(.band-unit, .band-stage, .band-text) { color: var(--ink) !impor
   .blog-card.is-feature { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) { .news-item, .blog-card, .blog-more summary::after, .news-tabs [role=tab] { transition: none; } }
+
+/* ---------- Portal page: two ways in ---------- */
+.portal-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; max-width: 980px; margin: 0 auto; }
+.portal-card { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: clamp(28px, 4vw, 44px); border-radius: 22px; background: var(--pale); }
+.portal-card h3 { font-size: clamp(1.5rem, 2.6vw, 2rem); font-weight: 800; }
+.portal-card p { margin: 0; line-height: 1.6; color: var(--text); }
+.portal-card .btn { margin-top: auto; }
+.portal-card p:last-of-type { margin-bottom: 14px; }
+.portal-icon { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 16px; background: #fff; color: var(--red); }
+.portal-icon svg { width: 30px; height: 30px; }
+.portal-state { font-size: .82rem; font-weight: 700; color: var(--muted); background: #fff; border-radius: 999px; padding: 4px 12px; }
+.portal-card--admin { background: var(--ink); }
+.portal-card--admin h3, .portal-card--admin p { color: #fff !important; }
+.portal-card--admin p { opacity: .85; }
+.portal-card--admin .portal-icon { background: rgba(255, 255, 255, .12); color: #fff; }
+@media (max-width: 720px) { .portal-grid { grid-template-columns: 1fr; } }
