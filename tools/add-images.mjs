@@ -1,10 +1,11 @@
 // Gives every news story and blog post a feature image (see images.mjs), then deletes saved photos that no story
 // uses any more. Run by the Tenshi Scraper and Tenshi Blog Writer jobs after they gather content, or by hand:
-//   node tools/add-images.mjs
+//   node tools/add-images.mjs [news|blog]     (no argument: both)
 // A story that only has a generated cover is tried again for a photo on the next run.
 import { readFileSync, writeFileSync, existsSync, readdirSync, unlinkSync } from "node:fs";
 import { imageFor, guessQuery, saveCache, DIR } from "./images.mjs";
 
+const only = process.argv[2];   // "news" from the Scraper job, "blog" from the Blog Writer job
 const load = (f) => (existsSync(f) ? JSON.parse(readFileSync(f, "utf8")) : null);
 const news = load("data/news.json"), blog = load("data/blog.json");
 const taken = new Set();
@@ -17,11 +18,11 @@ async function fill(item, cat, text) {
   item.image.generated ? covers++ : found++;
 }
 
-if (news) for (const c of news.categories) for (const s of c.items) await fill(s, c.id, `${s.title} ${s.excerpt || ""} ${s.summary || ""}`);
-if (blog) for (const p of blog.posts) await fill(p, "blog", `${p.title} ${p.intro}`);
+if (news && only !== "blog") for (const c of news.categories) for (const s of c.items) await fill(s, c.id, `${s.title} ${s.excerpt || ""} ${s.summary || ""}`);
+if (blog && only !== "news") for (const p of blog.posts) await fill(p, "blog", `${p.title} ${p.intro}`);
 
-if (news) writeFileSync("data/news.json", JSON.stringify(news, null, 2) + "\n");
-if (blog) writeFileSync("data/blog.json", JSON.stringify(blog, null, 2) + "\n");
+if (news && only !== "blog") writeFileSync("data/news.json", JSON.stringify(news, null, 2) + "\n");
+if (blog && only !== "news") writeFileSync("data/blog.json", JSON.stringify(blog, null, 2) + "\n");
 saveCache();
 
 // Remove saved photos nothing points to any more.
