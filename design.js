@@ -33,13 +33,9 @@
   window.addEventListener("resize", onScroll);
   onScroll();
 
-  /* Homepage hero: vertical tagline with a hanko seal, a scroll cue and an ensō around the logo */
+  /* Homepage hero: a scroll cue */
   var hero = document.querySelector(".hero");
   if (hero) {
-    var tate = document.createElement("div");
-    tate.className = "hero-tate"; tate.setAttribute("aria-hidden", "true"); tate.lang = "ja";
-    tate.innerHTML = "<b>信頼の技術を、未来へ。</b><span class=\"hero-seal\">天使</span>";
-    hero.appendChild(tate);
     var cue = document.createElement("div");
     cue.className = "hero-scroll"; cue.setAttribute("aria-hidden", "true");
     cue.innerHTML = "SCROLL<i></i>";

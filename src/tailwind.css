@@ -1,0 +1,29 @@
+/* Tailwind CSS for the Tenshi site. Built into /tailwind.css by `npm run css` (and by the rebuild Action).
+
+   - No Preflight (Tailwind's reset): the site's own styles.css already sets the base look, and the reset would shift it.
+   - Everything Tailwind makes sits in CSS layers. The site's own stylesheets are not layered, so where both set the
+     same thing, the site's styles win. On new content Tailwind classes work fully; to beat an old rule, use "!" (e.g. !mt-8).
+   - Only the files listed with @source are scanned for class names. */
+@layer theme, base, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+
+@source "../*.html";
+@source "../services/*.html";
+@source "../projects/*.html";
+@source "../tools/build-pages.mjs";
+@source "../app.js";
+@source "../design.js";
+@source not "../admin.html";
+
+/* Tenshi brand colours and fonts as Tailwind names: bg-tenshi-red, text-tenshi-ink, font-sans, ... */
+@theme {
+  --color-tenshi-red: #c8102e;
+  --color-tenshi-red-deep: #9e0c22;
+  --color-tenshi-red-dark: #7e0a1b;
+  --color-tenshi-ink: #16191e;
+  --color-tenshi-night: #1a080c;
+  --color-tenshi-black: #0d0406;
+  --font-sans: "Lato", "Segoe UI", "Hiragino Sans", "Noto Sans JP", system-ui, sans-serif;
+}

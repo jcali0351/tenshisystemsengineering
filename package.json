@@ -1,0 +1,14 @@
+{
+  "name": "tenshisystemsengineering",
+  "private": true,
+  "description": "Tenshi Systems Engineering website (static, GitHub Pages). Node is only used for build tools.",
+  "scripts": {
+    "css": "tailwindcss -i ./src/tailwind.css -o ./tailwind.css --minify",
+    "css:watch": "tailwindcss -i ./src/tailwind.css -o ./tailwind.css --watch",
+    "build": "node tools/build-pages.mjs && npm run css && node tools/stamp-assets.mjs"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "4.3.3",
+    "tailwindcss": "4.3.3"
+  }
+}

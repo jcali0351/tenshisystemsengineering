@@ -1,4 +1,4 @@
-# After a save from the Tenshi Editor (admin.html), rebuild the generated pages and restamp assets,
+# After a save from the Tenshi Editor (admin.html), rebuild the generated pages, Tailwind CSS and asset stamps,
 # so the pages' built-in text, menus and picture links match translations.js and the pictures.
 # Editor commits start with "CMS:". The bot's own commit only touches the generated pages, so it never loops.
 name: Rebuild after site edit
@@ -7,7 +7,7 @@ run-name: Rebuild pages (${{ github.event.head_commit.message }})
 on:
   push:
     branches: [main]
-    paths: ["translations.js", "img/**", "brand/**", "tools/build-pages.mjs", "styles.css", "design.css", "app.js", "design.js", "chat.js", "chat.css", "rain.js"]
+    paths: ["*.html", "services/*.html", "projects/*.html", "translations.js", "img/**", "brand/**", "tools/build-pages.mjs", "src/tailwind.css", "package.json", "package-lock.json", "styles.css", "design.css", "app.js", "design.js", "chat.js", "chat.css", "rain.js"]
   workflow_dispatch:
 
 permissions:
@@ -26,15 +26,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Rebuild pages and restamp assets
-        run: |
-          node tools/build-pages.mjs
-          node tools/stamp-assets.mjs
+      - name: Install the build tools (Tailwind CLI)
+        run: npm ci --ignore-scripts
+      - name: Rebuild pages, Tailwind CSS and asset stamps
+        run: npm run build
       - name: Commit
         run: |
           git config user.name "tenshi-editor-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A -- '*.html'
+          git add -A -- '*.html' tailwind.css
           if git diff --cached --quiet; then echo "Nothing changed."; exit 0; fi
           git commit -m "Rebuild pages and asset stamps after a site edit"
           for i in 1 2 3 4; do

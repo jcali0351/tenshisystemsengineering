@@ -55,3 +55,16 @@ GitHub fine-grained key (only this repository, Contents: read and write; the sig
 
 Files: `admin.html`, `admin/admin.js`, `admin/admin.css`, and `admin/tr.js` (reads and edits `translations.js` one entry
 at a time, keeping its layout; also usable from Node).
+
+## Tailwind CSS
+
+Tailwind CSS (v4, through the Tailwind CLI, no Vite) is available on every page next to the site's own styles.
+
+- Setup: `src/tailwind.css` (brand colours such as `bg-tenshi-red`, `text-tenshi-ink`, and which files are scanned).
+  It's built into `tailwind.css`, which every page links before `styles.css`.
+- No Preflight reset, and Tailwind sits in CSS layers, so the site's own styles win where both set the same thing.
+  Tailwind classes work fully on new content; to beat an older rule add `!` (e.g. `!mt-8`).
+- The site's root font size is 18.4px, so Tailwind spacing and text sizes come out about 15% larger than Tailwind's docs show.
+- First time on a computer: `npm install`. After changing pages or classes: `npm run build`
+  (page builder, Tailwind and asset stamps), or `npm run css` for Tailwind alone. The rebuild Action runs the same
+  build on GitHub after every push that touches pages, text, pictures or styles.

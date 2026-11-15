@@ -143,9 +143,10 @@ function frame({ prefix, current, titleKey, descKey, bodyClass, main, photoCredi
   <meta property="og:title" content="${tx(titleKey)} | ${tx("brandName")}">
   <meta property="og:description" content="${tx(descKey)}">
   <meta property="og:type" content="website">
-  <link rel="icon" href="${prefix}brand/tenshi-favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="${prefix}brand/tenshi-logo.png" type="image/png">
   <link rel="alternate icon" href="${prefix}brand/tenshi-apple-touch-icon.png" type="image/png">
   <link rel="apple-touch-icon" href="${prefix}brand/tenshi-apple-touch-icon.png">
+  <link rel="stylesheet" href="${prefix}tailwind.css">
   <link rel="stylesheet" href="${prefix}styles.css">
   <link rel="stylesheet" href="${prefix}design.css">
   <link rel="stylesheet" href="${prefix}chat.css">

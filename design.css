@@ -91,18 +91,6 @@ html[dir="rtl"] .scroll-line { transform-origin: 100% 50%; }
 .hero-wash { background: radial-gradient(ellipse 55% 60% at 50% 46%, rgba(250, 248, 244, .55), transparent 72%), linear-gradient(180deg, rgba(250, 248, 244, .5) 0%, rgba(250, 248, 244, .12) 40%, rgba(19, 19, 21, .28) 100%); }
 .hero-card { border: 1px solid rgba(255, 255, 255, .7); border-radius: 4px; box-shadow: 0 40px 80px -40px rgba(19, 19, 21, .45); }
 .hero-card h1 { letter-spacing: -.02em; }
-.hero-tate {
-  position: absolute; z-index: 1; inset-block: 0; inset-inline-end: clamp(18px, 4vw, 64px); display: flex; align-items: center; gap: 18px; pointer-events: none;
-  writing-mode: vertical-rl; font: 600 clamp(1.05rem, 1.5vw, 1.35rem)/1.9 var(--mincho); letter-spacing: .5em; color: #fff;
-  text-shadow: 0 2px 18px rgba(19, 19, 21, .55);
-}
-.hero-tate::after { content: ""; width: 1px; height: 120px; background: linear-gradient(var(--shu), transparent); }
-.hero-tate b { font-weight: 600; color: #fff; }
-.hero-seal { /* hanko under the vertical line */
-  writing-mode: vertical-rl; display: grid; place-items: center; width: 34px; padding: 6px 0; border-radius: 4px;
-  background: var(--shu); color: #fff; font: 700 .9rem/1.15 var(--mincho); letter-spacing: .1em; text-shadow: none;
-  box-shadow: 0 6px 16px rgba(126, 10, 27, .4); transform: rotate(3deg);
-}
 .hero-scroll {
   position: absolute; z-index: 1; left: 50%; bottom: 22px; transform: translateX(-50%); display: grid; justify-items: center; gap: 10px;
   font: 700 .62rem/1 var(--font); letter-spacing: .4em; color: #fff; text-shadow: 0 1px 8px rgba(0, 0, 0, .5); pointer-events: none;
@@ -142,7 +130,7 @@ html.rv-on .rv.rv-in { opacity: 1; transform: none; }
 
 /* ---------- Phones ---------- */
 @media (max-width: 760px) {
-  .hero-tate, .hero-scroll { display: none; }
+  .hero-scroll { display: none; }
   .hero { min-height: auto; }
   .page-seal { width: 38px; height: 38px; font-size: .66rem; margin-inline-start: 10px; }
   .site-footer::after { display: none; }
@@ -155,9 +143,6 @@ html.rv-on .rv.rv-in { opacity: 1; transform: none; }
   .btn-primary { transition: none; }
 }
 
-/* Pin the vertical tagline to the edge (other hero rules position its children) and lift the enso above the glow */
-.hero .hero-tate { top: 0; bottom: 0; left: auto; right: clamp(18px, 4vw, 64px); width: auto; justify-content: center; }
-html[dir="rtl"] .hero .hero-tate { right: auto; left: clamp(18px, 4vw, 64px); }
 .logo-dazzle .enso { z-index: 0; }
 
 /* The hanko seal sits on the title line; the footer watermark is pinned to the physical right */
