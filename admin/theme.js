@@ -15,7 +15,7 @@
     h1Spacing: -1, h2Spacing: -1, h3Spacing: -1, h4Spacing: -1, headingSpacingUnit: "px", // negative is tighter
     headingLine: 1.04, headingCase: "none",
     bodySpacing: 0, bodyLine: 1.65,
-    headingColor: "#3d4249", textColor: "#5b616a", mutedColor: "#6e757e", accentColor: "#c8102e",
+    headingColor: "#3d4249", headingOpacity: 38, textColor: "#6b7280", mutedColor: "#7d838c", accentColor: "#c8102e",
     motion: true, motionChars: true, motionText: true, motionImages: true, motionCards: true, motionColor: true, colorDuration: 1.8,
     motionSpeed: 1, motionDistance: 56, motionDistanceMobile: 26, charDelay: 26
   };
@@ -28,10 +28,11 @@
     if (s.headingSpacingUnit === undefined && s.h1Spacing !== undefined) s = Object.assign({}, s, { headingSpacingUnit: "em" });
     for (k in DEFAULTS) o[k] = s[k] === undefined || s[k] === null || s[k] === "" ? DEFAULTS[k] : s[k];
     ["headingWeight", "bodyWeight", "rootSize", "heroSize", "pageTitleSize", "sectionSize", "featureSize", "cardSize", "h1Spacing", "h2Spacing", "h3Spacing",
-      "h4Spacing", "headingLine", "bodySpacing", "bodyLine", "motionSpeed", "motionDistance", "motionDistanceMobile", "charDelay", "colorDuration"].forEach(function (k) { o[k] = num(o[k], DEFAULTS[k]); });
+      "h4Spacing", "headingLine", "headingOpacity", "bodySpacing", "bodyLine", "motionSpeed", "motionDistance", "motionDistanceMobile", "charDelay", "colorDuration"].forEach(function (k) { o[k] = num(o[k], DEFAULTS[k]); });
     ["motion", "motionChars", "motionText", "motionImages", "motionCards", "motionColor"].forEach(function (k) { o[k] = o[k] === true || o[k] === "true" || o[k] === 1; });
     ["headingColor", "textColor", "mutedColor", "accentColor"].forEach(function (k) { if (!/^#[0-9a-f]{6}$/i.test(o[k])) o[k] = DEFAULTS[k]; });
     if (["none", "uppercase", "capitalize"].indexOf(o.headingCase) < 0) o.headingCase = "none";
+    o.headingOpacity = Math.max(5, Math.min(100, Math.round(o.headingOpacity)));
     if (o.headingSpacingUnit !== "em") o.headingSpacingUnit = "px";
     return o;
   }
@@ -73,7 +74,7 @@
     var hw = nearest(hf, s.headingWeight), bw = nearest(bf, s.bodyWeight);
     var H = ":not(#_)";   // a raised specificity, so these settings win over the layered stylesheets before them
     out += ":root{--font:" + stack(bf) + ";--font-ja:" + stack(bf) + ', "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif;--font-heading:' + stack(hf) +
-      ";--ink:" + s.headingColor + ";--text:" + s.textColor + ";--muted:" + s.mutedColor +
+      ";--ink:" + s.headingColor + ";--heading:" + s.headingColor + (s.headingOpacity < 100 ? ("0" + Math.round(s.headingOpacity * 2.55).toString(16)).slice(-2) : "") + ";--text:" + s.textColor + ";--muted:" + s.mutedColor +
       ";--red:" + s.accentColor + ";--shu:" + s.accentColor + ";--red-deep:color-mix(in srgb," + s.accentColor + " 82%,#000);--red-dark:color-mix(in srgb," + s.accentColor + " 65%,#000)" +
       ";--a-dur:" + (0.9 * s.motionSpeed).toFixed(2) + "s;--a-dur-img:" + (1.2 * s.motionSpeed).toFixed(2) + "s;--ch-dur:" + (0.7 * s.motionSpeed).toFixed(2) + "s" +
       ";--dx:" + s.motionDistance + "px;--dy:" + Math.round(s.motionDistance * 0.55) + "px;--cs-base:" + s.charDelay + "ms" +
@@ -84,7 +85,11 @@
     out += "html{font-size:" + px(s.rootSize) + "}\n";
     out += "body" + H + "{font-family:var(--font);font-weight:" + bw + ";letter-spacing:" + s.bodySpacing + "em;line-height:" + s.bodyLine + ";color:var(--text)}\n";
     out += ":is(p,li,dd,blockquote,td)" + H + "{letter-spacing:" + s.bodySpacing + "em}\n";
-    out += ":is(h1,h2,h3,h4,h5,h6)" + H + "{font-family:var(--font-heading)!important;font-weight:" + hw + "!important;color:var(--ink);text-transform:" + s.headingCase + "}\n";
+    // Lead and intro paragraphs and form labels are body text too, so they take the body color
+    out += ":is(.hero-lead,.feature-lead,.page-lead,.pitch-lead,.svc-intro,.svc-for p,.svc-other span,.contact-form label,.field label)" + H + "{color:var(--text)!important}\n";
+    out += ":is(h1,h2,h3,h4,h5,h6)" + H + "{font-family:var(--font-heading)!important;font-weight:" + hw + "!important;text-transform:" + s.headingCase + "}\n";
+    // Heading color (with its opacity) everywhere except on the few dark panels, whose headings stay white
+    out += ":is(h1,h2,h3,h4,h5,h6)" + H + ":not(:is(.portal-card--admin,.blog-card.is-feature,.svc-cta.is-dark) *){color:var(--heading)!important}\n";
     out += ":is(h1,h2)" + H + "{line-height:" + s.headingLine + "!important}\n";
     out += "h1" + H + "{letter-spacing:" + s.h1Spacing + s.headingSpacingUnit + "!important}\n";
     out += "h2" + H + "{letter-spacing:" + s.h2Spacing + s.headingSpacingUnit + "!important}\n";

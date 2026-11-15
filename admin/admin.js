@@ -693,7 +693,7 @@
      site-theme.css (the settings ride along in its first line), and the site updates about a minute later. */
   var TH = window.TenshiTheme, dz = { fonts: null, saved: null, cur: null, ready: false };
   var DZ_UNITS = { rootSize: "px", heroSize: "px", pageTitleSize: "px", sectionSize: "px", featureSize: "px", cardSize: "px",
-    bodySpacing: "em", motionDistance: "px", motionDistanceMobile: "px", charDelay: "ms", motionSpeed: "×", colorDuration: "s" };
+    bodySpacing: "em", motionDistance: "px", motionDistanceMobile: "px", charDelay: "ms", motionSpeed: "×", colorDuration: "s", headingOpacity: "%" };
   function dzFontOptions() {
     var groups = { sans: "Sans serif", serif: "Serif", display: "Display", script: "Script", mono: "Monospace" };
     return Object.keys(groups).map(function (g) {
