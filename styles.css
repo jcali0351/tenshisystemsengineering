@@ -1833,3 +1833,42 @@ html:not([dir="rtl"]):not(:lang(ja)):not(:lang(zh)):not(:lang(ko)) .pitch-lead::
   .feature-figure { float: none; width: 100%; margin: 0 0 28px; }
   .feature-figure img { aspect-ratio: 4 / 3; }
 }
+
+/* Feature areas 2 and 3: alternate the photo side and the colour scheme. */
+.feature-body { display: flow-root; }
+.feature--left .feature-figure { float: left; margin: 4px clamp(28px, 4vw, 56px) 20px 0; }
+#feature-2 .feature-figure img { object-position: 42% 62%; }
+#feature-3 .feature-figure img { object-position: 42% 66%; }
+
+/* Charcoal and black */
+.feature--charcoal {
+  color: rgba(255, 255, 255, .82);
+  background:
+    radial-gradient(800px 500px at 10% 20%, rgba(200, 16, 46, .14), transparent 70%),
+    linear-gradient(160deg, #2a2b30 0%, #18191c 55%, #0b0b0d 100%);
+  border-top-color: rgba(255, 255, 255, .1);
+}
+.feature--charcoal::before { background: linear-gradient(90deg, transparent, #8a8d94, #c8102e, #8a8d94, transparent); box-shadow: 0 0 14px rgba(200, 16, 46, .35); }
+.feature--charcoal .feature-figure { border-color: rgba(255, 255, 255, .14); }
+.feature--charcoal .eyebrow { color: #ff8597; }
+.feature--charcoal h2::after { background: #c8102e; }
+
+/* White and light gray */
+.feature--light {
+  color: #4a4e57;
+  background:
+    radial-gradient(800px 500px at 90% 10%, rgba(200, 16, 46, .06), transparent 70%),
+    linear-gradient(160deg, #ffffff 0%, #f5f5f7 55%, #e9eaed 100%);
+  border-top-color: #e1e2e6;
+}
+.feature--light::before { background: linear-gradient(90deg, transparent, #c8102e, transparent); box-shadow: none; }
+.feature--light .feature-figure { border-color: #dcdde1; box-shadow: 0 24px 50px rgba(22, 25, 30, .16); }
+.feature--light .eyebrow { color: var(--red); }
+.feature--light h2 { color: var(--ink); }
+.feature--light h2::after { background: var(--red); }
+.feature--light .feature-lead { color: var(--ink); }
+.feature--light .feature-list li::before { background: var(--red); box-shadow: none; }
+
+@media (max-width: 760px) {
+  .feature--left .feature-figure { float: none; margin: 0 0 28px; }
+}
