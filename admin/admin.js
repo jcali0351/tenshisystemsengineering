@@ -495,6 +495,9 @@
   function translateAll(jobs, translators, status) {
     // jobs: [{ key, text, langs: [...] }]
     var missing = new Set(), done = 0, total = jobs.reduce(function (n, j) { return n + j.langs.length; }, 0);
+    // The whole translation step gets at most 20 seconds, so a save never hangs (Chrome can take minutes to
+    // download a language the first time). Whatever isn't translated by then keeps the English text.
+    var deadline = Date.now() + 20000, left = function () { return Math.max(0, deadline - Date.now()); };
     var chain = Promise.resolve();
     jobs.forEach(function (job) {
       job.langs.forEach(function (l) {
@@ -502,10 +505,10 @@
           var waiting = setInterval(function () {
             if (dlProgress[l] != null && dlProgress[l] < 1) status("Getting " + LANG_NAMES[l] + "… " + Math.round(dlProgress[l] * 100) + "%");
           }, 500);
-          return translators[l].then(function (tr) { clearInterval(waiting); return tr; });
+          return timeout(translators[l], left(), null).then(function (tr) { clearInterval(waiting); return tr; });
         }).then(function (tr) {
-          if (!tr) { missing.add(l); return job.text; }
-          return timeout(tr.translate(job.text), 20000, null).then(function (o) {
+          if (!tr || !left()) { missing.add(l); return job.text; }
+          return timeout(tr.translate(job.text), left(), null).then(function (o) {
             if (o == null || o === "") { missing.add(l); return job.text; }
             return o;
           });

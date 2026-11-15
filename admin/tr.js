@@ -12,7 +12,7 @@
 
   /* Where each language's block starts and ends: { en: [start, end], ... } (end = index of the closing "\n  }") */
   function blocks(src) {
-    var out = {}, re = /\n  ([a-z]{2,3}): \{\n/g, m, starts = [];
+    var out = {}, re = /\n  ([a-z]{2,3}): \{\r?\n/g, m, starts = [];   // \r?: also reads a copy with Windows line endings
     while ((m = re.exec(src))) starts.push({ lang: m[1], at: m.index + m[0].length });
     starts.forEach(function (s) {
       var end = src.indexOf("\n  }", s.at);
