@@ -154,7 +154,7 @@
     Object.keys(pend).forEach(function (l) { Object.keys(pend[l]).forEach(function (k) { s.add(k); }); });
     return s;
   }
-  function pendingCount() { return changedKeys().size + imgEdits.size; }
+  function pendingCount() { return changedKeys().size + imgEdits.size + (sloganDirty() ? 1 : 0); }
   function updateBar() {
     var n = pendingCount(), p = $("#ed-pending");
     p.hidden = !n; p.textContent = n + (n === 1 ? " unsaved change" : " unsaved changes");
@@ -238,6 +238,7 @@
     if (name === "images") renderImages();
     if (name === "bots") loadBots();
     if (name === "design") loadDesign();
+    if (name === "slogan") loadSlogan();
   }
 
   /* ================================================================== PAGES (click to edit) */
@@ -538,9 +539,10 @@
       // what's saved becomes the new starting point
       Object.keys(pend).forEach(function (l) { Object.keys(pend[l]).forEach(function (k) { T[l] = T[l] || {}; T[l][k] = pend[l][k]; if (l === "en" && order.indexOf(k) < 0) order.push(k); }); });
       pend = {}; autoTr = {};
+      if (slg.cur) slg.saved = JSON.parse(JSON.stringify(slg.cur));
       imgEdits.forEach(function (r, p) { if (r.newPath !== p) { tree.delete(p); } tree.set(r.newPath, { sha: "saved" + Date.now(), size: r.blob.size }); });
       imgEdits.clear();
-      updateBar(); renderImages(); renderText();
+      updateBar(); renderImages(); renderText(); if (slg.cur && !$("[data-panel=slogan]").hidden) renderSlogan();
       $$("[data-ed-changed]", $("#ed-frame").contentDocument || document).forEach(function (el) { el.removeAttribute("data-ed-changed"); });
       var note = missing.size ? " " + Array.from(missing).map(function (l) { return LANG_NAMES[l]; }).join(", ") + " got the English text: this browser can't translate into " + (missing.size === 1 ? "it" : "them") + ". Fix them by hand under Other languages." : "";
       toast("Saved. The live site updates in about a minute; reload a page with Ctrl+F5 if it still looks old." + note, false, missing.size ? 14000 : 7000);
@@ -581,13 +583,17 @@
           });
         }));
       });
-    }).then(function () { return { changes: changes, summary: parts.join(", ") || "edit" }; });
+    }).then(function () {
+      if (sloganDirty()) { changes.push({ path: "data/slogan.json", text: sloganJSON() }); parts.push("slogan"); }
+      return { changes: changes, summary: parts.join(", ") || "edit" };
+    });
   }
 
   /* Discard */
   $("#ed-discard").addEventListener("click", function () {
     if (!window.confirm("Throw away all unsaved changes?")) return;
     pend = {}; autoTr = {}; manual.clear();
+    if (slg.saved) { slg.cur = JSON.parse(JSON.stringify(slg.saved)); renderSlogan(); }
     imgEdits.forEach(function (r) { if (r.url) URL.revokeObjectURL(r.url); }); imgEdits.clear();
     $("#ed-drawer").hidden = true;
     updateBar(); renderText(); renderImages(); loadFrame();
@@ -790,5 +796,75 @@
       msg.className = "ed-msg ok"; msg.textContent = "Saved. The live site shows the new design in about a minute.";
       toast("Design saved.");
     }).catch(function (e) { busy(btn, false); msg.className = "ed-msg err"; msg.textContent = e.message; });
+  });
+
+  /* ================================================================== SLOGAN (the animated strip on the homepage)
+     The list of lines, their order and timing live in data/slogan.json; each line's words live in translations.js
+     like any other text. Everything here saves with the main Save button (new or changed English is translated). */
+  var slg = { saved: null, cur: null };
+  var SLG_DEFAULT = { enabled: true, lines: ["motto", "tag1", "tag2", "tag3", "tag4"], hold: 7, japaneseFirst: true, japaneseHold: 1.9, wordPace: 90 };
+  function sloganDirty() { return !!(slg.cur && slg.saved && JSON.stringify(slg.cur) !== JSON.stringify(slg.saved)); }
+  function sloganJSON() { return JSON.stringify(slg.cur, null, 2) + "\n"; }
+  function loadSlogan() {
+    if (slg.cur) { renderSlogan(); return; }
+    (tree.has("data/slogan.json") ? readText("data/slogan.json").then(JSON.parse) : Promise.resolve(SLG_DEFAULT)).catch(function () { return SLG_DEFAULT; }).then(function (d) {
+      slg.saved = Object.assign({}, SLG_DEFAULT, d); slg.saved.lines = (slg.saved.lines || []).slice();
+      slg.cur = JSON.parse(JSON.stringify(slg.saved));
+      renderSlogan();
+    });
+  }
+  function renderSlogan() {
+    var c = slg.cur;
+    $("#sl-enabled").checked = c.enabled !== false;
+    $("#sl-ja").checked = c.japaneseFirst !== false;
+    [["#sl-hold", "hold", "s"], ["#sl-jahold", "japaneseHold", "s"], ["#sl-pace", "wordPace", "ms"]].forEach(function (x) {
+      $(x[0]).value = c[x[1]]; $(x[0]).parentNode.querySelector("output").textContent = c[x[1]] + " " + x[2];
+    });
+    $("#sl-jahold").disabled = !$("#sl-ja").checked;
+    $("#sl-lines").innerHTML = c.lines.map(function (k, i) {
+      return '<li class="sl-line" data-key="' + esc(k) + '">' +
+        '<span class="sl-num">' + (i === 0 ? "Motto" : "Line " + (i + 1)) + "</span>" +
+        '<input type="text" class="sl-text" value="' + esc(cur("en", k)) + '" aria-label="' + (i === 0 ? "Motto" : "Line " + (i + 1)) + ' (English)">' +
+        '<span class="sl-ja" lang="ja" title="Japanese">' + esc(cur("ja", k) || "") + "</span>" +
+        '<div class="sl-tools">' +
+        '<button type="button" class="ed-btn ed-btn--ghost ed-btn--small" data-act="langs">All languages</button>' +
+        '<button type="button" class="ed-btn ed-btn--ghost ed-btn--small" data-act="up" aria-label="Move up"' + (i === 0 ? " disabled" : "") + ">↑</button>" +
+        '<button type="button" class="ed-btn ed-btn--ghost ed-btn--small" data-act="down" aria-label="Move down"' + (i === c.lines.length - 1 ? " disabled" : "") + ">↓</button>" +
+        '<button type="button" class="ed-btn ed-btn--ghost ed-btn--small" data-act="remove"' + (c.lines.length < 2 ? " disabled" : "") + ">Remove</button>" +
+        "</div></li>";
+    }).join("");
+    updateBar();
+  }
+  $("#sl-lines").addEventListener("input", function (e) {
+    var li = e.target.closest(".sl-line"); if (!li || !e.target.classList.contains("sl-text")) return;
+    setPend("en", li.dataset.key, e.target.value);
+  });
+  $("#sl-lines").addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-act]"); if (!b) return;
+    var k = b.closest(".sl-line").dataset.key, L = slg.cur.lines, i = L.indexOf(k);
+    if (b.dataset.act === "langs") { openText([k]); return; }
+    if (b.dataset.act === "up" && i > 0) { L.splice(i - 1, 0, L.splice(i, 1)[0]); }
+    if (b.dataset.act === "down" && i < L.length - 1) { L.splice(i + 1, 0, L.splice(i, 1)[0]); }
+    if (b.dataset.act === "remove" && L.length > 1) { L.splice(i, 1); }
+    renderSlogan();
+  });
+  $("#sl-add").addEventListener("click", function () {
+    var n = 1; while ((T.en && T.en["slogan" + n] !== undefined) || (pend.en && pend.en["slogan" + n] !== undefined) || slg.cur.lines.indexOf("slogan" + n) >= 0) n++;
+    var key = "slogan" + n, text = "A new line for the slogan";
+    // A new text in every language; on Save the English is translated into the others (or copied where it can't be)
+    LANGS.forEach(function (l) { setPend(l, key, text); });
+    autoTr[key] = true;
+    slg.cur.lines.push(key);
+    renderSlogan();
+    var last = $$("#sl-lines .sl-text").pop(); if (last) { last.focus(); last.select(); }
+  });
+  $("#sl-settings").addEventListener("input", function (e) {
+    var c = slg.cur, el = e.target;
+    if (el.id === "sl-enabled") c.enabled = el.checked;
+    if (el.id === "sl-ja") c.japaneseFirst = el.checked;
+    if (el.id === "sl-hold") c.hold = parseFloat(el.value);
+    if (el.id === "sl-jahold") c.japaneseHold = parseFloat(el.value);
+    if (el.id === "sl-pace") c.wordPace = parseFloat(el.value);
+    renderSlogan();
   });
 })();

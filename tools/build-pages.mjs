@@ -200,6 +200,25 @@ ${news.length ? box("fw-news", "newsHeadTitle", "news.html", "homeNewsAll", news
 ${posts.length ? box("fw-blog", "homeBlogTitle", "blog.html", "homeBlogAll", blogItems) : ""}
     </div>`;
 }
+/* ---------- The animated slogan strip on the homepage (Tenshi Editor › Slogan) ----------
+   data/slogan.json says which lines (translation keys) show, in what order and for how long. app.js animates them. */
+const SLOGAN = readJson("data/slogan.json", { enabled: true, lines: ["motto", "tag1", "tag2", "tag3", "tag4"], hold: 7, japaneseFirst: true, japaneseHold: 1.9, wordPace: 90 });
+function sloganBand() {
+  const lines = (SLOGAN.lines || []).filter((k) => EN[k] !== undefined);
+  if (SLOGAN.enabled === false || !lines.length) return "";
+  return `    <section class="band" aria-label="${tx("mottoLabel")}" data-i18n-attr="aria-label:mottoLabel"
+      data-lines="${lines.join(",")}" data-hold="${+SLOGAN.hold || 7}" data-ja-first="${SLOGAN.japaneseFirst === false ? 0 : 1}" data-ja-hold="${+SLOGAN.japaneseHold || 1.9}" data-pace="${+SLOGAN.wordPace || 90}">
+      <div class="band-sheen" aria-hidden="true"></div>
+      <!-- The animated slogan: app.js writes each line in, word by word -->
+      <p class="band-stage band-text" aria-hidden="true"></p>
+      <span class="band-line" aria-hidden="true"></span>
+      <!-- Every line as plain text: read by screen readers, and shown instead of the animation for reduced motion or without JavaScript -->
+      <ul class="band-list">
+${lines.map((k, i) => `        <li${i === 0 ? ' class="band-text"' : ""} data-i18n="${k}">${tx(k)}</li>`).join("\n")}
+      </ul>
+    </section>`;
+}
+index = between(index, "band", sloganBand());
 index = between(index, "widgets", footerWidgets());
 writeFileSync("index.html", index);
 const HEADER = index.match(/  <header class="site-header">[\s\S]*?<\/header>/)[0];

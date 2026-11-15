@@ -119,8 +119,11 @@ const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
   const band = $(".band");
   let setupBand = () => {};
   if (band) {
-    const BAND_LINES = ["motto", "tag1", "tag2", "tag3", "tag4"];
-    const BAND_HOLD = 7000;   // how long each line stays (Japanese first, then the visitor's language), in milliseconds
+    // Lines, order and timing come from data/slogan.json via the band's data attributes (Tenshi Editor › Slogan)
+    const BAND_LINES = (band.dataset.lines || "motto,tag1,tag2,tag3,tag4").split(",").filter(Boolean);
+    const BAND_HOLD = (parseFloat(band.dataset.hold) || 7) * 1000;   // how long each line stays, in milliseconds
+    const JA_FIRST = band.dataset.jaFirst !== "0";                     // show each line in Japanese first
+    const PACE = parseFloat(band.dataset.pace) || 90;                  // milliseconds between words
     const stage = $(".band-stage");
     const bandLine = $(".band-line");
     const sheen = $(".band-sheen");
@@ -137,7 +140,7 @@ const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
         : window.Intl && Intl.Segmenter ? Array.from(new Intl.Segmenter(inLang, { granularity: "word" }).segment(text), (s) => s.segment)
         : Array.from(text);
       stage.setAttribute("lang", inLang);
-      stage.style.setProperty("--step", noSpaces ? "40ms" : "90ms");
+      stage.style.setProperty("--step", (noSpaces ? PACE * 0.45 : PACE) + "ms");
       stage.setAttribute("dir", inLang === "ar" || inLang === "fa" ? "rtl" : "ltr");
       stage.classList.remove("is-out");
       stage.replaceChildren(...units.map((u, k) => {
@@ -151,17 +154,18 @@ const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
 
     // Each line appears in Japanese first; for visitors in another language it then dissolves and rewrites itself
     // in their language.
-    const JA_HOLD = 1900;   // how long the Japanese stays before switching, in milliseconds
+    const JA_HOLD = (parseFloat(band.dataset.jaHold) || 1.9) * 1000;   // how long the Japanese stays before switching
     let switchTimer = null;
     const showBandLine = (i) => {
       clearTimeout(switchTimer);
       bandIndex = i % BAND_LINES.length;
       const key = BAND_LINES[bandIndex];
       stage.classList.toggle("is-tag", bandIndex > 0);
-      writeLine(T.ja[key], "ja");
+      const ja = (T.ja && T.ja[key]) || t(key);
+      writeLine(JA_FIRST ? ja : t(key), JA_FIRST ? "ja" : lang);
       restart(bandLine);
       restart(sheen);
-      if (lang === "ja") return;
+      if (lang === "ja" || !JA_FIRST) return;
       const shownIndex = bandIndex;
       switchTimer = setTimeout(() => {
         stage.classList.add("is-out");

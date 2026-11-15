@@ -53,6 +53,7 @@
       <button type="button" role="tab" data-tab="pages" aria-selected="true">Pages</button>
       <button type="button" role="tab" data-tab="text" aria-selected="false">All text</button>
       <button type="button" role="tab" data-tab="images" aria-selected="false">Images</button>
+      <button type="button" role="tab" data-tab="slogan" aria-selected="false">Slogan</button>
       <button type="button" role="tab" data-tab="design" aria-selected="false">Design</button>
       <button type="button" role="tab" data-tab="bots" aria-selected="false">Content bots</button>
     </nav>
@@ -84,6 +85,22 @@
         <p class="ed-tip">Click a picture to replace it. New pictures are resized and compressed in your browser before they're saved.</p>
       </div>
       <ul class="ed-imgs" id="ed-imgs"></ul>
+    </section>
+    <!-- Slogan: the animated strip on the homepage (data/slogan.json + texts in translations.js) -->
+    <section class="ed-panel ed-slogan" data-panel="slogan" hidden>
+      <div class="sl-wrap">
+        <p class="ed-tip">The animated strip under the homepage headline. Each line writes itself in word by word, then makes way for the next. Changes save with the <b>Save</b> button at the top; edited English is translated into the other languages, and <b>All languages</b> lets you write any language by hand.</p>
+        <form id="sl-settings" class="sl-settings" autocomplete="off">
+          <label class="ed-check"><input type="checkbox" id="sl-enabled"> Show the slogan strip on the homepage</label>
+          <label class="ed-check"><input type="checkbox" id="sl-ja"> Show each line in Japanese first, then in the visitor's language</label>
+          <label class="dz-range"><span>Each line stays for</span><input type="range" id="sl-hold" min="2" max="20" step="0.5"><output></output></label>
+          <label class="dz-range"><span>Japanese shows for</span><input type="range" id="sl-jahold" min="0.5" max="6" step="0.1"><output></output></label>
+          <label class="dz-range"><span>Time between words</span><input type="range" id="sl-pace" min="20" max="300" step="5"><output></output></label>
+        </form>
+        <h2 class="sl-h">Lines</h2>
+        <ol class="sl-lines" id="sl-lines"></ol>
+        <button type="button" class="ed-btn ed-btn--ghost" id="sl-add">Add a line</button>
+      </div>
     </section>
     <!-- Design: fonts, typography, colors and motion (writes site-theme.css) -->
     <section class="ed-panel ed-design" data-panel="design" hidden>

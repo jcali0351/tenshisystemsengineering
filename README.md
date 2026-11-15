@@ -105,3 +105,11 @@ Motion (`design.js`, styles at the end of `design.css`): headings appear charact
 Arabic and Farsi), text slides in from alternating sides, pictures fade and rise, cards rise one after another, and
 every picture starts black and white and turns to full color as it comes into view. Each can be switched off or
 re-timed in the Design tab. Visitors who ask their device for reduced motion get a still site.
+
+## Slogan tab: the animated strip on the homepage
+
+The Tenshi Editor's **Slogan** tab manages the strip under the homepage headline: which lines show and in what order
+(add, remove, reorder), each line's words (English, translated on Save; "All languages" to write any language by hand),
+how long each line stays, whether it shows in Japanese first and for how long, the pace of the words, and whether the
+strip shows at all. The list and timing are in `data/slogan.json`; the words are translation keys in `translations.js`.
+`tools/build-pages.mjs` writes the strip into index.html, and `app.js` animates it.
