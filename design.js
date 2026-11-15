@@ -97,6 +97,12 @@
       node.parentNode.replaceChild(frag, node);
     });
     h.classList.add("ch-split");
+    // The homepage headline gets its own entrance: each letter's distance from the centre of the line (-1 to 1)
+    if (h.closest(".hero-card") && on("--anim-hero")) {
+      var chars = h.querySelectorAll(".ch"), mid = (chars.length - 1) / 2 || 1;
+      Array.prototype.forEach.call(chars, function (c, n) { c.style.setProperty("--o", ((n - mid) / mid).toFixed(3)); c.style.setProperty("--i", n); });
+      h.classList.add("ch-hero");
+    }
     if (!h.querySelector("a, button") && label) { h.setAttribute("aria-label", label); Array.prototype.forEach.call(h.querySelectorAll(".ch-w, .ch"), function (c) { c.setAttribute("aria-hidden", "true"); }); }
   }
 

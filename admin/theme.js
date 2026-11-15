@@ -17,7 +17,7 @@
     bodySpacing: 0, bodyLine: 1.75,
     sectionSpace: 168, flowSpace: 1.25, headingSpace: 0.7, cardPad: 44, gridGap: 34, gutter: 56,   // spacing: px, em, em, px, px, px
     headingColor: "#3d4249", headingOpacity: 38, textColor: "#6b7280", mutedColor: "#7d838c", accentColor: "#c8102e",
-    motion: true, motionChars: true, motionText: true, motionImages: true, motionCards: true, motionColor: true, colorDuration: 1.8, intro: true, introHold: 5, introFade: 2.6, introStyle: "bloom",
+    motion: true, motionChars: true, motionText: true, motionImages: true, motionCards: true, motionColor: true, colorDuration: 1.8, intro: true, introHold: 5, introFade: 2.6, introStyle: "bloom", heroEffect: true, heroStep: 55, heroDuration: 1.5,
     motionSpeed: 1, motionDistance: 56, motionDistanceMobile: 26, charDelay: 26
   };
 
@@ -29,8 +29,8 @@
     if (s.headingSpacingUnit === undefined && s.h1Spacing !== undefined) s = Object.assign({}, s, { headingSpacingUnit: "em" });
     for (k in DEFAULTS) o[k] = s[k] === undefined || s[k] === null || s[k] === "" ? DEFAULTS[k] : s[k];
     ["headingWeight", "bodyWeight", "rootSize", "heroSize", "pageTitleSize", "sectionSize", "featureSize", "cardSize", "h1Spacing", "h2Spacing", "h3Spacing",
-      "h4Spacing", "headingLine", "headingOpacity", "bodySpacing", "sectionSpace", "flowSpace", "headingSpace", "cardPad", "gridGap", "gutter", "bodyLine", "motionSpeed", "motionDistance", "motionDistanceMobile", "charDelay", "colorDuration", "introHold", "introFade"].forEach(function (k) { o[k] = num(o[k], DEFAULTS[k]); });
-    ["motion", "motionChars", "motionText", "motionImages", "motionCards", "motionColor", "intro"].forEach(function (k) { o[k] = o[k] === true || o[k] === "true" || o[k] === 1; });
+      "h4Spacing", "headingLine", "headingOpacity", "bodySpacing", "sectionSpace", "flowSpace", "headingSpace", "cardPad", "gridGap", "gutter", "bodyLine", "motionSpeed", "motionDistance", "motionDistanceMobile", "charDelay", "colorDuration", "introHold", "introFade", "heroStep", "heroDuration"].forEach(function (k) { o[k] = num(o[k], DEFAULTS[k]); });
+    ["motion", "motionChars", "motionText", "motionImages", "motionCards", "motionColor", "intro", "heroEffect"].forEach(function (k) { o[k] = o[k] === true || o[k] === "true" || o[k] === 1; });
     ["headingColor", "textColor", "mutedColor", "accentColor"].forEach(function (k) { if (!/^#[0-9a-f]{6}$/i.test(o[k])) o[k] = DEFAULTS[k]; });
     if (["none", "uppercase", "capitalize"].indexOf(o.headingCase) < 0) o.headingCase = "none";
     o.headingOpacity = Math.max(5, Math.min(100, Math.round(o.headingOpacity)));
@@ -84,8 +84,8 @@
       ";--anim-images:" + (s.motionImages ? 1 : 0) + ";--anim-cards:" + (s.motionCards ? 1 : 0) +
       ";--anim-color:" + (s.motionColor ? 1 : 0) + ";--gs-dur:" + s.colorDuration + "s}\n";
     // Opening: black and white for introHold seconds, then color (design.css draws it)
-    out += ":root{--intro-hold:" + s.introHold + "s;--intro-fade:" + s.introFade + "s}\n";
-    if (!s.intro) out += "body::after{display:none!important}\n";
+    out += ":root{--intro-hold:" + s.introHold + "s;--intro-fade:" + s.introFade + "s;--anim-hero:" + (s.heroEffect ? 1 : 0) + ";--hero-step:" + s.heroStep + "ms;--hero-dur:" + s.heroDuration + "s}\n";
+    if (!s.intro) out += "body::after{display:none!important}body>:is(.site-header,main,.site-footer){animation:none!important}\n";
     else if (s.introStyle === "even") out += "body::after{-webkit-mask-image:none!important;mask-image:none!important;animation-name:tse-intro-even!important}\n";
     out += "@media (max-width:760px){:root{--dx:" + s.motionDistanceMobile + "px;--dy:" + Math.round(s.motionDistanceMobile * 0.75) + "px}}\n";
     out += "html{font-size:" + px(s.rootSize) + "}\n";

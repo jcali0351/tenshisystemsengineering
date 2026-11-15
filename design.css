@@ -412,3 +412,22 @@ html.intro-even body::after, html.intro-even-css body::after { -webkit-mask-imag
 @media (prefers-reduced-motion: reduce) { body::after { -webkit-mask-image: none; mask-image: none; animation-name: tse-intro-even; } }
 @media print { body::after { display: none; } }
 html.no-intro body::after { display: none !important; }
+/* The header (with the ticker), the content and the footer also turn themselves gray, in step with the opening layer,
+   so they stay black and white even in browsers that draw fixed and frosted bars above other layers. */
+@keyframes tse-intro-self { from { filter: grayscale(1); } to { filter: none; } }
+body > :is(.site-header, main, .site-footer) { animation: tse-intro-self var(--intro-fade, 2.6s) ease var(--intro-hold, 5s) backwards; }
+html.no-intro body > :is(.site-header, main, .site-footer) { animation: none !important; }
+@media print { body > :is(.site-header, main, .site-footer) { animation: none; } }
+
+/* ---------- Homepage headline: letters flip up out of a blur and draw together into the line ---------- */
+html.anim-on .ch-split.ch-hero .ch {
+  opacity: 0; filter: blur(12px);
+  transform: perspective(700px) translate3d(calc(var(--o, 0) * .9em), .42em, 0) rotateX(-82deg) scale(1.18);
+  transform-origin: 50% 100%;
+  transition: opacity calc(var(--hero-dur, 1.5s) * .6) ease-out, filter calc(var(--hero-dur, 1.5s) * .8) ease-out, transform var(--hero-dur, 1.5s) cubic-bezier(.16, 1.12, .3, 1);
+  transition-delay: calc(var(--i, 0) * var(--hero-step, 55ms) + .3s);
+}
+html.anim-on .ch-split.ch-hero.is-in .ch { opacity: 1; filter: blur(0); transform: none; }
+@media (max-width: 760px) { html.anim-on .ch-split.ch-hero .ch { transform: perspective(500px) translate3d(calc(var(--o, 0) * .5em), .4em, 0) rotateX(-75deg) scale(1.12); } }
+@media (prefers-reduced-motion: reduce) { html.anim-on .ch-split.ch-hero .ch { opacity: 1 !important; filter: none !important; transform: none !important; transition: none !important; } }
+@media print { html.anim-on .ch-split.ch-hero .ch { opacity: 1 !important; filter: none !important; transform: none !important; } }

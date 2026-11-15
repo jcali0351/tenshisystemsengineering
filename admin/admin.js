@@ -693,7 +693,7 @@
      site-theme.css (the settings ride along in its first line), and the site updates about a minute later. */
   var TH = window.TenshiTheme, dz = { fonts: null, saved: null, cur: null, ready: false };
   var DZ_UNITS = { rootSize: "px", heroSize: "px", pageTitleSize: "px", sectionSize: "px", featureSize: "px", cardSize: "px",
-    bodySpacing: "em", motionDistance: "px", motionDistanceMobile: "px", charDelay: "ms", motionSpeed: "×", colorDuration: "s", headingOpacity: "%", sectionSpace: "px", flowSpace: "em", headingSpace: "em", cardPad: "px", gridGap: "px", gutter: "px", introHold: "s", introFade: "s" };
+    bodySpacing: "em", motionDistance: "px", motionDistanceMobile: "px", charDelay: "ms", motionSpeed: "×", colorDuration: "s", headingOpacity: "%", sectionSpace: "px", flowSpace: "em", headingSpace: "em", cardPad: "px", gridGap: "px", gutter: "px", introHold: "s", introFade: "s", heroStep: "ms", heroDuration: "s" };
   function dzFontOptions() {
     var groups = { sans: "Sans serif", serif: "Serif", display: "Display", script: "Script", mono: "Monospace" };
     return Object.keys(groups).map(function (g) {
@@ -730,7 +730,7 @@
     var hf = dzFamily(dz.cur.headingFont), bf = dzFamily(dz.cur.bodyFont);
     $("#dz-sample-h").style.cssText = "font-family:" + (hf ? '"' + hf.name + '"' : "inherit") + ";font-weight:" + dz.cur.headingWeight + ";letter-spacing:" + dz.cur.h1Spacing + dz.cur.headingSpacingUnit;
     $("#dz-sample-b").style.cssText = "font-family:" + (bf ? '"' + bf.name + '"' : "inherit") + ";font-weight:" + dz.cur.bodyWeight + ";letter-spacing:" + dz.cur.bodySpacing + "em;line-height:" + dz.cur.bodyLine;
-    $$("#dz-form [data-k^=motion]:not([data-k=motion]), #dz-form [data-k=charDelay], #dz-form [data-k=colorDuration]").forEach(function (el) { el.disabled = !dz.cur.motion; });
+    $$("#dz-form [data-k^=motion]:not([data-k=motion]), #dz-form [data-k=charDelay], #dz-form [data-k=colorDuration], #dz-form [data-k^=hero]").forEach(function (el) { el.disabled = !dz.cur.motion; });
     $$("#dz-form [data-k=introHold], #dz-form [data-k=introFade], #dz-form [data-k=introStyle]").forEach(function (el) { el.disabled = !dz.cur.intro; });
     $("#dz-save").disabled = JSON.stringify(dz.cur) === JSON.stringify(dz.saved);
   }
@@ -772,7 +772,7 @@
     if (k === "headingFont" || k === "bodyFont") { var w = $('.dz-weight[data-for="' + k + '"]'); dz.cur[w.dataset.k] = TH.nearest(dzFamily(dz.cur[k]) || { faces: [] }, dz.cur[w.dataset.k]); }
     dz.cur = TH.clean(dz.cur);
     dzShow(); dzLive();
-    if (/^motion|charDelay|colorDuration|^intro/.test(k)) { clearTimeout(dz.replay); dz.replay = setTimeout(dzLoadFrame, 700); }
+    if (/^motion|charDelay|colorDuration|^intro|^hero/.test(k)) { clearTimeout(dz.replay); dz.replay = setTimeout(dzLoadFrame, 700); }
   });
   $("#dz-page").addEventListener("change", dzLoadFrame);
   $("#dz-replay").addEventListener("click", dzLoadFrame);
