@@ -1884,3 +1884,83 @@ html:not([dir="rtl"]):not(:lang(ja)):not(:lang(zh)):not(:lang(ko)) .pitch-lead::
 .feature h2::after { left: auto; inset-inline-start: 0; }
 .feature-list li { padding-left: 0; padding-inline-start: 22px; }
 .feature-list li::before { left: auto; inset-inline-start: 0; }
+
+/* Feature areas: white and light gray for readability, red only as an accent. Area 2 is the light gray one. */
+.feature--gray {
+  background:
+    radial-gradient(800px 500px at 10% 15%, rgba(200, 16, 46, .05), transparent 70%),
+    linear-gradient(160deg, #f4f4f6 0%, #eceef1 100%);
+}
+.feature--light .feature-figure { border-color: #dcdde1; }
+.feature--light p, .feature--light .feature-list { color: #3f434b; }
+
+/* ======================================================================
+   Light content areas across the whole site: white and light gray backgrounds, dark text, red only as an accent.
+   The homepage consultation section (.contact, near the footer) keeps its dark red look on purpose.
+   These sections were designed dark, with many differently weighted rules, so this block uses !important,
+   scoped to the sections listed here.
+   ====================================================================== */
+:is(.svc-hero, .svc-cta, section.band, section.services, .red-section, .ab-web, .ab-global, .svc-benefits, .prj-fair, .team-section, .tech-section, .pat-section) {
+  background: #fff !important; color: #3f434b !important; text-shadow: none !important;
+}
+/* light gray ones, so neighbouring areas stay distinct */
+:is(.svc-hero, .svc-cta, section.band, .ab-global, .prj-fair, .pat-section, .svc-benefits) { background: #f4f4f6 !important; }
+.svc-hero { border-bottom: 3px solid var(--red); }
+section.band { border-block: 1px solid #e3e4e8; }
+
+/* decorations drawn for dark backgrounds */
+:is(.svc-hero, section.band, section.services, .pat-section, .team-section, .tech-section, .ab-web)::before,
+:is(.svc-hero, section.band, section.services, .pat-section, .team-section, .tech-section, .ab-web)::after { display: none !important; }
+.svc-rain, .band-line, .band-sheen { display: none !important; }
+.svc-hero .page-art { color: var(--red); opacity: .55; }
+
+/* text */
+:is(.svc-hero, .svc-cta, section.band, section.services, .red-section, .ab-web, .ab-global, .svc-benefits, .prj-fair, .team-section, .tech-section, .pat-section)
+  :is(h1, h2, h3, h4, h5, strong, b, dt, .band-text, .band-unit, .band-stage, .team-name, .tech-name, .tech-group-title, .pat-sub) { color: #16191e !important; text-shadow: none !important; }
+:is(.svc-hero, .svc-cta, section.band, section.services, .red-section, .ab-web, .ab-global, .svc-benefits, .prj-fair, .team-section, .tech-section, .pat-section)
+  :is(p, li, span, small, dd, figcaption, label, code, .section-intro, .team-role, .tech-desc, .tech-group-text) { color: #3f434b !important; text-shadow: none !important; }
+section.band .band-list li:not(.band-text) + li:not(.band-text) { border-left-color: var(--red) !important; }
+
+/* red accents */
+:is(.svc-hero, .svc-cta, section.band, section.services, .red-section, .ab-web, .ab-global, .svc-benefits, .prj-fair, .team-section, .tech-section, .pat-section)
+  :is(.eyebrow, .pat-num, .team-view, .team-view span, a:not(.btn):not(.btn-more):not(.prj-btn)) { color: var(--red) !important; }
+.svc-hero :is(.breadcrumbs, nav) a, .svc-hero li a { color: var(--red) !important; }
+:is(.svc-hero, .svc-cta, section.band, section.services, .red-section, .ab-web, .ab-global, .svc-benefits, .prj-fair, .team-section, .tech-section, .pat-section)
+  :is(.ab-icon, .ab-check, .benefit-icon, .svc-icon) { background: #fbe8eb !important; color: var(--red) !important; border-color: #f3c6cd !important; box-shadow: none !important; }
+:is(.ab-icon, .ab-check, .benefit-icon, .svc-icon) :is(svg, span) { color: var(--red) !important; }
+
+/* cards: white with a hairline and a soft shadow */
+:is(section.services, .red-section, .ab-web, .svc-benefits, .team-section, .tech-section, .pat-section, .ab-global)
+  :is(.service-card, .team-card, .tech-card, .benefit-card, .prj-ed, .ab-focus) {
+  background: #fff !important; border: 1px solid #e3e4e8 !important; box-shadow: 0 10px 28px rgba(22, 25, 30, .07) !important; color: #3f434b !important;
+}
+
+/* buttons and fields */
+:is(.svc-hero, .svc-cta, section.band, section.services, .red-section, .ab-web, .ab-global, .svc-benefits, .prj-fair, .team-section, .tech-section, .pat-section) .btn-primary,
+.svc-cta .btn-light { background: var(--red) !important; border-color: var(--red) !important; color: #fff !important; box-shadow: 0 6px 16px rgba(200, 16, 46, .22) !important; }
+:is(.btn-primary, .svc-cta .btn-light) * { color: #fff !important; }
+:is(section.services, .red-section) .btn-more,
+.svc-benefits .prj-btn { background: #fff !important; border: 1px solid var(--red) !important; color: var(--red) !important; }
+:is(section.services, .red-section) .btn-more *, .svc-benefits .prj-btn * { color: var(--red) !important; }
+:is(.tech-section, .pat-section) :is(input, select, textarea) { background: #fff !important; color: #16191e !important; border: 1px solid #cfd2d8 !important; }
+:is(.tech-section, .pat-section) :is(input, textarea)::placeholder { color: #8a8f99 !important; }
+
+/* Light content areas, part 2: cards and panels that carried their own dark or red backgrounds */
+:is(.prj-card, .name-card, .chat-card) {
+  background: #fff !important; border: 1px solid #e3e4e8 !important; border-top: 3px solid var(--red) !important;
+  box-shadow: 0 10px 28px rgba(22, 25, 30, .08) !important; color: #3f434b !important;
+}
+:is(.prj-card, .name-card, .chat-card) :is(h2, h3, h4, strong, b) { color: #16191e !important; text-shadow: none !important; }
+:is(.prj-card, .name-card, .chat-card) :is(p, li:not(.prj-chip), span:not(.prj-group-icon):not(.ab-icon), small, dd, dt) { color: #3f434b !important; text-shadow: none !important; }
+:is(.prj-card, .name-card, .chat-card) a:not(.btn) { color: var(--red) !important; }
+.prj-section .prj-intro, .prj-section .section-intro { color: #3f434b !important; }
+.prj-section .section-title { color: #16191e !important; }
+.prj-btn-view { background: #fff !important; border: 1px solid var(--red) !important; color: var(--red) !important; }
+.prj-btn-view * { color: var(--red) !important; }
+.contact-pitch .pitch-omote { background: #f4f4f6 !important; color: #3f434b !important; border-left: 3px solid var(--red); }
+.contact-page .btn-dark, .chat-card .btn-dark { background: var(--red) !important; border-color: var(--red) !important; color: #fff !important; }
+section.band :is(.band-unit, .band-stage, .band-text) { color: #16191e !important; }
+.name-card .name-kanji { color: var(--red) !important; opacity: .08 !important; }
+.tech-filter button { background: #fff !important; border: 1px solid #e3b5bd !important; color: var(--red) !important; box-shadow: none !important; }
+.tech-filter button:hover { border-color: var(--red) !important; }
+.tech-filter button[aria-pressed="true"] { background: var(--red) !important; border-color: var(--red) !important; color: #fff !important; }
