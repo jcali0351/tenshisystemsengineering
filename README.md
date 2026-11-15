@@ -21,6 +21,7 @@ A plain static site for GitHub Pages.
 - `img/chevrons.svg` – the red band's chevron pattern
 - `img/team/` – placeholder team photos; `img/tech/` – technology logos from Simple Icons (CC0; the logos are their owners' trademarks)
 - `fonts/lato/` – the Lato font (Google Fonts, SIL Open Font License), hosted with the site
+- `fonts/roboto/` – the Roboto font for all headings (Google Fonts via Fontsource, SIL Open Font License), hosted with the site
 - `logo.png` – the company logo (header, hero, footer and tab icon)
 - `img/tanaka.svg` – Tanaka Matsumoto's illustrated portrait (an original drawing, not a photo of a real person)
 
