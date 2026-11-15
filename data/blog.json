@@ -1,5 +1,5 @@
 {
-  "generatedAt": null,
+  "generatedAt": "2026-11-15T22:07:56.457Z",
   "posts": [
     {
       "id": "placeholder-10",
@@ -13,7 +13,19 @@
         "Next comes a single, obvious call to action, honest photos of your real work, plain-language service pages and a contact form that never asks for more than it needs."
       ],
       "placeholder": true,
-      "sources": []
+      "sources": [],
+      "image": {
+        "src": "img/stories/e119267020be5014.jpg",
+        "query": "laptop desk workspace",
+        "creator": "phil_g",
+        "creatorUrl": "https://www.flickr.com/photos/68975104@N00",
+        "license": "CC BY-SA 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+        "page": "https://www.flickr.com/photos/68975104@N00/1936840027",
+        "provider": "flickr",
+        "via": "Openverse",
+        "file": "https://api.openverse.org/v1/images/997dbeb1-c6fb-4091-a660-2d4a4c5dae2b/thumb/"
+      }
     },
     {
       "id": "placeholder-9",
@@ -27,7 +39,19 @@
         "The result is that adding a page takes minutes, not days, and nobody has to hunt through HTML to fix a typo."
       ],
       "placeholder": true,
-      "sources": []
+      "sources": [],
+      "image": {
+        "src": "img/stories/0f7a140b8368fd1e.jpg",
+        "query": "web design laptop",
+        "creator": "viagallery.com",
+        "creatorUrl": "https://www.flickr.com/photos/15932083@N05",
+        "license": "CC BY 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+        "page": "https://www.flickr.com/photos/15932083@N05/2037438874",
+        "provider": "flickr",
+        "via": "Openverse",
+        "file": "https://api.openverse.org/v1/images/56056bc1-bba7-4c4b-b182-395177542e34/thumb/"
+      }
     },
     {
       "id": "placeholder-8",
@@ -41,7 +65,19 @@
         "Keep API keys on a server, never in the browser, and review conversations regularly to see what visitors actually ask."
       ],
       "placeholder": true,
-      "sources": []
+      "sources": [],
+      "image": {
+        "src": "img/stories/2211d546feaf6957.jpg",
+        "query": "server room",
+        "creator": "Leonardo Rizzi",
+        "creatorUrl": "https://www.flickr.com/photos/29479498@N05",
+        "license": "CC BY-SA 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+        "page": "https://www.flickr.com/photos/29479498@N05/2759159448",
+        "provider": "flickr",
+        "via": "Openverse",
+        "file": "https://api.openverse.org/v1/images/720cb108-319f-47e2-8c7a-c110bc9af59f/thumb/"
+      }
     },
     {
       "id": "placeholder-7",
@@ -55,7 +91,19 @@
         "Pair it with a simple editor and you still get easy updates, without the plugin treadmill."
       ],
       "placeholder": true,
-      "sources": []
+      "sources": [],
+      "image": {
+        "src": "img/stories/6774d4da7b034a7b.jpg",
+        "query": "web design laptop",
+        "creator": "jurvetson",
+        "creatorUrl": "https://www.flickr.com/photos/44124348109@N01",
+        "license": "CC BY 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+        "page": "https://www.flickr.com/photos/44124348109@N01/2608962510",
+        "provider": "flickr",
+        "via": "Openverse",
+        "file": "https://api.openverse.org/v1/images/87c2795e-e07d-4f83-97a6-cd316e87b5a9/thumb/"
+      }
     },
     {
       "id": "placeholder-6",
@@ -69,7 +117,19 @@
         "Then pick two colors and one typeface, and use them everywhere for a year before you change anything."
       ],
       "placeholder": true,
-      "sources": []
+      "sources": [],
+      "image": {
+        "src": "img/stories/bce8963a8b4e2c96.jpg",
+        "query": "design studio desk",
+        "creator": "juhansonin",
+        "creatorUrl": "https://www.flickr.com/photos/38869431@N00",
+        "license": "CC BY 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+        "page": "https://www.flickr.com/photos/38869431@N00/8682730703",
+        "provider": "flickr",
+        "via": "Openverse",
+        "file": "https://api.openverse.org/v1/images/13668fbc-1b6e-4e1b-b168-55f6fd880f66/thumb/"
+      }
     },
     {
       "id": "placeholder-5",
@@ -83,7 +143,19 @@
         "A progressive web app can sit in between, installable from the browser at a fraction of the cost."
       ],
       "placeholder": true,
-      "sources": []
+      "sources": [],
+      "image": {
+        "src": "img/stories/146094d82b717f44.jpg",
+        "query": "web design laptop",
+        "creator": "Tim & Selena Middleton",
+        "creatorUrl": "https://www.flickr.com/photos/33547369@N00",
+        "license": "CC BY 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+        "page": "https://www.flickr.com/photos/33547369@N00/5051157647",
+        "provider": "flickr",
+        "via": "Openverse",
+        "file": "https://api.openverse.org/v1/images/0e30ad9b-da94-4226-93e1-278e3cb66979/thumb/"
+      }
     },
     {
       "id": "placeholder-4",
@@ -97,7 +169,19 @@
         "And the food is better. We will not be taking questions on that."
       ],
       "placeholder": true,
-      "sources": []
+      "sources": [],
+      "image": {
+        "src": "img/stories/d16b7da6f6407eb2.jpg",
+        "query": "programming code screen",
+        "creator": "hackNY",
+        "creatorUrl": "https://www.flickr.com/photos/61623410@N08",
+        "license": "CC BY-SA 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+        "page": "https://www.flickr.com/photos/61623410@N08/6887025506",
+        "provider": "flickr",
+        "via": "Openverse",
+        "file": "https://api.openverse.org/v1/images/58768062-2f38-4135-bdd9-d3a5e47328a7/thumb/"
+      }
     },
     {
       "id": "placeholder-3",
@@ -111,7 +195,19 @@
         "Batch-write in quiet weeks, schedule ahead, and reuse each post as a newsletter and a few social updates."
       ],
       "placeholder": true,
-      "sources": []
+      "sources": [],
+      "image": {
+        "src": "img/stories/675e024695cf0e06.jpg",
+        "query": "laptop desk workspace",
+        "creator": "bionicteaching",
+        "creatorUrl": "https://www.flickr.com/photos/29096601@N00",
+        "license": "CC BY-SA 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+        "page": "https://www.flickr.com/photos/29096601@N00/16598625858",
+        "provider": "flickr",
+        "via": "Openverse",
+        "file": "https://api.openverse.org/v1/images/777d9564-8312-4bae-8438-a687290bc7ea/thumb/"
+      }
     },
     {
       "id": "placeholder-2",
@@ -125,7 +221,19 @@
         "Add alt text that says what an image shows, and never rely on color alone to carry meaning."
       ],
       "placeholder": true,
-      "sources": []
+      "sources": [],
+      "image": {
+        "src": "img/stories/ccc12f1a51c20758.jpg",
+        "query": "keyboard laptop",
+        "creator": "Epicantus",
+        "creatorUrl": "https://www.flickr.com/photos/36076466@N08",
+        "license": "CC BY 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+        "page": "https://www.flickr.com/photos/36076466@N08/16417325661",
+        "provider": "flickr",
+        "via": "Openverse",
+        "file": "https://api.openverse.org/v1/images/64e7c890-a2b7-4fab-b79e-53cdf283c829/thumb/"
+      }
     },
     {
       "id": "placeholder-1",
@@ -139,8 +247,24 @@
         "If there is a topic you would like us to cover, the contact page is the quickest way to tell us."
       ],
       "placeholder": true,
-      "sources": []
+      "sources": [],
+      "image": {
+        "src": "img/stories/51f35f7fd6829910.jpg",
+        "query": "laptop desk workspace",
+        "creator": "Delwin Steven Campbell",
+        "creatorUrl": "https://www.flickr.com/photos/22955545@N00",
+        "license": "CC BY 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+        "page": "https://www.flickr.com/photos/22955545@N00/208216078",
+        "provider": "flickr",
+        "via": "Openverse",
+        "file": "https://api.openverse.org/v1/images/f141eb0b-dcb8-467e-aa18-3d2d4c9427ed/thumb/"
+      }
     }
   ],
-  "lastRun": null
+  "lastRun": {
+    "at": "2026-11-15T22:07:56.457Z",
+    "ok": false,
+    "message": "The Blog Writer needs an ANTHROPIC_API_KEY secret on GitHub before it can write posts. Nothing was changed."
+  }
 }
