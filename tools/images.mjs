@@ -64,7 +64,7 @@ export const guessQuery = (text, cat) => (KEYWORDS.find(([re]) => re.test(text))
 const LICENSES = { cc0: "CC0", pdm: "Public domain", by: "CC BY", "by-sa": "CC BY-SA" };
 
 async function openverse(q) {
-  const u = `https://api.openverse.org/v1/images/?q=${encodeURIComponent(q)}&license=cc0,pdm,by,by-sa&page_size=20&mature=false&aspect_ratio=wide`;
+  const u = `https://api.openverse.org/v1/images/?q=${encodeURIComponent(q)}&license=cc0,pdm,by,by-sa&page_size=20&mature=false&aspect_ratio=wide&category=photograph&size=large`;
   const r = await fetch(u, { headers: UA, signal: AbortSignal.timeout(20000) });
   if (!r.ok) throw new Error("Openverse HTTP " + r.status);
   return ((await r.json()).results || []).filter((x) => x.thumbnail && LICENSES[x.license]).map((x) => ({

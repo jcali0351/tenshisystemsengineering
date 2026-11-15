@@ -23,7 +23,7 @@
 }
 
 /* ---------- Paper, ink and type ---------- */
-body { background: var(--washi); color: #3b3f45; }
+body { background: var(--washi); color: var(--text); }
 body::before { /* the faint fibres of washi paper */
   content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .5;
   background: var(--grain);
@@ -188,3 +188,160 @@ html[dir="rtl"] .pat-num { right: auto; left: 16px; }
   .pat-section::after { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .pat-card { transition: none; } .pat-card:hover { transform: none; } }
+
+/* ==========================================================================
+   Refined layer (Nov 2026): a clean, airy product-page feel.
+   White and soft-gray full-width sections, gray type instead of black, large tight headlines,
+   pill buttons, big rounded flat panels and a frosted header. Tenshi red stays the one accent.
+   It overrides the layers above; delete this block to go back to the earlier look.
+   ========================================================================== */
+:root {
+  --mist: #f5f5f7;            /* the soft gray band between white sections */
+  --hair: #e3e5e9;            /* hairlines */
+  --washi: #fff; --washi-2: var(--mist); --pale: var(--mist); --line: var(--hair);
+  --radius: 22px;
+  --pill: 980px;
+}
+
+/* ---------- Page, type and color ---------- */
+body { background: #fff; color: var(--text); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body::before { display: none; }
+h1, h2, h3, h4 { color: var(--ink); }
+h1 { letter-spacing: -.032em; }
+h2 { letter-spacing: -.026em; }
+h3 { letter-spacing: -.012em; }
+p, li { text-wrap: pretty; }
+:is(h1, h2) { text-wrap: balance; }
+html:lang(ja) :is(h1, h2, h3), html:lang(zh) :is(h1, h2, h3), html:lang(ko) :is(h1, h2, h3) { letter-spacing: 0; }
+
+/* Section titles: big and quiet, no underline bars, brush strokes or kanji numbers */
+.section-title { font-size: clamp(2rem, 4.2vw, 3.2rem); font-weight: 800; line-height: 1.08; padding-bottom: 0; margin-bottom: 20px; }
+.section-title::after, .section-title[data-kan]::before, .feature h2::after, .feature--light h2::after, .contact-intro h2::after { display: none !important; }
+.eyebrow { text-transform: none; letter-spacing: 0; font-size: 1.05rem; font-weight: 700; color: var(--red); margin-bottom: 8px; }
+html[dir="rtl"] .eyebrow, html:lang(ja) .eyebrow { letter-spacing: 0; }
+
+/* ---------- Header: thin frosted glass ---------- */
+.site-header, .site-header.is-scrolled {
+  background: rgba(255, 255, 255, .78) !important; border-bottom: 1px solid rgba(0, 0, 0, .07) !important; box-shadow: none !important;
+  -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px);
+}
+.scroll-line { display: none; }
+.main-nav a { font-size: .92rem; font-weight: 500; color: var(--text); background: transparent !important; }
+.main-nav a::after { display: none; }
+.main-nav a:hover { color: var(--ink); }
+.main-nav a[aria-current="page"] { color: var(--ink); font-weight: 700; }
+.lang-current { box-shadow: none !important; border-color: var(--hair) !important; background: rgba(255, 255, 255, .6) !important; }
+
+/* ---------- Buttons: pills ---------- */
+.btn, .btn-more, .prj-btn {
+  border-radius: var(--pill) !important; letter-spacing: 0 !important; text-transform: none !important; font-weight: 600 !important;
+}
+.btn { padding: 13px 26px; font-size: 1rem; }
+.btn-primary, :is(.svc-hero, .svc-cta, section.band, section.services, .red-section, .ab-web, .ab-global, .svc-benefits, .prj-fair, .team-section, .tech-section, .pat-section) .btn-primary, .svc-cta .btn-light {
+  background: var(--red) !important; border-color: var(--red) !important; box-shadow: none !important; transition: background-color .2s;
+}
+.btn-primary:hover, .svc-cta .btn-light:hover { background: var(--red-deep) !important; transform: none !important; }
+.btn-more, :is(section.services, .red-section) .btn-more {
+  background: transparent !important; border: 0 !important; color: var(--red) !important; padding: 6px 0 !important; box-shadow: none !important; justify-content: flex-start;
+}
+.btn-more:hover { text-decoration: underline; text-underline-offset: 4px; transform: none !important; }
+
+/* ---------- Homepage hero: a big, calm headline over a soft photo ---------- */
+.hero { min-height: clamp(620px, 88vh, 940px); }
+.hero-wash { background: linear-gradient(180deg, rgba(255, 255, 255, .9) 0%, rgba(255, 255, 255, .72) 48%, rgba(255, 255, 255, .25) 100%) !important; }
+.hero-card { background: transparent !important; border: 0 !important; box-shadow: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+.hero-card h1 { font-size: clamp(2.9rem, 7vw, 5.8rem); font-weight: 800; line-height: 1.02; letter-spacing: -.04em; color: var(--ink); }
+.hero-lead { font-size: clamp(1.15rem, 1.7vw, 1.45rem); line-height: 1.5; color: var(--text); max-width: 36ch; margin-inline: auto; }
+.hero-logo { width: clamp(64px, 7vw, 88px); height: auto; }
+.enso { display: none; }
+
+/* ---------- Sections: white and soft gray, lots of air ---------- */
+.page-section, .feature, .services, .contact, .svc-body, .svc-offer-section, .svc-process, .svc-benefits, .svc-tech-section, .svc-cta {
+  padding-top: clamp(80px, 10vw, 140px) !important; padding-bottom: clamp(80px, 10vw, 140px) !important;
+}
+.feature--gray, .page-section.tinted, .svc-offer-section, .svc-process, .svc-detail-section, .prj-more { background: var(--mist) !important; }
+:is(.svc-hero, .svc-cta, section.band, .ab-global, .prj-fair, .pat-section, .svc-benefits) { background: var(--mist) !important; }
+section.band { border-block: 0 !important; background: #fff !important; }
+.feature, .feature--light { border: 0 !important; }
+.feature::before, .feature::after { display: none !important; }
+.feature h2 { font-size: clamp(2.2rem, 4.6vw, 3.6rem); font-weight: 800; line-height: 1.05; }
+.feature-lead { font-size: clamp(1.1rem, 1.5vw, 1.3rem); line-height: 1.55; color: var(--ink) !important; }
+.feature-figure { border: 0 !important; box-shadow: none !important; border-radius: var(--radius) !important; overflow: hidden; }
+.feature-figure img { border-radius: var(--radius); }
+.feature-list li::before { width: 6px; height: 6px; border-radius: 50%; }
+
+/* ---------- Page banners: quiet, big title, no seal ---------- */
+.svc-hero { border-bottom: 0 !important; padding-top: clamp(64px, 9vw, 120px); padding-bottom: clamp(48px, 7vw, 96px); }
+.svc-hero::before { display: none; }
+.svc-hero h1 { font-size: clamp(2.6rem, 6vw, 4.6rem) !important; font-weight: 800; line-height: 1.04; letter-spacing: -.035em !important; }
+.svc-hero-lead { font-size: clamp(1.1rem, 1.6vw, 1.35rem) !important; line-height: 1.5; max-width: 40ch; }
+.page-seal { display: none; }
+.svc-hero .page-art { opacity: .35; }
+
+/* ---------- Panels and cards: big rounded corners, flat, no hairlines or shadows ---------- */
+:is(.service-card, .offer-card, .benefit-card, .svc-tech, .tech-card, .value-card, .ab-step, .ab-std-card, .ab-focus, .ab-mv-card,
+    .svc-detail, .prj-ed, .svc-step, .contact-pitch, .svc-for, .team-card, .news-item, .blog-card, .contact-form),
+:is(section.services, .red-section, .ab-web, .svc-benefits, .team-section, .tech-section, .pat-section, .ab-global)
+  :is(.service-card, .team-card, .tech-card, .benefit-card, .prj-ed, .ab-focus) {
+  border: 0 !important; box-shadow: none !important; border-radius: var(--radius) !important; background: var(--mist) !important;
+}
+/* on soft-gray sections the panels turn white so they still stand apart */
+:is(.feature--gray, .page-section.tinted, .svc-offer-section, .svc-process, .svc-detail-section, .prj-more, .svc-benefits, .ab-global, .contact)
+  :is(.service-card, .offer-card, .benefit-card, .svc-tech, .tech-card, .value-card, .ab-step, .ab-std-card, .ab-focus, .ab-mv-card, .svc-detail, .prj-ed, .svc-step, .contact-pitch, .svc-for, .team-card, .news-item, .blog-card, .contact-form) {
+  background: #fff !important;
+}
+:is(.service-card, .offer-card, .benefit-card, .svc-tech, .tech-card, .value-card, .ab-step, .ab-std-card, .svc-step, .news-item, .blog-card):hover {
+  box-shadow: none !important; transform: none !important; border-color: transparent !important;
+}
+.service-card { padding: 28px 26px !important; }
+.service-card h3 { font-size: 1.25rem; letter-spacing: -.015em; }
+.service-pic, .svc-figure img, .page-photo img, .svc-detail-pic img, .tech-group-pic { border-radius: 14px !important; box-shadow: none !important; }
+:is(.prj-card, .name-card, .chat-card) { border: 0 !important; border-top: 0 !important; box-shadow: none !important; border-radius: var(--radius) !important; background: var(--mist) !important; }
+
+/* ---------- Homepage consultation: light, with the form on a white panel ---------- */
+.contact, .contact:not(.page-section) { background: var(--mist) !important; border-top: 0 !important; color: var(--text); }
+.contact:not(.page-section)::before { display: none !important; }
+.contact:not(.page-section) .eyebrow { color: var(--red) !important; }
+.contact:not(.page-section) .contact-intro h2 { color: var(--ink) !important; font-size: clamp(2.2rem, 4.6vw, 3.4rem); letter-spacing: -.03em; }
+.contact:not(.page-section) :is(.contact-intro p, .contact-direct) { color: var(--text) !important; }
+.contact:not(.page-section) .contact-email { color: var(--red) !important; }
+.contact:not(.page-section) .contact-form { background: #fff !important; color: var(--text) !important; padding: clamp(24px, 3vw, 36px) !important; }
+.contact:not(.page-section) .contact-form :is(label, span, .req-note, small) { color: var(--text) !important; }
+.contact:not(.page-section) .contact-form :is(input, select, textarea) {
+  background: var(--mist) !important; color: var(--ink) !important; border: 1px solid transparent !important; border-radius: 12px !important; box-shadow: none !important;
+}
+.contact-form :is(input, select, textarea) { border-radius: 12px !important; }
+.contact-form :is(input, select, textarea):focus { border-color: var(--red) !important; box-shadow: 0 0 0 4px rgba(200, 16, 46, .12) !important; background: #fff !important; outline: none; }
+
+/* ---------- Footer: light and small ---------- */
+.site-footer { background: var(--mist) !important; border-top: 1px solid var(--hair) !important; color: var(--muted) !important; }
+.site-footer::before, .site-footer::after { display: none !important; }
+.site-footer :is(p, span, small, li) { color: var(--muted) !important; }
+.footer-brand strong { color: var(--ink) !important; }
+.footer-nav a { color: var(--text) !important; font-weight: 500; font-size: .86rem; }
+.footer-nav a:hover, .footer-nav a[aria-current="page"] { color: var(--ink) !important; }
+.site-footer a { color: var(--text); }
+.footer-meta, .photo-credits { font-size: .76rem !important; }
+
+/* ---------- News and blog: let the photos lead ---------- */
+.news-item, .blog-card { overflow: hidden; }
+.blog-card.is-feature { background: var(--ink) !important; }
+.news-tabs [role=tab] { border: 0; background: var(--mist); font-weight: 600; }
+.news-stories .news-tabs [role=tab] { background: #fff; }
+.news-tabs [role=tab][aria-selected=true] { background: var(--ink); color: #fff; }
+
+/* ---------- Ticker: part of the header glass ---------- */
+.ticker { background: rgba(255, 255, 255, .9); border-bottom: 1px solid rgba(0, 0, 0, .06); }
+
+/* ---------- Phones ---------- */
+@media (max-width: 760px) {
+  .hero { min-height: auto; }
+  .hero-card h1 { font-size: clamp(2.4rem, 11vw, 3.2rem); }
+}
+
+/* Refined layer, round 2 */
+.hero-wash { background: linear-gradient(180deg, rgba(255, 255, 255, .95) 0%, rgba(255, 255, 255, .9) 58%, rgba(255, 255, 255, .55) 100%) !important; }
+.feature, .feature--light { background: #fff !important; }
+.feature--gray { background: var(--mist) !important; }
+.chev-flight, .contact:not(.page-section) .contact-form::before, .contact:not(.page-section)::after { display: none !important; }
+.contact:not(.page-section) .contact-form { border: 0 !important; }
