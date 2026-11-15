@@ -1788,3 +1788,48 @@ html:not([dir="rtl"]):not(:lang(ja)):not(:lang(zh)):not(:lang(ko)) .pitch-lead::
 .pitch-sign { margin: 22px 0 0 !important; padding-top: 16px; border-top: 1px solid #f0d4d9; display: grid; gap: 4px; }
 .pitch-sign span { font-style: italic; color: var(--text); }
 .pitch-sign b { color: var(--red); font-weight: 900; }
+
+/* ======================================================================
+   Homepage feature content area: full-screen dark red, like the consultation form card.
+   Text runs down the left; a large photo floats to the right.
+   ====================================================================== */
+.feature {
+  position: relative; overflow: hidden; color: rgba(255, 255, 255, .86);
+  min-height: 100vh; min-height: 100svh; display: flex; align-items: center;
+  padding: clamp(44px, 5vw, 72px) var(--gutter);
+  background:
+    radial-gradient(900px 520px at 85% 15%, rgba(200, 16, 46, .28), transparent 70%),
+    radial-gradient(700px 480px at 0% 100%, rgba(126, 10, 27, .35), transparent 70%),
+    linear-gradient(160deg, #1a080c 0%, #12050a 55%, #0d0406 100%);
+  border-top: 1px solid rgba(255, 70, 95, .28);
+}
+.feature::before {
+  content: ""; position: absolute; left: 10%; right: 10%; top: -1px; height: 3px; border-radius: 0 0 3px 3px;
+  background: linear-gradient(90deg, transparent, #ff2d4f, #c8102e, #ff2d4f, transparent);
+  box-shadow: 0 0 18px rgba(255, 45, 79, .6);
+}
+.feature-inner { position: relative; width: 100%; max-width: 1180px; margin: 0 auto; }
+.feature-inner::after { content: ""; display: block; clear: both; }
+.feature-figure {
+  float: right; width: min(50%, 600px); margin: 4px 0 20px clamp(28px, 4vw, 56px);
+  border-radius: 16px; overflow: hidden; border: 1px solid rgba(255, 70, 95, .28);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, .55), inset 0 1px 0 rgba(255, 110, 130, .12);
+}
+.feature-figure img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; object-position: 68% 70%; }
+.feature .eyebrow { color: #ffb3bf; }
+.feature h2 {
+  color: #fff; font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 800; line-height: 1.15; text-wrap: balance;
+  margin-bottom: 18px; padding-bottom: 16px; position: relative;
+}
+.feature h2::after { content: ""; position: absolute; left: 0; bottom: 0; width: 55px; height: 3px; background: #ff5c74; }
+.feature h3 { color: #f3d6db; font-size: 1.2rem; font-weight: 800; margin: 30px 0 12px; }
+.feature p { margin: 0 0 14px; font-size: .92rem; line-height: 1.65; max-width: 62ch; }
+.feature .feature-lead { color: #fff; font-size: 1.05rem; }
+.feature-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; max-width: 62ch; font-size: .92rem; }
+.feature-list li { position: relative; padding-left: 22px; line-height: 1.6; }
+.feature-list li::before { content: ""; position: absolute; left: 0; top: .6em; width: 9px; height: 9px; border-radius: 2px; background: #ff2d4f; box-shadow: 0 0 10px rgba(255, 45, 79, .6); }
+@media (max-width: 760px) {
+  .feature { min-height: 0; }
+  .feature-figure { float: none; width: 100%; margin: 0 0 28px; }
+  .feature-figure img { aspect-ratio: 4 / 3; }
+}
