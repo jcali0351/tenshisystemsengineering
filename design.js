@@ -1,7 +1,6 @@
 /* 墨と朱 · Ink and vermilion: the motion and ornaments of the Tenshi design layer.
    Kanji section numbers, a scroll-progress line, a header that settles as you scroll,
-   quiet reveals, the hero's vertical tagline, ensō and scroll cue, and a hanko seal on
-   page banners. Purely decorative: everything it adds is hidden from screen readers. */
+   quiet reveals and a hanko seal on page banners. Purely decorative: everything it adds is hidden from screen readers. */
 (function () {
   "use strict";
   var doc = document.documentElement;
@@ -32,15 +31,6 @@
   window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", onScroll);
   onScroll();
-
-  /* Homepage hero: a scroll cue */
-  var hero = document.querySelector(".hero");
-  if (hero) {
-    var cue = document.createElement("div");
-    cue.className = "hero-scroll"; cue.setAttribute("aria-hidden", "true");
-    cue.innerHTML = "SCROLL<i></i>";
-    hero.appendChild(cue);
-  }
 
   /* Page banners: a hanko seal beside the title */
   var bannerTitle = document.querySelector(".svc-hero h1");
