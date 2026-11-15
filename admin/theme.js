@@ -14,9 +14,10 @@
     heroSize: 92, pageTitleSize: 74, sectionSize: 54, featureSize: 58, cardSize: 20,   // px at full width; phones scale down
     h1Spacing: -1, h2Spacing: -1, h3Spacing: -1, h4Spacing: -1, headingSpacingUnit: "px", // negative is tighter
     headingLine: 1.04, headingCase: "none",
-    bodySpacing: 0, bodyLine: 1.65,
+    bodySpacing: 0, bodyLine: 1.75,
+    sectionSpace: 168, flowSpace: 1.25, headingSpace: 0.7, cardPad: 44, gridGap: 34, gutter: 56,   // spacing: px, em, em, px, px, px
     headingColor: "#3d4249", headingOpacity: 38, textColor: "#6b7280", mutedColor: "#7d838c", accentColor: "#c8102e",
-    motion: true, motionChars: true, motionText: true, motionImages: true, motionCards: true, motionColor: true, colorDuration: 1.8,
+    motion: true, motionChars: true, motionText: true, motionImages: true, motionCards: true, motionColor: true, colorDuration: 1.8, intro: true, introHold: 5, introFade: 2.6, introStyle: "bloom",
     motionSpeed: 1, motionDistance: 56, motionDistanceMobile: 26, charDelay: 26
   };
 
@@ -28,12 +29,13 @@
     if (s.headingSpacingUnit === undefined && s.h1Spacing !== undefined) s = Object.assign({}, s, { headingSpacingUnit: "em" });
     for (k in DEFAULTS) o[k] = s[k] === undefined || s[k] === null || s[k] === "" ? DEFAULTS[k] : s[k];
     ["headingWeight", "bodyWeight", "rootSize", "heroSize", "pageTitleSize", "sectionSize", "featureSize", "cardSize", "h1Spacing", "h2Spacing", "h3Spacing",
-      "h4Spacing", "headingLine", "headingOpacity", "bodySpacing", "bodyLine", "motionSpeed", "motionDistance", "motionDistanceMobile", "charDelay", "colorDuration"].forEach(function (k) { o[k] = num(o[k], DEFAULTS[k]); });
-    ["motion", "motionChars", "motionText", "motionImages", "motionCards", "motionColor"].forEach(function (k) { o[k] = o[k] === true || o[k] === "true" || o[k] === 1; });
+      "h4Spacing", "headingLine", "headingOpacity", "bodySpacing", "sectionSpace", "flowSpace", "headingSpace", "cardPad", "gridGap", "gutter", "bodyLine", "motionSpeed", "motionDistance", "motionDistanceMobile", "charDelay", "colorDuration", "introHold", "introFade"].forEach(function (k) { o[k] = num(o[k], DEFAULTS[k]); });
+    ["motion", "motionChars", "motionText", "motionImages", "motionCards", "motionColor", "intro"].forEach(function (k) { o[k] = o[k] === true || o[k] === "true" || o[k] === 1; });
     ["headingColor", "textColor", "mutedColor", "accentColor"].forEach(function (k) { if (!/^#[0-9a-f]{6}$/i.test(o[k])) o[k] = DEFAULTS[k]; });
     if (["none", "uppercase", "capitalize"].indexOf(o.headingCase) < 0) o.headingCase = "none";
     o.headingOpacity = Math.max(5, Math.min(100, Math.round(o.headingOpacity)));
     if (o.headingSpacingUnit !== "em") o.headingSpacingUnit = "px";
+    if (o.introStyle !== "even") o.introStyle = "bloom";
     return o;
   }
 
@@ -81,6 +83,10 @@
       ";--anim:" + (s.motion ? 1 : 0) + ";--anim-chars:" + (s.motionChars ? 1 : 0) + ";--anim-text:" + (s.motionText ? 1 : 0) +
       ";--anim-images:" + (s.motionImages ? 1 : 0) + ";--anim-cards:" + (s.motionCards ? 1 : 0) +
       ";--anim-color:" + (s.motionColor ? 1 : 0) + ";--gs-dur:" + s.colorDuration + "s}\n";
+    // Opening: black and white for introHold seconds, then color (design.css draws it)
+    out += ":root{--intro-hold:" + s.introHold + "s;--intro-fade:" + s.introFade + "s}\n";
+    if (!s.intro) out += "body::after{display:none!important}\n";
+    else if (s.introStyle === "even") out += "body::after{-webkit-mask-image:none!important;mask-image:none!important;animation-name:tse-intro-even!important}\n";
     out += "@media (max-width:760px){:root{--dx:" + s.motionDistanceMobile + "px;--dy:" + Math.round(s.motionDistanceMobile * 0.75) + "px}}\n";
     out += "html{font-size:" + px(s.rootSize) + "}\n";
     out += "body" + H + "{font-family:var(--font);font-weight:" + bw + ";letter-spacing:" + s.bodySpacing + "em;line-height:" + s.bodyLine + ";color:var(--text)}\n";
@@ -95,6 +101,28 @@
     out += "h2" + H + "{letter-spacing:" + s.h2Spacing + s.headingSpacingUnit + "!important}\n";
     out += "h3" + H + "{letter-spacing:" + s.h3Spacing + s.headingSpacingUnit + "!important}\n";
     out += ":is(h4,h5,h6)" + H + "{letter-spacing:" + s.h4Spacing + s.headingSpacingUnit + "!important}\n";
+    // ---------- Spacing: calm, even negative space in the content areas (header and footer untouched) ----------
+    var C = "main";
+    out += ":root{--gutter:clamp(20px, 5.2vw, " + s.gutter + "px)}\n";
+    out += C + " :is(.page-section,.feature,.services,.contact,.svc-body,.svc-offer-section,.svc-process,.svc-benefits,.svc-tech-section,.svc-cta,.svc-detail-section,.prj-section,.prj-editions,.prj-gallery,.prj-fair)" + H +
+      "{padding-top:" + fluid(s.sectionSpace) + "!important;padding-bottom:" + fluid(s.sectionSpace) + "!important}\n";
+    out += C + " .svc-hero" + H + "{padding-top:" + fluid(s.sectionSpace * 0.8) + "!important;padding-bottom:" + fluid(s.sectionSpace * 0.62) + "!important}\n";
+    out += C + " :is(p,ul,ol,dl,blockquote,table,figure,.btn,.feature-list,.news-tabs) + :is(p,ul,ol,dl,blockquote,table,figure,.feature-list)" + H + "{margin-top:" + s.flowSpace + "em}\n";
+    out += C + " :is(p,ul,ol,blockquote,figure,img,.feature-list,.news-head-text,.section-intro) + .btn" + H + "{margin-top:" + (s.flowSpace * 1.4).toFixed(2) + "em}\n";
+    out += C + " :is(li + li)" + H + "{margin-top:" + (s.flowSpace * 0.42).toFixed(2) + "em}\n";
+    out += C + " :is(h1,h2,h3,h4)" + H + "{margin-bottom:" + s.headingSpace + "em}\n";
+    out += C + " :is(p,ul,ol,figure,.btn,blockquote) + :is(h2,h3,h4)" + H + "{margin-top:" + (s.flowSpace * 1.5).toFixed(2) + "em}\n";
+    out += C + " :is(.eyebrow)" + H + "{margin-bottom:" + (s.headingSpace * 0.9).toFixed(2) + "em}\n";
+    out += C + " :is(.section-title,.feature h2,.contact-intro h2)" + H + "{margin-bottom:" + (s.headingSpace * 0.8).toFixed(2) + "em!important}\n";
+    out += C + " :is(.section-title + p,.section-intro,.news-head-text,.blog-note)" + H + "{margin-bottom:" + fluid(s.gridGap * 1.4) + "}\n";
+    out += C + " :is(.service-card,.offer-card,.benefit-card,.svc-tech,.tech-card,.value-card,.ab-step,.ab-std-card,.ab-focus,.ab-mv-card,.svc-detail,.prj-card,.prj-ed,.svc-step,.contact-pitch,.svc-for,.team-card,.portal-card,.contact-form,.pat-card,.name-card)" + H +
+      "{padding:" + fluid(s.cardPad) + "!important}\n";
+    out += C + " :is(.news-body,.blog-body)" + H + "{padding:" + fluid(s.cardPad * 0.75) + " " + fluid(s.cardPad * 0.8) + "!important}\n";
+    out += C + " .blog-card.is-feature .blog-body" + H + "{padding:" + fluid(s.cardPad * 1.25) + "!important}\n";
+    out += C + " :is(.services-grid,.offer-grid,.benefit-grid,.blog-grid,.news-list,.portal-grid,.prj-grid,.prj-ed-grid,.svc-grid,.svc-tech-grid,.team-grid,.tech-grid,.value-grid,.pat-grid,.ab-find-grid,.ab-focus-grid,.ab-mv-grid,.ab-std-grid,.svc-steps,.svc-other-list,.svc-detail-list)" + H +
+      "{gap:" + fluid(s.gridGap) + "!important}\n";
+    out += C + " :is(.feature-inner,.svc-body-inner,.contact-inner,.contact-layout)" + H + "{gap:" + fluid(s.gridGap * 2) + "!important;column-gap:" + fluid(s.gridGap * 2.2) + "!important}\n";
+    out += C + " :is(.news-tabs)" + H + "{margin-bottom:" + fluid(s.gridGap * 1.2) + "!important}\n";
     out += ".hero-card h1" + H + "{font-size:" + fluid(s.heroSize) + "!important}\n";
     out += ".svc-hero h1" + H + "{font-size:" + fluid(s.pageTitleSize) + "!important}\n";
     out += ":is(.section-title,.contact-intro h2,.prj-group-title)" + H + "{font-size:" + fluid(s.sectionSize) + "!important}\n";

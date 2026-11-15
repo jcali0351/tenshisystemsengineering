@@ -154,6 +154,54 @@ function bakeEnglish(html) {
 }
 
 /* ---------- shared page frame ---------- */
+/* ---------- Footer widgets on every page: latest news and the newest blog posts ----------
+   Filled from data/news.json (Tenshi Scraper) and data/blog.json (Tenshi Blog Writer) between the widgets:start and
+   widgets:end markers in index.html's footer, which is then copied to every page, so they refresh whenever a bot runs. */
+const readJson = (f, fallback) => { try { return JSON.parse(readFileSync(f, "utf8")); } catch { return fallback; } };
+const NEWS = readJson("data/news.json", { categories: [] });
+const BLOGDATA = readJson("data/blog.json", { posts: [] });
+const wDate = (d) => (d ? new Date(d.length === 10 ? d + "T12:00:00Z" : d).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "Asia/Tokyo" }) : "");
+const wIso = (d) => (d ? new Date(d.length === 10 ? d + "T12:00:00Z" : d).toISOString().slice(0, 10) : "");
+const wUrl = (u) => (/^https?:\/\//.test(u || "") ? esc(u) : "#");
+const wSrc = (img, cat) => (img && img.src && !/^https?:/.test(img.src) ? img.src : `img/covers/${cat}.svg`);
+const wCredit = (img) => (img && !img.generated && img.src ? ` · <span data-i18n="photoLabel">${tx("photoLabel")}</span>: ${esc(img.creator || "Unknown")}${img.license ? ` (<a href="${wUrl(img.licenseUrl || img.page)}" target="_blank" rel="noopener">${esc(img.license)}</a>)` : ""}` : "");
+function footerWidgets() {
+  const photo = (s) => s && s.image && !s.image.generated && s.image.src;
+  // The newest story with a photo from each category, newest first
+  const news = NEWS.categories.map((c) => ({ c, s: c.items.find(photo) || c.items[0] })).filter((x) => x.s)
+    .sort((a, b) => Date.parse(b.s.date || 0) - Date.parse(a.s.date || 0)).slice(0, 5);
+  const posts = (BLOGDATA.posts || []).slice(0, 4);
+  if (!news.length && !posts.length) return "";
+  const box = (id, titleKey, href, moreKey, items) => `      <section class="fw" aria-labelledby="${id}">
+        <h2 id="${id}" class="fw-title"><a href="${href}" data-i18n="${titleKey}">${tx(titleKey)}</a></h2>
+        <ul class="fw-list">
+${items.join("\n")}
+        </ul>
+        <a class="fw-more" href="${href}"><span data-i18n="${moreKey}">${tx(moreKey)}</span></a>
+      </section>`;
+  const newsItems = news.map(({ c, s }) => `          <li class="fw-item">
+            <img class="fw-thumb" src="${esc(wSrc(s.image, c.id))}" alt="" width="96" height="72" loading="lazy" decoding="async">
+            <div class="fw-text">
+              <p class="fw-meta"><span data-i18n="${c.key}">${tx(c.key)}</span> · <time datetime="${wIso(s.date)}">${wDate(s.date)}</time></p>
+              <a class="fw-link" href="${wUrl(s.url)}" target="_blank" rel="noopener">${esc(s.title)}<span class="sr-only"> <span data-i18n="techNewTab">${tx("techNewTab")}</span></span></a>
+              <p class="fw-src">${esc(s.source)}${wCredit(s.image)}</p>
+            </div>
+          </li>`);
+  const blogItems = posts.map((b) => `          <li class="fw-item">
+            <img class="fw-thumb" src="${esc(wSrc(b.image, "blog"))}" alt="" width="96" height="72" loading="lazy" decoding="async">
+            <div class="fw-text">
+              <p class="fw-meta">${esc(b.cat)} · <time datetime="${wIso(b.date)}">${wDate(b.date)}</time></p>
+              <a class="fw-link" href="blog.html#post-${esc(b.id)}">${esc(b.title)}</a>
+              <p class="fw-src">${b.min} <span data-i18n="blogMin">${tx("blogMin")}</span>${wCredit(b.image)}</p>
+            </div>
+          </li>`);
+  return `    <div class="footer-widgets">
+${news.length ? box("fw-news", "newsHeadTitle", "news.html", "homeNewsAll", newsItems) : ""}
+${posts.length ? box("fw-blog", "homeBlogTitle", "blog.html", "homeBlogAll", blogItems) : ""}
+    </div>`;
+}
+index = between(index, "widgets", footerWidgets());
+writeFileSync("index.html", index);
 const HEADER = index.match(/  <header class="site-header">[\s\S]*?<\/header>/)[0];
 const FOOTER = index.match(/  <footer class="site-footer">[\s\S]*?<\/footer>/)[0].replace(/\n\s*<p class="photo-credits">[\s\S]*?<\/p>/, "");
 const FORM = index.match(/        <form class="contact-form"[\s\S]*?<\/form>/)[0];
@@ -162,7 +210,8 @@ const FORM = index.match(/        <form class="contact-form"[\s\S]*?<\/form>/)[0
 function chrome(html, prefix, current) {
   return markCurrent(html, current)
     .replace('href="#top"', `href="${prefix}index.html"`)
-    .replace(/src="(brand\/[\w.-]+)"/g, `src="${prefix}$1"`)
+    .replace(/src="((?:brand|img)\/[\w.\/-]+)"/g, `src="${prefix}$1"`)
+    .replace(/href="((?:news|blog)\.html#[^"]*)"/g, `href="${prefix}$1"`)
     .replace(/href="((?:index|about|services|contact|team|technology|projects|news|blog|portal)\.html|projects\/[a-z-]+\.html)"/g, `href="${prefix}$1"`);
 }
 
@@ -971,9 +1020,6 @@ ${cta("../contact.html")}`,
 /* ---------- News and Blog: content from data/news.json (Tenshi Scraper) and data/blog.json (Tenshi Blog Writer) ----------
    Both bots run on GitHub from buttons in the Tenshi Editor. Every story and post credits its sources, and every
    feature photo credits its creator and license. */
-const readJson = (f, fallback) => { try { return JSON.parse(readFileSync(f, "utf8")); } catch { return fallback; } };
-const NEWS = readJson("data/news.json", { categories: [] });
-const BLOGDATA = readJson("data/blog.json", { posts: [] });
 const fmtDate = (d) => d ? new Date(d.length === 10 ? d + "T12:00:00Z" : d).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric", timeZone: "Asia/Tokyo" }) : "";
 const isoDay = (d) => (d ? new Date(d.length === 10 ? d + "T12:00:00Z" : d).toISOString().slice(0, 10) : "");
 const safeUrl = (u) => (/^https?:\/\//.test(u || "") ? esc(u) : "#");

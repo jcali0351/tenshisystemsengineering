@@ -4,6 +4,8 @@
 (function () {
   "use strict";
   var doc = document.documentElement;
+  // No black-and-white opening inside the Tenshi Editor's Pages preview (the Design preview, ?motion=1, keeps it)
+  if (window.frameElement && !/[?&]motion=1/.test(location.search)) doc.classList.add("no-intro");
   var still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* Kanji numbers on each visible section title: 一 二 三 … */
@@ -62,7 +64,7 @@
 
   var CARDS = [".service-card", ".offer-card", ".benefit-card", ".svc-tech", ".tech-card", ".value-card", ".ab-step", ".ab-std-card",
     ".ab-focus", ".ab-mv-card", ".svc-detail", ".prj-card", ".prj-ed", ".svc-step", ".contact-pitch", ".svc-for", ".team-card", ".name-card",
-    ".pat-card", ".pat-search", ".news-item", ".blog-card", ".contact-form", ".minimap", ".faq details", ".svc-other", ".prj-shot-fig", ".tk-item-card"].join(",");
+    ".pat-card", ".pat-search", ".news-item", ".blog-card", ".portal-card", ".fw", ".contact-form", ".minimap", ".faq details", ".svc-other", ".prj-shot-fig", ".tk-item-card"].join(",");
   var HEADS = "h1, h2";
   var PICS = "figure, picture, img, svg.page-art, .hero-logo";
   var TEXT = "p, li, blockquote, h3, h4, h5, dl, table, .btn, .eyebrow, .crumbs, .news-tabs, .tech-filter, label";

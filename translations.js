@@ -664,7 +664,13 @@ window.TRANSLATIONS = {
     portalClientBtn: "Ask for a project update",
     portalAdminTitle: "Admin portal",
     portalAdminText: "For the Tenshi team: edit every page, picture and translation, change the design and run the news and blog bots.",
-    portalAdminBtn: "Open the admin portal"
+    portalAdminBtn: "Open the admin portal",
+    homeNewsLead: "The week's stories in technology, business and daily life in Japan, each credited to the publisher that reported it.",
+    homeNewsAll: "All news",
+    homeBlogTitle: "From the blog",
+    homeBlogLead: "Practical notes on web design, software and AI from our studio in Osaka.",
+    homeBlogAll: "All posts",
+    homeReadPost: "Read the post"
   },
   ja: {
     patTitle: "日本のロボット特許エクスプローラー",
@@ -1329,7 +1335,13 @@ window.TRANSLATIONS = {
     portalClientBtn: "進捗を問い合わせる",
     portalAdminTitle: "管理者ポータル",
     portalAdminText: "Tenshiチーム向け：すべてのページ、画像、翻訳の編集、デザインの変更、ニュースとブログのボットの実行ができます。",
-    portalAdminBtn: "管理者ポータルを開く"
+    portalAdminBtn: "管理者ポータルを開く",
+    homeNewsLead: "今週の日本のテクノロジー、ビジネス、暮らしのニュース。各記事は報じた発行元のクレジット付きです。",
+    homeNewsAll: "すべてのニュース",
+    homeBlogTitle: "ブログより",
+    homeBlogLead: "大阪のスタジオから、ウェブデザイン、ソフトウェア、AIの実践的なノートをお届けします。",
+    homeBlogAll: "すべての記事",
+    homeReadPost: "記事を読む"
   },
   ko: {
     patTitle: "일본 로봇 특허 탐색기",
@@ -2002,7 +2014,13 @@ window.TRANSLATIONS = {
     portalClientBtn: "진행 상황 문의하기",
     portalAdminTitle: "관리자 포털",
     portalAdminText: "Tenshi 팀 전용: 모든 페이지와 이미지, 번역을 편집하고 디자인을 바꾸고 뉴스·블로그 봇을 실행합니다.",
-    portalAdminBtn: "관리자 포털 열기"
+    portalAdminBtn: "관리자 포털 열기",
+    homeNewsLead: "이번 주 일본의 기술·비즈니스·생활 뉴스. 각 기사에는 보도한 발행처가 표시됩니다.",
+    homeNewsAll: "모든 뉴스",
+    homeBlogTitle: "블로그에서",
+    homeBlogLead: "오사카 스튜디오에서 전하는 웹 디자인, 소프트웨어, AI 실전 노트.",
+    homeBlogAll: "모든 글",
+    homeReadPost: "글 읽기"
   },
   de: {
     patTitle: "Japanischer Robotik-Patentexplorer",
@@ -2675,7 +2693,13 @@ window.TRANSLATIONS = {
     portalClientBtn: "Projekt-Update anfragen",
     portalAdminTitle: "Admin-Portal",
     portalAdminText: "Für das Tenshi-Team: Seiten, Bilder und Übersetzungen bearbeiten, das Design ändern und die News- und Blog-Bots starten.",
-    portalAdminBtn: "Admin-Portal öffnen"
+    portalAdminBtn: "Admin-Portal öffnen",
+    homeNewsLead: "Die Meldungen der Woche aus Technik, Wirtschaft und Alltag in Japan, jeweils mit dem Verlag, der berichtet hat.",
+    homeNewsAll: "Alle Nachrichten",
+    homeBlogTitle: "Aus dem Blog",
+    homeBlogLead: "Praktische Notizen zu Webdesign, Software und KI aus unserem Studio in Osaka.",
+    homeBlogAll: "Alle Beiträge",
+    homeReadPost: "Beitrag lesen"
   },
   es: {
     patTitle: "Explorador de patentes japonesas de robótica",
@@ -3348,7 +3372,13 @@ window.TRANSLATIONS = {
     portalClientBtn: "Pedir una actualización",
     portalAdminTitle: "Portal de administración",
     portalAdminText: "Para el equipo de Tenshi: edita páginas, imágenes y traducciones, cambia el diseño y ejecuta los bots de noticias y blog.",
-    portalAdminBtn: "Abrir el portal de administración"
+    portalAdminBtn: "Abrir el portal de administración",
+    homeNewsLead: "Las noticias de la semana sobre tecnología, negocios y vida diaria en Japón, cada una con el medio que la publicó.",
+    homeNewsAll: "Todas las noticias",
+    homeBlogTitle: "Del blog",
+    homeBlogLead: "Notas prácticas sobre diseño web, software e IA desde nuestro estudio en Osaka.",
+    homeBlogAll: "Todas las entradas",
+    homeReadPost: "Leer la entrada"
   },
   zh: {
     patTitle: "日本机器人专利探索",
@@ -4021,7 +4051,13 @@ window.TRANSLATIONS = {
     portalClientBtn: "询问项目进展",
     portalAdminTitle: "管理员门户",
     portalAdminText: "供 Tenshi 团队使用：编辑所有页面、图片和翻译，更改设计，运行新闻和博客机器人。",
-    portalAdminBtn: "打开管理员门户"
+    portalAdminBtn: "打开管理员门户",
+    homeNewsLead: "本周日本科技、商业与生活新闻，每条均注明报道来源。",
+    homeNewsAll: "全部新闻",
+    homeBlogTitle: "博客精选",
+    homeBlogLead: "来自大阪工作室的网页设计、软件与 AI 实用笔记。",
+    homeBlogAll: "全部文章",
+    homeReadPost: "阅读文章"
   },
   ar: {
     patTitle: "مستكشف براءات الروبوتات اليابانية",
@@ -4694,7 +4730,13 @@ window.TRANSLATIONS = {
     portalClientBtn: "اطلب تحديثاً عن مشروعك",
     portalAdminTitle: "بوابة الإدارة",
     portalAdminText: "لفريق Tenshi: تحرير كل الصفحات والصور والترجمات وتغيير التصميم وتشغيل روبوتات الأخبار والمدونة.",
-    portalAdminBtn: "افتح بوابة الإدارة"
+    portalAdminBtn: "افتح بوابة الإدارة",
+    homeNewsLead: "أخبار الأسبوع عن التكنولوجيا والأعمال والحياة اليومية في اليابان، مع ذكر الناشر الذي نشر كل خبر.",
+    homeNewsAll: "كل الأخبار",
+    homeBlogTitle: "من المدونة",
+    homeBlogLead: "ملاحظات عملية حول تصميم المواقع والبرمجيات والذكاء الاصطناعي من استوديونا في أوساكا.",
+    homeBlogAll: "كل المقالات",
+    homeReadPost: "اقرأ المقال"
   },
   pl: {
     patTitle: "Eksplorator japońskich patentów robotycznych",
@@ -5367,7 +5409,13 @@ window.TRANSLATIONS = {
     portalClientBtn: "Poproś o aktualizację",
     portalAdminTitle: "Portal administratora",
     portalAdminText: "Dla zespołu Tenshi: edycja stron, zdjęć i tłumaczeń, zmiana wyglądu oraz uruchamianie botów wiadomości i bloga.",
-    portalAdminBtn: "Otwórz portal administratora"
+    portalAdminBtn: "Otwórz portal administratora",
+    homeNewsLead: "Najważniejsze wiadomości tygodnia z Japonii o technologii, biznesie i codziennym życiu, każda z nazwą wydawcy.",
+    homeNewsAll: "Wszystkie wiadomości",
+    homeBlogTitle: "Z bloga",
+    homeBlogLead: "Praktyczne notatki o projektowaniu stron, oprogramowaniu i AI z naszego studia w Osace.",
+    homeBlogAll: "Wszystkie wpisy",
+    homeReadPost: "Przeczytaj wpis"
   },
   pcm: {
     patTitle: "Japanese Robotics Patent Explorer",
@@ -6040,7 +6088,13 @@ window.TRANSLATIONS = {
     portalClientBtn: "Ask for project update",
     portalAdminTitle: "Admin portal",
     portalAdminText: "For Tenshi team: edit every page, picture and translation, change di design and run di news and blog bots.",
-    portalAdminBtn: "Open admin portal"
+    portalAdminBtn: "Open admin portal",
+    homeNewsLead: "Di week news for Japan about technology, business and daily life, each one get di name of di people wey report am.",
+    homeNewsAll: "All news",
+    homeBlogTitle: "From di blog",
+    homeBlogLead: "Practical note about web design, software and AI from our studio for Osaka.",
+    homeBlogAll: "All posts",
+    homeReadPost: "Read di post"
   },
   fa: {
     patTitle: "کاوشگر پتنت‌های رباتیک ژاپن",
@@ -6713,6 +6767,12 @@ window.TRANSLATIONS = {
     portalClientBtn: "درخواست گزارش پروژه",
     portalAdminTitle: "پورتال مدیریت",
     portalAdminText: "برای تیم Tenshi: ویرایش همه صفحه‌ها، تصویرها و ترجمه‌ها، تغییر طراحی و اجرای ربات‌های خبر و وبلاگ.",
-    portalAdminBtn: "ورود به پورتال مدیریت"
+    portalAdminBtn: "ورود به پورتال مدیریت",
+    homeNewsLead: "خبرهای این هفته ژاپن درباره فناوری، کسب‌وکار و زندگی روزمره، هر کدام با نام ناشری که آن را گزارش کرده است.",
+    homeNewsAll: "همه اخبار",
+    homeBlogTitle: "از وبلاگ",
+    homeBlogLead: "یادداشت‌های کاربردی درباره طراحی وب، نرم‌افزار و هوش مصنوعی از استودیوی ما در اوساکا.",
+    homeBlogAll: "همه نوشته‌ها",
+    homeReadPost: "خواندن نوشته"
   }
 };
