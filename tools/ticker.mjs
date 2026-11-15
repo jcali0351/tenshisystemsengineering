@@ -7,7 +7,7 @@ import { writeFileSync, mkdirSync, existsSync, readFileSync } from "node:fs";
 
 export const SYMBOLS = [
   { name: "Nikkei 225", yahoo: "^N225", stooq: "^nkx", kind: "index" },
-  { name: "TOPIX", yahoo: "^TOPX", stooq: "^tpx", kind: "index" },
+  { name: "TOPIX ETF", code: "1306", yahoo: "1306.T", stooq: "1306.jp" },   // the TOPIX index itself isn't offered by either source
   { name: "USD/JPY", yahoo: "JPY=X", stooq: "usdjpy", kind: "fx" },
   { name: "Toyota", code: "7203", yahoo: "7203.T", stooq: "7203.jp" },
   { name: "Sony", code: "6758", yahoo: "6758.T", stooq: "6758.jp" },
