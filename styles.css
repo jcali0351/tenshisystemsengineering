@@ -1879,3 +1879,8 @@ html:not([dir="rtl"]):not(:lang(ja)):not(:lang(zh)):not(:lang(ko)) .pitch-lead::
   border-radius: 0; border-left: 0; border-right: 0;
   padding-inline: max(var(--gutter), calc((100% - 736px) / 2));
 }
+
+/* Feature areas in right-to-left languages (Arabic, Farsi): underline and list markers on the reading side */
+.feature h2::after { left: auto; inset-inline-start: 0; }
+.feature-list li { padding-left: 0; padding-inline-start: 22px; }
+.feature-list li::before { left: auto; inset-inline-start: 0; }

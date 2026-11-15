@@ -116,7 +116,23 @@ const markCurrent = (html, current) => [].concat(current).reduce((h, c) =>
 index = between(index, "services", carousel);
 index = between(index, "topics", topics);
 index = markCurrent(index, "home");
+index = bakeEnglish(index);
 writeFileSync("index.html", index);
+
+/* Put the current English text into the homepage's own HTML (what search engines and the first paint see), for every
+   plain-text element with data-i18n and every data-i18n-attr attribute, so text edited in translations.js (or the
+   Tenshi Editor) shows up there too. Elements that contain other tags are left alone. */
+function bakeEnglish(html) {
+  html = html.replace(/(<([a-z0-9]+)\b[^>]*\sdata-i18n="([A-Za-z0-9_]+)"[^>]*>)([^<]*)(<\/\2>)/g,
+    (m, open, tag, key, text, close) => (EN[key] === undefined ? m : open + esc(EN[key]) + close));
+  return html.replace(/<[a-z0-9]+\b[^>]*\sdata-i18n-attr="([^"]+)"[^>]*>/g, (tagHtml, spec) =>
+    spec.split(";").reduce((t, pair) => {
+      const [attr, key] = pair.split(":").map((s) => s && s.trim());
+      if (!attr || !key || EN[key] === undefined) return t;
+      const re = new RegExp(`(\\s${attr}=")[^"]*(")`);
+      return re.test(t) ? t.replace(re, `$1${esc(EN[key])}$2`) : t;
+    }, tagHtml));
+}
 
 /* ---------- shared page frame ---------- */
 const HEADER = index.match(/  <header class="site-header">[\s\S]*?<\/header>/)[0];
