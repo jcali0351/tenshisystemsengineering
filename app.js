@@ -115,6 +115,35 @@ const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitHeader);
   }
 
+  /* ---------- Menu row on phones: one straight line that scrolls sideways (styles.css), current page in view, fades on
+     the side that has more ---------- */
+  const navRow = $(".site-header .main-nav");
+  if (navRow) {
+    const edges = () => {
+      const max = navRow.scrollWidth - navRow.clientWidth;
+      const x = Math.abs(navRow.scrollLeft);   // right-to-left pages scroll with negative values
+      const rtl = document.documentElement.dir === "rtl";
+      const before = max > 2 && x > 2, after = max > 2 && x < max - 2;
+      // has-more-start / has-more-end fade the left / right edge
+      navRow.classList.toggle("has-more-start", rtl ? after : before);
+      navRow.classList.toggle("has-more-end", rtl ? before : after);
+    };
+    const showCurrent = () => {
+      const cur = $(':scope > ul > li > a[aria-current="page"]', navRow);
+      if (cur && navRow.scrollWidth > navRow.clientWidth + 2) {
+        const n = navRow.getBoundingClientRect(), c = cur.getBoundingClientRect();
+        navRow.scrollLeft += (c.left + c.width / 2) - (n.left + n.width / 2);
+      }
+      edges();
+    };
+    navRow.addEventListener("scroll", edges, { passive: true });
+    window.addEventListener("resize", () => requestAnimationFrame(edges));
+    window.addEventListener("load", showCurrent);
+    onLanguage.push(() => requestAnimationFrame(showCurrent));
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(showCurrent);
+    showCurrent();
+  }
+
   /* ---------- Red band: the slogan, then the taglines, written in word by word ---------- */
   const band = $(".band");
   let setupBand = () => {};

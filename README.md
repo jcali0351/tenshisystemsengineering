@@ -101,6 +101,13 @@ the same library as the Xal'Reth site), heading and body weights, sizes, line he
 level and for body text, colors, and every motion setting, with a live preview. Saving writes `site-theme.css`
 (built by `admin/theme.js`; the settings ride along in its first line). Every page loads it last.
 
+**Heading styles** (in the same tab) fine-tune each heading level on its own (Main titles H1, Section headings H2,
+Card headings H3, Small headings H4–H6): font, weight, italic, line height, word spacing, letter case, small capitals,
+alignment, text color, outline width and color, shadow and underline. Each control starts at "Site default" (it follows
+the rest of the tab) and has its own Reset; "Reset this level" clears a level. The settings are `headingStyles` in the
+theme JSON (`HS_LEVELS` / `HS_FIELDS` in admin/theme.js) and are written as raised-specificity rules near the end of
+site-theme.css, so they win over the general heading settings; dark panels keep their white headings.
+
 Motion (`design.js`, styles at the end of `design.css`): headings appear character by character (word by word in
 Arabic and Farsi), text slides in from alternating sides, pictures fade and rise, cards rise one after another, and
 every picture starts black and white and turns to full color as it comes into view. Each can be switched off or

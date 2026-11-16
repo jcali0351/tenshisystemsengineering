@@ -1,2 +1,3 @@
 /* Written by tools/build-pages.mjs from data/slogan.json (Tenshi Editor › Slogan › Look). Don't edit by hand. */
-main section.band:not(#_):not(#__) :is(.band-stage, .band-unit, .band-list li, .band-text){font-weight:300!important}
+main section.band:not(#_):not(#__) :is(.band-stage, .band-unit, .band-list li, .band-text){font-weight:300!important;letter-spacing:-0.02em!important}
+html:is(:lang(ar), :lang(fa)) main section.band:not(#_):not(#__) :is(.band-stage, .band-unit, .band-list li, .band-text){letter-spacing:0!important;word-spacing:normal!important}
