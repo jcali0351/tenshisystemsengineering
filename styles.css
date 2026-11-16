@@ -2094,3 +2094,9 @@ section.band :is(.band-unit, .band-stage, .band-text) { color: var(--ink) !impor
 .portal-card--admin p { opacity: .85; }
 .portal-card--admin .portal-icon { background: rgba(255, 255, 255, .12); color: #fff; }
 @media (max-width: 720px) { .portal-grid { grid-template-columns: 1fr; } }
+
+/* Homepage slogan: vertically centred in the white space between the hero and the service cards
+   (equal space above and below; the services section adds none of its own on top). */
+section.band { padding-block: clamp(56px, 6.6vw, 96px) !important; }
+/* stronger than the Design tab's section spacing in site-theme.css (main :is(...):not(#_)) */
+main section.band + section.services:not(#_):not(#__) { padding-top: 0 !important; }
