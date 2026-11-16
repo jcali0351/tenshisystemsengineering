@@ -41,7 +41,7 @@ const BRAND = {"adobeaftereffects":"#9999FF","adobeillustrator":"#FF9A00","adobe
 // translations.js (staff1Name, staff1Role, staff1Bio …).
 const TEAM = [
   { n: 1, img: "illustrated-1.svg", skills: ["software", "webdev", "cms"] },
-  { n: 2, img: "illustrated-2.svg", skills: ["consulting", "ai", "hosting"] },
+  { n: 2, img: "illustrated-2.png", skills: ["consulting", "ai", "hosting"] },
   { n: 3, img: "illustrated-3.svg", skills: ["webdesign", "media", "branding"] },
   { n: 4, img: "illustrated-4.svg", skills: ["ai", "hosting", "software"] },
 ];
