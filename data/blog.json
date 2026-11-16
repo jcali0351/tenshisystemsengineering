@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-15T22:16:22.013Z",
+  "generatedAt": "2026-11-16T00:09:47.359Z",
   "posts": [
     {
       "id": "placeholder-10",
@@ -263,7 +263,7 @@
     }
   ],
   "lastRun": {
-    "at": "2026-11-15T22:16:22.013Z",
+    "at": "2026-11-16T00:09:47.359Z",
     "ok": false,
     "message": "The Blog Writer needs an ANTHROPIC_API_KEY secret on GitHub before it can write posts. Nothing was changed."
   }
