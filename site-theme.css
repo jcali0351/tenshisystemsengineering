@@ -1,4 +1,4 @@
-/* tse-theme {"headingFont":"roboto","bodyFont":"lato","headingWeight":300,"bodyWeight":400,"rootSize":18.4,"heroSize":92,"pageTitleSize":74,"sectionSize":54,"featureSize":58,"cardSize":20,"h1Spacing":-4,"h2Spacing":-1,"h3Spacing":-1,"h4Spacing":-1,"headingSpacingUnit":"px","headingLine":1.04,"headingCase":"none","bodySpacing":-0.015,"bodyLine":1.75,"sectionSpace":168,"flowSpace":1.25,"headingSpace":0.7,"cardPad":44,"gridGap":34,"gutter":56,"headingColor":"#3d4249","headingOpacity":38,"textColor":"#6b7280","mutedColor":"#7d838c","accentColor":"#c8102e","motion":true,"motionChars":true,"motionText":true,"motionImages":true,"motionCards":true,"motionColor":true,"colorDuration":1.8,"intro":true,"introHold":5,"introFade":2.6,"introStyle":"bloom","heroEffect":true,"heroStep":55,"heroDuration":1.5,"motionSpeed":1,"motionDistance":56,"motionDistanceMobile":26,"charDelay":26,"headingStyles":{}} */
+/* tse-theme {"headingFont":"roboto","bodyFont":"lato","headingWeight":300,"bodyWeight":400,"rootSize":18.4,"heroSize":92,"pageTitleSize":74,"sectionSize":54,"featureSize":58,"cardSize":20,"h1Spacing":-5.4,"h2Spacing":-1,"h3Spacing":-1,"h4Spacing":-1,"headingSpacingUnit":"px","headingLine":1.04,"headingCase":"none","bodySpacing":-0.015,"bodyLine":1.75,"sectionSpace":168,"flowSpace":1.25,"headingSpace":0.7,"cardPad":44,"gridGap":34,"gutter":56,"headingColor":"#3d4249","headingOpacity":38,"textColor":"#6b7280","mutedColor":"#7d838c","accentColor":"#c8102e","motion":true,"motionChars":true,"motionText":true,"motionImages":true,"motionCards":true,"motionColor":true,"colorDuration":1.8,"intro":true,"introHold":5,"introFade":2.6,"introStyle":"bloom","heroEffect":true,"heroStep":55,"heroDuration":1.5,"motionSpeed":1,"motionDistance":56,"motionDistanceMobile":26,"charDelay":26,"headingStyles":{}} */
 /* Site theme, set in the Tenshi Editor (admin.html › Design), which rewrites this file. Loaded after every other stylesheet.
    Fonts live in fonts/<name>/ (see fonts/fonts.json); free to use: SIL Open Font License, Apache 2.0 or the Ubuntu Font Licence (each folder has its LICENSE). */
 @font-face{font-family:"Roboto";font-style:italic;font-weight:300;font-display:swap;src:url("fonts/roboto/roboto-300-italic.woff2") format("woff2")}
@@ -27,7 +27,7 @@ body:not(#_){font-family:var(--font);font-weight:400;letter-spacing:-0.015em;lin
 :is(h1,h2,h3,h4,h5,h6):not(#_){font-family:var(--font-heading)!important;font-weight:300!important;text-transform:none}
 :is(h1,h2,h3,h4,h5,h6):not(#_):not(:is(.portal-card--admin,.blog-card.is-feature,.svc-cta.is-dark) *){color:var(--heading)!important}
 :is(h1,h2):not(#_){line-height:1.04!important}
-h1:not(#_){letter-spacing:-4px!important}
+h1:not(#_){letter-spacing:-5.4px!important}
 h2:not(#_){letter-spacing:-1px!important}
 h3:not(#_){letter-spacing:-1px!important}
 :is(h4,h5,h6):not(#_){letter-spacing:-1px!important}
