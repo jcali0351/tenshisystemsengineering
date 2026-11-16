@@ -33,20 +33,69 @@
         <p>Follow project progress, exchange files, send requests and keep important project details close at hand.</p>
         <div class="tp-seal">天使<br><small>TENSHI</small></div>
       </div>
-      <form id="login-form" class="tp-auth-card">
-        <span class="tp-overline">SECURE CLIENT ACCESS</span>
-        <h2>Welcome back.</h2>
-        <p class="tp-muted">Sign in with the email address associated with your Tenshi Systems account.</p>
-        <label>Email address<input id="login-email" type="email" autocomplete="username" required placeholder="you@company.com"></label>
-        <label>Password<input id="login-password" type="password" autocomplete="current-password" required placeholder="Your password"></label>
-        <button class="tp-button tp-button-primary tp-wide" type="submit">Sign in <span>→</span></button>
-        <button id="forgot-password" class="tp-text-button" type="button">Forgot your password?</button>
-        <p id="auth-message" class="tp-message" role="status"></p>
-        <p class="tp-footnote">
-  New client?
-  <button id="show-register" type="button">Create an account</button>
-</p>
-      </form>
+<div class="tp-auth-card">
+
+  <form id="login-form">
+    <span class="tp-overline">SECURE CLIENT ACCESS</span>
+    <h2>Welcome back.</h2>
+    <p class="tp-muted">Sign in to your Tenshi Systems account.</p>
+
+    <label>Email address
+      <input id="login-email" type="email" required>
+    </label>
+
+    <label>Password
+      <input id="login-password" type="password" required>
+    </label>
+
+    <button class="tp-button tp-button-primary tp-wide" type="submit">
+      Sign in →
+    </button>
+
+    <button id="forgot-password" class="tp-text-button" type="button">
+      Forgot your password?
+    </button>
+
+    <p id="auth-message" class="tp-message"></p>
+
+    <p class="tp-footnote">
+      New client?
+      <button id="show-register" type="button">Create an account</button>
+    </p>
+  </form>
+
+  <form id="register-form" class="hidden">
+    <span class="tp-overline">NEW CLIENT</span>
+    <h2>Create your account.</h2>
+
+    <label>Full name
+      <input id="register-name" type="text" required>
+    </label>
+
+    <label>Email address
+      <input id="register-email" type="email" required>
+    </label>
+
+    <label>Password
+      <input id="register-password" type="password" minlength="8" required>
+    </label>
+
+    <label>Confirm password
+      <input id="register-confirm-password" type="password" minlength="8" required>
+    </label>
+
+    <button class="tp-button tp-button-primary tp-wide" type="submit">
+      Create account →
+    </button>
+
+    <button id="show-login" class="tp-text-button" type="button">
+      Back to sign in
+    </button>
+
+    <p id="register-message" class="tp-message"></p>
+  </form>
+
+</div>
     </section>
 
     <section id="workspace" class="tp-workspace hidden">
