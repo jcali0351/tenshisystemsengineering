@@ -2122,3 +2122,23 @@ main section.band + section.services:not(#_):not(#__) { padding-top: 0 !importan
 .main-nav.has-more-start { -webkit-mask-image: linear-gradient(to right, transparent, #000 28px); mask-image: linear-gradient(to right, transparent, #000 28px); }
 .main-nav.has-more-end { -webkit-mask-image: linear-gradient(to left, transparent, #000 28px); mask-image: linear-gradient(to left, transparent, #000 28px); }
 .main-nav.has-more-start.has-more-end { -webkit-mask-image: linear-gradient(to right, transparent, #000 28px, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(to right, transparent, #000 28px, #000 calc(100% - 28px), transparent); }
+.client-portal-button {
+    display: inline-block;
+    padding: 14px 28px;
+    background: #111827;
+    color: #ffffff;
+    text-decoration: none;
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    border: 1px solid #374151;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.client-portal-button:hover {
+    background: #2563eb;
+    border-color: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.25);
+}
