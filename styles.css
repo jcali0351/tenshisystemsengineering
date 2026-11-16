@@ -2100,3 +2100,25 @@ section.band :is(.band-unit, .band-stage, .band-text) { color: var(--ink) !impor
 section.band { padding-block: clamp(56px, 6.6vw, 96px) !important; }
 /* stronger than the Design tab's section spacing in site-theme.css (main :is(...):not(#_)) */
 main section.band + section.services:not(#_):not(#__) { padding-top: 0 !important; }
+
+/* ======================================================================
+   Menu on its own row (phones, tablets, or a stacked header): always one straight line.
+   If it is wider than the screen it scrolls sideways (no scrollbar), with soft fades on the side that has more,
+   and app.js (navRow) scrolls the current page's item into view. The Projects dropdown can't open inside a scrolling
+   row, so there the Projects link simply opens the Projects page, which lists every project.
+   ====================================================================== */
+@media (max-width: 860px) {
+  .site-header.site-header .main-nav { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+  .site-header.site-header .main-nav > ul { flex-wrap: nowrap; justify-content: flex-start; gap: 0 2px; width: max-content; margin-inline: auto; }
+  .site-header.site-header .main-nav > ul > li { flex: none; }
+  .site-header.site-header .main-nav > ul > li > a { padding: 9px clamp(6px, 2vw, 10px); font-size: clamp(.82rem, 2.05vw, .98rem); }
+  .site-header.site-header .main-nav .sub-nav, .site-header.site-header .main-nav .has-sub > a::before { display: none; }
+}
+.site-header.is-stacked .main-nav { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+.site-header.is-stacked .main-nav > ul { flex-wrap: nowrap; justify-content: flex-start; gap: 0 2px; width: max-content; margin-inline: auto; }
+.site-header.is-stacked .main-nav > ul > li { flex: none; }
+.site-header.is-stacked .main-nav .sub-nav, .site-header.is-stacked .main-nav .has-sub > a::before { display: none; }
+.main-nav::-webkit-scrollbar { display: none; }
+.main-nav.has-more-start { -webkit-mask-image: linear-gradient(to right, transparent, #000 28px); mask-image: linear-gradient(to right, transparent, #000 28px); }
+.main-nav.has-more-end { -webkit-mask-image: linear-gradient(to left, transparent, #000 28px); mask-image: linear-gradient(to left, transparent, #000 28px); }
+.main-nav.has-more-start.has-more-end { -webkit-mask-image: linear-gradient(to right, transparent, #000 28px, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(to right, transparent, #000 28px, #000 calc(100% - 28px), transparent); }
