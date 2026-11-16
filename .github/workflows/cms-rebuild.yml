@@ -34,7 +34,7 @@ jobs:
         run: |
           git config user.name "tenshi-editor-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A -- '*.html' tailwind.css
+          git add -A -- '*.html' tailwind.css slogan.css
           if git diff --cached --quiet; then echo "Nothing changed."; exit 0; fi
           git commit -m "Rebuild pages and asset stamps after a site edit"
           for i in 1 2 3 4; do
