@@ -98,7 +98,7 @@ img, svg { display: block; }
   display: flex; align-items: center; justify-content: space-between; gap: 18.4px;
 }
 .brand { display: flex; align-items: center; gap: 11.5px; text-decoration: none; min-width: 0; }
-.brand-logo { width: 40.3px; height: auto; flex: none; }
+.brand-logo { width: 30.3px; height: auto; flex: none; }
 .brand-text { display: flex; flex-direction: column; min-width: 0; }
 .brand-en { color: var(--ink); font-weight: 700; font-size: 0.807rem; line-height: 1.25; }
 .brand-ja { color: var(--muted); font-family: var(--font-ja); font-size: 0.478rem; letter-spacing: .04em; line-height: 1.3; }
