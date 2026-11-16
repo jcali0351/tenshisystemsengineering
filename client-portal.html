@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#c8102e">
+  <title>Client Portal | Tenshi Systems Engineering</title>
+  <meta name="description" content="Secure client workspace for Tenshi Systems Engineering projects.">
+  <link rel="icon" href="brand/tenshi-logo.png" type="image/png">
+  <link rel="stylesheet" href="styles.css?v=6b1bcc4c">
+  <link rel="stylesheet" href="design.css?v=ea6e1648">
+  <link rel="stylesheet" href="client-portal.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="client-portal.js"></script>
+</head>
+<body class="tenshi-portal">
+  <header class="tp-header">
+    <a class="tp-brand" href="index.html">
+      <img src="brand/tenshi-logo.png" alt="" width="46" height="44">
+      <span><strong>Tenshi Systems</strong><small>天使システム</small></span>
+    </a>
+    <div class="tp-header-right">
+      <a href="portal.html" class="tp-back">← Main portal</a>
+      <button id="sign-out" class="tp-button tp-button-quiet hidden" type="button">Sign out</button>
+    </div>
+  </header>
+
+  <main class="tp-main">
+    <section id="auth-view" class="tp-auth">
+      <div class="tp-auth-aside">
+        <p class="tp-kicker">CLIENT WORKSPACE · 顧客ポータル</p>
+        <h1>Your work,<br><em>all in one place.</em></h1>
+        <p>Follow project progress, exchange files, send requests and keep important project details close at hand.</p>
+        <div class="tp-seal">天使<br><small>TENSHI</small></div>
+      </div>
+<div class="tp-auth-card">
+
+  <form id="login-form">
+    <span class="tp-overline">SECURE CLIENT ACCESS</span>
+    <h2>Welcome back.</h2>
+    <p class="tp-muted">Sign in to your Tenshi Systems account.</p>
+
+    <label>Email address
+      <input id="login-email" type="email" required>
+    </label>
+
+    <label>Password
+      <input id="login-password" type="password" required>
+    </label>
+
+    <button class="tp-button tp-button-primary tp-wide" type="submit">
+      Sign in →
+    </button>
+
+    <button id="forgot-password" class="tp-text-button" type="button">
+      Forgot your password?
+    </button>
+
+    <p id="auth-message" class="tp-message"></p>
+
+    <p class="tp-footnote">
+      New client?
+      <button id="show-register" type="button">Create an account</button>
+    </p>
+  </form>
+
+  <form id="register-form" class="hidden">
+    <span class="tp-overline">NEW CLIENT</span>
+    <h2>Create your account.</h2>
+
+    <label>Full name
+      <input id="register-name" type="text" required>
+    </label>
+
+    <label>Email address
+      <input id="register-email" type="email" required>
+    </label>
+
+    <label>Password
+      <input id="register-password" type="password" minlength="8" required>
+    </label>
+
+    <label>Confirm password
+      <input id="register-confirm-password" type="password" minlength="8" required>
+    </label>
+
+    <button class="tp-button tp-button-primary tp-wide" type="submit">
+      Create account →
+    </button>
+
+    <button id="show-login" class="tp-text-button" type="button">
+      Back to sign in
+    </button>
+
+    <p id="register-message" class="tp-message"></p>
+  </form>
+
+</div>
+    </section>
+
+    <section id="workspace" class="tp-workspace hidden">
+      <aside class="tp-sidebar">
+        <div class="tp-sidebar-heading">
+          <span class="tp-kicker">WORKSPACE</span>
+          <strong id="sidebar-name">Client account</strong>
+        </div>
+        <nav class="tp-nav" aria-label="Portal sections">
+          <button class="active" data-tab="overview" type="button"><span>▦</span> Overview</button>
+          <button data-tab="projects" type="button"><span>◇</span> Projects</button>
+          <button data-tab="files" type="button"><span>▤</span> Files</button>
+          <button data-tab="requests" type="button"><span>＋</span> Requests</button>
+          <button data-tab="messages" type="button"><span>✉</span> Messages</button>
+          <button data-tab="invoices" type="button"><span>＄</span> Invoices</button>
+          <button id="admin-nav" data-tab="admin" class="hidden" type="button"><span>⚙</span> Administration</button>
+        </nav>
+        <div class="tp-sidebar-bottom">
+          <span class="tp-red-line"></span>
+          <p>Thoughtful work.<br>Clear communication.</p>
+          <small>天使システムズエンジニアリング</small>
+        </div>
+      </aside>
+
+      <div class="tp-content">
+        <div class="tp-topline">
+          <div><span class="tp-kicker">TENSHI SYSTEMS ENGINEERING</span><h1 id="page-heading">Overview</h1></div>
+          <div class="tp-user"><span class="tp-avatar" id="user-avatar">T</span><span id="user-email">Client</span></div>
+        </div>
+
+        <section class="tp-panel active" id="panel-overview">
+          <div class="tp-welcome">
+            <div><span class="tp-overline">YOUR PROJECT SPACE</span><h2 id="welcome-heading">Welcome.</h2><p class="tp-muted">Here is the latest on your work with our team.</p></div>
+            <div class="tp-date" id="today"></div>
+          </div>
+          <div class="tp-stats">
+            <article><span>ACTIVE PROJECTS</span><strong id="stat-projects">—</strong><small>Currently in progress</small></article>
+            <article><span>OPEN REQUESTS</span><strong id="stat-requests">—</strong><small>Awaiting a response or action</small></article>
+            <article><span>UNPAID INVOICES</span><strong id="stat-invoices">—</strong><small>Invoices requiring attention</small></article>
+          </div>
+          <div class="tp-section-title"><div><span class="tp-overline">IN PROGRESS</span><h2>Project overview</h2></div><button class="tp-inline-link" data-tab="projects" type="button">All projects →</button></div>
+          <div id="overview-projects" class="tp-project-grid"><div class="tp-empty">Your project information will appear here.</div></div>
+          <div class="tp-section-title"><div><span class="tp-overline">RECENT ACTIVITY</span><h2>Latest updates</h2></div></div>
+          <div id="recent-updates" class="tp-list-card"><div class="tp-empty">No updates yet.</div></div>
+        </section>
+
+        <section class="tp-panel" id="panel-projects">
+          <div class="tp-section-title"><div><span class="tp-overline">YOUR WORK</span><h2>Projects</h2><p class="tp-muted">Milestones, progress and the next steps.</p></div></div>
+          <div id="all-projects" class="tp-project-grid"><div class="tp-empty">Loading projects…</div></div>
+        </section>
+
+        <section class="tp-panel" id="panel-files">
+          <div class="tp-section-title"><div><span class="tp-overline">SHARED MATERIALS</span><h2>Project files</h2><p class="tp-muted">Securely exchange documents and creative assets.</p></div></div>
+          <form id="upload-form" class="tp-upload-card">
+            <div><strong>Share a file with your project team</strong><p class="tp-muted">Files are stored privately and only shared with your account and Tenshi administrators.</p></div>
+            <label>Project<select id="upload-project" required></select></label>
+            <label class="tp-file-label">Choose file<input id="upload-file" type="file" required></label>
+            <button class="tp-button tp-button-primary" type="submit">Upload file ↑</button>
+            <p id="upload-message" class="tp-message" role="status"></p>
+          </form>
+          <div id="file-list" class="tp-list-card"><div class="tp-empty">No shared files yet.</div></div>
+        </section>
+
+        <section class="tp-panel" id="panel-requests">
+          <div class="tp-section-title"><div><span class="tp-overline">KEEP THINGS MOVING</span><h2>Project requests</h2><p class="tp-muted">Ask for a change, share a question or flag something for our team.</p></div></div>
+          <form id="request-form" class="tp-form-card">
+            <label>Project<select id="request-project" required></select></label>
+            <label>Request type<select id="request-type"><option>Website change</option><option>Content update</option><option>Bug or issue</option><option>New feature</option><option>General question</option></select></label>
+            <label>Details<textarea id="request-details" rows="4" required maxlength="5000" placeholder="Tell us what you need…"></textarea></label>
+            <button class="tp-button tp-button-primary" type="submit">Send request →</button>
+            <p id="request-message" class="tp-message" role="status"></p>
+          </form>
+          <div class="tp-section-title"><div><span class="tp-overline">REQUEST HISTORY</span><h2>Previous requests</h2></div></div>
+          <div id="request-list" class="tp-list-card"><div class="tp-empty">No requests yet.</div></div>
+        </section>
+
+        <section class="tp-panel" id="panel-messages">
+          <div class="tp-section-title"><div><span class="tp-overline">DIRECT COMMUNICATION</span><h2>Project messages</h2><p class="tp-muted">Keep project conversations together in one place.</p></div></div>
+          <div class="tp-form-card">
+            <label>Project<select id="message-project"></select></label>
+            <div id="message-list" class="tp-message-thread"><div class="tp-empty">Select a project to view its messages.</div></div>
+            <form id="message-form" class="tp-message-compose">
+              <textarea id="message-body" rows="2" maxlength="4000" required placeholder="Write a message…"></textarea>
+              <button class="tp-button tp-button-primary" type="submit">Send →</button>
+            </form>
+            <p id="message-status" class="tp-message" role="status"></p>
+          </div>
+        </section>
+
+        <section class="tp-panel" id="panel-invoices">
+          <div class="tp-section-title"><div><span class="tp-overline">ACCOUNT</span><h2>Invoices</h2><p class="tp-muted">Review invoices and payment status.</p></div></div>
+          <div id="invoice-list" class="tp-list-card"><div class="tp-empty">No invoices yet.</div></div>
+        </section>
+
+        <section class="tp-panel" id="panel-admin">
+          <div class="tp-section-title"><div><span class="tp-overline">TENSHI TEAM ONLY</span><h2>Administration</h2><p class="tp-muted">Create projects and publish updates for clients.</p></div></div>
+          <div class="tp-admin-grid">
+            <form id="admin-project-form" class="tp-form-card">
+              <h3>Create a project</h3>
+              <label>Client account<select id="admin-client" required></select></label>
+              <label>Project name<input id="admin-project-name" required maxlength="160" placeholder="Website redesign"></label>
+              <label>Description<textarea id="admin-project-description" rows="3" maxlength="2000"></textarea></label>
+              <label>Target date<input id="admin-project-date" type="date"></label>
+              <button class="tp-button tp-button-primary" type="submit">Create project</button>
+              <p id="admin-project-message" class="tp-message" role="status"></p>
+            </form>
+            <form id="admin-update-form" class="tp-form-card">
+              <h3>Publish a project update</h3>
+              <label>Project<select id="admin-update-project" required></select></label>
+              <label>Update title<input id="admin-update-title" required maxlength="160" placeholder="Homepage design ready for review"></label>
+              <label>Update details<textarea id="admin-update-body" rows="3" required maxlength="3000"></textarea></label>
+              <label>Progress <output id="progress-output">25%</output><input id="admin-progress" type="range" min="0" max="100" step="5" value="25"></label>
+              <label>Status<select id="admin-status"><option>Discovery</option><option>Design</option><option>Development</option><option>Review</option><option>Launch</option><option>Completed</option></select></label>
+              <button class="tp-button tp-button-primary" type="submit">Publish update</button>
+              <p id="admin-update-message" class="tp-message" role="status"></p>
+            </form>
+          </div>
+          <div class="tp-section-title"><div><span class="tp-overline">CLIENT WORK</span><h2>All projects</h2></div></div>
+          <div id="admin-project-list" class="tp-list-card"><div class="tp-empty">Loading projects…</div></div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="tp-footer"><span>© <span id="year"></span> Tenshi Systems Engineering</span><span>Osaka, Japan · 天使システム</span></footer>
+</body>
+</html>

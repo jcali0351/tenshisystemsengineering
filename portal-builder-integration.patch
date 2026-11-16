@@ -1,0 +1,5 @@
+--- a/tools/build-pages.mjs
++++ b/tools/build-pages.mjs
+@@
+-            <a class="btn btn-primary" href="contact.html" data-i18n="portalClientBtn">${tx("portalClientBtn")}</a>
++            <a class="btn btn-primary" href="client-portal.html" data-i18n="portalClientBtn">${tx("portalClientBtn")}</a>
