@@ -153,7 +153,69 @@ async function loadAdmin() {
   $("admin-project-list").innerHTML = allProjects?.length ? allProjects.map(p=>`<div class="tp-list-row"><div><strong>${escapeHTML(p.name)}</strong><small>${escapeHTML(p.portal_profiles?.full_name || p.portal_profiles?.company || "Client")} · ${escapeHTML(p.status)} · ${Number(p.progress)||0}%</small></div></div>`).join("") : '<div class="tp-empty">No projects yet.</div>';
   fillSelect("admin-update-project",allProjects || []);
 }
+// Switch between login and registration
+$("show-register").addEventListener("click", () => {
+  $("login-form").classList.add("hidden");
+  $("register-form").classList.remove("hidden");
+});
 
+$("show-login").addEventListener("click", () => {
+  $("register-form").classList.add("hidden");
+  $("login-form").classList.remove("hidden");
+});
+
+// Create a new client account
+$("register-form").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  if (!db) {
+    return say("register-message", "Portal setup is incomplete.", true);
+  }
+
+  const fullName = $("register-name").value.trim();
+  const email = $("register-email").value.trim();
+  const password = $("register-password").value;
+  const confirmPassword = $("register-confirm-password").value;
+
+  if (password.length < 8) {
+    return say("register-message", "Password must be at least 8 characters.", true);
+  }
+
+  if (password !== confirmPassword) {
+    return say("register-message", "Passwords do not match.", true);
+  }
+
+  say("register-message", "Creating your account...");
+
+  const { data, error } = await db.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        full_name: fullName
+      }
+    }
+  });
+
+  if (error) {
+    return say("register-message", error.message, true);
+  }
+
+  $("register-form").reset();
+
+  if (data.session) {
+    say("register-message", "Account created successfully!");
+  } else {
+    say(
+      "register-message",
+      "Account created! Check your email for a confirmation link."
+    );
+
+    $("login-email").value = email;
+    $("register-form").classList.add("hidden");
+    $("login-form").classList.remove("hidden");
+  }
+});
 $("login-form").addEventListener("submit", async event => {
   event.preventDefault();
   if (!db) return say("auth-message","Setup needed: add your Supabase URL and anon key in client-portal.js.",true);
