@@ -1,8 +1,8 @@
 // Tenshi Systems Engineering client portal.
 // Configure with the Supabase Project URL and anon/publishable key.
 // Never place a Supabase service_role key in browser code.
-const SUPABASE_URL = "YOUR_SUPABASE_URL";
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+const SUPABASE_URL = "https://wzzkpwxjzrfdzqknmrzw.supabase.co/rest/v1/";
+const SUPABASE_ANON_KEY = "Ysb_publishable_bCv6XRdMlVVtHAkMJu3HAw_oz43M5Iu";
 const STORAGE_BUCKET = "client-portal-files";
 
 const $ = (id) => document.getElementById(id);
