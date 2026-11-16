@@ -870,4 +870,112 @@
     if (el.id === "sl-pace") c.wordPace = parseFloat(el.value);
     renderSlogan();
   });
+
+  /* ================================================================== SLOGAN › LOOK
+     Font, weight, size, spacing, case, color, outline, shadow, alignment, background and space of the slogan.
+     Kept in data/slogan.json "style"; admin/slogan-style.js turns it into CSS for the live preview here and, on the
+     site, into slogan.css (written by tools/build-pages.mjs after Save). An empty setting keeps the site's normal look. */
+  var SS = window.TenshiSloganStyle, slFonts = null, slFontsLoading = null;
+  function slStyle() { return (slg.cur && slg.cur.style) || {}; }
+  function slSetStyle(key, value) {
+    var s = Object.assign({}, slStyle());
+    if (value === undefined || value === null || value === "" || value === false) delete s[key]; else s[key] = value;
+    if (Object.keys(s).length) slg.cur.style = s; else delete slg.cur.style;
+    updateBar(); slPreviewStyle(); slLookOutputs();
+  }
+  function slLoadFonts() {
+    if (slFonts) return Promise.resolve(slFonts);
+    if (!slFontsLoading) slFontsLoading = fetch(SITE + "fonts/fonts.json", { cache: "no-cache" }).then(function (r) { return r.ok ? r.json() : []; })
+      .catch(function () { return []; }).then(function (f) { slFonts = Array.isArray(f) ? f : []; return slFonts; });
+    return slFontsLoading;
+  }
+  var CATS = { sans: "Sans serif", serif: "Serif", display: "Display", mono: "Monospace", hand: "Handwriting", jp: "Japanese" };
+  function slFontOptions(cur) {
+    var groups = {};
+    (slFonts || []).forEach(function (f) { (groups[f.cat] = groups[f.cat] || []).push(f); });
+    return '<option value="">Site default</option>' + Object.keys(groups).map(function (c) {
+      return '<optgroup label="' + esc(CATS[c] || c) + '">' + groups[c].map(function (f) {
+        return '<option value="' + esc(f.slug) + '"' + (f.slug === cur ? " selected" : "") + ">" + esc(f.name) + "</option>";
+      }).join("") + "</optgroup>";
+    }).join("");
+  }
+  function slFmt(f, v) { return (Math.round(v * 1000) / 1000) + (f.unit ? " " + f.unit : ""); }
+  function renderLook() {
+    var s = slStyle();
+    $("#sl-look").innerHTML = SS.FIELDS.map(function (f) {
+      var v = s[f.key], set = v !== undefined && v !== "", id = "slk-" + f.key, reset = '<button type="button" class="ed-btn ed-btn--ghost ed-btn--small sl-reset" data-reset="' + f.key + '"' + (set ? "" : " hidden") + ">Reset</button>";
+      if (f.type === "font") return '<label class="sl-field"><span>' + esc(f.label) + '</span><select id="' + id + '" data-key="' + f.key + '">' + slFontOptions(v) + "</select>" + reset + '<small class="sl-note" id="slk-font-note"></small></label>';
+      if (f.type === "select") return '<label class="sl-field"><span>' + esc(f.label) + '</span><select id="' + id + '" data-key="' + f.key + '">' + f.options.map(function (o) { return '<option value="' + o[0] + '"' + (String(v === undefined ? "" : v) === o[0] ? " selected" : "") + ">" + esc(o[1]) + "</option>"; }).join("") + "</select>" + reset + "</label>";
+      if (f.type === "range") { var mid = set ? v : (f.key === "lineHeight" ? 1.1 : f.key === "space" ? 96 : f.key === "sizeMax" ? 48 : f.key === "sizeMin" ? 26 : 0);
+        return '<label class="sl-field sl-range"><span>' + esc(f.label) + '</span><input type="range" id="' + id + '" data-key="' + f.key + '" min="' + f.min + '" max="' + f.max + '" step="' + f.step + '" value="' + mid + '"><output data-out="' + f.key + '">' + (set ? slFmt(f, v) : "Site default") + "</output>" + reset + "</label>"; }
+      if (f.type === "color") return '<label class="sl-field sl-color"><span>' + esc(f.label) + '</span><input type="color" id="' + id + '" data-key="' + f.key + '" value="' + (set ? v : (f.key === "background" ? "#ffffff" : "#16191e")) + '"><output data-out="' + f.key + '">' + (set ? esc(v) : "Site default") + "</output>" + reset + "</label>";
+      if (f.type === "check") return '<label class="ed-check sl-field"><input type="checkbox" id="' + id + '" data-key="' + f.key + '"' + (v === true ? " checked" : "") + "> " + esc(f.label) + "</label>";
+      return "";
+    }).join("");
+    slLookOutputs(); slPreviewStyle();
+  }
+  /* Refresh the value labels, Reset buttons and the font's weight note without rebuilding the form (keeps focus while dragging). */
+  function slLookOutputs() {
+    var s = slStyle();
+    SS.FIELDS.forEach(function (f) {
+      var set = s[f.key] !== undefined && s[f.key] !== "";
+      var out = $('#sl-look [data-out="' + f.key + '"]'); if (out) out.textContent = set ? (f.type === "range" ? slFmt(f, s[f.key]) : s[f.key]) : "Site default";
+      var r = $('#sl-look [data-reset="' + f.key + '"]'); if (r) r.hidden = !set;
+    });
+    var note = $("#slk-font-note"), fam = s.font && (slFonts || []).filter(function (x) { return x.slug === s.font; })[0];
+    if (note) note.textContent = fam ? "This font has weights " + Array.from(new Set(fam.faces.map(function (x) { return x.w; }))).sort(function (a, b) { return a - b; }).join(", ") + (fam.faces.some(function (x) { return x.s === "italic"; }) ? ", with italics" : ", no italics") + ". Other weights are drawn by the browser." : "";
+  }
+  $("#sl-look").addEventListener("input", function (e) {
+    var el = e.target, f = SS.FIELDS.filter(function (x) { return x.key === el.dataset.key; })[0]; if (!f) return;
+    if (f.type === "check") slSetStyle(f.key, el.checked);
+    else if (f.type === "range") slSetStyle(f.key, parseFloat(el.value));
+    else slSetStyle(f.key, el.value);
+  });
+  $("#sl-look").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-reset]"); if (!b) return;
+    e.preventDefault(); slSetStyle(b.dataset.reset, undefined); renderLook();
+  });
+  $("#sl-look-reset").addEventListener("click", function () { if (slg.cur) { delete slg.cur.style; updateBar(); renderLook(); } });
+
+  /* Live preview: the real homepage slogan in a frame, with the unsaved look applied on top. */
+  function slPreviewLoad() {
+    var fr = $("#sl-preview-frame"); if (!fr) return;
+    fr.style.width = $("#sl-preview-phone").checked ? "375px" : "100%";
+    fr.src = SITE + "index.html?lang=" + $("#sl-preview-lang").value + "&slogan-preview=1";
+  }
+  function slPreviewStyle() {
+    var fr = $("#sl-preview-frame"), doc; try { doc = fr && fr.contentDocument; } catch (e) { return; }
+    if (!doc || !doc.head || !slFonts) return;
+    var tag = doc.getElementById("sl-look-preview");
+    if (!tag) { tag = doc.createElement("style"); tag.id = "sl-look-preview"; doc.head.appendChild(tag); }
+    // the saved slogan.css is switched off in the preview so a reset shows the site default again
+    $$('link[href*="slogan.css"]', doc).forEach(function (l) { l.disabled = true; });
+    tag.textContent = SS.css(slStyle(), slFonts, { prefix: SITE });
+    slPreviewFit();
+  }
+  function slPreviewFit() {
+    var fr = $("#sl-preview-frame"), doc; try { doc = fr.contentDocument; } catch (e) { return; }
+    var band = doc && doc.querySelector("section.band"); if (!band) return;
+    fr.style.height = Math.min(520, Math.max(120, Math.ceil(band.getBoundingClientRect().height) + 2)) + "px";
+    fr.contentWindow.scrollTo(0, band.getBoundingClientRect().top + fr.contentWindow.scrollY);
+  }
+  $("#sl-preview-frame").addEventListener("load", function () {
+    var doc; try { doc = this.contentDocument; } catch (e) { return; }
+    if (!doc || !doc.head) return;
+    var st = doc.createElement("style");
+    // show only the slogan strip: no header, ticker, intro screen, chat or scrolling
+    st.textContent = "html,body{overflow:hidden!important}.site-header,.ticker,.stock-ticker,[class*=ticker],.chat-launcher,.chat-panel,[class^=tk-],.lang-dialog,.bw-intro,[class*=intro-screen],.skip-link{display:none!important}";
+    doc.head.appendChild(st);
+    slLoadFonts().then(function () { slPreviewStyle(); setTimeout(slPreviewFit, 400); setTimeout(slPreviewFit, 1500); });
+  });
+  $("#sl-preview-lang").addEventListener("change", slPreviewLoad);
+  $("#sl-preview-phone").addEventListener("change", slPreviewLoad);
+  window.addEventListener("resize", function () { if (!$("[data-panel=slogan]").hidden) slPreviewFit(); });
+
+  // build the Look panel the first time the Slogan tab has its data
+  var _renderSlogan = renderSlogan, slLookReady = false;
+  renderSlogan = function () {
+    _renderSlogan();
+    if (!slLookReady && slg.cur) { slLookReady = true; slLoadFonts().then(function () { renderLook(); slPreviewLoad(); }); }
+  };
 })();

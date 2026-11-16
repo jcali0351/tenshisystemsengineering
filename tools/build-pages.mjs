@@ -7,6 +7,7 @@
 //   node tools/build-pages.mjs && node tools/stamp-assets.mjs
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import vm from "node:vm";
+import { createRequire } from "node:module";
 
 // The order here is the order everywhere: on the homepage three sets of three.
 const SERVICES = [
@@ -219,6 +220,10 @@ ${lines.map((k, i) => `        <li${i === 0 ? ' class="band-text"' : ""} data-i1
     </section>`;
 }
 index = between(index, "band", sloganBand());
+// The slogan's look (Tenshi Editor › Slogan › Look): data/slogan.json "style" → slogan.css, loaded by the homepage after site-theme.css
+writeFileSync("slogan.css", "/* Written by tools/build-pages.mjs from data/slogan.json (Tenshi Editor › Slogan › Look). Don't edit by hand. */\n" +
+  createRequire(import.meta.url)("../admin/slogan-style.js").css(SLOGAN.style || {}, readJson("fonts/fonts.json", [])));
+if (!index.includes('href="slogan.css')) index = index.replace(/(  <link rel="stylesheet" href="site-theme.css[^"]*">\n)/, '$1  <link rel="stylesheet" href="slogan.css">\n');
 index = between(index, "widgets", footerWidgets());
 writeFileSync("index.html", index);
 const HEADER = index.match(/  <header class="site-header">[\s\S]*?<\/header>/)[0];

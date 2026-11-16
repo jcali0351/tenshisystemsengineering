@@ -100,6 +100,18 @@
         <h2 class="sl-h">Lines</h2>
         <ol class="sl-lines" id="sl-lines"></ol>
         <button type="button" class="ed-btn ed-btn--ghost" id="sl-add">Add a line</button>
+
+        <h2 class="sl-h">Look</h2>
+        <p class="ed-tip">Font, size, spacing and color of the slogan. Leave a setting on "Site default" (or press Reset beside it) to keep the site's normal look for it. The preview updates as you change things; Save puts it on the site.</p>
+        <div class="sl-preview" id="sl-preview" aria-live="polite">
+          <div class="sl-preview-controls">
+            <label class="ed-inline"><span>Preview in</span> <select id="sl-preview-lang"><option value="en">English</option><option value="ja">Japanese</option><option value="de">German</option><option value="ar">Arabic</option></select></label>
+            <label class="ed-check"><input type="checkbox" id="sl-preview-phone"> Phone width</label>
+          </div>
+          <div class="sl-preview-stage"><iframe id="sl-preview-frame" title="Slogan preview" loading="lazy"></iframe></div>
+        </div>
+        <form id="sl-look" class="sl-look" autocomplete="off"></form>
+        <button type="button" class="ed-btn ed-btn--ghost" id="sl-look-reset">Reset all to site default</button>
       </div>
     </section>
     <!-- Design: fonts, typography, colors and motion (writes site-theme.css) -->
@@ -268,6 +280,7 @@
   <div class="ed-toast" id="ed-toast" role="status" aria-live="polite"></div>
 
   <script src="admin/tr.js"></script>
+  <script src="admin/slogan-style.js"></script>
   <script src="admin/theme.js"></script>
   <script src="admin/admin.js"></script>
 </body>
