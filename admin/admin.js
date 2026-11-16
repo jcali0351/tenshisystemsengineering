@@ -742,6 +742,7 @@
     $$("#dz-form [data-k^=motion]:not([data-k=motion]), #dz-form [data-k=charDelay], #dz-form [data-k=colorDuration], #dz-form [data-k^=hero]").forEach(function (el) { el.disabled = !dz.cur.motion; });
     $$("#dz-form [data-k=introHold], #dz-form [data-k=introFade], #dz-form [data-k=introStyle]").forEach(function (el) { el.disabled = !dz.cur.intro; });
     $("#dz-save").disabled = JSON.stringify(dz.cur) === JSON.stringify(dz.saved);
+    dzHsOutputs();
   }
   /* The preview frame picks this up: design.js in the frame reads it before measuring the motion settings */
   function dzLive() {
@@ -768,9 +769,69 @@
       $$(".dz-font").forEach(function (s) { s.innerHTML = dzFontOptions(); });
       // The preview covers top-level pages (fonts load from the site root)
       $("#dz-page").innerHTML = pages.filter(function (p) { return p.indexOf("/") < 0; }).map(function (p) { return '<option value="' + esc(p) + '">' + esc(prettyPage(p)) + "</option>"; }).join("");
-      dzShow(); dzLoadFrame();
+      $("#dz-hs-level").innerHTML = TH.HS_LEVELS.map(function (L) { return '<option value="' + L.key + '">' + esc(L.label) + "</option>"; }).join("");
+      dzHsRender(); dzShow(); dzLoadFrame();
     }).catch(function (e) { $("#dz-msg").className = "ed-msg err"; $("#dz-msg").textContent = "Couldn't load the design settings: " + e.message; });
   }
+
+  /* Heading styles: one level at a time (H1, H2, H3, H4–H6), built from TH.HS_FIELDS. Values live in dz.cur.headingStyles. */
+  function dzHsLevel() { return $("#dz-hs-level").value || "h1"; }
+  function dzHsStyle() { return (dz.cur.headingStyles || {})[dzHsLevel()] || {}; }
+  function dzHsFmt(f, v) { return (Math.round(v * 1000) / 1000) + (f.unit ? " " + f.unit : ""); }
+  function dzHsRender() {
+    var s = dzHsStyle();
+    $("#dz-hs-fields").innerHTML = TH.HS_FIELDS.map(function (f) {
+      var v = s[f.key], set = v !== undefined && v !== "", id = "dzhs-" + f.key,
+        reset = '<button type="button" class="ed-btn ed-btn--ghost ed-btn--small sl-reset" data-hs-reset="' + f.key + '"' + (set ? "" : " hidden") + ">Reset</button>";
+      if (f.type === "font") return '<label class="sl-field"><span>' + esc(f.label) + '</span><select id="' + id + '" data-hs="' + f.key + '"><option value="">Site default</option>' + dzFontOptions() + "</select>" + reset + '<small class="sl-note" id="dzhs-font-note"></small></label>';
+      if (f.type === "select") return '<label class="sl-field"><span>' + esc(f.label) + '</span><select id="' + id + '" data-hs="' + f.key + '">' + f.options.map(function (o) { return '<option value="' + o[0] + '">' + esc(o[1]) + "</option>"; }).join("") + "</select>" + reset + "</label>";
+      if (f.type === "range") return '<label class="sl-field sl-range"><span>' + esc(f.label) + '</span><input type="range" id="' + id + '" data-hs="' + f.key + '" min="' + f.min + '" max="' + f.max + '" step="' + f.step + '" value="' + (set ? v : f.start) + '"><output data-hs-out="' + f.key + '"></output>' + reset + "</label>";
+      if (f.type === "color") return '<label class="sl-field sl-color"><span>' + esc(f.label) + '</span><input type="color" id="' + id + '" data-hs="' + f.key + '" value="' + (set ? v : f.start) + '"><output data-hs-out="' + f.key + '"></output>' + reset + "</label>";
+      if (f.type === "check") return '<label class="ed-check sl-field"><input type="checkbox" id="' + id + '" data-hs="' + f.key + '"' + (v === true ? " checked" : "") + "> " + esc(f.label) + "</label>";
+      return "";
+    }).join("");
+    TH.HS_FIELDS.forEach(function (f) { if (f.type === "font" || f.type === "select") $("#dzhs-" + f.key).value = s[f.key] === undefined ? "" : String(s[f.key]); });
+    dzHsOutputs();
+  }
+  /* Labels, Reset buttons and the font note, without rebuilding the controls (keeps focus while dragging) */
+  function dzHsOutputs() {
+    if (!dz.ready || !$("#dz-hs-fields").firstChild) return;
+    var s = dzHsStyle();
+    TH.HS_FIELDS.forEach(function (f) {
+      var set = s[f.key] !== undefined && s[f.key] !== "";
+      var out = $('#dz-hs-fields [data-hs-out="' + f.key + '"]'); if (out) out.textContent = set ? (f.type === "range" ? dzHsFmt(f, s[f.key]) : String(s[f.key]).toUpperCase()) : "Site default";
+      var r = $('#dz-hs-fields [data-hs-reset="' + f.key + '"]'); if (r) r.hidden = !set;
+    });
+    var note = $("#dzhs-font-note"), fam = dzFamily(s.font || dz.cur.headingFont);
+    if (note) note.textContent = fam ? fam.name + " has weights " + Array.from(new Set(fam.faces.map(function (x) { return x.w; }))).sort(function (a, b) { return a - b; }).join(", ") +
+      (fam.faces.some(function (x) { return x.s === "italic"; }) ? ", with italics" : ", no italics") + ". Other weights are drawn by the browser." : "";
+    // Levels with their own styles get a dot in the list
+    $$("#dz-hs-level option").forEach(function (o) {
+      var L = TH.HS_LEVELS.filter(function (x) { return x.key === o.value; })[0];
+      o.textContent = L.label + ((dz.cur.headingStyles || {})[L.key] ? " \u25CF" : "");
+    });
+  }
+  function dzHsSet(key, v) {
+    var hs = JSON.parse(JSON.stringify(dz.cur.headingStyles || {})), lv = dzHsLevel();
+    hs[lv] = hs[lv] || {};
+    if (v === undefined || v === "" || v === false) delete hs[lv][key]; else hs[lv][key] = v;
+    dz.cur.headingStyles = hs; dz.cur = TH.clean(dz.cur);
+    dzShow(); dzLive();
+  }
+  $("#dz-hs-fields").addEventListener("input", function (e) {
+    var el = e.target, f = TH.HS_FIELDS.filter(function (x) { return x.key === el.dataset.hs; })[0]; if (!f || !dz.ready) return;
+    dzHsSet(f.key, f.type === "check" ? el.checked : f.type === "range" ? parseFloat(el.value) : el.value);
+  });
+  $("#dz-hs-fields").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-hs-reset]"); if (!b) return;
+    e.preventDefault(); dzHsSet(b.dataset.hsReset, undefined); dzHsRender();
+  });
+  $("#dz-hs-level").addEventListener("change", function (e) { e.stopPropagation(); dzHsRender(); });
+  $("#dz-hs-reset").addEventListener("click", function () {
+    if (!dz.ready) return;
+    var hs = JSON.parse(JSON.stringify(dz.cur.headingStyles || {})); delete hs[dzHsLevel()];
+    dz.cur.headingStyles = hs; dz.cur = TH.clean(dz.cur); dzHsRender(); dzShow(); dzLive();
+  });
   $("#dz-form").addEventListener("input", function (e) {
     var el = e.target, k = el.dataset && el.dataset.k;
     if (!k || !dz.ready) return;
@@ -787,13 +848,13 @@
   $("#dz-replay").addEventListener("click", dzLoadFrame);
   $("#dz-width").addEventListener("change", function () { $("#dz-frame").style.width = this.value; });
   $("#dz-reset").addEventListener("click", function () {
-    dz.cur = TH.clean({}); dzShow(); dzLive(); dzLoadFrame();
+    dz.cur = TH.clean({}); dzHsRender(); dzShow(); dzLive(); dzLoadFrame();
     $("#dz-msg").className = "ed-msg"; $("#dz-msg").textContent = "Defaults loaded. Save to put them on the site.";
   });
   $("#dz-save").addEventListener("click", function () {
     var btn = this, msg = $("#dz-msg");
     busy(btn, true, "Saving…");
-    commit([{ path: "site-theme.css", text: TH.css(dz.cur, dz.fonts) }], "Design: update fonts, typography, colors and motion").then(function () {
+    commit([{ path: "site-theme.css", text: TH.css(dz.cur, dz.fonts) }], "Design: update fonts, typography, heading styles, colors and motion").then(function () {
       dz.saved = JSON.parse(JSON.stringify(dz.cur));
       busy(btn, false); dzShow();
       msg.className = "ed-msg ok"; msg.textContent = "Saved. The live site shows the new design in about a minute.";

@@ -190,3 +190,5 @@ select { width: auto; }
 .sl-field .sl-reset { justify-self: end; }
 .sl-field .sl-note { grid-column: 1 / -1; color: var(--muted); font-size: .78rem; }
 .ed-check.sl-field { display: flex; margin: 0; }
+.dz-hs .sl-look { grid-template-columns: 1fr; gap: 8px; margin: 0; }
+.dz-hs #dz-hs-reset { justify-self: start; }

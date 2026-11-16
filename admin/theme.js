@@ -18,8 +18,60 @@
     sectionSpace: 168, flowSpace: 1.25, headingSpace: 0.7, cardPad: 44, gridGap: 34, gutter: 56,   // spacing: px, em, em, px, px, px
     headingColor: "#3d4249", headingOpacity: 38, textColor: "#6b7280", mutedColor: "#7d838c", accentColor: "#c8102e",
     motion: true, motionChars: true, motionText: true, motionImages: true, motionCards: true, motionColor: true, colorDuration: 1.8, intro: true, introHold: 5, introFade: 2.6, introStyle: "bloom", heroEffect: true, heroStep: 55, heroDuration: 1.5,
-    motionSpeed: 1, motionDistance: 56, motionDistanceMobile: 26, charDelay: 26
+    motionSpeed: 1, motionDistance: 56, motionDistanceMobile: 26, charDelay: 26,
+    headingStyles: {}                     // per heading level: { h1: { weight: 700, ... }, ... } (see HS_FIELDS); empty = the settings above
   };
+
+  /* Heading styles: extra settings for each heading level, on top of the font, weight, letter spacing and sizes above.
+     Every setting is optional: an empty value keeps the rest of the theme's look. The editor builds its controls from these. */
+  var HS_LEVELS = [
+    { key: "h1", label: "Main titles (H1)", sel: "h1" },
+    { key: "h2", label: "Section headings (H2)", sel: "h2" },
+    { key: "h3", label: "Card headings (H3)", sel: "h3" },
+    { key: "h4", label: "Small headings (H4\u2013H6)", sel: ":is(h4,h5,h6)" }
+  ];
+  var HS_FIELDS = [
+    { key: "font", label: "Font", type: "font" },
+    { key: "weight", label: "Weight", type: "select", options: [["", "Site default"], ["100", "100 Thin"], ["200", "200 Extra light"], ["300", "300 Light"], ["400", "400 Regular"], ["500", "500 Medium"], ["600", "600 Semibold"], ["700", "700 Bold"], ["800", "800 Extra bold"], ["900", "900 Black"]] },
+    { key: "fontStyle", label: "Style", type: "select", options: [["", "Site default"], ["normal", "Upright"], ["italic", "Italic"]] },
+    { key: "lineHeight", label: "Line height", type: "range", min: 0.8, max: 2, step: 0.02, unit: "", start: 1.1 },
+    { key: "wordSpacing", label: "Word spacing", type: "range", min: -0.2, max: 1, step: 0.01, unit: "em", start: 0 },
+    { key: "transform", label: "Letter case", type: "select", options: [["", "Site default"], ["none", "As written"], ["uppercase", "ALL CAPITALS"], ["lowercase", "all lowercase"], ["capitalize", "Capitalize Each Word"]] },
+    { key: "smallCaps", label: "Small capitals", type: "check" },
+    { key: "align", label: "Alignment", type: "select", options: [["", "Site default"], ["left", "Left"], ["center", "Center"], ["right", "Right"]] },
+    { key: "color", label: "Text color", type: "color", start: "#3d4249" },
+    { key: "stroke", label: "Outline width", type: "range", min: 0, max: 3, step: 0.25, unit: "px", start: 0 },
+    { key: "strokeColor", label: "Outline color", type: "color", start: "#c8102e" },
+    { key: "shadow", label: "Shadow", type: "select", options: [["", "Site default"], ["none", "None"], ["soft", "Soft"], ["lifted", "Lifted"], ["strong", "Strong"], ["glow", "Red glow"]] },
+    { key: "decoration", label: "Underline", type: "select", options: [["", "Site default"], ["none", "None"], ["underline", "Underline"], ["overline", "Line above"], ["line-through", "Line through"]] }
+  ];
+  var HS_SHADOWS = {
+    none: "none",
+    soft: "0 1px 2px rgba(0,0,0,.12)",
+    lifted: "0 2px 0 rgba(0,0,0,.12), 0 8px 24px rgba(0,0,0,.14)",
+    strong: "0 3px 0 rgba(0,0,0,.25), 0 12px 32px rgba(0,0,0,.3)",
+    glow: "0 0 18px rgba(200,16,46,.55), 0 0 2px rgba(200,16,46,.6)"
+  };
+  /* Keep only valid, set values; drop empty levels */
+  function cleanHS(hs) {
+    var out = {};
+    if (!hs || typeof hs !== "object") return out;
+    HS_LEVELS.forEach(function (L) {
+      var src = hs[L.key], o = {};
+      if (!src || typeof src !== "object") return;
+      HS_FIELDS.forEach(function (f) {
+        var v = src[f.key];
+        if (v === undefined || v === null || v === "") return;
+        if (f.type === "range") { v = parseFloat(v); if (isFinite(v)) o[f.key] = Math.max(f.min, Math.min(f.max, v)); }
+        else if (f.type === "check") { if (v === true || v === "true") o[f.key] = true; }
+        else if (f.type === "color") { if (/^#[0-9a-f]{6}$/i.test(v)) o[f.key] = String(v).toLowerCase(); }
+        else if (f.type === "select") { if (f.options.some(function (x) { return x[0] === String(v) && x[0] !== ""; })) o[f.key] = String(v); }
+        else if (f.type === "font") { if (/^[a-z0-9-]+$/.test(v)) o[f.key] = v; }
+      });
+      if (Object.keys(o).length) out[L.key] = o;
+    });
+    return out;
+  }
 
   function num(v, d) { v = parseFloat(v); return isFinite(v) ? v : d; }
   function clean(s) {
@@ -36,6 +88,7 @@
     o.headingOpacity = Math.max(5, Math.min(100, Math.round(o.headingOpacity)));
     if (o.headingSpacingUnit !== "em") o.headingSpacingUnit = "px";
     if (o.introStyle !== "even") o.introStyle = "bloom";
+    o.headingStyles = cleanHS(o.headingStyles);
     return o;
   }
 
@@ -68,7 +121,8 @@
     var out = "/* tse-theme " + JSON.stringify(s) + " */\n" +
       "/* Site theme, set in the Tenshi Editor (admin.html › Design), which rewrites this file. Loaded after every other stylesheet.\n" +
       "   Fonts live in fonts/<name>/ (see fonts/fonts.json); free to use: SIL Open Font License, Apache 2.0 or the Ubuntu Font Licence (each folder has its LICENSE). */\n";
-    [hf, bf].filter(function (f, i, a) { return f && a.indexOf(f) === i; }).forEach(function (f) {
+    var lvFonts = HS_LEVELS.map(function (L) { var x = s.headingStyles[L.key]; return x && x.font ? family(fonts, x.font) : null; });
+    [hf, bf].concat(lvFonts).filter(function (f, i, a) { return f && a.indexOf(f) === i; }).forEach(function (f) {
       (f.faces || []).forEach(function (x) {
         out += '@font-face{font-family:"' + f.name + '";font-style:' + x.s + ";font-weight:" + x.w + ';font-display:swap;src:url("fonts/' + f.slug + "/" + x.f + '") format("woff2")}\n';
       });
@@ -101,6 +155,7 @@
     out += "h2" + H + "{letter-spacing:" + s.h2Spacing + s.headingSpacingUnit + "!important}\n";
     out += "h3" + H + "{letter-spacing:" + s.h3Spacing + s.headingSpacingUnit + "!important}\n";
     out += ":is(h4,h5,h6)" + H + "{letter-spacing:" + s.h4Spacing + s.headingSpacingUnit + "!important}\n";
+    out += headingStylesCss(s.headingStyles, fonts);
     // ---------- Spacing: calm, even negative space in the content areas (header and footer untouched) ----------
     var C = "main";
     out += ":root{--gutter:clamp(20px, 5.2vw, " + s.gutter + "px)}\n";
@@ -133,5 +188,32 @@
     return out;
   }
 
-  return { DEFAULTS: DEFAULTS, clean: clean, parse: parse, css: css, nearest: nearest };
+  /* The Heading styles rules. Two :not(#…) raise them above the theme rules before them; the text color skips the few dark
+     panels whose headings stay white. */
+  function headingStylesCss(hs, fonts) {
+    var out = "";
+    HS_LEVELS.forEach(function (L) {
+      var o = hs[L.key]; if (!o) return;
+      var sel = L.sel + ":not(#_):not(#__)", t = [];
+      var f = o.font ? family(fonts, o.font) : null;
+      if (f) t.push("font-family:" + stack(f));
+      if (o.weight) t.push("font-weight:" + o.weight);
+      if (o.fontStyle) t.push("font-style:" + o.fontStyle);
+      if (o.lineHeight !== undefined) t.push("line-height:" + o.lineHeight);
+      if (o.wordSpacing !== undefined) t.push("word-spacing:" + o.wordSpacing + "em");
+      if (o.transform) t.push("text-transform:" + o.transform);
+      if (o.smallCaps) t.push("font-variant-caps:small-caps");
+      if (o.align) t.push("text-align:" + o.align);
+      if (o.stroke) t.push("-webkit-text-stroke:" + o.stroke + "px " + (o.strokeColor || "currentColor"));
+      if (o.shadow) t.push("text-shadow:" + HS_SHADOWS[o.shadow]);
+      if (o.decoration) t.push("text-decoration-line:" + o.decoration, "text-decoration-thickness:.06em", "text-underline-offset:.18em");
+      if (t.length) out += sel + "{" + t.join("!important;") + "!important}\n";
+      if (o.color) out += sel + ":not(:is(.portal-card--admin,.blog-card.is-feature,.svc-cta.is-dark) *){color:" + o.color + "!important;-webkit-text-fill-color:" + o.color + "!important}\n";
+      // Arabic and Farsi letters must stay joined
+      if (o.wordSpacing !== undefined) out += "html:is(:lang(ar),:lang(fa)) " + sel + "{word-spacing:normal!important}\n";
+    });
+    return out ? "/* Heading styles (Design › Heading styles) */\n" + out : "";
+  }
+
+  return { DEFAULTS: DEFAULTS, clean: clean, parse: parse, css: css, nearest: nearest, HS_LEVELS: HS_LEVELS, HS_FIELDS: HS_FIELDS };
 });
