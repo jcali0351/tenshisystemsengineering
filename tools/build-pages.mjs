@@ -1159,7 +1159,7 @@ const portalPage = frame({
             <p class="portal-state" data-i18n="portalClientSoon">${tx("portalClientSoon")}</p>
             <h3 id="portal-client-title" data-i18n="portalClientTitle">${tx("portalClientTitle")}</h3>
             <p data-i18n="portalClientText">${tx("portalClientText")}</p>
-            <a class="btn btn-primary" href="contact.html" data-i18n="portalClientBtn">${tx("portalClientBtn")}</a>
+            <a class="btn btn-primary" href="client-portal.html" data-i18n="portalClientBtn">${tx("portalClientBtn")}</a>
           </article>
           <article class="portal-card portal-card--admin" aria-labelledby="portal-admin-title">
             ${portalIcon("admin")}
