@@ -12,5 +12,8 @@
   "hold": 7,
   "japaneseFirst": true,
   "japaneseHold": 1.9,
-  "wordPace": 90
+  "wordPace": 90,
+  "style": {
+    "weight": "300"
+  }
 }
