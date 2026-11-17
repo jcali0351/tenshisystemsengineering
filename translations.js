@@ -672,7 +672,9 @@ window.TRANSLATIONS = {
     homeBlogAll: "All posts",
     homeReadPost: "Read the post",
     slogan1: "asfd asdf a asdfa",
-    slogan2: "A new line for the slogan"
+    slogan2: "A new line for the slogan",
+    slogan3: "Prestige Worldwide",
+    slogan4: "Rapid Deployment"
   },
   ja: {
     patTitle: "日本のロボット特許エクスプローラー",
@@ -1345,7 +1347,9 @@ window.TRANSLATIONS = {
     homeBlogAll: "すべての記事",
     homeReadPost: "記事を読む",
     slogan1: "ASFD ASDF と ASDFA",
-    slogan2: "A new line for the slogan"
+    slogan2: "A new line for the slogan",
+    slogan3: "プレステージワールドワイド",
+    slogan4: "迅速な展開"
   },
   ko: {
     patTitle: "일본 로봇 특허 탐색기",
@@ -2026,7 +2030,9 @@ window.TRANSLATIONS = {
     homeBlogAll: "모든 글",
     homeReadPost: "글 읽기",
     slogan1: "ASFD ASDF a ASDFA",
-    slogan2: "A new line for the slogan"
+    slogan2: "A new line for the slogan",
+    slogan3: "전 세계 프레스티지",
+    slogan4: "신속한 배포"
   },
   de: {
     patTitle: "Japanischer Robotik-Patentexplorer",
@@ -2707,7 +2713,9 @@ window.TRANSLATIONS = {
     homeBlogAll: "Alle Beiträge",
     homeReadPost: "Beitrag lesen",
     slogan1: "ASFD ASDF ein ASDFA",
-    slogan2: "A new line for the slogan"
+    slogan2: "A new line for the slogan",
+    slogan3: "Prestige weltweit",
+    slogan4: "Schnelle Bereitstellung"
   },
   es: {
     patTitle: "Explorador de patentes japonesas de robótica",
@@ -3388,7 +3396,9 @@ window.TRANSLATIONS = {
     homeBlogAll: "Todas las entradas",
     homeReadPost: "Leer la entrada",
     slogan1: "ASFD ASDF a ASDFA",
-    slogan2: "Una nueva línea para el eslogan"
+    slogan2: "Una nueva línea para el eslogan",
+    slogan3: "Prestige en todo el mundo",
+    slogan4: "Despliegue rápido"
   },
   zh: {
     patTitle: "日本机器人专利探索",
@@ -4069,7 +4079,9 @@ window.TRANSLATIONS = {
     homeBlogAll: "全部文章",
     homeReadPost: "阅读文章",
     slogan1: "asfd asdf a asdfa",
-    slogan2: "A new line for the slogan"
+    slogan2: "A new line for the slogan",
+    slogan3: "Prestige 全球",
+    slogan4: "快速部署"
   },
   ar: {
     patTitle: "مستكشف براءات الروبوتات اليابانية",
@@ -4750,7 +4762,9 @@ window.TRANSLATIONS = {
     homeBlogAll: "كل المقالات",
     homeReadPost: "اقرأ المقال",
     slogan1: "asfd asdf a asdfa",
-    slogan2: "A new line for the slogan"
+    slogan2: "A new line for the slogan",
+    slogan3: "برستيج في جميع أنحاء العالم",
+    slogan4: "النشر السريع"
   },
   pl: {
     patTitle: "Eksplorator japońskich patentów robotycznych",
@@ -5431,7 +5445,9 @@ window.TRANSLATIONS = {
     homeBlogAll: "Wszystkie wpisy",
     homeReadPost: "Przeczytaj wpis",
     slogan1: "asfd asdf a asdfa",
-    slogan2: "A new line for the slogan"
+    slogan2: "A new line for the slogan",
+    slogan3: "Prestiż na całym świecie",
+    slogan4: "Szybkie wdrożenie"
   },
   pcm: {
     patTitle: "Japanese Robotics Patent Explorer",
@@ -6112,7 +6128,9 @@ window.TRANSLATIONS = {
     homeBlogAll: "All posts",
     homeReadPost: "Read di post",
     slogan1: "asfd asdf a asdfa",
-    slogan2: "A new line for the slogan"
+    slogan2: "A new line for the slogan",
+    slogan3: "Prestige Worldwide",
+    slogan4: "Rapid Deployment"
   },
   fa: {
     patTitle: "کاوشگر پتنت‌های رباتیک ژاپن",
@@ -6793,6 +6811,8 @@ window.TRANSLATIONS = {
     homeBlogAll: "همه نوشته‌ها",
     homeReadPost: "خواندن نوشته",
     slogan1: "asfd asdf a asdfa",
-    slogan2: "A new line for the slogan"
+    slogan2: "A new line for the slogan",
+    slogan3: "پرستیژ در سراسر جهان",
+    slogan4: "استقرار سریع"
   }
 };

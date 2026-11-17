@@ -5,7 +5,9 @@
     "tag1",
     "tag2",
     "tag3",
-    "tag4"
+    "tag4",
+    "slogan3",
+    "slogan4"
   ],
   "hold": 5.5,
   "japaneseFirst": true,
@@ -13,6 +15,7 @@
   "wordPace": 90,
   "style": {
     "weight": "300",
-    "tracking": -0.02
+    "tracking": -0.02,
+    "color": "#575757"
   }
 }
