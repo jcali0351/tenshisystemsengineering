@@ -21,7 +21,15 @@
     { key: "tabs", label: "News tabs", sel: ".news-tabs [role=tab]", note: "The category tabs on the news page (the selected tab keeps its red look unless you set colors)." },
     { key: "lang", label: "Language picker", sel: ".lang-current", note: "The flag button in the header that opens the language menu." },
     { key: "chat", label: "Ask Tanaka chat button", sel: ".tk-launch", note: "The round chat launcher at the bottom corner." },
-    { key: "chatSend", label: "Chat send button", sel: ".tk-send", note: "The send arrow inside the Tanaka chat window." }
+    { key: "chatSend", label: "Chat send button", sel: ".tk-send", note: "The send arrow inside the Tanaka chat window." },
+    /* The homepage hero's glass pill (hero-cta.css). It has its own controls: they set the --hg-* variables that
+       hero-cta.css builds the button from, so the glass layers, icon and phone sizes all follow. */
+    { key: "heroGlass", label: "Hero glass button", sel: ".hero-cta-glass .hg-btn",
+      note: "The glass \u201cRequest Consultation\u201d button with the round arrow on the homepage hero slider. Corner rounding 40 = fully round.",
+      fields: ["color", "iconBg", "iconColor", "scale", "radius", "font", "weight", "tracking", "transform", "hoverColor", "hoverLift"],
+      vars: { color: "--hg-text", iconBg: "--hg-icon-bg", iconColor: "--hg-icon-fg", scale: "--hg-scale", radius: "--hg-r", hoverLift: "--hg-lift" },
+      defaults: { color: "#3e3e3e", iconBg: "#3e3e3e", iconColor: "#f5f5f5", scale: 1, radius: 40, hoverLift: 3, hoverColor: "#3e3e3e" },
+      ranges: { radius: { min: 0, max: 40 }, hoverLift: { max: 10 } } }
   ];
 
   /* The controls, in the order the editor shows them. type: color | range | select | font | text */
@@ -48,7 +56,11 @@
     { key: "hoverShadow", label: "Hover shadow", type: "select", options: SH, group: "Hover" },
     { key: "hoverLift", label: "Hover lift", type: "range", min: 0, max: 10, step: 0.5, unit: "px", start: 0, group: "Hover" },
     { key: "hoverScale", label: "Hover grow", type: "range", min: 0.9, max: 1.2, step: 0.01, unit: "×", start: 1, group: "Hover" },
-    { key: "duration", label: "Transition time", type: "range", min: 0, max: 1000, step: 10, unit: "ms", start: 200, group: "Hover" }
+    { key: "duration", label: "Transition time", type: "range", min: 0, max: 1000, step: 10, unit: "ms", start: 200, group: "Hover" },
+    // Only for types that list them in their own fields (the hero glass button)
+    { key: "iconBg", label: "Icon background", type: "color", group: "Normal", only: true },
+    { key: "iconColor", label: "Icon arrow color", type: "color", group: "Normal", only: true },
+    { key: "scale", label: "Size", type: "range", min: 0.7, max: 1.4, step: 0.01, unit: "\u00d7", start: 1, group: "Normal", only: true }
   ];
 
   var SHADOWS = {
@@ -68,6 +80,20 @@
   function q(s) { return '"' + String(s).replace(/["\\]/g, "") + '"'; }
   function field(k) { for (var i = 0; i < FIELDS.length; i++) if (FIELDS[i].key === k) return FIELDS[i]; return null; }
   function clamp(f, v) { var n = num(v); if (n === null) return null; return Math.min(f.max, Math.max(f.min, n)); }
+  /* The controls a type has: its own list when it has one, else every general control. Each comes with the type's
+     own range limits and starting value (defaults = the type's built-in look). */
+  function fieldsFor(T) {
+    var list = T && T.fields ? T.fields.map(field).filter(Boolean) : FIELDS.filter(function (f) { return !f.only; });
+    return list.map(function (f) {
+      var r = (T && T.ranges && T.ranges[f.key]) || {}, d = T && T.defaults ? T.defaults[f.key] : undefined, o = {};
+      for (var k in f) o[k] = f[k];
+      if (r.min !== undefined) o.min = r.min;
+      if (r.max !== undefined) o.max = r.max;
+      if (d !== undefined) { o.def = d; if (f.type === "range") o.start = d; }
+      return o;
+    });
+  }
+  function typeField(T, k) { var l = fieldsFor(T); for (var i = 0; i < l.length; i++) if (l[i].key === k) return l[i]; return null; }
 
   /* Strong enough to beat styles.css, design.css (which uses !important) and site-theme.css (:not(#_) !important). */
   function wrap(sel) { return "html body :is(" + sel + "):not(#_):not(#__)"; }
@@ -81,8 +107,18 @@
     data = data || {}; opts = opts || {};
     var types = data.types || {}, prefix = opts.prefix || "", out = "", faces = {};
     TYPES.forEach(function (T) {
-      var s = types[T.key]; if (!s || typeof s !== "object") return;
-      var base = opts.sel ? opts.sel(T) : wrap(T.sel), a = [], h = [], v;
+      var s0 = types[T.key]; if (!s0 || typeof s0 !== "object") return;
+      var base = opts.sel ? opts.sel(T) : wrap(T.sel), a = [], h = [], v, s = {};
+      fieldsFor(T).forEach(function (f) { if (has(s0[f.key])) s[f.key] = s0[f.key]; });
+      // Settings the type's own stylesheet reads as CSS variables (the hero glass button)
+      Object.keys(T.vars || {}).forEach(function (k) {
+        if (!has(s[k])) return;
+        var f = typeField(T, k), val = null;
+        if (f.type === "color") val = color(s[k]);
+        else if ((v = clamp(f, s[k])) !== null) val = k === "scale" ? String(v) : (k === "radius" && v >= f.max ? "9999px" : v + "px");
+        if (val !== null) a.push(T.vars[k] + ":" + val);
+        delete s[k];
+      });
       var f = has(s.font) ? family(fonts, s.font) : null;
       if (f) { faces[f.slug] = f; a.push("font-family:" + q(f.name) + ", " + (f.fallback || "sans-serif")); }
       if (color(s.bg)) a.push("background:" + s.bg);
@@ -135,11 +171,11 @@
     TYPES.forEach(function (T) {
       var s = ((data || {}).types || {})[T.key]; if (!s) return;
       var o = {};
-      FIELDS.forEach(function (f) { if (has(s[f.key])) o[f.key] = f.type === "range" ? num(s[f.key]) : String(s[f.key]); });
+      fieldsFor(T).forEach(function (f) { if (has(s[f.key])) o[f.key] = f.type === "range" ? num(s[f.key]) : String(s[f.key]); });
       if (Object.keys(o).length) out.types[T.key] = o;
     });
     return out;
   }
 
-  return { TYPES: TYPES, FIELDS: FIELDS, SHADOWS: SHADOWS, css: css, clean: clean };
+  return { TYPES: TYPES, FIELDS: FIELDS, SHADOWS: SHADOWS, fieldsFor: fieldsFor, css: css, clean: clean };
 });

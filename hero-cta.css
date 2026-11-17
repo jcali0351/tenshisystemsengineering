@@ -1,0 +1,154 @@
+/* Homepage hero call to action: the "glass pill" button (Get started style), scoped to .hero-cta-glass.
+   Markup: <p class="hero-cta-glass"><a class="hg-btn"><span class="hg-text">…</span><span class="hg-icon"><svg class="hg-svg">…</svg></span>
+   <span class="hg-ring"></span></a></p>. The wrapper carries the design's contrast(3) layer (never the hero itself).
+   Tenshi Editor › Buttons › "Hero glass button" sets the --hg-* variables in buttons.css; the defaults below are the design.
+   Selectors use :not(#_):not(#__) + !important where site-theme.css (:not(#_) !important) would otherwise win. */
+.hero-cta-glass {
+  display: flex;
+  justify-content: center;
+  filter: contrast(3);         /* the design's fx-layer */
+  max-width: 100%;
+}
+main .hero-cta-glass:not(#_):not(#__) { margin: clamp(4px, 1vw, 12px) 0 0 !important; padding: 0 !important; line-height: 1 !important; letter-spacing: normal !important; }
+
+/* The design values; Tenshi Editor › Buttons writes overrides of these to buttons.css */
+.hero-cta-glass .hg-btn {
+  --hg-text: #3e3e3e;          /* label */
+  --hg-text-active: #000;
+  --hg-icon-bg: #3e3e3e;       /* round icon */
+  --hg-icon-fg: #f5f5f5;       /* arrow */
+  --hg-r: 9999px;              /* corner rounding */
+  --hg-scale: 1;               /* size multiplier */
+  --hg-lift: 3px;              /* hover lift */
+  --hg-tr: 15%;                /* corner highlight length */
+  /* ~260×75 on desktop, ~200×58 on phones */
+  --hg-h: calc(clamp(58px, 44px + 2.4vw, 75px) * var(--hg-scale));
+  --hg-w: calc(clamp(200px, 156px + 8.2vw, 260px) * var(--hg-scale));
+  --hg-fs: calc(clamp(19px, 15px + .78vw, 25px) * var(--hg-scale));
+  --hg-icon: calc(clamp(31px, 24px + 1.25vw, 40px) * var(--hg-scale));
+}
+.hero-cta-glass .hg-btn:not(#_):not(#__) {
+  position: relative;
+  isolation: isolate;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--hg-fs) * .64);
+  width: auto;
+  min-width: min(var(--hg-w), 100%);
+  max-width: 100%;
+  min-height: max(44px, var(--hg-h));
+  height: auto;
+  padding: 6px calc(var(--hg-h) * .2) 6px calc(var(--hg-h) * .42) !important;
+  padding-inline: calc(var(--hg-h) * .42) calc(var(--hg-h) * .2) !important;
+  margin: 0 !important;
+  border-radius: var(--hg-r) !important;
+  border: 1px double rgba(51, 51, 51, .08) !important;
+  box-shadow:
+    inset 2px -2px 1px -1px rgba(255, 255, 255, .9),
+    inset -2px 2px 1px -1px rgba(255, 255, 255, .9),
+    inset 6px -6px 1px -6px rgba(255, 255, 255, .55),
+    inset -6px 6px 1px -6px rgba(255, 255, 255, .55),
+    inset 0 0 2px rgba(0, 0, 0, .8),
+    0 4px 8px rgba(0, 0, 0, .2) !important;
+  background: rgba(0, 0, 0, .02) !important;
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  filter: brightness(.9);
+  color: var(--hg-text) !important;
+  font-family: var(--font, inherit);
+  font-size: var(--hg-fs) !important;
+  font-weight: 400;
+  line-height: 1.15 !important;
+  text-decoration: none !important;
+  text-transform: none;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform .25s, background .25s, color .25s;
+}
+/* soft dark shadow ring under the pill */
+.hero-cta-glass .hg-btn::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 35%;
+  left: 8px;
+  right: 8px;
+  height: calc(100% - 16px);
+  border-radius: var(--hg-r);
+  border: 1px solid rgba(0, 0, 0, .9);
+  filter: blur(8px);
+  pointer-events: none;
+}
+/* white highlight on two corners, above the label (as in the design) */
+.hero-cta-glass .hg-btn::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  border-radius: var(--hg-r);
+  filter: blur(7px);
+  background: linear-gradient(45deg, rgba(255, 255, 255, .8) 0%, transparent var(--hg-tr), transparent calc(100% - var(--hg-tr)), rgba(255, 255, 255, .8) 100%);
+  pointer-events: none;
+}
+.hero-cta-glass .hg-ring {
+  position: absolute;
+  inset: 4.5px;
+  border: 1px solid rgba(255, 255, 255, .2);
+  border-radius: var(--hg-r);
+  filter: blur(1px);
+  pointer-events: none;
+}
+.hero-cta-glass .hg-text:not(#_):not(#__) {
+  position: relative;
+  z-index: 1;
+  color: inherit !important;
+  font: inherit !important;
+  letter-spacing: inherit;
+  filter: drop-shadow(0 25px 3px rgba(102, 102, 102, .15));
+  transition: color .25s;
+}
+.hero-cta-glass .hg-icon {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: var(--hg-icon);
+  height: var(--hg-icon);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--hg-icon-bg);
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(0, 0, 0, .3);
+  transition: transform .25s;
+}
+.hero-cta-glass .hg-svg {
+  display: block;
+  width: 40%;
+  height: auto;
+  fill: var(--hg-icon-fg);
+  filter: drop-shadow(0 25px 3px rgba(102, 102, 102, .2));
+}
+/* Arabic and Farsi: the row already runs right to left; point the arrow the reading way */
+html[dir="rtl"] .hero-cta-glass .hg-svg { transform: scaleX(-1); }
+
+.hero-cta-glass .hg-btn:not(#_):not(#__):hover { background: rgba(0, 0, 0, 0) !important; transform: translateY(calc(var(--hg-lift) * -1)); }
+.hero-cta-glass .hg-btn:hover .hg-icon { transform: scale(1.1); }
+.hero-cta-glass .hg-btn:not(#_):not(#__):active { transform: scale(.94); }
+.hero-cta-glass .hg-btn:not(#_):not(#__):active .hg-text { color: var(--hg-text-active) !important; }
+.hero-cta-glass .hg-btn:active .hg-icon { transform: scale(.94); }
+.hero-cta-glass .hg-btn:not(#_):not(#__):focus { outline: none !important; }
+.hero-cta-glass .hg-btn:not(#_):not(#__):focus-visible { outline: 3px solid #c8102e !important; outline-offset: 4px !important; transform: translateY(calc(var(--hg-lift) * -1)); }
+
+/* Narrow phones: never wider than the screen; long words shrink a little instead of overflowing */
+@media (max-width: 420px) {
+  .hero-cta-glass .hg-btn { --hg-fs: calc(clamp(17px, 4.6vw, 19px) * var(--hg-scale)); }
+  .hero-cta-glass .hg-btn:not(#_):not(#__) { white-space: normal; text-align: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-cta-glass .hg-btn:not(#_):not(#__), .hero-cta-glass .hg-icon { transition: none; }
+  .hero-cta-glass .hg-btn:not(#_):not(#__):is(:hover, :focus-visible, :active), .hero-cta-glass .hg-btn:is(:hover, :active) .hg-icon { transform: none; }
+}

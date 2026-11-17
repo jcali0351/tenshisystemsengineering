@@ -1562,7 +1562,7 @@
   var bt = { saved: null, cur: null, fonts: null, ready: false, loading: false };
   // where each kind of button can be seen
   var BT_PAGE = { primary: "index.html", submit: "contact.html", light: "services/web-design.html", dark: "contact.html", more: "index.html",
-    project: "projects.html", textLink: "index.html", tabs: "news.html", lang: "index.html", chat: "index.html", chatSend: "index.html" };
+    project: "projects.html", textLink: "index.html", tabs: "news.html", lang: "index.html", chat: "index.html", chatSend: "index.html", heroGlass: "index.html" };
   // the main buttons' words (translations.js keys)
   var BT_LABELS = [["cta", "Request Consultation buttons"], ["send", "Contact form Send button"], ["more", "Learn more (service cards)"],
     ["seeAll", "See all services (About page)"], ["aboutTeamBtn", "Meet the team (About page)"], ["portalClientBtn", "Client portal button"],
@@ -1602,13 +1602,15 @@
     $("#bt-note").textContent = T ? T.note : "";
     var groups = ["Normal", "Text", "Hover"], names = { Normal: "Look", Text: "Text", Hover: "Hover and motion" };
     $("#bt-form").innerHTML = groups.map(function (g) {
-      return '<div class="bt-group"><h3>' + names[g] + '</h3><div class="sl-look">' + BS.FIELDS.filter(function (f) { return f.group === g; }).map(function (f) {
+      var list = BS.fieldsFor(T).filter(function (f) { return f.group === g; });
+      if (!list.length) return "";
+      return '<div class="bt-group"><h3>' + names[g] + '</h3><div class="sl-look">' + list.map(function (f) {
         var v = s[f.key], set = v !== undefined && v !== "", id = "btf-" + f.key,
           reset = '<button type="button" class="ed-btn ed-btn--ghost ed-btn--small sl-reset" data-bt-reset="' + f.key + '"' + (set ? "" : " hidden") + ">Reset</button>";
         if (f.type === "font") return '<label class="sl-field"><span>' + esc(f.label) + '</span><select id="' + id + '" data-bt="' + f.key + '">' + slFontOptions(v) + "</select>" + reset + "</label>";
         if (f.type === "select") return '<label class="sl-field"><span>' + esc(f.label) + '</span><select id="' + id + '" data-bt="' + f.key + '">' + f.options.map(function (o) { return '<option value="' + o[0] + '"' + (String(set ? v : "") === o[0] ? " selected" : "") + ">" + esc(o[1]) + "</option>"; }).join("") + "</select>" + reset + "</label>";
         if (f.type === "range") return '<label class="sl-field sl-range"><span>' + esc(f.label) + '</span><input type="range" id="' + id + '" data-bt="' + f.key + '" min="' + f.min + '" max="' + f.max + '" step="' + f.step + '" value="' + (set ? v : f.start) + '"><output data-bt-out="' + f.key + '"></output>' + reset + "</label>";
-        if (f.type === "color") return '<label class="sl-field sl-color"><span>' + esc(f.label) + '</span><input type="color" id="' + id + '" data-bt="' + f.key + '" value="' + (set ? esc(v) : (/color$/i.test(f.key) && !/border/i.test(f.key) ? "#ffffff" : "#c8102e")) + '"><output data-bt-out="' + f.key + '"></output>' + reset + "</label>";
+        if (f.type === "color") return '<label class="sl-field sl-color"><span>' + esc(f.label) + '</span><input type="color" id="' + id + '" data-bt="' + f.key + '" value="' + (set ? esc(v) : f.def !== undefined ? esc(f.def) : (/color$/i.test(f.key) && !/border/i.test(f.key) ? "#ffffff" : "#c8102e")) + '"><output data-bt-out="' + f.key + '"></output>' + reset + "</label>";
         return "";
       }).join("") + "</div></div>";
     }).join("");
@@ -1616,8 +1618,8 @@
   }
   /* Refresh value labels and Reset buttons without rebuilding the form (keeps focus while dragging). */
   function btOutputs() {
-    var s = btStyle();
-    BS.FIELDS.forEach(function (f) {
+    var s = btStyle(), T = BS.TYPES.filter(function (x) { return x.key === btType(); })[0];
+    BS.fieldsFor(T).forEach(function (f) {
       var set = s[f.key] !== undefined && s[f.key] !== "";
       var out = $('#bt-form [data-bt-out="' + f.key + '"]'); if (out) out.textContent = set ? (f.type === "range" ? btFmt(f, s[f.key]) : String(s[f.key]).toUpperCase()) : "Site default";
       var r = $('#bt-form [data-bt-reset="' + f.key + '"]'); if (r) r.hidden = !set;
@@ -1656,7 +1658,12 @@
     var p = BT_PAGE[btType()] || "index.html";
     if (pages.indexOf(p) < 0) p = "index.html";
     if ($("#bt-page").value !== p || !$("#bt-frame").getAttribute("src")) { $("#bt-page").value = p; btLoadFrame(); }
-    else btLive();
+    else btScrollTo(btLive() || []);
+  }
+  // Bring the first visible button of the chosen kind into view in the preview (fixed ones are always in view)
+  function btScrollTo(els) {
+    var el = els.filter(function (x) { return x.getClientRects().length; })[0];
+    if (el && getComputedStyle(el).position !== "fixed") el.scrollIntoView({ block: "center" });
   }
   function btLoadFrame() { $("#bt-frame").src = SITE + $("#bt-page").value + "?lang=en&t=" + Date.now(); }
   /* The unsaved look on the real page; the saved buttons.css is switched off so a reset shows the site default. */
@@ -1685,8 +1692,7 @@
     setTimeout(function () {
       var els = btLive() || [];
       if (btType() === "chatSend") { var l = doc.querySelector(".tk-launch"); if (l) { l.click(); setTimeout(btLive, 600); } return; }
-      var el = els.filter(function (x) { return x.getClientRects().length; })[0];
-      if (el && getComputedStyle(el).position !== "fixed") el.scrollIntoView({ block: "center" });
+      btScrollTo(els);
       setTimeout(btLive, 800);
     }, 700);
   });
