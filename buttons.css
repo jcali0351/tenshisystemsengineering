@@ -1,1 +1,2 @@
 /* Written by tools/build-pages.mjs from data/buttons.json (Tenshi Editor › Buttons). Don't edit by hand. */
+html body :is(.btn-primary):not(#_):not(#__){background:#ffffff!important;color:#000000!important;border-color:#808080!important}
