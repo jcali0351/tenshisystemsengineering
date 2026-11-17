@@ -131,7 +131,7 @@ let index = readFileSync("index.html", "utf8");
 const between = (html, name, body) => {
   const re = new RegExp(`(<!-- ${name}:start[^>]*-->\\n)[\\s\\S]*?(\\s*<!-- ${name}:end -->)`);
   if (!re.test(html)) throw new Error(`Marker ${name} not found in index.html`);
-  return html.replace(re, (m, a, b) => a + body + b);
+  return html.replace(re, (m, a, b) => a + body.replace(/\s+$/, "") + b);
 };
 const markCurrent = (html, current) => [].concat(current).reduce((h, c) =>
   h.replace(new RegExp(`(<a [^>]*?)( data-nav="${c}")`, "g"), `$1 aria-current="page"$2`),
