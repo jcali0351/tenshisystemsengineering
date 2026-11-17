@@ -2142,3 +2142,37 @@ main section.band + section.services:not(#_):not(#__) { padding-top: 0 !importan
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(37, 99, 235, 0.25);
 }
+
+/* =========================================
+   TENSHI SYSTEMS - HORIZONTAL BRAND LOGO
+   ========================================= */
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-shrink: 0;
+}
+
+.brand-logo,
+.site-header.is-compact .brand-logo,
+.site-header.is-tight .brand-logo {
+    display: block;
+    width: clamp(190px, 21vw, 270px);
+    height: auto;
+    max-width: 100%;
+    object-fit: contain;
+    flex: none;
+}
+
+.brand .logo-dazzle {
+    display: none;
+}
+
+@media (max-width: 600px) {
+    .brand-logo,
+    .site-header.is-compact .brand-logo,
+    .site-header.is-tight .brand-logo {
+        width: 190px;
+    }
+}
