@@ -138,7 +138,7 @@
     panel.hidden = true; toggle.setAttribute("aria-expanded", "false"); root.classList.remove("is-open");
     if (returnFocus) toggle.focus();
   }
-  toggle.addEventListener("click", () => (isOpen() ? closePanel(true) : openPanel()));
+  toggle.addEventListener("click", () => (!inline.matches && isOpen() ? closePanel(true) : openPanel()));
   ["pointerenter", "focus"].forEach((e) => toggle.addEventListener(e, () => load(lang()), { once: true }));
   input.addEventListener("focus", () => { form.classList.add("is-active"); load(lang()); if (input.value.trim() && list.hidden) update(); });
   input.addEventListener("blur", () => { if (!input.value) form.classList.remove("is-active"); });
