@@ -1,0 +1,30 @@
+{
+  "bands": [
+    {
+      "id": "px1",
+      "enabled": true,
+      "image": "img/photos/kobe.jpg",
+      "altKey": "px1Alt",
+      "titleKey": "px1Title",
+      "textKey": "px1Text",
+      "speed": 0.35,
+      "height": 70,
+      "overlay": "#1a080c",
+      "overlayOpacity": 0.45,
+      "position": "center center"
+    },
+    {
+      "id": "px2",
+      "enabled": true,
+      "image": "img/photos/osaka.jpg",
+      "altKey": "px2Alt",
+      "titleKey": "px2Title",
+      "textKey": "px2Text",
+      "speed": 0.4,
+      "height": 70,
+      "overlay": "#12050a",
+      "overlayOpacity": 0.4,
+      "position": "center 40%"
+    }
+  ]
+}

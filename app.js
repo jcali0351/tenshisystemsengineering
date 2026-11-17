@@ -558,6 +558,48 @@ const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
   startCards();
   setupNewsTabs();
   setupTicker();
+  setupParallax();
+
+
+  /* ---------- Homepage parallax bands: shift the inner image layer as the band crosses the viewport.
+     Disabled when the visitor prefers reduced motion. Avoids background-attachment: fixed (broken on iOS). ---------- */
+  function setupParallax() {
+    const bands = $$("[data-parallax]");
+    if (!bands.length) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const layers = bands.map((band) => ({
+      band,
+      layer: $(".parallax-layer", band),
+      speed: Number(band.dataset.speed)
+    })).filter((x) => x.layer && Number.isFinite(x.speed));
+    if (!layers.length) return;
+
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      if (reduce.matches) {
+        layers.forEach(({ layer }) => { layer.style.transform = "translate3d(0,0,0)"; });
+        return;
+      }
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      layers.forEach(({ band, layer, speed }) => {
+        const rect = band.getBoundingClientRect();
+        if (rect.bottom < -80 || rect.top > vh + 80) return;
+        const y = -((rect.top + rect.height / 2) - vh / 2) * speed;
+        layer.style.transform = "translate3d(0," + y.toFixed(1) + "px,0)";
+      });
+    };
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    if (reduce.addEventListener) reduce.addEventListener("change", onScroll);
+    else if (reduce.addListener) reduce.addListener(onScroll);
+    update();
+  }
 
   /* ---------- News page: one tab per category (Technology, Business, Stock Exchange, Weather, Sports, Health) ---------- */
   function setupNewsTabs() {

@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex, nofollow">
   <title>Tenshi Editor</title>
   <link rel="icon" href="brand/tenshi-logo.png" type="image/png">
-  <link rel="stylesheet" href="admin/admin.css?v=6a1b4525">
+  <link rel="stylesheet" href="admin/admin.css?v=5209f564">
   <link rel="stylesheet" href="fonts/catalog.css">
 </head>
 <body>
@@ -54,6 +54,7 @@
       <button type="button" role="tab" data-tab="text" aria-selected="false">All text</button>
       <button type="button" role="tab" data-tab="images" aria-selected="false">Images</button>
       <button type="button" role="tab" data-tab="slogan" aria-selected="false">Slogan</button>
+      <button type="button" role="tab" data-tab="parallax" aria-selected="false">Parallax</button>
       <button type="button" role="tab" data-tab="design" aria-selected="false">Design</button>
       <button type="button" role="tab" data-tab="bots" aria-selected="false">Content bots</button>
     </nav>
@@ -112,6 +113,14 @@
         </div>
         <form id="sl-look" class="sl-look" autocomplete="off"></form>
         <button type="button" class="ed-btn ed-btn--ghost" id="sl-look-reset">Reset all to site default</button>
+      </div>
+    </section>
+
+    <!-- Parallax: full-width photograph bands between the Design, Development and Optimization panels (data/parallax.json) -->
+    <section class="ed-panel ed-parallax" data-panel="parallax" hidden>
+      <div class="px-wrap">
+        <p class="ed-tip">Two full-width photograph bands on the homepage, between the Design, Development and Optimization panels. Changes save with the <b>Save</b> button at the top. Pick a picture already on the site, or upload a new one — uploads are stored under <code>img/parallax/</code> so shared photos (skylines, service pictures) are not overwritten. Heading, caption and alternative text are optional; clear them to show only the photograph. Edited English is translated into the other languages; <b>All languages</b> lets you write any language by hand.</p>
+        <div id="px-bands"></div>
       </div>
     </section>
     <!-- Design: fonts, typography, colors and motion (writes site-theme.css) -->
@@ -290,6 +299,6 @@
   <script src="admin/tr.js?v=e4a183e9"></script>
   <script src="admin/slogan-style.js?v=5b8514a0"></script>
   <script src="admin/theme.js?v=5adf2a95"></script>
-  <script src="admin/admin.js?v=6527ef0a"></script>
+  <script src="admin/admin.js?v=9ade952f"></script>
 </body>
 </html>

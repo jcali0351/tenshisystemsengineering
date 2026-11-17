@@ -1,5 +1,7 @@
 // Builds every generated part of the site from translations.js and the homepage's header and footer:
-//   - index.html: the nine service cards, the form's topic list, the current menu item
+//   - index.html: the nine service cards, the form's topic list, the current menu item, the slogan band,
+//     footer widgets, and the two homepage parallax bands (data/parallax.json, between the Design / Development /
+//     Optimization panels)
 //   - about.html, services.html, contact.html, news.html, blog.html
 //   - services/<slug>.html, one full page per service
 //   - blog/<slug>.html, one page per long-form post that has a slug in data/blog.json
@@ -222,12 +224,67 @@ ${lines.map((k, i) => `        <li${i === 0 ? ' class="band-text"' : ""} data-i1
       </ul>
     </section>`;
 }
+
+/* ---------- Homepage parallax bands (Tenshi Editor › Parallax): data/parallax.json
+   Two full-width photographs between the Design, Development and Optimization panels.
+   app.js moves the inner image layer on scroll (disabled when the visitor prefers reduced motion). */
+const PARALLAX = readJson("data/parallax.json", { bands: [] });
+const pxClamp = (n, min, max, fallback) => { const v = Number(n); return Number.isFinite(v) ? Math.min(max, Math.max(min, v)) : fallback; };
+const pxImage = (p) => {
+  const s = String(p || "").replace(/\\/g, "/");
+  return /^(img|brand)\/[A-Za-z0-9._/-]+$/.test(s) && !s.includes("..") ? s : "";
+};
+const pxPos = (p) => {
+  const s = String(p || "center center").trim();
+  return /^[a-z0-9.%\s-]+$/i.test(s) && s.length <= 40 ? s : "center center";
+};
+const pxColor = (c) => (/^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i.test(c || "") ? c : "#1a080c");
+function parallaxSlot(i) {
+  const b = (PARALLAX.bands || [])[i];
+  if (!b || b.enabled === false) return "";
+  const image = pxImage(b.image);
+  if (!image) return "";
+  const id = String(b.id || "px" + (i + 1)).replace(/[^a-z0-9_-]/gi, "") || ("px" + (i + 1));
+  const speed = pxClamp(b.speed, -1, 1, 0.35);
+  const height = pxClamp(b.height, 30, 100, 70);
+  const overlay = pxColor(b.overlay);
+  const op = pxClamp(b.overlayOpacity, 0, 1, 0.4);
+  const pos = pxPos(b.position);
+  const keyOk = (k) => k && EN[k] !== undefined;
+  const hasText = (k) => keyOk(k) && String(EN[k]).trim() !== "";
+  const titleKey = hasText(b.titleKey) ? b.titleKey : "";
+  const textKey = hasText(b.textKey) ? b.textKey : "";
+  const altKey = keyOk(b.altKey) ? b.altKey : "";
+  const titleId = titleKey ? `parallax-${id}-title` : "";
+  const labelled = titleKey
+    ? ` aria-labelledby="${titleId}"`
+    : (hasText(b.altKey) ? ` aria-label="${tx(b.altKey)}"` : ' aria-hidden="true"');
+  const alt = altKey
+    ? ` alt="${tx(altKey)}"${hasText(b.altKey) ? ` data-i18n-attr="alt:${altKey}"` : ""}`
+    : ' alt=""';
+  const title = titleKey ? `        <h2 class="parallax-title" id="${titleId}" data-i18n="${titleKey}">${tx(titleKey)}</h2>` : "";
+  const lead = textKey ? `        <p class="parallax-text" data-i18n="${textKey}">${tx(textKey)}</p>` : "";
+  const copy = (title || lead) ? `      <div class="parallax-copy">\n${[title, lead].filter(Boolean).join("\n")}\n      </div>` : "";
+  return `    <section class="parallax" data-parallax data-speed="${speed}" style="--px-h:${height}vh;--px-overlay:${overlay};--px-op:${op};--px-pos:${pos}"${labelled}>
+      <div class="parallax-viewport">
+        <div class="parallax-layer" aria-hidden="true">
+          <img src="${image}"${alt} width="1920" height="1080" loading="lazy" decoding="async">
+        </div>
+        <div class="parallax-overlay" aria-hidden="true"></div>
+${copy}
+      </div>
+    </section>
+`;
+}
+
 index = between(index, "band", sloganBand());
 // The slogan's look (Tenshi Editor › Slogan › Look): data/slogan.json "style" → slogan.css, loaded by the homepage after site-theme.css
 writeFileSync("slogan.css", "/* Written by tools/build-pages.mjs from data/slogan.json (Tenshi Editor › Slogan › Look). Don't edit by hand. */\n" +
   createRequire(import.meta.url)("../admin/slogan-style.js").css(SLOGAN.style || {}, readJson("fonts/fonts.json", [])));
 if (!index.includes('href="slogan.css')) index = index.replace(/(  <link rel="stylesheet" href="site-theme.css[^"]*">\n)/, '$1  <link rel="stylesheet" href="slogan.css">\n');
 index = between(index, "widgets", footerWidgets());
+index = between(index, "parallax1", parallaxSlot(0));
+index = between(index, "parallax2", parallaxSlot(1));
 writeFileSync("index.html", index);
 const HEADER = index.match(/  <header class="site-header">[\s\S]*?<\/header>/)[0];
 const FOOTER = index.match(/  <footer class="site-footer">[\s\S]*?<\/footer>/)[0].replace(/\n\s*<p class="photo-credits">[\s\S]*?<\/p>/, "");

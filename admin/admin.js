@@ -154,7 +154,7 @@
     Object.keys(pend).forEach(function (l) { Object.keys(pend[l]).forEach(function (k) { s.add(k); }); });
     return s;
   }
-  function pendingCount() { return changedKeys().size + imgEdits.size + (sloganDirty() ? 1 : 0); }
+  function pendingCount() { return changedKeys().size + imgEdits.size + (sloganDirty() ? 1 : 0) + (parallaxDirty() ? 1 : 0); }
   function updateBar() {
     var n = pendingCount(), p = $("#ed-pending");
     p.hidden = !n; p.textContent = n + (n === 1 ? " unsaved change" : " unsaved changes");
@@ -239,6 +239,7 @@
     if (name === "bots") loadBots();
     if (name === "design") loadDesign();
     if (name === "slogan") loadSlogan();
+    if (name === "parallax") loadParallax();
   }
 
   /* ================================================================== PAGES (click to edit) */
@@ -423,9 +424,14 @@
     }).catch(function (e) { m.textContent = e.message; m.className = "ed-msg err"; });
   });
   dlg.addEventListener("close", function () {
-    if (dlg.returnValue !== "ok" || !dlgPrepared) return;
+    if (dlg.returnValue !== "ok" || !dlgPrepared) { pxUploadIndex = -1; return; }
     var old = imgEdits.get(dlgPath); if (old && old.url) URL.revokeObjectURL(old.url);
     imgEdits.set(dlgPath, dlgPrepared);
+    if (pxUploadIndex >= 0 && px.cur && px.cur.bands[pxUploadIndex]) {
+      px.cur.bands[pxUploadIndex].image = dlgPrepared.newPath;
+      pxUploadIndex = -1;
+      renderParallax();
+    }
     updateBar(); renderImages(); paintFrame();
     toast("Picture ready. Press Save to put it on the site.");
   });
@@ -543,9 +549,10 @@
       Object.keys(pend).forEach(function (l) { Object.keys(pend[l]).forEach(function (k) { T[l] = T[l] || {}; T[l][k] = pend[l][k]; if (l === "en" && order.indexOf(k) < 0) order.push(k); }); });
       pend = {}; autoTr = {};
       if (slg.cur) slg.saved = JSON.parse(JSON.stringify(slg.cur));
+      if (px.cur) px.saved = JSON.parse(JSON.stringify(px.cur));
       imgEdits.forEach(function (r, p) { if (r.newPath !== p) { tree.delete(p); } tree.set(r.newPath, { sha: "saved" + Date.now(), size: r.blob.size }); });
       imgEdits.clear();
-      updateBar(); renderImages(); renderText(); if (slg.cur && !$("[data-panel=slogan]").hidden) renderSlogan();
+      updateBar(); renderImages(); renderText(); if (slg.cur && !$("[data-panel=slogan]").hidden) renderSlogan(); if (px.cur && !$("[data-panel=parallax]").hidden) renderParallax();
       $$("[data-ed-changed]", $("#ed-frame").contentDocument || document).forEach(function (el) { el.removeAttribute("data-ed-changed"); });
       var note = missing.size ? " " + Array.from(missing).map(function (l) { return LANG_NAMES[l]; }).join(", ") + " got the English text: this browser can't translate into " + (missing.size === 1 ? "it" : "them") + ". Fix them by hand under Other languages." : "";
       toast("Saved. The live site updates in about a minute; reload a page with Ctrl+F5 if it still looks old." + note, false, missing.size ? 14000 : 7000);
@@ -588,6 +595,7 @@
       });
     }).then(function () {
       if (sloganDirty()) { changes.push({ path: "data/slogan.json", text: sloganJSON() }); parts.push("slogan"); }
+      if (parallaxDirty()) { changes.push({ path: "data/parallax.json", text: parallaxJSON() }); parts.push("parallax"); }
       return { changes: changes, summary: parts.join(", ") || "edit" };
     });
   }
@@ -597,6 +605,7 @@
     if (!window.confirm("Throw away all unsaved changes?")) return;
     pend = {}; autoTr = {}; manual.clear();
     if (slg.saved) { slg.cur = JSON.parse(JSON.stringify(slg.saved)); renderSlogan(); }
+    if (px.saved) { px.cur = JSON.parse(JSON.stringify(px.saved)); renderParallax(); }
     imgEdits.forEach(function (r) { if (r.url) URL.revokeObjectURL(r.url); }); imgEdits.clear();
     $("#ed-drawer").hidden = true;
     updateBar(); renderText(); renderImages(); loadFrame();
@@ -1039,4 +1048,130 @@
     _renderSlogan();
     if (!slLookReady && slg.cur) { slLookReady = true; slLoadFonts().then(function () { renderLook(); slPreviewLoad(); }); }
   };
+
+  /* ================================================================== PARALLAX
+     Two full-width photograph bands on the homepage, between Design, Development and Optimization.
+     Settings live in data/parallax.json; heading, caption and alt text live in translations.js.
+     Uploads go to img/parallax/<id>.ext so shared site photos are not overwritten.
+     Everything here saves with the main Save button (new or changed English is translated). */
+  var px = { saved: null, cur: null };
+  var pxUploadIndex = -1;
+  var PX_DEFAULT = { bands: [
+    { id: "px1", enabled: true, image: "img/photos/kobe.jpg", altKey: "px1Alt", titleKey: "px1Title", textKey: "px1Text", speed: 0.35, height: 70, overlay: "#1a080c", overlayOpacity: 0.45, position: "center center" },
+    { id: "px2", enabled: true, image: "img/photos/osaka.jpg", altKey: "px2Alt", titleKey: "px2Title", textKey: "px2Text", speed: 0.4, height: 70, overlay: "#12050a", overlayOpacity: 0.4, position: "center 40%" }
+  ] };
+  var PX_POS = [
+    ["center center", "Centre"],
+    ["center top", "Top"],
+    ["center 30%", "Upper third"],
+    ["center 40%", "Slightly above centre"],
+    ["center 60%", "Slightly below centre"],
+    ["center bottom", "Bottom"],
+    ["left center", "Left"],
+    ["right center", "Right"]
+  ];
+  function parallaxDirty() { return !!(px.cur && px.saved && JSON.stringify(px.cur) !== JSON.stringify(px.saved)); }
+  function parallaxJSON() { return JSON.stringify(px.cur, null, 2) + "\n"; }
+  function loadParallax() {
+    if (px.cur) { renderParallax(); return; }
+    (tree.has("data/parallax.json") ? readText("data/parallax.json").then(JSON.parse) : Promise.resolve(PX_DEFAULT)).catch(function () { return PX_DEFAULT; }).then(function (d) {
+      var src = (d && Array.isArray(d.bands) && d.bands.length) ? d.bands : PX_DEFAULT.bands;
+      px.saved = { bands: src.map(function (b, i) { return Object.assign({}, PX_DEFAULT.bands[i] || PX_DEFAULT.bands[0], b); }) };
+      px.cur = JSON.parse(JSON.stringify(px.saved));
+      renderParallax();
+    });
+  }
+  function pxImgSrc(path) {
+    var ed = imgEdits.get(path);
+    if (ed && ed.url) return ed.url;
+    for (var it = imgEdits.values(), n = it.next(); !n.done; n = it.next()) {
+      if (n.value.newPath === path && n.value.url) return n.value.url;
+    }
+    var rec = tree.get(path);
+    return SITE + path + (rec && rec.sha ? "?b=" + rec.sha.slice(0, 8) : "");
+  }
+  function pxPathOptions(cur) {
+    var paths = imagePaths().slice();
+    if (cur && paths.indexOf(cur) < 0) paths.unshift(cur);
+    var groups = {}, order = [];
+    paths.forEach(function (p) {
+      var f = p.indexOf("/") < 0 ? "(main folder)" : p.slice(0, p.lastIndexOf("/"));
+      if (!groups[f]) { groups[f] = []; order.push(f); }
+      groups[f].push(p);
+    });
+    return order.map(function (f) {
+      return '<optgroup label="' + esc(f) + '">' + groups[f].map(function (p) {
+        return '<option value="' + esc(p) + '"' + (p === cur ? " selected" : "") + ">" + esc(p.replace(/^.*\//, "")) + "</option>";
+      }).join("") + "</optgroup>";
+    }).join("");
+  }
+  function renderParallax() {
+    if (!px.cur) return;
+    var labels = ["Between Design and Development", "Between Development and Optimization"];
+    $("#px-bands").innerHTML = px.cur.bands.map(function (b, i) {
+      var posOpts = PX_POS.map(function (o) { return '<option value="' + o[0] + '"' + (b.position === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("");
+      if (b.position && !PX_POS.some(function (o) { return o[0] === b.position; })) {
+        posOpts += '<option value="' + esc(b.position) + '" selected>' + esc(b.position) + "</option>";
+      }
+      return '<article class="px-card" data-px="' + i + '">' +
+        "<h2>" + (labels[i] || ("Band " + (i + 1))) + "</h2>" +
+        '<label class="ed-check"><input type="checkbox" data-px-k="enabled"' + (b.enabled !== false ? " checked" : "") + "> Show this band on the homepage</label>" +
+        '<div class="px-preview">' +
+          '<img class="px-thumb" alt="" src="' + esc(pxImgSrc(b.image)) + '">' +
+          '<div class="px-actions">' +
+            '<label class="ed-inline ed-grow"><span>Picture</span> <select data-px-k="image">' + pxPathOptions(b.image) + "</select></label>" +
+            '<button type="button" class="ed-btn" data-px-act="upload">Upload a new picture</button>' +
+          "</div>" +
+        "</div>" +
+        '<div class="px-fields">' +
+          '<label class="ed-field"><span>Heading (English, optional)</span><input type="text" data-px-text="titleKey" value="' + esc(cur("en", b.titleKey)) + '">' +
+            (b.titleKey ? '<button type="button" class="ed-btn ed-btn--ghost ed-btn--small" data-px-act="langs" data-px-key="' + esc(b.titleKey) + '">All languages</button>' : "") + "</label>" +
+          '<label class="ed-field"><span>Caption (English, optional)</span><input type="text" data-px-text="textKey" value="' + esc(cur("en", b.textKey)) + '">' +
+            (b.textKey ? '<button type="button" class="ed-btn ed-btn--ghost ed-btn--small" data-px-act="langs" data-px-key="' + esc(b.textKey) + '">All languages</button>' : "") + "</label>" +
+          '<label class="ed-field"><span>Alternative text (English, for screen readers)</span><input type="text" data-px-text="altKey" value="' + esc(cur("en", b.altKey)) + '">' +
+            (b.altKey ? '<button type="button" class="ed-btn ed-btn--ghost ed-btn--small" data-px-act="langs" data-px-key="' + esc(b.altKey) + '">All languages</button>' : "") + "</label>" +
+          '<label class="dz-range"><span>Parallax speed</span><input type="range" data-px-k="speed" min="-1" max="1" step="0.05" value="' + b.speed + '"><output>' + b.speed + "</output></label>" +
+          '<label class="dz-range"><span>Height</span><input type="range" data-px-k="height" min="30" max="100" step="1" value="' + b.height + '"><output>' + b.height + " vh</output></label>" +
+          '<label class="dz-range"><span>Overlay opacity</span><input type="range" data-px-k="overlayOpacity" min="0" max="1" step="0.05" value="' + b.overlayOpacity + '"><output>' + b.overlayOpacity + "</output></label>" +
+          '<label class="sl-field sl-color"><span>Overlay colour</span><input type="color" data-px-k="overlay" value="' + esc(b.overlay || "#1a080c") + '"><output>' + esc(b.overlay || "#1a080c") + "</output></label>" +
+          '<label class="ed-field"><span>Picture position</span><select data-px-k="position">' + posOpts + "</select></label>" +
+        "</div></article>";
+    }).join("");
+    updateBar();
+  }
+  $("#px-bands").addEventListener("input", function (e) {
+    var card = e.target.closest(".px-card"); if (!card || !px.cur) return;
+    var b = px.cur.bands[+card.dataset.px], el = e.target;
+    if (el.dataset.pxText) {
+      setPend("en", b[el.dataset.pxText], el.value);
+      return;
+    }
+    var k = el.dataset.pxK; if (!k) return;
+    if (k === "enabled") b.enabled = el.checked;
+    else if (k === "speed" || k === "height" || k === "overlayOpacity") {
+      b[k] = parseFloat(el.value);
+      el.parentNode.querySelector("output").textContent = k === "height" ? b[k] + " vh" : String(b[k]);
+    } else if (k === "overlay") {
+      b.overlay = el.value;
+      el.parentNode.querySelector("output").textContent = el.value;
+    } else if (k === "image" || k === "position") {
+      b[k] = el.value;
+      if (k === "image") renderParallax();
+    }
+    updateBar();
+  });
+  $("#px-bands").addEventListener("click", function (e) {
+    var act = e.target.closest("[data-px-act]"); if (!act) return;
+    if (act.dataset.pxAct === "langs") { openText([act.dataset.pxKey]); return; }
+    if (act.dataset.pxAct === "upload") {
+      var card = act.closest(".px-card"); if (!card) return;
+      var i = +card.dataset.px, b = px.cur.bands[i];
+      var dest = /^img\/parallax\//.test(b.image) ? b.image : "img/parallax/" + (b.id || ("px" + (i + 1))) + ".jpg";
+      pxUploadIndex = i;
+      openImage(dest);
+      $("#ed-imgdlg-old").src = pxImgSrc(b.image);
+      $("#ed-imgdlg-path").textContent = dest;
+    }
+  });
+
 })();

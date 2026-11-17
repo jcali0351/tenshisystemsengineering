@@ -1917,6 +1917,94 @@ html:not([dir="rtl"]):not(:lang(ja)):not(:lang(zh)):not(:lang(ko)) .pitch-lead::
   background: #fff !important; color: var(--text) !important; text-shadow: none !important;
 }
 /* light gray ones, so neighbouring areas stay distinct */
+
+/* ======================================================================
+   Homepage parallax bands: full-width photographs between the Design,
+   Development and Optimization panels. The inner image layer is taller
+   than the band; app.js shifts it with translate3d on scroll. Do not use
+   background-attachment: fixed (broken on iOS).
+   ====================================================================== */
+.parallax {
+  position: relative;
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  height: var(--px-h, 70vh);
+  min-height: 220px;
+  overflow: hidden;
+  isolation: isolate;
+  background: #12050a;
+}
+.parallax-viewport {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.parallax-layer {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  top: -30%;
+  height: 160%;
+  will-change: transform;
+  pointer-events: none;
+}
+.parallax-layer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--px-pos, center center);
+}
+.parallax-overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--px-overlay, #1a080c);
+  opacity: var(--px-op, 0.4);
+  pointer-events: none;
+}
+.parallax-copy {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px var(--gutter);
+  text-align: center;
+  pointer-events: none;
+}
+.parallax-title {
+  color: #fff;
+  font-size: clamp(1.5rem, 3.2vw, 2.4rem);
+  font-weight: 800;
+  line-height: 1.2;
+  text-wrap: balance;
+  margin: 0 0 12px;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, .5);
+}
+.parallax-text {
+  color: rgba(255, 255, 255, .92);
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  line-height: 1.55;
+  max-width: 40em;
+  margin: 0;
+  text-wrap: pretty;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, .5);
+}
+@media (prefers-reduced-motion: reduce) {
+  .parallax-layer {
+    top: 0;
+    height: 100%;
+    will-change: auto;
+    transform: none !important;
+  }
+}
+
 :is(.svc-hero, .svc-cta, section.band, .ab-global, .prj-fair, .pat-section, .svc-benefits) { background: #f4f4f6 !important; }
 .svc-hero { border-bottom: 3px solid var(--red); }
 section.band { border-block: 1px solid #e3e4e8; }
