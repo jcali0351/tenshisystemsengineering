@@ -2,6 +2,58 @@
   "generatedAt": "2026-11-17T05:02:08.000Z",
   "posts": [
     {
+      "id": "20261116-website-analytics-plain-english",
+      "date": "2026-11-16",
+      "cat": "Technology",
+      "slug": "website-analytics-in-plain-english-for-business-owners",
+      "title": "Website Analytics in Plain English: How to Tell If Your Site Is Doing Its Job",
+      "intro": "A website can look fine and still miss its purpose. Here is how to read the numbers that show whether visitors find you, understand you, and get in touch.",
+      "body": [
+        "A website can look professional, load quickly, and still fall short of the job that matters: helping the right people understand what you offer and take the next step. Analytics will not fix that on its own, but it will show you what is actually happening, instead of what you hope is happening. This guide explains the idea in plain English, names the numbers that usually matter, and suggests a simple monthly habit you can keep.",
+        {
+          "h2": "Analytics Is a Record of Behavior, Not a Scorecard"
+        },
+        "Website analytics is a record of how people find your site and what they do while they are there. Typical tools show how many visits you received, which pages were opened, whether someone arrived from a search engine or a link, and whether they used a phone or a computer.",
+        "That record is useful, but it is not a verdict on your brand, and it is not a sales report. Think of it as a flashlight: it helps you see patterns, not a crystal ball. One well-installed tool, a few clear goals, and a regular look at the results are enough for most small and mid-size businesses.",
+        {
+          "h2": "The Numbers That Usually Matter"
+        },
+        "Begin with questions you already have, not with a dashboard full of charts. Are people finding us? Which pages do they read? Do they get as far as contacting us? If a report does not help you answer those questions, you can usually ignore it, including vanity metrics such as raw page-view counts or follower totals that never turn into inquiries.",
+        "Look at trends over weeks and months, not a quiet Tuesday. The useful question is whether this month looks meaningfully different from last month, or from the same period last year if you have the data.",
+        "Pay attention to sources: search, direct visits (someone typing your address or using a bookmark), links from other sites, and social media. If almost all of your inquiries come from search, that is a clue about where to invest your energy. If a partner site sends visits that never contact you, the traffic may be the wrong audience, or the landing page may be unclear.",
+        "See which pages do the work. Service pages, a contact page, or a clearly written about page often matter more than the homepage. Notice which pages people open most often, and which ones they are on before they leave or get in touch.",
+        "Most important, measure whether people take the next step. In analytics tools this is often called a conversion, a goal, or a key event. For many companies that step is an inquiry form, a click on an email address or phone number, or a booking. A simple method is to send people to a thank-you page after they submit a form, and to count visits to that page. One to three goals is plenty. If most visitors use a phone, treat the mobile experience as the main one, not an afterthought.",
+        "A word of caution about bounce rate. It tries to show how often someone viewed a single page and left. That can be a problem on a service page that should lead to an inquiry, and perfectly normal on a page that answers one question quickly, such as your opening hours. Do not treat it as a single grade for the whole site.",
+        {
+          "h2": "Set It Up So You Will Actually Use It"
+        },
+        "A complicated setup that nobody opens is worse than a simple one you review. Choose one analytics tool and install it correctly on every page, including the thank-you page if you have one. Popular options include Google Analytics and a number of privacy-focused alternatives; pick the one you will actually look at. Then define one to three goals that match real business outcomes, such as a completed inquiry, and decide who reviews the reports, and when.",
+        "Because analytics records information about visitors, treat it with the same care you would give any other customer data. Collect only what you need, be open about the fact that you use it, and follow the privacy rules that apply to your customers. In Japan that includes the [Act on the Protection of Personal Information](https://www.ppc.go.jp/en/); other countries have their own requirements. This is not legal advice, but it is a reason to be conservative and clear.",
+        {
+          "h2": "Common Mistakes to Avoid"
+        },
+        "A few habits often lead to confusion. More visits are not automatically better; a smaller number of people who get in touch is more valuable than a crowd that arrives and leaves. A change from four inquiries to six in a week is not yet a trend, so give decisions enough time and enough visits to be meaningful. If you rewrite a page, change the menu, and launch a promotion in the same week, you will not know what caused a rise or a drop. When a number jumps, look for a cause before you celebrate or panic.",
+        "The point of measurement is to improve something: a confusing headline, a buried contact link, a slow page, or a service description that does not answer the questions people actually have. Numbers that never lead to a change are just decoration.",
+        {
+          "h2": "A Monthly Review You Can Keep"
+        },
+        "You do not need to watch your analytics every morning. Once a month, set aside half an hour and write down brief answers to five questions:",
+        {
+          "ul": [
+            "Did overall visits rise, fall, or stay about the same compared with last month?",
+            "Where did useful visits come from?",
+            "Which pages were most used, and did any important page suddenly drop?",
+            "How many people completed the action you care about, such as an inquiry?",
+            "What is the one improvement we will try next month?"
+          ]
+        },
+        "Keep those notes. Over a few months you will see patterns a single screenshot cannot show, which is useful when you brief a designer or developer. Launch day is only the beginning. Analytics is how you keep learning after the site is live, so each change has a reason and a way to tell whether it helped.",
+        "**Want a clearer picture of how your website is performing?** Tenshi Systems Engineering measures real-world results, sets up analytics and goals, and provides plain-language progress reports as part of our optimization work for businesses in Osaka and around the world. [Request a consultation](contact.html#contact) and we will help you see what the numbers mean and what to do next."
+      ],
+      "sources": [],
+      "min": 5
+    },
+    {
       "id": "20261116-design-dev-opt-ai",
       "date": "2026-11-16",
       "cat": "Services",
