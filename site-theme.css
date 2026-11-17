@@ -55,3 +55,59 @@ main :is(.news-tabs):not(#_){margin-bottom:clamp(23.66px, 3.09vw, 40.8px)!import
 .feature h2:not(#_){font-size:clamp(41.76px, 5.45vw, 72px)!important}
 :is(.service-card,.offer-card,.benefit-card,.news-item,.blog-card,.value-card,.team-card,.prj-card,.svc-step,.ab-step) h3:not(#_){font-size:clamp(16px, 2.08vw, 27.5px)!important}
 :is(html:lang(ja),html:lang(zh),html:lang(ko),html[dir=rtl]) :is(h1,h2,h3,h4,h5,h6):not(#_){letter-spacing:0!important}
+
+override.
+
+Paste this at the very bottom:
+
+/* ================================================
+   TENSHI SYSTEMS - ANIMATED PEARL SILVER HEADER
+   ================================================ */
+
+.site-header,
+.site-header.is-scrolled {
+    background: linear-gradient(
+        120deg,
+        #e9eaed,
+        #ffffff,
+        #e5e7eb,
+        #f8f9fa,
+        #e6e8ec
+    ) !important;
+
+    background-size: 300% 300% !important;
+
+    animation: tenshi-silver-flow 18s ease infinite !important;
+
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+
+    border-bottom: 2px solid rgba(190, 25, 35, 0.75) !important;
+
+    box-shadow:
+        0 4px 18px rgba(25, 30, 40, 0.055),
+        inset 0 -1px 0 rgba(255,255,255,0.9) !important;
+}
+
+@keyframes tenshi-silver-flow {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Respect accessibility preferences */
+@media (prefers-reduced-motion: reduce) {
+    .site-header,
+    .site-header.is-scrolled {
+        animation: none !important;
+        background-position: 50% 50% !important;
+    }
+}
