@@ -2,6 +2,87 @@
   "generatedAt": "2026-11-17T05:02:08.000Z",
   "posts": [
     {
+      "id": "20261117-choosing-web-hosting",
+      "date": "2026-11-17",
+      "cat": "Technology",
+      "slug": "choosing-web-hosting-for-your-business-a-plain-english-guide",
+      "title": "Choosing Web Hosting for Your Business: A Plain-English Guide",
+      "intro": "Hosting is the part of your website most owners never see, until something goes wrong. Here is how the main options differ and what to ask before you choose.",
+      "body": [
+        "Every website lives on a computer somewhere, connected to the internet around the clock. Web hosting is the service that provides that computer, keeps it running, and delivers your pages to visitors when they type in your address. It is easy to treat hosting as a commodity and pick the cheapest plan on offer. But the host you choose affects how fast your site loads, how often it is unavailable, how safe it is, and how much work it takes to keep it healthy.",
+        "This guide explains the main types of hosting in plain English, what actually matters when comparing them, and the questions worth asking before you sign up or move.",
+        {
+          "h2": "The Main Types of Hosting"
+        },
+        "Most hosting falls into a handful of categories. The names vary from provider to provider, but the underlying ideas are consistent.",
+        {
+          "ul": [
+            "**Shared hosting.** Your site sits on a server alongside many other websites, sharing its processing power, memory, and storage. It is inexpensive and usually comes with a simple control panel. The trade-off is that a busy or badly behaved neighbor can slow your site down, and you have limited control over the server's setup.",
+            "**Virtual private server (VPS).** One physical machine is divided into several isolated virtual servers, and you get one of them with a guaranteed share of resources. That brings more consistent performance and more control, but someone has to configure, update, and secure that server.",
+            "**Cloud hosting.** Your site runs on infrastructure spread across many machines run by a large provider. Resources can usually be added or reduced as needed, which suits sites with uneven traffic or growing applications. Pricing is often based on usage, which is flexible but can be harder to predict.",
+            "**Managed hosting.** This describes who does the work rather than the technology underneath. With a managed plan, the provider or your agency handles updates, backups, security, and monitoring. It costs more than doing it yourself, but it buys back time and reduces the risk of a forgotten update.",
+            "**Static site hosting.** If your site is built as pre-generated pages rather than pages assembled by a database on every visit, it can be served from simple, fast, and often low-cost platforms, frequently backed by a content delivery network. There is less software running, which also means less to break and less to attack."
+          ]
+        },
+        "There is no single best option. A five-page company site, an online shop, and a customer portal have very different needs.",
+        {
+          "h2": "What Actually Matters When Comparing Hosts"
+        },
+        "Hosting plans are often marketed with long lists of features. A few factors matter far more than the rest.",
+        {
+          "ul": [
+            "**Speed and location.** The physical distance between the server and your visitors affects how quickly pages arrive. If most of your customers are in Japan, a server or content delivery network with a presence nearby will generally serve them faster than one on another continent. If you serve customers worldwide, a content delivery network that copies your files to locations around the globe helps everyone.",
+            "**Reliability.** Ask what uptime the provider commits to, what happens if it misses that commitment, and how outages are communicated. A status page and a clear history of incidents are good signs.",
+            "**Security.** Look for automatic HTTPS certificates, regular software patching, firewall protection, and isolation between customers. Find out who is responsible for updating your content management system and plugins, because hosts often secure the server but leave the application to you.",
+            "**Backups.** Confirm how often backups are taken, how long they are kept, where they are stored, and how quickly a site can be restored. A backup you have never tested restoring is a hope, not a plan.",
+            "**Support.** When something breaks, you want a knowledgeable person who responds promptly in a language you are comfortable with. Check the support channels and hours before you need them.",
+            "**Room to grow.** Consider whether you can upgrade resources, add a staging site for testing changes, or move to a larger plan without rebuilding everything."
+          ]
+        },
+        {
+          "h2": "The Real Cost of Hosting"
+        },
+        "The monthly price is only part of the picture. Introductory discounts often end after the first term, and renewal rates can be noticeably higher. Some plans charge separately for backups, email, SSL certificates, or extra storage. Cheaper plans may also cost you in other ways: slower pages that frustrate visitors, time spent applying updates yourself, or a stressful weekend recovering from an outage with no recent backup.",
+        "A fair comparison looks at the total cost over two or three years, including renewals and add-ons, alongside the time and risk each option involves.",
+        {
+          "h2": "Keep Ownership in Your Hands"
+        },
+        "Whatever you choose, make sure your business stays in control of its own assets. That means:",
+        {
+          "ul": [
+            "**Registering your domain name in your company's name,** with login details your business holds, even if an agency manages it for you.",
+            "**Knowing where your site files and database live** and being able to get a full copy of them.",
+            "**Keeping a record of key accounts,** such as the domain registrar, hosting provider, and DNS settings, stored securely and shared with more than one trusted person.",
+            "**Separating email from web hosting where sensible,** so a problem with one does not take down the other."
+          ]
+        },
+        "These steps make it far easier to change providers or agencies later without losing your website or your email address.",
+        {
+          "h2": "Questions to Ask Before You Choose"
+        },
+        "Before you sign up, or if you are reviewing your current setup, these questions will tell you a lot:",
+        {
+          "ul": [
+            "Where are your servers located, and do you use a content delivery network?",
+            "What uptime do you commit to, and how do you notify customers of problems?",
+            "How often are backups taken, and how do I restore one?",
+            "Who is responsible for software updates and security patches?",
+            "What does the plan cost at renewal, and what costs extra?",
+            "How do I get my files and data out if I decide to leave?"
+          ]
+        },
+        "If a provider cannot answer these clearly, that is useful information in itself.",
+        {
+          "h2": "When Moving Makes Sense"
+        },
+        "Changing hosts is worth considering if your site is regularly slow, goes down without explanation, has been compromised, or has outgrown its plan. A careful migration copies everything to the new host, tests it thoroughly, and only then switches your domain over, ideally at a quiet time, so visitors never notice. Rushed moves are where email stops working or pages go missing, so it pays to plan.",
+        "Hosting rarely gets attention when it works well, and that is exactly the goal. The right choice is one that keeps your site fast, secure, and available, without demanding your time.",
+        "**Not sure your current hosting is the right fit?** Tenshi Systems Engineering provides secure hosting, monitoring, and long-term support for businesses in Osaka and around the world, and we are happy to review your existing setup in plain language. [Request a consultation](contact.html#contact) and we will help you find a home for your website that you do not have to worry about."
+      ],
+      "sources": [],
+      "min": 5
+    },
+    {
       "id": "20261116-website-analytics-plain-english",
       "date": "2026-11-16",
       "cat": "Technology",
