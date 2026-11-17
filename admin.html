@@ -7,8 +7,9 @@
   <title>Tenshi Editor</title>
   <link rel="icon" href="brand/favicon-32.png" type="image/png" sizes="32x32">
   <link rel="icon" href="brand/favicon-192.png" type="image/png" sizes="192x192">
-  <link rel="stylesheet" href="admin/admin.css?v=0196974d">
+  <link rel="stylesheet" href="admin/admin.css?v=9967d0d3">
   <link rel="stylesheet" href="fonts/catalog.css">
+  <link rel="stylesheet" href="fx.css?v=1f2472f8">
 </head>
 <body>
   <header class="ed-bar">
@@ -59,6 +60,7 @@
       <button type="button" role="tab" data-tab="design" aria-selected="false">Design</button>
       <button type="button" role="tab" data-tab="buttons" aria-selected="false">Buttons</button>
       <button type="button" role="tab" data-tab="share" aria-selected="false">Share buttons</button>
+      <button type="button" role="tab" data-tab="fx" aria-selected="false">Image effects</button>
       <button type="button" role="tab" data-tab="css" aria-selected="false">Custom CSS</button>
       <button type="button" role="tab" data-tab="bots" aria-selected="false">Content bots</button>
     </nav>
@@ -286,6 +288,49 @@
       </div>
     </section>
 
+    <!-- Image effects: shimmer, sparkles and sprite sheets on any picture or logo (data/fx.json → fx-data.js; fx.js, fx.css) -->
+    <section class="ed-panel ed-fx" data-panel="fx" hidden>
+      <div class="fx-wrap-ed">
+        <p class="ed-tip">Add a light sweep (shimmer), twinkling stars (sparkles), an animated sprite, a soft glow or a hover tilt to any picture or logo. Each rule picks pictures with a CSS selector; use a quick pick or write your own. Effects never block clicks, pause when the picture is off screen, and stay still for visitors who ask their device for less motion. Changes save with the <b>Save</b> button at the top and show on the site about a minute later.</p>
+        <label class="ed-check fx-check"><input type="checkbox" id="fx-enabled"> Show image effects on the site</label>
+        <div class="fx-rules-head">
+          <h2 class="sl-h">Rules</h2>
+          <button type="button" class="ed-btn ed-btn--small" id="fx-add">Add rule</button>
+        </div>
+        <ul class="fx-rules" id="fx-rules"></ul>
+        <p class="ed-msg" id="fx-msg" role="status"></p>
+        <div class="fx-editor" id="fx-editor" hidden>
+          <div class="fx-edit-main">
+            <div class="fx-basics">
+              <label class="ed-field fx-name"><span>Name (only shown here)</span><input type="text" id="fx-name" spellcheck="false" maxlength="80"></label>
+              <label class="ed-field fx-sel"><span>Pictures (CSS selector)</span><input type="text" id="fx-selector" spellcheck="false" placeholder=".brand-logo" autocomplete="off"></label>
+              <p class="ed-tip fx-sel-note" id="fx-sel-note"></p>
+              <div class="fx-picks" id="fx-picks"></div>
+              <p class="ed-tip">Any picture can also opt in by itself: <code>&lt;img data-fx="shimmer sparkles" data-fx-sparkles-count="12"&gt;</code>.</p>
+            </div>
+            <div id="fx-effects" class="fx-effects"></div>
+          </div>
+          <aside class="fx-preview">
+            <div class="fx-preview-bar">
+              <label class="ed-inline"><span>Sample</span> <select id="fx-sample">
+                <option value="brand/tenshi-logo.png">Tenshi logo</option>
+                <option value="brand/tenshi-horizontal.png">Header logo</option>
+                <option value="img/photos/kyoto.jpg">A photo</option>
+              </select></label>
+              <label class="ed-inline"><span>Background</span> <select id="fx-bg">
+                <option value="light">Light</option>
+                <option value="gray">Light gray</option>
+                <option value="dark">Dark</option>
+              </select></label>
+              <button type="button" class="ed-btn ed-btn--ghost ed-btn--small" id="fx-replay">Replay</button>
+            </div>
+            <div class="fx-stage" id="fx-stage" data-bg="light"><img id="fx-sample-img" src="brand/tenshi-logo.png" alt="Effect preview" width="225" height="217"></div>
+            <p class="ed-tip" id="fx-preview-note">Live preview of this rule. Hover the picture to try “On hover” effects.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
     <!-- Custom CSS: your own rules, loaded last on every page (custom.css) -->
     <section class="ed-panel ed-css" data-panel="css" hidden>
       <div class="cc-wrap">
@@ -371,6 +416,7 @@
   <script src="admin/buttons-style.js?v=c3c0e7a0"></script>
   <script src="admin/share-networks.js?v=57332b3e"></script>
   <script src="admin/theme.js?v=5adf2a95"></script>
-  <script src="admin/admin.js?v=83c899bc"></script>
+  <script src="fx.js?v=5a67a4ab"></script>
+  <script src="admin/admin.js?v=2bbca025"></script>
 </body>
 </html>

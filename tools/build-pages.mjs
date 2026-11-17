@@ -7,6 +7,7 @@
 //   - services/<slug>.html, one full page per service
 //   - blog/<slug>.html, one page per long-form post that has a slug in data/blog.json
 //   - data/search/<lang>.json, the footer search's index of every page and blog post in all ten languages (search.js)
+//   - fx-data.js (image effects: shimmer, sparkles, sprites) from data/fx.json (Tenshi Editor › Image effects; fx.js, fx.css)
 //   - share buttons at the end of each post from data/share.json (Tenshi Editor › Share buttons; Shareon 2.8.1
 //     in vendor/shareon/, plus LINE and Hatena)
 //   - buttons.css from data/buttons.json (Tenshi Editor › Buttons), and the links to buttons.css and custom.css
@@ -544,6 +545,7 @@ function frame({ prefix, current, titleKey, descKey, title, description, bodyCla
   <link rel="stylesheet" href="${prefix}site-theme.css">
   <link rel="stylesheet" href="${prefix}search.css">
   <link rel="stylesheet" href="${prefix}nav.css">
+  <link rel="stylesheet" href="${prefix}fx.css">
 ${extraHead}</head>
 <body class="${bodyClass}"${bodyAttrs}>
   <!-- Written by tools/build-pages.mjs: edit translations.js and the script, not this file. -->
@@ -560,6 +562,8 @@ ${chrome(FOOTER, prefix, current).replace("    </div>\n  </footer>", photoCredit
   <script src="${prefix}translations.js"></script>
   <script src="${prefix}app.js"></script>
   <script src="${prefix}nav.js"></script>
+  <script src="${prefix}fx-data.js"></script>
+  <script src="${prefix}fx.js"></script>
   <script src="${prefix}search.js"></script>
   <script src="${prefix}design.js"></script>
   <script src="${prefix}chat.js"></script>
@@ -1608,6 +1612,8 @@ console.log(`index.html updated; about.html, team.html, services.html, technolog
    site-theme.css (and slogan.css), and custom.css last of all, so its rules win. */
 writeFileSync("buttons.css", "/* Written by tools/build-pages.mjs from data/buttons.json (Tenshi Editor › Buttons). Don't edit by hand. */\n" +
   createRequire(import.meta.url)("../admin/buttons-style.js").css(readJson("data/buttons.json", {}), readJson("fonts/fonts.json", [])));
+// Image effects (Tenshi Editor › Image effects): data/fx.json → fx-data.js (window.TENSHI_FX), read by fx.js on every page
+writeFileSync("fx-data.js", createRequire(import.meta.url)("../fx.js").dataJs(readJson("data/fx.json", {})));
 if (!existsSync("custom.css")) writeFileSync("custom.css", "/* Custom CSS (Tenshi Editor › Custom CSS). Rules here load last on every page and override the site's styles. */\n");
 {
   const pagesWithTheme = [

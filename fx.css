@@ -1,0 +1,55 @@
+/* =====================================================================================================================
+   IMAGE EFFECTS (fx.js; settings in data/fx.json, Tenshi Editor › Image effects): shimmer, sparkles, sprite sheets,
+   glow pulse and hover tilt on any image. fx.js wraps each image in .fx-wrap and adds the overlay layers.
+   Overlays never take the pointer (logo links keep working), nothing changes size, animations pause off screen
+   (.fx-paused) and none run with reduced motion. Scoped with :not(#_):not(#__) to beat site-theme.css and design.css.
+   ===================================================================================================================== */
+.fx-wrap:not(#_):not(#__) { position: relative; vertical-align: baseline; line-height: 0; box-sizing: border-box; }
+.fx-wrap:not(#_):not(#__) > img, .fx-wrap:not(#_):not(#__) > picture { max-width: 100%; }
+.fx-wrap:not(#_):not(#__) .fx-layer,
+.fx-wrap:not(#_):not(#__) .fx-sprite { position: absolute; pointer-events: none; user-select: none; }
+.fx-wrap:not(#_):not(#__) .fx-layer { inset: 0; z-index: 2; }
+
+/* ---------- shimmer: a light band sweeping across, cut to the picture's shape (fx.js sets the path) ---------- */
+.fx-wrap:not(#_):not(#__) .fx-shimmer { overflow: hidden; }
+.fx-wrap:not(#_):not(#__) .fx-band {
+  position: absolute; left: 50%; top: 50%; display: block;
+  transform: translate(var(--fx-x0, -200%), var(--fx-y0, 0)) rotate(var(--fx-rot, 0deg));
+  will-change: transform;
+}
+
+/* ---------- sparkles: four-point stars ---------- */
+.fx-wrap:not(#_):not(#__) .fx-sparkles { overflow: visible; z-index: 3; }
+.fx-wrap:not(#_):not(#__) .fx-spark {
+  position: absolute; display: block; opacity: 0; background: var(--fx-c, #fff);
+  clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+  filter: drop-shadow(0 0 2px var(--fx-c, #fff));
+}
+
+/* ---------- sprite sheet: one strip of frames played with steps() ---------- */
+@keyframes fx-sprite { from { background-position: 0 0; } to { background-position: var(--fx-sp-end, 0) 0; } }
+.fx-wrap:not(#_):not(#__) .fx-sprite { z-index: 4; display: block; background-repeat: no-repeat; background-position: 0 0; }
+.fx-wrap:not(#_):not(#__) .fx-pos-top-start { top: 0; inset-inline-start: 0; }
+.fx-wrap:not(#_):not(#__) .fx-pos-top-end { top: 0; inset-inline-start: 100%; }
+.fx-wrap:not(#_):not(#__) .fx-pos-bottom-start { top: 100%; inset-inline-start: 0; }
+.fx-wrap:not(#_):not(#__) .fx-pos-bottom-end { top: 100%; inset-inline-start: 100%; }
+.fx-wrap:not(#_):not(#__) .fx-pos-center { top: 50%; inset-inline-start: 50%; }
+
+/* ---------- glow pulse: a coloured shadow from the picture's own shape ---------- */
+@keyframes fx-glow { 0%, 100% { filter: drop-shadow(0 0 calc(var(--fx-glow-size) * .35) var(--fx-glow)); } 50% { filter: drop-shadow(0 0 var(--fx-glow-size) var(--fx-glow)); } }
+.fx-wrap.fx-glow:not(#_):not(#__) > img, .fx-wrap.fx-glow:not(#_):not(#__) > picture { animation: fx-glow var(--fx-glow-speed, 4s) ease-in-out infinite; }
+
+/* ---------- hover tilt ---------- */
+.fx-wrap.fx-tilt:not(#_):not(#__) { transform: perspective(600px) rotateX(var(--fx-rx, 0deg)) rotateY(var(--fx-ry, 0deg)); transition: transform .25s ease-out; transform-style: preserve-3d; }
+
+/* ---------- off screen: hold every animation where it is ---------- */
+.fx-wrap.fx-paused:not(#_):not(#__) *, .fx-wrap.fx-paused:not(#_):not(#__) { animation-play-state: paused !important; }
+
+/* ---------- reduced motion: no movement; sparkles stay as still stars, the glow as a still shadow ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .fx-wrap:not(#_):not(#__) .fx-shimmer, .fx-wrap:not(#_):not(#__) .fx-sprite { display: none !important; }
+  .fx-wrap:not(#_):not(#__) .fx-spark { animation: none !important; opacity: .75; transform: scale(.8) rotate(45deg); }
+  .fx-wrap.fx-glow:not(#_):not(#__) > img, .fx-wrap.fx-glow:not(#_):not(#__) > picture { animation: none !important; filter: drop-shadow(0 0 calc(var(--fx-glow-size) * .6) var(--fx-glow)); }
+  .fx-wrap.fx-tilt:not(#_):not(#__) { transform: none !important; transition: none !important; }
+}
+@media print { .fx-wrap .fx-layer, .fx-wrap .fx-sprite { display: none !important; } }

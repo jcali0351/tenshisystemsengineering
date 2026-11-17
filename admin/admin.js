@@ -154,7 +154,7 @@
     Object.keys(pend).forEach(function (l) { Object.keys(pend[l]).forEach(function (k) { s.add(k); }); });
     return s;
   }
-  function pendingCount() { return changedKeys().size + imgEdits.size + (sloganDirty() ? 1 : 0) + (parallaxDirty() ? 1 : 0) + (buttonsDirty() ? 1 : 0) + (customDirty() ? 1 : 0) + (shareDirty() ? 1 : 0); }
+  function pendingCount() { return changedKeys().size + imgEdits.size + (sloganDirty() ? 1 : 0) + (parallaxDirty() ? 1 : 0) + (buttonsDirty() ? 1 : 0) + (customDirty() ? 1 : 0) + (shareDirty() ? 1 : 0) + (fxDirty() ? 1 : 0); }
   function updateBar() {
     var n = pendingCount(), p = $("#ed-pending");
     p.hidden = !n; p.textContent = n + (n === 1 ? " unsaved change" : " unsaved changes");
@@ -242,6 +242,7 @@
     if (name === "parallax") loadParallax();
     if (name === "buttons") loadButtons();
     if (name === "share") loadShare();
+    if (name === "fx") loadFx();
     if (name === "css") loadCustom();
   }
 
@@ -568,6 +569,7 @@
       if (bt.cur) bt.saved = JSON.parse(JSON.stringify(bt.cur));
       if (cc.cur != null) { cc.saved = cc.cur; ccCheck(); }
       if (sh.cur) sh.saved = JSON.parse(JSON.stringify(sh.cur));
+      if (fx && fx.cur) fx.saved = JSON.parse(JSON.stringify(fx.cur));
       imgEdits.forEach(function (r, p) { if (r.newPath !== p) { tree.delete(p); } tree.set(r.newPath, { sha: "saved" + Date.now(), size: r.blob.size }); });
       imgEdits.clear();
       updateBar(); renderImages(); renderText(); if (slg.cur && !$("[data-panel=slogan]").hidden) renderSlogan(); if (px.cur && !$("[data-panel=parallax]").hidden) renderParallax();
@@ -629,6 +631,11 @@
         changes.push({ path: "data/share.json", text: shareJSON() });
         parts.push("share buttons");
       }
+      if (fxDirty()) {
+        changes.push({ path: "data/fx.json", text: fxJSON() });
+        changes.push({ path: "fx-data.js", text: FX.dataJs(fx.cur) });
+        parts.push("image effects");
+      }
       return { changes: changes, summary: parts.join(", ") || "edit" };
     });
   }
@@ -642,6 +649,7 @@
     if (bt.saved) { bt.cur = JSON.parse(JSON.stringify(bt.saved)); btRender(); }
     if (cc.saved != null) { cc.cur = cc.saved; $("#cc-text").value = cc.cur; ccGutter(); ccCheck(); ccLive(); }
     if (sh.saved) { sh.cur = JSON.parse(JSON.stringify(sh.saved)); shInitOrder(sh.cur); renderShare(); }
+    if (fx && fx.saved) { fx.cur = JSON.parse(JSON.stringify(fx.saved)); if (fx.sel >= fx.cur.rules.length) fx.sel = fx.cur.rules.length - 1; renderFx(); }
     imgEdits.forEach(function (r) { if (r.url) URL.revokeObjectURL(r.url); }); imgEdits.clear();
     $("#ed-drawer").hidden = true;
     updateBar(); renderText(); renderImages(); loadFrame();
@@ -2068,5 +2076,217 @@
     sh.order.splice(to, 0, sh.dragId);
     shSyncNetworks(); updateBar(); renderShare();
   });
+
+  /* ================================================================== IMAGE EFFECTS (shimmer, sparkles, sprites on any picture)
+     Settings live in data/fx.json. fx.js (loaded on every page and here) holds the defaults, the checks (clean) and
+     dataJs(), which writes fx-data.js, the small file pages read. On Save both files are committed, like data/buttons.json
+     and buttons.css; tools/build-pages.mjs writes the same fx-data.js again when the site rebuilds. */
+  var FX = window.TenshiFX;
+  var fx = { saved: null, cur: null, sel: -1, ready: false, loading: false, ctl: null };
+  var FX_PICKS = [
+    ["Header logo", ".brand-logo"], ["Homepage logo", ".hero-logo"], ["Footer logo", ".footer-logo"],
+    ["Team photos", ".td-photo"], ["Project logos", ".prj-card-logo, .prj-logo, .prj-hero-logos img"],
+    ["Service pictures", ".service-pic"], ["Story thumbnails", ".fw-thumb"]
+  ];
+  var FX_LABELS = { shimmer: "Shimmer", sparkles: "Sparkles", sprite: "Sprite", glow: "Glow pulse", tilt: "Hover tilt" };
+  var FX_NOTES = {
+    shimmer: "A diagonal band of light that sweeps across the picture.",
+    sparkles: "Small four-point stars that twinkle on or around the picture.",
+    sprite: "An animated sprite sheet (a strip of frames side by side) played over the picture.",
+    glow: "A soft coloured glow from the picture's own shape that slowly breathes.",
+    tilt: "The picture tilts toward the pointer on computers with a mouse."
+  };
+  var FX_SPRITES = [["img/fx/glint.svg", "Glint (white star, 8 frames)"], ["img/fx/starburst.svg", "Star-burst (red and white, 8 frames)"]];
+  /* [key, label, type, unit or options] — number limits come from FX.RANGES */
+  var FX_FIELDS = {
+    shimmer: [["color", "Colour", "color"], ["opacity", "Strength", "range", "%"], ["angle", "Angle", "range", "°"], ["width", "Band width (share of the picture)", "range", "pct"],
+      ["speed", "Sweep time", "range", "s"], ["delay", "Pause between sweeps (or before it, for Once)", "range", "s"],
+      ["mode", "When", "select", [["loop", "Loop"], ["hover", "On hover"], ["scroll", "Once, when scrolled into view"]]],
+      ["clip", "Only on the picture's own shape (skips see-through areas)", "check"]],
+    sparkles: [["colors", "Colours", "colors"], ["count", "How many", "range", ""], ["sizeMin", "Smallest", "range", "px"], ["sizeMax", "Largest", "range", "px"],
+      ["speed", "Twinkle time", "range", "s"], ["density", "Lit at once", "range", "%"],
+      ["spread", "Where", "select", [["edge", "Around the edge"], ["inside", "Over the picture"]]], ["reach", "How far outside the edge", "range", "px"]],
+    sprite: [["url", "Sprite sheet", "sprite"], ["frames", "Frames", "range", ""], ["frameWidth", "Frame width", "range", "px"], ["frameHeight", "Frame height", "range", "px"],
+      ["fps", "Frames per second", "range", ""], ["scale", "Size", "range", "×"], ["loop", "Keep playing", "check"], ["gap", "Pause between plays", "range", "s"],
+      ["position", "Position", "select", [["top-start", "Top corner, start side"], ["top-end", "Top corner, end side"], ["bottom-start", "Bottom corner, start side"], ["bottom-end", "Bottom corner, end side"], ["center", "Centre"]]],
+      ["blend", "Blend", "select", FX.BLENDS.map(function (b) { return [b, b]; })]],
+    glow: [["color", "Colour", "color"], ["opacity", "Strength", "range", "%"], ["size", "Size", "range", "px"], ["speed", "Breath time", "range", "s"]],
+    tilt: [["max", "Most tilt", "range", "°"]]
+  };
+  function fxDirty() { return !!(fx && fx.cur && fx.saved && JSON.stringify(FX.clean(fx.cur)) !== JSON.stringify(FX.clean(fx.saved))); }
+  function fxJSON() { return JSON.stringify(FX.clean(fx.cur), null, 2) + "\n"; }
+  function fxRule() { return fx.cur && fx.cur.rules[fx.sel]; }
+  function fxFmt(unit, v) { return unit === "%" ? Math.round(v * 100) + "%" : unit === "pct" ? v + "%" : v + (unit ? (unit === "×" ? "×" : " " + unit) : ""); }
+  function loadFx() {
+    if (fx.ready) { renderFx(); return; }
+    if (fx.loading) return;
+    fx.loading = true;
+    (tree.has("data/fx.json") ? readText("data/fx.json").then(JSON.parse).catch(function () { return {}; }) : Promise.resolve({})).then(function (d) {
+      fx.saved = FX.clean(d); fx.cur = JSON.parse(JSON.stringify(fx.saved));
+      fx.sel = fx.cur.rules.length ? 0 : -1;
+      fx.ready = true; renderFx();
+    }).catch(function (e) {
+      $("#fx-msg").className = "ed-msg err";
+      $("#fx-msg").textContent = "Couldn't load the image effect settings: " + e.message;
+    }).then(function () { fx.loading = false; });
+  }
+  function fxSummary(r) {
+    var on = FX.EFFECTS.filter(function (e) { return r[e].on; }).map(function (e) { return FX_LABELS[e]; });
+    return on.length ? on.join(", ") : "No effect switched on";
+  }
+  function renderFx() {
+    if (!fx.cur) return;
+    $("#fx-enabled").checked = fx.cur.enabled !== false;
+    var rules = fx.cur.rules;
+    $("#fx-rules").innerHTML = rules.length ? rules.map(function (r, i) {
+      return '<li class="fx-rule' + (i === fx.sel ? " is-sel" : "") + (r.enabled ? "" : " is-off") + '" data-fx-i="' + i + '">' +
+        '<label class="fx-rule-on" title="Rule on or off"><input type="checkbox" data-fx-on' + (r.enabled ? " checked" : "") + ' aria-label="Rule on"></label>' +
+        '<button type="button" class="fx-rule-pick" data-fx-pick><b>' + esc(r.name || r.selector || "New rule") + "</b>" +
+        '<span class="fx-rule-meta"><code>' + esc(r.selector || "no selector yet") + "</code> · " + esc(fxSummary(r)) + "</span></button>" +
+        '<button type="button" class="ed-btn ed-btn--ghost ed-btn--small" data-fx-del>Remove</button></li>';
+    }).join("") : '<li class="ed-tip">No rules yet. Press <b>Add rule</b> to start.</li>';
+    $("#fx-msg").className = "ed-msg";
+    var liveN = rules.filter(function (r) { return r.enabled && r.selector && FX.EFFECTS.some(function (e) { return r[e].on; }); }).length;
+    $("#fx-msg").textContent = fx.cur.enabled === false ? "Image effects are off across the site." : liveN + " rule" + (liveN === 1 ? "" : "s") + " active on the site.";
+    renderFxEditor();
+  }
+  function fxField(e, f, val) {
+    var key = f[0], label = f[1], type = f[2], id = "fx-f-" + e + "-" + key, attrs = ' id="' + id + '" data-fx-e="' + e + '" data-fx-k="' + key + '"';
+    if (type === "range") {
+      var r = FX.RANGES[e][key];
+      return '<label class="sl-field sl-range"><span>' + esc(label) + '</span><input type="range"' + attrs + ' min="' + r[0] + '" max="' + r[1] + '" step="' + r[2] + '" value="' + val + '"><output>' + esc(fxFmt(f[3], val)) + "</output></label>";
+    }
+    if (type === "color") return '<label class="sl-field sl-color"><span>' + esc(label) + '</span><input type="color"' + attrs + ' value="' + esc(val) + '"><output>' + esc(val) + "</output></label>";
+    if (type === "select") return '<label class="sl-field"><span>' + esc(label) + '</span><select' + attrs + ">" + f[3].map(function (o) {
+      return '<option value="' + esc(o[0]) + '"' + (o[0] === val ? " selected" : "") + ">" + esc(o[1]) + "</option>"; }).join("") + "</select></label>";
+    if (type === "check") return '<label class="ed-check sl-field"><input type="checkbox"' + attrs + (val ? " checked" : "") + "> " + esc(label) + "</label>";
+    if (type === "colors") {
+      var list = String(val).split(/\s*,\s*/); while (list.length < 3) list.push(list[list.length - 1] || "#ffffff");
+      return '<div class="sl-field fx-colors"><span>' + esc(label) + "</span><div>" + list.slice(0, 3).map(function (c, i) {
+        return '<input type="color" data-fx-e="' + e + '" data-fx-k="colors" data-fx-n="' + i + '" value="' + esc(c) + '" aria-label="Colour ' + (i + 1) + '">'; }).join("") + "</div></div>";
+    }
+    if (type === "sprite") {
+      var known = FX_SPRITES.some(function (s) { return s[0] === val; });
+      return '<label class="sl-field fx-sprite-pick"><span>' + esc(label) + '</span><select data-fx-e="' + e + '" data-fx-sprite>' +
+        FX_SPRITES.map(function (s) { return '<option value="' + esc(s[0]) + '"' + (s[0] === val ? " selected" : "") + ">" + esc(s[1]) + "</option>"; }).join("") +
+        '<option value=""' + (known ? "" : " selected") + '>My own image…</option></select>' +
+        '<input type="text"' + attrs + ' value="' + esc(val) + '" spellcheck="false" placeholder="img/fx/my-sprite.png"' + (known ? " hidden" : "") + '>' +
+        '<span class="sl-note">A strip of frames side by side, from the site\'s main folder. Set the frame count and size to match.</span></label>';
+    }
+    return "";
+  }
+  function renderFxEditor() {
+    var r = fxRule();
+    $("#fx-editor").hidden = !r;
+    if (!r) { fxPreview(); return; }
+    $("#fx-name").value = r.name;
+    $("#fx-selector").value = r.selector;
+    fxCheckSelector();
+    $("#fx-picks").innerHTML = '<span class="fx-picks-label">Quick picks:</span>' + FX_PICKS.map(function (p) {
+      return '<button type="button" class="ed-btn ed-btn--ghost ed-btn--small" data-fx-sel="' + esc(p[1]) + '" title="' + esc(p[1]) + '">' + esc(p[0]) + "</button>"; }).join("");
+    $("#fx-effects").innerHTML = FX.EFFECTS.map(function (e) {
+      var s = r[e];
+      return '<fieldset class="fx-effect' + (s.on ? " is-on" : "") + '" data-fx-effect="' + e + '"><legend><label class="ed-check"><input type="checkbox" data-fx-e="' + e + '" data-fx-k="on"' + (s.on ? " checked" : "") + "> " + esc(FX_LABELS[e]) + "</label></legend>" +
+        '<p class="ed-tip">' + esc(FX_NOTES[e]) + "</p>" +
+        '<div class="sl-look fx-fields">' + FX_FIELDS[e].map(function (f) { return fxField(e, f, s[f[0]]); }).join("") + "</div></fieldset>";
+    }).join("");
+    fxPreview();
+  }
+  function fxCheckSelector() {
+    var r = fxRule(), note = $("#fx-sel-note"); if (!r) return;
+    var bad = false;
+    if (r.selector) { try { document.createDocumentFragment().querySelector(r.selector); } catch (err) { bad = true; } }
+    note.className = "ed-tip fx-sel-note" + (bad ? " err" : "");
+    note.textContent = !r.selector ? "Pick the pictures this rule applies to." : bad ? "That isn't a valid CSS selector, so the rule won't match anything." :
+      "A selector that matches a box (not a picture) applies to the pictures inside it.";
+  }
+  var fxTimer = 0;
+  function fxPreview() {
+    cancelAnimationFrame(fxTimer);
+    fxTimer = requestAnimationFrame(function () {
+      var img = $("#fx-sample-img"), r = fxRule();
+      if (img.__fxCtl) img.__fxCtl.destroy();
+      fx.ctl = r && FX.apply ? FX.apply(img, r) : null;
+      var calmNow = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      $("#fx-preview-note").textContent = calmNow ? "This computer asks for reduced motion, so the preview (like the site) stays still." :
+        !r || !FX.EFFECTS.some(function (e) { return r[e].on; }) ? "Switch on an effect to see it here." : "Live preview of this rule. Hover the picture to try “On hover” effects.";
+    });
+  }
+  function fxSet(e, k, v) {
+    var r = fxRule(); if (!r) return;
+    r[e][k] = v;
+    r[e] = FX.cleanEffect(e, r[e]);
+    updateBar(); fxPreview();
+  }
+  $("#fx-enabled").addEventListener("change", function () { fx.cur.enabled = this.checked; updateBar(); renderFx(); });
+  $("#fx-add").addEventListener("click", function () {
+    if (!fx.cur) return;
+    var n = fx.cur.rules.length + 1, ids = fx.cur.rules.map(function (r) { return r.id; });
+    while (ids.indexOf("rule-" + n) >= 0) n++;
+    var r = FX.cleanRule({ id: "rule-" + n, name: "", selector: "", shimmer: { on: true } }, 0);
+    fx.cur.rules.push(r); fx.sel = fx.cur.rules.length - 1;
+    updateBar(); renderFx();
+    $("#fx-selector").focus();
+  });
+  $("#fx-rules").addEventListener("click", function (e) {
+    var li = e.target.closest("[data-fx-i]"); if (!li) return;
+    var i = parseInt(li.dataset.fxI, 10);
+    if (e.target.closest("[data-fx-del]")) {
+      var r = fx.cur.rules[i];
+      if (!window.confirm("Remove the rule “" + (r.name || r.selector || "New rule") + "”?")) return;
+      fx.cur.rules.splice(i, 1);
+      if (fx.sel >= fx.cur.rules.length) fx.sel = fx.cur.rules.length - 1;
+      updateBar(); renderFx(); return;
+    }
+    if (e.target.closest("[data-fx-pick]")) { fx.sel = i; renderFx(); }
+  });
+  $("#fx-rules").addEventListener("change", function (e) {
+    if (!e.target.matches("[data-fx-on]")) return;
+    var li = e.target.closest("[data-fx-i]"); fx.cur.rules[parseInt(li.dataset.fxI, 10)].enabled = e.target.checked;
+    updateBar(); renderFx();
+  });
+  function fxRefreshRow() {
+    var r = fxRule(), li = $('#fx-rules [data-fx-i="' + fx.sel + '"]'); if (!r || !li) return;
+    li.querySelector("b").textContent = r.name || r.selector || "New rule";
+    li.querySelector(".fx-rule-meta").innerHTML = "<code>" + esc(r.selector || "no selector yet") + "</code> · " + esc(fxSummary(r));
+  }
+  $("#fx-name").addEventListener("input", function () { var r = fxRule(); if (!r) return; r.name = this.value.replace(/[<>]/g, "").slice(0, 80); updateBar(); fxRefreshRow(); });
+  $("#fx-selector").addEventListener("input", function () { var r = fxRule(); if (!r) return; r.selector = this.value.replace(/[<>{}]/g, "").slice(0, 300); updateBar(); fxCheckSelector(); fxRefreshRow(); });
+  $("#fx-picks").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-fx-sel]"), r = fxRule(); if (!b || !r) return;
+    r.selector = b.dataset.fxSel;
+    if (!r.name) r.name = b.textContent;
+    $("#fx-selector").value = r.selector; $("#fx-name").value = r.name;
+    updateBar(); fxCheckSelector(); fxRefreshRow();
+  });
+  $("#fx-effects").addEventListener("input", function (e) {
+    var t = e.target, eff = t.dataset.fxE, key = t.dataset.fxK; if (!eff) return;
+    if (t.hasAttribute("data-fx-sprite")) return;
+    if (key === "colors") {
+      var list = $$('[data-fx-e="' + eff + '"][data-fx-k="colors"]').map(function (c) { return c.value; });
+      fxSet(eff, "colors", list.join(", ")); fxRefreshRow(); return;
+    }
+    var v = t.type === "checkbox" ? t.checked : t.type === "range" ? parseFloat(t.value) : t.value;
+    fxSet(eff, key, v);
+    var out = t.parentElement.querySelector("output"), f = FX_FIELDS[eff] && FX_FIELDS[eff].filter(function (x) { return x[0] === key; })[0];
+    if (out && f) out.textContent = f[2] === "range" ? fxFmt(f[3], fxRule()[eff][key]) : fxRule()[eff][key];
+    if (key === "on") { t.closest(".fx-effect").classList.toggle("is-on", t.checked); fxRefreshRow(); }
+  });
+  $("#fx-effects").addEventListener("change", function (e) {
+    var t = e.target;
+    if (t.hasAttribute("data-fx-sprite")) {
+      var txt = t.parentElement.querySelector("input[type=text]");
+      txt.hidden = !!t.value;
+      if (t.value) { txt.value = t.value; fxSet("sprite", "url", t.value); } else txt.focus();
+    }
+  });
+  $("#fx-sample").addEventListener("change", function () {
+    var img = $("#fx-sample-img");
+    if (img.__fxCtl) img.__fxCtl.destroy();
+    img.onload = function () { img.onload = null; fxPreview(); };
+    img.src = this.value;
+  });
+  $("#fx-bg").addEventListener("change", function () { $("#fx-stage").dataset.bg = this.value; });
+  $("#fx-replay").addEventListener("click", fxPreview);
 
 })();
