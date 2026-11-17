@@ -3,7 +3,7 @@
     {
       "id": "px1",
       "enabled": true,
-      "image": "img/photos/kobe.jpg",
+      "image": "img/parallax/px1.jpg",
       "altKey": "px1Alt",
       "titleKey": "px1Title",
       "textKey": "px1Text",
@@ -16,7 +16,7 @@
     {
       "id": "px2",
       "enabled": true,
-      "image": "img/photos/osaka.jpg",
+      "image": "img/parallax/px2.jpg",
       "altKey": "px2Alt",
       "titleKey": "px2Title",
       "textKey": "px2Text",
