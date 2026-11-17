@@ -1,11 +1,11 @@
-// Stamps every page's links to tailwind.css, styles.css, search.css, translations.js, app.js, search.js and rain.js with a short hash of each file's
+// Stamps every page's links to tailwind.css, styles.css, search.css, nav.css, translations.js, app.js, nav.js, search.js and rain.js with a short hash of each file's
 // contents (e.g. styles.css?v=1a2b3c4d), so visitors' browsers fetch the new copy as soon as a file changes.
 // Covers every page in the main folder and the pages in services/, projects/ and blog/ (whose links start with ../).
 // Run from the repository folder after changing any of those files: node tools/stamp-assets.mjs
 import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
 import { createHash } from "node:crypto";
 
-const files = ["tailwind.css", "styles.css", "design.css", "chat.css", "site-theme.css", "slogan.css", "hero-cta.css", "search.css", "buttons.css", "custom.css", "share.css", "vendor/shareon/shareon.min.css", "vendor/shareon/shareon.iife.js", "admin/admin.css", "admin/tr.js", "admin/slogan-style.js", "admin/buttons-style.js", "admin/share-networks.js", "admin/theme.js", "admin/admin.js", "translations.js", "app.js", "search.js", "rain.js", "chat.js", "design.js"].filter((f) => existsSync(f));
+const files = ["tailwind.css", "styles.css", "design.css", "chat.css", "site-theme.css", "slogan.css", "hero-cta.css", "search.css", "nav.css", "buttons.css", "custom.css", "share.css", "vendor/shareon/shareon.min.css", "vendor/shareon/shareon.iife.js", "admin/admin.css", "admin/tr.js", "admin/slogan-style.js", "admin/buttons-style.js", "admin/share-networks.js", "admin/theme.js", "admin/admin.js", "translations.js", "app.js", "nav.js", "search.js", "rain.js", "chat.js", "design.js"].filter((f) => existsSync(f));
 const pages = [...readdirSync(".").filter((f) => f.endsWith(".html")), ...["services", "projects", "blog"].flatMap((d) => existsSync(d) ? readdirSync(d).filter((f) => f.endsWith(".html")).map((f) => d + "/" + f) : [])];
 // The header search's index (data/search/<lang>.json, written by build-pages.mjs): one version for all languages,
 // stamped into each page's data-search-v, which search.js adds to the index's address.

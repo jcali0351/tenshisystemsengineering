@@ -543,6 +543,7 @@ function frame({ prefix, current, titleKey, descKey, title, description, bodyCla
   <link rel="stylesheet" href="${prefix}chat.css">
   <link rel="stylesheet" href="${prefix}site-theme.css">
   <link rel="stylesheet" href="${prefix}search.css">
+  <link rel="stylesheet" href="${prefix}nav.css">
 ${extraHead}</head>
 <body class="${bodyClass}"${bodyAttrs}>
   <!-- Written by tools/build-pages.mjs: edit translations.js and the script, not this file. -->
@@ -558,6 +559,7 @@ ${chrome(FOOTER, prefix, current).replace("    </div>\n  </footer>", photoCredit
 
   <script src="${prefix}translations.js"></script>
   <script src="${prefix}app.js"></script>
+  <script src="${prefix}nav.js"></script>
   <script src="${prefix}search.js"></script>
   <script src="${prefix}design.js"></script>
   <script src="${prefix}chat.js"></script>

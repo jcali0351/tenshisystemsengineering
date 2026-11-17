@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="../chat.css?v=8097383f">
   <link rel="stylesheet" href="../site-theme.css?v=e9955052">
   <link rel="stylesheet" href="../search.css?v=e44023c1">
+  <link rel="stylesheet" href="../nav.css?v=c1c50704">
   <link rel="stylesheet" href="../vendor/shareon/shareon.min.css?v=e14c16cf">
   <link rel="stylesheet" href="../share.css?v=e677cf5e">
   <link rel="stylesheet" href="../buttons.css?v=3885ce6d">
@@ -43,29 +44,30 @@
   height="47"
 >
       </a>
-      <nav class="main-nav" aria-label="Main menu" data-i18n-attr="aria-label:navLabel">
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span class="nav-toggle-icon" aria-hidden="true"><span></span></span><span class="nav-toggle-text" data-i18n="navMenu">Menu</span></button>
+      <nav class="site-nav" id="site-nav" aria-label="Main menu" data-i18n-attr="aria-label:navLabel">
         <ul>
           <li><a href="../index.html" data-nav="home" data-i18n="navHome">Home</a></li>
-          <li class="has-sub"><a href="../about.html" data-nav="about" data-i18n="navAbout">About</a>
-            <ul class="sub-nav">
+          <li class="has-sub"><a href="../about.html" id="nav-about" data-nav="about" data-i18n="navAbout">About</a><button class="sub-toggle" type="button" aria-expanded="false" aria-controls="sub-about" aria-labelledby="nav-about"></button>
+            <ul class="sub" id="sub-about">
               <li><a href="../team.html" data-nav="team" data-i18n="navTeam">Team</a></li>
               <li><a href="../technology.html" data-nav="technology" data-i18n="navTech">Technology</a></li>
             </ul>
           </li>
           <li><a href="../services.html" data-nav="services" data-i18n="navServices">Services</a></li>
-          <li class="has-sub"><a href="../projects.html" data-nav="projects" data-i18n="navProjects">Projects</a>
-            <ul class="sub-nav">
+          <li class="has-sub"><a href="../projects.html" id="nav-projects" data-nav="projects" data-i18n="navProjects">Projects</a><button class="sub-toggle" type="button" aria-expanded="false" aria-controls="sub-projects" aria-labelledby="nav-projects"></button>
+            <ul class="sub" id="sub-projects">
               <li><a href="../projects/storycaster.html" data-nav="p-storycaster">StoryCaster</a></li>
               <li><a href="../projects/master-baiter-pro.html" data-nav="p-master-baiter-pro">Master Baiter Pro</a></li>
             </ul>
           </li>
-          <li class="has-sub"><a href="../news.html" aria-current="page" data-nav="news" data-i18n="navNews">News</a>
-            <ul class="sub-nav">
+          <li class="has-sub"><a href="../news.html" id="nav-news" aria-current="page" data-nav="news" data-i18n="navNews">News</a><button class="sub-toggle" type="button" aria-expanded="false" aria-controls="sub-news" aria-labelledby="nav-news"></button>
+            <ul class="sub" id="sub-news">
               <li><a href="../blog.html" aria-current="page" data-nav="blog" data-i18n="navBlog">Blog</a></li>
             </ul>
           </li>
-          <li class="has-sub"><a href="../contact.html" data-nav="contact" data-i18n="navContact">Contact</a>
-            <ul class="sub-nav">
+          <li class="has-sub"><a href="../contact.html" id="nav-contact" data-nav="contact" data-i18n="navContact">Contact</a><button class="sub-toggle" type="button" aria-expanded="false" aria-controls="sub-contact" aria-labelledby="nav-contact"></button>
+            <ul class="sub" id="sub-contact">
               <li><a href="../portal.html" data-nav="portal" data-i18n="navPortal">Portal</a></li>
             </ul>
           </li>
@@ -339,8 +341,9 @@
     </div>
   </footer>
 
-  <script src="../translations.js?v=e46ac8a9"></script>
+  <script src="../translations.js?v=89766092"></script>
   <script src="../app.js?v=43b4bb8b"></script>
+  <script src="../nav.js?v=70de5473"></script>
   <script src="../search.js?v=6e09d35a"></script>
   <script src="../design.js?v=e4ade4cb"></script>
   <script src="../chat.js?v=e6aee4be"></script>
