@@ -66,7 +66,7 @@
     ".ab-focus", ".ab-mv-card", ".svc-detail", ".prj-card", ".prj-ed", ".svc-step", ".contact-pitch", ".svc-for", ".team-card", ".name-card",
     ".pat-card", ".pat-search", ".news-item", ".blog-card", ".portal-card", ".fw", ".contact-form", ".minimap", ".faq details", ".svc-other", ".prj-shot-fig", ".tk-item-card"].join(",");
   var HEADS = "h1, h2";
-  var PICS = "figure, picture, img, svg.page-art, .hero-logo";
+  var PICS = "figure, picture, .logo-dazzle--hero, img, svg.page-art";   // the hero logo is revealed with its wrapper, so its glow comes in with it
   var TEXT = "p, li, blockquote, h3, h4, h5, dl, table, .btn, .eyebrow, .crumbs, .news-tabs, .tech-filter, label";
   // Parts that animate on their own, sit in the fixed header, or must stay put
   var SKIP = ".site-header, .ticker, dialog, .svc-set, .hero-slides, .band, .chev-flight, .lang-menu, .sr-only, .skip-link, [data-still], .svc-rain";
@@ -169,7 +169,8 @@
   // Every picture starts black and white and turns to full color as it comes into view
   var grays = [];
   if (on("--anim-color")) {
-    grays = all("img").filter(function (img) { return !img.closest(".site-header, .ticker, dialog, [data-still-color]"); });
+    // The hero logo stays a plain picture (its glow is a separate layer); the page-wide opening still grays it
+    grays = all("img").filter(function (img) { return !img.closest(".site-header, .ticker, dialog, .logo-dazzle--hero, [data-still-color]"); });
     var gsMs = (parseFloat(css.getPropertyValue("--gs-dur")) || 1.8) * 1000;
     var gio = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {

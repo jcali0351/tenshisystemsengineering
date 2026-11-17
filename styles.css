@@ -173,7 +173,6 @@ img, svg { display: block; }
 @keyframes rise { from { opacity: 0; transform: translateY(20.7px); } to { opacity: 1; transform: none; } }
 .hero-logo {
   width: clamp(110.4px, 23vw, 142.6px); height: auto; margin: 0 auto 25.3px;
-  filter: drop-shadow(0 9.2px 16.1px rgba(110, 110, 110, .45));
 }
 .hero-card h1 {
   font-size: clamp(1.75rem, 5.06vw, 2.6rem); font-weight: 800; letter-spacing: -.015em;
@@ -1536,6 +1535,18 @@ html[dir="rtl"] .prj-btn-view .prj-ico { transform: scaleX(-1); }
 .logo-dazzle { position: relative; display: inline-flex; flex: none; }
 .logo-dazzle--hero { display: flex; width: fit-content; margin: 0 auto 25.3px; }
 .logo-dazzle--hero .hero-logo { margin: 0; }
+/* Hero logo glow: a soft medium-gray shadow cast by a rounded layer cut to the logo tile, sitting behind the picture.
+   It used to be a shadow effect applied to the picture itself, which the opening animations kept redrawing
+   (the black-and-white picture effect swapped it out, the scaled reveal drew it at low resolution), so it loaded
+   blocky and popped in late. A plain box-shadow stays smooth from the first frame. */
+.logo-dazzle--hero { isolation: isolate; }
+.logo-dazzle--hero::before {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  inset: 8.29% 4.89% 7.37% 4%; border-radius: 7.8% / 8.74%;   /* the opaque tile inside tenshi-logo.png (225 x 217) */
+  box-shadow: 0 9.2px 30px 2px rgba(110, 110, 110, .38);   /* measured to match the old 0 9.2px 16.1px rgba(110,110,110,.45) picture shadow */
+}
+/* The logo and its glow arrive together (design.js reveals the wrapper): fade and rise only, no scaling */
+html.anim-on .logo-dazzle--hero.a-img:not(.is-in) { transform: translate3d(0, var(--dy), 0); }
 
 /* Hero card: half-transparent white over the skyline, frosted so the text stays readable */
 .hero-card { background: rgba(255, 255, 255, .5); -webkit-backdrop-filter: blur(10px) saturate(1.2); backdrop-filter: blur(10px) saturate(1.2); border: 1px solid rgba(255, 255, 255, .6); }
