@@ -56,9 +56,7 @@ main :is(.news-tabs):not(#_){margin-bottom:clamp(23.66px, 3.09vw, 40.8px)!import
 :is(.service-card,.offer-card,.benefit-card,.news-item,.blog-card,.value-card,.team-card,.prj-card,.svc-step,.ab-step) h3:not(#_){font-size:clamp(16px, 2.08vw, 27.5px)!important}
 :is(html:lang(ja),html:lang(zh),html:lang(ko),html[dir=rtl]) :is(h1,h2,h3,h4,h5,h6):not(#_){letter-spacing:0!important}
 
-override.
 
-Paste this at the very bottom:
 
 /* ================================================
    TENSHI SYSTEMS - ANIMATED PEARL SILVER HEADER
