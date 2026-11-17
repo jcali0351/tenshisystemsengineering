@@ -2276,21 +2276,58 @@ section.band :is(.band-unit, .band-stage, .band-text) { color: var(--ink) !impor
 .blog-back { margin-top: 2rem; }
 .blog-back a { font-weight: 700; }
 
-/* ---------- Portal page: two ways in ---------- */
-.portal-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; max-width: 980px; margin: 0 auto; }
-.portal-card { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: clamp(28px, 4vw, 44px); border-radius: 22px; background: var(--pale); }
-.portal-card h3 { font-size: clamp(1.5rem, 2.6vw, 2rem); font-weight: 800; }
+/* ---------- Portal page: two ways in ----------
+   Two equal cards (client / admin). Shared padding, 4-row grid (icon, heading,
+   text, button) so every row lines up. Subgrid keeps that alignment even when
+   one language wraps more; without it, cards still share height and the
+   buttons stay on the bottom row. Theme spacing is zeroed inside the cards. */
+.portal-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; max-width: 980px; margin: 0 auto; align-items: stretch; }
+.portal-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto 1fr auto;
+  align-items: stretch;
+  justify-items: stretch;
+  gap: 12px;
+  padding: clamp(28px, 4vw, 44px);
+  border-radius: 22px;
+  background: var(--pale);
+  box-sizing: border-box;
+  min-height: 0;
+}
+main .portal-card :is(.portal-card-head, h3, p, .btn):not(#_):not(#__) { margin-top: 0 !important; margin-bottom: 0 !important; }
+.portal-card h3 { font-size: clamp(1.5rem, 2.6vw, 2rem); font-weight: 800; width: 100%; }
 .portal-card p { margin: 0; line-height: 1.6; color: var(--text); }
-.portal-card .btn { margin-top: auto; }
-.portal-card p:last-of-type { margin-bottom: 14px; }
-.portal-icon { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 16px; background: #fff; color: var(--red); }
+.portal-card-head { display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; width: 100%; min-width: 0; }
+.portal-card-text { width: 100%; min-width: 0; }
+.portal-card .btn { width: 100%; box-sizing: border-box; min-height: 50.6px; align-self: stretch; }
+.portal-icon { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 16px; background: #fff; color: var(--red); justify-self: start; }
 .portal-icon svg { width: 30px; height: 30px; }
-.portal-state { font-size: .82rem; font-weight: 700; color: var(--muted); background: #fff; border-radius: 999px; padding: 4px 12px; }
+.portal-state { font-size: .82rem; font-weight: 700; color: var(--muted); background: #fff; border-radius: 999px; padding: 4px 12px; width: fit-content; }
+.portal-state:empty { display: none; }
 .portal-card--admin { background: var(--ink); }
 .portal-card--admin h3, .portal-card--admin p { color: #fff !important; }
 .portal-card--admin p { opacity: .85; }
 .portal-card--admin .portal-icon { background: rgba(255, 255, 255, .12); color: #fff; }
-@media (max-width: 720px) { .portal-grid { grid-template-columns: 1fr; } }
+.portal-card--admin .portal-state { background: rgba(255, 255, 255, .12); color: #fff; }
+@supports (grid-template-rows: subgrid) {
+  @media (min-width: 721px) {
+    main .portal-section .portal-grid:not(#_) {
+      grid-template-rows: auto auto 1fr auto;
+      column-gap: clamp(19.72px, 2.58vw, 34px) !important;
+      row-gap: 12px !important;
+    }
+    .portal-card { grid-template-rows: subgrid; grid-row: span 4; }
+  }
+}
+@media (max-width: 720px) {
+  main .portal-section .portal-grid:not(#_) {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    gap: clamp(19.72px, 2.58vw, 34px) !important;
+  }
+  .portal-card { grid-template-rows: auto auto 1fr auto; grid-row: auto; gap: 12px; }
+}
 
 /* Homepage slogan: vertically centred in the white space between the hero and the service cards
    (equal space above and below; the services section adds none of its own on top). */
