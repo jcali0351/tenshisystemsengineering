@@ -2547,3 +2547,9 @@ main .eyebrow + :is(h1, h2, h3):not(#_):not(#__) { margin-top: 30.5px !important
 .ab-mv-card:not(#_):not(#__) > .ab-icon { grid-column: 1 !important; margin: 0 !important; }
 .ab-mv-card:not(#_):not(#__) > h2 { grid-column: 2 !important; margin: 0 !important; }
 .ab-mv-card:not(#_):not(#__) > p { grid-column: 1 / -1 !important; margin-top: 14px !important; }
+
+/* About: value card icon sits on the same line as its heading */
+.value-card:not(#_):not(#__) { display: grid !important; grid-template-columns: auto minmax(0, 1fr) !important; column-gap: 14px !important; align-items: center !important; align-content: start !important; text-align: start !important; }
+.value-card:not(#_):not(#__) > .value-icon { grid-column: 1 !important; margin: 0 !important; width: 44px !important; height: 44px !important; }
+.value-card:not(#_):not(#__) > h3 { grid-column: 2 !important; margin: 0 !important; text-align: start !important; }
+.value-card:not(#_):not(#__) > p { grid-column: 1 / -1 !important; margin-top: 14px !important; text-align: start !important; }
