@@ -134,7 +134,8 @@ const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
       navRow.classList.toggle("has-more-end", rtl ? before : after);
     };
     const showCurrent = () => {
-      const cur = $(':scope > ul > li > a[aria-current="page"]', navRow);
+      // The deepest current item: on Team that's Team (shown after About in the phone row), not About
+      const cur = $$('a[aria-current="page"]', navRow).filter((a) => a.getClientRects().length).pop();
       if (cur && navRow.scrollWidth > navRow.clientWidth + 2) {
         const n = navRow.getBoundingClientRect(), c = cur.getBoundingClientRect();
         navRow.scrollLeft += (c.left + c.width / 2) - (n.left + n.width / 2);

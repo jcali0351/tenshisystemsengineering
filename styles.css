@@ -2355,15 +2355,32 @@ main section.band + section.services:not(#_):not(#__) { padding-top: 0 !importan
 /* ======================================================================
    Menu on its own row (phones, tablets, or a stacked header): always one straight line.
    If it is wider than the screen it scrolls sideways (no scrollbar), with soft fades on the side that has more,
-   and app.js (navRow) scrolls the current page's item into view. The Projects dropdown can't open inside a scrolling
-   row, so there the Projects link simply opens the Projects page, which lists every project.
+   and app.js (navRow) scrolls the current page's item into view. Dropdowns can't open inside a scrolling row, so there
+   each dropdown's pages are shown in the row right after their parent.
    ====================================================================== */
 @media (max-width: 860px) {
   .site-header.site-header .main-nav { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
   .site-header.site-header .main-nav > ul { flex-wrap: nowrap; justify-content: flex-start; gap: 0 2px; width: max-content; margin-inline: auto; }
   .site-header.site-header .main-nav > ul > li { flex: none; }
   .site-header.site-header .main-nav > ul > li > a { padding: 9px clamp(6px, 2vw, 10px); font-size: clamp(.82rem, 2.05vw, .98rem); }
-  .site-header.site-header .main-nav .sub-nav, .site-header.site-header .main-nav .has-sub > a::before { display: none; }
+  .site-header.site-header .main-nav .has-sub > a::before { display: none; }
+  /* Dropdown pages follow their parent in the row, smaller and lighter after a thin divider ("About | Team | Technology"),
+     so every page can be reached with a tap; no dropdown has to open inside the scrolling row. */
+  .site-header.site-header .main-nav .has-sub { display: flex; align-items: center; }
+  .site-header.site-header .main-nav .sub-nav {
+    position: static; display: flex; align-items: center; gap: 0; min-width: 0; margin: 0; padding: 0;
+    background: none; border: 0; border-radius: 0; box-shadow: none; opacity: 1; visibility: visible; transform: none; transition: none;
+  }
+  .site-header.site-header .main-nav .sub-nav::before { display: none; }
+  .site-header.site-header .main-nav .sub-nav li { display: flex; align-items: center; flex: none; margin: 0; }
+  .site-header.site-header .main-nav .sub-nav li::before { content: ""; flex: none; width: 1px; height: .95em; background: rgba(61, 66, 73, .22); }
+  .site-header.site-header .main-nav .sub-nav a {
+    padding: 9px clamp(5px, 1.6vw, 8px); border-radius: 0; font-size: clamp(.74rem, 1.85vw, .88rem); font-weight: 400;
+    color: var(--muted, #7a8088); background: none; outline-offset: -2px;
+  }
+  .site-header.site-header .main-nav .sub-nav a:hover { color: var(--ink); background: none; }
+  .site-header.site-header .main-nav .sub-nav a[aria-current="page"] { color: var(--ink); font-weight: 700; background: none; }
+  .site-header.site-header .main-nav .sub-nav a:focus-visible { outline: 2px solid var(--red); color: var(--ink); background: none; }
 }
 .site-header.is-stacked .main-nav { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
 .site-header.is-stacked .main-nav > ul { flex-wrap: nowrap; justify-content: flex-start; gap: 0 2px; width: max-content; margin-inline: auto; }
