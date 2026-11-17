@@ -2046,14 +2046,21 @@ section.band :is(.band-unit, .band-stage, .band-text) { color: var(--ink) !impor
 .blog-card.is-feature { grid-column: 1 / -1; display: grid; grid-template-columns: 1.1fr 1fr; background: linear-gradient(135deg, var(--red-dark), var(--red)); border-color: transparent; color: #fff; }
 .blog-card.is-feature .blog-fig img { height: 100%; aspect-ratio: auto; min-height: 300px; }
 .blog-card.is-feature .blog-body { padding: clamp(24px, 3.5vw, 40px); justify-content: center; }
-.blog-card.is-feature h3, .blog-card.is-feature .blog-meta, .blog-card.is-feature .blog-intro, .blog-card.is-feature .blog-more p, .blog-card.is-feature .blog-sources, .blog-card.is-feature .blog-sources a { color: #fff; }
+.blog-card.is-feature h3, .blog-card.is-feature h3 a, .blog-card.is-feature .blog-meta, .blog-card.is-feature .blog-intro, .blog-card.is-feature .blog-more p, .blog-card.is-feature .blog-read, .blog-card.is-feature .blog-sources, .blog-card.is-feature .blog-sources a { color: #fff; }
 .blog-card.is-feature h3 { font-size: clamp(1.4rem, 2.6vw, 2rem); }
 .blog-card.is-feature .blog-cat { background: rgba(255, 255, 255, .18); color: #fff; }
 .blog-card.is-feature summary { color: #fff; }
 .blog-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0; font-size: .85rem; color: var(--muted); }
 .blog-cat { padding: 3px 10px; border-radius: 999px; background: #fff4f6; color: var(--red); font-weight: 700; font-size: .78rem; letter-spacing: .02em; text-transform: uppercase; }
 .blog-card h3 { font-family: var(--font-heading); font-size: 1.2rem; font-weight: 800; line-height: 1.3; }
+.blog-card h3 a { color: inherit; text-decoration: none; }
+.blog-card h3 a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .blog-intro { margin: 0; line-height: 1.6; }
+.blog-read { font-weight: 700; color: var(--red); display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
+.blog-read::after { content: "→"; }
+.blog-read:hover { text-decoration: underline; text-underline-offset: 3px; }
+.blog-read:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; border-radius: 4px; }
+.blog-card.is-feature .blog-read { color: #fff; }
 .blog-more summary { cursor: pointer; list-style: none; font-weight: 700; color: var(--red); display: inline-flex; align-items: center; gap: 6px; }
 .blog-more summary::-webkit-details-marker { display: none; }
 .blog-more summary::after { content: "→"; transition: transform .2s ease; }
@@ -2078,6 +2085,23 @@ section.band :is(.band-unit, .band-stage, .band-text) { color: var(--ink) !impor
   .blog-card.is-feature { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) { .news-item, .blog-card, .blog-more summary::after, .news-tabs [role=tab] { transition: none; } }
+
+/* ---------- Blog post page ---------- */
+.blog-post-page .svc-hero h1 { font-size: clamp(1.7rem, 4vw, 2.6rem); }
+.blog-post-page .svc-hero-lead { max-width: 62ch; }
+.blog-post-page .svc-hero .blog-meta { color: rgba(255, 255, 255, .85); margin: 0 0 12px; }
+.blog-post-page .svc-hero .blog-cat { background: rgba(255, 255, 255, .18); color: #fff; }
+.blog-article { font-size: 1.05rem; line-height: 1.75; }
+.blog-article h2 { font-family: var(--font-heading); font-size: clamp(1.25rem, 2vw, 1.55rem); font-weight: 800; margin: 2rem 0 .8rem; line-height: 1.3; }
+.blog-article h2:first-child { margin-top: 0; }
+.blog-article p { margin: 0 0 1rem; }
+.blog-article ul { margin: 0 0 1.25rem; padding-left: 1.25rem; }
+.blog-article li { margin: .4rem 0; line-height: 1.65; }
+.blog-article a { color: var(--red); font-weight: 700; }
+.blog-article .blog-post-fig { margin: 0 0 1.75rem; border-radius: var(--radius); overflow: hidden; position: relative; background: #2a0710; }
+.blog-article .blog-post-fig img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.blog-back { margin-top: 2rem; }
+.blog-back a { font-weight: 700; }
 
 /* ---------- Portal page: two ways in ---------- */
 .portal-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; max-width: 980px; margin: 0 auto; }

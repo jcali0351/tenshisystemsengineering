@@ -2,7 +2,8 @@
 //   - index.html: the nine service cards, the form's topic list, the current menu item
 //   - about.html, services.html, contact.html, news.html, blog.html
 //   - services/<slug>.html, one full page per service
-// All wording lives in translations.js. The header and footer are copied from index.html, so change them there.
+//   - blog/<slug>.html, one page per long-form post that has a slug in data/blog.json
+// All wording lives in translations.js, except blog post bodies (data/blog.json). The header and footer are copied from index.html, so change them there.
 // Run from the repository folder after changing text, services, the header or the footer, then stamp the versions:
 //   node tools/build-pages.mjs && node tools/stamp-assets.mjs
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
@@ -161,6 +162,8 @@ function bakeEnglish(html) {
 const readJson = (f, fallback) => { try { return JSON.parse(readFileSync(f, "utf8")); } catch { return fallback; } };
 const NEWS = readJson("data/news.json", { categories: [] });
 const BLOGDATA = readJson("data/blog.json", { posts: [] });
+const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const postPermalink = (b) => (b.slug && SLUG_RE.test(b.slug) ? `blog/${b.slug}.html` : `blog.html#post-${b.id}`);
 const wDate = (d) => (d ? new Date(d.length === 10 ? d + "T12:00:00Z" : d).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "Asia/Tokyo" }) : "");
 const wIso = (d) => (d ? new Date(d.length === 10 ? d + "T12:00:00Z" : d).toISOString().slice(0, 10) : "");
 const wUrl = (u) => (/^https?:\/\//.test(u || "") ? esc(u) : "#");
@@ -192,7 +195,7 @@ ${items.join("\n")}
             <img class="fw-thumb" src="${esc(wSrc(b.image, "blog"))}" alt="" width="96" height="72" loading="lazy" decoding="async">
             <div class="fw-text">
               <p class="fw-meta">${esc(b.cat)} · <time datetime="${wIso(b.date)}">${wDate(b.date)}</time></p>
-              <a class="fw-link" href="blog.html#post-${esc(b.id)}">${esc(b.title)}</a>
+              <a class="fw-link" href="${postPermalink(b)}">${esc(b.title)}</a>
               <p class="fw-src">${b.min} <span data-i18n="blogMin">${tx("blogMin")}</span>${wCredit(b.image)}</p>
             </div>
           </li>`);
@@ -236,20 +239,23 @@ function chrome(html, prefix, current) {
     .replace('href="#top"', `href="${prefix}index.html"`)
     .replace(/src="((?:brand|img)\/[\w.\/-]+)"/g, `src="${prefix}$1"`)
     .replace(/href="((?:news|blog)\.html#[^"]*)"/g, `href="${prefix}$1"`)
-    .replace(/href="((?:index|about|services|contact|team|technology|projects|news|blog|portal)\.html|projects\/[a-z-]+\.html)"/g, `href="${prefix}$1"`);
+    .replace(/href="((?:index|about|services|contact|team|technology|projects|news|blog|portal)\.html|projects\/[a-z-]+\.html|blog\/[a-z-]+\.html)"/g, `href="${prefix}$1"`);
 }
 
-function frame({ prefix, current, titleKey, descKey, bodyClass, main, photoCredits = "" }) {
+function frame({ prefix, current, titleKey, descKey, title, description, bodyClass, main, photoCredits = "" }) {
+  const pageTitle = title != null ? esc(title) : tx(titleKey);
+  const pageDesc = description != null ? esc(description) : tx(descKey);
+  const bodyAttrs = title != null ? " data-fixed-title" : ` data-title-key="${titleKey}" data-desc-key="${descKey}"`;
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${tx(titleKey)} | ${tx("brandName")}</title>
-  <meta name="description" content="${tx(descKey)}">
+  <title>${pageTitle} | ${tx("brandName")}</title>
+  <meta name="description" content="${pageDesc}">
   <meta name="theme-color" content="#c8102e">
-  <meta property="og:title" content="${tx(titleKey)} | ${tx("brandName")}">
-  <meta property="og:description" content="${tx(descKey)}">
+  <meta property="og:title" content="${pageTitle} | ${tx("brandName")}">
+  <meta property="og:description" content="${pageDesc}">
   <meta property="og:type" content="website">
   <link rel="icon" href="${prefix}brand/tenshi-logo.png" type="image/png">
   <link rel="alternate icon" href="${prefix}brand/tenshi-apple-touch-icon.png" type="image/png">
@@ -260,7 +266,7 @@ function frame({ prefix, current, titleKey, descKey, bodyClass, main, photoCredi
   <link rel="stylesheet" href="${prefix}chat.css">
   <link rel="stylesheet" href="${prefix}site-theme.css">
 </head>
-<body class="${bodyClass}" data-title-key="${titleKey}" data-desc-key="${descKey}">
+<body class="${bodyClass}"${bodyAttrs}>
   <!-- Written by tools/build-pages.mjs: edit translations.js and the script, not this file. -->
   <a class="skip-link" href="#main" data-i18n="skip">${tx("skip")}</a>
 
@@ -1051,8 +1057,8 @@ const ext = (u, text) => `<a href="${safeUrl(u)}" target="_blank" rel="noopener"
 const COVER = (cat) => `img/covers/${cat}.svg`;
 
 /* A feature image with its credit line ("Photo: creator · license · provider"). Generated covers need no credit. */
-function featureImage(img, cat, cls) {
-  const src = img && img.src && !/^https?:/.test(img.src) ? img.src : COVER(cat);
+function featureImage(img, cat, cls, prefix = "") {
+  const src = prefix + (img && img.src && !/^https?:/.test(img.src) ? img.src : COVER(cat));
   const credit = img && !img.generated && img.src ? `
               <figcaption class="img-credit"><span data-i18n="photoLabel">${tx("photoLabel")}</span>: ${img.creatorUrl ? ext(img.creatorUrl, esc(img.creator)) : esc(img.creator || "Unknown")}${img.license ? " · " + (img.licenseUrl ? ext(img.licenseUrl, esc(img.license)) : esc(img.license)) : ""}${img.page ? " · " + ext(img.page, esc(img.provider || "Source")) : ""}</figcaption>` : "";
   return `<figure class="${cls}">
@@ -1106,6 +1112,92 @@ ${cta("contact.html")}`,
 writeFileSync("news.html", newsPage);
 
 const POSTS = BLOGDATA.posts || [];
+const postHref = (url, prefix) => {
+  if (/^https?:\/\//.test(url || "")) return url;
+  if (/^#/.test(url || "")) return url;
+  if (/^(?:index|about|services|contact|team|technology|projects|news|blog|portal)\.html(?:#[\w.-]+)?$/.test(url || "")) return prefix + url;
+  return "#";
+};
+const inlineFmt = (s, prefix) => esc(s)
+  .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+  .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, url) => `<a href="${esc(postHref(url, prefix))}">${label}</a>`);
+function renderPostBody(body, prefix, indent = "        ") {
+  return (body || []).map((block) => {
+    if (block && typeof block === "object") {
+      if (block.h2) return `${indent}<h2>${inlineFmt(block.h2, prefix)}</h2>`;
+      if (Array.isArray(block.ul)) {
+        const items = block.ul.map((item) => `${indent}  <li>${inlineFmt(item, prefix)}</li>`).join("\n");
+        return `${indent}<ul>\n${items}\n${indent}</ul>`;
+      }
+    }
+    return `${indent}<p>${inlineFmt(String(block ?? ""), prefix)}</p>`;
+  }).join("\n");
+}
+function blogMore(b) {
+  if (b.slug && SLUG_RE.test(b.slug)) {
+    return `              <p><a class="blog-read" href="${esc(postPermalink(b))}"><span data-i18n="blogReadMore">${tx("blogReadMore")}</span></a></p>`;
+  }
+  const paras = (b.body || []).filter((p) => typeof p === "string").map((para) => `                <p>${esc(para)}</p>`).join("\n");
+  const sources = (b.sources || []).length ? `                <div class="blog-sources">
+                  <p class="blog-sources-title" data-i18n="blogSources">${tx("blogSources")}</p>
+${b.ai ? `                  <p class="blog-ai" data-i18n="blogAiNote">${tx("blogAiNote")}</p>\n` : ""}                  <ul>
+${b.sources.map((s) => `                    <li>${ext(s.url, esc(s.title))} <span class="blog-src-pub">— ${esc(s.source)}${s.date ? ", " + fmtDate(s.date) : ""}</span></li>`).join("\n")}
+                  </ul>
+                </div>
+` : "";
+  return `              <details class="blog-more">
+                <summary><span class="blog-open" data-i18n="blogReadMore">${tx("blogReadMore")}</span><span class="blog-close" data-i18n="blogShowLess">${tx("blogShowLess")}</span></summary>
+${paras}
+${sources}              </details>`;
+}
+function blogCard(b, i) {
+  const permalink = b.slug && SLUG_RE.test(b.slug) ? postPermalink(b) : "";
+  const title = permalink ? `<a href="${esc(permalink)}">${esc(b.title)}</a>` : esc(b.title);
+  return `          <article class="blog-card${i === 0 ? " is-feature" : ""}" id="post-${esc(b.id)}" aria-labelledby="post-${esc(b.id)}-title">
+            ${featureImage(b.image, "blog", "blog-fig")}
+            <div class="blog-body">
+              <p class="blog-meta"><span class="blog-cat">${esc(b.cat)}</span> <time datetime="${isoDay(b.date)}">${fmtDate(b.date)}</time> · ${b.min} <span data-i18n="blogMin">${tx("blogMin")}</span></p>
+              <h3 id="post-${esc(b.id)}-title">${title}</h3>
+              <p class="blog-intro">${esc(b.intro)}</p>
+${blogMore(b)}
+            </div>
+          </article>`;
+}
+function postBanner(prefix, post) {
+  return `    <section class="svc-hero">
+      <div class="svc-hero-inner">
+        <div class="svc-hero-text">
+          <nav class="crumbs" aria-label="${tx("crumbLabel")}" data-i18n-attr="aria-label:crumbLabel">
+            <ol>
+              <li><a href="${prefix}index.html" data-i18n="crumbHome">${tx("crumbHome")}</a></li>
+              <li><a href="${prefix}blog.html" data-i18n="navBlog">${tx("navBlog")}</a></li>
+              <li aria-current="page">${esc(post.title)}</li>
+            </ol>
+          </nav>
+          <p class="blog-meta"><span class="blog-cat">${esc(post.cat)}</span> <time datetime="${isoDay(post.date)}">${fmtDate(post.date)}</time> · ${post.min} <span data-i18n="blogMin">${tx("blogMin")}</span></p>
+          <h1 id="post-title">${esc(post.title)}</h1>
+          <p class="svc-hero-lead">${esc(post.intro)}</p>
+        </div>
+      </div>
+    </section>`;
+}
+function postPage(post) {
+  const prefix = "../";
+  return frame({
+    prefix, current: "blog", title: post.title, description: post.intro, bodyClass: "page blog-post-page",
+    main: `${postBanner(prefix, post)}
+
+    <section class="page-section blog-post-section" aria-labelledby="post-title">
+      <article class="page-inner narrow blog-article">
+${featureImage(post.image, "blog", "blog-post-fig", prefix)}
+${renderPostBody(post.body, prefix)}
+        <p class="blog-back"><a href="../blog.html"><span data-i18n="homeBlogAll">${tx("homeBlogAll")}</span></a></p>
+      </article>
+    </section>
+
+${cta("../contact.html#contact")}`,
+  });
+}
 const blogPage = frame({
   prefix: "", current: "blog", titleKey: "blogTitle", descKey: "blogLead", bodyClass: "page blog-page",
   main: `${banner("", [{ key: "navBlog" }], "blogTitle", "blogLead", ART.blog)}
@@ -1114,24 +1206,7 @@ const blogPage = frame({
       <div class="page-inner">
         <h2 id="posts-title" class="section-title" data-i18n="blogPostsTitle">${tx("blogPostsTitle")}</h2>
 ${POSTS.some((p) => p.placeholder) ? `        ${t("p", "blogFiller", 'class="blog-note"')}\n` : ""}        <div class="blog-grid">
-${POSTS.map((b, i) => `          <article class="blog-card${i === 0 ? " is-feature" : ""}" id="post-${esc(b.id)}" aria-labelledby="post-${esc(b.id)}-title">
-            ${featureImage(b.image, "blog", "blog-fig")}
-            <div class="blog-body">
-              <p class="blog-meta"><span class="blog-cat">${esc(b.cat)}</span> <time datetime="${isoDay(b.date)}">${fmtDate(b.date)}</time> · ${b.min} <span data-i18n="blogMin">${tx("blogMin")}</span></p>
-              <h3 id="post-${esc(b.id)}-title">${esc(b.title)}</h3>
-              <p class="blog-intro">${esc(b.intro)}</p>
-              <details class="blog-more">
-                <summary><span class="blog-open" data-i18n="blogReadMore">${tx("blogReadMore")}</span><span class="blog-close" data-i18n="blogShowLess">${tx("blogShowLess")}</span></summary>
-${(b.body || []).map((p) => `                <p>${esc(p)}</p>`).join("\n")}
-${(b.sources || []).length ? `                <div class="blog-sources">
-                  <p class="blog-sources-title" data-i18n="blogSources">${tx("blogSources")}</p>
-${b.ai ? `                  <p class="blog-ai" data-i18n="blogAiNote">${tx("blogAiNote")}</p>\n` : ""}                  <ul>
-${b.sources.map((s) => `                    <li>${ext(s.url, esc(s.title))} <span class="blog-src-pub">— ${esc(s.source)}${s.date ? ", " + fmtDate(s.date) : ""}</span></li>`).join("\n")}
-                  </ul>
-                </div>
-` : ""}              </details>
-            </div>
-          </article>`).join("\n")}
+${POSTS.map(blogCard).join("\n")}
         </div>
       </div>
     </section>
@@ -1139,6 +1214,10 @@ ${b.sources.map((s) => `                    <li>${ext(s.url, esc(s.title))} <spa
 ${cta("contact.html")}`,
 });
 writeFileSync("blog.html", blogPage);
+mkdirSync("blog", { recursive: true });
+const slugPosts = POSTS.filter((b) => b.slug && SLUG_RE.test(b.slug));
+for (const post of slugPosts) writeFileSync(`blog/${post.slug}.html`, postPage(post));
+
 
 /* ---------- Portal: the way in for clients and for the Tenshi team (admin.html, the Tenshi Editor) ---------- */
 const PORTAL_ICON = {
@@ -1176,4 +1255,4 @@ writeFileSync("portal.html", portalPage);
 
 mkdirSync("projects", { recursive: true });
 for (const p of PROJECTS) writeFileSync(`projects/${p.slug}.html`, projectPage(p));
-console.log(`index.html updated; about.html, team.html, services.html, technology.html, projects.html, contact.html, ${SERVICES.length} service pages and ${PROJECTS.length} project pages written; news.html, blog.html and portal.html written`);
+console.log(`index.html updated; about.html, team.html, services.html, technology.html, projects.html, contact.html, ${SERVICES.length} service pages and ${PROJECTS.length} project pages written; news.html, blog.html, ${slugPosts.length} blog post page(s) and portal.html written`);

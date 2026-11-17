@@ -24,10 +24,15 @@ const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === "ar" || lang === "fa" ? "rtl" : "ltr";   // Arabic and Farsi read right to left
     // Service pages name themselves (data-title-key); the homepage uses pageTitle.
+    // Blog post pages set data-fixed-title so a language change does not replace the English title or description.
     const titleKey = document.body.dataset.titleKey;
-    document.title = titleKey ? `${t(titleKey)} | ${t("brandName")}` : t("pageTitle");
+    const fixedTitle = document.body.hasAttribute("data-fixed-title");
+    if (titleKey) document.title = `${t(titleKey)} | ${t("brandName")}`;
+    else if (!fixedTitle) document.title = t("pageTitle");
     const meta = $('meta[name="description"]');
-    if (meta) meta.setAttribute("content", t(document.body.dataset.descKey || "metaDescription"));
+    const descKey = document.body.dataset.descKey;
+    if (meta && descKey) meta.setAttribute("content", t(descKey));
+    else if (meta && !fixedTitle) meta.setAttribute("content", t("metaDescription"));
 
     $$("[data-i18n]").forEach((el) => { el.textContent = t(el.dataset.i18n); });
     $$("[data-i18n-attr]").forEach((el) => {

@@ -2,6 +2,69 @@
   "generatedAt": "2026-11-16T00:09:47.359Z",
   "posts": [
     {
+      "id": "20261116-design-dev-opt-ai",
+      "date": "2026-11-16",
+      "cat": "Services",
+      "slug": "design-development-optimization-ai",
+      "title": "Design, Development, Optimization and AI: How One Partner Can Carry Your Business Online",
+      "intro": "For many small and mid-size businesses, a website is the first place a customer meets you. Getting that right takes more than a good-looking homepage. It takes clear design, solid engineering, steady improvement after launch, and increasingly, practical use of AI.",
+      "body": [
+        "At Tenshi Systems Engineering, based in Osaka, our aim is simple: engineering reliable solutions for tomorrow. Here is what each of our four services covers, and why it matters to a business like yours.",
+        {
+          "h2": "Design: Making Your Business Easy to Understand and Easy to Trust"
+        },
+        "Good design is not decoration. It is how a customer works out, in a few seconds, who you are and whether they can rely on you. Our design work shapes how your company looks, sounds and feels, so every customer meets the same clear, confident brand, on a phone, a laptop or in print.",
+        "In practice, that includes:",
+        {
+          "ul": [
+            "**Brand identity, logos and style guides.** A style guide records your colors, typefaces, tone of voice and logo rules, so anyone producing material for your business can keep it consistent.",
+            "**Website and app interfaces, from wireframe to prototype.** We start with simple layouts to agree on structure and content, then build clickable prototypes so you can see how the finished product will work before any code is written. Changes are cheaper at this stage.",
+            "**Photography, illustration, video and motion graphics.** Original visuals help you stand apart from competitors using the same stock images."
+          ]
+        },
+        {
+          "h2": "Development: Software Built to Last"
+        },
+        "A design only creates value once it works reliably in the real world. Our development team turns designs and ideas into fast, dependable software built on proven technology. We write code to be maintained for years, not rewritten in months. That means clear structure and sensible documentation.",
+        "Our development work covers:",
+        {
+          "ul": [
+            "**Websites and web apps built to last.** From a company site to a booking system or customer portal, we build for speed, security and growth.",
+            "**Custom software, automation and AI assistants.** Many businesses still rely on spreadsheets, copy-and-paste and manual follow-ups. We build tools that handle repetitive work and connect systems that do not talk to each other.",
+            "**Secure hosting, monitoring and long-term support.** We keep your site running, watch for problems, apply updates and remain available when you need changes. You have a partner after launch, not just a handover."
+          ]
+        },
+        {
+          "h2": "Optimization: Launch Day Is Only the Beginning"
+        },
+        "A new website is a starting point. Our optimization service measures real-world performance and improves it step by step, so your site loads faster, ranks higher in search results and turns more visitors into customers.",
+        "This includes:",
+        {
+          "ul": [
+            "**Speed, Core Web Vitals and accessibility audits.** Core Web Vitals are Google's measures of loading speed, responsiveness and visual stability. Accessibility checks make sure people using screen readers, keyboards or other assistive tools can use your site.",
+            "**SEO in several languages.** For businesses serving customers in Japan and abroad, we help your pages appear in search results in each language you work in, with content that reads naturally rather than like a direct translation.",
+            "**Analytics, A/B testing and monthly progress reports.** We track what visitors actually do, test alternatives and report on progress each month in plain language, so you always know what has changed and why."
+          ]
+        },
+        {
+          "h2": "AI Services: Practical Tools That Support Your Team"
+        },
+        "AI attracts a lot of attention, but for most businesses the useful question is narrow: where can it save time or improve service without adding risk? We focus on practical AI solutions, from chat assistants to automation, that support your team rather than replace it.",
+        "That might be a chat assistant that answers common customer questions at any hour and passes complex requests to your staff. It might be a tool that sorts inquiries or drafts routine replies for review. We start with your existing processes, identify where AI genuinely helps, and build solutions your team can easily oversee.",
+        {
+          "h2": "How the Four Work Together"
+        },
+        "Each service stands on its own, but they are strongest together. Design defines what customers should see and feel. Development turns that into reliable software. Optimization measures how it performs and guides improvements. AI services extend what your site and team can do. Because one team handles all four, nothing is lost between agencies and you have one point of contact who understands the whole picture.",
+        "You do not need everything at once. You might begin with a brand refresh, a performance audit or a single automation, as long as each step fits a longer plan.",
+        {
+          "h2": "Request a Consultation"
+        },
+        "If you are considering a new website, an update to an existing one, or a practical way to bring AI into your business, we would be glad to hear from you. Tell us about your project, your goals and your timeline, and we will suggest a sensible way forward. [Request a consultation](contact.html#contact) with Tenshi Systems Engineering today."
+      ],
+      "sources": [],
+      "min": 4
+    },
+    {
       "id": "placeholder-10",
       "date": "2026-11-13",
       "cat": "Web design",
