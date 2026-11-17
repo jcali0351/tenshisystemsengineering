@@ -2297,6 +2297,8 @@ section.band :is(.band-unit, .band-stage, .band-text) { color: var(--ink) !impor
 }
 main .portal-card :is(.portal-card-head, h3, p, .btn):not(#_):not(#__) { margin-top: 0 !important; margin-bottom: 0 !important; }
 .portal-card h3 { font-size: clamp(1.5rem, 2.6vw, 2rem); font-weight: 800; width: 100%; }
+main .portal-card :is(h3, .portal-card-head, .portal-card-text):not(#_):not(#__) { text-align: start !important; margin-inline: 0 !important; }
+main .portal-card .portal-icon:not(#_):not(#__) { margin-inline: 0 !important; align-self: start; }
 .portal-card p { margin: 0; line-height: 1.6; color: var(--text); }
 .portal-card-head { display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; width: 100%; min-width: 0; }
 .portal-card-text { width: 100%; min-width: 0; }
