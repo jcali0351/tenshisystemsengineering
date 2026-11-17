@@ -2190,7 +2190,7 @@ main section.band + section.services:not(#_):not(#__) { padding-top: 0 !importan
 .site-header.is-compact .brand-logo,
 .site-header.is-tight .brand-logo {
     display: block;
-    width: clamp(152px, 16.8vw, 216px);
+    width: clamp(129px, 14.3vw, 184px);
     height: auto;
     max-width: 100%;
     object-fit: contain;
@@ -2205,7 +2205,7 @@ main section.band + section.services:not(#_):not(#__) { padding-top: 0 !importan
     .brand-logo,
     .site-header.is-compact .brand-logo,
     .site-header.is-tight .brand-logo {
-        width: 152px;
+        width: 129px;
     }
 }
 
