@@ -1996,6 +1996,9 @@ html:not([dir="rtl"]):not(:lang(ja)):not(:lang(zh)):not(:lang(ko)) .pitch-lead::
   text-wrap: pretty;
   text-shadow: 0 1px 12px rgba(0, 0, 0, .5);
 }
+/* site-theme.css greys out every heading; the band titles sit on a photo, so keep them white */
+.parallax h2.parallax-title:not(#_):not(#__),
+.parallax h2.parallax-title:not(#_):not(#__) * { color: #fff !important; }
 @media (prefers-reduced-motion: reduce) {
   .parallax-layer {
     top: 0;
