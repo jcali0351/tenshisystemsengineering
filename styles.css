@@ -2494,3 +2494,7 @@ main section.band + section.services:not(#_):not(#__) { padding-top: 0 !importan
 .svc-hero.px-hero:not(#_):not(#__) .page-art { color: #fff !important; opacity: .28; }
 .svc-hero.px-hero:not(#_):not(#__) .blog-cat { background: rgba(255, 255, 255, .18) !important; color: #fff !important; }
 .svc-hero.px-hero:not(#_):not(#__) .blog-meta :is(span, time) { color: rgba(255, 255, 255, .88) !important; }
+
+/* Red eyebrow labels sit just above their heading on every panel */
+main .eyebrow:not(#_):not(#__) { margin-bottom: 0 !important; }
+main .eyebrow + :is(h1, h2, h3):not(#_):not(#__) { margin-top: 12px !important; }
