@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex, nofollow">
   <title>Tenshi Editor</title>
   <link rel="icon" href="brand/tenshi-logo.png" type="image/png">
-  <link rel="stylesheet" href="admin/admin.css?v=652288f5">
+  <link rel="stylesheet" href="admin/admin.css?v=2d9208d4">
   <link rel="stylesheet" href="fonts/catalog.css">
 </head>
 <body>
@@ -56,6 +56,8 @@
       <button type="button" role="tab" data-tab="slogan" aria-selected="false">Slogan</button>
       <button type="button" role="tab" data-tab="parallax" aria-selected="false">Parallax</button>
       <button type="button" role="tab" data-tab="design" aria-selected="false">Design</button>
+      <button type="button" role="tab" data-tab="buttons" aria-selected="false">Buttons</button>
+      <button type="button" role="tab" data-tab="css" aria-selected="false">Custom CSS</button>
       <button type="button" role="tab" data-tab="bots" aria-selected="false">Content bots</button>
     </nav>
 
@@ -236,6 +238,47 @@
         <div class="dz-frame-wrap"><iframe id="dz-frame" title="Design preview"></iframe></div>
       </div>
     </section>
+    <!-- Buttons: the look of every kind of button on the site (data/buttons.json → buttons.css) -->
+    <section class="ed-panel ed-buttons" data-panel="buttons" hidden>
+      <div class="bt-wrap">
+        <p class="ed-tip">Change how each kind of button on the site looks: colors, border, corners, padding, font, shadow and the hover effect. Leave a setting on "Site default" (or press Reset beside it) to keep the site's normal look. The preview shows the real page with your unsaved changes; changes save with the <b>Save</b> button at the top.</p>
+        <div class="bt-toolbar">
+          <label class="ed-inline"><span>Button</span> <select id="bt-type"></select></label>
+          <label class="ed-inline"><span>Preview page</span> <select id="bt-page"></select></label>
+          <label class="ed-check"><input type="checkbox" id="bt-hover"> Show hover look</label>
+          <button type="button" class="ed-btn ed-btn--ghost ed-btn--small" id="bt-reset">Reset this button</button>
+          <button type="button" class="ed-btn ed-btn--ghost ed-btn--small" id="bt-reset-all">Reset all buttons</button>
+        </div>
+        <p class="ed-tip" id="bt-note"></p>
+        <div class="bt-preview"><iframe id="bt-frame" title="Button preview" loading="lazy"></iframe></div>
+        <p class="ed-msg" id="bt-msg" role="status"></p>
+        <form id="bt-form" class="bt-form" autocomplete="off"></form>
+        <h2 class="sl-h">Button text</h2>
+        <p class="ed-tip">The words on the main buttons, in English. Edited English is translated into the other languages on Save; <b>All languages</b> lets you write any language by hand. Links stay as they are.</p>
+        <div id="bt-labels" class="bt-labels"></div>
+      </div>
+    </section>
+
+    <!-- Custom CSS: your own rules, loaded last on every page (custom.css) -->
+    <section class="ed-panel ed-css" data-panel="css" hidden>
+      <div class="cc-wrap">
+        <details class="ed-help cc-help" open>
+          <summary>How Custom CSS works</summary>
+          <p>Rules you write here are saved to <code>custom.css</code>, which every page loads <b>last</b>, after all the site's own styles and the Buttons settings. When two rules are equally specific, yours win; to beat a stubborn rule add <code>!important</code>, e.g. <code>.site-footer { background: #111 !important; }</code>. Paths in <code>url()</code> start from the site's main folder, e.g. <code>url(img/photos/kobe.jpg)</code>.</p>
+          <p>Only CSS goes here (no <code>&lt;style&gt;</code> or <code>&lt;script&gt;</code> tags). Tab inserts two spaces; press Esc, then Tab, to move on. The preview below applies your CSS as you type; Save puts it on the site. Clear the box to remove all custom styles.</p>
+        </details>
+        <div class="cc-editor">
+          <pre class="cc-gutter" id="cc-gutter" aria-hidden="true">1</pre>
+          <textarea id="cc-text" spellcheck="false" wrap="off" autocomplete="off" autocapitalize="off" aria-label="Custom CSS" placeholder="/* Example: */&#10;.site-footer { background: #111; }"></textarea>
+        </div>
+        <p class="ed-msg" id="cc-msg" role="status"></p>
+        <div class="bt-toolbar">
+          <label class="ed-inline"><span>Preview page</span> <select id="cc-page"></select></label>
+          <button type="button" class="ed-btn ed-btn--ghost ed-btn--small" id="cc-reload">Reload preview</button>
+        </div>
+        <div class="bt-preview cc-preview"><iframe id="cc-frame" title="Custom CSS preview" loading="lazy"></iframe></div>
+      </div>
+    </section>
     <!-- Content bots -->
     <section class="ed-panel" data-panel="bots" hidden>
       <div class="ed-bots">
@@ -298,7 +341,8 @@
 
   <script src="admin/tr.js?v=e4a183e9"></script>
   <script src="admin/slogan-style.js?v=5b8514a0"></script>
+  <script src="admin/buttons-style.js?v=90c15c95"></script>
   <script src="admin/theme.js?v=5adf2a95"></script>
-  <script src="admin/admin.js?v=8b5f7451"></script>
+  <script src="admin/admin.js?v=ba5e5719"></script>
 </body>
 </html>

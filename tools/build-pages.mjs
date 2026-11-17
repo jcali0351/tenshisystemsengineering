@@ -5,10 +5,12 @@
 //   - about.html, services.html, contact.html, news.html, blog.html
 //   - services/<slug>.html, one full page per service
 //   - blog/<slug>.html, one page per long-form post that has a slug in data/blog.json
+//   - buttons.css from data/buttons.json (Tenshi Editor › Buttons), and the links to buttons.css and custom.css
+//     (Tenshi Editor › Custom CSS) at the end of every page's stylesheets
 // All wording lives in translations.js, except blog post bodies (data/blog.json). The header and footer are copied from index.html, so change them there.
 // Run from the repository folder after changing text, services, the header or the footer, then stamp the versions:
 //   node tools/build-pages.mjs && node tools/stamp-assets.mjs
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from "node:fs";
 import vm from "node:vm";
 import { createRequire } from "node:module";
 
@@ -1391,3 +1393,32 @@ writeFileSync("portal.html", portalPage);
 mkdirSync("projects", { recursive: true });
 for (const p of PROJECTS) writeFileSync(`projects/${p.slug}.html`, projectPage(p));
 console.log(`index.html updated; about.html, team.html, services.html, technology.html, projects.html, contact.html, ${SERVICES.length} service pages and ${PROJECTS.length} project pages written; news.html, blog.html, ${slugPosts.length} blog post page(s) and portal.html written`);
+
+/* ---------- Buttons and Custom CSS (Tenshi Editor › Buttons, › Custom CSS) ----------
+   data/buttons.json → buttons.css (no settings = no rules, so the site looks as before). custom.css is written by the
+   editor as is; the build only creates an empty one when it's missing. Every page loads buttons.css after
+   site-theme.css (and slogan.css), and custom.css last of all, so its rules win. */
+writeFileSync("buttons.css", "/* Written by tools/build-pages.mjs from data/buttons.json (Tenshi Editor › Buttons). Don't edit by hand. */\n" +
+  createRequire(import.meta.url)("../admin/buttons-style.js").css(readJson("data/buttons.json", {}), readJson("fonts/fonts.json", [])));
+if (!existsSync("custom.css")) writeFileSync("custom.css", "/* Custom CSS (Tenshi Editor › Custom CSS). Rules here load last on every page and override the site's styles. */\n");
+{
+  const pagesWithTheme = [
+    ...readdirSync(".").filter((f) => f.endsWith(".html") && !["admin.html", "client-portal.html", "404.html"].includes(f)),
+    ...["services", "projects", "blog"].flatMap((d) => existsSync(d) ? readdirSync(d).filter((f) => f.endsWith(".html")).map((f) => d + "/" + f) : []),
+  ];
+  let linked = 0;
+  for (const p of pagesWithTheme) {
+    const html = readFileSync(p, "utf8"), end = html.indexOf("</head>");
+    if (end < 0) continue;
+    const prefix = p.includes("/") ? "../" : "";
+    let head = html.slice(0, end).replace(/  <link rel="stylesheet" href="(?:\.\.\/)?(?:buttons|custom)\.css[^"]*">\n/g, "");
+    const links = [...head.matchAll(/  <link rel="stylesheet" href="[^"]*">\n/g)];
+    if (!links.length) continue;
+    const last = links[links.length - 1], at = last.index + last[0].length;
+    head = head.slice(0, at) + `  <link rel="stylesheet" href="${prefix}buttons.css">\n  <link rel="stylesheet" href="${prefix}custom.css">\n` + head.slice(at);
+    const out = head + html.slice(end);
+    if (out !== html) writeFileSync(p, out);
+    linked++;
+  }
+  console.log(`buttons.css written; buttons.css and custom.css linked last on ${linked} pages`);
+}

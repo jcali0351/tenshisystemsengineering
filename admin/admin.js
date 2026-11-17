@@ -154,7 +154,7 @@
     Object.keys(pend).forEach(function (l) { Object.keys(pend[l]).forEach(function (k) { s.add(k); }); });
     return s;
   }
-  function pendingCount() { return changedKeys().size + imgEdits.size + (sloganDirty() ? 1 : 0) + (parallaxDirty() ? 1 : 0); }
+  function pendingCount() { return changedKeys().size + imgEdits.size + (sloganDirty() ? 1 : 0) + (parallaxDirty() ? 1 : 0) + (buttonsDirty() ? 1 : 0) + (customDirty() ? 1 : 0); }
   function updateBar() {
     var n = pendingCount(), p = $("#ed-pending");
     p.hidden = !n; p.textContent = n + (n === 1 ? " unsaved change" : " unsaved changes");
@@ -240,6 +240,8 @@
     if (name === "design") loadDesign();
     if (name === "slogan") loadSlogan();
     if (name === "parallax") loadParallax();
+    if (name === "buttons") loadButtons();
+    if (name === "css") loadCustom();
   }
 
   /* ================================================================== PAGES (click to edit) */
@@ -529,6 +531,8 @@
 
   /* ================================================================== SAVE */
   $("#ed-save").addEventListener("click", function () {
+    // Custom CSS: tags are refused in buildChanges; unbalanced braces only need a confirmation
+    if (customDirty() && !ccBlocked(cc.cur) && ccBraces(cc.cur) && !window.confirm("Custom CSS: " + ccBraces(cc.cur) + " The rules after the mistake may not work. Save anyway?")) return;
     var btn = this, keys = Object.keys(pend.en || {}).filter(function (k) { return autoTr[k] !== false; });
     var jobs = keys.map(function (k) {
       return { key: k, text: pend.en[k], langs: LANGS.filter(function (l) { return l !== "en" && !manual.has(l + ":" + k); }) };
@@ -550,6 +554,8 @@
       pend = {}; autoTr = {};
       if (slg.cur) slg.saved = JSON.parse(JSON.stringify(slg.cur));
       if (px.cur) px.saved = JSON.parse(JSON.stringify(px.cur));
+      if (bt.cur) bt.saved = JSON.parse(JSON.stringify(bt.cur));
+      if (cc.cur != null) { cc.saved = cc.cur; ccCheck(); }
       imgEdits.forEach(function (r, p) { if (r.newPath !== p) { tree.delete(p); } tree.set(r.newPath, { sha: "saved" + Date.now(), size: r.blob.size }); });
       imgEdits.clear();
       updateBar(); renderImages(); renderText(); if (slg.cur && !$("[data-panel=slogan]").hidden) renderSlogan(); if (px.cur && !$("[data-panel=parallax]").hidden) renderParallax();
@@ -596,6 +602,17 @@
     }).then(function () {
       if (sloganDirty()) { changes.push({ path: "data/slogan.json", text: sloganJSON() }); parts.push("slogan"); }
       if (parallaxDirty()) { changes.push({ path: "data/parallax.json", text: parallaxJSON() }); parts.push("parallax"); }
+      if (buttonsDirty()) {
+        changes.push({ path: "data/buttons.json", text: JSON.stringify(BS.clean(bt.cur), null, 2) + "\n" });
+        changes.push({ path: "buttons.css", text: buttonsCssFile() });
+        parts.push("buttons");
+      }
+      if (customDirty()) {
+        var bad = ccBlocked(cc.cur);
+        if (bad) throw new Error("Custom CSS: " + bad);
+        changes.push({ path: "custom.css", text: cc.cur.replace(/\s*$/, "") + "\n" });
+        parts.push("custom CSS");
+      }
       return { changes: changes, summary: parts.join(", ") || "edit" };
     });
   }
@@ -606,6 +623,8 @@
     pend = {}; autoTr = {}; manual.clear();
     if (slg.saved) { slg.cur = JSON.parse(JSON.stringify(slg.saved)); renderSlogan(); }
     if (px.saved) { px.cur = JSON.parse(JSON.stringify(px.saved)); renderParallax(); }
+    if (bt.saved) { bt.cur = JSON.parse(JSON.stringify(bt.saved)); btRender(); }
+    if (cc.saved != null) { cc.cur = cc.saved; $("#cc-text").value = cc.cur; ccGutter(); ccCheck(); ccLive(); }
     imgEdits.forEach(function (r) { if (r.url) URL.revokeObjectURL(r.url); }); imgEdits.clear();
     $("#ed-drawer").hidden = true;
     updateBar(); renderText(); renderImages(); loadFrame();
@@ -1290,6 +1309,232 @@
       $("#ed-imgdlg-old").src = pxImgSrc(b.image);
       $("#ed-imgdlg-path").textContent = dest;
     }
+  });
+
+
+  /* ================================================================== BUTTONS (every kind of button on the site)
+     Settings live in data/buttons.json; admin/buttons-style.js turns them into CSS for the live preview here and into
+     buttons.css (saved with the settings, and rewritten by tools/build-pages.mjs). Every page loads buttons.css after
+     site-theme.css. An empty setting keeps the site's normal look, so with no settings the site looks as before. */
+  var BS = window.TenshiButtonStyle;
+  var bt = { saved: null, cur: null, fonts: null, ready: false, loading: false };
+  // where each kind of button can be seen
+  var BT_PAGE = { primary: "index.html", submit: "contact.html", light: "services/web-design.html", dark: "contact.html", more: "index.html",
+    project: "projects.html", textLink: "index.html", tabs: "news.html", lang: "index.html", chat: "index.html", chatSend: "index.html" };
+  // the main buttons' words (translations.js keys)
+  var BT_LABELS = [["cta", "Request Consultation buttons"], ["send", "Contact form Send button"], ["more", "Learn more (service cards)"],
+    ["seeAll", "See all services (About page)"], ["aboutTeamBtn", "Meet the team (About page)"], ["portalClientBtn", "Client portal button"],
+    ["portalAdminBtn", "Editor button (portal page)"], ["infoChatBtn", "Chat button (contact page)"], ["homeNewsAll", "All news link"], ["homeBlogAll", "All posts link"]];
+  function buttonsDirty() { return !!(bt && bt.cur && bt.saved && JSON.stringify(BS.clean(bt.cur)) !== JSON.stringify(BS.clean(bt.saved))); }
+  function buttonsCssFile() {
+    return "/* Written by tools/build-pages.mjs from data/buttons.json (Tenshi Editor › Buttons). Don't edit by hand. */\n" + BS.css(BS.clean(bt.cur), bt.fonts || []);
+  }
+  function btType() { return $("#bt-type").value || "primary"; }
+  function btStyle() { var t = btType(); bt.cur.types = bt.cur.types || {}; return bt.cur.types[t] || {}; }
+  function btSet(k, v) {
+    var t = btType(); bt.cur.types = bt.cur.types || {};
+    var s = bt.cur.types[t] = bt.cur.types[t] || {};
+    if (v === undefined || v === "" || v === null) delete s[k]; else s[k] = v;
+    if (!Object.keys(s).length) delete bt.cur.types[t];
+    updateBar(); btOutputs(); btLive();
+  }
+  function loadButtons() {
+    if (bt.ready) { btRender(); return; }
+    if (bt.loading) return;
+    bt.loading = true;
+    Promise.all([
+      slLoadFonts(),
+      tree.has("data/buttons.json") ? readText("data/buttons.json").then(JSON.parse).catch(function () { return {}; }) : Promise.resolve({})
+    ]).then(function (r) {
+      bt.fonts = r[0]; bt.saved = BS.clean(r[1]); bt.cur = JSON.parse(JSON.stringify(bt.saved)); bt.ready = true;
+      $("#bt-type").innerHTML = BS.TYPES.map(function (T) { return '<option value="' + T.key + '">' + esc(T.label) + "</option>"; }).join("");
+      $("#bt-page").innerHTML = pages.map(function (p) { return '<option value="' + esc(p) + '">' + esc(prettyPage(p)) + "</option>"; }).join("");
+      btRender(); btLabels(); btPickPage();
+    }).catch(function (e) { $("#bt-msg").className = "ed-msg err"; $("#bt-msg").textContent = "Couldn't load the button settings: " + e.message; })
+      .then(function () { bt.loading = false; });
+  }
+  function btFmt(f, v) { return (Math.round(v * 1000) / 1000) + (f.unit ? " " + f.unit : ""); }
+  function btRender() {
+    if (!bt.cur) return;
+    var s = btStyle(), T = BS.TYPES.filter(function (x) { return x.key === btType(); })[0];
+    $("#bt-note").textContent = T ? T.note : "";
+    var groups = ["Normal", "Text", "Hover"], names = { Normal: "Look", Text: "Text", Hover: "Hover and motion" };
+    $("#bt-form").innerHTML = groups.map(function (g) {
+      return '<div class="bt-group"><h3>' + names[g] + '</h3><div class="sl-look">' + BS.FIELDS.filter(function (f) { return f.group === g; }).map(function (f) {
+        var v = s[f.key], set = v !== undefined && v !== "", id = "btf-" + f.key,
+          reset = '<button type="button" class="ed-btn ed-btn--ghost ed-btn--small sl-reset" data-bt-reset="' + f.key + '"' + (set ? "" : " hidden") + ">Reset</button>";
+        if (f.type === "font") return '<label class="sl-field"><span>' + esc(f.label) + '</span><select id="' + id + '" data-bt="' + f.key + '">' + slFontOptions(v) + "</select>" + reset + "</label>";
+        if (f.type === "select") return '<label class="sl-field"><span>' + esc(f.label) + '</span><select id="' + id + '" data-bt="' + f.key + '">' + f.options.map(function (o) { return '<option value="' + o[0] + '"' + (String(set ? v : "") === o[0] ? " selected" : "") + ">" + esc(o[1]) + "</option>"; }).join("") + "</select>" + reset + "</label>";
+        if (f.type === "range") return '<label class="sl-field sl-range"><span>' + esc(f.label) + '</span><input type="range" id="' + id + '" data-bt="' + f.key + '" min="' + f.min + '" max="' + f.max + '" step="' + f.step + '" value="' + (set ? v : f.start) + '"><output data-bt-out="' + f.key + '"></output>' + reset + "</label>";
+        if (f.type === "color") return '<label class="sl-field sl-color"><span>' + esc(f.label) + '</span><input type="color" id="' + id + '" data-bt="' + f.key + '" value="' + (set ? esc(v) : (/color$/i.test(f.key) && !/border/i.test(f.key) ? "#ffffff" : "#c8102e")) + '"><output data-bt-out="' + f.key + '"></output>' + reset + "</label>";
+        return "";
+      }).join("") + "</div></div>";
+    }).join("");
+    btOutputs(); btLive();
+  }
+  /* Refresh value labels and Reset buttons without rebuilding the form (keeps focus while dragging). */
+  function btOutputs() {
+    var s = btStyle();
+    BS.FIELDS.forEach(function (f) {
+      var set = s[f.key] !== undefined && s[f.key] !== "";
+      var out = $('#bt-form [data-bt-out="' + f.key + '"]'); if (out) out.textContent = set ? (f.type === "range" ? btFmt(f, s[f.key]) : String(s[f.key]).toUpperCase()) : "Site default";
+      var r = $('#bt-form [data-bt-reset="' + f.key + '"]'); if (r) r.hidden = !set;
+    });
+  }
+  function btLabels() {
+    $("#bt-labels").innerHTML = BT_LABELS.filter(function (l) { return T.en && T.en[l[0]] !== undefined; }).map(function (l) {
+      return '<label class="sl-field"><span>' + esc(l[1]) + '</span><input type="text" data-bt-label="' + l[0] + '" value="' + esc(cur("en", l[0])) + '">' +
+        '<button type="button" class="ed-btn ed-btn--ghost ed-btn--small" data-bt-langs="' + l[0] + '">All languages</button></label>';
+    }).join("");
+  }
+  $("#bt-labels").addEventListener("input", function (e) { var k = e.target.dataset.btLabel; if (k) { setPend("en", k, e.target.value); btLabelPaint(k); } });
+  $("#bt-labels").addEventListener("click", function (e) { var b = e.target.closest("[data-bt-langs]"); if (b) { e.preventDefault(); openText([b.dataset.btLangs]); } });
+  function btLabelPaint(k) {
+    var doc; try { doc = $("#bt-frame").contentDocument; } catch (e) { return; }
+    if (doc) $$('[data-i18n="' + k + '"]', doc).forEach(function (el) { el.textContent = cur("en", k); });
+  }
+  $("#bt-form").addEventListener("input", function (e) {
+    var el = e.target, k = el.dataset.bt; if (!k) return;
+    var f = BS.FIELDS.filter(function (x) { return x.key === k; })[0];
+    btSet(k, f.type === "range" ? parseFloat(el.value) : el.value);
+  });
+  $("#bt-form").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-bt-reset]"); if (!b) return;
+    e.preventDefault(); btSet(b.dataset.btReset, undefined); btRender();
+  });
+  $("#bt-type").addEventListener("change", function () { btRender(); btPickPage(); });
+  $("#bt-page").addEventListener("change", btLoadFrame);
+  $("#bt-hover").addEventListener("change", btLive);
+  $("#bt-reset").addEventListener("click", function () { if (bt.cur && bt.cur.types) { delete bt.cur.types[btType()]; updateBar(); btRender(); } });
+  $("#bt-reset-all").addEventListener("click", function () {
+    if (!bt.cur || !window.confirm("Put every button back to the site's normal look?")) return;
+    bt.cur = { types: {} }; updateBar(); btRender();
+  });
+  function btPickPage() {
+    var p = BT_PAGE[btType()] || "index.html";
+    if (pages.indexOf(p) < 0) p = "index.html";
+    if ($("#bt-page").value !== p || !$("#bt-frame").getAttribute("src")) { $("#bt-page").value = p; btLoadFrame(); }
+    else btLive();
+  }
+  function btLoadFrame() { $("#bt-frame").src = SITE + $("#bt-page").value + "?lang=en&t=" + Date.now(); }
+  /* The unsaved look on the real page; the saved buttons.css is switched off so a reset shows the site default. */
+  function btLive() {
+    var fr = $("#bt-frame"), doc; try { doc = fr.contentDocument; } catch (e) { return; }
+    if (!doc || !doc.head || !bt.cur) return;
+    $$('link[href*="buttons.css"]', doc).forEach(function (l) { l.disabled = true; });
+    var st = doc.getElementById("tse-live-buttons");
+    if (!st) { st = doc.createElement("style"); st.id = "tse-live-buttons"; doc.head.appendChild(st); }
+    st.textContent = BS.css(BS.clean(bt.cur), bt.fonts || [], { prefix: SITE, forceHover: "bt-force-hover" }) +
+      ".bt-spot{outline:3px dashed #ffc069!important;outline-offset:5px!important}";
+    var T = BS.TYPES.filter(function (x) { return x.key === btType(); })[0]; if (!T) return;
+    $$(".bt-spot, .bt-force-hover", doc).forEach(function (el) { el.classList.remove("bt-spot", "bt-force-hover"); });
+    var els = $$(T.sel, doc);
+    els.forEach(function (el) { el.classList.add("bt-spot"); if ($("#bt-hover").checked) el.classList.add("bt-force-hover"); });
+    $("#bt-msg").className = "ed-msg"; $("#bt-msg").textContent = els.length ? els.length + (els.length === 1 ? " button" : " buttons") + " of this kind on this page (outlined in the preview)." : "There are no buttons of this kind on this page; pick another preview page.";
+    return els;
+  }
+  $("#bt-frame").addEventListener("load", function () {
+    var doc; try { doc = this.contentDocument; } catch (e) { return; }
+    if (!doc || !doc.head) return;
+    var st = doc.createElement("style");
+    st.textContent = ".bw-intro,[class*=intro-screen],.lang-dialog{display:none!important}";
+    doc.head.appendChild(st);
+    var frame = this;
+    setTimeout(function () {
+      var els = btLive() || [];
+      if (btType() === "chatSend") { var l = doc.querySelector(".tk-launch"); if (l) { l.click(); setTimeout(btLive, 600); } return; }
+      var el = els.filter(function (x) { return x.getClientRects().length; })[0];
+      if (el && getComputedStyle(el).position !== "fixed") el.scrollIntoView({ block: "center" });
+      setTimeout(btLive, 800);
+    }, 700);
+  });
+
+  /* ================================================================== CUSTOM CSS (custom.css, loaded last on every page)
+     Saved as typed. No tags: the file is linked, never inlined, and Save refuses <style> or <script>. */
+  var cc = { saved: null, cur: null, ready: false, loading: false }, ccTimer;
+  function customDirty() { return !!(cc && cc.saved != null && cc.cur != null && cc.cur !== cc.saved); }
+  function ccStrip(css) { return css.replace(/\/\*[\s\S]*?(\*\/|$)/g, "").replace(/"(?:\\[\s\S]|[^"\\\n])*"|'(?:\\[\s\S]|[^'\\\n])*'/g, '""'); }
+  function ccBlocked(css) {
+    if (/<\s*\/?\s*(style|script)\b/i.test(css)) return "it contains a <style> or <script> tag. Only CSS rules can go here; remove the tag.";
+    if (/<!--|-->|<\s*\/?\s*[a-z]/i.test(ccStrip(css))) return "it contains HTML. Only CSS rules can go here.";
+    return "";
+  }
+  function ccBraces(css) {
+    var s = ccStrip(css), depth = 0, line = 1;
+    for (var i = 0; i < s.length; i++) {
+      var c = s[i];
+      if (c === "\n") line++;
+      else if (c === "{") depth++;
+      else if (c === "}") { depth--; if (depth < 0) return "there's an extra } on line " + line + "."; }
+    }
+    return depth > 0 ? (depth === 1 ? "a { has no closing }." : depth + " { have no closing }.") : "";
+  }
+  function ccCheck() {
+    var m = $("#cc-msg"), bad = ccBlocked(cc.cur || ""), br = bad ? "" : ccBraces(cc.cur || "");
+    m.className = "ed-msg" + (bad ? " err" : br ? " warn" : "");
+    m.textContent = bad ? "Can't save: " + bad : br ? "Check the braces: " + br : (customDirty() ? "Unsaved changes. The preview shows them; Save puts them on the site." : "");
+    if (br && !bad) m.style.color = "var(--warn)"; else m.style.color = "";
+  }
+  function ccGutter() {
+    var n = ($("#cc-text").value.match(/\n/g) || []).length + 1, out = [];
+    for (var i = 1; i <= n; i++) out.push(i);
+    $("#cc-gutter").textContent = out.join("\n");
+    $("#cc-gutter").scrollTop = $("#cc-text").scrollTop;
+  }
+  function loadCustom() {
+    if (cc.ready) { ccLive(); return; }
+    if (cc.loading) return;
+    cc.loading = true;
+    (tree.has("custom.css") ? readText("custom.css") : Promise.resolve("")).then(function (t) {
+      cc.saved = t; cc.cur = t; cc.ready = true;
+      $("#cc-text").value = t; ccGutter(); ccCheck();
+      $("#cc-page").innerHTML = pages.map(function (p) { return '<option value="' + esc(p) + '">' + esc(prettyPage(p)) + "</option>"; }).join("");
+      ccLoadFrame();
+    }).catch(function (e) { $("#cc-msg").className = "ed-msg err"; $("#cc-msg").textContent = "Couldn't load custom.css: " + e.message; })
+      .then(function () { cc.loading = false; });
+  }
+  $("#cc-text").addEventListener("input", function () {
+    if (!cc.ready) return;
+    cc.cur = this.value; ccGutter(); updateBar();
+    clearTimeout(ccTimer); ccTimer = setTimeout(function () { ccCheck(); ccLive(); }, 250);
+  });
+  $("#cc-text").addEventListener("scroll", function () { $("#cc-gutter").scrollTop = this.scrollTop; });
+  var ccEscaped = false;
+  $("#cc-text").addEventListener("keydown", function (e) {
+    if (e.key === "Escape") { ccEscaped = true; return; }
+    if (e.key !== "Tab" || e.ctrlKey || e.altKey || e.metaKey) { ccEscaped = false; return; }
+    if (ccEscaped) { ccEscaped = false; return; }   // Esc, then Tab: move focus on as usual
+    e.preventDefault();
+    var ta = this, a = ta.selectionStart, b = ta.selectionEnd, v = ta.value;
+    if (e.shiftKey) {
+      // outdent the current line
+      var ls = v.lastIndexOf("\n", a - 1) + 1, cut = v.slice(ls, ls + 2) === "  " ? 2 : v[ls] === " " ? 1 : 0;
+      if (!cut) return;
+      ta.setRangeText("", ls, ls + cut, "preserve");
+    } else {
+      ta.setRangeText("  ", a, b, "end");
+    }
+    ta.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+  $("#cc-page").addEventListener("change", ccLoadFrame);
+  $("#cc-reload").addEventListener("click", ccLoadFrame);
+  function ccLoadFrame() { $("#cc-frame").src = SITE + $("#cc-page").value + "?lang=en&t=" + Date.now(); }
+  /* The unsaved CSS on the real page; the saved custom.css is switched off. Tags are never put in the page. */
+  function ccLive() {
+    var doc; try { doc = $("#cc-frame").contentDocument; } catch (e) { return; }
+    if (!doc || !doc.head || cc.cur == null) return;
+    $$('link[href*="custom.css"]', doc).forEach(function (l) { l.disabled = true; });
+    var st = doc.getElementById("tse-live-custom");
+    if (!st) { st = doc.createElement("style"); st.id = "tse-live-custom"; doc.head.appendChild(st); }
+    st.textContent = ccBlocked(cc.cur) ? "" : cc.cur;
+  }
+  $("#cc-frame").addEventListener("load", function () {
+    var doc; try { doc = this.contentDocument; } catch (e) { return; }
+    if (!doc || !doc.head) return;
+    var st = doc.createElement("style");
+    st.textContent = ".bw-intro,[class*=intro-screen],.lang-dialog{display:none!important}";
+    doc.head.insertBefore(st, doc.head.firstChild);
+    ccLive();
   });
 
 })();
