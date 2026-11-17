@@ -13,7 +13,7 @@
   <link rel="alternate icon" href="../brand/tenshi-apple-touch-icon.png" type="image/png">
   <link rel="apple-touch-icon" href="../brand/tenshi-apple-touch-icon.png">
   <link rel="stylesheet" href="../tailwind.css?v=d4ae14d9">
-  <link rel="stylesheet" href="../styles.css?v=6c127b91">
+  <link rel="stylesheet" href="../styles.css?v=c88c0706">
   <link rel="stylesheet" href="../design.css?v=ea6e1648">
   <link rel="stylesheet" href="../chat.css?v=8097383f">
   <link rel="stylesheet" href="../site-theme.css?v=e9955052">
@@ -92,7 +92,13 @@
   </header>
 
   <main id="main">
-    <section class="svc-hero has-art">
+    <section class="svc-hero has-art px-hero" data-parallax data-speed="0.3" data-overlay="gradient" data-fx-letters="rise" style="--px-h:auto;--px-overlay:#12050a;--px-op:0.6;--px-pos:center center;--px-grad:linear-gradient(180deg,rgba(18,5,10,0.55) 0%,55%,rgba(18,5,10,0.8) 100%);--pxl-step:30ms;--pxl-dur:0.8s;--pxl-delay:0.1s">
+      <div class="px-hero-bg" aria-hidden="true">
+        <div class="parallax-layer">
+          <img src="../img/photos/kobe.jpg" alt="" width="1920" height="1080" decoding="async" fetchpriority="high" data-still data-still-color>
+        </div>
+        <div class="parallax-overlay"></div>
+      </div>
       <div class="svc-hero-inner">
         <div class="svc-hero-text">
           <nav class="crumbs" aria-label="Breadcrumb" data-i18n-attr="aria-label:crumbLabel">
@@ -102,7 +108,7 @@
               <li aria-current="page" data-i18n="prj_sc_name">StoryCaster</li>
             </ol>
           </nav>
-          <h1 data-i18n="prj_sc_name">StoryCaster</h1>
+          <h1 data-px-title data-still data-i18n="prj_sc_name">StoryCaster</h1>
           <p class="svc-hero-lead" data-i18n="prj_sc_tag">Write your own roleplay and perform it as emotes, with real character animations.</p>
         </div>
         <div class="prj-hero-logo"><picture><source srcset="../img/projects/storycaster-logo.webp" type="image/webp"><img class="prj-logo" src="../img/projects/storycaster-logo.png" alt="StoryCaster logo: a glowing open hand reaching out of violet smoke" data-i18n-attr="alt:prj_sc_logoAlt" width="220" height="220"></picture></div>
@@ -400,8 +406,8 @@
     </div>
   </footer>
 
-  <script src="../translations.js?v=78f9354f"></script>
-  <script src="../app.js?v=d2092dd3"></script>
+  <script src="../translations.js?v=8722ac0c"></script>
+  <script src="../app.js?v=ea8ef1b2"></script>
   <script src="../design.js?v=a58ab8fd"></script>
   <script src="../chat.js?v=e6aee4be"></script>
 </body>

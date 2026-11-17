@@ -562,7 +562,7 @@ const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
   setupParallaxFx();
 
 
-  /* ---------- Homepage parallax bands: shift the inner image layer as the band crosses the viewport.
+  /* ---------- Homepage parallax bands and interior page headers (.px-hero): shift the inner image layer as the band crosses the viewport.
      Disabled when the visitor prefers reduced motion. Avoids background-attachment: fixed (broken on iOS). ---------- */
   function setupParallax() {
     const bands = $$("[data-parallax]");
@@ -609,7 +609,7 @@ const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
      rain     - rain drawn on a canvas inside the band, behind the words; it only runs while the band is on screen
      Visitors who prefer reduced motion get the finished state: plain heading, full color, no rain. ---------- */
   function setupParallaxFx() {
-    const bands = $$("[data-parallax]").filter((b) => b.dataset.fxLetters || b.dataset.fxGray || b.dataset.fxRain);
+    const bands = $$("[data-parallax]").filter((b) => b.dataset.fxLetters || b.dataset.fxGray || b.dataset.fxRain || b.dataset.fxFireflies);
     if (!bands.length) return;
     const still = () => reduceMotion.matches;
     const CJK = /[\u3000-\u9fff\uac00-\ud7af\uff00-\uffef]/;
@@ -652,13 +652,14 @@ const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
     const scrollGray = [];
     bands.forEach((band) => {
       band.classList.add("pxfx-on");
-      const title = $(".parallax-title", band);
+      const title = $(".parallax-title, [data-px-title]", band);   // band heading, or the H1 of an interior page header
       if (band.dataset.fxLetters && title) {
         split(title);
         document.addEventListener("tse:lang", () => split(title));   // the language switcher rewrites the heading text
       }
       if (band.dataset.fxGray === "scroll") scrollGray.push(band);
       if (band.dataset.fxRain) startBandRain(band);
+      if (band.dataset.fxFireflies) startFireflies(band);
       if (enterIO && !still()) enterIO.observe(band); else band.classList.add("pxfx-in");
     });
 
@@ -686,6 +687,36 @@ const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
 
   // Rain inside one band. "streaks" draws slanted lines; "glyphs" is the falling-characters look of rain.js (in the
   // band's own colour, on a see-through canvas so the photo shows through).
+  // Fireflies inside one band: glowing dots that wander and pulse. The motion is plain CSS (styles.css, .pxff);
+  // this only places the dots with random paths and timings, and pauses them while the band is off screen.
+  // Settings: data-ff-count / -size / -size-var / -speed attributes, --ff-color / --ff-glow / --ff-pulse / --ff-op.
+  function startFireflies(band) {
+    const box = $(".parallax-fireflies", band);
+    if (!box || reduceMotion.matches) return;
+    const ds = band.dataset;
+    const num = (v, d) => (Number.isFinite(Number(v)) ? Number(v) : d);
+    const count = Math.max(1, Math.min(120, Math.round(num(ds.ffCount, 30))));
+    const size = num(ds.ffSize, 4), sizeVar = Math.max(0, Math.min(1, num(ds.ffSizeVar, 0.5))), speed = Math.max(0.1, num(ds.ffSpeed, 1));
+    const lower = ds.fxFireflies === "lower";
+    const r = (a, b) => a + Math.random() * (b - a);
+    const amp = () => (Math.random() < 0.5 ? -1 : 1) * r(18, 90);
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < count; i++) {
+      const f = document.createElement("span");
+      f.className = "pxff";
+      const d = r(14, 30) / speed, s = size * (1 - sizeVar * Math.random());
+      f.style.cssText = `left:${r(2, 98).toFixed(2)}%;top:${(lower ? r(52, 96) : r(4, 96)).toFixed(2)}%;` +
+        `--x1:${amp().toFixed(0)}px;--y1:${amp().toFixed(0)}px;--x2:${amp().toFixed(0)}px;--y2:${amp().toFixed(0)}px;--x3:${amp().toFixed(0)}px;--y3:${amp().toFixed(0)}px;` +
+        `--ffs:${Math.max(1, s).toFixed(2)}px;--ffd:${d.toFixed(2)}s;--ffdl:${(-r(0, d)).toFixed(2)}s;--ffp:${r(0.7, 1.4).toFixed(2)};--ffpl:${(-r(0, 6)).toFixed(2)}s`;
+      f.appendChild(document.createElement("i"));
+      frag.appendChild(f);
+    }
+    box.appendChild(frag);
+    box.classList.add("is-paused");
+    if ("IntersectionObserver" in window) new IntersectionObserver((e) => { box.classList.toggle("is-paused", !e[0].isIntersecting); }, { rootMargin: "80px" }).observe(band);
+    else box.classList.remove("is-paused");
+  }
+
   function startBandRain(band) {
     const canvas = $(".parallax-rain", band);
     if (!canvas || !canvas.getContext) return;

@@ -2,6 +2,7 @@
 //   - index.html: the nine service cards, the form's topic list, the current menu item, the slogan band,
 //     footer widgets, and the two homepage parallax bands (data/parallax.json, between the Design / Development /
 //     Optimization panels)
+//   - the photo header of every interior page (data/parallax.json "pageHeader", see heroPx)
 //   - about.html, services.html, contact.html, news.html, blog.html
 //   - services/<slug>.html, one full page per service
 //   - blog/<slug>.html, one page per long-form post that has a slug in data/blog.json
@@ -228,7 +229,7 @@ ${lines.map((k, i) => `        <li${i === 0 ? ' class="band-text"' : ""} data-i1
 }
 
 /* ---------- Homepage parallax bands (Tenshi Editor › Parallax): data/parallax.json
-   Two full-width photographs between the Design, Development and Optimization panels.
+   Three full-width photographs: between the Design, Development and Optimization panels, and before the contact form.
    app.js moves the inner image layer on scroll (disabled when the visitor prefers reduced motion). */
 const PARALLAX = readJson("data/parallax.json", { bands: [] });
 const pxClamp = (n, min, max, fallback) => { const v = Number(n); return Number.isFinite(v) ? Math.min(max, Math.max(min, v)) : fallback; };
@@ -243,11 +244,15 @@ const pxPos = (p) => {
 const pxColor = (c, fallback = "#1a080c") => (/^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i.test(c || "") ? c : fallback);
 const pxPick = (v, list) => (list.includes(v) ? v : list[0]);
 // Optional effects per band (Tenshi Editor › Parallax › Effects). Missing fields keep the look the bands launched with:
-// letter-by-letter heading and gray-to-color on, rain off. app.js runs them; reduced motion shows the finished state.
+// letter-by-letter heading and gray-to-color on, rain and fireflies off. app.js runs them; reduced motion shows the finished state.
 const PX_FX = {
   letters: { enabled: true, style: "rise", stagger: 40, duration: 0.8, delay: 0.1 },
   grayFade: { enabled: true, trigger: "enter", duration: 1.8, delay: 0.25, amount: 1 },
-  rain: { enabled: false, style: "streaks", density: 18, speed: 1, angle: 10, color: "#d6dde8", opacity: 0.45 }
+  rain: { enabled: false, style: "streaks", density: 18, speed: 1, angle: 10, color: "#d6dde8", opacity: 0.45 },
+  // Fireflies: glowing dots that wander and pulse (CSS animations; app.js places them and pauses them off screen).
+  // count = how many, size = dot size in px, sizeVar = 0 (all the same) to 1 (very mixed), glow = glow radius in px,
+  // speed = drift speed (1 = normal), pulse = seconds per glow cycle, area = "all" or "lower" (lower half of the band).
+  fireflies: { enabled: false, count: 30, color: "#f5e663", size: 4, sizeVar: 0.5, glow: 16, speed: 1, pulse: 2.5, opacity: 0.85, area: "all" }
 };
 // Overlay: "solid" (overlay colour + overlayOpacity, the original look; also used when overlayMode is missing) or
 // "gradient" (gradient: type linear/radial, angle, from/to colour and opacity, stop = midpoint between them in %).
@@ -272,6 +277,7 @@ function pxEffects(b) {
   const L = { ...PX_FX.letters, ...(b.letters || {}) };
   const G = { ...PX_FX.grayFade, ...(b.grayFade || {}) };
   const R = { ...PX_FX.rain, ...(b.rain || {}) };
+  const F = { ...PX_FX.fireflies, ...(b.fireflies || {}) };
   const attrs = [], vars = [];
   if (L.enabled !== false) {
     attrs.push(`data-fx-letters="${pxPick(L.style, ["rise", "fade", "blur", "flip"])}"`);
@@ -288,7 +294,14 @@ function pxEffects(b) {
       `data-rain-angle="${pxClamp(R.angle, -45, 45, 10)}"`, `data-rain-color="${pxColor(R.color, "#d6dde8")}"`,
       `data-rain-opacity="${pxClamp(R.opacity, 0.05, 1, 0.45)}"`);
   }
-  return { attrs: attrs.length ? " " + attrs.join(" ") : "", vars: vars.length ? ";" + vars.join(";") : "", rain };
+  const fireflies = F.enabled === true;
+  if (fireflies) {
+    attrs.push(`data-fx-fireflies="${pxPick(F.area, ["all", "lower"])}"`, `data-ff-count="${Math.round(pxClamp(F.count, 1, 120, 30))}"`,
+      `data-ff-size="${pxClamp(F.size, 1, 12, 4)}"`, `data-ff-size-var="${pxClamp(F.sizeVar, 0, 1, 0.5)}"`, `data-ff-speed="${pxClamp(F.speed, 0.1, 4, 1)}"`);
+    vars.push(`--ff-color:${pxColor(F.color, "#f5e663")}`, `--ff-glow:${pxClamp(F.glow, 0, 40, 16)}px`,
+      `--ff-pulse:${pxClamp(F.pulse, 0.3, 10, 2.5)}s`, `--ff-op:${pxClamp(F.opacity, 0.05, 1, 0.85)}`);
+  }
+  return { attrs: attrs.length ? " " + attrs.join(" ") : "", vars: vars.length ? ";" + vars.join(";") : "", rain, fireflies };
 }
 function parallaxSlot(i) {
   const b = (PARALLAX.bands || [])[i];
@@ -319,7 +332,8 @@ function parallaxSlot(i) {
   const title = titleKey ? `        <h2 class="parallax-title" id="${titleId}" data-i18n="${titleKey}" data-still>${tx(titleKey)}</h2>` : "";
   const lead = textKey ? `        <p class="parallax-text" data-i18n="${textKey}">${tx(textKey)}</p>` : "";
   const copy = (title || lead) ? `      <div class="parallax-copy">\n${[title, lead].filter(Boolean).join("\n")}\n      </div>` : "";
-  const rain = fx.rain ? `        <canvas class="parallax-rain" aria-hidden="true"></canvas>\n` : "";
+  const rain = (fx.rain ? `        <canvas class="parallax-rain" aria-hidden="true"></canvas>\n` : "") +
+    (fx.fireflies ? `        <div class="parallax-fireflies" aria-hidden="true"></div>\n` : "");
   return `    <section class="parallax" data-parallax data-speed="${speed}"${ov.attr}${fx.attrs} style="--px-h:${height}vh;--px-overlay:${overlay};--px-op:${op};--px-pos:${pos}${ov.vars}${fx.vars}"${labelled}>
       <div class="parallax-viewport">
         <div class="parallax-layer" aria-hidden="true">
@@ -332,6 +346,72 @@ ${rain}${copy}
 `;
 }
 
+/* ---------- Interior page headers (Tenshi Editor › Parallax › Interior page headers): data/parallax.json "pageHeader"
+   The title area at the top of every interior page (breadcrumbs, H1, lead) becomes a full-width photograph that uses
+   the same parallax, overlay and effects as the homepage bands. Settings are layered, later ones win field by field
+   (gradient / letters / grayFade / rain / fireflies merge key by key):
+     built-in defaults (PH_BASE) → pageHeader (everything except "pages") → pageHeader.pages["services/*"] (a group:
+     services/*, projects/*, blog/*) → pageHeader.pages["services/web-design"] (one page, keyed by its path without .html).
+   "height" is a minimum height in vh; 0 lets the text decide. "enabled": false on a page or group keeps the plain
+   light-gray header there. A data file without "pageHeader" gets the built-in defaults. */
+const PH_BASE = {
+  enabled: true, image: "img/photos/osaka.jpg", speed: 0.3, height: 0, position: "center center",
+  overlayMode: "gradient", overlay: "#12050a", overlayOpacity: 0.6,
+  gradient: { type: "linear", angle: 180, from: "#12050a", fromOpacity: 0.55, to: "#12050a", toOpacity: 0.8, stop: 55 },
+  letters: { enabled: true, style: "rise", stagger: 30, duration: 0.8, delay: 0.1 },
+  grayFade: { enabled: false, trigger: "enter", duration: 1.8, delay: 0.25, amount: 1 },
+  rain: { enabled: false, style: "streaks", density: 14, speed: 1, angle: 10, color: "#d6dde8", opacity: 0.35 },
+  fireflies: { enabled: false, count: 30, color: "#f5e663", size: 4, sizeVar: 0.5, glow: 16, speed: 1, pulse: 2.5, opacity: 0.85, area: "all" }
+};
+const phIsObj = (v) => v && typeof v === "object" && !Array.isArray(v);
+const phMerge = (a, b) => {
+  const o = { ...a };
+  if (!phIsObj(b)) return o;
+  for (const [k, v] of Object.entries(b)) {
+    if (k === "pages" || v === undefined || v === null) continue;
+    o[k] = phIsObj(v) && phIsObj(a[k]) ? { ...a[k], ...v } : v;
+  }
+  return o;
+};
+function phSettings(key) {
+  const P = phIsObj(PARALLAX.pageHeader) ? PARALLAX.pageHeader : {};
+  const pages = phIsObj(P.pages) ? P.pages : {};
+  let s = phMerge(PH_BASE, P);
+  if (key.includes("/")) s = phMerge(s, pages[key.split("/")[0] + "/*"]);
+  return phMerge(s, pages[key]);
+}
+// Rewrites the first .svc-hero of a generated interior page; html without one is returned unchanged.
+function heroPx(html, key) {
+  const s = phSettings(key);
+  if (s.enabled === false) return html;
+  const image = pxImage(s.image);
+  if (!image) return html;
+  const pre = "../".repeat(key.split("/").length - 1);
+  const fx = pxEffects(s), ov = pxOverlay(s);
+  const speed = pxClamp(s.speed, -1, 1, 0.3), height = pxClamp(s.height, 0, 100, 0);
+  const style = `--px-h:${height ? height + "vh" : "auto"};--px-overlay:${pxColor(s.overlay)};--px-op:${pxClamp(s.overlayOpacity, 0, 1, 0.6)};--px-pos:${pxPos(s.position)}${ov.vars}${fx.vars}`;
+  const rain = (fx.rain ? `        <canvas class="parallax-rain" aria-hidden="true"></canvas>\n` : "") +
+    (fx.fireflies ? `        <div class="parallax-fireflies" aria-hidden="true"></div>\n` : "");
+  let done = false;
+  let out = html.replace(/<section class="svc-hero([^"]*)">\n(\s*)<div class="svc-hero-inner">/, (m, cls, ind) => {
+    done = true;
+    return `<section class="svc-hero${cls} px-hero" data-parallax data-speed="${speed}"${ov.attr}${fx.attrs} style="${style}">
+      <div class="px-hero-bg" aria-hidden="true">
+        <div class="parallax-layer">
+          <img src="${pre}${image}" alt="" width="1920" height="1080" decoding="async" fetchpriority="high" data-still data-still-color>
+        </div>
+        <div class="parallax-overlay"></div>
+${rain}      </div>
+${ind}<div class="svc-hero-inner">`;
+  });
+  // The letter effect runs the H1 (app.js); data-still keeps design.js's own heading animation off it.
+  if (done && fx.attrs.includes("data-fx-letters")) {
+    out = out.replace(/(<section class="svc-hero[^"]* px-hero"[\s\S]*?)<h1(?![^>]*data-px-title)/, "$1<h1 data-px-title data-still");
+  }
+  return out;
+}
+const writePage = (file, html) => writeFileSync(file, heroPx(html, file.replace(/\.html$/, "")));
+
 index = between(index, "band", sloganBand());
 // The slogan's look (Tenshi Editor › Slogan › Look): data/slogan.json "style" → slogan.css, loaded by the homepage after site-theme.css
 writeFileSync("slogan.css", "/* Written by tools/build-pages.mjs from data/slogan.json (Tenshi Editor › Slogan › Look). Don't edit by hand. */\n" +
@@ -340,6 +420,7 @@ if (!index.includes('href="slogan.css')) index = index.replace(/(  <link rel="st
 index = between(index, "widgets", footerWidgets());
 index = between(index, "parallax1", parallaxSlot(0));
 index = between(index, "parallax2", parallaxSlot(1));
+index = between(index, "parallax3", parallaxSlot(2));
 writeFileSync("index.html", index);
 const HEADER = index.match(/  <header class="site-header">[\s\S]*?<\/header>/)[0];
 const FOOTER = index.match(/  <footer class="site-footer">[\s\S]*?<\/footer>/)[0].replace(/\n\s*<p class="photo-credits">[\s\S]*?<\/p>/, "");
@@ -598,7 +679,7 @@ ${TEAM.map((m) => `          <li><img src="img/team/${m.img}" alt="" width="400"
 
 ${cta("contact.html")}`,
 });
-writeFileSync("about.html", about);
+writePage("about.html", about);
 
 /* ---------- Team ---------- */
 const teamPage = frame({
@@ -640,7 +721,7 @@ ${m.skills.map((id) => { const s = SERVICES.find((x) => x.id === id); return `  
 
 ${cta("contact.html")}`,
 });
-writeFileSync("team.html", teamPage);
+writePage("team.html", teamPage);
 
 // A drawn line icon for each service (24 x 24, stroke), used in the detailed descriptions.
 const SVC_ICON = {
@@ -713,7 +794,7 @@ ${process()}
 
 ${cta("contact.html")}`,
 });
-writeFileSync("services.html", servicesPage);
+writePage("services.html", servicesPage);
 
 /* ---------- Technology: the Japanese robotics patent explorer (live searches of public patent databases) ---------- */
 const GP = "https://patents.google.com/";
@@ -811,7 +892,7 @@ ${gr.items.map(([slug, name, url]) => `            <li class="tech-card">
 
 ${patentSection()}${cta("contact.html")}`,
 });
-writeFileSync("technology.html", techPage);
+writePage("technology.html", techPage);
 
 /* ---------- Contact ---------- */
 const contactPage = frame({
@@ -872,7 +953,7 @@ ${[1, 2, 3, 4].map((n) => `          <details>
       </div>
     </section>`,
 });
-writeFileSync("contact.html", contactPage);
+writePage("contact.html", contactPage);
 
 /* ---------- one page per service ---------- */
 const SERVICE_TECH = {
@@ -978,7 +1059,7 @@ ${others.map((o) => `          <li><a class="svc-other" href="${o.slug}.html">
   });
 }
 mkdirSync("services", { recursive: true });
-for (const s of SERVICES) writeFileSync(`services/${s.slug}.html`, servicePage(s));
+for (const s of SERVICES) writePage(`services/${s.slug}.html`, servicePage(s));
 /* ---------- Projects: our own software (World of Warcraft add-ons) ---------- */
 const CF = "https://www.curseforge.com/wow/addons/";
 const PROJECTS = [
@@ -1051,7 +1132,7 @@ ${PROJECTS.map((p) => projCard(p, "")).join("\n")}
 
 ${cta("contact.html")}`,
 });
-writeFileSync("projects.html", projectsPage);
+writePage("projects.html", projectsPage);
 
 function projectPage(p) {
   const others = PROJECTS.filter((o) => o !== p);
@@ -1221,7 +1302,7 @@ ${c.items.map((n) => newsItem(n, c.id)).join("\n")}
 
 ${cta("contact.html")}`,
 });
-writeFileSync("news.html", newsPage);
+writePage("news.html", newsPage);
 
 const POSTS = BLOGDATA.posts || [];
 const postHref = (url, prefix) => {
@@ -1350,10 +1431,10 @@ ${POSTS.map(blogCard).join("\n")}
 
 ${cta("contact.html")}`,
 });
-writeFileSync("blog.html", blogPage);
+writePage("blog.html", blogPage);
 mkdirSync("blog", { recursive: true });
 const slugPosts = POSTS.filter((b) => b.slug && SLUG_RE.test(b.slug));
-for (const post of slugPosts) writeFileSync(`blog/${post.slug}.html`, postPage(post));
+for (const post of slugPosts) writePage(`blog/${post.slug}.html`, postPage(post));
 
 
 /* ---------- Portal: the way in for clients and for the Tenshi team (admin.html, the Tenshi Editor) ---------- */
@@ -1388,10 +1469,10 @@ const portalPage = frame({
     </section>
 `,
 });
-writeFileSync("portal.html", portalPage);
+writePage("portal.html", portalPage);
 
 mkdirSync("projects", { recursive: true });
-for (const p of PROJECTS) writeFileSync(`projects/${p.slug}.html`, projectPage(p));
+for (const p of PROJECTS) writePage(`projects/${p.slug}.html`, projectPage(p));
 console.log(`index.html updated; about.html, team.html, services.html, technology.html, projects.html, contact.html, ${SERVICES.length} service pages and ${PROJECTS.length} project pages written; news.html, blog.html, ${slugPosts.length} blog post page(s) and portal.html written`);
 
 /* ---------- Buttons and Custom CSS (Tenshi Editor › Buttons, › Custom CSS) ----------

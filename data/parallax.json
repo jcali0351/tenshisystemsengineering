@@ -91,6 +91,158 @@
         "color": "#d6dde8",
         "opacity": 0.4
       }
+    },
+    {
+      "id": "px3",
+      "enabled": true,
+      "image": "img/photos/tokyo.jpg",
+      "altKey": "px3Alt",
+      "titleKey": "px3Title",
+      "textKey": "px3Text",
+      "speed": 0.35,
+      "height": 60,
+      "overlayMode": "gradient",
+      "overlay": "#12050a",
+      "overlayOpacity": 0.45,
+      "gradient": {
+        "type": "linear",
+        "angle": 180,
+        "from": "#12050a",
+        "fromOpacity": 0.35,
+        "to": "#12050a",
+        "toOpacity": 0.8,
+        "stop": 55
+      },
+      "position": "center center",
+      "letters": {
+        "enabled": true,
+        "style": "rise",
+        "stagger": 40,
+        "duration": 0.8,
+        "delay": 0.1
+      },
+      "grayFade": {
+        "enabled": false,
+        "trigger": "enter",
+        "duration": 1.8,
+        "delay": 0.25,
+        "amount": 1
+      },
+      "rain": {
+        "enabled": false,
+        "style": "streaks",
+        "density": 18,
+        "speed": 1,
+        "angle": 10,
+        "color": "#d6dde8",
+        "opacity": 0.45
+      },
+      "fireflies": {
+        "enabled": true,
+        "count": 28,
+        "color": "#f5e663",
+        "size": 4,
+        "sizeVar": 0.5,
+        "glow": 16,
+        "speed": 1,
+        "pulse": 2.5,
+        "opacity": 0.85,
+        "area": "all"
+      }
     }
-  ]
+  ],
+  "pageHeader": {
+    "enabled": true,
+    "image": "img/photos/osaka.jpg",
+    "speed": 0.3,
+    "height": 0,
+    "position": "center center",
+    "overlayMode": "gradient",
+    "overlay": "#12050a",
+    "overlayOpacity": 0.6,
+    "gradient": {
+      "type": "linear",
+      "angle": 180,
+      "from": "#12050a",
+      "fromOpacity": 0.55,
+      "to": "#12050a",
+      "toOpacity": 0.8,
+      "stop": 55
+    },
+    "letters": {
+      "enabled": true,
+      "style": "rise",
+      "stagger": 30,
+      "duration": 0.8,
+      "delay": 0.1
+    },
+    "grayFade": {
+      "enabled": false,
+      "trigger": "enter",
+      "duration": 1.8,
+      "delay": 0.25,
+      "amount": 1
+    },
+    "rain": {
+      "enabled": false,
+      "style": "streaks",
+      "density": 14,
+      "speed": 1,
+      "angle": 10,
+      "color": "#d6dde8",
+      "opacity": 0.35
+    },
+    "pages": {
+      "about": {
+        "image": "img/photos/kyoto.jpg",
+        "position": "center 40%",
+        "fireflies": {
+          "enabled": true,
+          "count": 26,
+          "color": "#f5e663",
+          "size": 4,
+          "sizeVar": 0.5,
+          "glow": 16,
+          "speed": 0.8,
+          "pulse": 2.5,
+          "opacity": 0.8,
+          "area": "all"
+        }
+      },
+      "team": {
+        "image": "img/photos/yokohama.jpg"
+      },
+      "services": {
+        "image": "img/photos/tokyo.jpg"
+      },
+      "services/*": {
+        "image": "img/photos/tokyo.jpg"
+      },
+      "technology": {
+        "image": "img/photos/yokohama.jpg"
+      },
+      "projects": {
+        "image": "img/photos/kobe.jpg"
+      },
+      "projects/*": {
+        "image": "img/photos/kobe.jpg"
+      },
+      "news": {
+        "image": "img/photos/tokyo.jpg",
+        "position": "center 60%"
+      },
+      "blog": {
+        "image": "img/photos/kyoto.jpg"
+      },
+      "blog/*": {
+        "image": "img/photos/kyoto.jpg"
+      },
+      "contact": {
+        "image": "img/photos/osaka.jpg"
+      },
+      "portal": {
+        "image": "img/photos/yokohama.jpg"
+      }
+    }
+  }
 }

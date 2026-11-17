@@ -426,9 +426,14 @@
     }).catch(function (e) { m.textContent = e.message; m.className = "ed-msg err"; });
   });
   dlg.addEventListener("close", function () {
-    if (dlg.returnValue !== "ok" || !dlgPrepared) { pxUploadIndex = -1; return; }
+    if (dlg.returnValue !== "ok" || !dlgPrepared) { pxUploadIndex = -1; phUploadKey = null; return; }
     var old = imgEdits.get(dlgPath); if (old && old.url) URL.revokeObjectURL(old.url);
     imgEdits.set(dlgPath, dlgPrepared);
+    if (phUploadKey !== null && px.cur && px.cur.pageHeader) {
+      phTarget(phUploadKey).image = dlgPrepared.newPath;
+      phUploadKey = null;
+      renderPageHeaders();
+    }
     if (pxUploadIndex >= 0 && px.cur && px.cur.bands[pxUploadIndex]) {
       px.cur.bands[pxUploadIndex].image = dlgPrepared.newPath;
       pxUploadIndex = -1;
@@ -1075,6 +1080,7 @@
      Everything here saves with the main Save button (new or changed English is translated). */
   var px = { saved: null, cur: null };
   var pxUploadIndex = -1;
+  var phUploadKey = null;   // interior page header being given a new picture: "" = defaults, else a page key
   var PX_DEFAULT = { bands: [
     { id: "px1", enabled: true, image: "img/photos/kobe.jpg", altKey: "px1Alt", titleKey: "px1Title", textKey: "px1Text", speed: 0.35, height: 70, overlayMode: "solid", overlay: "#1a080c", overlayOpacity: 0.45,
       gradient: { type: "linear", angle: 180, from: "#1a080c", fromOpacity: 0.75, to: "#1a080c", toOpacity: 0.1, stop: 50 }, position: "center center",
@@ -1085,26 +1091,37 @@
       gradient: { type: "linear", angle: 180, from: "#12050a", fromOpacity: 0.1, to: "#12050a", toOpacity: 0.85, stop: 55 }, position: "center 40%",
       letters: { enabled: true, style: "blur", stagger: 45, duration: 0.9, delay: 0.1 },
       grayFade: { enabled: false, trigger: "enter", duration: 1.8, delay: 0.25, amount: 1 },
-      rain: { enabled: true, style: "streaks", density: 14, speed: 1, angle: 10, color: "#d6dde8", opacity: 0.4 } }
+      rain: { enabled: true, style: "streaks", density: 14, speed: 1, angle: 10, color: "#d6dde8", opacity: 0.4 } },
+    { id: "px3", enabled: true, image: "img/photos/tokyo.jpg", altKey: "px3Alt", titleKey: "px3Title", textKey: "px3Text", speed: 0.35, height: 60, overlayMode: "gradient", overlay: "#12050a", overlayOpacity: 0.45,
+      gradient: { type: "linear", angle: 180, from: "#12050a", fromOpacity: 0.35, to: "#12050a", toOpacity: 0.8, stop: 55 }, position: "center center",
+      letters: { enabled: true, style: "rise", stagger: 40, duration: 0.8, delay: 0.1 },
+      grayFade: { enabled: false, trigger: "enter", duration: 1.8, delay: 0.25, amount: 1 },
+      rain: { enabled: false, style: "streaks", density: 18, speed: 1, angle: 10, color: "#d6dde8", opacity: 0.45 },
+      fireflies: { enabled: true, count: 28, color: "#f5e663", size: 4, sizeVar: 0.5, glow: 16, speed: 1, pulse: 2.5, opacity: 0.85, area: "all" } }
   ] };
   // Effects a band gets when its saved settings don't mention them (same as tools/build-pages.mjs): heading letters and
-  // gray-to-color on, rain off.
+  // gray-to-color on, rain and fireflies off.
   var PX_FX = {
     letters: { enabled: true, style: "rise", stagger: 40, duration: 0.8, delay: 0.1 },
     grayFade: { enabled: true, trigger: "enter", duration: 1.8, delay: 0.25, amount: 1 },
-    rain: { enabled: false, style: "streaks", density: 18, speed: 1, angle: 10, color: "#d6dde8", opacity: 0.45 }
+    rain: { enabled: false, style: "streaks", density: 18, speed: 1, angle: 10, color: "#d6dde8", opacity: 0.45 },
+    fireflies: { enabled: false, count: 30, color: "#f5e663", size: 4, sizeVar: 0.5, glow: 16, speed: 1, pulse: 2.5, opacity: 0.85, area: "all" }
   };
   // [group, key, label, min, max, step, unit]
   var PX_FX_RANGES = {
     letters: [["stagger", "Delay between letters", 5, 250, 5, " ms"], ["duration", "Each letter's animation", 0.1, 4, 0.05, " s"], ["delay", "Start delay", 0, 5, 0.05, " s"]],
     grayFade: [["amount", "Starting gray amount", 0, 1, 0.05, ""], ["duration", "Fade length", 0.1, 8, 0.1, " s"], ["delay", "Start delay", 0, 5, 0.05, " s"]],
-    rain: [["density", "Amount of rain", 1, 60, 1, ""], ["speed", "Speed", 0.2, 3, 0.05, "×"], ["angle", "Angle / wind", -45, 45, 1, "°"], ["opacity", "Opacity", 0.05, 1, 0.05, ""]]
+    rain: [["density", "Amount of rain", 1, 60, 1, ""], ["speed", "Speed", 0.2, 3, 0.05, "×"], ["angle", "Angle / wind", -45, 45, 1, "°"], ["opacity", "Opacity", 0.05, 1, 0.05, ""]],
+    fireflies: [["count", "How many", 1, 120, 1, ""], ["size", "Dot size", 1, 12, 0.5, " px"], ["sizeVar", "Size variety (0 = all the same)", 0, 1, 0.05, ""],
+      ["glow", "Glow size", 0, 40, 1, " px"], ["speed", "Drift speed", 0.1, 4, 0.05, "×"], ["pulse", "Glow pulse length", 0.3, 10, 0.1, " s"], ["opacity", "Opacity", 0.05, 1, 0.05, ""]]
   };
   var PX_FX_CHOICES = {
     letters: ["style", "Style", [["rise", "Rise and tilt (site default)"], ["fade", "Fade"], ["blur", "Blur in"], ["flip", "Flip up"]]],
     grayFade: ["trigger", "When", [["enter", "Once, when the band comes into view"], ["scroll", "In step with scrolling"]]],
-    rain: ["style", "Look", [["streaks", "Rain streaks"], ["glyphs", "Falling characters"]]]
+    rain: ["style", "Look", [["streaks", "Rain streaks"], ["glyphs", "Falling characters"]]],
+    fireflies: ["area", "Where", [["all", "The whole band"], ["lower", "Lower half only"]]]
   };
+  var PX_FX_COLORS = { rain: ["Drop colour", "#d6dde8"], fireflies: ["Glow colour", "#f5e663"] };
   // Overlay a band gets when its settings don't mention one: the solid colour + opacity it launched with.
   var PX_GRAD = { type: "linear", angle: 180, from: "#1a080c", fromOpacity: 0.75, to: "#1a080c", toOpacity: 0.1, stop: 50 };
   function pxNormalize(b, i) {
@@ -1130,7 +1147,8 @@
     if (px.cur) { renderParallax(); return; }
     (tree.has("data/parallax.json") ? readText("data/parallax.json").then(JSON.parse) : Promise.resolve(PX_DEFAULT)).catch(function () { return PX_DEFAULT; }).then(function (d) {
       var src = (d && Array.isArray(d.bands) && d.bands.length) ? d.bands : PX_DEFAULT.bands;
-      px.saved = { bands: src.map(pxNormalize) };
+      src = src.concat(PX_DEFAULT.bands.slice(src.length));   // a file from before the third band gets its default
+      px.saved = { bands: src.map(pxNormalize), pageHeader: phNormalize(d && d.pageHeader) };
       px.cur = JSON.parse(JSON.stringify(px.saved));
       renderParallax();
     });
@@ -1161,7 +1179,7 @@
   }
   function renderParallax() {
     if (!px.cur) return;
-    var labels = ["Between Design and Development", "Between Development and Optimization"];
+    var labels = ["Between Design and Development", "Between Development and Optimization", "Between Optimization and Contact"];
     $("#px-bands").innerHTML = px.cur.bands.map(function (b, i) {
       var posOpts = PX_POS.map(function (o) { return '<option value="' + o[0] + '"' + (b.position === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("");
       if (b.position && !PX_POS.some(function (o) { return o[0] === b.position; })) {
@@ -1190,6 +1208,7 @@
           '<label class="ed-field"><span>Picture position</span><select data-px-k="position">' + posOpts + "</select></label>" +
         "</div>" + pxEffectsHTML(b) + "</article>";
     }).join("");
+    renderPageHeaders();
     updateBar();
   }
   function pxOverlayHTML(b) {
@@ -1226,26 +1245,30 @@
     var a = pxGradRgba(g.from, g.fromOpacity) + " 0%," + g.stop + "%," + pxGradRgba(g.to, g.toOpacity) + " 100%";
     return (g.type === "radial" ? "radial-gradient(ellipse at center," : "linear-gradient(" + g.angle + "deg,") + a + "), #888";
   }
+  var PX_FX_TITLES = { letters: "Heading letter by letter", grayFade: "Photo fades from gray to color", rain: "Rain", fireflies: "Fireflies" };
+  var PX_FX_NOTES = {
+    letters: "The heading appears one letter at a time as the band scrolls into view. Off: the heading simply shows.",
+    grayFade: "The photo starts black and white and turns to full color. Off: the photo is always in color.",
+    rain: "Rain falls over the photo, behind the words. It only runs while the band is on screen.",
+    fireflies: "Glowing dots drift slowly over the photo and pulse, behind the words. They pause while the band is off screen."
+  };
+  function pxFxGroupHTML(g, v) {
+    v = v || PX_FX[g];
+    var ch = PX_FX_CHOICES[g], colr = PX_FX_COLORS[g];
+    var opts = ch[2].map(function (o) { return '<option value="' + o[0] + '"' + (v[ch[0]] === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("");
+    var body = '<label class="ed-field"><span>' + ch[1] + '</span><select data-px-fx="' + g + "." + ch[0] + '">' + opts + "</select></label>" +
+      PX_FX_RANGES[g].map(function (r) {
+        return '<label class="dz-range"><span>' + r[1] + '</span><input type="range" data-px-fx="' + g + "." + r[0] + '" data-unit="' + esc(r[5]) + '" min="' + r[2] + '" max="' + r[3] + '" step="' + r[4] + '" value="' + v[r[0]] + '"><output>' + v[r[0]] + r[5] + "</output></label>";
+      }).join("") +
+      (colr ? '<label class="sl-field sl-color"><span>' + colr[0] + '</span><input type="color" data-px-fx="' + g + '.color" value="' + esc(v.color || colr[1]) + '"><output>' + esc(v.color || colr[1]) + "</output></label>" : "");
+    return '<div class="px-fx-group" data-px-fx-group="' + g + '"' + (v.enabled ? "" : " data-off") + ">" +
+      '<label class="ed-check"><input type="checkbox" data-px-fx="' + g + '.enabled"' + (v.enabled ? " checked" : "") + "> <b>" + PX_FX_TITLES[g] + "</b></label>" +
+      '<p class="px-fx-note">' + PX_FX_NOTES[g] + "</p>" +
+      '<div class="px-fx-body">' + body + "</div></div>";
+  }
+  var PX_RM_NOTE = '<p class="px-fx-note">Visitors who ask their device for reduced motion see the finished state: plain heading, full color, no rain or fireflies.</p>';
   function pxEffectsHTML(b) {
-    var titles = { letters: "Heading letter by letter", grayFade: "Photo fades from gray to color", rain: "Rain" };
-    var notes = {
-      letters: "The heading appears one letter at a time as the band scrolls into view. Off: the heading simply shows.",
-      grayFade: "The photo starts black and white and turns to full color. Off: the photo is always in color.",
-      rain: "Rain falls over the photo, behind the words. It only runs while the band is on screen."
-    };
-    return '<fieldset class="px-fx"><legend>Effects</legend>' + Object.keys(PX_FX).map(function (g) {
-      var v = b[g] || PX_FX[g], ch = PX_FX_CHOICES[g];
-      var opts = ch[2].map(function (o) { return '<option value="' + o[0] + '"' + (v[ch[0]] === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("");
-      var body = '<label class="ed-field"><span>' + ch[1] + '</span><select data-px-fx="' + g + "." + ch[0] + '">' + opts + "</select></label>" +
-        PX_FX_RANGES[g].map(function (r) {
-          return '<label class="dz-range"><span>' + r[1] + '</span><input type="range" data-px-fx="' + g + "." + r[0] + '" data-unit="' + esc(r[5]) + '" min="' + r[2] + '" max="' + r[3] + '" step="' + r[4] + '" value="' + v[r[0]] + '"><output>' + v[r[0]] + r[5] + "</output></label>";
-        }).join("") +
-        (g === "rain" ? '<label class="sl-field sl-color"><span>Drop colour</span><input type="color" data-px-fx="rain.color" value="' + esc(v.color || "#d6dde8") + '"><output>' + esc(v.color || "#d6dde8") + "</output></label>" : "");
-      return '<div class="px-fx-group" data-px-fx-group="' + g + '"' + (v.enabled ? "" : " data-off") + ">" +
-        '<label class="ed-check"><input type="checkbox" data-px-fx="' + g + '.enabled"' + (v.enabled ? " checked" : "") + "> <b>" + titles[g] + "</b></label>" +
-        '<p class="px-fx-note">' + notes[g] + "</p>" +
-        '<div class="px-fx-body">' + body + "</div></div>";
-    }).join("") + '<p class="px-fx-note">Visitors who ask their device for reduced motion see the finished state: plain heading, full color, no rain.</p></fieldset>';
+    return '<fieldset class="px-fx"><legend>Effects</legend>' + Object.keys(PX_FX).map(function (g) { return pxFxGroupHTML(g, b[g]); }).join("") + PX_RM_NOTE + "</fieldset>";
   }
   $("#px-bands").addEventListener("input", function (e) {
     var card = e.target.closest(".px-card"); if (!card || !px.cur) return;
@@ -1311,6 +1334,225 @@
     }
   });
 
+
+  /* ================================================================== PARALLAX › INTERIOR PAGE HEADERS
+     The photo title area at the top of every interior page (data/parallax.json "pageHeader"; tools/build-pages.mjs heroPx).
+     "Defaults" apply to every interior page. An override (pageHeader.pages[key]) changes only the parts ticked
+     "Customise" for a group of pages (services/*, projects/*, blog/*) or one page (its path without .html); the rest
+     follows the defaults. Saved with the main Save button, together with the homepage bands. */
+  var PH_BASE = {
+    enabled: true, image: "img/photos/osaka.jpg", speed: 0.3, height: 0, position: "center center",
+    overlayMode: "gradient", overlay: "#12050a", overlayOpacity: 0.6,
+    gradient: { type: "linear", angle: 180, from: "#12050a", fromOpacity: 0.55, to: "#12050a", toOpacity: 0.8, stop: 55 },
+    letters: { enabled: true, style: "rise", stagger: 30, duration: 0.8, delay: 0.1 },
+    grayFade: { enabled: false, trigger: "enter", duration: 1.8, delay: 0.25, amount: 1 },
+    rain: { enabled: false, style: "streaks", density: 14, speed: 1, angle: 10, color: "#d6dde8", opacity: 0.35 },
+    fireflies: { enabled: false, count: 30, color: "#f5e663", size: 4, sizeVar: 0.5, glow: 16, speed: 1, pulse: 2.5, opacity: 0.85, area: "all" }
+  };
+  // Which fields each "Customise" group covers
+  var PH_GROUPS = [
+    ["picture", "Picture", ["image", "position"]],
+    ["motion", "Parallax speed and height", ["speed", "height"]],
+    ["overlay", "Overlay", ["overlayMode", "overlay", "overlayOpacity", "gradient"]],
+    ["letters", "Heading letter by letter", ["letters"]],
+    ["grayFade", "Photo fades from gray to color", ["grayFade"]],
+    ["rain", "Rain", ["rain"]],
+    ["fireflies", "Fireflies", ["fireflies"]]
+  ];
+  var PH_NAMED = [
+    ["about", "About"], ["team", "Team"], ["services", "Services (overview)"], ["services/*", "Every service page"],
+    ["technology", "Technology"], ["projects", "Projects (overview)"], ["projects/*", "Every project page"],
+    ["news", "News"], ["blog", "Blog (list)"], ["blog/*", "Every blog post"], ["contact", "Contact"], ["portal", "Portal"]
+  ];
+  var phOpen = {};
+  function phIsObj(v) { return !!v && typeof v === "object" && !Array.isArray(v); }
+  function phMerge(a, b) {
+    var o = Object.assign({}, a);
+    if (!phIsObj(b)) return o;
+    Object.keys(b).forEach(function (k) {
+      var v = b[k];
+      if (k === "pages" || v === undefined || v === null) return;
+      o[k] = phIsObj(v) && phIsObj(a[k]) ? Object.assign({}, a[k], v) : v;
+    });
+    return o;
+  }
+  function phNormalize(h) {
+    var src = phIsObj(h) ? h : {};
+    var out = phMerge(PH_BASE, src);
+    out.pages = phIsObj(src.pages) ? JSON.parse(JSON.stringify(src.pages)) : {};
+    return out;
+  }
+  // The object a card edits: the defaults ("") or one override
+  function phTarget(key) {
+    var ph = px.cur.pageHeader;
+    if (!key) return ph;
+    ph.pages[key] = ph.pages[key] || {};
+    return ph.pages[key];
+  }
+  // What a page actually shows: defaults → its group (services/* …) → the page itself
+  function phEffective(key) {
+    var ph = px.cur.pageHeader, s = phMerge(PH_BASE, ph);
+    if (!key) return s;
+    if (key.indexOf("/") > 0 && key.slice(-2) !== "/*") s = phMerge(s, ph.pages[key.split("/")[0] + "/*"]);
+    return phMerge(s, ph.pages[key]);
+  }
+  function phLabel(key) {
+    for (var i = 0; i < PH_NAMED.length; i++) if (PH_NAMED[i][0] === key) return PH_NAMED[i][1];
+    return key.replace(/^(services|projects|blog)\//, function (m, f) { return { services: "Service: ", projects: "Project: ", blog: "Blog post: " }[f]; });
+  }
+  function phPageKeys() {
+    var keys = PH_NAMED.map(function (x) { return x[0]; });
+    Array.from(tree.keys()).sort().forEach(function (p) {
+      var m = /^(services|projects|blog)\/([a-z0-9-]+)\.html$/i.exec(p);
+      if (m) keys.push(m[1] + "/" + m[2]);
+    });
+    return keys;
+  }
+  function phPosOpts(cur) {
+    var o = PX_POS.map(function (x) { return '<option value="' + x[0] + '"' + (cur === x[0] ? " selected" : "") + ">" + x[1] + "</option>"; }).join("");
+    if (cur && !PX_POS.some(function (x) { return x[0] === cur; })) o += '<option value="' + esc(cur) + '" selected>' + esc(cur) + "</option>";
+    return o;
+  }
+  function phGroupHTML(g, v) {
+    if (g === "picture") {
+      return '<div class="px-preview"><img class="px-thumb" alt="" src="' + esc(pxImgSrc(v.image)) + '"><div class="px-actions">' +
+        '<label class="ed-inline ed-grow"><span>Picture</span> <select data-px-k="image">' + pxPathOptions(v.image) + "</select></label>" +
+        '<button type="button" class="ed-btn" data-ph-act="upload">Upload a new picture</button></div></div>' +
+        '<label class="ed-field"><span>Picture position</span><select data-px-k="position">' + phPosOpts(v.position) + "</select></label>";
+    }
+    if (g === "motion") {
+      return '<label class="dz-range"><span>Parallax speed</span><input type="range" data-px-k="speed" min="-1" max="1" step="0.05" value="' + v.speed + '"><output>' + v.speed + "</output></label>" +
+        '<label class="dz-range"><span>Minimum height (0 = fit the text)</span><input type="range" data-px-k="height" min="0" max="100" step="1" value="' + v.height + '"><output>' + (v.height ? v.height + " vh" : "fit") + "</output></label>";
+    }
+    if (g === "overlay") return pxOverlayHTML(v);
+    return pxFxGroupHTML(g, v[g]);
+  }
+  function phCardHTML(key) {
+    var isDef = !key, own = isDef ? null : (px.cur.pageHeader.pages[key] || {}), v = phEffective(key);
+    var head = isDef
+      ? "<h2>All interior pages (defaults)</h2>" +
+        '<label class="ed-check"><input type="checkbox" data-px-k="enabled"' + (v.enabled !== false ? " checked" : "") + "> Show a photo header on interior pages</label>"
+      : '<div class="ph-head"><h3>' + esc(phLabel(key)) + ' <code>' + esc(key) + "</code></h3>" +
+        '<button type="button" class="ed-btn ed-btn--ghost ed-btn--small" data-ph-act="remove">Remove override</button></div>' +
+        '<label class="ed-field"><span>Photo header on this page</span><select data-ph-show>' +
+          '<option value=""' + (own.enabled === undefined ? " selected" : "") + ">Same as the defaults</option>" +
+          '<option value="on"' + (own.enabled === true ? " selected" : "") + ">Show</option>" +
+          '<option value="off"' + (own.enabled === false ? " selected" : "") + ">Hide (plain light header)</option></select></label>";
+    var groups = PH_GROUPS.map(function (gr) {
+      var g = gr[0];
+      if (isDef) {
+        if (g === "picture" || g === "motion") return '<div class="px-fields">' + phGroupHTML(g, v) + "</div>";
+        return g === "overlay" ? phGroupHTML(g, v) : "";
+      }
+      var custom = gr[2].some(function (f) { return own[f] !== undefined; });
+      return '<div class="ph-group" data-ph-group="' + g + '">' +
+        '<label class="ed-check"><input type="checkbox" data-ph-custom="' + g + '"' + (custom ? " checked" : "") + "> Customise: <b>" + gr[1] + "</b></label>" +
+        (custom ? '<div class="ph-group-body">' + phGroupHTML(g, v) + "</div>" : "") + "</div>";
+    }).join("");
+    var fx = isDef ? '<fieldset class="px-fx"><legend>Effects</legend>' + ["letters", "grayFade", "rain", "fireflies"].map(function (g) { return pxFxGroupHTML(g, v[g]); }).join("") + PX_RM_NOTE + "</fieldset>" : "";
+    var tag = isDef ? "article" : "details";
+    return "<" + tag + ' class="px-card ph-card" data-ph="' + esc(key) + '"' + (!isDef && phOpen[key] ? " open" : "") + ">" +
+      (isDef ? "" : "<summary>" + esc(phLabel(key)) + "</summary>") + head + groups + fx + "</" + tag + ">";
+  }
+  function renderPageHeaders() {
+    var wrap = $("#ph-wrap"); if (!wrap || !px.cur) return;
+    if (!px.cur.pageHeader) px.cur.pageHeader = phNormalize(null);
+    var ph = px.cur.pageHeader, keys = phPageKeys();
+    var have = keys.filter(function (k) { return ph.pages[k]; }).concat(Object.keys(ph.pages).filter(function (k) { return keys.indexOf(k) < 0; }));
+    var free = keys.filter(function (k) { return !ph.pages[k]; });
+    wrap.innerHTML = '<h2 class="ph-title">Interior page headers</h2>' +
+      '<p class="ed-tip">The photo title area at the top of every page except the homepage (About, Services, each service, Projects, News, Blog and each post, Contact, Portal…). ' +
+      "Breadcrumbs, the page title and its introduction sit over the photo in white. Set the look for all pages here, then add an override to give a page, or every service / project / blog post, its own picture, overlay or effects. " +
+      "The page title is the heading the letter effect animates.</p>" +
+      phCardHTML("") +
+      '<h3 class="ph-sub">Page overrides</h3>' +
+      '<div class="ph-add"><label class="ed-inline ed-grow"><span>Page</span> <select id="ph-add-key">' +
+        free.map(function (k) { return '<option value="' + esc(k) + '">' + esc(phLabel(k)) + "</option>"; }).join("") +
+      '</select></label> <button type="button" class="ed-btn" data-ph-act="add"' + (free.length ? "" : " disabled") + ">Add override</button></div>" +
+      (have.length ? have.map(phCardHTML).join("") : '<p class="px-fx-note">No overrides: every interior page uses the defaults.</p>');
+  }
+  function phInput(e) {
+    var card = e.target.closest(".ph-card"); if (!card || !px.cur) return;
+    var key = card.dataset.ph, el = e.target, b;
+    if (el.hasAttribute("data-ph-custom")) {
+      var gr = PH_GROUPS.filter(function (x) { return x[0] === el.dataset.phCustom; })[0], own = phTarget(key);
+      if (el.checked) {
+        var eff = phEffective(key);
+        gr[2].forEach(function (f) { own[f] = phIsObj(eff[f]) ? Object.assign({}, eff[f]) : eff[f]; });
+      } else gr[2].forEach(function (f) { delete own[f]; });
+      phOpen[key] = true;
+      renderPageHeaders(); updateBar();
+      return;
+    }
+    if (el.hasAttribute("data-ph-show")) {
+      b = phTarget(key);
+      if (el.value === "") delete b.enabled; else b.enabled = el.value === "on";
+      updateBar();
+      return;
+    }
+    b = phTarget(key);
+    if (el.dataset.pxG) {
+      var gkey = el.dataset.pxG;
+      b.gradient = Object.assign({}, PX_GRAD, b.gradient || {});
+      b.gradient[gkey] = el.type === "range" ? parseFloat(el.value) : el.value;
+      var go = el.parentNode.querySelector("output"); if (go) go.textContent = b.gradient[gkey] + (el.dataset.unit || "");
+      var sw = card.querySelector(".px-ov-swatch"); if (sw) sw.style.background = pxGradCss(b.gradient);
+    } else if (el.dataset.pxFx) {
+      var gk = el.dataset.pxFx.split("."), g = gk[0], k2 = gk[1];
+      b[g] = Object.assign({}, PH_BASE[g], b[g] || {});
+      if (k2 === "enabled") {
+        b[g].enabled = el.checked;
+        var grp = el.closest(".px-fx-group"); if (grp) grp.toggleAttribute("data-off", !el.checked);
+      } else if (el.type === "range") {
+        b[g][k2] = parseFloat(el.value);
+        el.parentNode.querySelector("output").textContent = b[g][k2] + (el.dataset.unit || "");
+      } else {
+        b[g][k2] = el.value;
+        var o = el.parentNode.querySelector("output"); if (o) o.textContent = el.value;
+      }
+    } else {
+      var k = el.dataset.pxK; if (!k) return;
+      if (k === "enabled") b.enabled = el.checked;
+      else if (k === "speed" || k === "height" || k === "overlayOpacity") {
+        b[k] = parseFloat(el.value);
+        el.parentNode.querySelector("output").textContent = k === "height" ? (b[k] ? b[k] + " vh" : "fit") : String(b[k]);
+      } else if (k === "overlay") {
+        b.overlay = el.value;
+        el.parentNode.querySelector("output").textContent = el.value;
+      } else if (k === "overlayMode") {
+        b.overlayMode = el.value === "gradient" ? "gradient" : "solid";
+        card.querySelector(".px-ov-solid").hidden = b.overlayMode === "gradient";
+        card.querySelector(".px-ov-grad").hidden = b.overlayMode !== "gradient";
+      } else if (k === "image" || k === "position") {
+        b[k] = el.value;
+        if (k === "image") { var th = card.querySelector(".px-thumb"); if (th) th.src = pxImgSrc(el.value); }
+      }
+    }
+    updateBar();
+  }
+  $("#ph-wrap").addEventListener("input", phInput);
+  $("#ph-wrap").addEventListener("toggle", function (e) { var d = e.target; if (d.matches && d.matches("details.ph-card")) phOpen[d.dataset.ph] = d.open; }, true);
+  $("#ph-wrap").addEventListener("click", function (e) {
+    var act = e.target.closest("[data-ph-act]"); if (!act || !px.cur) return;
+    var ph = px.cur.pageHeader, card = act.closest(".ph-card"), key = card ? card.dataset.ph : "";
+    if (act.dataset.phAct === "add") {
+      var k = $("#ph-add-key").value; if (!k) return;
+      ph.pages[k] = ph.pages[k] || {};
+      phOpen[k] = true;
+      renderPageHeaders(); updateBar();
+    } else if (act.dataset.phAct === "remove") {
+      delete ph.pages[key];
+      renderPageHeaders(); updateBar();
+    } else if (act.dataset.phAct === "upload") {
+      var cur0 = phEffective(key).image;
+      var dest = /^img\/parallax\/header-/.test(cur0) && (key ? (ph.pages[key] || {}).image === cur0 : ph.image === cur0)
+        ? cur0 : "img/parallax/header-" + (key ? key.replace(/\/\*$/, "-all").replace(/[^a-z0-9-]+/gi, "-") : "default") + ".jpg";
+      phUploadKey = key;
+      openImage(dest);
+      $("#ed-imgdlg-old").src = pxImgSrc(cur0);
+      $("#ed-imgdlg-path").textContent = dest;
+    }
+  });
 
   /* ================================================================== BUTTONS (every kind of button on the site)
      Settings live in data/buttons.json; admin/buttons-style.js turns them into CSS for the live preview here and into

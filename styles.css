@@ -484,8 +484,12 @@ html:lang(ja) .btn-more, html:lang(ko) .btn-more { letter-spacing: .04em; }
   background: url(img/chevrons.svg) left center / auto 100% no-repeat; pointer-events: none;
 }
 .svc-hero-inner { position: relative; z-index: 1; max-width: 1150px; margin: 0 auto; }
-.crumbs ol { list-style: none; margin: 0 0 18px; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 0; font-size: .8rem; }
-.crumbs li + li::before { content: "/"; margin: 0 10px; opacity: .6; }
+.crumbs ol { list-style: none; margin: 0 0 18px; padding: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 0; font-size: .8rem; line-height: 1.5; }
+/* Every crumb on one baseline: site-theme.css spaces list items apart (li + li margin-top), which pushed all but the
+   first crumb down; crumbs, links and separators share the list's font size and line height. */
+.crumbs ol > li:not(#_):not(#__) { display: inline-flex; align-items: baseline; margin: 0 !important; padding: 0; font-size: inherit !important; line-height: inherit !important; }
+.crumbs ol > li > a:not(#_):not(#__) { display: inline; font-size: inherit !important; line-height: inherit !important; padding: 0; text-underline-offset: .18em; }
+.crumbs li + li::before { content: "/"; margin: 0 10px; margin-inline: .7em; opacity: .6; font-size: inherit; line-height: inherit; }
 .crumbs a { color: #fff; opacity: .85; }
 .crumbs a:hover { opacity: 1; }
 .crumbs [aria-current] { font-weight: 700; }
@@ -2013,35 +2017,61 @@ html:not([dir="rtl"]):not(:lang(ja)):not(:lang(zh)):not(:lang(ko)) .pitch-lead::
   height: 100%;
   pointer-events: none;
 }
+/* Fireflies (Tenshi Editor › Parallax › Effects › Fireflies): app.js adds the .pxff dots; each drifts on its own
+   random path (--x1..--y3, --ffd) while its glow pulses (--ff-pulse × --ffp). Paused while the band is off screen. */
+.parallax-fireflies { position: absolute; inset: 0; overflow: hidden; pointer-events: none; opacity: var(--ff-op, .85); }
+.pxff {
+  position: absolute; width: var(--ffs, 4px); height: var(--ffs, 4px); margin: calc(var(--ffs, 4px) / -2);
+  animation: pxff-drift var(--ffd, 20s) ease-in-out var(--ffdl, 0s) infinite alternate; will-change: transform;
+}
+.pxff i {
+  --ffc: var(--ff-color, #f5e663); --ffg: var(--ff-glow, 16px);
+  display: block; width: 100%; height: 100%; border-radius: 50%;
+  background: radial-gradient(circle, #fffbe0 0 30%, var(--ffc) 70%);
+  box-shadow: 0 0 calc(var(--ffg) / 4) calc(var(--ffg) / 10) var(--ffc),
+    0 0 var(--ffg) calc(var(--ffg) / 4) color-mix(in srgb, var(--ffc) 90%, transparent),
+    0 0 calc(var(--ffg) * 2) calc(var(--ffg) / 2) color-mix(in srgb, var(--ffc) 40%, transparent);
+  animation: pxff-pulse calc(var(--ff-pulse, 2.5s) * var(--ffp, 1)) ease-in-out var(--ffpl, 0s) infinite;
+}
+.parallax-fireflies.is-paused .pxff, .parallax-fireflies.is-paused .pxff i { animation-play-state: paused; }
+@keyframes pxff-drift {
+  0% { transform: translate3d(0, 0, 0); }
+  33% { transform: translate3d(var(--x1), var(--y1), 0); }
+  66% { transform: translate3d(var(--x2), var(--y2), 0); }
+  100% { transform: translate3d(var(--x3), var(--y3), 0); }
+}
+@keyframes pxff-pulse { 0%, 100% { opacity: .25; transform: scale(.75); } 45% { opacity: 1; transform: scale(1); } 60% { opacity: .85; } }
+@media (prefers-reduced-motion: reduce) { .parallax-fireflies { display: none; } }
+@media print { .parallax-fireflies { display: none; } }
 .pxl-w { display: inline-block; white-space: nowrap; }
 .pxl-c { display: inline-block; }
-.parallax.pxfx-on .pxl-split .pxl-c {
+:is(.parallax, .px-hero).pxfx-on .pxl-split .pxl-c {
   opacity: 0;
   transition: opacity calc(var(--pxl-dur, .8s) * .75) ease-out, transform var(--pxl-dur, .8s) cubic-bezier(.16, 1, .3, 1), filter var(--pxl-dur, .8s) ease-out;
   transition-delay: calc(var(--pxl-delay, .1s) + var(--i, 0) * var(--pxl-step, 40ms));
 }
-.parallax.pxfx-on[data-fx-letters="rise"] .pxl-split .pxl-c { transform: translate3d(0, .5em, 0) rotate(6deg); transform-origin: 0 100%; }
-.parallax.pxfx-on[data-fx-letters="blur"] .pxl-split .pxl-c { filter: blur(10px); transform: scale(1.25); }
-.parallax.pxfx-on[data-fx-letters="flip"] .pxl-split .pxl-c { transform: perspective(600px) translate3d(0, .35em, 0) rotateX(-80deg); transform-origin: 50% 100%; }
-.parallax.pxfx-on.pxfx-in .pxl-split .pxl-c { opacity: 1; transform: none; filter: none; }
-.parallax.pxfx-on[data-fx-gray] .parallax-layer img {
+:is(.parallax, .px-hero).pxfx-on[data-fx-letters="rise"] .pxl-split .pxl-c { transform: translate3d(0, .5em, 0) rotate(6deg); transform-origin: 0 100%; }
+:is(.parallax, .px-hero).pxfx-on[data-fx-letters="blur"] .pxl-split .pxl-c { filter: blur(10px); transform: scale(1.25); }
+:is(.parallax, .px-hero).pxfx-on[data-fx-letters="flip"] .pxl-split .pxl-c { transform: perspective(600px) translate3d(0, .35em, 0) rotateX(-80deg); transform-origin: 50% 100%; }
+:is(.parallax, .px-hero).pxfx-on.pxfx-in .pxl-split .pxl-c { opacity: 1; transform: none; filter: none; }
+:is(.parallax, .px-hero).pxfx-on[data-fx-gray] .parallax-layer img {
   filter: grayscale(var(--pxg-amt, 1));
   transition: filter var(--pxg-dur, 1.8s) ease var(--pxg-delay, .25s);
 }
-.parallax.pxfx-on.pxfx-in[data-fx-gray="enter"] .parallax-layer img { filter: grayscale(0); }
-.parallax.pxfx-on[data-fx-gray="scroll"] .parallax-layer img {
+:is(.parallax, .px-hero).pxfx-on.pxfx-in[data-fx-gray="enter"] .parallax-layer img { filter: grayscale(0); }
+:is(.parallax, .px-hero).pxfx-on[data-fx-gray="scroll"] .parallax-layer img {
   filter: grayscale(calc(var(--pxg-amt, 1) * (1 - var(--pxg-p, 0))));
   transition: filter .15s linear;
 }
 @media (prefers-reduced-motion: reduce) {
   .parallax-rain { display: none; }
-  .parallax.pxfx-on .pxl-split .pxl-c { opacity: 1 !important; transform: none !important; filter: none !important; transition: none !important; }
-  .parallax.pxfx-on[data-fx-gray] .parallax-layer img { filter: none !important; transition: none !important; }
+  :is(.parallax, .px-hero).pxfx-on .pxl-split .pxl-c { opacity: 1 !important; transform: none !important; filter: none !important; transition: none !important; }
+  :is(.parallax, .px-hero).pxfx-on[data-fx-gray] .parallax-layer img { filter: none !important; transition: none !important; }
 }
 @media print {
   .parallax-rain { display: none; }
-  .parallax.pxfx-on .pxl-split .pxl-c { opacity: 1 !important; transform: none !important; filter: none !important; }
-  .parallax.pxfx-on[data-fx-gray] .parallax-layer img { filter: none !important; }
+  :is(.parallax, .px-hero).pxfx-on .pxl-split .pxl-c { opacity: 1 !important; transform: none !important; filter: none !important; }
+  :is(.parallax, .px-hero).pxfx-on[data-fx-gray] .parallax-layer img { filter: none !important; }
 }
 @media (prefers-reduced-motion: reduce) {
   .parallax-layer {
@@ -2386,3 +2416,31 @@ main section.band + section.services:not(#_):not(#__) { padding-top: 0 !importan
     width: 8px !important;
     height: 8px !important;
 }
+
+/* ======================================================================
+   Interior page headers with a photograph (Tenshi Editor › Parallax › Interior page headers; data/parallax.json
+   "pageHeader", written by tools/build-pages.mjs heroPx). The light-gray title area becomes a full-width photo
+   with the homepage bands' parallax layer, overlay and effects (app.js); text turns white over the overlay.
+   The :not(#_) pairs outrank the light-section rules above and site-theme.css.
+   ====================================================================== */
+.svc-hero.px-hero:not(#_):not(#__) {
+  position: relative; overflow: hidden; isolation: isolate;
+  background: #12050a !important; color: #fff !important; border-bottom: 0 !important;
+  min-height: var(--px-h, auto);
+  display: flex; flex-direction: column; justify-content: center;
+}
+.px-hero .svc-hero-inner { width: 100%; }
+.px-hero-bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.svc-hero.px-hero:not(#_):not(#__) :is(h1, h1 *) { color: #fff !important; text-shadow: 0 2px 18px rgba(0, 0, 0, .45) !important; }
+.svc-hero.px-hero:not(#_):not(#__) :is(p, li, span, small, time, .svc-hero-lead) { color: rgba(255, 255, 255, .92) !important; text-shadow: 0 1px 10px rgba(0, 0, 0, .5) !important; }
+.svc-hero.px-hero:not(#_):not(#__) .crumbs a {
+  color: #fff !important; opacity: 1; font-weight: 700;
+  text-decoration: underline; text-decoration-color: rgba(255, 255, 255, .75); text-decoration-thickness: 1px; text-underline-offset: .18em;
+}
+.svc-hero.px-hero:not(#_):not(#__) .crumbs a:is(:hover, :focus-visible) { color: #ffd6dd !important; text-decoration-color: currentColor; text-decoration-thickness: 2px; }
+.svc-hero.px-hero:not(#_):not(#__) .crumbs a:focus-visible { outline: 2px solid #fff; outline-offset: 3px; border-radius: 2px; }
+.svc-hero.px-hero:not(#_):not(#__) .crumbs [aria-current] { color: #fff !important; }
+.svc-hero.px-hero:not(#_):not(#__) .crumbs li + li::before { color: #fff; opacity: .7; }
+.svc-hero.px-hero:not(#_):not(#__) .page-art { color: #fff !important; opacity: .28; }
+.svc-hero.px-hero:not(#_):not(#__) .blog-cat { background: rgba(255, 255, 255, .18) !important; color: #fff !important; }
+.svc-hero.px-hero:not(#_):not(#__) .blog-meta :is(span, time) { color: rgba(255, 255, 255, .88) !important; }

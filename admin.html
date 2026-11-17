@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex, nofollow">
   <title>Tenshi Editor</title>
   <link rel="icon" href="brand/tenshi-logo.png" type="image/png">
-  <link rel="stylesheet" href="admin/admin.css?v=2d9208d4">
+  <link rel="stylesheet" href="admin/admin.css?v=c0ae765d">
   <link rel="stylesheet" href="fonts/catalog.css">
 </head>
 <body>
@@ -121,8 +121,10 @@
     <!-- Parallax: full-width photograph bands between the Design, Development and Optimization panels (data/parallax.json) -->
     <section class="ed-panel ed-parallax" data-panel="parallax" hidden>
       <div class="px-wrap">
-        <p class="ed-tip">Two full-width photograph bands on the homepage, between the Design, Development and Optimization panels. Changes save with the <b>Save</b> button at the top. Pick a picture already on the site, or upload a new one — uploads are stored under <code>img/parallax/</code> so shared photos (skylines, service pictures) are not overwritten. Heading, caption and alternative text are optional; clear them to show only the photograph. Edited English is translated into the other languages; <b>All languages</b> lets you write any language by hand.</p>
+        <p class="ed-tip">Three full-width photograph bands on the homepage, between the Design, Development and Optimization panels and before the contact form, plus the photo headers of the interior pages (further down). Changes save with the <b>Save</b> button at the top. Pick a picture already on the site, or upload a new one — uploads are stored under <code>img/parallax/</code> so shared photos (skylines, service pictures) are not overwritten. Heading, caption and alternative text are optional; clear them to show only the photograph. Edited English is translated into the other languages; <b>All languages</b> lets you write any language by hand.</p>
         <div id="px-bands"></div>
+        <!-- Interior page headers: the photo title area of every page except the homepage (data/parallax.json "pageHeader") -->
+        <div id="ph-wrap" class="ph-wrap"></div>
       </div>
     </section>
     <!-- Design: fonts, typography, colors and motion (writes site-theme.css) -->
@@ -343,6 +345,6 @@
   <script src="admin/slogan-style.js?v=5b8514a0"></script>
   <script src="admin/buttons-style.js?v=90c15c95"></script>
   <script src="admin/theme.js?v=5adf2a95"></script>
-  <script src="admin/admin.js?v=ba5e5719"></script>
+  <script src="admin/admin.js?v=b77ee715"></script>
 </body>
 </html>
