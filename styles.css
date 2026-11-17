@@ -2373,6 +2373,9 @@ main section.band + section.services:not(#_):not(#__) { padding-top: 0 !importan
 .main-nav.has-more-start { -webkit-mask-image: linear-gradient(to right, transparent, #000 28px); mask-image: linear-gradient(to right, transparent, #000 28px); }
 .main-nav.has-more-end { -webkit-mask-image: linear-gradient(to left, transparent, #000 28px); mask-image: linear-gradient(to left, transparent, #000 28px); }
 .main-nav.has-more-start.has-more-end { -webkit-mask-image: linear-gradient(to right, transparent, #000 28px, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(to right, transparent, #000 28px, #000 calc(100% - 28px), transparent); }
+/* On desktop the menu doesn't scroll, but the About / News / Contact dropdowns stick out past its edge, so app.js can
+   think there is more to scroll to; never fade (mask) the row there, or the dropdowns would be cut off. */
+@media (min-width: 861px) { .site-header:not(.is-stacked) .main-nav { -webkit-mask-image: none; mask-image: none; } }
 .client-portal-button {
     display: inline-block;
     padding: 14px 28px;

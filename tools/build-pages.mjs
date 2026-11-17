@@ -502,6 +502,10 @@ const HEADER = index.match(/  <header class="site-header">[\s\S]*?<\/header>/)[0
 const FOOTER = index.match(/  <footer class="site-footer">[\s\S]*?<\/footer>/)[0].replace(/\n\s*<p class="photo-credits">[\s\S]*?<\/p>/, "");
 const FORM = index.match(/        <form class="contact-form"[\s\S]*?<\/form>/)[0];
 
+// The header menu's dropdowns: a page in a dropdown also marks its top-level item (on Team, About shows as current).
+// The footer menu is flat, so only the page itself is marked there. Project pages pass ["projects", "p-<slug>"] already.
+const NAV_PARENT = { team: "about", technology: "about", blog: "news", portal: "contact" };
+const navCurrent = (current) => [].concat(current).flatMap((c) => NAV_PARENT[c] ? [c, NAV_PARENT[c]] : [c]);
 // Point the copied links at the right folder and mark the current menu item.
 function chrome(html, prefix, current) {
   return markCurrent(html, current)
@@ -540,7 +544,7 @@ function frame({ prefix, current, titleKey, descKey, title, description, bodyCla
   <!-- Written by tools/build-pages.mjs: edit translations.js and the script, not this file. -->
   <a class="skip-link" href="#main" data-i18n="skip">${tx("skip")}</a>
 
-${chrome(HEADER, prefix, current)}
+${chrome(HEADER, prefix, navCurrent(current))}
 
   <main id="main">
 ${main}
