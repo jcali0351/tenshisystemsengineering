@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="../design.css?v=ea6e1648">
   <link rel="stylesheet" href="../chat.css?v=8097383f">
   <link rel="stylesheet" href="../site-theme.css?v=e9955052">
+  <link rel="stylesheet" href="../search.css?v=e632415c">
   <link rel="stylesheet" href="../buttons.css?v=3885ce6d">
   <link rel="stylesheet" href="../custom.css?v=743f7d62">
 </head>
@@ -59,6 +60,25 @@
           <li><a href="../portal.html" data-nav="portal" data-i18n="navPortal">Portal</a></li>
         </ul>
       </nav>
+      <div class="tse-finder" data-search data-search-v="f538981f">
+        <button type="button" class="tse-finder__toggle" aria-expanded="false" aria-controls="tse-finder-panel" aria-label="Search" data-i18n-attr="aria-label:searchOpen">
+          <span class="tse-finder__icon" aria-hidden="true"></span>
+        </button>
+        <div class="tse-finder__panel" id="tse-finder-panel" hidden>
+          <form class="tse-finder__form" role="search" autocomplete="off" aria-label="Search the site" data-i18n-attr="aria-label:searchLabel">
+            <label class="sr-only" for="tse-finder-q" data-i18n="searchLabel">Search the site</label>
+            <div class="tse-finder__outer">
+              <div class="tse-finder__inner">
+                <span class="tse-finder__icon" aria-hidden="true"></span>
+                <input class="tse-finder__input" id="tse-finder-q" type="search" name="q" dir="auto" enterkeyhint="search" spellcheck="false" placeholder="Search the site…" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="tse-finder-list" data-i18n-attr="placeholder:searchPlaceholder">
+              </div>
+            </div>
+            <ul class="tse-finder__list" id="tse-finder-list" role="listbox" aria-label="Search the site" data-i18n-attr="aria-label:searchLabel" hidden></ul>
+            <p class="tse-finder__empty" hidden data-i18n="searchNoResults">No results</p>
+            <p class="sr-only" aria-live="polite" data-search-status></p>
+          </form>
+        </div>
+      </div>
       <div class="lang-picker">
         <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
           <symbol id="flag-en" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect y="0" width="30" height="1.54" fill="#b22234"/><rect y="3.08" width="30" height="1.54" fill="#b22234"/><rect y="6.15" width="30" height="1.54" fill="#b22234"/><rect y="9.23" width="30" height="1.54" fill="#b22234"/><rect y="12.31" width="30" height="1.54" fill="#b22234"/><rect y="15.38" width="30" height="1.54" fill="#b22234"/><rect y="18.46" width="30" height="1.54" fill="#b22234"/><rect width="12" height="10.77" fill="#3c3b6e"/><circle cx="1" cy="1" r=".45" fill="#fff"/><circle cx="3" cy="1" r=".45" fill="#fff"/><circle cx="5" cy="1" r=".45" fill="#fff"/><circle cx="7" cy="1" r=".45" fill="#fff"/><circle cx="9" cy="1" r=".45" fill="#fff"/><circle cx="11" cy="1" r=".45" fill="#fff"/><circle cx="2" cy="3.15" r=".45" fill="#fff"/><circle cx="4" cy="3.15" r=".45" fill="#fff"/><circle cx="6" cy="3.15" r=".45" fill="#fff"/><circle cx="8" cy="3.15" r=".45" fill="#fff"/><circle cx="10" cy="3.15" r=".45" fill="#fff"/><circle cx="1" cy="5.3" r=".45" fill="#fff"/><circle cx="3" cy="5.3" r=".45" fill="#fff"/><circle cx="5" cy="5.3" r=".45" fill="#fff"/><circle cx="7" cy="5.3" r=".45" fill="#fff"/><circle cx="9" cy="5.3" r=".45" fill="#fff"/><circle cx="11" cy="5.3" r=".45" fill="#fff"/><circle cx="2" cy="7.45" r=".45" fill="#fff"/><circle cx="4" cy="7.45" r=".45" fill="#fff"/><circle cx="6" cy="7.45" r=".45" fill="#fff"/><circle cx="8" cy="7.45" r=".45" fill="#fff"/><circle cx="10" cy="7.45" r=".45" fill="#fff"/><circle cx="1" cy="9.6" r=".45" fill="#fff"/><circle cx="3" cy="9.6" r=".45" fill="#fff"/><circle cx="5" cy="9.6" r=".45" fill="#fff"/><circle cx="7" cy="9.6" r=".45" fill="#fff"/><circle cx="9" cy="9.6" r=".45" fill="#fff"/><circle cx="11" cy="9.6" r=".45" fill="#fff"/></symbol>
@@ -297,8 +317,9 @@
     </div>
   </footer>
 
-  <script src="../translations.js?v=1ef7cd16"></script>
+  <script src="../translations.js?v=1d49ab74"></script>
   <script src="../app.js?v=436bd629"></script>
+  <script src="../search.js?v=3cfe9ee3"></script>
   <script src="../design.js?v=e4ade4cb"></script>
   <script src="../chat.js?v=e6aee4be"></script>
 </body>

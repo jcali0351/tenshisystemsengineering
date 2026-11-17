@@ -1,0 +1,170 @@
+/* Header search: a compact neumorphic "finder" (off-white pill, soft outer shadow, inset well, dark magnifier).
+   Desktop (861px and up): the finder bar sits inline in the header, between the menu and the language button, and its
+   results drop down under it. Phones and tablets: a small round button opens the finder full width under the header. Results come from data/search/<lang>.json (written by tools/build-pages.mjs), see search.js.
+   Everything is scoped under .tse-finder. Loaded after site-theme.css. */
+.tse-finder {
+  --f-bg: #f6f5f0;
+  --f-ink: #292929;
+  --f-text: #5b616a;
+  --f-dark: rgba(170, 170, 170, .55);
+  --f-light: rgba(255, 255, 255, .9);
+  position: relative; flex: none; display: flex; align-items: center;
+  font-family: var(--font, "Lato", "Segoe UI", Helvetica, Arial, sans-serif);
+}
+
+/* ---------- The magnifier: a dark disc with a light lens and handle; when active the lens fills and the handle drops away.
+   Sizes are in --u (1/40 of the icon), so the original 40px drawing scales to any size. ---------- */
+.tse-finder__icon {
+  --s: 26px; --u: calc(var(--s) / 40);
+  position: relative; flex: none; display: block; width: var(--s); height: var(--s);
+  border-radius: 50%; box-shadow: inset 0 0 0 calc(var(--u) * 20) var(--f-ink);
+  transition: transform .2s;
+}
+.tse-finder__icon::before, .tse-finder__icon::after {
+  content: ""; display: block; position: absolute; box-sizing: content-box;
+  transition: all .5s cubic-bezier(.68, -.55, .265, 1.55);
+}
+.tse-finder__icon::after {
+  width: calc(var(--u) * 10); height: calc(var(--u) * 10);
+  background-color: var(--f-ink); border: calc(var(--u) * 3) solid var(--f-bg); border-radius: 50%;
+  top: 50%; left: 0; right: 0; margin: auto; transform: translateY(-50%);
+}
+.tse-finder__icon::before {
+  width: calc(var(--u) * 4); height: calc(var(--u) * 13); border-radius: calc(var(--u) * 4);
+  background-color: var(--f-bg); top: 50%; left: calc(var(--u) * 20);
+  transform: rotateZ(45deg) translate(-50%, 0); transform-origin: 0 0;
+}
+.tse-finder__form.is-active .tse-finder__inner .tse-finder__icon { transform: translateY(calc(var(--u) * -3)); }
+.tse-finder__form.is-active .tse-finder__inner .tse-finder__icon::after { border-width: calc(var(--u) * 10); background-color: var(--f-bg); }
+.tse-finder__form.is-active .tse-finder__inner .tse-finder__icon::before {
+  background-color: var(--f-ink); width: calc(var(--u) * 6); transform: rotateZ(45deg) translate(-50%, calc(var(--u) * 25));
+}
+.tse-finder__form.is-processing .tse-finder__inner .tse-finder__icon {
+  transform-origin: 50%; animation: tse-finder-spin .3s linear infinite; animation-delay: .25s;
+}
+@keyframes tse-finder-spin { from { transform: rotateZ(45deg); } to { transform: rotateZ(405deg); } }
+
+/* ---------- The header button ---------- */
+.site-header .tse-finder__toggle:not(#_):not(#__) {
+  display: grid; place-items: center; width: 36px; height: 36px; margin: 0; padding: 0;
+  border: 1px solid #fff !important; border-radius: 50% !important; background: var(--f-bg) !important; cursor: pointer;
+  box-shadow: 4px 4px 9px var(--f-dark), -4px -4px 9px var(--f-light), inset 0 0 0 1px rgba(0, 0, 0, .04) !important;
+  transition: box-shadow .2s, transform .2s;
+}
+.tse-finder__toggle .tse-finder__icon { --s: 20px; }
+.tse-finder__toggle:hover { transform: translateY(-1px); }
+.site-header .tse-finder__toggle[aria-expanded="true"]:not(#_):not(#__) {
+  box-shadow: inset 3px 3px 6px var(--f-dark), inset -3px -3px 6px var(--f-light) !important; transform: none;
+}
+.tse-finder__toggle:focus-visible, .tse-finder__input:focus-visible { outline: 3px solid var(--red, #c8102e) !important; outline-offset: 3px; }
+
+/* ---------- The finder card (desktop: under the button, aligned to its end) ---------- */
+.tse-finder__panel {
+  position: absolute; z-index: 70; top: calc(100% + 14px); inset-inline-end: -8px;
+  width: min(560px, calc(100vw - 2 * var(--gutter, 16px)));
+  transform-origin: top right; animation: tse-finder-in .22s cubic-bezier(.2, .75, .2, 1);
+}
+html[dir="rtl"] .tse-finder__panel { transform-origin: top left; }
+.tse-finder__panel[hidden] { display: none; }
+@keyframes tse-finder-in { from { opacity: 0; transform: translateY(-6px) scale(.98); } to { opacity: 1; transform: none; } }
+.tse-finder__form {
+  margin: 0; padding: 7px; border: 1px solid #fff; border-radius: 15px; background-color: var(--f-bg);
+  box-shadow: 9px 9px 16px rgba(160, 160, 160, .45), -9px -9px 16px rgba(255, 255, 255, .5), 0 18px 44px rgba(22, 32, 48, .14);
+}
+.tse-finder__outer {
+  display: flex; padding: 7px 16px; border-radius: 10px;
+  box-shadow: inset 10px 10px 15px -10px #c3c3c3, inset -10px -10px 15px -10px #ffffff;
+}
+.tse-finder__inner { display: flex; align-items: center; gap: 12px; position: relative; flex: 1; min-width: 0; }
+.tse-finder .tse-finder__input:not(#_):not(#__) {
+  flex: 1; min-width: 0; height: 34px; margin: 0; padding: 0; border: none !important; border-radius: 0 !important;
+  background: transparent !important; box-shadow: none !important; outline: none;
+  font: 400 1rem/1.2 var(--font, sans-serif) !important; letter-spacing: .4px; color: var(--f-ink) !important;
+  -webkit-appearance: none; appearance: none;
+}
+.tse-finder__input::placeholder { color: #8b8f95; opacity: 1; }
+.tse-finder__input::-webkit-search-cancel-button { -webkit-appearance: none; display: none; }
+.tse-finder__input:read-only { cursor: progress; }
+.tse-finder__form:focus-within .tse-finder__outer { box-shadow: inset 10px 10px 15px -10px #bdbdbd, inset -10px -10px 15px -10px #ffffff, 0 0 0 2px rgba(200, 16, 46, .28); }
+.tse-finder__input:focus-visible { outline: none !important; }
+
+/* ---------- Results ---------- */
+.tse-finder .tse-finder__list:not(#_):not(#__) {
+  list-style: none; margin: 8px 0 0 !important; padding: 0 !important; max-height: min(60vh, 440px); overflow-y: auto;
+  overscroll-behavior: contain; scrollbar-width: thin;
+}
+.tse-finder__list[hidden], .tse-finder__empty[hidden] { display: none !important; }
+.tse-finder .tse-finder__list > li:not(#_):not(#__) { margin: 0 !important; padding: 0; letter-spacing: 0; }
+.tse-finder .tse-finder__opt:not(#_):not(#__) {
+  display: block; padding: 9px 12px; border-radius: 10px; text-decoration: none !important;
+  border-inline-start: 3px solid transparent; color: var(--f-text) !important;
+}
+.tse-finder .tse-finder__opt[aria-selected="true"]:not(#_):not(#__), .tse-finder .tse-finder__opt:hover:not(#_):not(#__) {
+  background: #ecebe4; border-inline-start-color: var(--red, #c8102e);
+  box-shadow: inset 3px 3px 6px rgba(190, 190, 190, .45), inset -3px -3px 6px rgba(255, 255, 255, .8);
+}
+.tse-finder .tse-finder__opt-title:not(#_):not(#__) {
+  display: block; font: 700 .9rem/1.3 var(--font, sans-serif) !important; color: var(--f-ink) !important; letter-spacing: 0;
+}
+.tse-finder .tse-finder__opt-path:not(#_):not(#__) { display: block; margin-top: 1px; font: 400 .68rem/1.3 var(--font, sans-serif) !important; color: #8b8f95 !important; direction: ltr; text-align: start; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+html[dir="rtl"] .tse-finder .tse-finder__opt-path:not(#_):not(#__) { text-align: right; }
+.tse-finder .tse-finder__opt-snip:not(#_):not(#__) {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin-top: 3px;
+  font: 400 .78rem/1.45 var(--font, sans-serif) !important; color: var(--f-text) !important; letter-spacing: 0;
+}
+.tse-finder mark:not(#_):not(#__) { background: rgba(200, 16, 46, .13) !important; color: inherit !important; border-radius: 3px; padding: 0 1px; }
+.tse-finder .tse-finder__empty:not(#_):not(#__) {
+  margin: 8px 0 2px !important; padding: 10px 12px; font: 400 .85rem/1.4 var(--font, sans-serif) !important; color: var(--f-text) !important;
+}
+
+/* ---------- Desktop header: make room for the button. The menu items lose a little padding instead of the row
+   overflowing (horizontal spacing only, so the header keeps its height). ---------- */
+@media (min-width: 861px) and (max-width: 1340px) {
+  .site-header:not(.is-stacked) .header-inner:not(#_) { gap: clamp(10px, 1.4vw, 24px); padding-inline: clamp(16px, 2.6vw, 56px); }
+  .site-header:not(.is-stacked) .main-nav > ul:not(#_) { gap: 0; }
+  .site-header:not(.is-stacked) .main-nav > ul > li > a:not(#_) { padding-inline: clamp(5px, .62vw, 11px); }
+}
+
+/* ---------- Phones and tablets (menu on its own row): the button sits before the language button in the top row and
+   the finder opens full width under the header. ---------- */
+@media (max-width: 860px) {
+  .site-header .header-inner > .tse-finder { position: static; margin-inline-start: auto; }
+  .site-header .header-inner > .tse-finder + .lang-picker:not(#_) { margin-inline-start: 0; margin-left: 0; }
+  .site-header .tse-finder__toggle:not(#_):not(#__) { width: 32px; height: 32px; box-shadow: 3px 3px 7px var(--f-dark), -3px -3px 7px var(--f-light) !important; }
+  .tse-finder__toggle .tse-finder__icon { --s: 18px; }
+  .tse-finder__panel {
+    top: 100%; left: 0; right: 0; inset-inline-end: 0; width: auto; padding: 10px var(--gutter, 16px) 14px;
+    background: rgba(255, 255, 255, .97); border-bottom: 1px solid var(--line, #d7dce2);
+    box-shadow: 0 16px 30px rgba(22, 32, 48, .12); transform-origin: top center;
+  }
+  .tse-finder__form { box-shadow: 6px 6px 12px rgba(160, 160, 160, .4), -6px -6px 12px rgba(255, 255, 255, .6); }
+  .tse-finder .tse-finder__list:not(#_):not(#__) { max-height: calc(100dvh - 260px); }
+}
+
+/* ---------- Desktop: the finder bar inline in the header (the button is only for phones) ---------- */
+@media (min-width: 861px) {
+  .site-header .tse-finder__toggle:not(#_):not(#__) { display: none; }
+  .site-header .tse-finder__panel, .site-header .tse-finder__panel[hidden] {
+    display: block; position: relative; top: auto; inset-inline-end: auto; width: clamp(150px, 17vw, 240px); animation: none;
+  }
+  .site-header .tse-finder__form { padding: 3px; border-radius: 12px; box-shadow: 5px 5px 10px rgba(160, 160, 160, .45), -5px -5px 10px rgba(255, 255, 255, .7); }
+  .site-header .tse-finder__outer { padding: 2px 10px; border-radius: 9px; box-shadow: inset 7px 7px 10px -7px #c3c3c3, inset -7px -7px 10px -7px #ffffff; }
+  .site-header .tse-finder__inner { gap: 8px; }
+  .site-header .tse-finder__inner .tse-finder__icon { --s: 20px; }
+  .site-header .tse-finder .tse-finder__input:not(#_):not(#__) { height: 24px; font-size: .8rem !important; text-overflow: ellipsis; }
+  .site-header .tse-finder__form:focus-within .tse-finder__outer { box-shadow: inset 7px 7px 10px -7px #bdbdbd, inset -7px -7px 10px -7px #ffffff, 0 0 0 2px rgba(200, 16, 46, .28); }
+  /* Results: a finder-style card under the bar, wider than it, aligned to its end */
+  .site-header .tse-finder .tse-finder__list:not(#_):not(#__), .site-header .tse-finder .tse-finder__empty:not(#_):not(#__) {
+    position: absolute; top: calc(100% + 12px); inset-inline-end: 0; width: min(460px, calc(100vw - 2 * var(--gutter, 16px)));
+    margin: 0 !important; padding: 7px !important; border: 1px solid #fff; border-radius: 15px; background: var(--f-bg);
+    box-shadow: 9px 9px 16px rgba(160, 160, 160, .4), -9px -9px 16px rgba(255, 255, 255, .5), 0 18px 44px rgba(22, 32, 48, .16);
+    animation: tse-finder-in .2s cubic-bezier(.2, .75, .2, 1);
+  }
+  .site-header .tse-finder .tse-finder__empty:not(#_):not(#__) { padding: 14px 16px !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-header .tse-finder__list, .site-header .tse-finder__empty { animation: none !important; }
+  .tse-finder__icon, .tse-finder__icon::before, .tse-finder__icon::after, .tse-finder__toggle, .tse-finder__panel { transition: none !important; animation: none !important; }
+  .tse-finder__form.is-processing .tse-finder__inner .tse-finder__icon { animation: none !important; opacity: .55; }
+}

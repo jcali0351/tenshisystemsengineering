@@ -42,7 +42,7 @@ jobs:
         run: |
           git config user.name "tenshi-scraper-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A -- data/news.json data/image-cache.json img/stories '*.html' tailwind.css
+          git add -A -- data/news.json data/image-cache.json img/stories '*.html' tailwind.css data/search
           if git diff --cached --quiet; then echo "Nothing changed."; exit 0; fi
           git commit -m "Tenshi Scraper: refresh news stories"
           for i in 1 2 3 4; do

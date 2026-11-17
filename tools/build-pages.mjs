@@ -6,6 +6,7 @@
 //   - about.html, services.html, contact.html, news.html, blog.html
 //   - services/<slug>.html, one full page per service
 //   - blog/<slug>.html, one page per long-form post that has a slug in data/blog.json
+//   - data/search/<lang>.json, the header search's index of every page and blog post in all ten languages (search.js)
 //   - buttons.css from data/buttons.json (Tenshi Editor › Buttons), and the links to buttons.css and custom.css
 //     (Tenshi Editor › Custom CSS) at the end of every page's stylesheets
 // All wording lives in translations.js, except blog post bodies (data/blog.json). The header and footer are copied from index.html, so change them there.
@@ -533,6 +534,7 @@ function frame({ prefix, current, titleKey, descKey, title, description, bodyCla
   <link rel="stylesheet" href="${prefix}design.css">
   <link rel="stylesheet" href="${prefix}chat.css">
   <link rel="stylesheet" href="${prefix}site-theme.css">
+  <link rel="stylesheet" href="${prefix}search.css">
 </head>
 <body class="${bodyClass}"${bodyAttrs}>
   <!-- Written by tools/build-pages.mjs: edit translations.js and the script, not this file. -->
@@ -548,6 +550,7 @@ ${chrome(FOOTER, prefix, current).replace("    </div>\n  </footer>", photoCredit
 
   <script src="${prefix}translations.js"></script>
   <script src="${prefix}app.js"></script>
+  <script src="${prefix}search.js"></script>
   <script src="${prefix}design.js"></script>
   <script src="${prefix}chat.js"></script>
 </body>
@@ -1582,4 +1585,60 @@ if (!existsSync("custom.css")) writeFileSync("custom.css", "/* Custom CSS (Tensh
     linked++;
   }
   console.log(`buttons.css written; buttons.css and custom.css linked last on ${linked} pages`);
+}
+
+/* ---------- Header search (search.js, search.css): data/search/<lang>.json ----------
+   One small index per language of every page the build writes, plus the homepage: its address, title, description,
+   headings and a slice of its text. Words marked data-i18n are read from translations.js in that language (English
+   when a language lacks one); blog post bodies are English in every language. tools/stamp-assets.mjs stamps the
+   index's version into each page's data-search-v so browsers fetch the new one after a rebuild. */
+{
+  const T = sandbox.window.TRANSLATIONS;
+  const LANGS = Object.keys(T);
+  const pages = [
+    "index.html",
+    ...readdirSync(".").filter((f) => f.endsWith(".html") && !["index.html", "admin.html", "client-portal.html", "404.html"].includes(f)).sort(),
+    ...["services", "projects", "blog"].flatMap((d) => existsSync(d) ? readdirSync(d).filter((f) => f.endsWith(".html")).sort().map((f) => d + "/" + f) : []),
+  ];
+  const decode = (s) => s.replace(/&(#x[0-9a-f]+|#\d+|amp|lt|gt|quot|apos|nbsp|#39);/gi, (m, e) => {
+    const l = e.toLowerCase();
+    if (l[0] === "#") return String.fromCodePoint(l[1] === "x" ? parseInt(l.slice(2), 16) : parseInt(l.slice(1), 10));
+    return { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " " }[l];
+  });
+  const plain = (html) => decode(html.replace(/<[^>]+>/g, " ")).replace(/\s+/g, " ").trim();
+  const cut = (s, n) => s.length <= n ? s : s.slice(0, n).replace(/\s+\S*$/, "") + "…";
+  const escText = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const src = pages.map((p) => {
+    const html = readFileSync(p, "utf8");
+    const body = (html.match(/<body([^>]*)>/) || ["", ""])[1];
+    const main = (html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/) || ["", ""])[1]
+      .replace(/<(script|style|svg|noscript|template|form|figure|picture)\b[\s\S]*?<\/\1>/g, " ")
+      .replace(/<(nav) class="crumbs"[\s\S]*?<\/\1>/g, " ");
+    return {
+      url: p,
+      main,
+      titleKey: (body.match(/data-title-key="([^"]+)"/) || [])[1],
+      descKey: (body.match(/data-desc-key="([^"]+)"/) || [])[1],
+      fixed: /data-fixed-title/.test(body),
+      title: plain((html.match(/<title>([\s\S]*?)<\/title>/) || ["", ""])[1]).replace(/\s*\|[^|]*$/, ""),
+      desc: decode((html.match(/<meta name="description" content="([^"]*)"/) || ["", ""])[1]),
+    };
+  });
+  mkdirSync("data/search", { recursive: true });
+  for (const L of LANGS) {
+    const tr = (key) => { const v = T[L] && T[L][key] !== undefined ? T[L][key] : T.en[key]; return v == null ? "" : String(v); };
+    const entries = src.map((pg) => {
+      // Put the language's words into every data-i18n element (innermost ones: app.js replaces their text the same way)
+      const local = pg.main.replace(/<(\w+)\b([^>]*?)\sdata-i18n="([^"]+)"([^>]*)>([^<]*)<\/\1>/g,
+        (m, tag, a1, key, a2) => `<${tag}${a1}${a2}>${escText(tr(key))}</${tag}>`);
+      const heads = [...local.matchAll(/<h([1-3])\b[^>]*>([\s\S]*?)<\/h\1>/g)].map((m) => plain(m[2])).filter(Boolean);
+      const title = pg.titleKey ? tr(pg.titleKey) : pg.fixed ? pg.title : tr("pageTitle").replace(/\s*[|｜]\s*.*$/, "");
+      const desc = pg.descKey ? tr(pg.descKey) : pg.fixed ? pg.desc : tr("metaDescription");
+      return { u: pg.url, t: title, d: cut(desc, 220), h: cut([...new Set(heads)].join(" · "), 600), x: cut(plain(local), 1800) };
+    });
+    const out = JSON.stringify({ lang: L, pages: entries });
+    const file = `data/search/${L}.json`;
+    if (!existsSync(file) || readFileSync(file, "utf8") !== out) writeFileSync(file, out);
+  }
+  console.log(`search index written: data/search/<lang>.json for ${LANGS.length} languages, ${src.length} pages each`);
 }

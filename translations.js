@@ -2,6 +2,12 @@
 // To change wording, edit it here (both languages), not in index.html.
 window.TRANSLATIONS = {
   en: {
+    // Header search (search.js)
+    searchLabel: "Search the site",
+    searchPlaceholder: "Search the site…",
+    searchOpen: "Search",
+    searchNoResults: "No results",
+    searchCount: "{n} results",
     patTitle: "Japanese Robotics Patent Explorer",
     patIntro: "Japan is one of the world's great homes of robotics, and its patents are a map of where the field is heading. Search live records of patents published in Japan, explore twelve robotics fields or look up the country's leading robot makers. Every search runs on public patent databases, so the results are always current.",
     patSearchLabel: "Search Japanese patents",
@@ -685,6 +691,12 @@ window.TRANSLATIONS = {
     slogan4: "Rapid Deployment"
   },
   ja: {
+    // Header search (search.js)
+    searchLabel: "サイト内検索",
+    searchPlaceholder: "サイト内を検索…",
+    searchOpen: "検索",
+    searchNoResults: "該当する結果はありません",
+    searchCount: "{n} 件の結果",
     patTitle: "日本のロボット特許エクスプローラー",
     patIntro: "日本は世界有数のロボット大国であり、その特許はこの分野の行く先を示す地図です。日本で公開された特許の最新記録を検索し、12のロボット分野を探り、国内を代表するロボットメーカーを調べることができます。すべての検索は公開の特許データベースで行われるため、結果は常に最新です。",
     patSearchLabel: "日本の特許を検索",
@@ -1368,6 +1380,12 @@ window.TRANSLATIONS = {
     slogan4: "迅速な展開"
   },
   ko: {
+    // Header search (search.js)
+    searchLabel: "사이트 검색",
+    searchPlaceholder: "사이트 검색…",
+    searchOpen: "검색",
+    searchNoResults: "검색 결과가 없습니다",
+    searchCount: "검색 결과 {n}개",
     patTitle: "일본 로봇 특허 탐색기",
     patIntro: "일본은 세계적인 로봇 강국이며, 그 특허는 이 분야가 나아갈 방향을 보여 주는 지도입니다. 일본에서 공개된 특허의 최신 기록을 검색하고, 12개 로봇 분야를 살펴보거나, 일본을 대표하는 로봇 제조사를 찾아보세요. 모든 검색은 공개 특허 데이터베이스에서 이루어지므로 결과는 언제나 최신입니다.",
     patSearchLabel: "일본 특허 검색",
@@ -2059,6 +2077,12 @@ window.TRANSLATIONS = {
     slogan4: "신속한 배포"
   },
   de: {
+    // Header search (search.js)
+    searchLabel: "Website durchsuchen",
+    searchPlaceholder: "Website durchsuchen…",
+    searchOpen: "Suchen",
+    searchNoResults: "Keine Ergebnisse",
+    searchCount: "{n} Ergebnisse",
     patTitle: "Japanischer Robotik-Patentexplorer",
     patIntro: "Japan ist eine der großen Heimaten der Robotik, und seine Patente zeigen, wohin sich das Feld entwickelt. Durchsuchen Sie aktuelle Einträge der in Japan veröffentlichten Patente, erkunden Sie zwölf Robotikbereiche oder schlagen Sie die führenden Roboterhersteller des Landes nach. Jede Suche läuft über öffentliche Patentdatenbanken, die Ergebnisse sind also immer aktuell.",
     patSearchLabel: "Japanische Patente durchsuchen",
@@ -2750,6 +2774,12 @@ window.TRANSLATIONS = {
     slogan4: "Schnelle Bereitstellung"
   },
   es: {
+    // Header search (search.js)
+    searchLabel: "Buscar en el sitio",
+    searchPlaceholder: "Buscar en el sitio…",
+    searchOpen: "Buscar",
+    searchNoResults: "Sin resultados",
+    searchCount: "{n} resultados",
     patTitle: "Explorador de patentes japonesas de robótica",
     patIntro: "Japón es una de las grandes cunas de la robótica, y sus patentes son un mapa de hacia dónde avanza el sector. Busque registros actualizados de patentes publicadas en Japón, explore doce campos de la robótica o consulte a los principales fabricantes de robots del país. Cada búsqueda se realiza en bases de datos públicas de patentes, así que los resultados siempre están al día.",
     patSearchLabel: "Buscar patentes japonesas",
@@ -3441,6 +3471,12 @@ window.TRANSLATIONS = {
     slogan4: "Despliegue rápido"
   },
   zh: {
+    // Header search (search.js)
+    searchLabel: "站内搜索",
+    searchPlaceholder: "搜索本站…",
+    searchOpen: "搜索",
+    searchNoResults: "没有找到结果",
+    searchCount: "{n} 个结果",
     patTitle: "日本机器人专利探索",
     patIntro: "日本是全球机器人技术的重镇，其专利就像一张指引行业方向的地图。您可以检索在日本公开的专利的最新记录，浏览十二个机器人领域，或查找日本领先的机器人制造商。所有检索均通过公开的专利数据库进行，因此结果始终是最新的。",
     patSearchLabel: "检索日本专利",
@@ -4132,6 +4168,12 @@ window.TRANSLATIONS = {
     slogan4: "快速部署"
   },
   ar: {
+    // Header search (search.js)
+    searchLabel: "البحث في الموقع",
+    searchPlaceholder: "ابحث في الموقع…",
+    searchOpen: "بحث",
+    searchNoResults: "لا توجد نتائج",
+    searchCount: "النتائج: {n}",
     patTitle: "مستكشف براءات الروبوتات اليابانية",
     patIntro: "اليابان من أعظم مواطن علم الروبوتات في العالم، وبراءاتها خريطة لاتجاه هذا المجال. ابحث في السجلات الحديثة للبراءات المنشورة في اليابان، واستكشف اثني عشر مجالًا من مجالات الروبوتات، أو تعرّف على أبرز صانعي الروبوتات في البلاد. يجري كل بحث في قواعد بيانات البراءات العامة، لذا تكون النتائج محدّثة دائمًا.",
     patSearchLabel: "ابحث في البراءات اليابانية",
@@ -4823,6 +4865,12 @@ window.TRANSLATIONS = {
     slogan4: "النشر السريع"
   },
   pl: {
+    // Header search (search.js)
+    searchLabel: "Szukaj w witrynie",
+    searchPlaceholder: "Szukaj w witrynie…",
+    searchOpen: "Szukaj",
+    searchNoResults: "Brak wyników",
+    searchCount: "Wyniki: {n}",
     patTitle: "Eksplorator japońskich patentów robotycznych",
     patIntro: "Japonia to jedna z wielkich ojczyzn robotyki, a jej patenty są mapą kierunku, w którym zmierza ta dziedzina. Przeszukuj aktualne rekordy patentów opublikowanych w Japonii, poznawaj dwanaście obszarów robotyki lub sprawdzaj czołowych producentów robotów w kraju. Każde wyszukiwanie odbywa się w publicznych bazach patentowych, więc wyniki są zawsze aktualne.",
     patSearchLabel: "Szukaj japońskich patentów",
@@ -5514,6 +5562,12 @@ window.TRANSLATIONS = {
     slogan4: "Szybkie wdrożenie"
   },
   pcm: {
+    // Header search (search.js)
+    searchLabel: "Search di website",
+    searchPlaceholder: "Search di website…",
+    searchOpen: "Search",
+    searchNoResults: "We no see anytin",
+    searchCount: "{n} result dem",
     patTitle: "Japanese Robotics Patent Explorer",
     patIntro: "Japan na one of the biggest homes of robotics for the world, and their patents be like map wey show where the field dey go. Search fresh records of patents wey dem publish for Japan, check twelve robotics fields, or look up the top robot makers for the country. Every search dey run on public patent databases, so the results go always dey current.",
     patSearchLabel: "Search Japanese patents",
@@ -6205,6 +6259,12 @@ window.TRANSLATIONS = {
     slogan4: "Rapid Deployment"
   },
   fa: {
+    // Header search (search.js)
+    searchLabel: "جستجو در سایت",
+    searchPlaceholder: "جستجو در سایت…",
+    searchOpen: "جستجو",
+    searchNoResults: "نتیجه‌ای پیدا نشد",
+    searchCount: "{n} نتیجه",
     patTitle: "کاوشگر پتنت‌های رباتیک ژاپن",
     patIntro: "ژاپن یکی از خاستگاه‌های بزرگ رباتیک در جهان است و پتنت‌هایش نقشه‌ای از مسیر آیندهٔ این حوزه‌اند. در تازه‌ترین سوابق پتنت‌های منتشرشده در ژاپن جست‌وجو کنید، دوازده حوزهٔ رباتیک را بکاوید یا سازندگان برتر ربات این کشور را بیابید. هر جست‌وجو در پایگاه‌های عمومی پتنت انجام می‌شود، پس نتایج همیشه به‌روزند.",
     patSearchLabel: "جست‌وجوی پتنت‌های ژاپن",
