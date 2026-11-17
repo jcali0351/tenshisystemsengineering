@@ -559,6 +559,7 @@ const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
   setupNewsTabs();
   setupTicker();
   setupParallax();
+  setupParallaxFx();
 
 
   /* ---------- Homepage parallax bands: shift the inner image layer as the band crosses the viewport.
@@ -599,6 +600,176 @@ const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
     if (reduce.addEventListener) reduce.addEventListener("change", onScroll);
     else if (reduce.addListener) reduce.addListener(onScroll);
     update();
+  }
+
+  /* ---------- Homepage parallax band effects (Tenshi Editor › Parallax › Effects; settings arrive as data-fx-* attributes
+     and --pxl-* / --pxg-* custom properties written by tools/build-pages.mjs):
+     letters  - the band heading arrives letter by letter (word by word in Arabic and Farsi, whose letters join)
+     gray     - the photo starts black and white and turns to color on entering view, or in step with scrolling
+     rain     - rain drawn on a canvas inside the band, behind the words; it only runs while the band is on screen
+     Visitors who prefer reduced motion get the finished state: plain heading, full color, no rain. ---------- */
+  function setupParallaxFx() {
+    const bands = $$("[data-parallax]").filter((b) => b.dataset.fxLetters || b.dataset.fxGray || b.dataset.fxRain);
+    if (!bands.length) return;
+    const still = () => reduceMotion.matches;
+    const CJK = /[\u3000-\u9fff\uac00-\ud7af\uff00-\uffef]/;
+
+    // Letters: split the heading into spans; a word's letters stay together so lines still wrap between words.
+    const split = (h) => {
+      const label = h.textContent.replace(/\s+/g, " ").trim();
+      const byWord = /^(ar|fa)\b/.test(document.documentElement.lang || "");
+      const frag = document.createDocumentFragment();
+      let i = 0;
+      const add = (parent, text) => {
+        const c = document.createElement("span");
+        c.className = "pxl-c"; c.textContent = text; c.style.setProperty("--i", Math.min(i++, 80));
+        c.setAttribute("aria-hidden", "true"); parent.appendChild(c);
+      };
+      label.split(/(\s+)/).forEach((tok) => {
+        if (!tok) return;
+        if (/^\s+$/.test(tok)) { frag.appendChild(document.createTextNode(" ")); return; }
+        if (byWord) { add(frag, tok); return; }
+        if (CJK.test(tok)) { Array.from(tok).forEach((ch) => add(frag, ch)); return; }
+        const w = document.createElement("span");
+        w.className = "pxl-w"; w.setAttribute("aria-hidden", "true");
+        Array.from(tok).forEach((ch) => add(w, ch));
+        frag.appendChild(w);
+      });
+      h.textContent = "";
+      h.appendChild(frag);
+      if (label) h.setAttribute("aria-label", label);
+      h.classList.add("pxl-split");
+    };
+
+    const enterIO = "IntersectionObserver" in window ? new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        enterIO.unobserve(e.target);
+        e.target.classList.add("pxfx-in");
+      });
+    }, { rootMargin: "0px 0px -12% 0px", threshold: 0.15 }) : null;
+
+    const scrollGray = [];
+    bands.forEach((band) => {
+      band.classList.add("pxfx-on");
+      const title = $(".parallax-title", band);
+      if (band.dataset.fxLetters && title) {
+        split(title);
+        document.addEventListener("tse:lang", () => split(title));   // the language switcher rewrites the heading text
+      }
+      if (band.dataset.fxGray === "scroll") scrollGray.push(band);
+      if (band.dataset.fxRain) startBandRain(band);
+      if (enterIO && !still()) enterIO.observe(band); else band.classList.add("pxfx-in");
+    });
+
+    // Gray tied to scrolling: full gray as the band's top meets the bottom of the screen, full color once its middle
+    // reaches the middle of the screen.
+    if (scrollGray.length) {
+      let ticking = false;
+      const update = () => {
+        ticking = false;
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+        scrollGray.forEach((band) => {
+          const r = band.getBoundingClientRect();
+          if (r.bottom < -80 || r.top > vh + 80) return;
+          const start = vh, end = vh / 2 - r.height / 2;
+          const p = still() ? 1 : Math.min(1, Math.max(0, (start - r.top) / Math.max(1, start - end)));
+          band.style.setProperty("--pxg-p", p.toFixed(3));
+        });
+      };
+      const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll, { passive: true });
+      update();
+    }
+  }
+
+  // Rain inside one band. "streaks" draws slanted lines; "glyphs" is the falling-characters look of rain.js (in the
+  // band's own colour, on a see-through canvas so the photo shows through).
+  function startBandRain(band) {
+    const canvas = $(".parallax-rain", band);
+    if (!canvas || !canvas.getContext) return;
+    const ctx = canvas.getContext("2d");
+    const ds = band.dataset;
+    const num = (v, d) => (Number.isFinite(Number(v)) ? Number(v) : d);
+    const style = ds.fxRain === "glyphs" ? "glyphs" : "streaks";
+    const density = num(ds.rainDensity, 18), speed = num(ds.rainSpeed, 1), angle = num(ds.rainAngle, 10) * Math.PI / 180;
+    const color = /^#[0-9a-f]{3,6}$/i.test(ds.rainColor || "") ? ds.rainColor : "#d6dde8";
+    canvas.style.opacity = String(num(ds.rainOpacity, 0.45));
+    const GLYPHS = Array.from("アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン天使技術設計開発未来信頼大阪日本0123456789");
+    let w = 0, h = 0, dpr = 1, drops = [], cols = [], size = 18;
+    let running = false, visible = false, raf = 0, last = 0;
+    const tan = Math.tan(angle);
+    const newDrop = (top) => {
+      const z = 0.45 + Math.random() * 0.55;   // nearer drops are longer, faster and brighter
+      return { x: Math.random() * (w + Math.abs(tan) * h) - (tan > 0 ? tan * h : 0), y: top ? Math.random() * h : -Math.random() * h * 0.3 - 20,
+        len: (12 + Math.random() * 16) * z, v: (650 + Math.random() * 350) * z * speed, a: 0.35 + z * 0.65, wdt: z > 0.8 ? 1.4 : 1 };
+    };
+    const resize = () => {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = band.clientWidth; h = band.clientHeight;
+      canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (style === "streaks") {
+        const n = Math.min(1200, Math.round(w / 100 * density * (h / 400)));
+        drops = Array.from({ length: n }, (_, i) => drops[i] || newDrop(true));
+      } else {
+        size = w < 600 ? 15 : 18;
+        const n = Math.ceil(w / size), share = Math.min(1, density / 30);
+        cols = Array.from({ length: n }, (_, i) => cols[i] || { on: Math.random() < share, y: Math.random() * -h / size, v: 0.45 + Math.random() * 0.75 });
+      }
+    };
+    const pick = () => GLYPHS[(Math.random() * GLYPHS.length) | 0];
+    const frame = (dt) => {
+      if (style === "streaks") {
+        ctx.clearRect(0, 0, w, h);
+        ctx.strokeStyle = color; ctx.lineCap = "round";
+        drops.forEach((d, i) => {
+          const dy = d.v * dt;
+          d.y += dy; d.x += dy * tan;
+          if (d.y - d.len > h) { drops[i] = newDrop(false); return; }
+          ctx.globalAlpha = d.a; ctx.lineWidth = d.wdt;
+          ctx.beginPath(); ctx.moveTo(d.x, d.y); ctx.lineTo(d.x - d.len * tan, d.y - d.len); ctx.stroke();
+        });
+        ctx.globalAlpha = 1;
+      } else {
+        // Fade what is already drawn so older characters leave a trail, then draw the new heads.
+        ctx.globalCompositeOperation = "destination-out";
+        ctx.fillStyle = "rgba(0,0,0,0.16)"; ctx.fillRect(0, 0, w, h);
+        ctx.globalCompositeOperation = "source-over";
+        ctx.font = `700 ${size}px "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", Meiryo, "Noto Sans JP", sans-serif`;
+        ctx.textAlign = "center"; ctx.fillStyle = color;
+        const step = dt * 22 * speed;
+        cols.forEach((c, i) => {
+          if (!c.on) return;
+          const y = c.y * size;
+          if (y > 0) { ctx.globalAlpha = 0.5; ctx.fillText(pick(), i * size + size / 2, y - size); ctx.globalAlpha = 1; ctx.fillText(pick(), i * size + size / 2, y); }
+          c.y += c.v * step;
+          if (y > h + size * 4 && Math.random() > 0.975) { c.y = Math.random() * -20; c.v = 0.45 + Math.random() * 0.75; }
+        });
+        ctx.globalAlpha = 1;
+      }
+    };
+    const loop = (t) => {
+      if (!running) return;
+      raf = requestAnimationFrame(loop);
+      const dt = last ? Math.min(0.05, (t - last) / 1000) : 0.016;
+      if (style === "glyphs" && last && t - last < 1000 / 30) return;
+      last = t;
+      frame(dt);
+    };
+    const update = () => {
+      const should = visible && !document.hidden && !reduceMotion.matches;
+      if (should && !running) { running = true; last = 0; raf = requestAnimationFrame(loop); }
+      if (!should && running) { running = false; cancelAnimationFrame(raf); }
+      if (reduceMotion.matches) ctx.clearRect(0, 0, w, h);
+    };
+    resize();
+    if ("ResizeObserver" in window) new ResizeObserver(resize).observe(band); else window.addEventListener("resize", resize);
+    if ("IntersectionObserver" in window) new IntersectionObserver((e) => { visible = e[0].isIntersecting; update(); }, { rootMargin: "100px" }).observe(band);
+    else { visible = true; update(); }
+    document.addEventListener("visibilitychange", update);
+    if (reduceMotion.addEventListener) reduceMotion.addEventListener("change", update);
   }
 
   /* ---------- News page: one tab per category (Technology, Business, Stock Exchange, Weather, Sports, Health) ---------- */

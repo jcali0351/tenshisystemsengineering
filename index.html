@@ -14,7 +14,7 @@
   <link rel="apple-touch-icon" href="brand/tenshi-apple-touch-icon.png">
   <link rel="preload" href="img/photos/osaka.jpg" as="image" type="image/jpeg">
   <link rel="stylesheet" href="tailwind.css?v=d4ae14d9">
-  <link rel="stylesheet" href="styles.css?v=7c36dc0f">
+  <link rel="stylesheet" href="styles.css?v=6c127b91">
   <link rel="stylesheet" href="design.css?v=ea6e1648">
   <link rel="stylesheet" href="chat.css?v=8097383f">
   <link rel="stylesheet" href="site-theme.css?v=e9955052">
@@ -224,14 +224,14 @@
     </section>
 
     <!-- parallax1:start (written by tools/build-pages.mjs from data/parallax.json; words in translations.js) -->
-    <section class="parallax" data-parallax data-speed="0.35" style="--px-h:70vh;--px-overlay:#1a080c;--px-op:0.45;--px-pos:center center" aria-labelledby="parallax-px1-title">
+    <section class="parallax" data-parallax data-speed="0.35" data-fx-letters="rise" data-fx-gray="enter" style="--px-h:70vh;--px-overlay:#1a080c;--px-op:0.45;--px-pos:center center;--pxl-step:40ms;--pxl-dur:0.8s;--pxl-delay:0.1s;--pxg-dur:1.8s;--pxg-delay:0.25s;--pxg-amt:1" aria-labelledby="parallax-px1-title">
       <div class="parallax-viewport">
         <div class="parallax-layer" aria-hidden="true">
-          <img src="img/parallax/px1.jpg" alt="Kobe skyline and harbor" data-i18n-attr="alt:px1Alt" width="1920" height="1080" loading="lazy" decoding="async">
+          <img src="img/parallax/px1.jpg" alt="Kobe skyline and harbor" data-i18n-attr="alt:px1Alt" width="1920" height="1080" loading="lazy" decoding="async" data-still data-still-color>
         </div>
         <div class="parallax-overlay" aria-hidden="true"></div>
       <div class="parallax-copy">
-        <h2 class="parallax-title" id="parallax-px1-title" data-i18n="px1Title">From look to lasting software</h2>
+        <h2 class="parallax-title" id="parallax-px1-title" data-i18n="px1Title" data-still>From look to lasting software</h2>
         <p class="parallax-text" data-i18n="px1Text">A clear design only creates value once it works reliably in the real world.</p>
       </div>
       </div>
@@ -261,14 +261,15 @@
     </section>
 
     <!-- parallax2:start (written by tools/build-pages.mjs from data/parallax.json; words in translations.js) -->
-    <section class="parallax" data-parallax data-speed="0.4" style="--px-h:70vh;--px-overlay:#12050a;--px-op:0.4;--px-pos:center 40%" aria-labelledby="parallax-px2-title">
+    <section class="parallax" data-parallax data-speed="0.4" data-overlay="gradient" data-fx-letters="blur" data-fx-rain="streaks" data-rain-density="14" data-rain-speed="1" data-rain-angle="10" data-rain-color="#d6dde8" data-rain-opacity="0.4" style="--px-h:70vh;--px-overlay:#12050a;--px-op:0.4;--px-pos:center 40%;--px-grad:linear-gradient(180deg,rgba(18,5,10,0.1) 0%,55%,rgba(18,5,10,0.85) 100%);--pxl-step:45ms;--pxl-dur:0.9s;--pxl-delay:0.1s" aria-labelledby="parallax-px2-title">
       <div class="parallax-viewport">
         <div class="parallax-layer" aria-hidden="true">
-          <img src="img/parallax/px2.jpg" alt="Osaka skyline" data-i18n-attr="alt:px2Alt" width="1920" height="1080" loading="lazy" decoding="async">
+          <img src="img/parallax/px2.jpg" alt="Osaka skyline" data-i18n-attr="alt:px2Alt" width="1920" height="1080" loading="lazy" decoding="async" data-still data-still-color>
         </div>
         <div class="parallax-overlay" aria-hidden="true"></div>
+        <canvas class="parallax-rain" aria-hidden="true"></canvas>
       <div class="parallax-copy">
-        <h2 class="parallax-title" id="parallax-px2-title" data-i18n="px2Title">Built, then made better</h2>
+        <h2 class="parallax-title" id="parallax-px2-title" data-i18n="px2Title" data-still>Built, then made better</h2>
         <p class="parallax-text" data-i18n="px2Text">Launch day is a starting point. We keep measuring and improving what we ship.</p>
       </div>
       </div>
@@ -490,7 +491,7 @@
   </footer>
 
   <script src="translations.js?v=78f9354f"></script>
-  <script src="app.js?v=721833ed"></script>
+  <script src="app.js?v=d2092dd3"></script>
   <script src="design.js?v=a58ab8fd"></script>
   <script src="rain.js?v=1d215429"></script>
   <script src="chat.js?v=e6aee4be"></script>

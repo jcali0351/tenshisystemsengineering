@@ -1057,9 +1057,44 @@
   var px = { saved: null, cur: null };
   var pxUploadIndex = -1;
   var PX_DEFAULT = { bands: [
-    { id: "px1", enabled: true, image: "img/photos/kobe.jpg", altKey: "px1Alt", titleKey: "px1Title", textKey: "px1Text", speed: 0.35, height: 70, overlay: "#1a080c", overlayOpacity: 0.45, position: "center center" },
-    { id: "px2", enabled: true, image: "img/photos/osaka.jpg", altKey: "px2Alt", titleKey: "px2Title", textKey: "px2Text", speed: 0.4, height: 70, overlay: "#12050a", overlayOpacity: 0.4, position: "center 40%" }
+    { id: "px1", enabled: true, image: "img/photos/kobe.jpg", altKey: "px1Alt", titleKey: "px1Title", textKey: "px1Text", speed: 0.35, height: 70, overlayMode: "solid", overlay: "#1a080c", overlayOpacity: 0.45,
+      gradient: { type: "linear", angle: 180, from: "#1a080c", fromOpacity: 0.75, to: "#1a080c", toOpacity: 0.1, stop: 50 }, position: "center center",
+      letters: { enabled: true, style: "rise", stagger: 40, duration: 0.8, delay: 0.1 },
+      grayFade: { enabled: true, trigger: "enter", duration: 1.8, delay: 0.25, amount: 1 },
+      rain: { enabled: false, style: "streaks", density: 18, speed: 1, angle: 10, color: "#d6dde8", opacity: 0.45 } },
+    { id: "px2", enabled: true, image: "img/photos/osaka.jpg", altKey: "px2Alt", titleKey: "px2Title", textKey: "px2Text", speed: 0.4, height: 70, overlayMode: "gradient", overlay: "#12050a", overlayOpacity: 0.4,
+      gradient: { type: "linear", angle: 180, from: "#12050a", fromOpacity: 0.1, to: "#12050a", toOpacity: 0.85, stop: 55 }, position: "center 40%",
+      letters: { enabled: true, style: "blur", stagger: 45, duration: 0.9, delay: 0.1 },
+      grayFade: { enabled: false, trigger: "enter", duration: 1.8, delay: 0.25, amount: 1 },
+      rain: { enabled: true, style: "streaks", density: 14, speed: 1, angle: 10, color: "#d6dde8", opacity: 0.4 } }
   ] };
+  // Effects a band gets when its saved settings don't mention them (same as tools/build-pages.mjs): heading letters and
+  // gray-to-color on, rain off.
+  var PX_FX = {
+    letters: { enabled: true, style: "rise", stagger: 40, duration: 0.8, delay: 0.1 },
+    grayFade: { enabled: true, trigger: "enter", duration: 1.8, delay: 0.25, amount: 1 },
+    rain: { enabled: false, style: "streaks", density: 18, speed: 1, angle: 10, color: "#d6dde8", opacity: 0.45 }
+  };
+  // [group, key, label, min, max, step, unit]
+  var PX_FX_RANGES = {
+    letters: [["stagger", "Delay between letters", 5, 250, 5, " ms"], ["duration", "Each letter's animation", 0.1, 4, 0.05, " s"], ["delay", "Start delay", 0, 5, 0.05, " s"]],
+    grayFade: [["amount", "Starting gray amount", 0, 1, 0.05, ""], ["duration", "Fade length", 0.1, 8, 0.1, " s"], ["delay", "Start delay", 0, 5, 0.05, " s"]],
+    rain: [["density", "Amount of rain", 1, 60, 1, ""], ["speed", "Speed", 0.2, 3, 0.05, "×"], ["angle", "Angle / wind", -45, 45, 1, "°"], ["opacity", "Opacity", 0.05, 1, 0.05, ""]]
+  };
+  var PX_FX_CHOICES = {
+    letters: ["style", "Style", [["rise", "Rise and tilt (site default)"], ["fade", "Fade"], ["blur", "Blur in"], ["flip", "Flip up"]]],
+    grayFade: ["trigger", "When", [["enter", "Once, when the band comes into view"], ["scroll", "In step with scrolling"]]],
+    rain: ["style", "Look", [["streaks", "Rain streaks"], ["glyphs", "Falling characters"]]]
+  };
+  // Overlay a band gets when its settings don't mention one: the solid colour + opacity it launched with.
+  var PX_GRAD = { type: "linear", angle: 180, from: "#1a080c", fromOpacity: 0.75, to: "#1a080c", toOpacity: 0.1, stop: 50 };
+  function pxNormalize(b, i) {
+    var out = Object.assign({}, PX_DEFAULT.bands[i] || PX_DEFAULT.bands[0], b);
+    out.overlayMode = b && b.overlayMode === "gradient" ? "gradient" : "solid";
+    out.gradient = Object.assign({}, PX_GRAD, (b && b.gradient) || {});
+    Object.keys(PX_FX).forEach(function (g) { out[g] = Object.assign({}, PX_FX[g], (b && b[g]) || {}); });
+    return out;
+  }
   var PX_POS = [
     ["center center", "Centre"],
     ["center top", "Top"],
@@ -1076,7 +1111,7 @@
     if (px.cur) { renderParallax(); return; }
     (tree.has("data/parallax.json") ? readText("data/parallax.json").then(JSON.parse) : Promise.resolve(PX_DEFAULT)).catch(function () { return PX_DEFAULT; }).then(function (d) {
       var src = (d && Array.isArray(d.bands) && d.bands.length) ? d.bands : PX_DEFAULT.bands;
-      px.saved = { bands: src.map(function (b, i) { return Object.assign({}, PX_DEFAULT.bands[i] || PX_DEFAULT.bands[0], b); }) };
+      px.saved = { bands: src.map(pxNormalize) };
       px.cur = JSON.parse(JSON.stringify(px.saved));
       renderParallax();
     });
@@ -1132,16 +1167,95 @@
             (b.altKey ? '<button type="button" class="ed-btn ed-btn--ghost ed-btn--small" data-px-act="langs" data-px-key="' + esc(b.altKey) + '">All languages</button>' : "") + "</label>" +
           '<label class="dz-range"><span>Parallax speed</span><input type="range" data-px-k="speed" min="-1" max="1" step="0.05" value="' + b.speed + '"><output>' + b.speed + "</output></label>" +
           '<label class="dz-range"><span>Height</span><input type="range" data-px-k="height" min="30" max="100" step="1" value="' + b.height + '"><output>' + b.height + " vh</output></label>" +
-          '<label class="dz-range"><span>Overlay opacity</span><input type="range" data-px-k="overlayOpacity" min="0" max="1" step="0.05" value="' + b.overlayOpacity + '"><output>' + b.overlayOpacity + "</output></label>" +
-          '<label class="sl-field sl-color"><span>Overlay colour</span><input type="color" data-px-k="overlay" value="' + esc(b.overlay || "#1a080c") + '"><output>' + esc(b.overlay || "#1a080c") + "</output></label>" +
+          pxOverlayHTML(b) +
           '<label class="ed-field"><span>Picture position</span><select data-px-k="position">' + posOpts + "</select></label>" +
-        "</div></article>";
+        "</div>" + pxEffectsHTML(b) + "</article>";
     }).join("");
     updateBar();
+  }
+  function pxOverlayHTML(b) {
+    var g = Object.assign({}, PX_GRAD, b.gradient || {}), grad = b.overlayMode === "gradient";
+    var rng = function (k, label, min, max, step, unit) {
+      return '<label class="dz-range"><span>' + label + '</span><input type="range" data-px-g="' + k + '" data-unit="' + unit + '" min="' + min + '" max="' + max + '" step="' + step + '" value="' + g[k] + '"><output>' + g[k] + unit + "</output></label>";
+    };
+    var col = function (k, label) {
+      return '<label class="sl-field sl-color"><span>' + label + '</span><input type="color" data-px-g="' + k + '" value="' + esc(g[k]) + '"><output>' + esc(g[k]) + "</output></label>";
+    };
+    return '<fieldset class="px-fx px-ov"><legend>Overlay</legend>' +
+      '<label class="ed-field"><span>Overlay style</span><select data-px-k="overlayMode">' +
+        '<option value="solid"' + (grad ? "" : " selected") + '>Solid colour</option><option value="gradient"' + (grad ? " selected" : "") + ">Gradient</option></select></label>" +
+      '<div class="px-ov-solid"' + (grad ? " hidden" : "") + '>' +
+        '<label class="sl-field sl-color"><span>Overlay colour</span><input type="color" data-px-k="overlay" value="' + esc(b.overlay || "#1a080c") + '"><output>' + esc(b.overlay || "#1a080c") + "</output></label>" +
+        '<label class="dz-range"><span>Overlay opacity</span><input type="range" data-px-k="overlayOpacity" min="0" max="1" step="0.05" value="' + b.overlayOpacity + '"><output>' + b.overlayOpacity + "</output></label>" +
+      "</div>" +
+      '<div class="px-ov-grad"' + (grad ? "" : " hidden") + '>' +
+        '<label class="ed-field"><span>Gradient type</span><select data-px-g="type"><option value="linear"' + (g.type === "radial" ? "" : " selected") + '>Linear</option><option value="radial"' + (g.type === "radial" ? " selected" : "") + ">Radial (from the centre out)</option></select></label>" +
+        rng("angle", "Angle (linear; 180° = top to bottom)", 0, 360, 5, "°") +
+        col("from", "Start colour") + rng("fromOpacity", "Start opacity", 0, 1, 0.05, "") +
+        col("to", "End colour") + rng("toOpacity", "End opacity", 0, 1, 0.05, "") +
+        rng("stop", "Midpoint", 1, 99, 1, "%") +
+        '<div class="px-ov-swatch" style="background:' + esc(pxGradCss(g)) + '"></div>' +
+      "</div></fieldset>";
+  }
+  function pxGradRgba(hex, a) {
+    var h = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(hex || "") ? hex.slice(1) : "1a080c";
+    if (h.length === 3) h = h.split("").map(function (c) { return c + c; }).join("");
+    var n = parseInt(h, 16);
+    return "rgba(" + (n >> 16) + "," + ((n >> 8) & 255) + "," + (n & 255) + "," + a + ")";
+  }
+  function pxGradCss(g) {
+    var a = pxGradRgba(g.from, g.fromOpacity) + " 0%," + g.stop + "%," + pxGradRgba(g.to, g.toOpacity) + " 100%";
+    return (g.type === "radial" ? "radial-gradient(ellipse at center," : "linear-gradient(" + g.angle + "deg,") + a + "), #888";
+  }
+  function pxEffectsHTML(b) {
+    var titles = { letters: "Heading letter by letter", grayFade: "Photo fades from gray to color", rain: "Rain" };
+    var notes = {
+      letters: "The heading appears one letter at a time as the band scrolls into view. Off: the heading simply shows.",
+      grayFade: "The photo starts black and white and turns to full color. Off: the photo is always in color.",
+      rain: "Rain falls over the photo, behind the words. It only runs while the band is on screen."
+    };
+    return '<fieldset class="px-fx"><legend>Effects</legend>' + Object.keys(PX_FX).map(function (g) {
+      var v = b[g] || PX_FX[g], ch = PX_FX_CHOICES[g];
+      var opts = ch[2].map(function (o) { return '<option value="' + o[0] + '"' + (v[ch[0]] === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("");
+      var body = '<label class="ed-field"><span>' + ch[1] + '</span><select data-px-fx="' + g + "." + ch[0] + '">' + opts + "</select></label>" +
+        PX_FX_RANGES[g].map(function (r) {
+          return '<label class="dz-range"><span>' + r[1] + '</span><input type="range" data-px-fx="' + g + "." + r[0] + '" data-unit="' + esc(r[5]) + '" min="' + r[2] + '" max="' + r[3] + '" step="' + r[4] + '" value="' + v[r[0]] + '"><output>' + v[r[0]] + r[5] + "</output></label>";
+        }).join("") +
+        (g === "rain" ? '<label class="sl-field sl-color"><span>Drop colour</span><input type="color" data-px-fx="rain.color" value="' + esc(v.color || "#d6dde8") + '"><output>' + esc(v.color || "#d6dde8") + "</output></label>" : "");
+      return '<div class="px-fx-group" data-px-fx-group="' + g + '"' + (v.enabled ? "" : " data-off") + ">" +
+        '<label class="ed-check"><input type="checkbox" data-px-fx="' + g + '.enabled"' + (v.enabled ? " checked" : "") + "> <b>" + titles[g] + "</b></label>" +
+        '<p class="px-fx-note">' + notes[g] + "</p>" +
+        '<div class="px-fx-body">' + body + "</div></div>";
+    }).join("") + '<p class="px-fx-note">Visitors who ask their device for reduced motion see the finished state: plain heading, full color, no rain.</p></fieldset>';
   }
   $("#px-bands").addEventListener("input", function (e) {
     var card = e.target.closest(".px-card"); if (!card || !px.cur) return;
     var b = px.cur.bands[+card.dataset.px], el = e.target;
+    if (el.dataset.pxG) {
+      var gkey = el.dataset.pxG;
+      b.gradient = Object.assign({}, PX_GRAD, b.gradient || {});
+      b.gradient[gkey] = el.type === "range" ? parseFloat(el.value) : el.value;
+      var go = el.parentNode.querySelector("output"); if (go) go.textContent = b.gradient[gkey] + (el.dataset.unit || "");
+      var sw = card.querySelector(".px-ov-swatch"); if (sw) sw.style.background = pxGradCss(b.gradient);
+      updateBar();
+      return;
+    }
+    if (el.dataset.pxFx) {
+      var gk = el.dataset.pxFx.split("."), g = gk[0], key = gk[1];
+      b[g] = Object.assign({}, PX_FX[g], b[g] || {});
+      if (key === "enabled") {
+        b[g].enabled = el.checked;
+        var grp = el.closest(".px-fx-group"); if (grp) grp.toggleAttribute("data-off", !el.checked);
+      } else if (el.type === "range") {
+        b[g][key] = parseFloat(el.value);
+        el.parentNode.querySelector("output").textContent = b[g][key] + (el.dataset.unit || "");
+      } else {
+        b[g][key] = el.value;
+        var o = el.parentNode.querySelector("output"); if (o) o.textContent = el.value;
+      }
+      updateBar();
+      return;
+    }
     if (el.dataset.pxText) {
       setPend("en", b[el.dataset.pxText], el.value);
       return;
@@ -1154,6 +1268,10 @@
     } else if (k === "overlay") {
       b.overlay = el.value;
       el.parentNode.querySelector("output").textContent = el.value;
+    } else if (k === "overlayMode") {
+      b.overlayMode = el.value === "gradient" ? "gradient" : "solid";
+      card.querySelector(".px-ov-solid").hidden = b.overlayMode === "gradient";
+      card.querySelector(".px-ov-grad").hidden = b.overlayMode !== "gradient";
     } else if (k === "image" || k === "position") {
       b[k] = el.value;
       if (k === "image") renderParallax();

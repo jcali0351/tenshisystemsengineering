@@ -238,7 +238,56 @@ const pxPos = (p) => {
   const s = String(p || "center center").trim();
   return /^[a-z0-9.%\s-]+$/i.test(s) && s.length <= 40 ? s : "center center";
 };
-const pxColor = (c) => (/^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i.test(c || "") ? c : "#1a080c");
+const pxColor = (c, fallback = "#1a080c") => (/^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i.test(c || "") ? c : fallback);
+const pxPick = (v, list) => (list.includes(v) ? v : list[0]);
+// Optional effects per band (Tenshi Editor › Parallax › Effects). Missing fields keep the look the bands launched with:
+// letter-by-letter heading and gray-to-color on, rain off. app.js runs them; reduced motion shows the finished state.
+const PX_FX = {
+  letters: { enabled: true, style: "rise", stagger: 40, duration: 0.8, delay: 0.1 },
+  grayFade: { enabled: true, trigger: "enter", duration: 1.8, delay: 0.25, amount: 1 },
+  rain: { enabled: false, style: "streaks", density: 18, speed: 1, angle: 10, color: "#d6dde8", opacity: 0.45 }
+};
+// Overlay: "solid" (overlay colour + overlayOpacity, the original look; also used when overlayMode is missing) or
+// "gradient" (gradient: type linear/radial, angle, from/to colour and opacity, stop = midpoint between them in %).
+const PX_GRAD = { type: "linear", angle: 180, from: "#1a080c", fromOpacity: 0.75, to: "#1a080c", toOpacity: 0.1, stop: 50 };
+const pxRgba = (hex, a) => {
+  let h = pxColor(hex).slice(1);
+  if (h.length === 3) h = h.split("").map((c) => c + c).join("");
+  const n = parseInt(h, 16);
+  return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`;
+};
+function pxOverlay(b) {
+  if (b.overlayMode !== "gradient") return { attr: "", vars: "" };
+  const g = { ...PX_GRAD, ...(b.gradient || {}) };
+  const from = pxRgba(g.from, pxClamp(g.fromOpacity, 0, 1, 0.75)), to = pxRgba(g.to, pxClamp(g.toOpacity, 0, 1, 0.1));
+  const stop = pxClamp(g.stop, 1, 99, 50);
+  const css = g.type === "radial"
+    ? `radial-gradient(ellipse at center,${from} 0%,${stop}%,${to} 100%)`
+    : `linear-gradient(${pxClamp(g.angle, 0, 360, 180)}deg,${from} 0%,${stop}%,${to} 100%)`;
+  return { attr: ' data-overlay="gradient"', vars: `;--px-grad:${css}` };
+}
+function pxEffects(b) {
+  const L = { ...PX_FX.letters, ...(b.letters || {}) };
+  const G = { ...PX_FX.grayFade, ...(b.grayFade || {}) };
+  const R = { ...PX_FX.rain, ...(b.rain || {}) };
+  const attrs = [], vars = [];
+  if (L.enabled !== false) {
+    attrs.push(`data-fx-letters="${pxPick(L.style, ["rise", "fade", "blur", "flip"])}"`);
+    vars.push(`--pxl-step:${pxClamp(L.stagger, 5, 250, 40)}ms`, `--pxl-dur:${pxClamp(L.duration, 0.1, 4, 0.8)}s`, `--pxl-delay:${pxClamp(L.delay, 0, 5, 0.1)}s`);
+  }
+  if (G.enabled !== false) {
+    attrs.push(`data-fx-gray="${pxPick(G.trigger, ["enter", "scroll"])}"`);
+    vars.push(`--pxg-dur:${pxClamp(G.duration, 0.1, 8, 1.8)}s`, `--pxg-delay:${pxClamp(G.delay, 0, 5, 0.25)}s`, `--pxg-amt:${pxClamp(G.amount, 0, 1, 1)}`);
+  }
+  const rain = R.enabled === true;
+  if (rain) {
+    attrs.push(`data-fx-rain="${pxPick(R.style, ["streaks", "glyphs"])}"`,
+      `data-rain-density="${pxClamp(R.density, 1, 60, 18)}"`, `data-rain-speed="${pxClamp(R.speed, 0.2, 3, 1)}"`,
+      `data-rain-angle="${pxClamp(R.angle, -45, 45, 10)}"`, `data-rain-color="${pxColor(R.color, "#d6dde8")}"`,
+      `data-rain-opacity="${pxClamp(R.opacity, 0.05, 1, 0.45)}"`);
+  }
+  return { attrs: attrs.length ? " " + attrs.join(" ") : "", vars: vars.length ? ";" + vars.join(";") : "", rain };
+}
 function parallaxSlot(i) {
   const b = (PARALLAX.bands || [])[i];
   if (!b || b.enabled === false) return "";
@@ -262,16 +311,20 @@ function parallaxSlot(i) {
   const alt = altKey
     ? ` alt="${tx(altKey)}"${hasText(b.altKey) ? ` data-i18n-attr="alt:${altKey}"` : ""}`
     : ' alt=""';
-  const title = titleKey ? `        <h2 class="parallax-title" id="${titleId}" data-i18n="${titleKey}">${tx(titleKey)}</h2>` : "";
+  const fx = pxEffects(b);
+  const ov = pxOverlay(b);
+  // data-still keeps design.js's site-wide motion off the heading and photo: the band's own effects (app.js) run them.
+  const title = titleKey ? `        <h2 class="parallax-title" id="${titleId}" data-i18n="${titleKey}" data-still>${tx(titleKey)}</h2>` : "";
   const lead = textKey ? `        <p class="parallax-text" data-i18n="${textKey}">${tx(textKey)}</p>` : "";
   const copy = (title || lead) ? `      <div class="parallax-copy">\n${[title, lead].filter(Boolean).join("\n")}\n      </div>` : "";
-  return `    <section class="parallax" data-parallax data-speed="${speed}" style="--px-h:${height}vh;--px-overlay:${overlay};--px-op:${op};--px-pos:${pos}"${labelled}>
+  const rain = fx.rain ? `        <canvas class="parallax-rain" aria-hidden="true"></canvas>\n` : "";
+  return `    <section class="parallax" data-parallax data-speed="${speed}"${ov.attr}${fx.attrs} style="--px-h:${height}vh;--px-overlay:${overlay};--px-op:${op};--px-pos:${pos}${ov.vars}${fx.vars}"${labelled}>
       <div class="parallax-viewport">
         <div class="parallax-layer" aria-hidden="true">
-          <img src="${image}"${alt} width="1920" height="1080" loading="lazy" decoding="async">
+          <img src="${image}"${alt} width="1920" height="1080" loading="lazy" decoding="async" data-still data-still-color>
         </div>
         <div class="parallax-overlay" aria-hidden="true"></div>
-${copy}
+${rain}${copy}
       </div>
     </section>
 `;
