@@ -2553,3 +2553,11 @@ main .eyebrow + :is(h1, h2, h3):not(#_):not(#__) { margin-top: 30.5px !important
 .value-card:not(#_):not(#__) > .value-icon { grid-column: 1 !important; margin: 0 !important; width: 44px !important; height: 44px !important; }
 .value-card:not(#_):not(#__) > h3 { grid-column: 2 !important; margin: 0 !important; text-align: start !important; }
 .value-card:not(#_):not(#__) > p { grid-column: 1 / -1 !important; margin-top: 14px !important; text-align: start !important; }
+
+/* Card grids: the site-wide "li + li" spacing pushed every card but the first down; grid gap already spaces them */
+main :is(.services-grid,.offer-grid,.benefit-grid,.blog-grid,.news-list,.portal-grid,.prj-grid,.prj-ed-grid,.svc-grid,.svc-tech-grid,.team-grid,.tech-grid,.value-grid,.pat-grid,.ab-find-grid,.ab-focus-grid,.ab-mv-grid,.ab-std-grid,.svc-steps,.svc-other-list,.svc-detail-list) > li:not(#_):not(#__) { margin-top: 0 !important; }
+
+/* Team cards: photo and text centered in the card */
+.team-card:not(#_):not(#__) { align-items: center !important; text-align: center !important; }
+.team-card:not(#_):not(#__) > .team-photo { width: 100% !important; }
+.team-card:not(#_):not(#__) > .team-text { width: 100% !important; justify-items: center !important; text-align: center !important; padding-inline: 0 !important; }
