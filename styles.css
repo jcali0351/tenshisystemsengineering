@@ -2536,3 +2536,8 @@ main section.band + section.services:not(#_):not(#__) { padding-top: 0 !importan
 /* Red eyebrow labels sit just above their heading on every panel */
 main .eyebrow:not(#_):not(#__) { margin-bottom: 0 !important; }
 main .eyebrow + :is(h1, h2, h3):not(#_):not(#__) { margin-top: 30.5px !important; margin-bottom: 17.5px !important; }
+
+/* Desktop: menu centered in the space between the logo and the language button */
+@media (min-width: 861px) {
+  .site-header:not(.is-stacked) .main-nav:not(#_):not(#__) { margin-inline: auto !important; }
+}

@@ -75,13 +75,15 @@
 /* ---------- Footer placement: inline-end on desktop (margin-inline-start:auto so RTL goes left), full width on phones.
    Overflow is forced visible so the upward results are not clipped by design.css's .site-footer { overflow: hidden }. ---------- */
 .site-footer:not(#_):not(#__), .site-footer .footer-inner:not(#_):not(#__) { overflow: visible !important; }
-/* Room for the fixed chat launcher (.tk-launch, bottom-right) so it does not cover the bar when the page is scrolled to the end. */
-.site-footer .footer-inner:not(#_):not(#__) { padding-bottom: 88px !important; }
 .site-footer .footer-inner > .tse-finder:not(#_):not(#__) {
   position: relative; z-index: 6;
   flex: 0 1 280px; width: min(280px, 100%); min-width: 200px;
   margin-inline-start: auto;
 }
+/* The bar sits at the top of the footer: on the logo's row at the inline-end on desktop, right under the logo on phones. */
+.site-footer .footer-inner > *:not(#_):not(#__) { order: 2; }
+.site-footer .footer-inner > .footer-brand:not(#_):not(#__) { order: 0; }
+.site-footer .footer-inner > .tse-finder:not(#_):not(#__) { order: 1; }
 @media (max-width: 860px) {
   .site-footer .footer-inner > .tse-finder:not(#_):not(#__) {
     flex: 1 1 100%; width: 100%; min-width: 0; margin-inline-start: 0; align-self: stretch;
