@@ -46,20 +46,29 @@
       <nav class="main-nav" aria-label="Main menu" data-i18n-attr="aria-label:navLabel">
         <ul>
           <li><a href="index.html" aria-current="page" data-nav="home" data-i18n="navHome">Home</a></li>
-          <li><a href="about.html" data-nav="about" data-i18n="navAbout">About</a></li>
-          <li><a href="team.html" data-nav="team" data-i18n="navTeam">Team</a></li>
+          <li class="has-sub"><a href="about.html" data-nav="about" data-i18n="navAbout">About</a>
+            <ul class="sub-nav">
+              <li><a href="team.html" data-nav="team" data-i18n="navTeam">Team</a></li>
+              <li><a href="technology.html" data-nav="technology" data-i18n="navTech">Technology</a></li>
+            </ul>
+          </li>
           <li><a href="services.html" data-nav="services" data-i18n="navServices">Services</a></li>
-          <li><a href="technology.html" data-nav="technology" data-i18n="navTech">Technology</a></li>
           <li class="has-sub"><a href="projects.html" data-nav="projects" data-i18n="navProjects">Projects</a>
             <ul class="sub-nav">
               <li><a href="projects/storycaster.html" data-nav="p-storycaster">StoryCaster</a></li>
               <li><a href="projects/master-baiter-pro.html" data-nav="p-master-baiter-pro">Master Baiter Pro</a></li>
             </ul>
           </li>
-          <li><a href="news.html" data-nav="news" data-i18n="navNews">News</a></li>
-          <li><a href="blog.html" data-nav="blog" data-i18n="navBlog">Blog</a></li>
-          <li><a href="contact.html" data-nav="contact" data-i18n="navContact">Contact</a></li>
-          <li><a href="portal.html" data-nav="portal" data-i18n="navPortal">Portal</a></li>
+          <li class="has-sub"><a href="news.html" data-nav="news" data-i18n="navNews">News</a>
+            <ul class="sub-nav">
+              <li><a href="blog.html" data-nav="blog" data-i18n="navBlog">Blog</a></li>
+            </ul>
+          </li>
+          <li class="has-sub"><a href="contact.html" data-nav="contact" data-i18n="navContact">Contact</a>
+            <ul class="sub-nav">
+              <li><a href="portal.html" data-nav="portal" data-i18n="navPortal">Portal</a></li>
+            </ul>
+          </li>
         </ul>
       </nav>
       <div class="lang-picker">
