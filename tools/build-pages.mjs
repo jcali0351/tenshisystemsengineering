@@ -1120,15 +1120,40 @@ const postHref = (url, prefix) => {
 };
 const inlineFmt = (s, prefix) => esc(s)
   .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+  .replace(/`([^`]+)`/g, "<code>$1</code>")
   .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, url) => `<a href="${esc(postHref(url, prefix))}">${label}</a>`);
+function renderListItem(item, prefix, indent) {
+  if (item && typeof item === "object" && !Array.isArray(item)) {
+    const text = inlineFmt(item.text ?? "", prefix);
+    let inner = "";
+    if (Array.isArray(item.ul)) inner += `\n${renderList("ul", item.ul, prefix, indent + "  ")}`;
+    if (Array.isArray(item.ol)) inner += `\n${renderList("ol", item.ol, prefix, indent + "  ")}`;
+    if (inner) inner += `\n${indent}  `;
+    return `${indent}  <li>${text}${inner}</li>`;
+  }
+  return `${indent}  <li>${inlineFmt(String(item ?? ""), prefix)}</li>`;
+}
+function renderList(tag, items, prefix, indent) {
+  const lis = (items || []).map((item) => renderListItem(item, prefix, indent)).join("\n");
+  return `${indent}<${tag}>\n${lis}\n${indent}</${tag}>`;
+}
+function renderTable(table, prefix, indent) {
+  const headers = table.headers || [];
+  const rows = table.rows || [];
+  const thead = headers.length
+    ? `${indent}  <thead>\n${indent}  <tr>\n${headers.map((h) => `${indent}    <th>${inlineFmt(h, prefix)}</th>`).join("\n")}\n${indent}  </tr>\n${indent}  </thead>\n`
+    : "";
+  const tbody = `${indent}  <tbody>\n${rows.map((row) => `${indent}  <tr>\n${(row || []).map((c) => `${indent}    <td>${inlineFmt(String(c ?? ""), prefix)}</td>`).join("\n")}\n${indent}  </tr>`).join("\n")}\n${indent}  </tbody>`;
+  return `${indent}<div class="blog-table-wrap">\n${indent}<table class="blog-table">\n${thead}${tbody}\n${indent}</table>\n${indent}</div>`;
+}
 function renderPostBody(body, prefix, indent = "        ") {
   return (body || []).map((block) => {
     if (block && typeof block === "object") {
       if (block.h2) return `${indent}<h2>${inlineFmt(block.h2, prefix)}</h2>`;
-      if (Array.isArray(block.ul)) {
-        const items = block.ul.map((item) => `${indent}  <li>${inlineFmt(item, prefix)}</li>`).join("\n");
-        return `${indent}<ul>\n${items}\n${indent}</ul>`;
-      }
+      if (block.h3) return `${indent}<h3>${inlineFmt(block.h3, prefix)}</h3>`;
+      if (Array.isArray(block.ul)) return renderList("ul", block.ul, prefix, indent);
+      if (Array.isArray(block.ol)) return renderList("ol", block.ol, prefix, indent);
+      if (block.table) return renderTable(block.table, prefix, indent);
     }
     return `${indent}<p>${inlineFmt(String(block ?? ""), prefix)}</p>`;
   }).join("\n");
@@ -1205,7 +1230,7 @@ const blogPage = frame({
     <section class="page-section blog-section" aria-labelledby="posts-title">
       <div class="page-inner">
         <h2 id="posts-title" class="section-title" data-i18n="blogPostsTitle">${tx("blogPostsTitle")}</h2>
-${POSTS.some((p) => p.placeholder) ? `        ${t("p", "blogFiller", 'class="blog-note"')}\n` : ""}        <div class="blog-grid">
+        <div class="blog-grid">
 ${POSTS.map(blogCard).join("\n")}
         </div>
       </div>

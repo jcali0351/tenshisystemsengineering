@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Web Accessibility Basics: What WCAG Means for Your Business Website | Tenshi Systems </title>
+  <meta name="description" content="Imagine a customer who wants to book your service but cannot see the screen and relies on software that reads it aloud. Or someone with a tremor who navigates with a keyboard instead of a mouse. Or an older visitor who simply needs larger, higher-contrast text. If your website works for them, it is accessible. If it does not, you are turning away people who want to do business with you, often without ever knowing it.">
+  <meta name="theme-color" content="#c8102e">
+  <meta property="og:title" content="Web Accessibility Basics: What WCAG Means for Your Business Website | Tenshi Systems ">
+  <meta property="og:description" content="Imagine a customer who wants to book your service but cannot see the screen and relies on software that reads it aloud. Or someone with a tremor who navigates with a keyboard instead of a mouse. Or an older visitor who simply needs larger, higher-contrast text. If your website works for them, it is accessible. If it does not, you are turning away people who want to do business with you, often without ever knowing it.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="../brand/tenshi-logo.png" type="image/png">
+  <link rel="alternate icon" href="../brand/tenshi-apple-touch-icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="../brand/tenshi-apple-touch-icon.png">
+  <link rel="stylesheet" href="../tailwind.css?v=d4ae14d9">
+  <link rel="stylesheet" href="../styles.css?v=41a68d99">
+  <link rel="stylesheet" href="../design.css?v=ea6e1648">
+  <link rel="stylesheet" href="../chat.css?v=8097383f">
+  <link rel="stylesheet" href="../site-theme.css?v=e9955052">
+</head>
+<body class="page blog-post-page" data-fixed-title>
+  <!-- Written by tools/build-pages.mjs: edit translations.js and the script, not this file. -->
+  <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
+
+  <header class="site-header">
+    <div class="ticker" data-ticker hidden>
+      <p class="ticker-label"><span data-i18n="tickerLabel">Japan markets</span> <small data-i18n="tickerDelayed">Delayed prices</small></p>
+      <div class="ticker-window"><ul class="ticker-track"></ul></div>
+      <p class="ticker-time"></p>
+    </div>
+    <div class="header-inner">
+      <a class="brand" href="../index.html" aria-label="Tenshi Systems" data-i18n-attr="aria-label:brandLabel">
+     <img
+  class="brand-logo"
+  src="../brand/tenshi-horizontal.png"
+  alt="Tenshi Systems Engineering"
+  width="200"
+  height="47"
+>
+      </a>
+      <nav class="main-nav" aria-label="Main menu" data-i18n-attr="aria-label:navLabel">
+        <ul>
+          <li><a href="../index.html" data-nav="home" data-i18n="navHome">Home</a></li>
+          <li><a href="../about.html" data-nav="about" data-i18n="navAbout">About</a></li>
+          <li><a href="../team.html" data-nav="team" data-i18n="navTeam">Team</a></li>
+          <li><a href="../services.html" data-nav="services" data-i18n="navServices">Services</a></li>
+          <li><a href="../technology.html" data-nav="technology" data-i18n="navTech">Technology</a></li>
+          <li class="has-sub"><a href="../projects.html" data-nav="projects" data-i18n="navProjects">Projects</a>
+            <ul class="sub-nav">
+              <li><a href="../projects/storycaster.html" data-nav="p-storycaster">StoryCaster</a></li>
+              <li><a href="../projects/master-baiter-pro.html" data-nav="p-master-baiter-pro">Master Baiter Pro</a></li>
+            </ul>
+          </li>
+          <li><a href="../news.html" data-nav="news" data-i18n="navNews">News</a></li>
+          <li><a href="../blog.html" aria-current="page" data-nav="blog" data-i18n="navBlog">Blog</a></li>
+          <li><a href="../contact.html" data-nav="contact" data-i18n="navContact">Contact</a></li>
+          <li><a href="../portal.html" data-nav="portal" data-i18n="navPortal">Portal</a></li>
+        </ul>
+      </nav>
+      <div class="lang-picker">
+        <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+          <symbol id="flag-en" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect y="0" width="30" height="1.54" fill="#b22234"/><rect y="3.08" width="30" height="1.54" fill="#b22234"/><rect y="6.15" width="30" height="1.54" fill="#b22234"/><rect y="9.23" width="30" height="1.54" fill="#b22234"/><rect y="12.31" width="30" height="1.54" fill="#b22234"/><rect y="15.38" width="30" height="1.54" fill="#b22234"/><rect y="18.46" width="30" height="1.54" fill="#b22234"/><rect width="12" height="10.77" fill="#3c3b6e"/><circle cx="1" cy="1" r=".45" fill="#fff"/><circle cx="3" cy="1" r=".45" fill="#fff"/><circle cx="5" cy="1" r=".45" fill="#fff"/><circle cx="7" cy="1" r=".45" fill="#fff"/><circle cx="9" cy="1" r=".45" fill="#fff"/><circle cx="11" cy="1" r=".45" fill="#fff"/><circle cx="2" cy="3.15" r=".45" fill="#fff"/><circle cx="4" cy="3.15" r=".45" fill="#fff"/><circle cx="6" cy="3.15" r=".45" fill="#fff"/><circle cx="8" cy="3.15" r=".45" fill="#fff"/><circle cx="10" cy="3.15" r=".45" fill="#fff"/><circle cx="1" cy="5.3" r=".45" fill="#fff"/><circle cx="3" cy="5.3" r=".45" fill="#fff"/><circle cx="5" cy="5.3" r=".45" fill="#fff"/><circle cx="7" cy="5.3" r=".45" fill="#fff"/><circle cx="9" cy="5.3" r=".45" fill="#fff"/><circle cx="11" cy="5.3" r=".45" fill="#fff"/><circle cx="2" cy="7.45" r=".45" fill="#fff"/><circle cx="4" cy="7.45" r=".45" fill="#fff"/><circle cx="6" cy="7.45" r=".45" fill="#fff"/><circle cx="8" cy="7.45" r=".45" fill="#fff"/><circle cx="10" cy="7.45" r=".45" fill="#fff"/><circle cx="1" cy="9.6" r=".45" fill="#fff"/><circle cx="3" cy="9.6" r=".45" fill="#fff"/><circle cx="5" cy="9.6" r=".45" fill="#fff"/><circle cx="7" cy="9.6" r=".45" fill="#fff"/><circle cx="9" cy="9.6" r=".45" fill="#fff"/><circle cx="11" cy="9.6" r=".45" fill="#fff"/></symbol>
+          <symbol id="flag-ja" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><circle cx="15" cy="10" r="6" fill="#bc002d"/></symbol>
+          <symbol id="flag-ko" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><g transform="rotate(33.69 15 10)"><circle cx="15" cy="10" r="5" fill="#cd2e3a"/><path d="M10 10a5 5 0 0 0 10 0a2.5 2.5 0 0 0-5 0a2.5 2.5 0 0 1-5 0z" fill="#0047a0"/></g><g transform="rotate(-56.31 6.7 4.5)" fill="#000"><rect x="4.7" y="2.95" width="4" height=".75"/><rect x="4.7" y="4.05" width="4" height=".75"/><rect x="4.7" y="5.15" width="4" height=".75"/></g><g transform="rotate(-56.31 23.3 15.5)" fill="#000"><rect x="21.3" y="13.95" width="1.7" height=".75"/><rect x="23.6" y="13.95" width="1.7" height=".75"/><rect x="21.3" y="15.05" width="1.7" height=".75"/><rect x="23.6" y="15.05" width="1.7" height=".75"/><rect x="21.3" y="16.15" width="1.7" height=".75"/><rect x="23.6" y="16.15" width="1.7" height=".75"/></g><g transform="rotate(56.31 23.3 4.5)" fill="#000"><rect x="21.3" y="2.95" width="1.7" height=".75"/><rect x="23.6" y="2.95" width="1.7" height=".75"/><rect x="21.3" y="4.05" width="4" height=".75"/><rect x="21.3" y="5.15" width="1.7" height=".75"/><rect x="23.6" y="5.15" width="1.7" height=".75"/></g><g transform="rotate(56.31 6.7 15.5)" fill="#000"><rect x="4.7" y="13.95" width="4" height=".75"/><rect x="4.7" y="15.05" width="1.7" height=".75"/><rect x="7" y="15.05" width="1.7" height=".75"/><rect x="4.7" y="16.15" width="4" height=".75"/></g></symbol>
+          <symbol id="flag-de" viewBox="0 0 30 20"><rect width="30" height="6.67" fill="#000"/><rect y="6.67" width="30" height="6.67" fill="#dd0000"/><rect y="13.33" width="30" height="6.67" fill="#ffce00"/></symbol>
+          <symbol id="flag-zh" viewBox="0 0 30 20"><rect width="30" height="20" fill="#ee1c25"/><polygon points="5,2 5.67,4.07 7.85,4.07 6.09,5.35 6.76,7.43 5,6.15 3.24,7.43 3.91,5.35 2.15,4.07 4.33,4.07" fill="#ffde00"/><polygon points="10.39,1.08 10.33,1.8 11,2.09 10.29,2.25 10.22,2.97 9.85,2.35 9.14,2.52 9.62,1.97 9.25,1.34 9.91,1.63" fill="#ffde00"/><polygon points="12.72,3.31 12.38,3.95 12.88,4.47 12.17,4.34 11.83,4.98 11.73,4.27 11.01,4.14 11.66,3.82 11.56,3.1 12.07,3.62" fill="#ffde00"/><polygon points="12.94,6.66 12.37,7.11 12.62,7.79 12.01,7.38 11.44,7.83 11.64,7.13 11.04,6.72 11.76,6.7 11.97,6 12.21,6.68" fill="#ffde00"/><polygon points="10.36,8.07 10.32,8.79 11,9.05 10.3,9.24 10.26,9.97 9.86,9.36 9.16,9.54 9.62,8.98 9.22,8.37 9.9,8.63" fill="#ffde00"/></symbol>
+          <symbol id="flag-es" viewBox="0 0 30 20"><rect width="30" height="20" fill="#aa151b"/><rect y="5" width="30" height="10" fill="#f1bf00"/></symbol>
+          <symbol id="flag-pl" viewBox="0 0 30 20"><rect width="30" height="10" fill="#fff"/><rect y="10" width="30" height="10" fill="#dc143c"/></symbol>
+          <symbol id="flag-pcm" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect width="10" height="20" fill="#008751"/><rect x="20" width="10" height="20" fill="#008751"/></symbol>
+          <symbol id="flag-ar" viewBox="0 0 30 20"><rect width="30" height="20" fill="#1a7a4c"/><text x="15" y="15" text-anchor="middle" font-size="14" font-weight="700" fill="#fff" font-family="Segoe UI, Tahoma, Arial, sans-serif">ع</text></symbol>
+          <symbol id="flag-fa" viewBox="0 0 30 20"><rect width="30" height="6.67" fill="#239f40"/><rect y="6.67" width="30" height="6.67" fill="#fff"/><rect y="13.33" width="30" height="6.67" fill="#da0000"/></symbol>
+        </svg>
+        <button type="button" class="lang-current" aria-haspopup="true" aria-expanded="false" aria-controls="lang-menu" aria-label="Choose language" data-i18n-attr="aria-label:langMenu">
+          <svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-en"/></svg><span class="lang-code">EN</span><svg class="lang-caret" viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+        </button>
+        <ul class="lang-menu" id="lang-menu" hidden>
+            <li><button type="button" data-lang="en" lang="en" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-en"/></svg><span>English</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="ja" lang="ja" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-ja"/></svg><span>日本語</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="ko" lang="ko" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-ko"/></svg><span>한국어</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="de" lang="de" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-de"/></svg><span>Deutsch</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="zh" lang="zh" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-zh"/></svg><span>中文</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="es" lang="es" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-es"/></svg><span>Español</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="pl" lang="pl" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-pl"/></svg><span>Polski</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="pcm" lang="pcm" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-pcm"/></svg><span>Naijá (Pidgin)</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="ar" lang="ar" dir="rtl" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-ar"/></svg><span>العربية</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="fa" lang="fa" dir="rtl" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-fa"/></svg><span>فارسی</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="svc-hero">
+      <div class="svc-hero-inner">
+        <div class="svc-hero-text">
+          <nav class="crumbs" aria-label="Breadcrumb" data-i18n-attr="aria-label:crumbLabel">
+            <ol>
+              <li><a href="../index.html" data-i18n="crumbHome">Home</a></li>
+              <li><a href="../blog.html" data-i18n="navBlog">Blog</a></li>
+              <li aria-current="page">Web Accessibility Basics: What WCAG Means for Your Business Website</li>
+            </ol>
+          </nav>
+          <p class="blog-meta"><span class="blog-cat">Accessibility</span> <time datetime="2026-11-13">Nov 13, 2026</time> · 5 <span data-i18n="blogMin">min read</span></p>
+          <h1 id="post-title">Web Accessibility Basics: What WCAG Means for Your Business Website</h1>
+          <p class="svc-hero-lead">Imagine a customer who wants to book your service but cannot see the screen and relies on software that reads it aloud. Or someone with a tremor who navigates with a keyboard instead of a mouse. Or an older visitor who simply needs larger, higher-contrast text. If your website works for them, it is accessible. If it does not, you are turning away people who want to do business with you, often without ever knowing it.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section blog-post-section" aria-labelledby="post-title">
+      <article class="page-inner narrow blog-article">
+<figure class="blog-post-fig">
+              <img src="../img/covers/blog.svg" alt="" width="800" height="450" loading="lazy" decoding="async">
+            </figure>
+        <p>Accessibility can sound like a technical specialty, but its foundations are surprisingly practical. This post explains the standard most of the world uses, why it matters in Japan and abroad, and what you can check on your own site this week.</p>
+        <h2>What Is WCAG?</h2>
+        <p>The Web Content Accessibility Guidelines, or WCAG, are published by the World Wide Web Consortium (W3C), the organization that develops many core web standards. The current version is WCAG 2.2, released in October 2023. The guidelines are organized into three conformance levels:</p>
+        <ul>
+          <li><strong>Level A:</strong> The minimum. Failing these makes content unusable for some people.</li>
+          <li><strong>Level AA:</strong> The level most organizations and many laws aim for. It covers the barriers that affect the largest number of users.</li>
+          <li><strong>Level AAA:</strong> The highest level, often not achievable for every type of content, and usually applied selectively.</li>
+        </ul>
+        <p>For most business websites, Level AA is the sensible target.</p>
+        <p>In Japan, the national standard for web accessibility is JIS X 8341-3, which is aligned with WCAG. In addition, the amended Act for Eliminating Discrimination against Persons with Disabilities made reasonable accommodation a legal obligation for private businesses starting in April 2024. If you serve customers in other countries, many have their own accessibility rules as well. A website built to WCAG AA puts you on solid ground almost everywhere.</p>
+        <h2>The Four Principles, in Plain English</h2>
+        <p>Every WCAG guideline falls under four principles, often remembered by the acronym POUR. Thinking in these terms makes the whole subject easier to grasp.</p>
+        <h3>Perceivable</h3>
+        <p>People must be able to take in the information, whether by sight, sound, or touch. This means:</p>
+        <ul>
+          <li>Providing text alternatives (alt text) for meaningful images</li>
+          <li>Offering captions for videos and transcripts for audio</li>
+          <li>Ensuring enough color contrast between text and background. WCAG AA requires a contrast ratio of at least 4.5:1 for normal text and 3:1 for large text</li>
+          <li>Never relying on color alone to convey meaning, such as marking required fields only in red</li>
+        </ul>
+        <h3>Operable</h3>
+        <p>People must be able to use the interface. Key requirements include:</p>
+        <ul>
+          <li>Every function works with a keyboard alone, not just a mouse</li>
+          <li>A visible focus indicator shows where you are on the page as you press Tab</li>
+          <li>Nothing flashes rapidly enough to trigger seizures</li>
+          <li>Users have enough time to read and complete tasks, or can extend time limits</li>
+          <li>Touch targets are large enough to activate reliably</li>
+        </ul>
+        <h3>Understandable</h3>
+        <p>Content and controls must make sense. That means clear language, predictable navigation that stays consistent from page to page, form fields with visible labels, and error messages that explain what went wrong and how to fix it.</p>
+        <h3>Robust</h3>
+        <p>Content must work with a wide range of browsers and assistive technologies, now and in the future. In practice, this comes down to clean, standards-based code: proper headings, real buttons and links instead of clickable boxes, and correct use of HTML elements so screen readers can interpret the page.</p>
+        <h2>Why Accessibility Is Good Business</h2>
+        <p>Accessibility is the right thing to do, and it also benefits your business in concrete ways.</p>
+        <ol>
+          <li><strong>You reach more customers.</strong> People with disabilities, aging customers, and people with temporary injuries all use the web.</li>
+          <li><strong>Everyone gets a better experience.</strong> Captions help people watching in a quiet office. Good contrast helps anyone reading outdoors in sunlight. Clear forms reduce errors for all users.</li>
+          <li><strong>Search engines benefit too.</strong> Descriptive headings, alt text, and well-structured pages help search engines understand your content.</li>
+          <li><strong>You reduce legal and reputational risk.</strong> Addressing accessibility proactively is far easier than responding to a complaint.</li>
+        </ol>
+        <h2>A 15-Minute Accessibility Self-Check</h2>
+        <p>You do not need to be an expert to spot many common problems. Try these checks on your homepage and your most important form:</p>
+        <ul>
+          <li><strong>Unplug your mouse.</strong> Use Tab, Shift+Tab, Enter, and the arrow keys to move through the page. Can you reach every link and button? Can you always see where you are?</li>
+          <li><strong>Zoom to 200 percent.</strong> Does the text remain readable without overlapping or forcing sideways scrolling?</li>
+          <li><strong>Check your images.</strong> Do meaningful images have descriptive alt text? Decorative images should have empty alt text so screen readers skip them.</li>
+          <li><strong>Look at your headings.</strong> Is there one main heading (H1), followed by a logical order of subheadings? Headings should reflect structure, not just make text bigger.</li>
+          <li><strong>Test your contrast.</strong> Free tools such as the WebAIM Contrast Checker will tell you whether your text colors meet the standard.</li>
+          <li><strong>Submit a form with mistakes.</strong> Are errors explained in text, near the field, in a way that would make sense without color?</li>
+          <li><strong>Run an automated scan.</strong> Tools such as Lighthouse in Chrome or the WAVE browser extension flag many issues quickly.</li>
+        </ul>
+        <p>A word of caution: automated tools are useful but catch only a portion of accessibility problems. Many issues, like whether alt text is actually meaningful or whether a process makes sense, require human judgment. Testing with a real screen reader, such as VoiceOver on Apple devices or NVDA on Windows, reveals a great deal.</p>
+        <h2>Making Accessibility Part of Your Process</h2>
+        <p>The most cost-effective time to address accessibility is at the beginning. When designers choose colors, they can check contrast immediately. When developers build components, they can use proper HTML from the start. When content writers add images, they can write alt text as they go.</p>
+        <p>For an existing website, start with an audit, fix the issues that block key tasks first (like contacting you or making a purchase), and then work through the rest. Train anyone who updates the site so new content stays accessible. Finally, consider publishing an accessibility statement that explains your commitment and gives visitors a way to report problems.</p>
+        <p>Accessibility is an ongoing habit, not a one-time project.</p>
+        <p><strong>Ready to make your website work for everyone?</strong> Tenshi Systems Engineering provides accessibility audits and remediation aligned with WCAG for businesses in Osaka and around the world. <a href="../contact.html#contact">Request a consultation</a> to learn where your site stands and how to improve it.</p>
+        <p class="blog-back"><a href="../blog.html"><span data-i18n="homeBlogAll">All posts</span></a></p>
+      </article>
+    </section>
+
+    <section class="svc-cta" aria-labelledby="cta-title">
+      <h2 id="cta-title" data-i18n="ctaTitle">Let's talk about your project</h2>
+      <p data-i18n="ctaText">Tell us what you need. The consultation form takes about a minute.</p>
+      <a class="btn btn-light" href="../contact.html#contact" data-i18n="cta">Request Consultation</a>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <!-- widgets:start (written by tools/build-pages.mjs from data/news.json and data/blog.json) -->
+    <div class="footer-widgets">
+      <section class="fw" aria-labelledby="fw-news">
+        <h2 id="fw-news" class="fw-title"><a href="../news.html" data-i18n="newsHeadTitle">Latest from Japan</a></h2>
+        <ul class="fw-list">
+          <li class="fw-item">
+            <img class="fw-thumb" src="../img/stories/549909cee5334c8f.jpg" alt="" width="96" height="72" loading="lazy" decoding="async">
+            <div class="fw-text">
+              <p class="fw-meta"><span data-i18n="newsCatStocks">Stock Exchange</span> · <time datetime="2026-11-16">Nov 16</time></p>
+              <a class="fw-link" href="https://news.google.com/rss/articles/CBMilgFBVV95cUxNeWN3clJ6TG1pcjF1X1RPSkVrSy1xamxEbkFlUU01Q3FRTlpIY3dna2lCRmNDU2FSeHM1T2U4dnFULVNNUjB2UFJUUmpwWTNOMUI0T3l5aDhKTkJIdXdQVG5ZbUZ5d1c5NlNkaXJXOVNkRUdHRHM0a0NOa29WNndva05tRmlGNXpibFlhY2M3QkFYZDJncXc?oc=5" target="_blank" rel="noopener">Yen caught in tug-of-war between bulls and bears amid clashing market forces! Goldman Sachs bets on rebound, while Morgan Stanley predicts drop to 162.<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a>
+              <p class="fw-src">富途牛牛 · <span data-i18n="photoLabel">Photo</span>: Japanexperterna.se (<a href="https://creativecommons.org/licenses/by-sa/3.0" target="_blank" rel="noopener">CC BY-SA 3.0</a>)</p>
+            </div>
+          </li>
+          <li class="fw-item">
+            <img class="fw-thumb" src="../img/stories/e9f9498238154376.jpg" alt="" width="96" height="72" loading="lazy" decoding="async">
+            <div class="fw-text">
+              <p class="fw-meta"><span data-i18n="newsCatBusiness">Business</span> · <time datetime="2026-11-16">Nov 16</time></p>
+              <a class="fw-link" href="https://news.google.com/rss/articles/CBMidkFVX3lxTE1OT3BHYXo0SzBmZkcwQlhHMjNfZG9yMWlRSG82U05iZTVQdHlvcFo2VWljaDhwbFViWWRwVVN4WGg3U0JZeUEtODVuVkt6dFE5RXdGQzNqZ2FNNTloZmdhbk14cUZySkViSHk0QzF4bGstS3d5a2c?oc=5" target="_blank" rel="noopener">Japan's Economy Stalls in Q3 as Weak Yen, Middle East Conflict Fuel Inflation; BOJ December Rate Hike Expected<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a>
+              <p class="fw-src">finance.biggo.com · <span data-i18n="photoLabel">Photo</span>: Unknown (<a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener">CC0</a>)</p>
+            </div>
+          </li>
+          <li class="fw-item">
+            <img class="fw-thumb" src="../img/stories/0e77fd93844316bc.jpg" alt="" width="96" height="72" loading="lazy" decoding="async">
+            <div class="fw-text">
+              <p class="fw-meta"><span data-i18n="newsCatWeather">Weather</span> · <time datetime="2026-11-16">Nov 16</time></p>
+              <a class="fw-link" href="https://news.google.com/rss/articles/CBMiWkFVX3lxTE1jVjlCU1ZXNE9uNGZfX0R6aXNJUDNKaTc0ZXRNS0hhZGJlWmFLUjVIaDhOYmxHcFBZNEhiRGZTa0hKMWNSSW9FS0ItVk03MG1FRWtOMWZjWDJYZw?oc=5" target="_blank" rel="noopener">Japan to launch network to improve weather disaster warnings in Asia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a>
+              <p class="fw-src">Japan Wire by Kyodo News · <span data-i18n="photoLabel">Photo</span>: Clark Moreland (<a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener">CC0</a>)</p>
+            </div>
+          </li>
+          <li class="fw-item">
+            <img class="fw-thumb" src="../img/stories/4ff564220545c534.jpg" alt="" width="96" height="72" loading="lazy" decoding="async">
+            <div class="fw-text">
+              <p class="fw-meta"><span data-i18n="newsCatSports">Sports</span> · <time datetime="2026-11-16">Nov 16</time></p>
+              <a class="fw-link" href="https://www.japantimes.co.jp/sports/2026/11/16/tennis/mirra-andreeva-wta-finals/" target="_blank" rel="noopener">Mirra Andreeva beats Elina Svitolina to capture WTA Finals crown<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a>
+              <p class="fw-src">The Japan Times · <span data-i18n="photoLabel">Photo</span>: Matt Moloney (<a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener">CC0</a>)</p>
+            </div>
+          </li>
+          <li class="fw-item">
+            <img class="fw-thumb" src="../img/stories/728b8e54120ba5b2.jpg" alt="" width="96" height="72" loading="lazy" decoding="async">
+            <div class="fw-text">
+              <p class="fw-meta"><span data-i18n="newsCatHealth">Health</span> · <time datetime="2026-11-16">Nov 16</time></p>
+              <a class="fw-link" href="https://news.google.com/rss/articles/CBMiX0FVX3lxTE4tSlJzVXFEZDFRcUkxRWtWMENrLTVYQUY2WUxnU0xMalJyQ1lpM0NtMnpLY25sLUlpSTkzRWpUdEwzbEVDOVlMd3A4QkZTWFVJMUxJZnNJTkx0MVNnTzZv?oc=5" target="_blank" rel="noopener">Deficits Reported at Nearly 40 Pct of Care Facilities in Japan<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a>
+              <p class="fw-src">jiji press · <span data-i18n="photoLabel">Photo</span>: Unknown (<a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener">CC0</a>)</p>
+            </div>
+          </li>
+        </ul>
+        <a class="fw-more" href="../news.html"><span data-i18n="homeNewsAll">All news</span></a>
+      </section>
+      <section class="fw" aria-labelledby="fw-blog">
+        <h2 id="fw-blog" class="fw-title"><a href="../blog.html" data-i18n="homeBlogTitle">From the blog</a></h2>
+        <ul class="fw-list">
+          <li class="fw-item">
+            <img class="fw-thumb" src="../img/covers/blog.svg" alt="" width="96" height="72" loading="lazy" decoding="async">
+            <div class="fw-text">
+              <p class="fw-meta">Services · <time datetime="2026-11-16">Nov 16</time></p>
+              <a class="fw-link" href="../blog/design-development-optimization-ai.html">Design, Development, Optimization and AI: How One Partner Can Carry Your Business Online</a>
+              <p class="fw-src">4 <span data-i18n="blogMin">min read</span></p>
+            </div>
+          </li>
+          <li class="fw-item">
+            <img class="fw-thumb" src="../img/covers/blog.svg" alt="" width="96" height="72" loading="lazy" decoding="async">
+            <div class="fw-text">
+              <p class="fw-meta">Web design · <time datetime="2026-11-15">Nov 15</time></p>
+              <a class="fw-link" href="../blog/mobile-first-design-why-your-website-should-start-on-the-smallest-screen.html">Mobile-First Design: Why Your Website Should Start on the Smallest Screen</a>
+              <p class="fw-src">5 <span data-i18n="blogMin">min read</span></p>
+            </div>
+          </li>
+          <li class="fw-item">
+            <img class="fw-thumb" src="../img/covers/tech.svg" alt="" width="96" height="72" loading="lazy" decoding="async">
+            <div class="fw-text">
+              <p class="fw-meta">Engineering · <time datetime="2026-11-14">Nov 14</time></p>
+              <a class="fw-link" href="../blog/core-web-vitals-explained-a-plain-english-guide-for-business-owners.html">Core Web Vitals Explained: A Plain-English Guide for Business Owners</a>
+              <p class="fw-src">5 <span data-i18n="blogMin">min read</span></p>
+            </div>
+          </li>
+          <li class="fw-item">
+            <img class="fw-thumb" src="../img/covers/blog.svg" alt="" width="96" height="72" loading="lazy" decoding="async">
+            <div class="fw-text">
+              <p class="fw-meta">Accessibility · <time datetime="2026-11-13">Nov 13</time></p>
+              <a class="fw-link" href="../blog/web-accessibility-basics-what-wcag-means-for-your-business-website.html">Web Accessibility Basics: What WCAG Means for Your Business Website</a>
+              <p class="fw-src">5 <span data-i18n="blogMin">min read</span></p>
+            </div>
+          </li>
+        </ul>
+        <a class="fw-more" href="../blog.html"><span data-i18n="homeBlogAll">All posts</span></a>
+      </section>
+    </div>    <!-- widgets:end -->
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img class="footer-logo" src="../brand/tenshi-logo.png" alt="" width="225" height="217">
+        <div>
+          <strong>Tenshi Systems Engineering</strong>
+          <span lang="ja">天使システムズエンジニアリング</span>
+        </div>
+      </div>
+      <nav class="footer-nav" aria-label="Main menu" data-i18n-attr="aria-label:navLabel">
+          <ul>
+            <li><a href="../index.html" data-nav="home" data-i18n="navHome">Home</a></li>
+            <li><a href="../about.html" data-nav="about" data-i18n="navAbout">About</a></li>
+            <li><a href="../team.html" data-nav="team" data-i18n="navTeam">Team</a></li>
+            <li><a href="../services.html" data-nav="services" data-i18n="navServices">Services</a></li>
+            <li><a href="../technology.html" data-nav="technology" data-i18n="navTech">Technology</a></li>
+            <li><a href="../projects.html" data-nav="projects" data-i18n="navProjects">Projects</a></li>
+            <li><a href="../news.html" data-nav="news" data-i18n="navNews">News</a></li>
+            <li><a href="../blog.html" aria-current="page" data-nav="blog" data-i18n="navBlog">Blog</a></li>
+            <li><a href="../contact.html" data-nav="contact" data-i18n="navContact">Contact</a></li>
+            <li><a href="../portal.html" data-nav="portal" data-i18n="navPortal">Portal</a></li>
+          </ul>
+      </nav>
+      <p class="footer-meta"><span data-i18n="location">Osaka, Japan</span> · © <span id="year">2026</span> Tenshi Systems Engineering</p>
+    </div>
+  </footer>
+
+  <script src="../translations.js?v=68e1cb73"></script>
+  <script src="../app.js?v=6d558dce"></script>
+  <script src="../design.js?v=a58ab8fd"></script>
+  <script src="../chat.js?v=e6aee4be"></script>
+</body>
+</html>

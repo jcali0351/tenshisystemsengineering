@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-16T00:09:47.359Z",
+  "generatedAt": "2026-11-17T05:02:08.000Z",
   "posts": [
     {
       "id": "20261116-design-dev-opt-ai",
@@ -65,263 +65,1017 @@
       "min": 4
     },
     {
-      "id": "placeholder-10",
-      "date": "2026-11-13",
+      "id": "20261115-mobile-first",
+      "date": "2026-11-15",
       "cat": "Web design",
-      "min": 4,
-      "title": "Five things every small business site needs in 2027",
-      "intro": "A fast homepage, a clear way to get in touch and pages that read well on a phone still matter more than any trend. Here is the short list we start every project with.",
+      "slug": "mobile-first-design-why-your-website-should-start-on-the-smallest-screen",
+      "title": "Mobile-First Design: Why Your Website Should Start on the Smallest Screen",
+      "intro": "Many of your customers will meet your business for the first time on a phone. They might be on a train, standing in line, or comparing options on the couch. If your website was designed for a large desktop monitor and then squeezed down to fit a phone, they will feel it: tiny text, buttons that are hard to tap, and menus that fight back. Mobile-first design flips that process around. In this post, we explain what mobile-first and responsive design actually mean, why they matter for small and mid-size businesses, and how to check whether your own site measures up.",
       "body": [
-        "Placeholder text: start with speed. A page that loads in under two seconds keeps visitors around long enough to read what you offer.",
-        "Next comes a single, obvious call to action, honest photos of your real work, plain-language service pages and a contact form that never asks for more than it needs."
+        {
+          "h2": "Responsive Design and Mobile-First: What Is the Difference?"
+        },
+        "These two terms are often used together, but they describe different ideas.",
+        {
+          "ul": [
+            "**Responsive design** means a single website adapts its layout to the screen it is viewed on. Columns stack, images resize, and navigation changes shape, all from the same code and the same web address.",
+            "**Mobile-first** is a way of working. Designers and developers plan the small-screen experience first, then add layout and features as more space becomes available."
+          ]
+        },
+        "The order matters. When you start with a large screen, it is easy to fill space with extras that later have to be hidden or crammed onto a phone. When you start small, you are forced to decide what is truly important, and that clarity usually improves the desktop version too.",
+        {
+          "h2": "Why Mobile-First Matters for Your Business"
+        },
+        "A mobile-first approach is not just a technical preference. It affects how customers experience your brand and how search engines evaluate your site.",
+        {
+          "ul": [
+            "**Search visibility:** Google uses mobile-first indexing, which means it primarily looks at the mobile version of your pages when deciding how to rank them. Content that is missing or broken on mobile can hurt you everywhere.",
+            "**First impressions:** A visitor who struggles to read your pricing or find your phone number on a phone may simply leave and try a competitor.",
+            "**Speed:** Designing for phones encourages lighter pages, which load faster on mobile networks and benefit every visitor.",
+            "**Focus:** Limited space pushes you to put your most important message and your main call to action front and center."
+          ]
+        },
+        {
+          "h2": "The Core Principles of Mobile-First Design"
+        },
+        "Good mobile design follows a handful of practical rules. You do not need to be a designer to understand them.",
+        {
+          "ol": [
+            "**Prioritize content.** Decide the one or two things a visitor must see on each page and put them near the top. Everything else supports those goals.",
+            "**Design for thumbs.** Buttons and links should be large enough to tap comfortably and spaced so people do not hit the wrong one. A common guideline is a touch target of roughly 44 to 48 pixels square.",
+            "**Keep text readable.** Body text should be large enough to read without zooming, typically around 16 pixels, with comfortable line spacing.",
+            "**Simplify navigation.** A short, clearly labeled menu works better than a long list of links. Put the most-used pages first.",
+            "**Use flexible layouts.** Content should flow into a single column on small screens and expand into multiple columns as space allows, using CSS techniques such as flexbox and grid.",
+            "**Optimize media.** Serve appropriately sized images to each device so phones are not downloading files meant for large monitors."
+          ]
+        },
+        {
+          "h2": "Common Mobile Mistakes to Avoid"
+        },
+        "Even well-designed websites sometimes slip on the details. Watch for these frequent problems:",
+        {
+          "ul": [
+            "Pop-ups that cover the entire screen and are difficult to close on a phone",
+            "Phone numbers and addresses that are not tappable",
+            "Wide tables or images that force sideways scrolling",
+            "Forms with tiny fields or the wrong keyboard type, such as a text keyboard for a phone number",
+            "Important information hidden inside images, where it cannot scale or be read by search engines",
+            "Hover-only menus or effects that do nothing on a touchscreen"
+          ]
+        },
+        "Each of these creates friction, and friction is often what turns an interested visitor into a lost one.",
+        {
+          "h2": "How to Test Your Website on Mobile"
+        },
+        "You can learn a lot about your site in about fifteen minutes. Try the following:",
+        {
+          "ol": [
+            "**Use your own phone.** Visit your homepage and try to complete a key task, such as finding your hours or sending an inquiry. Note anything that feels slow or awkward.",
+            "**Try different devices.** Ask a colleague with a different phone or a tablet to do the same. Screens vary more than most people expect.",
+            "**Use browser developer tools.** Chrome, Edge, Safari, and Firefox all include a device mode that lets you preview your site at many screen sizes from your computer.",
+            "**Run Lighthouse.** Built into Chrome's developer tools, Lighthouse reports on performance, accessibility, and best practices, including several mobile-specific issues.",
+            "**Check real conditions.** Test on a mobile connection rather than office Wi-Fi to see how your site performs for people on the go."
+          ]
+        },
+        "Write down what you find. A simple list of problems, ordered by how much they affect customers, is a great starting point for improvements.",
+        {
+          "h2": "Building Mobile-First From the Start"
+        },
+        "If you are planning a new website or a redesign, ask your design and development team how they approach mobile. Look for wireframes or mockups of the phone layout early in the process, not as an afterthought. Ask how images will be optimized, how navigation will work on small screens, and how the site will be tested across devices before launch. It is also worth asking who will maintain the site afterward, because new content added carelessly, such as oversized photos or wide tables, can quietly undo good mobile work over time.",
+        "Mobile-first design is ultimately about respect for your visitors' time and attention. When your site is easy to use on the smallest screen, it tends to be easier to use everywhere.",
+        "**Is your website working as hard on phones as it does on desktops?** Tenshi Systems Engineering designs and builds responsive, mobile-first websites for businesses in Osaka and around the world. [Request a consultation](contact.html#contact) and we will review your site's mobile experience and recommend practical next steps."
       ],
-      "placeholder": true,
       "sources": [],
+      "min": 5,
       "image": {
-        "src": "img/stories/4b625bce2162dce7.jpg",
-        "query": "laptop desk workspace",
-        "creator": "energepic.com",
-        "creatorUrl": "https://stocksnap.io/author/31875",
-        "license": "CC0",
-        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-        "page": "https://stocksnap.io/photo/office-work-42H3JH8QI5",
-        "provider": "stocksnap",
-        "via": "Openverse",
-        "file": "https://api.openverse.org/v1/images/66dc98ae-ee48-4946-959f-e9ecbee09411/thumb/"
+        "src": "img/covers/blog.svg",
+        "generated": true
       }
     },
     {
-      "id": "placeholder-9",
-      "date": "2026-11-06",
+      "id": "20261114-core-web-vitals",
+      "date": "2026-11-14",
       "cat": "Engineering",
-      "min": 6,
-      "title": "How we keep a ten-language website in sync",
-      "intro": "Every word on our own site lives in one file, in ten languages. This is how we stop a menu item in Polish from drifting out of step with the English one.",
+      "slug": "core-web-vitals-explained-a-plain-english-guide-for-business-owners",
+      "title": "Core Web Vitals Explained: A Plain-English Guide for Business Owners",
+      "intro": "\"Your site is slow\" is useful feedback, but it is not very specific. Slow to appear? Slow to respond when someone taps a button? Or does it simply feel unstable, with content jumping around as it loads? Google's Core Web Vitals give each of those frustrations a name and a measurable target. Understanding them helps you set clear goals and spend your improvement budget where it matters.",
       "body": [
-        "Placeholder text: one source of truth for wording, a build step that writes every page from it, and a check that fails when any language is missing a key.",
-        "The result is that adding a page takes minutes, not days, and nobody has to hunt through HTML to fix a typo."
+        "This guide explains each metric, what causes poor scores, and how to check your own site.",
+        {
+          "h2": "A Quick Definition"
+        },
+        "Core Web Vitals are a small set of measurements that Google uses to describe the real-world experience of loading and using a web page. They are part of what Google calls page experience signals, which it considers alongside many other factors, most importantly the relevance and quality of your content.",
+        "There are currently three Core Web Vitals:",
+        {
+          "table": {
+            "headers": [
+              "Metric",
+              "What it measures",
+              "\"Good\" threshold"
+            ],
+            "rows": [
+              [
+                "Largest Contentful Paint (LCP)",
+                "Loading: how quickly the main content appears",
+                "2.5 seconds or less"
+              ],
+              [
+                "Interaction to Next Paint (INP)",
+                "Responsiveness: how quickly the page reacts to taps, clicks, and key presses",
+                "200 milliseconds or less"
+              ],
+              [
+                "Cumulative Layout Shift (CLS)",
+                "Visual stability: how much content moves around unexpectedly",
+                "0.1 or less"
+              ]
+            ]
+          }
+        },
+        "Google evaluates these at the 75th percentile of visits. In plain terms, a page passes when at least three out of four visits meet the target. So your score reflects visitors on older phones and slower connections, not just the fast laptop in your office.",
+        "INP replaced an older metric, First Input Delay, in March 2024. If you see FID in an older report, know that it is no longer part of the set.",
+        {
+          "h2": "Largest Contentful Paint: \"Is It Here Yet?\""
+        },
+        "LCP marks the moment the largest visible element, usually a hero image, a video poster, or a large block of headline text, finishes rendering. It is a good stand-in for when a visitor feels the page has arrived.",
+        "Common causes of a slow LCP include:",
+        {
+          "ul": [
+            "Large, uncompressed hero images, especially photos uploaded straight from a camera",
+            "Slow server response times, often from underpowered hosting or no caching",
+            "Render-blocking CSS and JavaScript that must download before anything appears",
+            "Web fonts that delay text from showing",
+            "Main images loaded late because they are inserted by JavaScript or marked for lazy loading"
+          ]
+        },
+        "Fixes usually start with the image itself: resize it to its displayed dimensions, convert it to a modern format such as WebP or AVIF, and tell the browser to prioritize it. Then look at hosting, caching, and a content delivery network (CDN).",
+        {
+          "h2": "Interaction to Next Paint: \"Did It Hear Me?\""
+        },
+        "INP looks at the interactions a visitor makes during their time on a page and reports one of the slowest. If someone taps \"Add to cart\" and nothing visibly happens for half a second, they may tap again, give up, or lose trust.",
+        "Poor INP is almost always about JavaScript. When the browser's main thread is busy running scripts, it cannot respond to the visitor. Typical culprits are:",
+        {
+          "ul": [
+            "Too many third-party scripts, such as chat widgets, ad tags, heatmaps, and social embeds",
+            "Large JavaScript bundles from themes or page builders that load features you never use",
+            "Heavy work triggered by a single click, such as re-rendering a whole page to update one number"
+          ]
+        },
+        "Improving INP often means auditing scripts and asking of each one: is this earning its place? Removing or delaying non-essential tools and breaking long tasks into smaller pieces can make a site feel noticeably more responsive.",
+        {
+          "h2": "Cumulative Layout Shift: \"Why Did That Move?\""
+        },
+        "You have probably tried to tap a link just as a banner loaded above it and pushed it away. CLS measures that kind of unexpected movement.",
+        "The usual causes are straightforward:",
+        {
+          "ol": [
+            "Images and videos without set width and height, so the browser does not know how much space to reserve",
+            "Ads, embeds, or cookie banners injected above existing content",
+            "Web fonts that swap in and change the size of text after it first appears",
+            "Content added dynamically, such as a \"free shipping\" bar that appears a moment after load"
+          ]
+        },
+        "The fix is to reserve space in advance: give media explicit dimensions, place banners in fixed slots, and choose font settings that minimize reflow. CLS is often the easiest of the three to improve.",
+        {
+          "h2": "How to Check Your Own Scores"
+        },
+        "You do not need special software to get started. Two free tools from Google will tell you most of what you need to know.",
+        {
+          "ul": [
+            "**PageSpeed Insights** (pagespeed.web.dev): Enter any URL to see field data from real Chrome users, when enough data exists, plus lab data from a simulated test with specific recommendations.",
+            "**Google Search Console:** The Core Web Vitals report groups your pages into \"Good,\" \"Needs improvement,\" and \"Poor,\" separately for mobile and desktop. It is the best way to see patterns across a whole site."
+          ]
+        },
+        "It helps to understand the difference between the two types of data. **Field data** comes from real visitors over the previous 28 days, so improvements take time to show up. **Lab data** comes from a single controlled test, which is useful for diagnosing problems and checking fixes immediately, but may not match what real visitors experience.",
+        {
+          "h2": "Where to Focus First"
+        },
+        "If your results show problems, resist the urge to chase a perfect score on every page. Instead:",
+        {
+          "ol": [
+            "**Start with your most important templates.** Homepage, service pages, product pages, and contact page usually matter most.",
+            "**Fix by template, not by page.** On most sites, pages share layouts, so one fix to a template can improve hundreds of URLs.",
+            "**Prioritize mobile.** Mobile scores tend to be worse and mobile visitors are often your largest group.",
+            "**Measure before and after.** Record your baseline so you can confirm each change actually helped.",
+            "**Watch for regressions.** New plugins, tracking tags, and large images added later are the most common reasons good scores slip."
+          ]
+        },
+        "Remember that Core Web Vitals are a means to an end. The goal is not a green number in a report; it is a website that feels fast, responsive, and dependable to the people who use it.",
+        "**Want a clear picture of your website's performance?** Tenshi Systems Engineering offers speed and Core Web Vitals optimization for businesses in Osaka and beyond. [Request a consultation](contact.html#contact) and we will review your results, explain what they mean, and outline a practical plan to improve them."
       ],
-      "placeholder": true,
       "sources": [],
-      "image": {
-        "src": "img/stories/c48074c31a903ee9.jpg",
-        "query": "web design laptop",
-        "creator": "Unknown",
-        "creatorUrl": null,
-        "license": "CC0",
-        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-        "page": "https://www.rawpixel.com/image/5966952/macbook-css-code-web-design-desk",
-        "provider": "rawpixel",
-        "via": "Openverse",
-        "file": "https://api.openverse.org/v1/images/2a22061d-99eb-4ac1-9fdf-3420fb465851/thumb/"
-      }
-    },
-    {
-      "id": "placeholder-8",
-      "date": "2026-10-30",
-      "cat": "AI",
       "min": 5,
-      "title": "Putting an AI assistant on your website without the risk",
-      "intro": "A chat assistant can answer the same ten questions your team hears every day. Done carelessly, it can also make things up. Here is where we draw the lines.",
-      "body": [
-        "Placeholder text: keep the assistant's answers grounded in your own pages, give it a polite way to say it doesn't know, and always offer a route to a real person.",
-        "Keep API keys on a server, never in the browser, and review conversations regularly to see what visitors actually ask."
-      ],
-      "placeholder": true,
-      "sources": [],
       "image": {
-        "src": "img/stories/cbd6c172436e674d.jpg",
-        "query": "server room",
-        "creator": "Unknown",
-        "creatorUrl": null,
-        "license": "CC0",
-        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-        "page": "https://www.rawpixel.com/image/6042704/photo-image-public-domain-free",
-        "provider": "rawpixel",
-        "via": "Openverse",
-        "file": "https://api.openverse.org/v1/images/c580cdaf-7228-4c08-92cf-1401c43a5d84/thumb/"
+        "src": "img/covers/tech.svg",
+        "generated": true
       }
     },
     {
-      "id": "placeholder-7",
-      "date": "2026-10-23",
-      "cat": "Hosting",
-      "min": 3,
-      "title": "Static sites are back, and they are fast",
-      "intro": "Not every website needs a database. For brochure sites and portfolios, plain files on a global network are cheaper, safer and quicker.",
-      "body": [
-        "Placeholder text: with no server code to attack, a static site removes a whole category of security worries.",
-        "Pair it with a simple editor and you still get easy updates, without the plugin treadmill."
-      ],
-      "placeholder": true,
-      "sources": [],
-      "image": {
-        "src": "img/stories/21fdcffe2a5bc00b.jpg",
-        "query": "web design laptop",
-        "creator": "André Karwath aka Aka",
-        "creatorUrl": null,
-        "license": "CC BY-SA 4.0",
-        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-        "page": "https://commons.wikimedia.org/wiki/File:IBM_Thinkpad_R51.jpg",
-        "provider": "Wikimedia Commons",
-        "via": "Wikimedia Commons",
-        "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0e/IBM_Thinkpad_R51.jpg/960px-IBM_Thinkpad_R51.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-      }
-    },
-    {
-      "id": "placeholder-6",
-      "date": "2026-10-16",
-      "cat": "Branding",
-      "min": 4,
-      "title": "What a logo can't do on its own",
-      "intro": "A logo is a signature, not a brand. The colors, words and habits around it are what people actually remember.",
-      "body": [
-        "Placeholder text: decide how you sound before you decide how you look. A short list of words you would and wouldn't use goes a long way.",
-        "Then pick two colors and one typeface, and use them everywhere for a year before you change anything."
-      ],
-      "placeholder": true,
-      "sources": [],
-      "image": {
-        "src": "img/stories/ab63ed5c0eab8b5d.jpg",
-        "query": "design studio desk",
-        "creator": "Burst",
-        "creatorUrl": "https://burst.shopify.com",
-        "license": "CC0",
-        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-        "page": "https://stocksnap.io/photo/paint-supplies-TCHBOFXNQ1",
-        "provider": "stocksnap",
-        "via": "Openverse",
-        "file": "https://api.openverse.org/v1/images/acacd593-029f-4d5c-96aa-331a819a8d68/thumb/"
-      }
-    },
-    {
-      "id": "placeholder-5",
-      "date": "2026-10-09",
-      "cat": "Software",
-      "min": 7,
-      "title": "Choosing between an app and a website",
-      "intro": "Clients often ask for an app when a well-built website would serve them better. Here are the questions we ask before writing a line of code.",
-      "body": [
-        "Placeholder text: does it need the camera, offline use or push notifications? Will people open it every week? If not, a mobile-friendly website is usually the answer.",
-        "A progressive web app can sit in between, installable from the browser at a fraction of the cost."
-      ],
-      "placeholder": true,
-      "sources": [],
-      "image": {
-        "src": "img/stories/db484b9bcd4da965.jpg",
-        "query": "web design laptop",
-        "creator": "VIA Technologies",
-        "creatorUrl": null,
-        "license": "CC BY 3.0",
-        "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
-        "page": "https://commons.wikimedia.org/wiki/File:VIA_OpenBook_CAD.jpg",
-        "provider": "Wikimedia Commons",
-        "via": "Wikimedia Commons",
-        "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e5/VIA_OpenBook_CAD.jpg/960px-VIA_OpenBook_CAD.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-      }
-    },
-    {
-      "id": "placeholder-4",
-      "date": "2026-10-02",
-      "cat": "Osaka",
-      "min": 3,
-      "title": "Why we build in Osaka",
-      "intro": "Tokyo gets the headlines, but Osaka's mix of manufacturers, shops and startups makes it a great place to build practical software.",
-      "body": [
-        "Placeholder text: our clients make things, sell things and fix things. Working close to them keeps our ideas grounded.",
-        "And the food is better. We will not be taking questions on that."
-      ],
-      "placeholder": true,
-      "sources": [],
-      "image": {
-        "src": "img/stories/edda3044b202ab28.jpg",
-        "query": "programming code screen",
-        "creator": "Lorenzo Cafaro",
-        "creatorUrl": "https://stocksnap.io/author/38205",
-        "license": "CC0",
-        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-        "page": "https://stocksnap.io/photo/code-coding-TIV258VG3N",
-        "provider": "stocksnap",
-        "via": "Openverse",
-        "file": "https://api.openverse.org/v1/images/a4d252c0-c7ab-4400-9b78-7c4466f01c4e/thumb/"
-      }
-    },
-    {
-      "id": "placeholder-3",
-      "date": "2026-09-25",
-      "cat": "Content",
-      "min": 5,
-      "title": "A content calendar you will actually keep",
-      "intro": "Most business blogs die after three posts. A small, realistic plan beats an ambitious one you abandon.",
-      "body": [
-        "Placeholder text: one post a month, written from questions customers already ask, is enough to show you are active and knowledgeable.",
-        "Batch-write in quiet weeks, schedule ahead, and reuse each post as a newsletter and a few social updates."
-      ],
-      "placeholder": true,
-      "sources": [],
-      "image": {
-        "src": "img/stories/1608d664b871ca69.jpg",
-        "query": "laptop desk workspace",
-        "creator": "Negative Space",
-        "creatorUrl": "https://stocksnap.io/author/4440",
-        "license": "CC0",
-        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-        "page": "https://stocksnap.io/photo/office-work-8P6GFHP0LU",
-        "provider": "stocksnap",
-        "via": "Openverse",
-        "file": "https://api.openverse.org/v1/images/4754c62f-38ec-42c9-870d-2f1b22d2930c/thumb/"
-      }
-    },
-    {
-      "id": "placeholder-2",
-      "date": "2026-09-18",
+      "id": "20261113-web-accessibility",
+      "date": "2026-11-13",
       "cat": "Accessibility",
-      "min": 6,
-      "title": "Accessibility is just good design",
-      "intro": "Clear contrast, real buttons and text that resizes properly help everyone, not only people who use screen readers.",
+      "slug": "web-accessibility-basics-what-wcag-means-for-your-business-website",
+      "title": "Web Accessibility Basics: What WCAG Means for Your Business Website",
+      "intro": "Imagine a customer who wants to book your service but cannot see the screen and relies on software that reads it aloud. Or someone with a tremor who navigates with a keyboard instead of a mouse. Or an older visitor who simply needs larger, higher-contrast text. If your website works for them, it is accessible. If it does not, you are turning away people who want to do business with you, often without ever knowing it.",
       "body": [
-        "Placeholder text: test with your keyboard alone. If you can't reach and use every part of the page, neither can many of your visitors.",
-        "Add alt text that says what an image shows, and never rely on color alone to carry meaning."
+        "Accessibility can sound like a technical specialty, but its foundations are surprisingly practical. This post explains the standard most of the world uses, why it matters in Japan and abroad, and what you can check on your own site this week.",
+        {
+          "h2": "What Is WCAG?"
+        },
+        "The Web Content Accessibility Guidelines, or WCAG, are published by the World Wide Web Consortium (W3C), the organization that develops many core web standards. The current version is WCAG 2.2, released in October 2023. The guidelines are organized into three conformance levels:",
+        {
+          "ul": [
+            "**Level A:** The minimum. Failing these makes content unusable for some people.",
+            "**Level AA:** The level most organizations and many laws aim for. It covers the barriers that affect the largest number of users.",
+            "**Level AAA:** The highest level, often not achievable for every type of content, and usually applied selectively."
+          ]
+        },
+        "For most business websites, Level AA is the sensible target.",
+        "In Japan, the national standard for web accessibility is JIS X 8341-3, which is aligned with WCAG. In addition, the amended Act for Eliminating Discrimination against Persons with Disabilities made reasonable accommodation a legal obligation for private businesses starting in April 2024. If you serve customers in other countries, many have their own accessibility rules as well. A website built to WCAG AA puts you on solid ground almost everywhere.",
+        {
+          "h2": "The Four Principles, in Plain English"
+        },
+        "Every WCAG guideline falls under four principles, often remembered by the acronym POUR. Thinking in these terms makes the whole subject easier to grasp.",
+        {
+          "h3": "Perceivable"
+        },
+        "People must be able to take in the information, whether by sight, sound, or touch. This means:",
+        {
+          "ul": [
+            "Providing text alternatives (alt text) for meaningful images",
+            "Offering captions for videos and transcripts for audio",
+            "Ensuring enough color contrast between text and background. WCAG AA requires a contrast ratio of at least 4.5:1 for normal text and 3:1 for large text",
+            "Never relying on color alone to convey meaning, such as marking required fields only in red"
+          ]
+        },
+        {
+          "h3": "Operable"
+        },
+        "People must be able to use the interface. Key requirements include:",
+        {
+          "ul": [
+            "Every function works with a keyboard alone, not just a mouse",
+            "A visible focus indicator shows where you are on the page as you press Tab",
+            "Nothing flashes rapidly enough to trigger seizures",
+            "Users have enough time to read and complete tasks, or can extend time limits",
+            "Touch targets are large enough to activate reliably"
+          ]
+        },
+        {
+          "h3": "Understandable"
+        },
+        "Content and controls must make sense. That means clear language, predictable navigation that stays consistent from page to page, form fields with visible labels, and error messages that explain what went wrong and how to fix it.",
+        {
+          "h3": "Robust"
+        },
+        "Content must work with a wide range of browsers and assistive technologies, now and in the future. In practice, this comes down to clean, standards-based code: proper headings, real buttons and links instead of clickable boxes, and correct use of HTML elements so screen readers can interpret the page.",
+        {
+          "h2": "Why Accessibility Is Good Business"
+        },
+        "Accessibility is the right thing to do, and it also benefits your business in concrete ways.",
+        {
+          "ol": [
+            "**You reach more customers.** People with disabilities, aging customers, and people with temporary injuries all use the web.",
+            "**Everyone gets a better experience.** Captions help people watching in a quiet office. Good contrast helps anyone reading outdoors in sunlight. Clear forms reduce errors for all users.",
+            "**Search engines benefit too.** Descriptive headings, alt text, and well-structured pages help search engines understand your content.",
+            "**You reduce legal and reputational risk.** Addressing accessibility proactively is far easier than responding to a complaint."
+          ]
+        },
+        {
+          "h2": "A 15-Minute Accessibility Self-Check"
+        },
+        "You do not need to be an expert to spot many common problems. Try these checks on your homepage and your most important form:",
+        {
+          "ul": [
+            "**Unplug your mouse.** Use Tab, Shift+Tab, Enter, and the arrow keys to move through the page. Can you reach every link and button? Can you always see where you are?",
+            "**Zoom to 200 percent.** Does the text remain readable without overlapping or forcing sideways scrolling?",
+            "**Check your images.** Do meaningful images have descriptive alt text? Decorative images should have empty alt text so screen readers skip them.",
+            "**Look at your headings.** Is there one main heading (H1), followed by a logical order of subheadings? Headings should reflect structure, not just make text bigger.",
+            "**Test your contrast.** Free tools such as the WebAIM Contrast Checker will tell you whether your text colors meet the standard.",
+            "**Submit a form with mistakes.** Are errors explained in text, near the field, in a way that would make sense without color?",
+            "**Run an automated scan.** Tools such as Lighthouse in Chrome or the WAVE browser extension flag many issues quickly."
+          ]
+        },
+        "A word of caution: automated tools are useful but catch only a portion of accessibility problems. Many issues, like whether alt text is actually meaningful or whether a process makes sense, require human judgment. Testing with a real screen reader, such as VoiceOver on Apple devices or NVDA on Windows, reveals a great deal.",
+        {
+          "h2": "Making Accessibility Part of Your Process"
+        },
+        "The most cost-effective time to address accessibility is at the beginning. When designers choose colors, they can check contrast immediately. When developers build components, they can use proper HTML from the start. When content writers add images, they can write alt text as they go.",
+        "For an existing website, start with an audit, fix the issues that block key tasks first (like contacting you or making a purchase), and then work through the rest. Train anyone who updates the site so new content stays accessible. Finally, consider publishing an accessibility statement that explains your commitment and gives visitors a way to report problems.",
+        "Accessibility is an ongoing habit, not a one-time project.",
+        "**Ready to make your website work for everyone?** Tenshi Systems Engineering provides accessibility audits and remediation aligned with WCAG for businesses in Osaka and around the world. [Request a consultation](contact.html#contact) to learn where your site stands and how to improve it."
       ],
-      "placeholder": true,
       "sources": [],
+      "min": 5,
       "image": {
-        "src": "img/stories/458c4bba45ed1a27.jpg",
-        "query": "keyboard laptop",
-        "creator": "Erkan Utu",
-        "creatorUrl": "https://stocksnap.io/author/37665",
-        "license": "CC0",
-        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-        "page": "https://stocksnap.io/photo/keyboard-laptop-0URTT0POJV",
-        "provider": "stocksnap",
-        "via": "Openverse",
-        "file": "https://api.openverse.org/v1/images/050c44a3-305c-47b2-8303-584d18d89711/thumb/"
+        "src": "img/covers/blog.svg",
+        "generated": true
       }
     },
     {
-      "id": "placeholder-1",
-      "date": "2026-09-11",
-      "cat": "Studio",
-      "min": 2,
-      "title": "Hello from Tenshi Systems Engineering",
-      "intro": "Welcome to our blog. We will use it to share how we work, what we are learning and the projects we are proud of.",
+      "id": "20261112-cms-or-static",
+      "date": "2026-11-12",
+      "cat": "Web development",
+      "slug": "cms-or-static-site-how-to-choose-the-right-foundation-for-your-website",
+      "title": "CMS or Static Site? How to Choose the Right Foundation for Your Website",
+      "intro": "Before a single page is designed, every website project faces a quiet but important decision: how will this site be built and managed? The answer shapes how fast your site loads, how easily your team can update it, how much it costs to maintain, and how exposed it is to security problems. Most business websites end up on one of two paths, a content management system (CMS) or a static site, with a growing middle ground between them.",
       "body": [
-        "Placeholder text: expect practical notes rather than buzzwords, written by the people doing the work.",
-        "If there is a topic you would like us to cover, the contact page is the quickest way to tell us."
+        "There is no universally right choice. There is only the right choice for how your business actually works. Here is how to think it through.",
+        {
+          "h2": "Two Approaches, Explained Simply"
+        },
+        "**A traditional CMS** such as WordPress, Drupal, or Joomla stores your content in a database. When someone visits a page, the server pulls content from the database, combines it with a template, and builds the page on the spot. You log in to an admin dashboard to edit text, add images, and publish posts.",
+        "**A static site** is made of pre-built HTML, CSS, and JavaScript files. The pages are assembled ahead of time, often by a tool called a static site generator such as Hugo, Eleventy, Jekyll, or Astro, and then uploaded to a server or hosting platform. When a visitor arrives, the server simply hands over a finished file. There is no database lookup and no page building in real time.",
+        "**The middle ground** is a headless CMS. Services such as Contentful, Sanity, Strapi, or Decap CMS give editors a friendly interface for writing content, while the public website is generated as fast static pages. Editors get convenience; visitors get speed.",
+        {
+          "h2": "Where a Traditional CMS Shines"
+        },
+        "A database-driven CMS earns its popularity for good reasons:",
+        {
+          "ul": [
+            "**Non-technical editing.** Staff can update pages, publish news, and swap images without touching code.",
+            "**Huge ecosystems.** Thousands of themes and plugins add features like events calendars, memberships, and online stores.",
+            "**Built-in workflows.** User roles, drafts, scheduled publishing, and revision history come standard or are easy to add.",
+            "**Dynamic features.** Search, user accounts, and personalized content are natural fits."
+          ]
+        },
+        "The trade-offs are real, though. A CMS needs regular updates to its core software, theme, and plugins. Each plugin is code written by someone else that you are trusting with your site. Pages can become slow if the hosting is weak or too many add-ons pile up. And because popular platforms are widely used, they are common targets for automated attacks.",
+        {
+          "h2": "Where a Static Site Shines"
+        },
+        "Static sites have become a strong option for many small and mid-size businesses:",
+        {
+          "ul": [
+            "**Speed.** Serving pre-built files is about as fast as the web gets, especially when combined with a content delivery network.",
+            "**Security.** With no database or server-side login on the public site, there are far fewer ways for an attacker to get in.",
+            "**Low maintenance.** There are no plugins to patch every month.",
+            "**Low hosting costs.** Many platforms host static sites inexpensively, and some offer free tiers for small sites.",
+            "**Version control.** Site files can live in a system like Git, so every change is tracked and easy to roll back."
+          ]
+        },
+        "The main limitation is editing. Without a CMS layer, updating content may mean editing files directly, which is fine for a developer but not for a busy office manager. Features that depend on real-time data, such as user logins, need extra services.",
+        {
+          "h2": "Five Questions to Guide Your Decision"
+        },
+        "Rather than starting with technology, start with how your business operates. Your answers to these questions will usually point clearly in one direction.",
+        {
+          "ol": [
+            "**Who will update the website, and how often?** If several non-technical staff publish content weekly, a CMS or headless CMS is worth it. If the site changes a few times a year, a static site may be ideal.",
+            "**What does the site need to do?** A brochure site, portfolio, or service business site fits a static approach well. Member areas, complex online stores, or heavy user interaction lean toward a CMS or a custom application.",
+            "**How important is speed?** Every approach can be fast with good engineering, but static sites make it easier by default.",
+            "**Who will handle maintenance?** If no one will reliably apply updates, a traditional CMS can become a liability. Be honest about this one.",
+            "**What is your total budget over time?** Compare not just the build cost but hosting, plugin licenses, security monitoring, and update work over three to five years."
+          ]
+        },
+        {
+          "h2": "A Few Common Scenarios"
+        },
+        "To make this concrete, here is how the decision often plays out:",
+        {
+          "ul": [
+            "**A local clinic or professional firm** with a handful of service pages and occasional updates: a static site, perhaps with a simple headless CMS for staff announcements.",
+            "**A restaurant or shop** that changes menus and promotions often: a CMS or headless CMS so staff can update quickly without calling a developer.",
+            "**A company publishing articles several times a week** with multiple authors and editors: a CMS with proper roles and workflow, or a headless setup with editorial features.",
+            "**A business needing bookings, accounts, or custom tools:** a CMS combined with dedicated services, or custom software built for the purpose."
+          ]
+        },
+        "These are starting points, not rules. Your specific needs, existing systems, and team skills all matter.",
+        {
+          "h2": "Avoiding Regret Down the Road"
+        },
+        "Whichever path you choose, a few habits protect your investment:",
+        {
+          "ul": [
+            "Make sure you own your domain, hosting account, and content, and that you can export content if you ever move.",
+            "Keep the number of plugins or third-party services as small as practical.",
+            "Document how the site is built and updated, so you are not dependent on one person's memory.",
+            "Plan for backups and updates from day one, not after something breaks."
+          ]
+        },
+        "The best foundation is the one that fits your team's real habits and your customers' real needs, not the one with the most features on paper.",
+        "**Not sure which approach fits your business?** Tenshi Systems Engineering builds both CMS-powered and static websites and can help you weigh the trade-offs honestly. [Request a consultation](contact.html#contact) and we will recommend the right foundation for your goals and budget."
       ],
-      "placeholder": true,
       "sources": [],
+      "min": 5,
       "image": {
-        "src": "img/stories/2c38544e55fedbf3.jpg",
-        "query": "laptop desk workspace",
-        "creator": "Ch%E2u%20Th%F4ng%20Phan",
-        "creatorUrl": "https://stocksnap.io/author/31913",
-        "license": "CC0",
-        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-        "page": "https://stocksnap.io/photo/office-work-I9INCIK831",
-        "provider": "stocksnap",
-        "via": "Openverse",
-        "file": "https://api.openverse.org/v1/images/49ccbf8f-de7b-45f4-802b-5dce908fd553/thumb/"
+        "src": "img/covers/tech.svg",
+        "generated": true
+      }
+    },
+    {
+      "id": "20261111-website-security",
+      "date": "2026-11-11",
+      "cat": "Security",
+      "slug": "website-security-essentials-a-practical-checklist-for-small-businesses",
+      "title": "Website Security Essentials: A Practical Checklist for Small Businesses",
+      "intro": "It is easy to assume that hackers only go after banks and large corporations. In reality, most attacks on websites are automated. Bots scan the internet around the clock looking for outdated software, weak passwords, and misconfigured servers. They do not care how big your company is; they care whether your site has an open door. A compromised website can show spam to your customers, redirect them to scam pages, leak form submissions, or be flagged by browsers as unsafe.",
+      "body": [
+        "The encouraging news is that a handful of consistent habits prevent the large majority of everyday problems. Think of website security not as one big lock, but as several layers, each one making the next attack harder.",
+        {
+          "h2": "Layer One: Encrypt Everything With HTTPS"
+        },
+        "HTTPS encrypts the connection between your visitor's browser and your website, so information like contact form entries and login details cannot be read or altered in transit. It relies on an SSL/TLS certificate installed on your server.",
+        "What to check:",
+        {
+          "ul": [
+            "Every page on your site loads with `https://`, not just the checkout or contact page.",
+            "Visitors who type `http://` are automatically redirected to the secure version.",
+            "Your certificate renews automatically. Free certificates from Let's Encrypt, offered by many hosts, typically renew every 90 days, and an expired certificate triggers alarming browser warnings.",
+            "There is no \"mixed content,\" meaning images or scripts still loading over plain HTTP."
+          ]
+        },
+        "Modern browsers label non-HTTPS pages as \"Not secure,\" so this layer protects your reputation as much as your data.",
+        {
+          "h2": "Layer Two: Keep Software Up to Date"
+        },
+        "Outdated software is one of the most common ways websites get compromised. When developers discover a security flaw in a CMS, plugin, or library, they release a fix. That same announcement also tells attackers exactly what to look for on sites that have not updated yet.",
+        "A sensible update routine looks like this:",
+        {
+          "ol": [
+            "**Apply security updates promptly,** ideally within days of release, not months.",
+            "**Remove what you do not use.** Deactivated plugins and old themes can still be exploited if they remain installed.",
+            "**Choose maintained tools.** Before adding a plugin, check when it was last updated and whether it is actively supported.",
+            "**Test updates safely.** For important sites, apply updates to a staging copy first so a compatibility problem does not take your live site down.",
+            "**Do not forget the server.** The operating system, PHP or Node.js version, and database also need updating. On managed hosting, confirm your provider handles this."
+          ]
+        },
+        {
+          "h2": "Layer Three: Control Who Gets In"
+        },
+        "Even perfectly updated software is vulnerable if someone can simply log in. Access control deserves real attention.",
+        {
+          "ul": [
+            "**Use strong, unique passwords** for every account connected to your website: CMS admin, hosting, domain registrar, and email. A password manager makes this practical.",
+            "**Turn on two-factor authentication (2FA)** wherever it is offered. It is one of the most effective protections available, because a stolen password alone is no longer enough.",
+            "**Give people only the access they need.** A blog writer does not need administrator rights. Review user accounts periodically and remove former staff and contractors.",
+            "**Protect the login page.** Limiting repeated failed login attempts helps stop automated password guessing.",
+            "**Secure your domain registrar.** If someone takes over your domain account, they can redirect your website and email. Enable registrar lock and 2FA."
+          ]
+        },
+        {
+          "h2": "Layer Four: Back Up as if You Will Need It"
+        },
+        "Backups are your safety net when everything else fails, whether the cause is an attack, a bad update, or simple human error. A backup you have never tested, however, is only a hope.",
+        "A widely used guideline is the **3-2-1 rule**: keep three copies of your data, on two different types of storage, with one copy stored off-site. For a website, that might mean your live site, your host's automatic backups, and a separate copy stored in a different cloud service.",
+        "Make sure your backups:",
+        {
+          "ul": [
+            "Include both files and the database, if your site has one",
+            "Run automatically on a schedule that matches how often your content changes",
+            "Are kept for long enough to go back before a problem started, since some infections go unnoticed for weeks",
+            "Are restored as a test at least once or twice a year, so you know the process works"
+          ]
+        },
+        {
+          "h2": "Layer Five: Watch, Filter, and Plan"
+        },
+        "The final layer is about noticing problems early and responding calmly.",
+        {
+          "ul": [
+            "**Uptime monitoring** alerts you when your site goes down. Many simple services offer this for free or at low cost.",
+            "**A web application firewall (WAF)**, available from many hosts and CDN providers, filters malicious traffic before it reaches your site.",
+            "**Google Search Console** notifies you if Google detects malware or hacked content on your site.",
+            "**Security headers** such as Content-Security-Policy and Strict-Transport-Security tell browsers to enforce safer behavior.",
+            "**Minimal data collection.** The less sensitive information your forms collect and store, the less there is to lose."
+          ]
+        },
+        "Finally, write down a short incident plan. Who do you call if the site is hacked? Where are the backups? Who has the hosting and domain logins? Answering these questions on a calm day saves hours of panic on a bad one.",
+        {
+          "h2": "A Simple Maintenance Calendar"
+        },
+        "Security works best as a routine. Here is a starting schedule you can adapt:",
+        {
+          "ul": [
+            "**Weekly:** Apply available updates; glance at uptime and security alerts.",
+            "**Monthly:** Review user accounts; confirm backups are running; check that your certificate is valid.",
+            "**Quarterly:** Remove unused plugins and accounts; review third-party scripts; check Search Console for warnings.",
+            "**Twice a year:** Test a full backup restore; review your incident plan and contact list."
+          ]
+        },
+        "None of these tasks takes long on its own. Together, they make your website a far less appealing target.",
+        "**Want a second pair of eyes on your website's security?** Tenshi Systems Engineering offers secure hosting, maintenance, and security reviews for businesses in Osaka and around the world. [Request a consultation](contact.html#contact) and we will help you close the gaps before they become problems."
+      ],
+      "sources": [],
+      "min": 5,
+      "image": {
+        "src": "img/covers/tech.svg",
+        "generated": true
+      }
+    },
+    {
+      "id": "20261110-website-redesign",
+      "date": "2026-11-10",
+      "cat": "Web design",
+      "slug": "planning-a-website-redesign-a-step-by-step-roadmap",
+      "title": "Planning a Website Redesign: A Step-by-Step Roadmap",
+      "intro": "A website redesign often begins with a feeling. The site looks dated next to a competitor's. The team is embarrassed to send people to it. Updating a single page takes a phone call and a week of waiting. Those feelings are valid, but they are not yet a plan. Redesigns that start with \"let's make it look modern\" tend to run over budget, launch late, and sometimes perform worse than the site they replaced.",
+      "body": [
+        "A successful redesign is mostly decided before any design work begins. This roadmap breaks the process into stages, with the questions to answer at each one.",
+        {
+          "h2": "Stage 1: Decide Whether You Need a Redesign at All"
+        },
+        "Not every problem requires a full rebuild. Sometimes a focused improvement delivers more value for far less cost. A redesign is usually justified when several of these are true:",
+        {
+          "ul": [
+            "The site is difficult or impossible to use on phones",
+            "The underlying platform is outdated, unsupported, or a security concern",
+            "Your services, audience, or brand have changed significantly",
+            "Staff cannot update content without technical help",
+            "The structure no longer reflects how customers look for information",
+            "Performance problems are rooted in the design or platform, not just a few heavy images"
+          ]
+        },
+        "If only one or two apply, consider targeted work instead, such as rewriting key pages, improving speed, or refreshing visual elements within the existing structure.",
+        {
+          "h2": "Stage 2: Define What Success Looks Like"
+        },
+        "Before talking about colors and layouts, write down what the new site needs to achieve. Good goals are specific and connected to your business:",
+        {
+          "ul": [
+            "\"Increase inquiry form submissions from the services pages.\"",
+            "\"Let our office staff publish news without developer help.\"",
+            "\"Make the site fully usable in both Japanese and English.\"",
+            "\"Reduce the number of phone calls asking for information that should be on the site.\""
+          ]
+        },
+        "Then record your **baseline**. Note your current traffic, top pages, conversion rates, search rankings for important terms, and Core Web Vitals. Without a starting point, you will have no way to tell whether the redesign actually helped.",
+        {
+          "h2": "Stage 3: Audit What You Already Have"
+        },
+        "Your current site holds valuable lessons and assets, even if you dislike how it looks.",
+        {
+          "ol": [
+            "**Inventory your content.** List every page, with its URL, purpose, and traffic. A spreadsheet works well.",
+            "**Sort it.** Mark each page to keep, improve, merge, or remove. Many sites carry years of outdated or duplicate pages.",
+            "**Find what performs.** Pages that attract search traffic or produce leads deserve special care during the transition.",
+            "**Review your analytics.** Look at where visitors enter, where they leave, and what they search for on your site.",
+            "**Ask real people.** Short conversations with a few customers and front-line staff often reveal problems no report will show."
+          ]
+        },
+        {
+          "h2": "Stage 4: Plan Scope, Budget, and Responsibilities"
+        },
+        "This is where many projects either succeed or quietly start to slip. Clarify the following with your team and any outside partner:",
+        {
+          "ul": [
+            "**Scope:** Which pages, features, languages, and integrations are included? What is explicitly out of scope for now?",
+            "**Content ownership:** Who is writing and approving new copy, and who is supplying photography? Content is the most common cause of launch delays.",
+            "**Platform:** Will you stay on your current system or move to a new CMS or static setup?",
+            "**Budget:** Include ongoing costs such as hosting, maintenance, and licenses, not just the build.",
+            "**Decision-making:** Name one person with authority to approve work. Designs reviewed by committee tend to drift.",
+            "**Timeline:** Work backward from any fixed dates, and leave room for feedback rounds and testing."
+          ]
+        },
+        {
+          "h2": "Stage 5: Design, Build, and Test"
+        },
+        "With a clear plan, the creative work becomes far more focused. A typical sequence looks like this:",
+        {
+          "ul": [
+            "**Sitemap and wireframes:** Agree on structure and page layouts in simple form before visual design begins. Changes are cheap at this stage.",
+            "**Visual design:** Apply your brand to key templates, usually starting with the homepage and one or two inner pages, on both mobile and desktop.",
+            "**Development:** Build reusable templates and components, connect the CMS, and integrate forms, analytics, and other tools.",
+            "**Content entry:** Load final copy and images. Review pages with real content, because placeholder text hides layout problems.",
+            "**Testing:** Check every page on multiple devices and browsers, test all forms, review accessibility and speed, and proofread carefully."
+          ]
+        },
+        {
+          "h2": "Stage 6: Launch Without Losing Ground, Then Keep Improving"
+        },
+        "Launch is when redesigns most often cause damage, especially to search visibility. Protect yourself with a launch checklist:",
+        {
+          "ol": [
+            "**Map redirects.** Every old URL that is changing should permanently redirect (a 301 redirect) to its most relevant new page. This preserves bookmarks, links from other sites, and much of your search history.",
+            "**Carry over the essentials.** Page titles, meta descriptions, and important content on high-performing pages should be kept or improved, not discarded.",
+            "**Verify tracking.** Confirm analytics and conversion tracking work on the new site before and after launch.",
+            "**Submit your sitemap.** Update your XML sitemap and submit it in Google Search Console.",
+            "**Choose a quiet time.** Avoid launching right before a holiday or your busiest season.",
+            "**Keep a backup** of the old site in case you need to refer to it or roll back."
+          ]
+        },
+        {
+          "h3": "After Launch Day"
+        },
+        "A redesign is not finished on launch day. Over the following weeks, monitor Search Console for crawl errors and broken links, compare results against your baseline, and gather feedback from customers and staff. Expect some small fixes, and keep a shared list so nothing reported by staff or customers gets forgotten. Then shift into a rhythm of regular improvements rather than waiting years for the next big overhaul.",
+        "The most effective websites evolve continuously. A well-planned redesign gives you a solid foundation to keep building on.",
+        "**Thinking about a redesign?** Tenshi Systems Engineering guides businesses in Osaka and around the world through every stage, from audit and planning to design, development, and launch. [Request a consultation](contact.html#contact) and let's map out a redesign that delivers real results."
+      ],
+      "sources": [],
+      "min": 5,
+      "image": {
+        "src": "img/covers/business.svg",
+        "generated": true
+      }
+    },
+    {
+      "id": "20261109-typography-and-color",
+      "date": "2026-11-09",
+      "cat": "Branding",
+      "slug": "typography-and-color-the-quiet-design-choices-that-shape-how-customers-see-you",
+      "title": "Typography and Color: The Quiet Design Choices That Shape How Customers See You",
+      "intro": "Visitors rarely say, \"I trusted this company because of its typeface.\" Yet within moments of landing on a page, people form an impression of your business, and much of that impression comes from type and color. Crisp, readable text and a calm, consistent palette signal care and competence. Cramped lines, clashing colors, and five different fonts suggest the opposite, even when the services behind them are excellent.",
+      "body": [
+        "You do not need to become a designer to make better decisions here. Understanding a few principles will help you brief a design team, evaluate proposals, and keep your website consistent as it grows.",
+        {
+          "h2": "Start With Readability, Not Personality"
+        },
+        "It is tempting to choose fonts and colors based on mood first. A better order is to make sure everything is easy to read, then add personality within those limits. On a website, text is the product: it is how visitors learn what you do, what it costs, and how to contact you.",
+        "A few readability fundamentals apply to almost every site:",
+        {
+          "ul": [
+            "**Body text size:** Around 16 pixels is a common baseline for body copy on screens, and larger is often better for content-heavy sites or older audiences.",
+            "**Line height:** Text set with line spacing of roughly 1.4 to 1.6 times the font size is far easier to read than tightly packed lines.",
+            "**Line length:** Lines that stretch across a wide monitor are tiring to follow. Many designers aim for roughly 50 to 75 characters per line for English text.",
+            "**Alignment:** Left-aligned text is usually easiest to scan in English. Fully justified text can create uneven gaps between words on the web.",
+            "**Contrast:** Light gray text on a white background may look elegant in a mockup, but it frustrates real readers. WCAG accessibility guidelines call for a contrast ratio of at least 4.5:1 for normal-sized text."
+          ]
+        },
+        {
+          "h2": "Choosing Typefaces That Work Together"
+        },
+        "Most business websites need only one or two typefaces. Restraint creates consistency, and every additional font file adds weight that can slow down your pages.",
+        "**Common, reliable approaches include:**",
+        {
+          "ol": [
+            "**One versatile family.** A single typeface with several weights, such as regular, medium, and bold, can handle headings and body text gracefully.",
+            "**A heading font plus a body font.** For example, a distinctive serif for headings paired with a clean sans-serif for paragraphs. The two should contrast clearly, not look almost-but-not-quite the same.",
+            "**A system font stack.** Using the fonts already installed on visitors' devices loads instantly and looks native on every platform, at the cost of some brand distinctiveness."
+          ]
+        },
+        "When evaluating a typeface, look beyond the alphabet sample. Check how it renders numbers, since prices and phone numbers matter. Confirm it includes every character you need, including any accented letters. And make sure it is properly licensed for web use. Libraries such as Google Fonts offer many open-licensed options.",
+        {
+          "h2": "Building a Clear Type Hierarchy"
+        },
+        "Hierarchy tells readers what matters most and how content is organized. Without it, every line competes for attention and nothing stands out.",
+        "Good hierarchy uses a small, consistent set of styles:",
+        {
+          "ul": [
+            "A main page heading that is clearly the largest element",
+            "Two or three levels of subheadings, each visibly distinct",
+            "Body text, plus a slightly smaller style for captions and notes",
+            "A consistent style for links and buttons so people instantly recognize what is clickable"
+          ]
+        },
+        "Size is only one tool. Weight, spacing, and color also create hierarchy. Generous space above a heading, for example, groups it with the content below and separates it from what came before. Document these choices in a simple style guide so every new page follows the same rules.",
+        {
+          "h2": "Building a Color Palette With Purpose"
+        },
+        "Color carries meaning and guides attention. A website palette typically has three kinds of colors:",
+        {
+          "ul": [
+            "**Neutrals:** Backgrounds, body text, borders, and dividers. These make up most of the page.",
+            "**Brand colors:** One or two colors that express your identity, used for headers, highlights, and key graphics.",
+            "**Accent or action color:** A color reserved for primary buttons and important links, so calls to action stand out consistently."
+          ]
+        },
+        "Many designers use the **60-30-10 guideline** as a starting point: roughly 60 percent dominant neutral color, 30 percent secondary color, and 10 percent accent. It is a rule of thumb, not a law, but it helps prevent pages that feel either flat or chaotic.",
+        "Also define colors for **feedback states**, such as success, warning, and error, and never rely on color alone to communicate them. Pair a red border with a clear text message, for example, so the meaning reaches people with color vision deficiencies too.",
+        "Keep in mind that color associations vary by culture and industry. Test your palette with people from your actual audience, especially if you serve customers across different countries.",
+        {
+          "h2": "Special Considerations for Japanese Typography"
+        },
+        "If your site includes Japanese text, typography requires extra thought:",
+        {
+          "ul": [
+            "**Font file size:** Japanese fonts contain thousands of characters, so files are much larger than Latin fonts. Techniques such as subsetting, or using services that deliver only the characters a page needs, keep pages fast.",
+            "**Line height:** Japanese text generally benefits from more generous line spacing than English.",
+            "**Line breaks:** Without spaces between words, line breaks can fall awkwardly. Modern CSS offers settings to improve how lines wrap.",
+            "**Pairing scripts:** When Japanese and English appear side by side, choose fonts whose Latin characters and Japanese characters feel balanced. Families like Noto Sans JP were designed with this in mind."
+          ]
+        },
+        "Thoughtful typography and color will not make a website on their own, but they quietly support everything else on the page. Once your choices are set, apply them everywhere, from email signatures to printed brochures, so customers recognize you instantly.",
+        "**Want a website that looks as professional as your work?** Tenshi Systems Engineering offers web design and branding services for businesses in Osaka and around the world. [Request a consultation](contact.html#contact) and we will help you create a visual identity that is readable, consistent, and unmistakably yours."
+      ],
+      "sources": [],
+      "min": 5,
+      "image": {
+        "src": "img/covers/blog.svg",
+        "generated": true
+      }
+    },
+    {
+      "id": "20261108-multilingual-website",
+      "date": "2026-11-08",
+      "cat": "Content",
+      "slug": "building-a-multilingual-website-for-japan-and-the-world",
+      "title": "Building a Multilingual Website for Japan and the World",
+      "intro": "For a business based in Japan, a second language on your website can open doors: international tourists planning a visit to Osaka, overseas companies looking for a reliable partner, or foreign residents who would rather read in English. For businesses abroad, a Japanese version can be the difference between being considered and being ignored by Japanese customers, who often expect content in their own language and in a style that feels familiar.",
+      "body": [
+        "But a multilingual website is much more than a translated copy of your current pages. Done well, it feels native in every language. Done poorly, it can confuse visitors and search engines alike, and quietly undermine the trust you worked hard to build. This guide covers the decisions that matter most.",
+        {
+          "h2": "Translation Is Not the Same as Localization"
+        },
+        "**Translation** converts words from one language into another. **Localization** adapts the whole experience for a particular audience, including words, examples, formats, imagery, and even which information comes first.",
+        "Consider a few differences between Japanese and English-speaking audiences that affect a website:",
+        {
+          "ul": [
+            "**Tone and formality.** Japanese business writing typically uses polite forms and a more formal register. A casual, punchy English headline translated directly can feel out of place.",
+            "**Information density.** Japanese websites often present more detail up front, including specifications, pricing tables, and access information. Many Western sites favor shorter text and more white space. Neither is wrong; each matches different expectations.",
+            "**Formats.** Dates, addresses, names, and phone numbers follow different conventions. Japanese addresses usually run from the largest unit (prefecture) to the smallest, with a postal code first, while English addresses typically run the other way.",
+            "**Trust signals.** Company profile details, such as founding date, registered address, and representative's name, are commonly expected on Japanese business sites.",
+            "**Contact and payment preferences.** Messaging apps such as LINE are widely used in Japan, and some customers expect payment options like bank transfer or convenience store payment."
+          ]
+        },
+        "Machine translation tools have improved and can help produce first drafts. For anything customer-facing, however, have a fluent human, ideally a native speaker who knows your industry, review and adapt the result.",
+        {
+          "h2": "Choosing a URL Structure"
+        },
+        "Each language version should have its own URL so search engines can index it and visitors can share it. There are three common approaches:",
+        {
+          "table": {
+            "headers": [
+              "Structure",
+              "Example",
+              "Considerations"
+            ],
+            "rows": [
+              [
+                "Subdirectory",
+                "example.com/en/",
+                "Simple to manage; all languages share one domain's authority"
+              ],
+              [
+                "Subdomain",
+                "en.example.com",
+                "Can be hosted separately; slightly more setup"
+              ],
+              [
+                "Country domain",
+                "example.jp, example.com",
+                "Strong local signal; more domains to buy and maintain"
+              ]
+            ]
+          }
+        },
+        "For most small and mid-size businesses, **subdirectories** are the most practical choice. Whatever you choose, avoid showing different languages at the same URL based on cookies or browser settings alone, because search engines may only ever see one version.",
+        {
+          "h2": "The Technical Details That Search Engines Need"
+        },
+        "A few behind-the-scenes elements help search engines show the right version to the right person:",
+        {
+          "ol": [
+            "**The `lang` attribute.** Each page's HTML should declare its language, for example `lang=\"ja\"` or `lang=\"en\"`. This also helps screen readers pronounce content correctly.",
+            "**Hreflang tags.** These tell search engines that pages are equivalents in different languages, so a Japanese searcher sees the Japanese page and an English searcher sees the English one. Each version should list all versions, including itself.",
+            "**An x-default.** This hreflang value names a fallback page for visitors whose language you do not specifically serve.",
+            "**Translated metadata.** Page titles, meta descriptions, image alt text, and URL slugs should be localized, not left in the original language.",
+            "**Separate keyword research.** People do not search the way a dictionary translates. Research the actual terms used in each language, including whether Japanese searchers use kanji, katakana, or English loanwords for your services."
+          ]
+        },
+        "Google is the dominant search engine in Japan, and Yahoo! JAPAN's search results are powered by Google's technology, so these standard practices serve you well in both.",
+        {
+          "h2": "Designing for More Than One Language"
+        },
+        "Multilingual sites need flexible design, because languages behave differently on the page.",
+        {
+          "ul": [
+            "**Text length varies.** The same message can be noticeably longer or shorter in different languages. Buttons, menus, and headings must accommodate this without breaking.",
+            "**Fonts must support every script.** Japanese fonts are large files with thousands of characters, so plan font loading carefully to keep pages fast.",
+            "**Avoid text inside images.** Text baked into graphics cannot be translated easily, read by search engines, or resized.",
+            "**Respect line spacing.** Japanese text usually needs more generous line height than English to remain comfortable to read."
+          ]
+        },
+        {
+          "h2": "Making Language Switching Easy"
+        },
+        "Your language switcher should be easy to find and easy to understand:",
+        {
+          "ul": [
+            "Place it in a consistent spot, commonly the top right of the header.",
+            "Label languages in their own language: \"日本語\" and \"English,\" not \"Japanese\" and \"English\" for everyone.",
+            "Avoid using flags alone. Flags represent countries, not languages.",
+            "Link each page to its equivalent in the other language rather than dumping visitors on the homepage.",
+            "Suggest a language based on browser settings if you like, but never force a redirect. Let people choose."
+          ]
+        },
+        {
+          "h2": "Keeping Every Language Current"
+        },
+        "The hardest part of a multilingual site is often maintenance. A new service added only in Japanese, or a price change that never reaches the English pages, quickly erodes trust. Choose a CMS or workflow with proper multilingual support, assign responsibility for each language, and include translation time in every content update. If you cannot maintain every page in every language, it is better to offer a smaller, accurate set of translated pages than a large, outdated one. A shared glossary of key terms, such as service names, product names, and preferred phrasing, also helps different writers and translators stay consistent, and makes future updates faster and less expensive.",
+        "**Ready to reach customers in more than one language?** Tenshi Systems Engineering builds multilingual websites and provides multilingual SEO from our base in Osaka. [Request a consultation](contact.html#contact) and we will help you plan a site that feels natural in Japanese, English, and beyond."
+      ],
+      "sources": [],
+      "min": 5,
+      "image": {
+        "src": "img/covers/business.svg",
+        "generated": true
+      }
+    },
+    {
+      "id": "20261107-seo-site-structure",
+      "date": "2026-11-07",
+      "cat": "SEO",
+      "slug": "seo-friendly-site-structure-how-to-organize-your-website-for-people-and-search-engines",
+      "title": "SEO-Friendly Site Structure: How to Organize Your Website for People and Search Engines",
+      "intro": "Think about walking into a well-run library. Signs point you to sections, sections hold shelves, and shelves hold books arranged in a logical order. You can find what you need without asking anyone. Now picture the same books piled randomly on tables. The collection is identical, but it has become almost useless.",
+      "body": [
+        "Websites work the same way. Two sites can have equally good content, yet one is easy to explore and ranks well while the other leaves visitors lost and search engines confused. The difference is structure. The good news is that site structure is one of the parts of search engine optimization (SEO) you control completely, and it does not depend on tricks or constant algorithm watching.",
+        {
+          "h2": "Why Structure Matters for SEO"
+        },
+        "Search engines discover pages largely by following links, then try to understand what each page is about and how it relates to the rest of your site. A clear structure helps them in several ways:",
+        {
+          "ul": [
+            "**Discovery:** Pages that are linked well are found and crawled reliably. Pages buried deep or linked from nowhere, sometimes called orphan pages, may be missed.",
+            "**Context:** Grouping related pages signals what topics your site covers in depth.",
+            "**Priority:** Pages you link to prominently and often are signaled as important.",
+            "**Presentation:** A logical structure can help search engines display helpful extras in results, such as breadcrumb trails."
+          ]
+        },
+        "For visitors, the benefits are just as real. People find answers faster, explore more pages, and are more likely to contact you when the path is obvious.",
+        {
+          "h2": "Design a Shallow, Logical Hierarchy"
+        },
+        "Most effective business websites follow a simple pyramid: the homepage at the top, a handful of main category pages beneath it, and detailed pages beneath those.",
+        "For example, a firm offering several services might look like this:",
+        {
+          "ul": [
+            {
+              "text": "Home",
+              "ul": [
+                {
+                  "text": "Services",
+                  "ul": [
+                    "Web Design",
+                    "Web Development",
+                    "Hosting"
+                  ]
+                },
+                "Work",
+                "About",
+                {
+                  "text": "Blog",
+                  "ul": [
+                    "Individual articles"
+                  ]
+                },
+                "Contact"
+              ]
+            }
+          ]
+        },
+        "Aim for a structure where important pages can be reached within about three clicks from the homepage. Keep main categories few and distinct, and make sure every page has one clear home in the hierarchy. When two pages compete to cover the same topic, consider merging them into one stronger page.",
+        {
+          "h2": "Write Clean, Descriptive URLs"
+        },
+        "URLs are a small detail with outsized impact on clarity. A good URL tells both people and search engines what to expect before they click.",
+        "Compare these two addresses:",
+        {
+          "ul": [
+            "`example.com/services/web-design`",
+            "`example.com/index.php?page_id=482&cat=7`"
+          ]
+        },
+        "The first is readable, memorable, and reflects where the page sits in your structure. Follow a few simple rules:",
+        {
+          "ol": [
+            "Use lowercase words separated by hyphens.",
+            "Keep URLs short and focused on the main topic.",
+            "Reflect your hierarchy where it helps, such as `/services/hosting`.",
+            "Avoid dates and unnecessary words in URLs for content that will be updated over time.",
+            "Once a URL is published, change it only with good reason, and always add a permanent (301) redirect from the old address."
+          ]
+        },
+        {
+          "h2": "Use Internal Links With Intention"
+        },
+        "Internal links, the links from one page of your site to another, are how you connect the shelves of your library. They guide visitors to related information and distribute importance across your site.",
+        "Practical ways to strengthen internal linking:",
+        {
+          "ul": [
+            "**Link from general to specific and back again.** Your Services page should link to each service, and each service page should link back to the overview.",
+            "**Connect related topics.** A blog post about website speed can naturally link to your optimization service page.",
+            "**Write descriptive link text.** \"Learn about our hosting plans\" tells everyone where the link goes. \"Click here\" tells no one.",
+            "**Feature your most important pages.** Pages that drive your business should be linked from your main navigation and from relevant content throughout the site.",
+            "**Fix broken links.** Links to pages that no longer exist frustrate visitors and waste search engines' crawling effort."
+          ]
+        },
+        "Breadcrumbs, the small trail such as \"Home > Services > Hosting\" near the top of a page, reinforce structure and give visitors an easy way to step back up a level.",
+        {
+          "h2": "Give Search Engines a Clear Map"
+        },
+        "A few technical elements help search engines navigate your site efficiently. Your developer can set these up, but it helps to know what they are:",
+        {
+          "ul": [
+            "**XML sitemap:** A file listing the pages you want indexed. Submit it in Google Search Console and keep it updated automatically.",
+            "**Robots.txt:** A file that tells crawlers which areas they should not crawl, such as admin sections. Be careful: a mistake here can block your whole site.",
+            "**Canonical tags:** When similar content appears at more than one URL, a canonical tag indicates the preferred version, which helps avoid duplicate content confusion.",
+            "**Structured data:** Code that describes content in a standard format, such as your business details or breadcrumbs, so search engines can understand it more precisely.",
+            "**Meaningful headings:** Each page should have one main H1 heading and logically nested subheadings that outline the content."
+          ]
+        },
+        {
+          "h2": "Map Your Own Site in an Afternoon"
+        },
+        "You can evaluate your current structure with nothing more than a spreadsheet and some focused attention:",
+        {
+          "ol": [
+            "List every page on your site, using your sitemap or a crawling tool such as Screaming Frog, which offers a free version for smaller sites.",
+            "Note each page's URL, main topic, and parent category.",
+            "Highlight pages with no clear parent, duplicate topics, or confusing URLs.",
+            "Count how many clicks it takes to reach your most important pages from the homepage.",
+            "Check Google Search Console's page indexing report for pages that are not being indexed, and look for patterns."
+          ]
+        },
+        "The result is a practical improvement list you can work through over time. Revisit it whenever you add a new service or section, so your structure grows deliberately instead of by accident.",
+        "**Want a website structure that works for both customers and search engines?** Tenshi Systems Engineering helps businesses in Osaka and around the world plan, build, and optimize sites for search. [Request a consultation](contact.html#contact) and we will review your structure and show you where the opportunities are."
+      ],
+      "sources": [],
+      "min": 5,
+      "image": {
+        "src": "img/covers/tech.svg",
+        "generated": true
+      }
+    },
+    {
+      "id": "20261106-web-forms-that-convert",
+      "date": "2026-11-06",
+      "cat": "Web design",
+      "slug": "web-forms-that-convert-designing-inquiry-and-signup-forms-people-actually-finish",
+      "title": "Web Forms That Convert: Designing Inquiry and Signup Forms People Actually Finish",
+      "intro": "For many business websites, the form is where everything comes together. All the design, content, and search optimization exist to bring someone to the moment they type their name and press \"Send.\" Yet forms are often treated as an afterthought, assembled quickly from a plugin and never looked at again. When a form is confusing, too long, or quietly broken, interested visitors walk away, and you never learn they were there.",
+      "body": [
+        "Let's look at a form the way your visitors do: before they start, while they fill it in, and after they press the button. Each stage offers practical opportunities to remove friction.",
+        {
+          "h2": "Before the First Field: Earning the Click"
+        },
+        "People decide whether to fill out a form before they reach the first field. They are asking themselves two questions: is this worth my time, and can I trust this company with my information?",
+        "Help them answer yes:",
+        {
+          "ul": [
+            "**Explain what happens next.** \"We will reply within one business day with a few questions about your project\" is far more reassuring than a bare \"Submit.\"",
+            "**State the benefit.** Make clear what they will receive, whether that is a quote, a callback, a consultation, or a download.",
+            "**Show the effort upfront.** A short form signals respect for their time. If a form must be long, say roughly how long it takes.",
+            "**Place forms where decisions happen.** A contact option at the end of each service page catches people at the moment they are ready, rather than sending them hunting for a contact page.",
+            "**Offer alternatives.** Some people prefer a phone call, email, or a messaging app. Providing options alongside the form keeps those visitors too."
+          ]
+        },
+        {
+          "h2": "Ask for Less, Ask Clearly"
+        },
+        "Every field is a small request. The more requests you make, the more chances someone has to hesitate or give up. Review each field and ask: do we truly need this now, or could we learn it later in the conversation?",
+        "For a typical inquiry, name, email, and a message are often enough to begin. A phone number or company name may be useful, but consider making them optional. When you do need more detail, these practices keep forms manageable:",
+        {
+          "ol": [
+            "**Use visible labels above fields.** Placeholder text that disappears when someone starts typing forces people to remember what the field was for, and it is less accessible.",
+            "**Mark optional fields, not just required ones,** or make all fields required and remove the rest.",
+            "**Group related fields** under clear headings, such as \"Your details\" and \"About your project.\"",
+            "**Use a single column.** A straight vertical path is easier to follow than fields scattered side by side.",
+            "**Choose the right input types.** Email, phone, and number fields bring up the appropriate keyboard on mobile devices.",
+            "**Prefer choices over typing** where it helps, using dropdowns, radio buttons, or checkboxes for things like budget ranges or service types.",
+            "**Support autofill** so browsers can fill in names, emails, and addresses automatically."
+          ]
+        },
+        "For longer processes, such as detailed quote requests, breaking the form into a few short steps with a progress indicator can make it feel more approachable.",
+        {
+          "h2": "Handling Mistakes Gracefully"
+        },
+        "Errors are a normal part of filling in forms. How your form responds to them can decide whether someone finishes or leaves.",
+        {
+          "ul": [
+            "**Validate helpfully.** Check entries as people go, or when they move to the next field, rather than only after submission.",
+            "**Write human error messages.** \"Please enter an email address, like name@example.com\" is better than \"Invalid input.\"",
+            "**Show errors next to the field,** in text, not just a red outline, so they work for everyone, including people who cannot distinguish colors.",
+            "**Never erase what someone typed.** Losing a carefully written message because of one mistake is a reliable way to lose a customer.",
+            "**Be flexible with formats.** Accept phone numbers with or without hyphens and spaces, and postal codes in common formats, then clean them up behind the scenes."
+          ]
+        },
+        {
+          "h2": "After They Press the Button"
+        },
+        "The experience does not end with a click. What happens next confirms whether the visitor made a good decision.",
+        {
+          "ul": [
+            "Show a clear confirmation message or a thank-you page that repeats what happens next and when.",
+            "Send an automatic confirmation email, so they have a record and know their message arrived.",
+            "Make sure submissions reach a monitored inbox, and that someone is responsible for replying promptly.",
+            "Test the form regularly. Changes to email settings, plugins, or hosting can silently break delivery, so a monthly test submission is a sensible habit."
+          ]
+        },
+        "A dedicated thank-you page has one more advantage: it makes conversion tracking in analytics simple and reliable.",
+        {
+          "h2": "Protecting Your Form and Your Visitors"
+        },
+        "Forms attract spam bots and handle personal information, so a few safeguards are essential:",
+        {
+          "ul": [
+            "**Use HTTPS** on every page that contains a form.",
+            "**Filter spam quietly.** Techniques such as hidden \"honeypot\" fields or invisible challenge services block many bots without burdening real people with difficult puzzles.",
+            "**Collect only what you need,** and explain how you will use it, with a link to your privacy policy. Businesses handling personal data in Japan should be familiar with the Act on the Protection of Personal Information, and other countries have their own privacy rules.",
+            "**Limit stored data.** If submissions are emailed to you, consider whether they also need to be stored indefinitely on the website."
+          ]
+        },
+        {
+          "h2": "Measure, Test, and Improve"
+        },
+        "Once your form is solid, data can show you where to improve. Set up analytics to track how many people view the form, how many start it, and how many complete it. A large gap between starting and finishing suggests something in the form is causing trouble.",
+        "From there, A/B testing lets you compare two versions, such as a different button label, fewer fields, or a new introduction, and measure which performs better with real visitors. Change one thing at a time, allow enough traffic for meaningful results, and keep the winning version.",
+        "**Want more of your website visitors to become inquiries?** Tenshi Systems Engineering designs and optimizes forms, runs analytics and A/B testing, and builds websites focused on results for businesses in Osaka and around the world. [Request a consultation](contact.html#contact) and we will help you turn interest into conversations."
+      ],
+      "sources": [],
+      "min": 5,
+      "image": {
+        "src": "img/covers/business.svg",
+        "generated": true
       }
     }
   ],
