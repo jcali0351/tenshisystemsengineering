@@ -1,7 +1,10 @@
-/* Header search: a compact neumorphic "finder" (off-white pill, soft outer shadow, inset well, dark magnifier).
-   Desktop (861px and up): the finder bar sits inline in the header, between the menu and the language button, and its
-   results drop down under it. Phones and tablets: a small round button opens the finder full width under the header. Results come from data/search/<lang>.json (written by tools/build-pages.mjs), see search.js.
-   Everything is scoped under .tse-finder. Loaded after site-theme.css. */
+/* Footer search: a compact neumorphic "finder" (off-white pill, soft outer shadow, inset well, dark magnifier).
+   The bar sits in the site footer, aligned to the inline-end (right in LTR, left in RTL) on desktop, and is always
+   visible as an inline field (no header toggle). On phones (<=860px) it spans the footer width. Results open upward
+   when the bar is near the bottom of the viewport so they are not clipped by the footer or the page end
+   (search.js places the list). Results come from data/search/<lang>.json (written by tools/build-pages.mjs).
+   Everything is scoped under .tse-finder. Loaded after site-theme.css. Use :not(#_):not(#__) + !important to beat
+   site-theme.css and the light footer rules in design.css. */
 .tse-finder {
   --f-bg: #f6f5f0;
   --f-ink: #292929;
@@ -44,57 +47,61 @@
 }
 @keyframes tse-finder-spin { from { transform: rotateZ(45deg); } to { transform: rotateZ(405deg); } }
 
-/* ---------- The header button ---------- */
-.site-header .tse-finder__toggle:not(#_):not(#__) {
-  display: grid; place-items: center; width: 36px; height: 36px; margin: 0; padding: 0;
-  border: 1px solid #fff !important; border-radius: 50% !important; background: var(--f-bg) !important; cursor: pointer;
-  box-shadow: 4px 4px 9px var(--f-dark), -4px -4px 9px var(--f-light), inset 0 0 0 1px rgba(0, 0, 0, .04) !important;
-  transition: box-shadow .2s, transform .2s;
-}
-.tse-finder__toggle .tse-finder__icon { --s: 20px; }
-.tse-finder__toggle:hover { transform: translateY(-1px); }
-.site-header .tse-finder__toggle[aria-expanded="true"]:not(#_):not(#__) {
-  box-shadow: inset 3px 3px 6px var(--f-dark), inset -3px -3px 6px var(--f-light) !important; transform: none;
-}
-.tse-finder__toggle:focus-visible, .tse-finder__input:focus-visible { outline: 3px solid var(--red, #c8102e) !important; outline-offset: 3px; }
-
-/* ---------- The finder card (desktop: under the button, aligned to its end) ---------- */
-.tse-finder__panel {
-  position: absolute; z-index: 70; top: calc(100% + 14px); inset-inline-end: -8px;
-  width: min(560px, calc(100vw - 2 * var(--gutter, 16px)));
-  transform-origin: top right; animation: tse-finder-in .22s cubic-bezier(.2, .75, .2, 1);
-}
-html[dir="rtl"] .tse-finder__panel { transform-origin: top left; }
-.tse-finder__panel[hidden] { display: none; }
-@keyframes tse-finder-in { from { opacity: 0; transform: translateY(-6px) scale(.98); } to { opacity: 1; transform: none; } }
+/* ---------- The footer bar (always visible; any leftover toggle is hidden) ---------- */
+.tse-finder__toggle:not(#_):not(#__) { display: none !important; }
+.tse-finder__panel, .tse-finder__panel[hidden] { display: contents; }
+.tse-finder__input:focus-visible { outline: none !important; }
 .tse-finder__form {
-  margin: 0; padding: 7px; border: 1px solid #fff; border-radius: 15px; background-color: var(--f-bg);
-  box-shadow: 9px 9px 16px rgba(160, 160, 160, .45), -9px -9px 16px rgba(255, 255, 255, .5), 0 18px 44px rgba(22, 32, 48, .14);
+  width: 100%; margin: 0; padding: 4px; border: 1px solid #fff; border-radius: 12px; background-color: var(--f-bg);
+  box-shadow: 5px 5px 10px rgba(160, 160, 160, .45), -5px -5px 10px rgba(255, 255, 255, .7);
 }
 .tse-finder__outer {
-  display: flex; padding: 7px 16px; border-radius: 10px;
-  box-shadow: inset 10px 10px 15px -10px #c3c3c3, inset -10px -10px 15px -10px #ffffff;
+  display: flex; padding: 3px 12px; border-radius: 9px;
+  box-shadow: inset 7px 7px 10px -7px #c3c3c3, inset -7px -7px 10px -7px #ffffff;
 }
-.tse-finder__inner { display: flex; align-items: center; gap: 12px; position: relative; flex: 1; min-width: 0; }
+.tse-finder__inner { display: flex; align-items: center; gap: 10px; position: relative; flex: 1; min-width: 0; }
+.tse-finder__inner .tse-finder__icon { --s: 22px; }
 .tse-finder .tse-finder__input:not(#_):not(#__) {
-  flex: 1; min-width: 0; height: 34px; margin: 0; padding: 0; border: none !important; border-radius: 0 !important;
+  flex: 1; min-width: 0; height: 28px; margin: 0; padding: 0; border: none !important; border-radius: 0 !important;
   background: transparent !important; box-shadow: none !important; outline: none;
-  font: 400 1rem/1.2 var(--font, sans-serif) !important; letter-spacing: .4px; color: var(--f-ink) !important;
-  -webkit-appearance: none; appearance: none;
+  font: 400 .9rem/1.2 var(--font, sans-serif) !important; letter-spacing: .4px; color: var(--f-ink) !important;
+  -webkit-appearance: none; appearance: none; text-overflow: ellipsis;
 }
 .tse-finder__input::placeholder { color: #8b8f95; opacity: 1; }
 .tse-finder__input::-webkit-search-cancel-button { -webkit-appearance: none; display: none; }
 .tse-finder__input:read-only { cursor: progress; }
-.tse-finder__form:focus-within .tse-finder__outer { box-shadow: inset 10px 10px 15px -10px #bdbdbd, inset -10px -10px 15px -10px #ffffff, 0 0 0 2px rgba(200, 16, 46, .28); }
-.tse-finder__input:focus-visible { outline: none !important; }
+.tse-finder__form:focus-within .tse-finder__outer { box-shadow: inset 7px 7px 10px -7px #bdbdbd, inset -7px -7px 10px -7px #ffffff, 0 0 0 2px rgba(200, 16, 46, .28); }
 
-/* ---------- Results ---------- */
-.tse-finder .tse-finder__list:not(#_):not(#__) {
-  list-style: none; margin: 8px 0 0 !important; padding: 0 !important; max-height: min(60vh, 440px); overflow-y: auto;
-  overscroll-behavior: contain; scrollbar-width: thin;
+/* ---------- Footer placement: inline-end on desktop (margin-inline-start:auto so RTL goes left), full width on phones.
+   Overflow is forced visible so the upward results are not clipped by design.css's .site-footer { overflow: hidden }. ---------- */
+.site-footer:not(#_):not(#__), .site-footer .footer-inner:not(#_):not(#__) { overflow: visible !important; }
+/* Room for the fixed chat launcher (.tk-launch, bottom-right) so it does not cover the bar when the page is scrolled to the end. */
+.site-footer .footer-inner:not(#_):not(#__) { padding-bottom: 88px !important; }
+.site-footer .footer-inner > .tse-finder:not(#_):not(#__) {
+  position: relative; z-index: 6;
+  flex: 0 1 280px; width: min(280px, 100%); min-width: 200px;
+  margin-inline-start: auto;
 }
+@media (max-width: 860px) {
+  .site-footer .footer-inner > .tse-finder:not(#_):not(#__) {
+    flex: 1 1 100%; width: 100%; min-width: 0; margin-inline-start: 0; align-self: stretch;
+  }
+  .tse-finder__form { box-shadow: 6px 6px 12px rgba(160, 160, 160, .4), -6px -6px 12px rgba(255, 255, 255, .6); }
+}
+
+/* ---------- Results (search.js sets position:fixed and the top/bottom/left/width so the list can open up or down) ---------- */
+.tse-finder .tse-finder__list:not(#_):not(#__), .tse-finder .tse-finder__empty:not(#_):not(#__) {
+  z-index: 80; list-style: none; margin: 0 !important; padding: 7px !important; max-height: min(60vh, 440px); overflow-y: auto;
+  overscroll-behavior: contain; scrollbar-width: thin;
+  border: 1px solid #fff; border-radius: 15px; background: var(--f-bg);
+  box-shadow: 9px 9px 16px rgba(160, 160, 160, .4), -9px -9px 16px rgba(255, 255, 255, .5), 0 18px 44px rgba(22, 32, 48, .16);
+  animation: tse-finder-in .2s cubic-bezier(.2, .75, .2, 1);
+}
+.tse-finder.is-up .tse-finder__list, .tse-finder.is-up .tse-finder__empty { animation-name: tse-finder-in-up; }
+@keyframes tse-finder-in { from { opacity: 0; transform: translateY(-6px) scale(.98); } to { opacity: 1; transform: none; } }
+@keyframes tse-finder-in-up { from { opacity: 0; transform: translateY(6px) scale(.98); } to { opacity: 1; transform: none; } }
 .tse-finder__list[hidden], .tse-finder__empty[hidden] { display: none !important; }
-.tse-finder .tse-finder__list > li:not(#_):not(#__) { margin: 0 !important; padding: 0; letter-spacing: 0; }
+.tse-finder .tse-finder__list > li:not(#_):not(#__) { margin: 0 !important; padding: 0; letter-spacing: 0; color: var(--f-text) !important; }
 .tse-finder .tse-finder__opt:not(#_):not(#__) {
   display: block; padding: 9px 12px; border-radius: 10px; text-decoration: none !important;
   border-inline-start: 3px solid transparent; color: var(--f-text) !important;
@@ -114,66 +121,11 @@ html[dir="rtl"] .tse-finder .tse-finder__opt-path:not(#_):not(#__) { text-align:
 }
 .tse-finder mark:not(#_):not(#__) { background: rgba(200, 16, 46, .13) !important; color: inherit !important; border-radius: 3px; padding: 0 1px; }
 .tse-finder .tse-finder__empty:not(#_):not(#__) {
-  margin: 8px 0 2px !important; padding: 10px 12px; font: 400 .85rem/1.4 var(--font, sans-serif) !important; color: var(--f-text) !important;
-}
-
-/* ---------- Desktop header: make room for the button. The menu items lose a little padding instead of the row
-   overflowing (horizontal spacing only, so the header keeps its height). ---------- */
-@media (min-width: 861px) and (max-width: 1340px) {
-  .site-header:not(.is-stacked) .header-inner:not(#_) { gap: clamp(10px, 1.4vw, 24px); padding-inline: clamp(16px, 2.6vw, 56px); }
-  .site-header:not(.is-stacked) .main-nav > ul:not(#_) { gap: 0; }
-  .site-header:not(.is-stacked) .main-nav > ul > li > a:not(#_) { padding-inline: clamp(5px, .62vw, 11px); }
-}
-/* Small laptops and tablets in landscape with the longest menu words (Japanese, German, Spanish): slightly smaller
-   menu text, same line height, so the row still fits and the header keeps its height. */
-@media (min-width: 861px) and (max-width: 980px) {
-  .site-header:not(.is-stacked) .main-nav > ul > li > a:not(#_) { font-size: .8rem; line-height: .92rem; padding-inline: 5px; }
-  .site-header:not(.is-stacked) .header-inner:not(#_) { gap: 8px; }
-  .site-header .header-inner > .tse-finder:not(#_) { min-width: 92px; }
-}
-
-/* ---------- Phones and tablets (menu on its own row): the button sits before the language button in the top row and
-   the finder opens full width under the header. ---------- */
-@media (max-width: 860px) {
-  .site-header .header-inner > .tse-finder { position: static; margin-inline-start: auto; }
-  .site-header .header-inner > .tse-finder + .lang-picker:not(#_) { margin-inline-start: 0; margin-left: 0; }
-  .site-header .tse-finder__toggle:not(#_):not(#__) { width: 32px; height: 32px; box-shadow: 3px 3px 7px var(--f-dark), -3px -3px 7px var(--f-light) !important; }
-  .tse-finder__toggle .tse-finder__icon { --s: 18px; }
-  .tse-finder__panel {
-    top: 100%; left: 0; right: 0; inset-inline-end: 0; width: auto; padding: 10px var(--gutter, 16px) 14px;
-    background: rgba(255, 255, 255, .97); border-bottom: 1px solid var(--line, #d7dce2);
-    box-shadow: 0 16px 30px rgba(22, 32, 48, .12); transform-origin: top center;
-  }
-  .tse-finder__form { box-shadow: 6px 6px 12px rgba(160, 160, 160, .4), -6px -6px 12px rgba(255, 255, 255, .6); }
-  .tse-finder .tse-finder__list:not(#_):not(#__) { max-height: calc(100dvh - 260px); }
-}
-
-/* ---------- Desktop: the finder bar inline in the header (the button is only for phones) ---------- */
-@media (min-width: 861px) {
-  .site-header .tse-finder__toggle:not(#_):not(#__) { display: none; }
-  .site-header .tse-finder__panel, .site-header .tse-finder__panel[hidden] {
-    display: block; position: relative; top: auto; inset-inline-end: auto; width: 100%; animation: none;
-  }
-  /* The bar gives way first when a language's menu words are long (it never goes below 120px) */
-  .site-header .header-inner > .tse-finder { flex: 0 1 clamp(150px, 17vw, 240px); min-width: 120px; }
-  .site-header .tse-finder__form { padding: 3px; border-radius: 12px; box-shadow: 5px 5px 10px rgba(160, 160, 160, .45), -5px -5px 10px rgba(255, 255, 255, .7); }
-  .site-header .tse-finder__outer { padding: 2px 10px; border-radius: 9px; box-shadow: inset 7px 7px 10px -7px #c3c3c3, inset -7px -7px 10px -7px #ffffff; }
-  .site-header .tse-finder__inner { gap: 8px; }
-  .site-header .tse-finder__inner .tse-finder__icon { --s: 20px; }
-  .site-header .tse-finder .tse-finder__input:not(#_):not(#__) { height: 24px; font-size: .8rem !important; text-overflow: ellipsis; }
-  .site-header .tse-finder__form:focus-within .tse-finder__outer { box-shadow: inset 7px 7px 10px -7px #bdbdbd, inset -7px -7px 10px -7px #ffffff, 0 0 0 2px rgba(200, 16, 46, .28); }
-  /* Results: a finder-style card under the bar, wider than it, aligned to its end */
-  .site-header .tse-finder .tse-finder__list:not(#_):not(#__), .site-header .tse-finder .tse-finder__empty:not(#_):not(#__) {
-    position: absolute; top: calc(100% + 12px); inset-inline-end: 0; width: min(460px, calc(100vw - 2 * var(--gutter, 16px)));
-    margin: 0 !important; padding: 7px !important; border: 1px solid #fff; border-radius: 15px; background: var(--f-bg);
-    box-shadow: 9px 9px 16px rgba(160, 160, 160, .4), -9px -9px 16px rgba(255, 255, 255, .5), 0 18px 44px rgba(22, 32, 48, .16);
-    animation: tse-finder-in .2s cubic-bezier(.2, .75, .2, 1);
-  }
-  .site-header .tse-finder .tse-finder__empty:not(#_):not(#__) { padding: 14px 16px !important; }
+  padding: 14px 16px !important; font: 400 .85rem/1.4 var(--font, sans-serif) !important; color: var(--f-text) !important; overflow: hidden;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .site-header .tse-finder__list, .site-header .tse-finder__empty { animation: none !important; }
-  .tse-finder__icon, .tse-finder__icon::before, .tse-finder__icon::after, .tse-finder__toggle, .tse-finder__panel { transition: none !important; animation: none !important; }
+  .tse-finder__list, .tse-finder__empty { animation: none !important; }
+  .tse-finder__icon, .tse-finder__icon::before, .tse-finder__icon::after { transition: none !important; animation: none !important; }
   .tse-finder__form.is-processing .tse-finder__inner .tse-finder__icon { animation: none !important; opacity: .55; }
 }

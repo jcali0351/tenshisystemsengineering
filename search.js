@@ -1,6 +1,9 @@
-// Header search: on desktop the finder bar sits in the header; on phones the round button opens it; results come from data/search/<lang>.json, which
-// tools/build-pages.mjs writes from every page and blog post (data-search-v, stamped by tools/stamp-assets.mjs,
-// is its version). Combobox pattern: arrow keys move through the results, Enter opens one, Esc closes.
+// Footer search: the finder bar sits in the site footer (always visible, no header toggle). Results come from
+// data/search/<lang>.json, which tools/build-pages.mjs writes from every page and blog post (data-search-v, stamped
+// by tools/stamp-assets.mjs, is its version). Combobox pattern: arrow keys move through the results, Enter opens
+// one, Esc closes them. The results list is position:fixed and opens upward when the bar is near the bottom of the
+// viewport so it is not clipped by the footer or the page end. The script stays usable if a leftover toggle or
+// panel is absent (or present but unused).
 (function () {
   "use strict";
   const root = document.querySelector(".tse-finder[data-search]");
@@ -8,16 +11,15 @@
   const $ = (s) => root.querySelector(s);
   const toggle = $(".tse-finder__toggle"), panel = $(".tse-finder__panel"), form = $(".tse-finder__form");
   const input = $(".tse-finder__input"), list = $(".tse-finder__list"), empty = $(".tse-finder__empty"), status = $("[data-search-status]");
-  if (!toggle || !panel || !form || !input || !list) return;
+  if (!form || !input || !list) return;
   const BASE = new URL("./", (document.currentScript && document.currentScript.src) || location.href);
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const T = window.TRANSLATIONS || {};
   const lang = () => (T[document.documentElement.lang] ? document.documentElement.lang : "en");
   const t = (key) => { const L = T[lang()] || {}; return L[key] !== undefined ? L[key] : (T.en && T.en[key]) || ""; };
   const MAX = 8;
-  const inline = window.matchMedia("(min-width: 861px)");   // the bar is always shown there (search.css)
 
-  /* ---------- The index: one file per language, fetched the first time the finder opens ---------- */
+  /* ---------- The index: one file per language, fetched the first time the finder is used ---------- */
   const cache = {};
   const load = (L) => cache[L] || (cache[L] = fetch(new URL(`data/search/${L}.json?v=${root.dataset.searchV || ""}`, BASE))
     .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
@@ -76,9 +78,48 @@
     return frag;
   }
 
-  /* ---------- Showing the results ---------- */
+  /* ---------- Showing the results, pinned to the bar and flipped up near the bottom of the viewport ---------- */
   let results = [], active = -1, seq = 0;
   const href = (p) => new URL(p.u, BASE).href;
+  function popover() {
+    if (list && !list.hidden) return list;
+    if (empty && !empty.hidden) return empty;
+    return null;
+  }
+  function placeResults() {
+    const pop = popover();
+    if (!pop) return;
+    const anchor = form.querySelector(".tse-finder__outer") || form;
+    const r = anchor.getBoundingClientRect();
+    const gap = 12, gutter = 16, vw = window.innerWidth, vh = window.innerHeight;
+    const narrow = window.matchMedia("(max-width: 860px)").matches;
+    const width = narrow ? Math.max(0, Math.min(r.width, vw - gutter * 2)) : Math.min(460, vw - gutter * 2, Math.max(r.width, 320));
+    const rtl = document.documentElement.dir === "rtl";
+    let left = rtl ? r.left : r.right - width;
+    left = Math.max(gutter, Math.min(left, vw - width - gutter));
+    pop.style.position = "fixed";
+    pop.style.width = width + "px";
+    pop.style.left = left + "px";
+    pop.style.right = "auto";
+    pop.style.maxHeight = "none";
+    pop.style.bottom = "auto";
+    const h = pop.getBoundingClientRect().height;
+    const spaceAbove = r.top - gap - gutter;
+    const spaceBelow = vh - r.bottom - gap - gutter;
+    const openUp = spaceAbove >= Math.min(h, 160) || spaceAbove >= spaceBelow;
+    const maxH = Math.max(120, Math.min(openUp ? spaceAbove : spaceBelow, vh * 0.6, 440));
+    pop.style.maxHeight = maxH + "px";
+    const usedH = Math.min(h > 0 ? h : maxH, maxH);
+    if (openUp) {
+      pop.style.top = Math.max(gutter, r.top - gap - usedH) + "px";
+      root.classList.add("is-up");
+      root.classList.remove("is-down");
+    } else {
+      pop.style.top = (r.bottom + gap) + "px";
+      root.classList.add("is-down");
+      root.classList.remove("is-up");
+    }
+  }
   function setActive(i) {
     const opts = list.querySelectorAll("[role=option]");
     active = opts.length ? (i + opts.length) % opts.length : -1;
@@ -108,6 +149,8 @@
     input.setAttribute("aria-expanded", String(open));
     if (empty) { empty.textContent = t("searchNoResults"); empty.hidden = !(showEmpty || (q.trim() && !open)); }
     if (status) status.textContent = q.trim() ? (open ? t("searchCount").replace("{n}", items.length) : t("searchNoResults")) : "";
+    if (popover()) placeResults();
+    else { root.classList.remove("is-up", "is-down"); }
   }
   async function update() {
     const q = input.value, my = ++seq;
@@ -119,52 +162,48 @@
   let timer = 0;
   input.addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(update, 60); form.classList.toggle("is-active", !!input.value || document.activeElement === input); });
 
-  /* ---------- Opening and closing ---------- */
-  const isOpen = () => inline.matches || !panel.hidden;
-  function openPanel() {
-    if (isOpen()) { input.focus(); load(lang()); return; }
-    panel.hidden = false; toggle.setAttribute("aria-expanded", "true"); root.classList.add("is-open");
-    input.focus();
-    load(lang());
-    if (input.value.trim()) update();
-  }
+  /* ---------- Opening and closing the results (the bar itself stays visible) ---------- */
   function hideResults() {
     list.hidden = true; input.setAttribute("aria-expanded", "false"); if (empty) empty.hidden = true;
     active = -1; input.removeAttribute("aria-activedescendant");
+    root.classList.remove("is-up", "is-down");
   }
-  function closePanel(returnFocus) {
-    hideResults();
-    if (inline.matches || panel.hidden) return;   // the desktop bar stays; only its results close
-    panel.hidden = true; toggle.setAttribute("aria-expanded", "false"); root.classList.remove("is-open");
-    if (returnFocus) toggle.focus();
+  function focusFinder() {
+    input.focus();
+    load(lang());
+    if (input.value.trim() && list.hidden) update();
   }
-  toggle.addEventListener("click", () => (!inline.matches && isOpen() ? closePanel(true) : openPanel()));
-  ["pointerenter", "focus"].forEach((e) => toggle.addEventListener(e, () => load(lang()), { once: true }));
+  if (toggle) {
+    toggle.addEventListener("click", () => { focusFinder(); });
+    ["pointerenter", "focus"].forEach((e) => toggle.addEventListener(e, () => load(lang()), { once: true }));
+  }
   input.addEventListener("focus", () => { form.classList.add("is-active"); load(lang()); if (input.value.trim() && list.hidden) update(); });
   input.addEventListener("blur", () => { if (!input.value) form.classList.remove("is-active"); });
-  document.addEventListener("pointerdown", (e) => { if (isOpen() && !root.contains(e.target)) closePanel(false); });
-  root.addEventListener("focusout", (e) => { if (isOpen() && e.relatedTarget && !root.contains(e.relatedTarget)) closePanel(false); });
+  document.addEventListener("pointerdown", (e) => { if (!root.contains(e.target) && popover()) hideResults(); });
+  root.addEventListener("focusout", (e) => { if (e.relatedTarget && !root.contains(e.relatedTarget) && popover()) hideResults(); });
   // "/" opens the search from anywhere except a text field
   document.addEventListener("keydown", (e) => {
     if (e.key !== "/" || e.ctrlKey || e.metaKey || e.altKey) return;
     const el = document.activeElement;
     if (el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName))) return;
-    e.preventDefault(); openPanel();
+    e.preventDefault(); focusFinder();
   });
 
   input.addEventListener("keydown", (e) => {
     if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-      if (list.hidden) { if (results.length) { list.hidden = false; input.setAttribute("aria-expanded", "true"); } else return; }
+      if (list.hidden) { if (results.length) { list.hidden = false; input.setAttribute("aria-expanded", "true"); placeResults(); } else return; }
       e.preventDefault();
       setActive(active < 0 ? (e.key === "ArrowDown" ? 0 : -1) : active + (e.key === "ArrowDown" ? 1 : -1));
     } else if (e.key === "Escape") {
       e.preventDefault();
       if (!list.hidden || (empty && !empty.hidden)) hideResults();
-      else if (inline.matches) input.blur();
-      else closePanel(true);
+      else input.blur();
     }
   });
-  panel.addEventListener("keydown", (e) => { if (e.key === "Escape" && e.target !== input) { e.preventDefault(); closePanel(true); } });
+  if (panel) panel.addEventListener("keydown", (e) => { if (e.key === "Escape" && e.target !== input) { e.preventDefault(); hideResults(); input.blur(); } });
+
+  window.addEventListener("resize", () => { if (popover()) placeResults(); });
+  window.addEventListener("scroll", () => { if (popover()) placeResults(); }, { passive: true, capture: true });
 
   /* ---------- Enter: the highlighted result, or the top one; the icon spins while it looks ---------- */
   let busy = false;
@@ -183,8 +222,6 @@
     render([], q, { showEmpty: true });
   });
 
-  inline.addEventListener("change", () => { hideResults(); if (!inline.matches) { panel.hidden = true; toggle.setAttribute("aria-expanded", "false"); root.classList.remove("is-open"); } });
-
   // A new language: new index, new words in the results
-  document.addEventListener("tse:lang", () => { if (empty) empty.textContent = t("searchNoResults"); if (isOpen() && input.value.trim()) update(); else render([], ""); });
+  document.addEventListener("tse:lang", () => { if (empty) empty.textContent = t("searchNoResults"); if (input.value.trim()) update(); else render([], ""); });
 })();

@@ -2,7 +2,7 @@
 // To change wording, edit it here (both languages), not in index.html.
 window.TRANSLATIONS = {
   en: {
-    // Header search (search.js)
+    // Footer search (search.js)
     searchLabel: "Search the site",
     searchPlaceholder: "Search the site…",
     searchOpen: "Search",
@@ -692,7 +692,7 @@ window.TRANSLATIONS = {
     slogan4: "Rapid Deployment"
   },
   ja: {
-    // Header search (search.js)
+    // Footer search (search.js)
     searchLabel: "サイト内検索",
     searchPlaceholder: "サイト内を検索…",
     searchOpen: "検索",
@@ -1382,7 +1382,7 @@ window.TRANSLATIONS = {
     slogan4: "迅速な展開"
   },
   ko: {
-    // Header search (search.js)
+    // Footer search (search.js)
     searchLabel: "사이트 검색",
     searchPlaceholder: "사이트 검색…",
     searchOpen: "검색",
@@ -2080,7 +2080,7 @@ window.TRANSLATIONS = {
     slogan4: "신속한 배포"
   },
   de: {
-    // Header search (search.js)
+    // Footer search (search.js)
     searchLabel: "Website durchsuchen",
     searchPlaceholder: "Website durchsuchen…",
     searchOpen: "Suchen",
@@ -2778,7 +2778,7 @@ window.TRANSLATIONS = {
     slogan4: "Schnelle Bereitstellung"
   },
   es: {
-    // Header search (search.js)
+    // Footer search (search.js)
     searchLabel: "Buscar en el sitio",
     searchPlaceholder: "Buscar en el sitio…",
     searchOpen: "Buscar",
@@ -3476,7 +3476,7 @@ window.TRANSLATIONS = {
     slogan4: "Despliegue rápido"
   },
   zh: {
-    // Header search (search.js)
+    // Footer search (search.js)
     searchLabel: "站内搜索",
     searchPlaceholder: "搜索本站…",
     searchOpen: "搜索",
@@ -4174,7 +4174,7 @@ window.TRANSLATIONS = {
     slogan4: "快速部署"
   },
   ar: {
-    // Header search (search.js)
+    // Footer search (search.js)
     searchLabel: "البحث في الموقع",
     searchPlaceholder: "ابحث في الموقع…",
     searchOpen: "بحث",
@@ -4872,7 +4872,7 @@ window.TRANSLATIONS = {
     slogan4: "النشر السريع"
   },
   pl: {
-    // Header search (search.js)
+    // Footer search (search.js)
     searchLabel: "Szukaj w witrynie",
     searchPlaceholder: "Szukaj w witrynie…",
     searchOpen: "Szukaj",
@@ -5570,7 +5570,7 @@ window.TRANSLATIONS = {
     slogan4: "Szybkie wdrożenie"
   },
   pcm: {
-    // Header search (search.js)
+    // Footer search (search.js)
     searchLabel: "Search di website",
     searchPlaceholder: "Search di website…",
     searchOpen: "Search",
@@ -6268,7 +6268,7 @@ window.TRANSLATIONS = {
     slogan4: "Rapid Deployment"
   },
   fa: {
-    // Header search (search.js)
+    // Footer search (search.js)
     searchLabel: "جستجو در سایت",
     searchPlaceholder: "جستجو در سایت…",
     searchOpen: "جستجو",

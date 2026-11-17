@@ -6,7 +6,7 @@
 //   - about.html, services.html, contact.html, news.html, blog.html
 //   - services/<slug>.html, one full page per service
 //   - blog/<slug>.html, one page per long-form post that has a slug in data/blog.json
-//   - data/search/<lang>.json, the header search's index of every page and blog post in all ten languages (search.js)
+//   - data/search/<lang>.json, the footer search's index of every page and blog post in all ten languages (search.js)
 //   - share buttons at the end of each post from data/share.json (Tenshi Editor › Share buttons; Shareon 2.8.1
 //     in vendor/shareon/, plus LINE and Hatena)
 //   - buttons.css from data/buttons.json (Tenshi Editor › Buttons), and the links to buttons.css and custom.css
@@ -1629,7 +1629,7 @@ if (!existsSync("custom.css")) writeFileSync("custom.css", "/* Custom CSS (Tensh
   console.log(`buttons.css written; buttons.css and custom.css linked last on ${linked} pages`);
 }
 
-/* ---------- Header search (search.js, search.css): data/search/<lang>.json ----------
+/* ---------- Footer search (search.js, search.css): data/search/<lang>.json ----------
    One small index per language of every page the build writes, plus the homepage: its address, title, description,
    headings and a slice of its text. Words marked data-i18n are read from translations.js in that language (English
    when a language lacks one); blog post bodies are English in every language. tools/stamp-assets.mjs stamps the
