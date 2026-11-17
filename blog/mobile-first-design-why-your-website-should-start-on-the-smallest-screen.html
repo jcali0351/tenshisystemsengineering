@@ -18,6 +18,8 @@
   <link rel="stylesheet" href="../chat.css?v=8097383f">
   <link rel="stylesheet" href="../site-theme.css?v=e9955052">
   <link rel="stylesheet" href="../search.css?v=2328ead7">
+  <link rel="stylesheet" href="../vendor/shareon/shareon.min.css?v=e14c16cf">
+  <link rel="stylesheet" href="../share.css?v=e677cf5e">
   <link rel="stylesheet" href="../buttons.css?v=3885ce6d">
   <link rel="stylesheet" href="../custom.css?v=743f7d62">
 </head>
@@ -44,50 +46,22 @@
       <nav class="main-nav" aria-label="Main menu" data-i18n-attr="aria-label:navLabel">
         <ul>
           <li><a href="../index.html" data-nav="home" data-i18n="navHome">Home</a></li>
-          <li class="has-sub"><a href="../about.html" data-nav="about" data-i18n="navAbout">About</a>
-            <ul class="sub-nav">
-              <li><a href="../team.html" data-nav="team" data-i18n="navTeam">Team</a></li>
-              <li><a href="../technology.html" data-nav="technology" data-i18n="navTech">Technology</a></li>
-            </ul>
-          </li>
+          <li><a href="../about.html" data-nav="about" data-i18n="navAbout">About</a></li>
+          <li><a href="../team.html" data-nav="team" data-i18n="navTeam">Team</a></li>
           <li><a href="../services.html" data-nav="services" data-i18n="navServices">Services</a></li>
+          <li><a href="../technology.html" data-nav="technology" data-i18n="navTech">Technology</a></li>
           <li class="has-sub"><a href="../projects.html" data-nav="projects" data-i18n="navProjects">Projects</a>
             <ul class="sub-nav">
               <li><a href="../projects/storycaster.html" data-nav="p-storycaster">StoryCaster</a></li>
               <li><a href="../projects/master-baiter-pro.html" data-nav="p-master-baiter-pro">Master Baiter Pro</a></li>
             </ul>
           </li>
-          <li class="has-sub"><a href="../news.html" aria-current="page" data-nav="news" data-i18n="navNews">News</a>
-            <ul class="sub-nav">
-              <li><a href="../blog.html" aria-current="page" data-nav="blog" data-i18n="navBlog">Blog</a></li>
-            </ul>
-          </li>
-          <li class="has-sub"><a href="../contact.html" data-nav="contact" data-i18n="navContact">Contact</a>
-            <ul class="sub-nav">
-              <li><a href="../portal.html" data-nav="portal" data-i18n="navPortal">Portal</a></li>
-            </ul>
-          </li>
+          <li><a href="../news.html" aria-current="page" data-nav="news" data-i18n="navNews">News</a></li>
+          <li><a href="../blog.html" aria-current="page" data-nav="blog" data-i18n="navBlog">Blog</a></li>
+          <li><a href="../contact.html" data-nav="contact" data-i18n="navContact">Contact</a></li>
+          <li><a href="../portal.html" data-nav="portal" data-i18n="navPortal">Portal</a></li>
         </ul>
       </nav>
-      <div class="tse-finder" data-search data-search-v="f538981f">
-        <button type="button" class="tse-finder__toggle" aria-expanded="false" aria-controls="tse-finder-panel" aria-label="Search" data-i18n-attr="aria-label:searchOpen">
-          <span class="tse-finder__icon" aria-hidden="true"></span>
-        </button>
-        <div class="tse-finder__panel" id="tse-finder-panel" hidden>
-          <form class="tse-finder__form" role="search" autocomplete="off" aria-label="Search the site" data-i18n-attr="aria-label:searchLabel">
-            <label class="sr-only" for="tse-finder-q" data-i18n="searchLabel">Search the site</label>
-            <div class="tse-finder__outer">
-              <div class="tse-finder__inner">
-                <span class="tse-finder__icon" aria-hidden="true"></span>
-                <input class="tse-finder__input" id="tse-finder-q" type="search" name="q" dir="auto" enterkeyhint="search" spellcheck="false" placeholder="Search the site…" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="tse-finder-list" data-i18n-attr="placeholder:searchPlaceholder">
-              </div>
-            </div>
-            <ul class="tse-finder__list" id="tse-finder-list" role="listbox" aria-label="Search the site" data-i18n-attr="aria-label:searchLabel" hidden></ul>
-            <p class="tse-finder__empty" hidden data-i18n="searchNoResults">No results</p>
-            <p class="sr-only" aria-live="polite" data-search-status></p>
-          </form>
-        </div>
-      </div>
       <div class="lang-picker">
         <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
           <symbol id="flag-en" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect y="0" width="30" height="1.54" fill="#b22234"/><rect y="3.08" width="30" height="1.54" fill="#b22234"/><rect y="6.15" width="30" height="1.54" fill="#b22234"/><rect y="9.23" width="30" height="1.54" fill="#b22234"/><rect y="12.31" width="30" height="1.54" fill="#b22234"/><rect y="15.38" width="30" height="1.54" fill="#b22234"/><rect y="18.46" width="30" height="1.54" fill="#b22234"/><rect width="12" height="10.77" fill="#3c3b6e"/><circle cx="1" cy="1" r=".45" fill="#fff"/><circle cx="3" cy="1" r=".45" fill="#fff"/><circle cx="5" cy="1" r=".45" fill="#fff"/><circle cx="7" cy="1" r=".45" fill="#fff"/><circle cx="9" cy="1" r=".45" fill="#fff"/><circle cx="11" cy="1" r=".45" fill="#fff"/><circle cx="2" cy="3.15" r=".45" fill="#fff"/><circle cx="4" cy="3.15" r=".45" fill="#fff"/><circle cx="6" cy="3.15" r=".45" fill="#fff"/><circle cx="8" cy="3.15" r=".45" fill="#fff"/><circle cx="10" cy="3.15" r=".45" fill="#fff"/><circle cx="1" cy="5.3" r=".45" fill="#fff"/><circle cx="3" cy="5.3" r=".45" fill="#fff"/><circle cx="5" cy="5.3" r=".45" fill="#fff"/><circle cx="7" cy="5.3" r=".45" fill="#fff"/><circle cx="9" cy="5.3" r=".45" fill="#fff"/><circle cx="11" cy="5.3" r=".45" fill="#fff"/><circle cx="2" cy="7.45" r=".45" fill="#fff"/><circle cx="4" cy="7.45" r=".45" fill="#fff"/><circle cx="6" cy="7.45" r=".45" fill="#fff"/><circle cx="8" cy="7.45" r=".45" fill="#fff"/><circle cx="10" cy="7.45" r=".45" fill="#fff"/><circle cx="1" cy="9.6" r=".45" fill="#fff"/><circle cx="3" cy="9.6" r=".45" fill="#fff"/><circle cx="5" cy="9.6" r=".45" fill="#fff"/><circle cx="7" cy="9.6" r=".45" fill="#fff"/><circle cx="9" cy="9.6" r=".45" fill="#fff"/><circle cx="11" cy="9.6" r=".45" fill="#fff"/></symbol>
@@ -199,6 +173,22 @@
         <p>If you are planning a new website or a redesign, ask your design and development team how they approach mobile. Look for wireframes or mockups of the phone layout early in the process, not as an afterthought. Ask how images will be optimized, how navigation will work on small screens, and how the site will be tested across devices before launch. It is also worth asking who will maintain the site afterward, because new content added carelessly, such as oversized photos or wide tables, can quietly undo good mobile work over time.</p>
         <p>Mobile-first design is ultimately about respect for your visitors' time and attention. When your site is easy to use on the smallest screen, it tends to be easier to use everywhere.</p>
         <p><strong>Is your website working as hard on phones as it does on desktops?</strong> Tenshi Systems Engineering designs and builds responsive, mobile-first websites for businesses in Osaka and around the world. <a href="../contact.html#contact">Request a consultation</a> and we will review your site's mobile experience and recommend practical next steps.</p>
+        <section class="share-block" aria-labelledby="share-heading">
+        <p class="share-heading" id="share-heading" data-i18n="shareThisPost">Share this post</p>
+        <div class="shareon" data-url="https://jcali0351.github.io/tenshisystemsengineering/blog/mobile-first-design-why-your-website-should-start-on-the-smallest-screen.html" data-title="Mobile-First Design: Why Your Website Should Start on the Smallest Screen">
+          <a class="twitter" title="X (Twitter)" aria-label="X (Twitter)"></a>
+          <a class="facebook" title="Facebook" aria-label="Facebook"></a>
+          <a class="linkedin" title="LinkedIn" aria-label="LinkedIn"></a>
+          <a class="line" href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fjcali0351.github.io%2Ftenshisystemsengineering%2Fblog%2Fmobile-first-design-why-your-website-should-start-on-the-smallest-screen.html" target="_blank" rel="noopener noreferrer" title="LINE" aria-label="LINE"></a>
+          <a class="hatena" href="https://b.hatena.ne.jp/entry/panel/?url=https%3A%2F%2Fjcali0351.github.io%2Ftenshisystemsengineering%2Fblog%2Fmobile-first-design-why-your-website-should-start-on-the-smallest-screen.html&amp;btitle=Mobile-First%20Design%3A%20Why%20Your%20Website%20Should%20Start%20on%20the%20Smallest%20Screen" target="_blank" rel="noopener noreferrer" title="Hatena Bookmark" aria-label="Hatena Bookmark"></a>
+          <a class="reddit" title="Reddit" aria-label="Reddit"></a>
+          <a class="telegram" title="Telegram" aria-label="Telegram"></a>
+          <a class="whatsapp" title="WhatsApp" aria-label="WhatsApp"></a>
+          <a class="pocket" title="Pocket" aria-label="Pocket"></a>
+          <a class="copy-url" title="Copy link" aria-label="Copy link"></a>
+          <a class="web-share" title="Device share sheet" aria-label="Device share sheet"></a>
+        </div>
+        </section>
         <p class="blog-back"><a href="../blog.html"><span data-i18n="homeBlogAll">All posts</span></a></p>
       </article>
     </section>
@@ -324,10 +314,11 @@
     </div>
   </footer>
 
-  <script src="../translations.js?v=1d49ab74"></script>
+  <script src="../translations.js?v=fe84d4ee"></script>
   <script src="../app.js?v=43b4bb8b"></script>
   <script src="../search.js?v=5de04e03"></script>
   <script src="../design.js?v=e4ade4cb"></script>
   <script src="../chat.js?v=e6aee4be"></script>
+  <script src="../vendor/shareon/shareon.iife.js?v=6208537e" defer init></script>
 </body>
 </html>

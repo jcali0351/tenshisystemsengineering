@@ -7,7 +7,7 @@ run-name: Rebuild pages (${{ github.event.head_commit.message }})
 on:
   push:
     branches: [main]
-    paths: ["data/slogan.json", "data/parallax.json", "data/buttons.json", "buttons.css", "custom.css", "admin/**", "fonts/fonts.json", "*.html", "services/*.html", "projects/*.html", "translations.js", "img/**", "brand/**", "tools/build-pages.mjs", "src/tailwind.css", "package.json", "package-lock.json", "styles.css", "design.css", "site-theme.css", "app.js", "design.js", "chat.js", "chat.css", "rain.js", "search.css", "search.js"]
+    paths: ["data/slogan.json", "data/parallax.json", "data/buttons.json", "data/share.json", "buttons.css", "custom.css", "admin/**", "fonts/fonts.json", "*.html", "services/*.html", "projects/*.html", "translations.js", "img/**", "brand/**", "tools/build-pages.mjs", "src/tailwind.css", "package.json", "package-lock.json", "styles.css", "design.css", "site-theme.css", "share.css", "vendor/shareon/**", "app.js", "design.js", "chat.js", "chat.css", "rain.js", "search.css", "search.js"]
   workflow_dispatch:
 
 permissions:

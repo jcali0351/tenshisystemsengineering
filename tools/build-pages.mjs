@@ -7,6 +7,8 @@
 //   - services/<slug>.html, one full page per service
 //   - blog/<slug>.html, one page per long-form post that has a slug in data/blog.json
 //   - data/search/<lang>.json, the header search's index of every page and blog post in all ten languages (search.js)
+//   - share buttons at the end of each post from data/share.json (Tenshi Editor › Share buttons; Shareon 2.8.1
+//     in vendor/shareon/, plus LINE and Hatena)
 //   - buttons.css from data/buttons.json (Tenshi Editor › Buttons), and the links to buttons.css and custom.css
 //     (Tenshi Editor › Custom CSS) at the end of every page's stylesheets
 // All wording lives in translations.js, except blog post bodies (data/blog.json). The header and footer are copied from index.html, so change them there.
@@ -168,6 +170,8 @@ function bakeEnglish(html) {
 const readJson = (f, fallback) => { try { return JSON.parse(readFileSync(f, "utf8")); } catch { return fallback; } };
 const NEWS = readJson("data/news.json", { categories: [] });
 const BLOGDATA = readJson("data/blog.json", { posts: [] });
+const Share = createRequire(import.meta.url)("../admin/share-networks.js");
+const SHARE = Share.clean(readJson("data/share.json", {}));
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const postPermalink = (b) => (b.slug && SLUG_RE.test(b.slug) ? `blog/${b.slug}.html` : `blog.html#post-${b.id}`);
 const wDate = (d) => (d ? new Date(d.length === 10 ? d + "T12:00:00Z" : d).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "Asia/Tokyo" }) : "");
@@ -515,7 +519,7 @@ function chrome(html, prefix, current) {
     .replace(/href="((?:index|about|services|contact|team|technology|projects|news|blog|portal)\.html|projects\/[a-z-]+\.html|blog\/[a-z-]+\.html)"/g, `href="${prefix}$1"`);
 }
 
-function frame({ prefix, current, titleKey, descKey, title, description, bodyClass, main, photoCredits = "" }) {
+function frame({ prefix, current, titleKey, descKey, title, description, bodyClass, main, photoCredits = "", extraHead = "", extraScripts = "" }) {
   const pageTitle = title != null ? esc(title) : tx(titleKey);
   const pageDesc = description != null ? esc(description) : tx(descKey);
   const bodyAttrs = title != null ? " data-fixed-title" : ` data-title-key="${titleKey}" data-desc-key="${descKey}"`;
@@ -539,7 +543,7 @@ function frame({ prefix, current, titleKey, descKey, title, description, bodyCla
   <link rel="stylesheet" href="${prefix}chat.css">
   <link rel="stylesheet" href="${prefix}site-theme.css">
   <link rel="stylesheet" href="${prefix}search.css">
-</head>
+${extraHead}</head>
 <body class="${bodyClass}"${bodyAttrs}>
   <!-- Written by tools/build-pages.mjs: edit translations.js and the script, not this file. -->
   <a class="skip-link" href="#main" data-i18n="skip">${tx("skip")}</a>
@@ -557,7 +561,7 @@ ${chrome(FOOTER, prefix, current).replace("    </div>\n  </footer>", photoCredit
   <script src="${prefix}search.js"></script>
   <script src="${prefix}design.js"></script>
   <script src="${prefix}chat.js"></script>
-</body>
+${extraScripts}</body>
 </html>
 `;
 }
@@ -1481,17 +1485,51 @@ function postBanner(prefix, post) {
       </div>
     </section>`;
 }
+function shareBlock(post) {
+  if (!SHARE.enabled || Share.isDisabledOn(SHARE, post) || !SHARE.networks.length) return "";
+  const url = Share.canonicalUrl(SHARE, post);
+  const title = post.title || "";
+  const heading = SHARE.heading !== false
+    ? `        <p class="share-heading" id="share-heading" data-i18n="shareThisPost">${tx("shareThisPost")}</p>\n`
+    : "";
+  const labelled = SHARE.heading !== false ? ` aria-labelledby="share-heading"` : ` aria-label="${esc(tx("shareThisPost"))}"`;
+  const fb = SHARE.fbAppId ? ` data-fb-app-id="${esc(SHARE.fbAppId)}"` : "";
+  const buttons = SHARE.networks.map((id) => {
+    const n = Share.BY_ID[id];
+    if (!n) return "";
+    const label = esc(n.label);
+    if (!n.shareon) {
+      return `          <a class="${id}" href="${esc(Share.customHref(id, url, title))}" target="_blank" rel="noopener noreferrer" title="${label}" aria-label="${label}"></a>`;
+    }
+    return `          <a class="${id}" title="${label}" aria-label="${label}"></a>`;
+  }).filter(Boolean).join("\n");
+  return `        <section class="share-block"${labelled}>
+${heading}        <div class="shareon" data-url="${esc(url)}" data-title="${esc(title)}"${fb}>
+${buttons}
+        </div>
+        </section>
+`;
+}
+function shareAssets(prefix) {
+  return {
+    extraHead: `  <link rel="stylesheet" href="${prefix}vendor/shareon/shareon.min.css">\n  <link rel="stylesheet" href="${prefix}share.css">\n`,
+    extraScripts: `  <script src="${prefix}vendor/shareon/shareon.iife.js" defer init></script>\n`,
+  };
+}
 function postPage(post) {
   const prefix = "../";
+  const share = shareBlock(post);
+  const assets = share ? shareAssets(prefix) : {};
   return frame({
     prefix, current: "blog", title: post.title, description: post.intro, bodyClass: "page blog-post-page",
+    extraHead: assets.extraHead || "", extraScripts: assets.extraScripts || "",
     main: `${postBanner(prefix, post)}
 
     <section class="page-section blog-post-section" aria-labelledby="post-title">
       <article class="page-inner narrow blog-article">
 ${featureImage(post.image, "blog", "blog-post-fig", prefix)}
 ${renderPostBody(post.body, prefix)}
-        <p class="blog-back"><a href="../blog.html"><span data-i18n="homeBlogAll">${tx("homeBlogAll")}</span></a></p>
+${share}        <p class="blog-back"><a href="../blog.html"><span data-i18n="homeBlogAll">${tx("homeBlogAll")}</span></a></p>
       </article>
     </section>
 

@@ -5,7 +5,7 @@
 import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
 import { createHash } from "node:crypto";
 
-const files = ["tailwind.css", "styles.css", "design.css", "chat.css", "site-theme.css", "slogan.css", "hero-cta.css", "search.css", "buttons.css", "custom.css", "admin/admin.css", "admin/tr.js", "admin/slogan-style.js", "admin/buttons-style.js", "admin/theme.js", "admin/admin.js", "translations.js", "app.js", "search.js", "rain.js", "chat.js", "design.js"].filter((f) => existsSync(f));
+const files = ["tailwind.css", "styles.css", "design.css", "chat.css", "site-theme.css", "slogan.css", "hero-cta.css", "search.css", "buttons.css", "custom.css", "share.css", "vendor/shareon/shareon.min.css", "vendor/shareon/shareon.iife.js", "admin/admin.css", "admin/tr.js", "admin/slogan-style.js", "admin/buttons-style.js", "admin/share-networks.js", "admin/theme.js", "admin/admin.js", "translations.js", "app.js", "search.js", "rain.js", "chat.js", "design.js"].filter((f) => existsSync(f));
 const pages = [...readdirSync(".").filter((f) => f.endsWith(".html")), ...["services", "projects", "blog"].flatMap((d) => existsSync(d) ? readdirSync(d).filter((f) => f.endsWith(".html")).map((f) => d + "/" + f) : [])];
 // The header search's index (data/search/<lang>.json, written by build-pages.mjs): one version for all languages,
 // stamped into each page's data-search-v, which search.js adds to the index's address.
@@ -16,7 +16,7 @@ const versions = Object.fromEntries(files.map((f) => [f, createHash("sha256").up
 for (const p of pages) {
   let html = readFileSync(p, "utf8");
   for (const f of files) {
-    const re = new RegExp(`(["'])((?:\\.\\./)?)${f.replace(".", "\\.")}(\\?v=[0-9a-f]+)?\\1`, "g");
+    const re = new RegExp(`(["'])((?:\\.\\./)?)${f.replace(/\./g, "\\.")}(\\?v=[0-9a-f]+)?\\1`, "g");
     html = html.replace(re, `$1$2${f}?v=${versions[f]}$1`);
   }
   html = html.replace(/data-search-v="[^"]*"/g, `data-search-v="${searchV}"`);

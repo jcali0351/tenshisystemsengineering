@@ -154,7 +154,7 @@
     Object.keys(pend).forEach(function (l) { Object.keys(pend[l]).forEach(function (k) { s.add(k); }); });
     return s;
   }
-  function pendingCount() { return changedKeys().size + imgEdits.size + (sloganDirty() ? 1 : 0) + (parallaxDirty() ? 1 : 0) + (buttonsDirty() ? 1 : 0) + (customDirty() ? 1 : 0); }
+  function pendingCount() { return changedKeys().size + imgEdits.size + (sloganDirty() ? 1 : 0) + (parallaxDirty() ? 1 : 0) + (buttonsDirty() ? 1 : 0) + (customDirty() ? 1 : 0) + (shareDirty() ? 1 : 0); }
   function updateBar() {
     var n = pendingCount(), p = $("#ed-pending");
     p.hidden = !n; p.textContent = n + (n === 1 ? " unsaved change" : " unsaved changes");
@@ -241,6 +241,7 @@
     if (name === "slogan") loadSlogan();
     if (name === "parallax") loadParallax();
     if (name === "buttons") loadButtons();
+    if (name === "share") loadShare();
     if (name === "css") loadCustom();
   }
 
@@ -566,6 +567,7 @@
       if (px.cur) px.saved = JSON.parse(JSON.stringify(px.cur));
       if (bt.cur) bt.saved = JSON.parse(JSON.stringify(bt.cur));
       if (cc.cur != null) { cc.saved = cc.cur; ccCheck(); }
+      if (sh.cur) sh.saved = JSON.parse(JSON.stringify(sh.cur));
       imgEdits.forEach(function (r, p) { if (r.newPath !== p) { tree.delete(p); } tree.set(r.newPath, { sha: "saved" + Date.now(), size: r.blob.size }); });
       imgEdits.clear();
       updateBar(); renderImages(); renderText(); if (slg.cur && !$("[data-panel=slogan]").hidden) renderSlogan(); if (px.cur && !$("[data-panel=parallax]").hidden) renderParallax();
@@ -623,6 +625,10 @@
         changes.push({ path: "custom.css", text: cc.cur.replace(/\s*$/, "") + "\n" });
         parts.push("custom CSS");
       }
+      if (shareDirty()) {
+        changes.push({ path: "data/share.json", text: shareJSON() });
+        parts.push("share buttons");
+      }
       return { changes: changes, summary: parts.join(", ") || "edit" };
     });
   }
@@ -635,6 +641,7 @@
     if (px.saved) { px.cur = JSON.parse(JSON.stringify(px.saved)); renderParallax(); }
     if (bt.saved) { bt.cur = JSON.parse(JSON.stringify(bt.saved)); btRender(); }
     if (cc.saved != null) { cc.cur = cc.saved; $("#cc-text").value = cc.cur; ccGutter(); ccCheck(); ccLive(); }
+    if (sh.saved) { sh.cur = JSON.parse(JSON.stringify(sh.saved)); shInitOrder(sh.cur); renderShare(); }
     imgEdits.forEach(function (r) { if (r.url) URL.revokeObjectURL(r.url); }); imgEdits.clear();
     $("#ed-drawer").hidden = true;
     updateBar(); renderText(); renderImages(); loadFrame();
@@ -1926,6 +1933,140 @@
     st.textContent = ".bw-intro,[class*=intro-screen],.lang-dialog{display:none!important}";
     doc.head.insertBefore(st, doc.head.firstChild);
     ccLive();
+  });
+
+
+  /* ================================================================== SHARE BUTTONS (end of every blog post)
+     Settings live in data/share.json; tools/build-pages.mjs writes the Shareon row (plus LINE and Hatena) into
+     each blog/<slug>.html. admin/share-networks.js holds the list of networks and the clean() helper. */
+  var SH = window.TenshiShare;
+  var sh = { saved: null, cur: null, posts: [], order: [], ready: false, loading: false, dragId: "" };
+  function shareDirty() { return !!(sh && sh.cur && sh.saved && JSON.stringify(SH.clean(sh.cur)) !== JSON.stringify(SH.clean(sh.saved))); }
+  function shareJSON() { return JSON.stringify(SH.clean(sh.cur), null, 2) + "\n"; }
+  function shSyncNetworks() {
+    sh.cur.networks = sh.order.filter(function (id) { return sh.cur._on[id]; });
+  }
+  function shInitOrder(cfg) {
+    var enabled = (cfg.networks || []).slice();
+    var rest = SH.NETWORKS.map(function (n) { return n.id; }).filter(function (id) { return enabled.indexOf(id) < 0; });
+    sh.order = enabled.concat(rest);
+    sh.cur._on = {};
+    enabled.forEach(function (id) { sh.cur._on[id] = true; });
+  }
+  function loadShare() {
+    if (sh.ready) { renderShare(); return; }
+    if (sh.loading) return;
+    sh.loading = true;
+    Promise.all([
+      tree.has("data/share.json") ? readText("data/share.json").then(JSON.parse).catch(function () { return {}; }) : Promise.resolve({}),
+      tree.has("data/blog.json") ? readText("data/blog.json").then(JSON.parse).catch(function () { return { posts: [] }; }) : Promise.resolve({ posts: [] })
+    ]).then(function (r) {
+      sh.saved = SH.clean(r[0]); sh.cur = JSON.parse(JSON.stringify(sh.saved));
+      shInitOrder(sh.cur);
+      sh.posts = (r[1] && r[1].posts) || [];
+      sh.ready = true; renderShare();
+    }).catch(function (e) {
+      $("#sh-msg").className = "ed-msg err";
+      $("#sh-msg").textContent = "Couldn't load the share button settings: " + e.message;
+    }).then(function () { sh.loading = false; });
+  }
+  function renderShare() {
+    if (!sh.cur) return;
+    $("#sh-enabled").checked = sh.cur.enabled !== false;
+    $("#sh-heading").checked = sh.cur.heading !== false;
+    $("#sh-site").value = sh.cur.siteUrl || "";
+    $("#sh-fb").value = sh.cur.fbAppId || "";
+    shSyncFb();
+    var order = sh.order;
+    $("#sh-nets").innerHTML = order.map(function (id, i) {
+      var n = SH.BY_ID[id]; if (!n) return "";
+      var on = !!sh.cur._on[id];
+      var note = n.note ? '<span class="sh-note">' + esc(n.note) + "</span>" : "";
+      return '<li class="sh-net" draggable="true" data-sh-id="' + esc(id) + '">' +
+        '<span class="sh-handle" aria-hidden="true">::</span>' +
+        '<label><input type="checkbox" data-sh-net="' + esc(id) + '"' + (on ? " checked" : "") + "> <span>" + esc(n.label) + note + "</span></label>" +
+        '<span class="sh-move">' +
+          '<button type="button" data-sh-move="-1" aria-label="Move up"' + (i === 0 ? " disabled" : "") + ">▲</button>" +
+          '<button type="button" data-sh-move="1" aria-label="Move down"' + (i === order.length - 1 ? " disabled" : "") + ">▼</button>" +
+        "</span></li>";
+    }).join("");
+    $("#sh-posts").innerHTML = sh.posts.length ? sh.posts.map(function (post) {
+      var key = post.slug || post.id || "";
+      var hide = SH.isDisabledOn(sh.cur, post);
+      var meta = (post.date ? esc(post.date) + " · " : "") + esc(post.slug || post.id || "");
+      return '<li class="sh-post"><label><input type="checkbox" data-sh-post="' + esc(key) + '"' + (hide ? " checked" : "") + "> <span>" +
+        esc(post.title || key) + '<span class="sh-meta">' + meta + "</span></span></label></li>";
+    }).join("") : '<li class="ed-tip">No blog posts were found in data/blog.json.</li>';
+    $("#sh-msg").className = "ed-msg";
+    $("#sh-msg").textContent = (sh.cur.enabled === false)
+      ? "Share buttons are off on every post."
+      : sh.cur.networks.length + " network" + (sh.cur.networks.length === 1 ? "" : "s") + " will appear on posts (except any you hide below).";
+  }
+  function shSyncFb() {
+    $("#sh-fb-wrap").hidden = !sh.cur._on.messenger;
+  }
+  function shMove(id, dir) {
+    var i = sh.order.indexOf(id); if (i < 0) return;
+    var j = i + dir; if (j < 0 || j >= sh.order.length) return;
+    sh.order.splice(i, 1); sh.order.splice(j, 0, id);
+    shSyncNetworks(); updateBar(); renderShare();
+  }
+  function shToggleNet(id, on) {
+    sh.cur._on[id] = !!on;
+    shSyncNetworks(); updateBar(); renderShare();
+  }
+  function shTogglePost(key, hide) {
+    var list = (sh.cur.disabledPosts || []).slice();
+    var i = list.indexOf(key);
+    if (hide && i < 0) list.push(key);
+    if (!hide && i >= 0) list.splice(i, 1);
+    sh.cur.disabledPosts = list;
+    updateBar(); renderShare();
+  }
+  $("#sh-enabled").addEventListener("change", function () { sh.cur.enabled = this.checked; updateBar(); renderShare(); });
+  $("#sh-heading").addEventListener("change", function () { sh.cur.heading = this.checked; updateBar(); renderShare(); });
+  $("#sh-site").addEventListener("input", function () { sh.cur.siteUrl = this.value.trim(); updateBar(); });
+  $("#sh-fb").addEventListener("input", function () { sh.cur.fbAppId = this.value.trim(); updateBar(); });
+  $("#sh-nets").addEventListener("change", function (e) {
+    var box = e.target.closest("[data-sh-net]"); if (!box) return;
+    shToggleNet(box.dataset.shNet, box.checked);
+  });
+  $("#sh-nets").addEventListener("click", function (e) {
+    var btn = e.target.closest("[data-sh-move]"); if (!btn || btn.disabled) return;
+    var row = btn.closest("[data-sh-id]"); if (!row) return;
+    shMove(row.dataset.shId, parseInt(btn.dataset.shMove, 10));
+  });
+  $("#sh-posts").addEventListener("change", function (e) {
+    var box = e.target.closest("[data-sh-post]"); if (!box) return;
+    shTogglePost(box.dataset.shPost, box.checked);
+  });
+  $("#sh-nets").addEventListener("dragstart", function (e) {
+    var row = e.target.closest("[data-sh-id]"); if (!row) return;
+    sh.dragId = row.dataset.shId;
+    row.classList.add("is-dragging");
+    e.dataTransfer.effectAllowed = "move";
+    try { e.dataTransfer.setData("text/plain", sh.dragId); } catch (err) {}
+  });
+  $("#sh-nets").addEventListener("dragend", function (e) {
+    var row = e.target.closest("[data-sh-id]"); if (row) row.classList.remove("is-dragging");
+    $$(".sh-net.is-over").forEach(function (el) { el.classList.remove("is-over"); });
+    sh.dragId = "";
+  });
+  $("#sh-nets").addEventListener("dragover", function (e) {
+    var row = e.target.closest("[data-sh-id]"); if (!row || !sh.dragId || row.dataset.shId === sh.dragId) return;
+    e.preventDefault();
+    $$(".sh-net.is-over").forEach(function (el) { if (el !== row) el.classList.remove("is-over"); });
+    row.classList.add("is-over");
+    e.dataTransfer.dropEffect = "move";
+  });
+  $("#sh-nets").addEventListener("drop", function (e) {
+    var row = e.target.closest("[data-sh-id]"); if (!row || !sh.dragId) return;
+    e.preventDefault();
+    var from = sh.order.indexOf(sh.dragId), to = sh.order.indexOf(row.dataset.shId);
+    if (from < 0 || to < 0 || from === to) return;
+    sh.order.splice(from, 1);
+    sh.order.splice(to, 0, sh.dragId);
+    shSyncNetworks(); updateBar(); renderShare();
   });
 
 })();

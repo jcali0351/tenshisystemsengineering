@@ -1,0 +1,110 @@
+/* Share buttons at the end of each blog post (Shareon 2.8.1, plus LINE and Hatena).
+   Loaded only on blog post pages, after vendor/shareon/shareon.min.css. Tenshi Editor › Share buttons. */
+
+.share-block:not(#_):not(#__) {
+  margin: 2.25rem 0 0 !important;
+  padding-top: 1.6rem !important;
+  border-top: 1px solid rgba(61, 66, 73, 0.16) !important;
+}
+
+.share-heading:not(#_):not(#__) {
+  font-family: var(--font, "Lato", "Segoe UI", Helvetica, Arial, sans-serif) !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.4 !important;
+  text-transform: none !important;
+  font-variant-caps: normal !important;
+  text-align: start !important;
+  text-decoration: none !important;
+  text-shadow: none !important;
+  color: var(--ink, #3d4249) !important;
+  -webkit-text-fill-color: var(--ink, #3d4249) !important;
+  margin: 0 0 0.85rem !important;
+}
+
+.shareon:not(#_):not(#__) {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 0 !important;
+}
+
+/* 44px tap targets; beat both Shareon's content-box sizing and .blog-article a color rules. */
+.blog-article .shareon > a:not(#_):not(#__),
+.shareon > a:not(#_):not(#__),
+.shareon > button:not(#_):not(#__) {
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 8px !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  font-size: 0 !important;
+  font-weight: 400 !important;
+  line-height: 0 !important;
+  text-decoration: none !important;
+  vertical-align: middle !important;
+  position: relative !important;
+}
+
+.blog-article .shareon > a:not(#_):not(#__):hover,
+.shareon > a:not(#_):not(#__):hover {
+  opacity: 0.8 !important;
+  color: #fff !important;
+}
+
+.shareon > a:not(#_):not(#__):before,
+.shareon > button:not(#_):not(#__):before {
+  content: "" !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 22px !important;
+  height: 22px !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: 22px 22px !important;
+  display: block !important;
+}
+
+/* LINE (custom): official green and speech-bubble mark. */
+.shareon > .line:not(#_):not(#__) {
+  background-color: #06c755 !important;
+}
+.shareon > .line:not(#_):not(#__):before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fff'%3E%3Cpath d='M12.001 2C6.478 2 2 6.02 2 10.985c0 4.425 3.921 8.132 9.223 8.825.359.077.846.236.97.54.11.273.073.701.036.975l-.155.95c-.046.283-.21 1.11.97.606 1.18-.502 6.36-3.746 8.678-6.41C22.69 14.2 23.5 12.685 23.5 10.985 23.5 6.02 17.523 2 12.001 2z'/%3E%3C/svg%3E") !important;
+}
+
+/* Hatena Bookmark (custom): official blue and B! mark. */
+.shareon > .hatena:not(#_):not(#__) {
+  background-color: #00a4de !important;
+}
+.shareon > .hatena:not(#_):not(#__):before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fff'%3E%3Cpath d='M4.2 3.2h6.1c2.85 0 5.15 1.7 5.15 4.55 0 1.85-1.05 3.2-2.65 3.95 1.9.7 3.15 2.15 3.15 4.3 0 3.05-2.5 5.2-5.7 5.2H4.2V3.2zm3.55 6.55h2.35c1.15 0 1.9-.7 1.9-1.75s-.75-1.7-1.9-1.7H7.75v3.45zm0 7.35h2.7c1.35 0 2.2-.8 2.2-2.05s-.85-2-2.2-2H7.75v4.05zM18.2 14.35A1.85 1.85 0 1 1 18.2 18a1.85 1.85 0 0 1 0-3.65zM17.35 4.1h1.7v8.2h-1.7z'/%3E%3C/svg%3E") !important;
+}
+
+@media (max-width: 480px) {
+  .shareon:not(#_):not(#__) {
+    gap: 10px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shareon > a:not(#_):not(#__) {
+    transition: none !important;
+  }
+}
+
+/* breathing room before "All posts" */
+.share-block:not(#_):not(#__) { margin-bottom: 2rem !important; }

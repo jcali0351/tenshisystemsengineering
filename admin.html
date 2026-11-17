@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex, nofollow">
   <title>Tenshi Editor</title>
   <link rel="icon" href="brand/tenshi-logo.png" type="image/png">
-  <link rel="stylesheet" href="admin/admin.css?v=c0ae765d">
+  <link rel="stylesheet" href="admin/admin.css?v=0196974d">
   <link rel="stylesheet" href="fonts/catalog.css">
 </head>
 <body>
@@ -57,6 +57,7 @@
       <button type="button" role="tab" data-tab="parallax" aria-selected="false">Parallax</button>
       <button type="button" role="tab" data-tab="design" aria-selected="false">Design</button>
       <button type="button" role="tab" data-tab="buttons" aria-selected="false">Buttons</button>
+      <button type="button" role="tab" data-tab="share" aria-selected="false">Share buttons</button>
       <button type="button" role="tab" data-tab="css" aria-selected="false">Custom CSS</button>
       <button type="button" role="tab" data-tab="bots" aria-selected="false">Content bots</button>
     </nav>
@@ -263,6 +264,27 @@
       </div>
     </section>
 
+
+    <!-- Share buttons: end of every blog post (data/share.json, Shareon 2.8.1 plus LINE and Hatena) -->
+    <section class="ed-panel ed-share" data-panel="share" hidden>
+      <div class="sh-wrap">
+        <p class="ed-tip">These buttons appear at the end of every blog post. Turn them off for the whole site, hide them on a single post, or choose and reorder the networks. LINE and Hatena Bookmark are included for Japan (Shareon does not ship them). Changes save with the <b>Save</b> button at the top; the live posts update after the site rebuilds, about a minute later.</p>
+        <label class="ed-check sh-check"><input type="checkbox" id="sh-enabled"> Show share buttons on blog posts</label>
+        <label class="ed-check sh-check"><input type="checkbox" id="sh-heading"> Show the “Share this post” heading</label>
+        <label class="ed-field sh-url"><span>Public site address (used in the share links)</span>
+          <input type="url" id="sh-site" spellcheck="false" placeholder="https://jcali0351.github.io/tenshisystemsengineering"></label>
+        <label class="ed-field sh-url" id="sh-fb-wrap" hidden><span>Facebook App ID (only needed for Messenger)</span>
+          <input type="text" id="sh-fb" spellcheck="false" placeholder="0123456789012345"></label>
+        <h2 class="sl-h">Networks</h2>
+        <p class="ed-tip">Tick a network to show it. Drag a row, or use the arrows, to change the order the icons appear in.</p>
+        <ul class="sh-nets" id="sh-nets"></ul>
+        <h2 class="sl-h">Hide on individual posts</h2>
+        <p class="ed-tip">Tick a post to leave the share buttons off that page only. New posts get the buttons unless you hide them here.</p>
+        <ul class="sh-posts" id="sh-posts"></ul>
+        <p class="ed-msg" id="sh-msg" role="status"></p>
+      </div>
+    </section>
+
     <!-- Custom CSS: your own rules, loaded last on every page (custom.css) -->
     <section class="ed-panel ed-css" data-panel="css" hidden>
       <div class="cc-wrap">
@@ -346,7 +368,8 @@
   <script src="admin/tr.js?v=e4a183e9"></script>
   <script src="admin/slogan-style.js?v=5b8514a0"></script>
   <script src="admin/buttons-style.js?v=c3c0e7a0"></script>
+  <script src="admin/share-networks.js?v=57332b3e"></script>
   <script src="admin/theme.js?v=5adf2a95"></script>
-  <script src="admin/admin.js?v=513293a9"></script>
+  <script src="admin/admin.js?v=83c899bc"></script>
 </body>
 </html>

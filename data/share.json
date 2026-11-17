@@ -1,0 +1,19 @@
+{
+  "enabled": true,
+  "siteUrl": "https://jcali0351.github.io/tenshisystemsengineering",
+  "heading": true,
+  "networks": [
+    "twitter",
+    "facebook",
+    "linkedin",
+    "line",
+    "hatena",
+    "reddit",
+    "telegram",
+    "whatsapp",
+    "pocket",
+    "copy-url",
+    "web-share"
+  ],
+  "disabledPosts": []
+}
