@@ -42,9 +42,9 @@
         "blend": "screen"
       },
       "glow": {
-        "on": false,
-        "color": "#c8102e",
-        "opacity": 0.35,
+        "on": true,
+        "color": "#636363",
+        "opacity": 0.75,
         "size": 14,
         "speed": 4
       },
