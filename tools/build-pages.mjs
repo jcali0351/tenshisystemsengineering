@@ -245,6 +245,7 @@ const pxColor = (c, fallback = "#1a080c") => (/^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i.
 const pxPick = (v, list) => (list.includes(v) ? v : list[0]);
 // Optional effects per band (Tenshi Editor › Parallax › Effects). Missing fields keep the look the bands launched with:
 // letter-by-letter heading and gray-to-color on, rain and fireflies off. app.js runs them; reduced motion shows the finished state.
+const PX_SNOW = { enabled: false, style: "flakes", density: 60, size: 3, sizeVar: 0.6, speed: 1, drift: 0.3, color: "#ffffff", opacity: 0.8 };
 const PX_FX = {
   letters: { enabled: true, style: "rise", stagger: 40, duration: 0.8, delay: 0.1 },
   grayFade: { enabled: true, trigger: "enter", duration: 1.8, delay: 0.25, amount: 1 },
@@ -252,7 +253,11 @@ const PX_FX = {
   // Fireflies: glowing dots that wander and pulse (CSS animations; app.js places them and pauses them off screen).
   // count = how many, size = dot size in px, sizeVar = 0 (all the same) to 1 (very mixed), glow = glow radius in px,
   // speed = drift speed (1 = normal), pulse = seconds per glow cycle, area = "all" or "lower" (lower half of the band).
-  fireflies: { enabled: false, count: 30, color: "#f5e663", size: 4, sizeVar: 0.5, glow: 16, speed: 1, pulse: 2.5, opacity: 0.85, area: "all" }
+  fireflies: { enabled: false, count: 30, color: "#f5e663", size: 4, sizeVar: 0.5, glow: 16, speed: 1, pulse: 2.5, opacity: 0.85, area: "all" },
+  // Snow: flakes drawn on a canvas (app.js), paused off screen, none at all for reduced motion. density = flakes per
+  // 1000 × 500 px of picture, size = flake size in px, sizeVar = 0 (all the same) to 1 (very mixed), speed = fall speed
+  // (1 = normal), drift = sideways wind (-2 left … 2 right), style = "flakes" (soft) or "dots" (crisp).
+  snow: PX_SNOW
 };
 // Overlay: "solid" (overlay colour + overlayOpacity, the original look; also used when overlayMode is missing) or
 // "gradient" (gradient: type linear/radial, angle, from/to colour and opacity, stop = midpoint between them in %).
@@ -264,6 +269,7 @@ const pxRgba = (hex, a) => {
   return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`;
 };
 function pxOverlay(b) {
+  if (b.overlayMode === "none") return { attr: ' data-overlay="none"', vars: "", none: true };
   if (b.overlayMode !== "gradient") return { attr: "", vars: "" };
   const g = { ...PX_GRAD, ...(b.gradient || {}) };
   const from = pxRgba(g.from, pxClamp(g.fromOpacity, 0, 1, 0.75)), to = pxRgba(g.to, pxClamp(g.toOpacity, 0, 1, 0.1));
@@ -278,6 +284,7 @@ function pxEffects(b) {
   const G = { ...PX_FX.grayFade, ...(b.grayFade || {}) };
   const R = { ...PX_FX.rain, ...(b.rain || {}) };
   const F = { ...PX_FX.fireflies, ...(b.fireflies || {}) };
+  const S = { ...PX_SNOW, ...(b.snow || {}) };
   const attrs = [], vars = [];
   if (L.enabled !== false) {
     attrs.push(`data-fx-letters="${pxPick(L.style, ["rise", "fade", "blur", "flip"])}"`);
@@ -301,8 +308,20 @@ function pxEffects(b) {
     vars.push(`--ff-color:${pxColor(F.color, "#f5e663")}`, `--ff-glow:${pxClamp(F.glow, 0, 40, 16)}px`,
       `--ff-pulse:${pxClamp(F.pulse, 0.3, 10, 2.5)}s`, `--ff-op:${pxClamp(F.opacity, 0.05, 1, 0.85)}`);
   }
-  return { attrs: attrs.length ? " " + attrs.join(" ") : "", vars: vars.length ? ";" + vars.join(";") : "", rain, fireflies };
+  const snow = S.enabled === true;
+  if (snow) {
+    attrs.push(`data-fx-snow="${pxPick(S.style, ["flakes", "dots"])}"`, `data-sn-density="${pxClamp(S.density, 1, 300, 60)}"`,
+      `data-sn-size="${pxClamp(S.size, 1, 12, 3)}"`, `data-sn-size-var="${pxClamp(S.sizeVar, 0, 1, 0.6)}"`,
+      `data-sn-speed="${pxClamp(S.speed, 0.1, 4, 1)}"`, `data-sn-drift="${pxClamp(S.drift, -2, 2, 0.3)}"`,
+      `data-sn-color="${pxColor(S.color, "#ffffff")}"`, `data-sn-opacity="${pxClamp(S.opacity, 0.05, 1, 0.8)}"`);
+  }
+  return { attrs: attrs.length ? " " + attrs.join(" ") : "", vars: vars.length ? ";" + vars.join(";") : "", rain, fireflies, snow };
 }
+// The effect layers inside a band, header or panel picture (behind any words), in the order they stack.
+const pxLayers = (fx, pad = "        ") =>
+  (fx.rain ? `${pad}<canvas class="parallax-rain" aria-hidden="true"></canvas>\n` : "") +
+  (fx.snow ? `${pad}<canvas class="parallax-snow" aria-hidden="true"></canvas>\n` : "") +
+  (fx.fireflies ? `${pad}<div class="parallax-fireflies" aria-hidden="true"></div>\n` : "");
 function parallaxSlot(i) {
   const b = (PARALLAX.bands || [])[i];
   if (!b || b.enabled === false) return "";
@@ -332,8 +351,7 @@ function parallaxSlot(i) {
   const title = titleKey ? `        <h2 class="parallax-title" id="${titleId}" data-i18n="${titleKey}" data-still>${tx(titleKey)}</h2>` : "";
   const lead = textKey ? `        <p class="parallax-text" data-i18n="${textKey}">${tx(textKey)}</p>` : "";
   const copy = (title || lead) ? `      <div class="parallax-copy">\n${[title, lead].filter(Boolean).join("\n")}\n      </div>` : "";
-  const rain = (fx.rain ? `        <canvas class="parallax-rain" aria-hidden="true"></canvas>\n` : "") +
-    (fx.fireflies ? `        <div class="parallax-fireflies" aria-hidden="true"></div>\n` : "");
+  const rain = pxLayers(fx);
   return `    <section class="parallax" data-parallax data-speed="${speed}"${ov.attr}${fx.attrs} style="--px-h:${height}vh;--px-overlay:${overlay};--px-op:${op};--px-pos:${pos}${ov.vars}${fx.vars}"${labelled}>
       <div class="parallax-viewport">
         <div class="parallax-layer" aria-hidden="true">
@@ -361,7 +379,8 @@ const PH_BASE = {
   letters: { enabled: true, style: "rise", stagger: 30, duration: 0.8, delay: 0.1 },
   grayFade: { enabled: false, trigger: "enter", duration: 1.8, delay: 0.25, amount: 1 },
   rain: { enabled: false, style: "streaks", density: 14, speed: 1, angle: 10, color: "#d6dde8", opacity: 0.35 },
-  fireflies: { enabled: false, count: 30, color: "#f5e663", size: 4, sizeVar: 0.5, glow: 16, speed: 1, pulse: 2.5, opacity: 0.85, area: "all" }
+  fireflies: { enabled: false, count: 30, color: "#f5e663", size: 4, sizeVar: 0.5, glow: 16, speed: 1, pulse: 2.5, opacity: 0.85, area: "all" },
+  snow: PX_SNOW
 };
 const phIsObj = (v) => v && typeof v === "object" && !Array.isArray(v);
 const phMerge = (a, b) => {
@@ -390,8 +409,7 @@ function heroPx(html, key) {
   const fx = pxEffects(s), ov = pxOverlay(s);
   const speed = pxClamp(s.speed, -1, 1, 0.3), height = pxClamp(s.height, 0, 100, 0);
   const style = `--px-h:${height ? height + "vh" : "auto"};--px-overlay:${pxColor(s.overlay)};--px-op:${pxClamp(s.overlayOpacity, 0, 1, 0.6)};--px-pos:${pxPos(s.position)}${ov.vars}${fx.vars}`;
-  const rain = (fx.rain ? `        <canvas class="parallax-rain" aria-hidden="true"></canvas>\n` : "") +
-    (fx.fireflies ? `        <div class="parallax-fireflies" aria-hidden="true"></div>\n` : "");
+  const rain = pxLayers(fx);
   let done = false;
   let out = html.replace(/<section class="svc-hero([^"]*)">\n(\s*)<div class="svc-hero-inner">/, (m, cls, ind) => {
     done = true;
@@ -410,6 +428,62 @@ ${ind}<div class="svc-hero-inner">`;
   }
   return out;
 }
+/* ---------- Homepage content panel pictures (Tenshi Editor › Parallax › Content panel images): data/parallax.json "panels"
+   The photos of the Design (feature1), Development (feature2) and Optimization (feature3) panels. The rounded frame keeps
+   its size and place; the picture inside it moves gently on scroll (app.js, clamped so no edge ever shows), with the
+   bands' overlay ("none" by default), gray-to-color, rain, fireflies and snow, all clipped inside the frame. "letters"
+   animates the panel's heading (the gray H2) letter by letter. Settings merge field by field over PP_BASE + PP_PANELS;
+   a data file without "panels" gets these defaults. "enabled": false puts back the plain picture. */
+const PP_BASE = {
+  enabled: true, speed: 0.12, overlayMode: "none", overlay: "#12050a", overlayOpacity: 0.35,
+  gradient: { type: "linear", angle: 180, from: "#12050a", fromOpacity: 0, to: "#12050a", toOpacity: 0.55, stop: 50 },
+  letters: { enabled: false, style: "rise", stagger: 40, duration: 0.8, delay: 0.1 },
+  grayFade: { enabled: false, trigger: "enter", duration: 1.8, delay: 0.25, amount: 1 },
+  rain: { enabled: false, style: "streaks", density: 14, speed: 1, angle: 10, color: "#d6dde8", opacity: 0.4 },
+  fireflies: { enabled: false, count: 14, color: "#f5e663", size: 3, sizeVar: 0.5, glow: 12, speed: 0.7, pulse: 2.5, opacity: 0.7, area: "all" },
+  snow: PX_SNOW
+};
+const PP_PANELS = [
+  { key: "feature1", section: "feature", image: "img/photos/kyoto.jpg", position: "68% 70%", altKey: "feat1Alt" },
+  { key: "feature2", section: "feature-2", image: "img/photos/tokyo.jpg", position: "42% 62%", altKey: "feat2Alt" },
+  { key: "feature3", section: "feature-3", image: "img/photos/yokohama.jpg", position: "42% 66%", altKey: "feat3Alt" }
+];
+function ppSettings(n) {
+  const all = phIsObj(PARALLAX.panels) ? PARALLAX.panels : {};
+  const P = PP_PANELS[n];
+  return phMerge(phMerge(PP_BASE, { image: P.image, position: P.position }), all[P.key]);
+}
+// Rewrites panel n's <figure>, its <section> tag (letter settings) and its H2 in index.html; same result on every run.
+function panelPx(html, n) {
+  const P = PP_PANELS[n], s = ppSettings(n), id = P.section;
+  const alt = `alt="${tx(P.altKey)}" data-i18n-attr="alt:${P.altKey}"`;
+  const on = s.enabled !== false && !!pxImage(s.image);
+  const image = pxImage(s.image) || P.image;
+  const L = { ...PP_BASE.letters, ...(s.letters || {}) };
+  const fx = pxEffects({ ...s, letters: { ...L, enabled: false } });
+  const ov = pxOverlay(s);
+  const gray = on && fx.attrs.includes("data-fx-gray");
+  const fig = on
+    ? `<figure class="feature-figure px-panel" data-parallax data-speed="${pxClamp(s.speed, -1, 1, 0.12)}"${ov.attr}${fx.attrs} style="--px-overlay:${pxColor(s.overlay)};--px-op:${pxClamp(s.overlayOpacity, 0, 1, 0.35)};--px-pos:${pxPos(s.position)}${ov.vars}${fx.vars}">
+          <div class="parallax-viewport">
+            <div class="parallax-layer">
+              <img src="${image}" ${alt} width="1920" height="1080" loading="lazy" decoding="async"${gray ? " data-still-color" : ""}>
+            </div>
+${ov.none ? "" : `            <div class="parallax-overlay" aria-hidden="true"></div>\n`}${pxLayers(fx, "            ")}          </div>
+        </figure>`
+    : `<figure class="feature-figure">
+          <img src="${image}" ${alt} width="1920" height="1080" loading="lazy">
+        </figure>`;
+  const re = new RegExp(`(<section class="feature[^"]*" id="${id}")[^>]*>([\\s\\S]*?)<figure class="feature-figure[\\s\\S]*?</figure>`);
+  if (!re.test(html)) throw new Error(`Panel ${id} not found in index.html`);
+  const letters = on && L.enabled === true;
+  const lAttr = letters ? ` data-pxfx data-fx-letters="${pxPick(L.style, ["rise", "fade", "blur", "flip"])}" style="--pxl-step:${pxClamp(L.stagger, 5, 250, 40)}ms;--pxl-dur:${pxClamp(L.duration, 0.1, 4, 0.8)}s;--pxl-delay:${pxClamp(L.delay, 0, 5, 0.1)}s"` : "";
+  html = html.replace(re, (m, open, mid) => `${open} aria-labelledby="${id}-title"${lAttr}>${mid}${fig}`);
+  // The panel heading: app.js runs the letter effect on it; data-still keeps design.js's own heading animation off it.
+  return html.replace(new RegExp(`<h2 id="${id}-title"[^>]*>`), (m) =>
+    m.replace(/ data-px-title| data-still/g, "").replace(/>$/, letters ? " data-px-title data-still>" : ">"));
+}
+
 const writePage = (file, html) => writeFileSync(file, heroPx(html, file.replace(/\.html$/, "")));
 
 index = between(index, "band", sloganBand());
@@ -421,6 +495,7 @@ index = between(index, "widgets", footerWidgets());
 index = between(index, "parallax1", parallaxSlot(0));
 index = between(index, "parallax2", parallaxSlot(1));
 index = between(index, "parallax3", parallaxSlot(2));
+index = [0, 1, 2].reduce(panelPx, index);
 writeFileSync("index.html", index);
 const HEADER = index.match(/  <header class="site-header">[\s\S]*?<\/header>/)[0];
 const FOOTER = index.match(/  <footer class="site-footer">[\s\S]*?<\/footer>/)[0].replace(/\n\s*<p class="photo-credits">[\s\S]*?<\/p>/, "");

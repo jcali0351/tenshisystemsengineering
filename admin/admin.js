@@ -426,13 +426,18 @@
     }).catch(function (e) { m.textContent = e.message; m.className = "ed-msg err"; });
   });
   dlg.addEventListener("close", function () {
-    if (dlg.returnValue !== "ok" || !dlgPrepared) { pxUploadIndex = -1; phUploadKey = null; return; }
+    if (dlg.returnValue !== "ok" || !dlgPrepared) { pxUploadIndex = -1; phUploadKey = null; ppUploadKey = null; return; }
     var old = imgEdits.get(dlgPath); if (old && old.url) URL.revokeObjectURL(old.url);
     imgEdits.set(dlgPath, dlgPrepared);
     if (phUploadKey !== null && px.cur && px.cur.pageHeader) {
       phTarget(phUploadKey).image = dlgPrepared.newPath;
       phUploadKey = null;
       renderPageHeaders();
+    }
+    if (ppUploadKey && px.cur && px.cur.panels && px.cur.panels[ppUploadKey]) {
+      px.cur.panels[ppUploadKey].image = dlgPrepared.newPath;
+      ppUploadKey = null;
+      renderPanels();
     }
     if (pxUploadIndex >= 0 && px.cur && px.cur.bands[pxUploadIndex]) {
       px.cur.bands[pxUploadIndex].image = dlgPrepared.newPath;
@@ -1081,6 +1086,7 @@
   var px = { saved: null, cur: null };
   var pxUploadIndex = -1;
   var phUploadKey = null;   // interior page header being given a new picture: "" = defaults, else a page key
+  var ppUploadKey = null;   // content panel picture being given a new picture: "feature1" … "feature3"
   var PX_DEFAULT = { bands: [
     { id: "px1", enabled: true, image: "img/photos/kobe.jpg", altKey: "px1Alt", titleKey: "px1Title", textKey: "px1Text", speed: 0.35, height: 70, overlayMode: "solid", overlay: "#1a080c", overlayOpacity: 0.45,
       gradient: { type: "linear", angle: 180, from: "#1a080c", fromOpacity: 0.75, to: "#1a080c", toOpacity: 0.1, stop: 50 }, position: "center center",
@@ -1100,12 +1106,14 @@
       fireflies: { enabled: true, count: 28, color: "#f5e663", size: 4, sizeVar: 0.5, glow: 16, speed: 1, pulse: 2.5, opacity: 0.85, area: "all" } }
   ] };
   // Effects a band gets when its saved settings don't mention them (same as tools/build-pages.mjs): heading letters and
-  // gray-to-color on, rain and fireflies off.
+  // gray-to-color on, rain, fireflies and snow off.
+  var PX_SNOW = { enabled: false, style: "flakes", density: 60, size: 3, sizeVar: 0.6, speed: 1, drift: 0.3, color: "#ffffff", opacity: 0.8 };
   var PX_FX = {
     letters: { enabled: true, style: "rise", stagger: 40, duration: 0.8, delay: 0.1 },
     grayFade: { enabled: true, trigger: "enter", duration: 1.8, delay: 0.25, amount: 1 },
     rain: { enabled: false, style: "streaks", density: 18, speed: 1, angle: 10, color: "#d6dde8", opacity: 0.45 },
-    fireflies: { enabled: false, count: 30, color: "#f5e663", size: 4, sizeVar: 0.5, glow: 16, speed: 1, pulse: 2.5, opacity: 0.85, area: "all" }
+    fireflies: { enabled: false, count: 30, color: "#f5e663", size: 4, sizeVar: 0.5, glow: 16, speed: 1, pulse: 2.5, opacity: 0.85, area: "all" },
+    snow: PX_SNOW
   };
   // [group, key, label, min, max, step, unit]
   var PX_FX_RANGES = {
@@ -1113,15 +1121,18 @@
     grayFade: [["amount", "Starting gray amount", 0, 1, 0.05, ""], ["duration", "Fade length", 0.1, 8, 0.1, " s"], ["delay", "Start delay", 0, 5, 0.05, " s"]],
     rain: [["density", "Amount of rain", 1, 60, 1, ""], ["speed", "Speed", 0.2, 3, 0.05, "×"], ["angle", "Angle / wind", -45, 45, 1, "°"], ["opacity", "Opacity", 0.05, 1, 0.05, ""]],
     fireflies: [["count", "How many", 1, 120, 1, ""], ["size", "Dot size", 1, 12, 0.5, " px"], ["sizeVar", "Size variety (0 = all the same)", 0, 1, 0.05, ""],
-      ["glow", "Glow size", 0, 40, 1, " px"], ["speed", "Drift speed", 0.1, 4, 0.05, "×"], ["pulse", "Glow pulse length", 0.3, 10, 0.1, " s"], ["opacity", "Opacity", 0.05, 1, 0.05, ""]]
+      ["glow", "Glow size", 0, 40, 1, " px"], ["speed", "Drift speed", 0.1, 4, 0.05, "×"], ["pulse", "Glow pulse length", 0.3, 10, 0.1, " s"], ["opacity", "Opacity", 0.05, 1, 0.05, ""]],
+    snow: [["density", "Amount of snow", 1, 300, 1, ""], ["size", "Flake size", 1, 12, 0.5, " px"], ["sizeVar", "Size variety (0 = all the same)", 0, 1, 0.05, ""],
+      ["speed", "Fall speed", 0.1, 4, 0.05, "×"], ["drift", "Wind (− left, + right)", -2, 2, 0.05, ""], ["opacity", "Opacity", 0.05, 1, 0.05, ""]]
   };
   var PX_FX_CHOICES = {
     letters: ["style", "Style", [["rise", "Rise and tilt (site default)"], ["fade", "Fade"], ["blur", "Blur in"], ["flip", "Flip up"]]],
     grayFade: ["trigger", "When", [["enter", "Once, when the band comes into view"], ["scroll", "In step with scrolling"]]],
     rain: ["style", "Look", [["streaks", "Rain streaks"], ["glyphs", "Falling characters"]]],
-    fireflies: ["area", "Where", [["all", "The whole band"], ["lower", "Lower half only"]]]
+    fireflies: ["area", "Where", [["all", "The whole band"], ["lower", "Lower half only"]]],
+    snow: ["style", "Look", [["flakes", "Soft flakes"], ["dots", "Crisp dots"]]]
   };
-  var PX_FX_COLORS = { rain: ["Drop colour", "#d6dde8"], fireflies: ["Glow colour", "#f5e663"] };
+  var PX_FX_COLORS = { rain: ["Drop colour", "#d6dde8"], fireflies: ["Glow colour", "#f5e663"], snow: ["Snow colour", "#ffffff"] };
   // Overlay a band gets when its settings don't mention one: the solid colour + opacity it launched with.
   var PX_GRAD = { type: "linear", angle: 180, from: "#1a080c", fromOpacity: 0.75, to: "#1a080c", toOpacity: 0.1, stop: 50 };
   function pxNormalize(b, i) {
@@ -1148,7 +1159,7 @@
     (tree.has("data/parallax.json") ? readText("data/parallax.json").then(JSON.parse) : Promise.resolve(PX_DEFAULT)).catch(function () { return PX_DEFAULT; }).then(function (d) {
       var src = (d && Array.isArray(d.bands) && d.bands.length) ? d.bands : PX_DEFAULT.bands;
       src = src.concat(PX_DEFAULT.bands.slice(src.length));   // a file from before the third band gets its default
-      px.saved = { bands: src.map(pxNormalize), pageHeader: phNormalize(d && d.pageHeader) };
+      px.saved = { bands: src.map(pxNormalize), panels: ppNormalize(d && d.panels), pageHeader: phNormalize(d && d.pageHeader) };
       px.cur = JSON.parse(JSON.stringify(px.saved));
       renderParallax();
     });
@@ -1208,11 +1219,13 @@
           '<label class="ed-field"><span>Picture position</span><select data-px-k="position">' + posOpts + "</select></label>" +
         "</div>" + pxEffectsHTML(b) + "</article>";
     }).join("");
+    renderPanels();
     renderPageHeaders();
     updateBar();
   }
-  function pxOverlayHTML(b) {
-    var g = Object.assign({}, PX_GRAD, b.gradient || {}), grad = b.overlayMode === "gradient";
+  // allowNone: content panel pictures can have no overlay at all (their default)
+  function pxOverlayHTML(b, allowNone) {
+    var g = Object.assign({}, PX_GRAD, b.gradient || {}), grad = b.overlayMode === "gradient", none = allowNone && b.overlayMode === "none";
     var rng = function (k, label, min, max, step, unit) {
       return '<label class="dz-range"><span>' + label + '</span><input type="range" data-px-g="' + k + '" data-unit="' + unit + '" min="' + min + '" max="' + max + '" step="' + step + '" value="' + g[k] + '"><output>' + g[k] + unit + "</output></label>";
     };
@@ -1221,8 +1234,9 @@
     };
     return '<fieldset class="px-fx px-ov"><legend>Overlay</legend>' +
       '<label class="ed-field"><span>Overlay style</span><select data-px-k="overlayMode">' +
-        '<option value="solid"' + (grad ? "" : " selected") + '>Solid colour</option><option value="gradient"' + (grad ? " selected" : "") + ">Gradient</option></select></label>" +
-      '<div class="px-ov-solid"' + (grad ? " hidden" : "") + '>' +
+        (allowNone ? '<option value="none"' + (none ? " selected" : "") + ">None (the plain picture)</option>" : "") +
+        '<option value="solid"' + (grad || none ? "" : " selected") + '>Solid colour</option><option value="gradient"' + (grad ? " selected" : "") + ">Gradient</option></select></label>" +
+      '<div class="px-ov-solid"' + (grad || none ? " hidden" : "") + '>' +
         '<label class="sl-field sl-color"><span>Overlay colour</span><input type="color" data-px-k="overlay" value="' + esc(b.overlay || "#1a080c") + '"><output>' + esc(b.overlay || "#1a080c") + "</output></label>" +
         '<label class="dz-range"><span>Overlay opacity</span><input type="range" data-px-k="overlayOpacity" min="0" max="1" step="0.05" value="' + b.overlayOpacity + '"><output>' + b.overlayOpacity + "</output></label>" +
       "</div>" +
@@ -1245,14 +1259,16 @@
     var a = pxGradRgba(g.from, g.fromOpacity) + " 0%," + g.stop + "%," + pxGradRgba(g.to, g.toOpacity) + " 100%";
     return (g.type === "radial" ? "radial-gradient(ellipse at center," : "linear-gradient(" + g.angle + "deg,") + a + "), #888";
   }
-  var PX_FX_TITLES = { letters: "Heading letter by letter", grayFade: "Photo fades from gray to color", rain: "Rain", fireflies: "Fireflies" };
+  var PX_FX_TITLES = { letters: "Heading letter by letter", grayFade: "Photo fades from gray to color", rain: "Rain", fireflies: "Fireflies", snow: "Snow" };
   var PX_FX_NOTES = {
     letters: "The heading appears one letter at a time as the band scrolls into view. Off: the heading simply shows.",
     grayFade: "The photo starts black and white and turns to full color. Off: the photo is always in color.",
     rain: "Rain falls over the photo, behind the words. It only runs while the band is on screen.",
-    fireflies: "Glowing dots drift slowly over the photo and pulse, behind the words. They pause while the band is off screen."
+    fireflies: "Glowing dots drift slowly over the photo and pulse, behind the words. They pause while the band is off screen.",
+    snow: "Snow falls gently over the photo, behind the words, drifting with the wind setting. It only runs while the band is on screen."
   };
-  function pxFxGroupHTML(g, v) {
+  // title / note: optional wording for other places (the content panel cards)
+  function pxFxGroupHTML(g, v, title, note) {
     v = v || PX_FX[g];
     var ch = PX_FX_CHOICES[g], colr = PX_FX_COLORS[g];
     var opts = ch[2].map(function (o) { return '<option value="' + o[0] + '"' + (v[ch[0]] === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("");
@@ -1262,11 +1278,11 @@
       }).join("") +
       (colr ? '<label class="sl-field sl-color"><span>' + colr[0] + '</span><input type="color" data-px-fx="' + g + '.color" value="' + esc(v.color || colr[1]) + '"><output>' + esc(v.color || colr[1]) + "</output></label>" : "");
     return '<div class="px-fx-group" data-px-fx-group="' + g + '"' + (v.enabled ? "" : " data-off") + ">" +
-      '<label class="ed-check"><input type="checkbox" data-px-fx="' + g + '.enabled"' + (v.enabled ? " checked" : "") + "> <b>" + PX_FX_TITLES[g] + "</b></label>" +
-      '<p class="px-fx-note">' + PX_FX_NOTES[g] + "</p>" +
+      '<label class="ed-check"><input type="checkbox" data-px-fx="' + g + '.enabled"' + (v.enabled ? " checked" : "") + "> <b>" + (title || PX_FX_TITLES[g]) + "</b></label>" +
+      '<p class="px-fx-note">' + (note || PX_FX_NOTES[g]) + "</p>" +
       '<div class="px-fx-body">' + body + "</div></div>";
   }
-  var PX_RM_NOTE = '<p class="px-fx-note">Visitors who ask their device for reduced motion see the finished state: plain heading, full color, no rain or fireflies.</p>';
+  var PX_RM_NOTE = '<p class="px-fx-note">Visitors who ask their device for reduced motion see the finished state: plain heading, full color, no rain, fireflies or snow.</p>';
   function pxEffectsHTML(b) {
     return '<fieldset class="px-fx"><legend>Effects</legend>' + Object.keys(PX_FX).map(function (g) { return pxFxGroupHTML(g, b[g]); }).join("") + PX_RM_NOTE + "</fieldset>";
   }
@@ -1347,7 +1363,8 @@
     letters: { enabled: true, style: "rise", stagger: 30, duration: 0.8, delay: 0.1 },
     grayFade: { enabled: false, trigger: "enter", duration: 1.8, delay: 0.25, amount: 1 },
     rain: { enabled: false, style: "streaks", density: 14, speed: 1, angle: 10, color: "#d6dde8", opacity: 0.35 },
-    fireflies: { enabled: false, count: 30, color: "#f5e663", size: 4, sizeVar: 0.5, glow: 16, speed: 1, pulse: 2.5, opacity: 0.85, area: "all" }
+    fireflies: { enabled: false, count: 30, color: "#f5e663", size: 4, sizeVar: 0.5, glow: 16, speed: 1, pulse: 2.5, opacity: 0.85, area: "all" },
+    snow: PX_SNOW
   };
   // Which fields each "Customise" group covers
   var PH_GROUPS = [
@@ -1357,7 +1374,8 @@
     ["letters", "Heading letter by letter", ["letters"]],
     ["grayFade", "Photo fades from gray to color", ["grayFade"]],
     ["rain", "Rain", ["rain"]],
-    ["fireflies", "Fireflies", ["fireflies"]]
+    ["fireflies", "Fireflies", ["fireflies"]],
+    ["snow", "Snow", ["snow"]]
   ];
   var PH_NAMED = [
     ["about", "About"], ["team", "Team"], ["services", "Services (overview)"], ["services/*", "Every service page"],
@@ -1449,7 +1467,7 @@
         '<label class="ed-check"><input type="checkbox" data-ph-custom="' + g + '"' + (custom ? " checked" : "") + "> Customise: <b>" + gr[1] + "</b></label>" +
         (custom ? '<div class="ph-group-body">' + phGroupHTML(g, v) + "</div>" : "") + "</div>";
     }).join("");
-    var fx = isDef ? '<fieldset class="px-fx"><legend>Effects</legend>' + ["letters", "grayFade", "rain", "fireflies"].map(function (g) { return pxFxGroupHTML(g, v[g]); }).join("") + PX_RM_NOTE + "</fieldset>" : "";
+    var fx = isDef ? '<fieldset class="px-fx"><legend>Effects</legend>' + ["letters", "grayFade", "rain", "fireflies", "snow"].map(function (g) { return pxFxGroupHTML(g, v[g]); }).join("") + PX_RM_NOTE + "</fieldset>" : "";
     var tag = isDef ? "article" : "details";
     return "<" + tag + ' class="px-card ph-card" data-ph="' + esc(key) + '"' + (!isDef && phOpen[key] ? " open" : "") + ">" +
       (isDef ? "" : "<summary>" + esc(phLabel(key)) + "</summary>") + head + groups + fx + "</" + tag + ">";
@@ -1550,6 +1568,131 @@
       phUploadKey = key;
       openImage(dest);
       $("#ed-imgdlg-old").src = pxImgSrc(cur0);
+      $("#ed-imgdlg-path").textContent = dest;
+    }
+  });
+
+  /* ================================================================== PARALLAX › CONTENT PANEL IMAGES
+     The pictures of the Design, Development and Optimization panels (data/parallax.json "panels"; tools/build-pages.mjs
+     panelPx). The rounded frame keeps its size; the picture moves gently inside it and can get an overlay, gray-to-color,
+     rain, fireflies and snow, all inside the frame. "letters" animates the panel's heading. Saved with the main Save button. */
+  var PP_BASE = {
+    enabled: true, image: "", speed: 0.12, position: "center center", overlayMode: "none", overlay: "#12050a", overlayOpacity: 0.35,
+    gradient: { type: "linear", angle: 180, from: "#12050a", fromOpacity: 0, to: "#12050a", toOpacity: 0.55, stop: 50 },
+    letters: { enabled: false, style: "rise", stagger: 40, duration: 0.8, delay: 0.1 },
+    grayFade: { enabled: false, trigger: "enter", duration: 1.8, delay: 0.25, amount: 1 },
+    rain: { enabled: false, style: "streaks", density: 14, speed: 1, angle: 10, color: "#d6dde8", opacity: 0.4 },
+    fireflies: { enabled: false, count: 14, color: "#f5e663", size: 3, sizeVar: 0.5, glow: 12, speed: 0.7, pulse: 2.5, opacity: 0.7, area: "all" },
+    snow: PX_SNOW
+  };
+  // key, card name, picture and framing it launched with (same as tools/build-pages.mjs PP_PANELS)
+  var PP_PANELS = [
+    ["feature1", "Design", "img/photos/kyoto.jpg", "68% 70%"],
+    ["feature2", "Development", "img/photos/tokyo.jpg", "42% 62%"],
+    ["feature3", "Optimization", "img/photos/yokohama.jpg", "42% 66%"]
+  ];
+  var PP_FX_TITLES = { letters: "Heading character animation" };
+  var PP_FX_NOTES = {
+    letters: "The panel's gray heading appears one letter at a time as the panel scrolls into view. Its size and spacing stay exactly the same. Off: the site's normal heading animation.",
+    grayFade: "The picture starts black and white and turns to full color. Off: the site's normal picture fade-in.",
+    rain: "Rain falls over the picture, inside its rounded frame. It only runs while the panel is on screen.",
+    fireflies: "Glowing dots drift slowly over the picture and pulse, inside its rounded frame. They pause while the panel is off screen.",
+    snow: "Snow falls gently over the picture, inside its rounded frame. It only runs while the panel is on screen."
+  };
+  function ppNormalize(src) {
+    var all = phIsObj(src) ? src : {}, out = {};
+    PP_PANELS.forEach(function (p) {
+      var base = Object.assign({}, PP_BASE, { image: p[2], position: p[3] });
+      out[p[0]] = phMerge(base, all[p[0]]);
+      out[p[0]].overlayMode = ["none", "solid", "gradient"].indexOf(out[p[0]].overlayMode) >= 0 ? out[p[0]].overlayMode : "none";
+    });
+    Object.keys(all).forEach(function (k) { if (!out[k]) out[k] = all[k]; });   // keep anything this editor doesn't know
+    return out;
+  }
+  function ppCardHTML(p, n) {
+    var v = px.cur.panels[p[0]];
+    var posOpts = phPosOpts(v.position).replace('value="' + p[3] + '" selected>' + p[3], 'value="' + p[3] + '" selected>Original framing (' + p[3] + ")");
+    if (v.position !== p[3]) posOpts += '<option value="' + p[3] + '">Original framing (' + p[3] + ")</option>";
+    return '<article class="px-card pp-card" data-pp="' + p[0] + '">' +
+      "<h2>" + p[1] + " panel picture</h2>" +
+      '<label class="ed-check"><input type="checkbox" data-px-k="enabled"' + (v.enabled !== false ? " checked" : "") + "> Move the picture and use the effects below (off: the plain picture)</label>" +
+      '<div class="px-preview">' +
+        '<img class="px-thumb" alt="" src="' + esc(pxImgSrc(v.image)) + '">' +
+        '<div class="px-actions">' +
+          '<label class="ed-inline ed-grow"><span>Picture</span> <select data-px-k="image">' + pxPathOptions(v.image) + "</select></label>" +
+          '<button type="button" class="ed-btn" data-pp-act="upload">Upload a new picture</button>' +
+        "</div>" +
+      "</div>" +
+      '<div class="px-fields">' +
+        '<label class="dz-range"><span>Parallax speed (0 = still)</span><input type="range" data-px-k="speed" min="-0.5" max="0.5" step="0.01" value="' + v.speed + '"><output>' + v.speed + "</output></label>" +
+        '<label class="ed-field"><span>Picture position</span><select data-px-k="position">' + posOpts + "</select></label>" +
+      "</div>" +
+      pxOverlayHTML(v, true) +
+      '<fieldset class="px-fx"><legend>Effects</legend>' +
+        ["letters", "grayFade", "rain", "fireflies", "snow"].map(function (g) { return pxFxGroupHTML(g, v[g], PP_FX_TITLES[g], PP_FX_NOTES[g]); }).join("") +
+        PX_RM_NOTE + "</fieldset></article>";
+  }
+  function renderPanels() {
+    var wrap = $("#pp-wrap"); if (!wrap || !px.cur) return;
+    if (!px.cur.panels) px.cur.panels = ppNormalize(null);
+    wrap.innerHTML = '<h2 class="ph-title">Content panel images</h2>' +
+      '<p class="ed-tip">The pictures beside the Design, Development and Optimization text on the homepage. Each keeps its rounded frame and size; ' +
+      "the picture moves gently inside the frame as visitors scroll, and the overlay and effects stay inside the frame. " +
+      "<b>Heading character animation</b> animates the panel's gray heading. Uploads are stored as <code>img/parallax/panel-1.jpg</code> … <code>panel-3.jpg</code>.</p>" +
+      PP_PANELS.map(ppCardHTML).join("");
+  }
+  function ppInput(e) {
+    var card = e.target.closest(".pp-card"); if (!card || !px.cur) return;
+    var b = px.cur.panels[card.dataset.pp], el = e.target; if (!b) return;
+    if (el.dataset.pxG) {
+      var gkey = el.dataset.pxG;
+      b.gradient = Object.assign({}, PP_BASE.gradient, b.gradient || {});
+      b.gradient[gkey] = el.type === "range" ? parseFloat(el.value) : el.value;
+      var go = el.parentNode.querySelector("output"); if (go) go.textContent = b.gradient[gkey] + (el.dataset.unit || "");
+      var sw = card.querySelector(".px-ov-swatch"); if (sw) sw.style.background = pxGradCss(b.gradient);
+    } else if (el.dataset.pxFx) {
+      var gk = el.dataset.pxFx.split("."), g = gk[0], k2 = gk[1];
+      b[g] = Object.assign({}, PP_BASE[g], b[g] || {});
+      if (k2 === "enabled") {
+        b[g].enabled = el.checked;
+        var grp = el.closest(".px-fx-group"); if (grp) grp.toggleAttribute("data-off", !el.checked);
+      } else if (el.type === "range") {
+        b[g][k2] = parseFloat(el.value);
+        el.parentNode.querySelector("output").textContent = b[g][k2] + (el.dataset.unit || "");
+      } else {
+        b[g][k2] = el.value;
+        var o = el.parentNode.querySelector("output"); if (o) o.textContent = el.value;
+      }
+    } else {
+      var k = el.dataset.pxK; if (!k) return;
+      if (k === "enabled") b.enabled = el.checked;
+      else if (k === "speed" || k === "overlayOpacity") {
+        b[k] = parseFloat(el.value);
+        el.parentNode.querySelector("output").textContent = String(b[k]);
+      } else if (k === "overlay") {
+        b.overlay = el.value;
+        el.parentNode.querySelector("output").textContent = el.value;
+      } else if (k === "overlayMode") {
+        b.overlayMode = ["none", "solid", "gradient"].indexOf(el.value) >= 0 ? el.value : "none";
+        card.querySelector(".px-ov-solid").hidden = b.overlayMode !== "solid";
+        card.querySelector(".px-ov-grad").hidden = b.overlayMode !== "gradient";
+      } else if (k === "image" || k === "position") {
+        b[k] = el.value;
+        if (k === "image") { var th = card.querySelector(".px-thumb"); if (th) th.src = pxImgSrc(el.value); }
+      }
+    }
+    updateBar();
+  }
+  $("#pp-wrap").addEventListener("input", ppInput);
+  $("#pp-wrap").addEventListener("click", function (e) {
+    var act = e.target.closest("[data-pp-act]"); if (!act || !px.cur) return;
+    var card = act.closest(".pp-card"); if (!card) return;
+    var key = card.dataset.pp, b = px.cur.panels[key], n = key.replace(/\D/g, "");
+    if (act.dataset.ppAct === "upload") {
+      var dest = /^img\/parallax\/panel-/.test(b.image) ? b.image : "img/parallax/panel-" + n + ".jpg";
+      ppUploadKey = key;
+      openImage(dest);
+      $("#ed-imgdlg-old").src = pxImgSrc(b.image);
       $("#ed-imgdlg-path").textContent = dest;
     }
   });

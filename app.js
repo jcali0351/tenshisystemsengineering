@@ -568,10 +568,13 @@ const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
     const bands = $$("[data-parallax]");
     if (!bands.length) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+    // Content panel pictures (.px-panel) move inside their rounded frame: the shift is clamped to the picture's spare
+    // height so an edge never shows.
     const layers = bands.map((band) => ({
       band,
       layer: $(".parallax-layer", band),
-      speed: Number(band.dataset.speed)
+      speed: Number(band.dataset.speed),
+      clamp: band.classList.contains("px-panel")
     })).filter((x) => x.layer && Number.isFinite(x.speed));
     if (!layers.length) return;
 
@@ -583,10 +586,11 @@ const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
         return;
       }
       const vh = window.innerHeight || document.documentElement.clientHeight;
-      layers.forEach(({ band, layer, speed }) => {
+      layers.forEach(({ band, layer, speed, clamp }) => {
         const rect = band.getBoundingClientRect();
         if (rect.bottom < -80 || rect.top > vh + 80) return;
-        const y = -((rect.top + rect.height / 2) - vh / 2) * speed;
+        let y = -((rect.top + rect.height / 2) - vh / 2) * speed;
+        if (clamp) { const room = Math.max(0, (layer.offsetHeight - band.clientHeight) / 2); y = Math.max(-room, Math.min(room, y)); }
         layer.style.transform = "translate3d(0," + y.toFixed(1) + "px,0)";
       });
     };
@@ -607,9 +611,11 @@ const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
      letters  - the band heading arrives letter by letter (word by word in Arabic and Farsi, whose letters join)
      gray     - the photo starts black and white and turns to color on entering view, or in step with scrolling
      rain     - rain drawn on a canvas inside the band, behind the words; it only runs while the band is on screen
-     Visitors who prefer reduced motion get the finished state: plain heading, full color, no rain. ---------- */
+     fireflies / snow - glowing dots / falling snow inside the band (or a content panel's picture), paused off screen
+     A content panel's heading effect sits on its <section data-pxfx>, the picture's effects on its <figure data-parallax>.
+     Visitors who prefer reduced motion get the finished state: plain heading, full color, no rain, fireflies or snow. ---------- */
   function setupParallaxFx() {
-    const bands = $$("[data-parallax]").filter((b) => b.dataset.fxLetters || b.dataset.fxGray || b.dataset.fxRain || b.dataset.fxFireflies);
+    const bands = $$("[data-parallax], [data-pxfx]").filter((b) => b.dataset.fxLetters || b.dataset.fxGray || b.dataset.fxRain || b.dataset.fxFireflies || b.dataset.fxSnow);
     if (!bands.length) return;
     const still = () => reduceMotion.matches;
     const CJK = /[\u3000-\u9fff\uac00-\ud7af\uff00-\uffef]/;
@@ -660,6 +666,7 @@ const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
       if (band.dataset.fxGray === "scroll") scrollGray.push(band);
       if (band.dataset.fxRain) startBandRain(band);
       if (band.dataset.fxFireflies) startFireflies(band);
+      if (band.dataset.fxSnow) startSnow(band);
       if (enterIO && !still()) enterIO.observe(band); else band.classList.add("pxfx-in");
     });
 
@@ -715,6 +722,77 @@ const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
     box.classList.add("is-paused");
     if ("IntersectionObserver" in window) new IntersectionObserver((e) => { box.classList.toggle("is-paused", !e[0].isIntersecting); }, { rootMargin: "80px" }).observe(band);
     else box.classList.remove("is-paused");
+  }
+
+  // Snow inside one band, header or panel picture, on a see-through canvas. "flakes" are soft round flakes (a blurred
+  // sprite), "dots" crisp ones. Settings: data-sn-density (flakes per 1000 × 500 px), -size, -size-var, -speed,
+  // -drift (sideways wind), -color, -opacity. Runs only while on screen; reduced motion draws no flakes at all.
+  function startSnow(band) {
+    const canvas = $(".parallax-snow", band);
+    if (!canvas || !canvas.getContext) return;
+    const ctx = canvas.getContext("2d");
+    const ds = band.dataset;
+    const num = (v, d) => (Number.isFinite(Number(v)) ? Number(v) : d);
+    const soft = ds.fxSnow !== "dots";
+    const density = Math.max(1, Math.min(300, num(ds.snDensity, 60))), size = Math.max(1, num(ds.snSize, 3));
+    const sizeVar = Math.max(0, Math.min(1, num(ds.snSizeVar, 0.6))), speed = Math.max(0.1, num(ds.snSpeed, 1)), drift = num(ds.snDrift, 0.3);
+    const color = /^#[0-9a-f]{3,6}$/i.test(ds.snColor || "") ? ds.snColor : "#ffffff";
+    canvas.style.opacity = String(num(ds.snOpacity, 0.8));
+    // One soft flake, drawn once and stamped at every size.
+    const sprite = document.createElement("canvas");
+    sprite.width = sprite.height = 64;
+    const sc = sprite.getContext("2d"), grad = sc.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grad.addColorStop(0, color); grad.addColorStop(0.45, color); grad.addColorStop(1, "transparent");
+    sc.fillStyle = grad; sc.beginPath(); sc.arc(32, 32, 32, 0, Math.PI * 2); sc.fill();
+    let w = 0, h = 0, dpr = 1, flakes = [], running = false, visible = false, raf = 0, last = 0;
+    const newFlake = (top) => {
+      const r = size * (1 - sizeVar * Math.random()) / 2 + 0.4;   // nearer (bigger) flakes fall faster
+      const z = r / (size / 2 + 0.4);
+      return { x: Math.random() * w, y: top ? Math.random() * h : -r * 2 - Math.random() * 30, r,
+        v: (22 + Math.random() * 26) * (0.55 + z * 0.6) * speed, ph: Math.random() * Math.PI * 2, sw: 0.6 + Math.random() * 1.2, a: 0.55 + z * 0.45 };
+    };
+    const resize = () => {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = band.clientWidth; h = band.clientHeight;
+      canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const n = reduceMotion.matches ? 0 : Math.min(900, Math.round(density * (w * h) / 500000));
+      flakes = Array.from({ length: n }, (_, i) => flakes[i] || newFlake(true));
+    };
+    const frame = (dt) => {
+      ctx.clearRect(0, 0, w, h);
+      if (!soft) ctx.fillStyle = color;
+      flakes.forEach((f, i) => {
+        f.ph += dt * f.sw;
+        f.y += f.v * dt;
+        f.x += (drift * 28 + Math.sin(f.ph) * 9) * dt;
+        if (f.y - f.r > h) { flakes[i] = newFlake(false); return; }
+        if (f.x > w + f.r * 2) f.x -= w + f.r * 4; else if (f.x < -f.r * 2) f.x += w + f.r * 4;
+        ctx.globalAlpha = f.a;
+        if (soft) { const d = f.r * 4; ctx.drawImage(sprite, f.x - d / 2, f.y - d / 2, d, d); }
+        else { ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2); ctx.fill(); }
+      });
+      ctx.globalAlpha = 1;
+    };
+    const loop = (t) => {
+      if (!running) return;
+      raf = requestAnimationFrame(loop);
+      const dt = last ? Math.min(0.05, (t - last) / 1000) : 0.016;
+      last = t;
+      frame(dt);
+    };
+    const update = () => {
+      const should = visible && !document.hidden && !reduceMotion.matches;
+      if (should && !running) { if (!flakes.length) resize(); running = true; last = 0; raf = requestAnimationFrame(loop); }
+      if (!should && running) { running = false; cancelAnimationFrame(raf); }
+      if (reduceMotion.matches) { flakes = []; ctx.clearRect(0, 0, w, h); }
+    };
+    resize();
+    if ("ResizeObserver" in window) new ResizeObserver(resize).observe(band); else window.addEventListener("resize", resize);
+    if ("IntersectionObserver" in window) new IntersectionObserver((e) => { visible = e[0].isIntersecting; update(); }, { rootMargin: "100px" }).observe(band);
+    else { visible = true; update(); }
+    document.addEventListener("visibilitychange", update);
+    if (reduceMotion.addEventListener) reduceMotion.addEventListener("change", update);
   }
 
   function startBandRain(band) {

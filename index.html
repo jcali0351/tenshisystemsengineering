@@ -13,8 +13,8 @@
   <link rel="alternate icon" href="brand/tenshi-apple-touch-icon.png" type="image/png">
   <link rel="apple-touch-icon" href="brand/tenshi-apple-touch-icon.png">
   <link rel="preload" href="img/photos/osaka.jpg" as="image" type="image/jpeg">
-  <link rel="stylesheet" href="tailwind.css?v=d4ae14d9">
-  <link rel="stylesheet" href="styles.css?v=bffcda72">
+  <link rel="stylesheet" href="tailwind.css?v=093e6a7b">
+  <link rel="stylesheet" href="styles.css?v=d2e75253">
   <link rel="stylesheet" href="design.css?v=ea6e1648">
   <link rel="stylesheet" href="chat.css?v=8097383f">
   <link rel="stylesheet" href="site-theme.css?v=e9955052">
@@ -211,8 +211,12 @@
     <!-- Feature content area 1: photo right, white. Text is in translations.js (feat1...) -->
     <section class="feature feature--light" id="feature" aria-labelledby="feature-title">
       <div class="feature-inner">
-        <figure class="feature-figure">
-          <img src="img/photos/kyoto.jpg" alt="Kyoto Tower above the city of Kyoto" data-i18n-attr="alt:feat1Alt" width="1920" height="1080" loading="lazy">
+        <figure class="feature-figure px-panel" data-parallax data-speed="0.12" data-overlay="none" style="--px-overlay:#12050a;--px-op:0.35;--px-pos:68% 70%">
+          <div class="parallax-viewport">
+            <div class="parallax-layer">
+              <img src="img/photos/kyoto.jpg" alt="Kyoto Tower above the city of Kyoto" data-i18n-attr="alt:feat1Alt" width="1920" height="1080" loading="lazy" decoding="async">
+            </div>
+          </div>
         </figure>
         <div class="feature-body">
           <p class="eyebrow" data-i18n="feat1Eyebrow">Brand, web and media</p>
@@ -248,8 +252,13 @@
     <!-- Feature content area 2: photo left, light gray. Text is in translations.js -->
     <section class="feature feature--left feature--light feature--gray" id="feature-2" aria-labelledby="feature-2-title">
       <div class="feature-inner">
-        <figure class="feature-figure">
-          <img src="img/photos/tokyo.jpg" alt="Tokyo skyline with Tokyo Tower at sunset" data-i18n-attr="alt:feat2Alt" width="1920" height="1080" loading="lazy">
+        <figure class="feature-figure px-panel" data-parallax data-speed="0.12" data-overlay="none" data-fx-snow="flakes" data-sn-density="110" data-sn-size="5" data-sn-size-var="0.6" data-sn-speed="0.6" data-sn-drift="0.25" data-sn-color="#ffffff" data-sn-opacity="0.85" style="--px-overlay:#12050a;--px-op:0.35;--px-pos:42% 62%">
+          <div class="parallax-viewport">
+            <div class="parallax-layer">
+              <img src="img/photos/tokyo.jpg" alt="Tokyo skyline with Tokyo Tower at sunset" data-i18n-attr="alt:feat2Alt" width="1920" height="1080" loading="lazy" decoding="async">
+            </div>
+            <canvas class="parallax-snow" aria-hidden="true"></canvas>
+          </div>
         </figure>
         <div class="feature-body">
           <p class="eyebrow" data-i18n="feat2Eyebrow">Software and web</p>
@@ -286,8 +295,13 @@
     <!-- Feature content area 3: photo right, white and light gray. Text is in translations.js -->
     <section class="feature feature--light" id="feature-3" aria-labelledby="feature-3-title">
       <div class="feature-inner">
-        <figure class="feature-figure">
-          <img src="img/photos/yokohama.jpg" alt="Yokohama waterfront and skyline under a clear blue sky" data-i18n-attr="alt:feat3Alt" width="1920" height="1080" loading="lazy">
+        <figure class="feature-figure px-panel" data-parallax data-speed="0.12" data-overlay="none" data-fx-fireflies="all" data-ff-count="18" data-ff-size="3.5" data-ff-size-var="0.5" data-ff-speed="0.7" style="--px-overlay:#12050a;--px-op:0.35;--px-pos:42% 66%;--ff-color:#f5e663;--ff-glow:14px;--ff-pulse:2.5s;--ff-op:0.85">
+          <div class="parallax-viewport">
+            <div class="parallax-layer">
+              <img src="img/photos/yokohama.jpg" alt="Yokohama waterfront and skyline under a clear blue sky" data-i18n-attr="alt:feat3Alt" width="1920" height="1080" loading="lazy" decoding="async">
+            </div>
+            <div class="parallax-fireflies" aria-hidden="true"></div>
+          </div>
         </figure>
         <div class="feature-body">
           <p class="eyebrow" data-i18n="feat3Eyebrow">Performance and growth</p>
@@ -514,7 +528,7 @@
   </footer>
 
   <script src="translations.js?v=1ef7cd16"></script>
-  <script src="app.js?v=ea8ef1b2"></script>
+  <script src="app.js?v=436bd629"></script>
   <script src="design.js?v=e4ade4cb"></script>
   <script src="rain.js?v=1d215429"></script>
   <script src="chat.js?v=e6aee4be"></script>
