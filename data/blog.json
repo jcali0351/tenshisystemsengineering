@@ -2,6 +2,103 @@
   "generatedAt": "2026-11-17T05:02:08.000Z",
   "posts": [
     {
+      "id": "20261117-domain-names-business-email",
+      "date": "2026-11-17",
+      "cat": "Technology",
+      "slug": "domain-names-and-business-email-getting-your-online-foundations-right",
+      "title": "Domain Names and Business Email: Getting Your Online Foundations Right",
+      "intro": "Your domain name and business email are some of the smallest line items in your budget, yet almost everything else online depends on them. Here is how to choose them well, keep them in your hands, and set them up so your messages arrive.",
+      "body": [
+        "Before a customer sees your website, reads your email, or clicks a link you shared, a quiet system has already done its work. Your domain name, such as yourcompany.com, points people to the right place. Your email settings tell other mail systems that a message really came from you. When these foundations are set up carefully, nobody notices them. When they are not, you may face a website that suddenly disappears, invoices that land in spam, or a former contractor who still controls your company's name online.",
+        "This guide explains the essentials in plain English, so you can make good decisions or ask the right questions of whoever manages them for you.",
+        {
+          "h2": "Choosing a Domain Name People Can Remember and Type"
+        },
+        "A good domain name is short, easy to say out loud, and easy to spell after hearing it once. Imagine telling it to someone over the phone. If you need to explain hyphens, unusual spellings, or numbers written as words, it will cost you visits and emails that never arrive.",
+        "A few practical guidelines:",
+        {
+          "ul": [
+            "**Match your business name where you can.** If the exact name is taken, a short, natural addition, such as your city or your main service, usually works better than an awkward abbreviation.",
+            "**Choose the ending with your customers in mind.** A .com is widely recognized around the world. For a business serving customers in Japan, a .jp or .co.jp address signals a local presence. Note that .jp requires a local presence in Japan, and .co.jp is limited to companies registered in Japan, with one per organization.",
+            "**Consider registering close variations.** Common misspellings, or both .com and .jp, can be redirected to your main site so visitors still find you and others cannot use them to imitate you.",
+            "**Check before you commit.** Search the name online and in trademark records to make sure you are not stepping on another company's brand, and check whether matching social media handles are available."
+          ]
+        },
+        {
+          "h2": "Make Sure the Domain Is Registered to You"
+        },
+        "This is the single most important point in this article. A domain is registered to a named owner, called the registrant. Whoever is listed there, and whoever holds the login to the registrar account, effectively controls the address.",
+        "It is common for a web designer, an IT contractor, or a well-meaning employee to register a domain in their own name or on their own account, just to get things moving. Years later, when that relationship ends, the business can find it cannot change its website or email without that person's cooperation. Sorting this out can take time and stress at exactly the wrong moment.",
+        "To avoid this:",
+        {
+          "ul": [
+            "**List your company as the registrant** and use a company email address you control as the contact, not a personal address.",
+            "**Keep the registrar login in a company-owned account**, ideally stored in a password manager, with more than one trusted person able to reach it.",
+            "**Give partners their own access** where the registrar allows it, rather than sharing your main password. Then you can remove their access when a project ends.",
+            "**Keep a simple record** of where the domain is registered, when it renews, and who has access."
+          ]
+        },
+        {
+          "h2": "Protect It from Expiring or Being Taken"
+        },
+        "Domains are rented, not bought outright. They are registered for a period, often one year at a time, and must be renewed. If a renewal fails because a card expired or reminder emails went to an old address, your website and email can stop working. If the domain is not recovered in time, someone else may register it.",
+        "A few settings reduce that risk considerably:",
+        {
+          "ul": [
+            "**Turn on auto-renew** and keep the payment card up to date. Many registrars also let you renew for several years at once.",
+            "**Turn on two-factor authentication** for the registrar account. Anyone who gets into that account can redirect your website and email.",
+            "**Enable the registrar lock**, often called transfer lock, so the domain cannot be moved to another registrar without your deliberate action.",
+            "**Use privacy protection where available** so your personal details are not published in public domain records. Availability depends on the domain ending and the registrar."
+          ]
+        },
+        {
+          "h2": "Why Business Email Should Use Your Own Domain"
+        },
+        "An address like info@yourcompany.com tells customers they are dealing with an established business. A free webmail address can feel less trustworthy, especially when you are sending quotes or invoices. Your own domain also means your email address stays the same if you change providers, and when staff leave, their mailbox belongs to the company, not to them.",
+        "Most small businesses use a hosted email service rather than running their own mail server. The well-known options include business plans from large providers, and many hosting companies bundle email as well. When comparing them, look at storage, security features such as two-factor authentication, how easily you can add and remove staff, shared mailboxes for addresses like sales@ or support@, and the quality of the calendar and mobile apps your team will use every day.",
+        {
+          "h2": "Help Your Email Reach the Inbox: SPF, DKIM and DMARC"
+        },
+        "Email was designed decades ago without strong proof of who sent a message. That is why scammers can send messages that appear to come from your domain. Three settings, added to your domain's DNS records, help receiving mail systems check that a message really came from you:",
+        {
+          "ul": [
+            "**SPF** lists the services that are allowed to send email for your domain, such as your email provider and your newsletter tool.",
+            "**DKIM** adds a digital signature to each message, so the receiving system can confirm it was not altered and was sent by an authorized service.",
+            "**DMARC** tells receiving systems what to do when a message fails those checks, such as deliver it, send it to spam, or reject it, and can send you reports about who is sending mail using your name."
+          ]
+        },
+        "Major mailbox providers increasingly expect these to be in place. Google's published email sender guidelines, for example, ask senders to set up SPF or DKIM, and require SPF, DKIM and DMARC for senders who send large volumes to Gmail addresses. Even if you send only a few messages a day, these settings help protect your reputation and make it harder for others to impersonate you.",
+        "A sensible approach is to start DMARC in a monitoring-only mode, review the reports to confirm that every legitimate service you use, including invoicing, booking and marketing tools, is set up correctly, and then tighten the policy step by step. Tightening too quickly can block your own legitimate messages, so this is worth doing carefully.",
+        {
+          "h2": "Keep Your DNS Records Tidy"
+        },
+        "DNS records are the instructions that connect your domain to your website, your email and other services. Over the years, they tend to collect leftovers from old websites, tools you no longer use, and verification codes nobody remembers adding. Every so often, review them with someone who understands them. Remove what is no longer needed, document what remains, and before moving your website or email to a new provider, plan the change so nothing goes offline in between.",
+        {
+          "h2": "A Short Checklist"
+        },
+        {
+          "ul": [
+            "Is the domain registered in the company's name, on an account the company controls?",
+            "Are auto-renew, two-factor authentication and the registrar lock turned on?",
+            "Do you know when the domain renews and who can access the account?",
+            "Does your team use email addresses on your own domain?",
+            "Are SPF, DKIM and DMARC set up for every service that sends email for you?",
+            "Has anyone reviewed your DNS records in the past year?"
+          ]
+        },
+        "If you answered no or not sure to any of these, it is worth an hour of attention now. These foundations are inexpensive to set up properly and far more costly to repair in a hurry.",
+        "**Not sure who controls your domain, or why your emails land in spam?** Tenshi Systems Engineering helps businesses in Osaka and around the world set up and review domains, business email and hosting, explained in plain language. [Request a consultation](contact.html#contact) and we will help you put your online foundations on solid ground."
+      ],
+      "sources": [
+        {
+          "url": "https://support.google.com/a/answer/81126",
+          "title": "Email sender guidelines",
+          "source": "Google"
+        }
+      ],
+      "min": 6
+    },
+    {
       "id": "20261117-choosing-web-hosting",
       "date": "2026-11-17",
       "cat": "Technology",
