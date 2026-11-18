@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-18T07:18:04.935Z",
+  "updatedAt": "2026-11-18T08:00:02.238Z",
   "delayed": true,
   "quotes": [
     {
@@ -26,10 +26,10 @@
       "name": "USD/JPY",
       "code": null,
       "kind": "fx",
-      "price": 159.2,
-      "change": -0.53,
-      "pct": -0.33,
-      "time": "2026-11-18T07:18:02.000Z",
+      "price": 159.36,
+      "change": -0.38,
+      "pct": -0.24,
+      "time": "2026-11-18T07:59:58.000Z",
       "source": "Yahoo Finance"
     },
     {
