@@ -1,9 +1,14 @@
-/* tse-theme {"headingFont":"oswald","bodyFont":"lato","headingWeight":400,"bodyWeight":400,"rootSize":18.4,"heroSize":92,"pageTitleSize":74,"sectionSize":49,"featureSize":72,"cardSize":27.5,"h1Spacing":-0.005,"h2Spacing":-0.04,"h3Spacing":-0.062,"h4Spacing":-0.062,"headingSpacingUnit":"em","headingLine":1.04,"headingCase":"uppercase","bodySpacing":0,"bodyLine":1.75,"sectionSpace":168,"flowSpace":1.25,"headingSpace":0.7,"cardPad":44,"gridGap":34,"gutter":56,"headingColor":"#3d4249","headingOpacity":38,"textColor":"#6b7280","mutedColor":"#7d838c","accentColor":"#c8102e","motion":true,"motionChars":true,"motionText":true,"motionImages":true,"motionCards":true,"motionColor":true,"colorDuration":1.8,"intro":true,"introHold":3,"introFade":4.2,"introStyle":"bloom","heroEffect":true,"heroStep":130,"heroDuration":4,"motionSpeed":1,"motionDistance":102,"motionDistanceMobile":26,"charDelay":33,"headingStyles":{"h1":{"smallCaps":true,"stroke":0,"strokeColor":"#000000","shadow":"none"},"h2":{"fontStyle":"normal"},"h3":{"font":"oswald","fontStyle":"normal","align":"center","color":"#5e5e5e","decoration":"none"},"h4":{"fontStyle":"normal"}}} */
+/* tse-theme {"headingFont":"roboto","bodyFont":"lato","headingWeight":400,"bodyWeight":400,"rootSize":18.4,"heroSize":92,"pageTitleSize":74,"sectionSize":49,"featureSize":72,"cardSize":27.5,"h1Spacing":-0.005,"h2Spacing":-0.04,"h3Spacing":-0.062,"h4Spacing":-0.062,"headingSpacingUnit":"em","headingLine":1.04,"headingCase":"uppercase","bodySpacing":0,"bodyLine":1.75,"sectionSpace":168,"flowSpace":1.25,"headingSpace":0.7,"cardPad":44,"gridGap":34,"gutter":56,"headingColor":"#3d4249","headingOpacity":38,"textColor":"#6b7280","mutedColor":"#7d838c","accentColor":"#c8102e","motion":true,"motionChars":true,"motionText":true,"motionImages":true,"motionCards":true,"motionColor":true,"colorDuration":1.8,"intro":true,"introHold":3,"introFade":4.2,"introStyle":"bloom","heroEffect":true,"heroStep":130,"heroDuration":4,"motionSpeed":1,"motionDistance":102,"motionDistanceMobile":26,"charDelay":33,"headingStyles":{"h1":{"font":"oswald","smallCaps":true,"color":"#171717","stroke":0,"strokeColor":"#000000","shadow":"none"},"h2":{"fontStyle":"normal"},"h3":{"font":"oswald","fontStyle":"normal","align":"center","color":"#5e5e5e","decoration":"none"},"h4":{"fontStyle":"normal"}}} */
 /* Site theme, set in the Tenshi Editor (admin.html › Design), which rewrites this file. Loaded after every other stylesheet.
    Fonts live in fonts/<name>/ (see fonts/fonts.json); free to use: SIL Open Font License, Apache 2.0 or the Ubuntu Font Licence (each folder has its LICENSE). */
-@font-face{font-family:"Oswald";font-style:normal;font-weight:300;font-display:swap;src:url("fonts/oswald/oswald-300-normal.woff2") format("woff2")}
-@font-face{font-family:"Oswald";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/oswald/oswald-400-normal.woff2") format("woff2")}
-@font-face{font-family:"Oswald";font-style:normal;font-weight:700;font-display:swap;src:url("fonts/oswald/oswald-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Roboto";font-style:italic;font-weight:300;font-display:swap;src:url("fonts/roboto/roboto-300-italic.woff2") format("woff2")}
+@font-face{font-family:"Roboto";font-style:normal;font-weight:300;font-display:swap;src:url("fonts/roboto/roboto-300-normal.woff2") format("woff2")}
+@font-face{font-family:"Roboto";font-style:italic;font-weight:400;font-display:swap;src:url("fonts/roboto/roboto-400-italic.woff2") format("woff2")}
+@font-face{font-family:"Roboto";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/roboto/roboto-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Roboto";font-style:italic;font-weight:700;font-display:swap;src:url("fonts/roboto/roboto-700-italic.woff2") format("woff2")}
+@font-face{font-family:"Roboto";font-style:normal;font-weight:700;font-display:swap;src:url("fonts/roboto/roboto-700-normal.woff2") format("woff2")}
+@font-face{font-family:"Roboto";font-style:italic;font-weight:900;font-display:swap;src:url("fonts/roboto/roboto-900-italic.woff2") format("woff2")}
+@font-face{font-family:"Roboto";font-style:normal;font-weight:900;font-display:swap;src:url("fonts/roboto/roboto-900-normal.woff2") format("woff2")}
 @font-face{font-family:"Lato";font-style:italic;font-weight:300;font-display:swap;src:url("fonts/lato/lato-300-italic.woff2") format("woff2")}
 @font-face{font-family:"Lato";font-style:normal;font-weight:300;font-display:swap;src:url("fonts/lato/lato-300-normal.woff2") format("woff2")}
 @font-face{font-family:"Lato";font-style:italic;font-weight:400;font-display:swap;src:url("fonts/lato/lato-400-italic.woff2") format("woff2")}
@@ -12,7 +17,10 @@
 @font-face{font-family:"Lato";font-style:normal;font-weight:700;font-display:swap;src:url("fonts/lato/lato-700-normal.woff2") format("woff2")}
 @font-face{font-family:"Lato";font-style:italic;font-weight:900;font-display:swap;src:url("fonts/lato/lato-900-italic.woff2") format("woff2")}
 @font-face{font-family:"Lato";font-style:normal;font-weight:900;font-display:swap;src:url("fonts/lato/lato-900-normal.woff2") format("woff2")}
-:root{--font:"Lato", "Segoe UI", Helvetica, Arial, sans-serif;--font-ja:"Lato", "Segoe UI", Helvetica, Arial, sans-serif, "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif;--font-heading:"Oswald", "Segoe UI", Helvetica, Arial, sans-serif;--ink:#3d4249;--heading:#3d424961;--text:#6b7280;--muted:#7d838c;--red:#c8102e;--shu:#c8102e;--red-deep:color-mix(in srgb,#c8102e 82%,#000);--red-dark:color-mix(in srgb,#c8102e 65%,#000);--a-dur:0.90s;--a-dur-img:1.20s;--ch-dur:0.70s;--dx:102px;--dy:56px;--cs-base:33ms;--anim:1;--anim-chars:1;--anim-text:1;--anim-images:1;--anim-cards:1;--anim-color:1;--gs-dur:1.8s}
+@font-face{font-family:"Oswald";font-style:normal;font-weight:300;font-display:swap;src:url("fonts/oswald/oswald-300-normal.woff2") format("woff2")}
+@font-face{font-family:"Oswald";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/oswald/oswald-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Oswald";font-style:normal;font-weight:700;font-display:swap;src:url("fonts/oswald/oswald-700-normal.woff2") format("woff2")}
+:root{--font:"Lato", "Segoe UI", Helvetica, Arial, sans-serif;--font-ja:"Lato", "Segoe UI", Helvetica, Arial, sans-serif, "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif;--font-heading:"Roboto", "Segoe UI", Helvetica, Arial, sans-serif;--ink:#3d4249;--heading:#3d424961;--text:#6b7280;--muted:#7d838c;--red:#c8102e;--shu:#c8102e;--red-deep:color-mix(in srgb,#c8102e 82%,#000);--red-dark:color-mix(in srgb,#c8102e 65%,#000);--a-dur:0.90s;--a-dur-img:1.20s;--ch-dur:0.70s;--dx:102px;--dy:56px;--cs-base:33ms;--anim:1;--anim-chars:1;--anim-text:1;--anim-images:1;--anim-cards:1;--anim-color:1;--gs-dur:1.8s}
 :root{--intro-hold:3s;--intro-fade:4.2s;--anim-hero:1;--hero-step:130ms;--hero-dur:4s}
 @media (max-width:760px){:root{--dx:26px;--dy:20px}}
 html{font-size:18.4px}
@@ -27,7 +35,8 @@ h2:not(#_){letter-spacing:-0.04em!important}
 h3:not(#_){letter-spacing:-0.062em!important}
 :is(h4,h5,h6):not(#_){letter-spacing:-0.062em!important}
 /* Heading styles (Design › Heading styles) */
-h1:not(#_):not(#__){font-variant-caps:small-caps!important;text-shadow:none!important}
+h1:not(#_):not(#__){font-family:"Oswald", "Segoe UI", Helvetica, Arial, sans-serif!important;font-variant-caps:small-caps!important;text-shadow:none!important}
+h1:not(#_):not(#__):not(:is(.portal-card--admin,.blog-card.is-feature,.svc-cta.is-dark) *){color:#171717!important;-webkit-text-fill-color:#171717!important}
 h2:not(#_):not(#__){font-style:normal!important}
 h3:not(#_):not(#__){font-family:"Oswald", "Segoe UI", Helvetica, Arial, sans-serif!important;font-style:normal!important;text-align:center!important;text-decoration-line:none!important;text-decoration-thickness:.06em!important;text-underline-offset:.18em!important}
 h3:not(#_):not(#__):not(:is(.portal-card--admin,.blog-card.is-feature,.svc-cta.is-dark) *){color:#5e5e5e!important;-webkit-text-fill-color:#5e5e5e!important}
@@ -55,57 +64,3 @@ main :is(.news-tabs):not(#_){margin-bottom:clamp(23.66px, 3.09vw, 40.8px)!import
 .feature h2:not(#_){font-size:clamp(41.76px, 5.45vw, 72px)!important}
 :is(.service-card,.offer-card,.benefit-card,.news-item,.blog-card,.value-card,.team-card,.prj-card,.svc-step,.ab-step) h3:not(#_){font-size:clamp(16px, 2.08vw, 27.5px)!important}
 :is(html:lang(ja),html:lang(zh),html:lang(ko),html[dir=rtl]) :is(h1,h2,h3,h4,h5,h6):not(#_){letter-spacing:0!important}
-
-
-
-/* ================================================
-   TENSHI SYSTEMS - ANIMATED PEARL SILVER HEADER
-   ================================================ */
-
-.site-header,
-.site-header.is-scrolled {
-    background: linear-gradient(
-        120deg,
-        #e9eaed,
-        #ffffff,
-        #e5e7eb,
-        #f8f9fa,
-        #e6e8ec
-    ) !important;
-
-    background-size: 300% 300% !important;
-
-    animation: tenshi-silver-flow 18s ease infinite !important;
-
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-
-    border-bottom: 2px solid rgba(190, 25, 35, 0.75) !important;
-
-    box-shadow:
-        0 4px 18px rgba(25, 30, 40, 0.055),
-        inset 0 -1px 0 rgba(255,255,255,0.9) !important;
-}
-
-@keyframes tenshi-silver-flow {
-    0% {
-        background-position: 0% 50%;
-    }
-
-    50% {
-        background-position: 100% 50%;
-    }
-
-    100% {
-        background-position: 0% 50%;
-    }
-}
-
-/* Respect accessibility preferences */
-@media (prefers-reduced-motion: reduce) {
-    .site-header,
-    .site-header.is-scrolled {
-        animation: none !important;
-        background-position: 50% 50% !important;
-    }
-}
