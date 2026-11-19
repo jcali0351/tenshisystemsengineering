@@ -1,4 +1,4 @@
-/* Tanaka Matsumoto, the AI assistant (chat.js). White and crimson, like the rest of the site. */
+/* Tanaka Matsumoto, the AI assistant (chat.js). White, with red as an accent (see the block at the end). */
 .tk-badge { display: block; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
 
 .tk-launch {
@@ -147,67 +147,67 @@ html:lang(ja) .tk-launch, html:lang(ko) .tk-launch { letter-spacing: .02em; text
 }
 
 /* ======================================================================
-   Black and reds only: no white backgrounds. Text is a pale pink (#f6dfe3) so it stays easy to read.
+   White, with red (#D6162C, hover #BC0E24) only as an accent. No gradients, glows or gloss;
+   the open panel is the only thing with a (soft, neutral) shadow.
    ====================================================================== */
-.tk-launch { color: #f6dfe3; border-color: rgba(255, 77, 103, .55); background: linear-gradient(135deg, #c8102e 0%, #7e0a1b 55%, #1a070b 100%); }
-.tk-launch:focus-visible { outline-color: #ff4d67; }
-.tk-orb { box-shadow: 0 0 0 2px #ff4d67; }
-.tk-dot { border-color: #1a070b; }
-
-.tk-panel {
-  background: #0d0406; color: #f6dfe3;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, .6), 0 0 0 1px rgba(255, 70, 95, .3), 0 0 40px rgba(200, 16, 46, .18);
+.tk-launch {
+  color: #D6162C; background: #fff; border: 1.5px solid #D6162C; box-shadow: none; animation: none;
+  transition: transform .25s cubic-bezier(.2, .9, .3, 1.3), background-color .2s, color .2s;
 }
-.tk-head {
-  color: #f6dfe3; border-bottom: 1px solid rgba(255, 70, 95, .3);
-  background: radial-gradient(360px 120px at 0% 0%, rgba(255, 45, 79, .35), transparent 70%), linear-gradient(135deg, #a10c23, #3a050d 70%, #1a070b);
-}
-.tk-ava { box-shadow: 0 0 0 2px #ff4d67; }
-.tk-ava::after { border-color: #2a060c; }
-.tk-who b { color: #fbe9ec; }
-.tk-hbtn { color: #f6dfe3; border-color: rgba(255, 77, 103, .45); background: rgba(13, 4, 6, .4); }
-.tk-hbtn:hover { background: rgba(200, 16, 46, .45); }
-.tk-hbtn:focus-visible { outline-color: #ff4d67; }
+.tk-launch:hover { box-shadow: none; background: #D6162C; color: #fff; }
+.tk-launch:focus-visible { outline: 3px solid #D6162C; outline-offset: 3px; }
+.tk-orb { box-shadow: 0 0 0 1px #e5e5ea; }
+.tk-dot { border-color: #fff; }
 
-.tk-log {
-  background: radial-gradient(420px 280px at 100% 100%, rgba(126, 10, 27, .35), transparent 70%), linear-gradient(180deg, #120507, #0d0406);
-  scrollbar-color: #5a1622 transparent;
-}
-.tk-intro {
-  color: #f6dfe3; border: 1px solid rgba(255, 70, 95, .35);
-  background: radial-gradient(260px 120px at 100% 0%, rgba(255, 45, 79, .35), transparent 70%), linear-gradient(135deg, #7e0a1b, #2a060c);
-  box-shadow: 0 10px 26px rgba(0, 0, 0, .45);
-}
-.tk-badge-lg { box-shadow: 0 0 0 3px #ff4d67; }
-.tk-row.bot .tk-bub { background: linear-gradient(160deg, #2a0a10, #1a070b); border: 1px solid rgba(255, 70, 95, .28); color: #f6dfe3; box-shadow: none; }
-.tk-row.me .tk-bub { background: linear-gradient(135deg, #c8102e, #7e0a1b); color: #fbe9ec; box-shadow: 0 6px 16px rgba(200, 16, 46, .3); }
-.tk-bub a { color: #ff8fa0; }
-.tk-row.me .tk-bub a { color: #ffd0d7; }
-.tk-links a { background: #22090f; border-color: rgba(255, 70, 95, .35); color: #ff8fa0; }
-.tk-links a:hover { background: #3a0c15; border-color: #ff4d67; color: #ffd0d7; }
-.tk-typing i { background: #ff4d67; }
+.tk-panel { background: #fff; color: #1d1d1f; box-shadow: 0 12px 40px rgba(0, 0, 0, .12), 0 0 0 1px #e5e5ea; }
+.tk-head { color: #1d1d1f; background: #fff; border-bottom: 1px solid #e5e5ea; }
+.tk-ava { box-shadow: 0 0 0 1px #e5e5ea; }
+.tk-ava::after { border-color: #fff; }
+.tk-who b { color: #1d1d1f; }
+.tk-who span { color: #6e6e73; opacity: 1; }
+.tk-hbtn { color: #1d1d1f; border-color: #e5e5ea; background: #fff; }
+.tk-hbtn:hover { background: #f5f5f7; }
+.tk-hbtn:focus-visible { outline-color: #D6162C; }
 
-.tk-chips { background: #0d0406; }
-.tk-chips button { background: #22090f; border-color: rgba(255, 77, 103, .45); color: #ffb3bf; }
-.tk-chips button:hover { background: #3a0c15; border-color: #ff4d67; color: #ffd0d7; }
-.tk-chips button.human { background: #1a070b; border-color: #7e0a1b; color: #f6dfe3; }
+.tk-log { background: #fff; scrollbar-color: #d2d2d7 transparent; }
+.tk-intro { color: #1d1d1f; background: #f5f5f7; border: 1px solid #e5e5ea; box-shadow: none; }
+.tk-badge-lg { box-shadow: 0 0 0 1px #e5e5ea; }
+.tk-intro-cap b { color: #1d1d1f; }
+.tk-intro-cap span { color: #1d1d1f; opacity: 1; }
+.tk-intro-cap em { color: #D6162C; opacity: 1; }
+.tk-row.bot .tk-bub { background: #f5f5f7; border: 1px solid #e5e5ea; color: #1d1d1f; box-shadow: none; }
+.tk-row.me .tk-bub { background: #D6162C; border: 0; color: #fff; box-shadow: none; }
+.tk-bub a { color: #D6162C; }
+.tk-row.me .tk-bub a { color: #fff; }
+.tk-links a { background: #fff; border-color: #e5e5ea; color: #D6162C; }
+.tk-links a:hover { background: #fff; border-color: #D6162C; color: #BC0E24; }
+.tk-typing i { background: #D6162C; }
 
-.tk-input { background: #0d0406; border-top: 1px solid rgba(255, 70, 95, .22); }
-.tk-input textarea { background: #22090f; border-color: #5a1622; color: #fbe9ec; }
-.tk-input textarea::placeholder { color: #8f5c66; }
-.tk-input textarea:focus { background: #2a0b12; border-color: #ff2d4f; box-shadow: 0 0 0 3px rgba(255, 45, 79, .25); }
-.tk-send { color: #fbe9ec; background: linear-gradient(135deg, #e0263f, #7e0a1b); box-shadow: 0 6px 16px rgba(200, 16, 46, .4); }
-.tk-send:focus-visible { outline-color: #ff4d67; }
-.tk-foot { background: #0d0406; color: #b98790; }
-.tk-foot button { color: #ff8fa0; }
+.tk-chips { background: #fff; }
+.tk-chips button, .tk-chips button.human { background: #fff; border-color: #e5e5ea; color: #1d1d1f; }
+.tk-chips button:hover, .tk-chips button.human:hover { background: #fff; border-color: #D6162C; color: #D6162C; }
+.tk-chips button:focus-visible { outline: 2px solid #D6162C; outline-offset: 2px; }
 
-.tk-form label { color: #f3d6db; }
-.tk-form textarea { background: #22090f; border-color: #5a1622; color: #fbe9ec; }
-.tk-form textarea:focus { border-color: #ff2d4f; box-shadow: 0 0 0 3px rgba(255, 45, 79, .25); }
-.tk-form .tk-check input { accent-color: #c8102e; }
-.tk-err { color: #ff8fa0; }
-.tk-form-actions button { background: linear-gradient(135deg, #c8102e, #7e0a1b); border-color: #ff4d67; color: #fbe9ec; }
-.tk-form-actions .tk-copy { background: #1a070b; color: #ffb3bf; border-color: #7e0a1b; }
+.tk-input { background: #fff; border-top: 1px solid #e5e5ea; }
+.tk-input textarea { background: #f5f5f7; border-color: #e5e5ea; color: #1d1d1f; }
+.tk-input textarea::placeholder { color: #6e6e73; }
+.tk-input textarea:focus { background: #fff; border-color: #D6162C; box-shadow: 0 0 0 3px rgba(214, 22, 44, .15); }
+.tk-send { color: #fff; background: #D6162C; box-shadow: none; transition: transform .15s, opacity .2s, background-color .2s; }
+.tk-send:hover { background: #BC0E24; }
+.tk-send:focus-visible { outline: 3px solid #D6162C; outline-offset: 2px; }
+.tk-foot { background: #fff; color: #6e6e73; }
+.tk-foot button { color: #D6162C; }
+.tk-foot button:hover { color: #BC0E24; }
+
+.tk-form label { color: #1d1d1f; }
+.tk-form textarea { background: #fff; border-color: #e5e5ea; color: #1d1d1f; }
+.tk-form textarea:focus { border-color: #D6162C; box-shadow: 0 0 0 3px rgba(214, 22, 44, .15); }
+.tk-form .tk-check input { accent-color: #D6162C; }
+.tk-err { color: #BC0E24; }
+.tk-form-actions button { background: #D6162C; border-color: #D6162C; color: #fff; }
+.tk-form-actions button:hover { background: #BC0E24; border-color: #BC0E24; }
+.tk-form-actions .tk-copy { background: #fff; color: #D6162C; border-color: #e5e5ea; }
+.tk-form-actions .tk-copy:hover { background: #fff; border-color: #D6162C; color: #BC0E24; }
 
 /* Link buttons in the chat: text only, centred */
 .tk-links a { justify-content: center; text-align: center; }
