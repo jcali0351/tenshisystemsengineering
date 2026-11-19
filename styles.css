@@ -2586,3 +2586,14 @@ main section#services + section.feature:not(#_):not(#__) { padding-top: clamp(72
 @media (min-width: 720px) {
   #services .svc-set:not(#_):not(#__) { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; max-width: none !important; }
 }
+
+/* Footer: the header's lockup as the footer logo, and the SDVOSB badge at the inline-end of the logo row
+   (after the search box on wide screens; pinned to the top inline-end corner on phones and tablets). */
+.site-footer .footer-brand .footer-logo:not(#_):not(#__) { width: auto !important; height: clamp(34px, 3.2vw, 42px) !important; max-width: 100%; }
+.site-footer .footer-inner > .footer-badge:not(#_):not(#__) { order: 1; flex: none; display: block; width: auto; height: clamp(90px, 8.4vw, 112px); }
+@media (max-width: 860px) {
+  .site-footer .footer-inner > .footer-brand:not(#_):not(#__) { min-height: 72px; padding-inline-end: 88px; }
+  .site-footer .footer-inner > .footer-badge:not(#_):not(#__) {
+    position: absolute; top: 28px; inset-inline-end: var(--gutter, 16px); height: 72px;
+  }
+}
