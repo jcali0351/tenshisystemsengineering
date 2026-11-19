@@ -1715,7 +1715,8 @@
   /* ================================================================== BUTTONS (every kind of button on the site)
      Settings live in data/buttons.json; admin/buttons-style.js turns them into CSS for the live preview here and into
      buttons.css (saved with the settings, and rewritten by tools/build-pages.mjs). Every page loads buttons.css after
-     site-theme.css. An empty setting keeps the site's normal look, so with no settings the site looks as before. */
+     site-theme.css. An empty setting keeps the site's normal look. The hero button's style (Flat red, the default, or Glass) is a
+     setting of the "Hero button" type; saving commits buttons.css too, so the switch shows without a site rebuild. */
   var BS = window.TenshiButtonStyle;
   var bt = { saved: null, cur: null, fonts: null, ready: false, loading: false };
   // where each kind of button can be seen

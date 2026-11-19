@@ -1607,7 +1607,7 @@ for (const p of PROJECTS) writePage(`projects/${p.slug}.html`, projectPage(p));
 console.log(`index.html updated; about.html, team.html, services.html, technology.html, projects.html, contact.html, ${SERVICES.length} service pages and ${PROJECTS.length} project pages written; news.html, blog.html, ${slugPosts.length} blog post page(s) and portal.html written`);
 
 /* ---------- Buttons and Custom CSS (Tenshi Editor › Buttons, › Custom CSS) ----------
-   data/buttons.json → buttons.css (no settings = no rules, so the site looks as before). custom.css is written by the
+   data/buttons.json → buttons.css (no settings = only the hero button's default Flat red look). custom.css is written by the
    editor as is; the build only creates an empty one when it's missing. Every page loads buttons.css after
    site-theme.css (and slogan.css), and custom.css last of all, so its rules win. */
 writeFileSync("buttons.css", "/* Written by tools/build-pages.mjs from data/buttons.json (Tenshi Editor › Buttons). Don't edit by hand. */\n" +

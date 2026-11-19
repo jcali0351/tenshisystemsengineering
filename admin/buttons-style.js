@@ -1,7 +1,8 @@
 /* Tenshi Editor › Buttons: turns the button settings (data/buttons.json) into CSS.
    Used by the editor for its live preview and by tools/build-pages.mjs to write buttons.css, which every page loads after
-   site-theme.css. Every setting is optional: an empty value keeps the site's normal look, so with no settings buttons.css
-   has no rules at all. Works in the browser (window.TenshiButtonStyle) and in Node (require). */
+   site-theme.css. Every setting is optional: an empty value keeps the site's normal look. The one rule set
+   that is always written is the homepage hero button's default "Flat red" look (Hero button style; set it to Glass to
+   show the glass pill from hero-cta.css instead). Works in the browser (window.TenshiButtonStyle) and in Node (require). */
 (function (root, factory) {
   if (typeof module === "object" && module.exports) module.exports = factory();
   else root.TenshiButtonStyle = factory();
@@ -24,9 +25,9 @@
     { key: "chatSend", label: "Chat send button", sel: ".tk-send", note: "The send arrow inside the Tanaka chat window." },
     /* The homepage hero's glass pill (hero-cta.css). It has its own controls: they set the --hg-* variables that
        hero-cta.css builds the button from, so the glass layers, icon and phone sizes all follow. */
-    { key: "heroGlass", label: "Hero glass button", sel: ".hero-cta-glass .hg-btn",
-      note: "The glass \u201cRequest Consultation\u201d button with the round arrow on the homepage hero slider. Corner rounding 40 = fully round.",
-      fields: ["color", "iconBg", "iconColor", "scale", "radius", "font", "weight", "tracking", "transform", "hoverColor", "hoverLift"],
+    { key: "heroGlass", label: "Hero button (Deploy Your Future)", sel: ".hero-cta-glass .hg-btn",
+      note: "The big call-to-action button with the round arrow on the homepage hero. Hero button style: Flat red (the default: solid red, white bold text) or Glass (the see-through pill). Text and icon colors and the hover text color apply to the Glass style; size, corner rounding and hover lift apply to both. Corner rounding 40 = fully round.",
+      fields: ["style", "color", "iconBg", "iconColor", "scale", "radius", "font", "weight", "tracking", "transform", "hoverColor", "hoverLift"],
       vars: { color: "--hg-text", iconBg: "--hg-icon-bg", iconColor: "--hg-icon-fg", scale: "--hg-scale", radius: "--hg-r", hoverLift: "--hg-lift" },
       defaults: { color: "#3e3e3e", iconBg: "#3e3e3e", iconColor: "#f5f5f5", scale: 1, radius: 40, hoverLift: 3, hoverColor: "#3e3e3e" },
       ranges: { radius: { min: 0, max: 40 }, hoverLift: { max: 10 } } }
@@ -35,7 +36,10 @@
   /* The controls, in the order the editor shows them. type: color | range | select | font | text */
   var W = [["", "Site default"], ["300", "300 Light"], ["400", "400 Regular"], ["500", "500 Medium"], ["600", "600 Semibold"], ["700", "700 Bold"], ["800", "800 Extra bold"], ["900", "900 Black"]];
   var SH = [["", "Site default"], ["none", "None"], ["soft", "Soft"], ["medium", "Medium"], ["lifted", "Lifted"], ["strong", "Strong"], ["glow", "Red glow"]];
+  var HERO_STYLES = [["", "Flat red"], ["glass", "Glass"]];
   var FIELDS = [
+    // Only for the hero button: which of its two looks the site shows (data/buttons.json types.heroGlass.style)
+    { key: "style", label: "Hero button style", type: "select", options: HERO_STYLES, group: "Normal", only: true },
     { key: "bg", label: "Background", type: "color", group: "Normal" },
     { key: "color", label: "Text color", type: "color", group: "Normal" },
     { key: "borderWidth", label: "Border width", type: "range", min: 0, max: 6, step: 0.5, unit: "px", start: 1, group: "Normal" },
@@ -95,6 +99,26 @@
   }
   function typeField(T, k) { var l = fieldsFor(T); for (var i = 0; i < l.length; i++) if (l[i].key === k) return l[i]; return null; }
 
+  /* The hero button's default look, "Flat red": a solid red pill with white bold text and a white round icon with a red
+     arrow. No see-through background, blur, gloss or corner highlights. Written into buttons.css (and the editor's
+     preview) unless the hero button style is set to Glass; hero-cta.css keeps the glass design and its sizes.
+     base = the button's selector; hov = its hover selector list. */
+  var FLAT = { bg: "#D6162C", hover: "#BC0E24" };
+  function heroFlat(base, hov) {
+    var w = "html body .hero-cta-glass:not(#_):not(#__)";
+    return w + "{filter:none!important}\n" +
+      base + "{background:" + FLAT.bg + "!important;color:#fff!important;border:0!important;box-shadow:none!important;" +
+        "-webkit-backdrop-filter:none!important;backdrop-filter:none!important;filter:none!important;font-weight:700;" +
+        "transition:transform .2s ease, background-color .2s ease!important}\n" +
+      base + "::before, " + base + "::after, " + base + " .hg-ring{display:none!important}\n" +
+      base + " .hg-text{color:#fff!important;filter:none!important}\n" +
+      base + " .hg-icon{background:#fff!important;box-shadow:none!important}\n" +
+      base + " .hg-svg{fill:" + FLAT.bg + "!important;filter:none!important}\n" +
+      hov + "{background:" + FLAT.hover + "!important;color:#fff!important}\n" +
+      base + ":active{background:" + FLAT.hover + "!important}\n" +
+      base + ":focus-visible{outline:3px solid " + FLAT.bg + "!important;outline-offset:3px!important;box-shadow:0 0 0 3px #fff!important}\n";
+  }
+
   /* Strong enough to beat styles.css, design.css (which uses !important) and site-theme.css (:not(#_) !important). */
   function wrap(sel) { return "html body :is(" + sel + "):not(#_):not(#__)"; }
 
@@ -105,11 +129,18 @@
      opts.prefix = how the stylesheet reaches the site root, for font files ("" on the site) */
   function css(data, fonts, opts) {
     data = data || {}; opts = opts || {};
-    var types = data.types || {}, prefix = opts.prefix || "", out = "", faces = {};
+    var types = data.types || {}, prefix = opts.prefix || "", out = "", faces = {}, flatCss = "";
     TYPES.forEach(function (T) {
-      var s0 = types[T.key]; if (!s0 || typeof s0 !== "object") return;
+      var s0 = types[T.key];
+      // The hero button is Flat red unless it's set to Glass (also with no settings at all)
+      if (T.key === "heroGlass" && !(s0 && s0.style === "glass")) {
+        var fb = opts.sel ? opts.sel(T) : wrap(T.sel);
+        flatCss = heroFlat(fb, fb + ":hover" + (opts.forceHover ? ", " + fb + "." + opts.forceHover : ""));
+      }
+      if (!s0 || typeof s0 !== "object") return;
       var base = opts.sel ? opts.sel(T) : wrap(T.sel), a = [], h = [], v, s = {};
       fieldsFor(T).forEach(function (f) { if (has(s0[f.key])) s[f.key] = s0[f.key]; });
+      delete s.style;
       // Settings the type's own stylesheet reads as CSS variables (the hero glass button)
       Object.keys(T.vars || {}).forEach(function (k) {
         if (!has(s[k])) return;
@@ -162,7 +193,8 @@
         head += "@font-face{font-family:" + q(f.name) + ";font-style:" + x.s + ";font-weight:" + x.w + ";font-display:swap;src:url(" + q(prefix + "fonts/" + f.slug + "/" + x.f) + ') format("woff2")}\n';
       });
     });
-    return head + out;
+    // the flat hero rules come last, so they win over the hero's glass-only color settings
+    return head + out + flatCss;
   }
 
   /* Keep only known types and settings with a value: what Save writes to data/buttons.json. */
@@ -177,5 +209,5 @@
     return out;
   }
 
-  return { TYPES: TYPES, FIELDS: FIELDS, SHADOWS: SHADOWS, fieldsFor: fieldsFor, css: css, clean: clean };
+  return { TYPES: TYPES, FIELDS: FIELDS, HERO_STYLES: HERO_STYLES, SHADOWS: SHADOWS, fieldsFor: fieldsFor, css: css, clean: clean };
 });

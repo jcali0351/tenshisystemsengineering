@@ -1,7 +1,9 @@
 /* Homepage hero call to action: the "glass pill" button (Get started style), scoped to .hero-cta-glass.
    Markup: <p class="hero-cta-glass"><a class="hg-btn"><span class="hg-text">…</span><span class="hg-icon"><svg class="hg-svg">…</svg></span>
    <span class="hg-ring"></span></a></p>. The wrapper carries the design's contrast(3) layer (never the hero itself).
-   Tenshi Editor › Buttons › "Hero glass button" sets the --hg-* variables in buttons.css; the defaults below are the design.
+   Tenshi Editor › Buttons › "Hero button" sets the --hg-* variables in buttons.css; the defaults below are the design.
+   This file is the GLASS look. The site default is "Flat red": buttons.css (admin/buttons-style.js) lays a solid red look
+   over these rules unless Tenshi Editor › Buttons › Hero button style is set to Glass.
    Selectors use :not(#_):not(#__) + !important where site-theme.css (:not(#_) !important) would otherwise win. */
 .hero-cta-glass {
   display: flex;
