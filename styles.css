@@ -2597,3 +2597,17 @@ main section#services + section.feature:not(#_):not(#__) { padding-top: clamp(72
     position: absolute; top: 28px; inset-inline-end: var(--gutter, 16px); height: 72px;
   }
 }
+
+/* Footer: the search box sits right under the logo (inline-start column); the SDVOSB badge stays at the row's
+   inline-end. No drop shadows inside the footer (the search box's inset well stays). */
+.site-footer .footer-inner > .footer-brand:not(#_):not(#__) { flex-direction: column; align-items: flex-start; gap: 16px; }
+.site-footer .footer-brand > .tse-finder:not(#_):not(#__) { position: relative; z-index: 6; width: 280px; max-width: 100%; margin: 0; }
+.site-footer .footer-inner > .footer-badge:not(#_):not(#__) { margin-inline-start: auto; }
+.site-footer .tse-finder__form:not(#_):not(#__),
+.site-footer .tse-finder .tse-finder__list:not(#_):not(#__),
+.site-footer .tse-finder .tse-finder__empty:not(#_):not(#__) { box-shadow: none !important; }
+@media (max-width: 860px) {
+  .site-footer .footer-inner > .footer-brand:not(#_):not(#__) { align-self: stretch; width: 100%; padding-inline-end: 0; min-height: 0; }
+  .site-footer .footer-brand > .footer-logo:not(#_):not(#__) { margin-block: 19px; }   /* centred on the 72px badge row */
+  .site-footer .footer-brand > .tse-finder:not(#_):not(#__) { width: 100%; }
+}
