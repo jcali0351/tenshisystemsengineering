@@ -2,5 +2,5 @@
 @font-face{font-family:"Oswald";font-style:normal;font-weight:300;font-display:swap;src:url("fonts/oswald/oswald-300-normal.woff2") format("woff2")}
 @font-face{font-family:"Oswald";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/oswald/oswald-400-normal.woff2") format("woff2")}
 @font-face{font-family:"Oswald";font-style:normal;font-weight:700;font-display:swap;src:url("fonts/oswald/oswald-700-normal.woff2") format("woff2")}
-main section.band:not(#_):not(#__) :is(.band-stage, .band-unit, .band-list li, .band-text){font-family:"Oswald", "Segoe UI", Helvetica, Arial, sans-serif!important;font-weight:300!important;letter-spacing:0.08em!important;color:#000000!important;-webkit-text-fill-color:#000000!important}
+main section.band:not(#_):not(#__) :is(.band-stage, .band-unit, .band-list li, .band-text){font-family:"Oswald", "Segoe UI", Helvetica, Arial, sans-serif!important;font-weight:300!important;letter-spacing:0.025em!important;color:#000000!important;-webkit-text-fill-color:#000000!important}
 html:is(:lang(ar), :lang(fa)) main section.band:not(#_):not(#__) :is(.band-stage, .band-unit, .band-list li, .band-text){letter-spacing:0!important;word-spacing:normal!important}
