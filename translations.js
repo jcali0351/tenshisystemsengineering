@@ -691,7 +691,8 @@ window.TRANSLATIONS = {
     slogan2: "A new line for the slogan",
     slogan3: "Prestige Worldwide",
     slogan4: "Rapid Deployment",
-    slogan5: "Free to Use Digital Management System"
+    slogan5: "Free to Use Digital Management System",
+    slogan6: "Technology for the Dreamers, Builders, and Doers"
   },
   ja: {
     // Footer search (search.js)
@@ -1383,7 +1384,8 @@ window.TRANSLATIONS = {
     slogan2: "A new line for the slogan",
     slogan3: "プレステージワールドワイド",
     slogan4: "迅速な展開",
-    slogan5: "無料で利用できるデジタル管理システム"
+    slogan5: "無料で利用できるデジタル管理システム",
+    slogan6: "夢想家、建設者、実行者のためのテクノロジー"
   },
   ko: {
     // Footer search (search.js)
@@ -2083,7 +2085,8 @@ window.TRANSLATIONS = {
     slogan2: "A new line for the slogan",
     slogan3: "전 세계 프레스티지",
     slogan4: "신속한 배포",
-    slogan5: "무료 사용 디지털 관리 시스템"
+    slogan5: "무료 사용 디지털 관리 시스템",
+    slogan6: "꿈꾸는 사람, 건축가, 실천자를 위한 기술"
   },
   de: {
     // Footer search (search.js)
@@ -2783,7 +2786,8 @@ window.TRANSLATIONS = {
     slogan2: "A new line for the slogan",
     slogan3: "Prestige weltweit",
     slogan4: "Schnelle Bereitstellung",
-    slogan5: "Kostenloses digitales Managementsystem"
+    slogan5: "Kostenloses digitales Managementsystem",
+    slogan6: "Technologie für die Träumer, Baumeister und Macher"
   },
   es: {
     // Footer search (search.js)
@@ -3483,7 +3487,8 @@ window.TRANSLATIONS = {
     slogan2: "Una nueva línea para el eslogan",
     slogan3: "Prestige en todo el mundo",
     slogan4: "Despliegue rápido",
-    slogan5: "Sistema de gestión digital de uso gratuito"
+    slogan5: "Sistema de gestión digital de uso gratuito",
+    slogan6: "Tecnología para los soñadores, constructores y hacedores"
   },
   zh: {
     // Footer search (search.js)
@@ -4183,7 +4188,8 @@ window.TRANSLATIONS = {
     slogan2: "A new line for the slogan",
     slogan3: "Prestige 全球",
     slogan4: "快速部署",
-    slogan5: "免费使用数字管理系统"
+    slogan5: "免费使用数字管理系统",
+    slogan6: "为梦想家、建设者和实干家提供技术"
   },
   ar: {
     // Footer search (search.js)
@@ -4883,7 +4889,8 @@ window.TRANSLATIONS = {
     slogan2: "A new line for the slogan",
     slogan3: "برستيج في جميع أنحاء العالم",
     slogan4: "النشر السريع",
-    slogan5: "نظام إدارة رقمي مجاني الاستخدام"
+    slogan5: "نظام إدارة رقمي مجاني الاستخدام",
+    slogan6: "التكنولوجيا للحالمين والبنائين والفاعلين"
   },
   pl: {
     // Footer search (search.js)
@@ -5583,7 +5590,8 @@ window.TRANSLATIONS = {
     slogan2: "A new line for the slogan",
     slogan3: "Prestiż na całym świecie",
     slogan4: "Szybkie wdrożenie",
-    slogan5: "Darmowy cyfrowy system zarządzania"
+    slogan5: "Darmowy cyfrowy system zarządzania",
+    slogan6: "Technologia dla marzycieli, budowniczych i wykonawców"
   },
   pcm: {
     // Footer search (search.js)
@@ -6283,7 +6291,8 @@ window.TRANSLATIONS = {
     slogan2: "A new line for the slogan",
     slogan3: "Prestige Worldwide",
     slogan4: "Rapid Deployment",
-    slogan5: "Free to Use Digital Management System"
+    slogan5: "Free to Use Digital Management System",
+    slogan6: "Technology for the Dreamers, Builders, and Doers"
   },
   fa: {
     // Footer search (search.js)
@@ -6983,6 +6992,7 @@ window.TRANSLATIONS = {
     slogan2: "A new line for the slogan",
     slogan3: "پرستیژ در سراسر جهان",
     slogan4: "استقرار سریع",
-    slogan5: "استفاده رایگان از سیستم مدیریت دیجیتال"
+    slogan5: "استفاده رایگان از سیستم مدیریت دیجیتال",
+    slogan6: "فناوری برای رویاپردازان، سازندگان و انجام دهندگان"
   }
 };
