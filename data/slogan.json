@@ -14,7 +14,7 @@
   "wordPace": 160,
   "style": {
     "weight": "300",
-    "tracking": 0.08,
+    "tracking": 0.025,
     "color": "#000000",
     "font": "oswald"
   }
