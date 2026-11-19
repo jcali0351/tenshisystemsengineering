@@ -43,8 +43,8 @@
       },
       "glow": {
         "on": true,
-        "color": "#636363",
-        "opacity": 0.75,
+        "color": "#ffffff",
+        "opacity": 0.9,
         "size": 14,
         "speed": 4
       },
