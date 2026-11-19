@@ -535,9 +535,9 @@ function frame({ prefix, current, titleKey, descKey, title, description, bodyCla
   <meta property="og:title" content="${pageTitle} | ${tx("brandName")}">
   <meta property="og:description" content="${pageDesc}">
   <meta property="og:type" content="website">
-  <link rel="icon" href="${prefix}brand/favicon-32.png" type="image/png" sizes="32x32">
-  <link rel="icon" href="${prefix}brand/favicon-192.png" type="image/png" sizes="192x192">
-  <link rel="apple-touch-icon" href="${prefix}brand/tenshi-apple-touch-icon.png">
+  <link rel="icon" href="${prefix}brand/favicon-32.png?v=20261119" type="image/png" sizes="32x32">
+  <link rel="icon" href="${prefix}brand/favicon-192.png?v=20261119" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="${prefix}brand/tenshi-apple-touch-icon.png?v=20261119">
   <link rel="stylesheet" href="${prefix}tailwind.css">
   <link rel="stylesheet" href="${prefix}styles.css">
   <link rel="stylesheet" href="${prefix}design.css">
