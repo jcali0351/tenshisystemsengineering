@@ -468,8 +468,8 @@ window.TRANSLATIONS = {
     mottoLabel: "Our motto",
     motto: "Build Something That Matters",
     tag1: "From Idea to Opportunity",
-    tag2: "Professional Internet Monitor Protocols",
-    tag3: "Web Assisted Networking Group",
+    tag2: " Ownership-First Philosphy",
+    tag3: "Rapid One Button Deployment",
     tag4: "Proper Enterprise Network Integrated Services",
     servicesTitle: "Our services",
     brandName: "Tenshi Systems ",
@@ -690,7 +690,8 @@ window.TRANSLATIONS = {
     slogan1: "asfd asdf a asdfa",
     slogan2: "A new line for the slogan",
     slogan3: "Prestige Worldwide",
-    slogan4: "Rapid Deployment"
+    slogan4: "Rapid Deployment",
+    slogan5: "Free to Use Digital Management System"
   },
   ja: {
     // Footer search (search.js)
@@ -1159,8 +1160,8 @@ window.TRANSLATIONS = {
     mottoLabel: "私たちの理念",
     motto: "重要なものを構築する",
     tag1: "アイデアから機会へ",
-    tag2: "プロフェッショナル・インターネット監視プロトコル",
-    tag3: "Web支援ネットワーキンググループ",
+    tag2: "所有権第一の哲学",
+    tag3: "迅速なワンボタン展開",
     tag4: "適正なエンタープライズネットワーク統合サービス",
     servicesTitle: "事業内容",
     brandName: "Tenshi Systems ",
@@ -1381,7 +1382,8 @@ window.TRANSLATIONS = {
     slogan1: "ASFD ASDF と ASDFA",
     slogan2: "A new line for the slogan",
     slogan3: "プレステージワールドワイド",
-    slogan4: "迅速な展開"
+    slogan4: "迅速な展開",
+    slogan5: "無料で利用できるデジタル管理システム"
   },
   ko: {
     // Footer search (search.js)
@@ -1853,8 +1855,8 @@ window.TRANSLATIONS = {
     mottoLabel: "우리의 모토",
     motto: "중요한 것을 구축하세요",
     tag1: "아이디어에서 기회로",
-    tag2: "전문 인터넷 모니터링 프로토콜",
-    tag3: "웹 기반 네트워킹 그룹",
+    tag2: "소유권 우선 철학",
+    tag3: "신속한 원버튼 배포",
     tag4: "엔터프라이즈 네트워크 통합 서비스",
     servicesTitle: "서비스",
     brandName: "Tenshi Systems ",
@@ -2080,7 +2082,8 @@ window.TRANSLATIONS = {
     slogan1: "ASFD ASDF a ASDFA",
     slogan2: "A new line for the slogan",
     slogan3: "전 세계 프레스티지",
-    slogan4: "신속한 배포"
+    slogan4: "신속한 배포",
+    slogan5: "무료 사용 디지털 관리 시스템"
   },
   de: {
     // Footer search (search.js)
@@ -2552,8 +2555,8 @@ window.TRANSLATIONS = {
     mottoLabel: "Unser Leitsatz",
     motto: "Bauen Sie etwas, das wichtig ist",
     tag1: "Von der Idee zur Gelegenheit",
-    tag2: "Professionelle Protokolle zur Internetüberwachung",
-    tag3: "Webgestützte Netzwerkgruppe",
+    tag2: "Eigentumsphilosophie",
+    tag3: "Schnelle Bereitstellung auf einer Knopffläche",
     tag4: "Integrierte Dienste für Unternehmensnetzwerke",
     servicesTitle: "Unsere Leistungen",
     brandName: "Tenshi Systems ",
@@ -2779,7 +2782,8 @@ window.TRANSLATIONS = {
     slogan1: "ASFD ASDF ein ASDFA",
     slogan2: "A new line for the slogan",
     slogan3: "Prestige weltweit",
-    slogan4: "Schnelle Bereitstellung"
+    slogan4: "Schnelle Bereitstellung",
+    slogan5: "Kostenloses digitales Managementsystem"
   },
   es: {
     // Footer search (search.js)
@@ -3252,8 +3256,8 @@ window.TRANSLATIONS = {
     mottoLabel: "Nuestro lema",
     motto: "Construya algo que importa",
     tag1: "De la idea a la oportunidad",
-    tag2: "Protocolos profesionales de monitorización de Internet",
-    tag3: "Grupo de redes asistidas por la web",
+    tag2: "Filosofía Ownership-First",
+    tag3: "Despliegue rápido de un solo botón",
     tag4: "Servicios integrados de redes empresariales",
     servicesTitle: "Nuestros servicios",
     brandName: "Tenshi Systems ",
@@ -3478,7 +3482,8 @@ window.TRANSLATIONS = {
     slogan1: "ASFD ASDF a ASDFA",
     slogan2: "Una nueva línea para el eslogan",
     slogan3: "Prestige en todo el mundo",
-    slogan4: "Despliegue rápido"
+    slogan4: "Despliegue rápido",
+    slogan5: "Sistema de gestión digital de uso gratuito"
   },
   zh: {
     // Footer search (search.js)
@@ -3951,8 +3956,8 @@ window.TRANSLATIONS = {
     mottoLabel: "我们的理念",
     motto: "构建重要的东西",
     tag1: "从创意到机会",
-    tag2: "专业的互联网监控协议",
-    tag3: "网络辅助联网小组",
+    tag2: "所有权至上的理念",
+    tag3: "快速一键部署",
     tag4: "企业网络集成服务",
     servicesTitle: "我们的服务",
     brandName: "Tenshi Systems ",
@@ -4177,7 +4182,8 @@ window.TRANSLATIONS = {
     slogan1: "asfd asdf a asdfa",
     slogan2: "A new line for the slogan",
     slogan3: "Prestige 全球",
-    slogan4: "快速部署"
+    slogan4: "快速部署",
+    slogan5: "免费使用数字管理系统"
   },
   ar: {
     // Footer search (search.js)
@@ -4650,8 +4656,8 @@ window.TRANSLATIONS = {
     mottoLabel: "شعارنا",
     motto: "بناء شيء مهم",
     tag1: "من فكرة إلى فرصة",
-    tag2: "بروتوكولات احترافية لمراقبة الإنترنت",
-    tag3: "مجموعة الشبكات المدعومة بالويب",
+    tag2: "الملكية أولا فلسفة",
+    tag3: "النشر السريع بزر واحد",
     tag4: "خدمات متكاملة لشبكات المؤسسات",
     servicesTitle: "خدماتنا",
     brandName: "Tenshi Systems ",
@@ -4876,7 +4882,8 @@ window.TRANSLATIONS = {
     slogan1: "asfd asdf a asdfa",
     slogan2: "A new line for the slogan",
     slogan3: "برستيج في جميع أنحاء العالم",
-    slogan4: "النشر السريع"
+    slogan4: "النشر السريع",
+    slogan5: "نظام إدارة رقمي مجاني الاستخدام"
   },
   pl: {
     // Footer search (search.js)
@@ -5349,8 +5356,8 @@ window.TRANSLATIONS = {
     mottoLabel: "Nasze motto",
     motto: "Zbuduj coś, co ma znaczenie",
     tag1: "Od pomysłu do szansy",
-    tag2: "Profesjonalne protokoły monitorowania internetu",
-    tag3: "Grupa sieciowa wspierana przez internet",
+    tag2: "Własność – filozofia na pierwszym miejscu",
+    tag3: "Szybkie wdrożenie jednym przyciskiem",
     tag4: "Zintegrowane usługi sieci korporacyjnych",
     servicesTitle: "Nasze usługi",
     brandName: "Tenshi Systems ",
@@ -5575,7 +5582,8 @@ window.TRANSLATIONS = {
     slogan1: "asfd asdf a asdfa",
     slogan2: "A new line for the slogan",
     slogan3: "Prestiż na całym świecie",
-    slogan4: "Szybkie wdrożenie"
+    slogan4: "Szybkie wdrożenie",
+    slogan5: "Darmowy cyfrowy system zarządzania"
   },
   pcm: {
     // Footer search (search.js)
@@ -6048,8 +6056,8 @@ window.TRANSLATIONS = {
     mottoLabel: "Our motto",
     motto: "Build Something That Matters",
     tag1: "From Idea to Opportunity",
-    tag2: "Professional protocols to dey watch internet",
-    tag3: "Networking group wey web dey support",
+    tag2: " Ownership-First Philosphy",
+    tag3: "Rapid One Button Deployment",
     tag4: "Network services wey join together for big companies",
     servicesTitle: "Our services",
     brandName: "Tenshi Systems ",
@@ -6274,7 +6282,8 @@ window.TRANSLATIONS = {
     slogan1: "asfd asdf a asdfa",
     slogan2: "A new line for the slogan",
     slogan3: "Prestige Worldwide",
-    slogan4: "Rapid Deployment"
+    slogan4: "Rapid Deployment",
+    slogan5: "Free to Use Digital Management System"
   },
   fa: {
     // Footer search (search.js)
@@ -6747,8 +6756,8 @@ window.TRANSLATIONS = {
     mottoLabel: "شعار ما",
     motto: "چیزی بسازید که مهم باشد",
     tag1: "از ایده تا فرصت",
-    tag2: "پروتکل‌های حرفه‌ای پایش اینترنت",
-    tag3: "گروه شبکه‌سازی مبتنی بر وب",
+    tag2: "مالکیت-اول فلسفه",
+    tag3: "استقرار سریع یک دکمه",
     tag4: "خدمات یکپارچهٔ شبکهٔ سازمانی",
     servicesTitle: "خدمات ما",
     brandName: "Tenshi Systems ",
@@ -6973,6 +6982,7 @@ window.TRANSLATIONS = {
     slogan1: "asfd asdf a asdfa",
     slogan2: "A new line for the slogan",
     slogan3: "پرستیژ در سراسر جهان",
-    slogan4: "استقرار سریع"
+    slogan4: "استقرار سریع",
+    slogan5: "استفاده رایگان از سیستم مدیریت دیجیتال"
   }
 };
