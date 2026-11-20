@@ -495,3 +495,44 @@ html.neon-insane #neon-bg { filter: saturate(1.6) contrast(1.1); }
   .neon-sound { bottom: 10px; }
   .neon-tip { bottom: 104px !important; }
 }
+
+/* ======================================================================================================
+   BLACK CONTENT AREAS (for now): the white and light-gray sections below the hero turn black, with white
+   text and headings. Cards and the contact form become dark panels; links turn lilac so they stay readable.
+   Buttons keep their own colours.
+   ====================================================================================================== */
+html.neon:not(#_):not(#__) :is(.band, .services, .feature, .contact, .site-footer) {
+  background: #000 !important;
+  color: #fff !important;
+}
+html.neon:not(#_):not(#__) :is(.band, .services, .feature, .contact, .site-footer)
+  :is(h1, h2, h3, h4, h5, h6, p, li, dt, dd, label, small, strong, em, b, span, figcaption, blockquote, legend, address):not(.btn *):not(.hg-btn *) {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+/* Cards and the form: dark panels with a faint edge. */
+html.neon:not(#_):not(#__) :is(.service-card, .contact-form, .tse-finder__form) {
+  background: #0e0b14 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: none !important;
+}
+html.neon:not(#_):not(#__) :is(.services, .feature, .contact, .site-footer) .service-pic { background: #0e0b14 !important; }
+/* Form fields: dark, white text, lighter placeholder. */
+html.neon:not(#_):not(#__) :is(.contact, .site-footer) :is(input, select, textarea) {
+  background: #17131f !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+}
+html.neon:not(#_):not(#__) :is(.contact, .site-footer) :is(input, textarea)::placeholder { color: rgba(255, 255, 255, 0.5) !important; -webkit-text-fill-color: rgba(255, 255, 255, 0.5) !important; }
+html.neon:not(#_):not(#__) :is(.contact, .site-footer) select option { background: #17131f; color: #fff; }
+/* Links (not buttons) turn lilac. */
+html.neon:not(#_):not(#__) :is(.band, .services, .feature, .contact, .site-footer) a:not(.btn):not(.hg-btn),
+html.neon:not(#_):not(#__) :is(.band, .services, .feature, .contact, .site-footer) a:not(.btn):not(.hg-btn) * {
+  color: #d7b8ff !important;
+  -webkit-text-fill-color: #d7b8ff !important;
+}
+/* Dividers and borders that were dark-on-white become faint white lines. */
+html.neon:not(#_):not(#__) :is(.band, .services, .feature, .contact, .site-footer) :is(hr, .footer-meta) { border-color: rgba(255, 255, 255, 0.12) !important; }
+/* The footer search's results and "No results" box. */
+html.neon:not(#_):not(#__) .tse-finder :is(.tse-finder__empty, [class*="tse-finder__result"], [class*="tse-finder__list"]) { background: #17131f !important; }
