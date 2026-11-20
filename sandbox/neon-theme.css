@@ -624,3 +624,129 @@ html.neon:not(#_):not(#__) .rts-intro h3 { color: #fff !important; -webkit-text-
 
 /* Page background: deep space purple instead of black (behind every section, and the bits between them). */
 html.neon:not(#_):not(#__) body { background-color: rgb(12, 4, 30) !important; }   /* not on <main>: it would cover the animated canvases */
+
+/* ======================================================================================================
+   GAMIFIED CONTENT: everything below the hero looks like the game's own screens (the GAME OVER panel):
+   purple glass panels with a pink edge glow, glowing uppercase Oswald headings, orange "score" labels,
+   white pill buttons and glowing inputs. neon-quest.js adds the STAGE tags, the quest HUD and XP toasts.
+   ====================================================================================================== */
+html.neon {
+  --gx-panel: linear-gradient(160deg, #2e0b57, #14052b);
+  --gx-edge: rgba(255, 43, 214, 0.45);
+  --gx-glow: 0 0 0 1px rgba(255, 43, 214, 0.18), 0 0 38px rgba(176, 77, 255, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --gx-glow-hot: 0 0 0 1px rgba(255, 43, 214, 0.5), 0 0 54px rgba(255, 43, 214, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+/* The sections: deep space purple with a faint game grid and a soft glow from the top. */
+html.neon:not(#_):not(#__) :is(.services, .feature, .contact, .site-footer) {
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(176, 77, 255, 0.16), transparent 70%),
+    linear-gradient(rgba(176, 77, 255, 0.05) 1px, transparent 1px) 0 0 / 44px 44px,
+    linear-gradient(90deg, rgba(176, 77, 255, 0.05) 1px, transparent 1px) 0 0 / 44px 44px,
+    rgb(12, 4, 30) !important;
+  position: relative;
+}
+/* Panels: the GAME OVER box. */
+html.neon:not(#_):not(#__) :is(.service-card, .contact-form, .feature-body, .contact-intro, .site-footer .fw) {
+  background: var(--gx-panel) !important;
+  border: 1px solid var(--gx-edge) !important;
+  border-radius: 20px !important;
+  box-shadow: var(--gx-glow) !important;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+html.neon:not(#_):not(#__) :is(.feature-body, .contact-intro, .site-footer .fw) { padding: clamp(22px, 2.6vw, 34px) !important; }
+html.neon:not(#_):not(#__) :is(.service-card, .feature-body):hover { transform: translateY(-4px); box-shadow: var(--gx-glow-hot) !important; }
+/* Headings glow like "GAME OVER". */
+html.neon:not(#_):not(#__) :is(.feature-body, .contact-intro) h2,
+html.neon:not(#_):not(#__) .site-footer .fw-title,
+html.neon:not(#_):not(#__) .site-footer .fw-title a {
+  font-family: Oswald, sans-serif !important; text-transform: uppercase; letter-spacing: 0.04em;
+  color: #fff !important; -webkit-text-fill-color: #fff !important; text-shadow: 0 0 22px #ff2bd6, 0 0 2px rgba(255, 255, 255, 0.6) !important;
+}
+html.neon:not(#_):not(#__) .service-card h3 {
+  font-family: Oswald, sans-serif !important; text-transform: uppercase; letter-spacing: 0.1em !important;
+  text-shadow: 0 0 14px rgba(255, 43, 214, 0.7) !important;
+}
+/* Small labels: spaced-out caps in "score" orange, like YOUR INITIALS. */
+html.neon:not(#_):not(#__) :is(.services, .feature, .contact, .site-footer) .eyebrow,
+html.neon:not(#_):not(#__) .contact-form label, html.neon:not(#_):not(#__) .contact-form label * {
+  font: 700 0.72rem/1.4 Oswald, sans-serif !important; letter-spacing: 0.25em !important; text-transform: uppercase;
+}
+html.neon:not(#_):not(#__) :is(.services, .feature, .contact, .site-footer) .eyebrow { color: #ffb36b !important; -webkit-text-fill-color: #ffb36b !important; }
+/* Lists read like the leaderboard: one row each, pink marker, faint divider. */
+html.neon:not(#_):not(#__) .feature-list { list-style: none !important; padding: 0 !important; }
+html.neon:not(#_):not(#__) .feature-list li { display: flex; gap: 12px; align-items: baseline; padding: 9px 0 !important; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+html.neon:not(#_):not(#__) .feature-list li::before { content: "◆" !important; position: static !important; transform: none !important; width: auto !important; height: auto !important; background: none !important; color: #ff6ec7; -webkit-text-fill-color: #ff6ec7; font-size: 0.7em; flex: none; }
+html.neon:not(#_):not(#__) .feature-list li { padding-left: 0 !important; }
+/* Buttons: white pills with dark purple text (PLAY AGAIN). */
+html.neon:not(#_):not(#__) .services .service-card a.btn-more.btn-more,
+html.neon:not(#_):not(#__) .contact .contact-form .btn.btn-primary.btn-primary {
+  display: inline-block; align-self: flex-start; padding: 10px 18px !important; border-radius: 999px !important; border: 0 !important;
+  background: #fff !important; color: #2e0b57 !important; -webkit-text-fill-color: #2e0b57 !important;
+  font: 800 0.8rem/1 Oswald, sans-serif !important; letter-spacing: 0.15em !important; text-transform: uppercase; text-decoration: none !important;
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.18); transition: transform 0.2s, box-shadow 0.2s;
+}
+html.neon:not(#_):not(#__) .services .service-card a.btn-more.btn-more * { color: #2e0b57 !important; -webkit-text-fill-color: #2e0b57 !important; }
+html.neon:not(#_):not(#__) .services .service-card a.btn-more.btn-more:hover,
+html.neon:not(#_):not(#__) .contact .contact-form .btn.btn-primary.btn-primary:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 0 26px rgba(255, 43, 214, 0.55); }
+/* Inputs: the initials box. */
+html.neon:not(#_):not(#__) .contact-form :is(input, select, textarea) {
+  background: #14052b !important; border: 1px solid #b04dff !important; border-radius: 10px !important;
+  font-family: Oswald, sans-serif; letter-spacing: 0.04em;
+}
+html.neon:not(#_):not(#__) .contact-form :is(input, select, textarea):focus { outline: none !important; box-shadow: 0 0 0 3px rgba(176, 77, 255, 0.45), 0 0 18px rgba(255, 43, 214, 0.35) !important; }
+/* Footer news and blog rows: leaderboard rows. */
+html.neon:not(#_):not(#__) .site-footer .fw-item { border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 10px; }
+html.neon:not(#_):not(#__) .site-footer .fw-meta, html.neon:not(#_):not(#__) .site-footer .fw-meta * { color: #ffb36b !important; -webkit-text-fill-color: #ffb36b !important; letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.68rem !important; }
+
+/* ---- STAGE tags (neon-quest.js puts one at the top of each section) ---- */
+html.neon .gx-stage {
+  position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;
+  margin: 0 auto clamp(18px, 2.4vw, 30px); padding-top: clamp(26px, 3vw, 40px); font: 700 0.75rem/1 Oswald, sans-serif; letter-spacing: 0.3em; color: #fff; text-transform: uppercase;
+}
+html.neon .gx-stage span { color: #ffb36b; }
+html.neon .gx-stage b { font-size: 1rem; text-shadow: 0 0 16px #ff2bd6; letter-spacing: 0.2em; }
+html.neon .gx-stage i { font-style: normal; padding: 5px 10px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.25); color: rgba(255, 255, 255, 0.6); letter-spacing: 0.2em; font-size: 0.65rem; }
+html.neon .gx-stage.is-cleared i { border-color: #7dffb2; color: #7dffb2; box-shadow: 0 0 14px rgba(125, 255, 178, 0.35); }
+html.neon .gx-stage::before, html.neon .gx-stage::after { content: ""; height: 1px; width: min(120px, 14vw); background: linear-gradient(90deg, transparent, rgba(255, 43, 214, 0.7)); }
+html.neon .gx-stage::after { transform: scaleX(-1); }
+
+/* ---- Quest HUD: top right once you scroll past the hero (where the arcade HUD sits in the hero) ---- */
+html.neon .gx-hud {
+  position: fixed; top: 78px; right: 16px; z-index: 60; width: 210px; padding: 12px 14px; border-radius: 14px; color: #fff;
+  background: var(--gx-panel); border: 1px solid var(--gx-edge); box-shadow: var(--gx-glow);
+  font: 700 0.7rem/1.5 Oswald, sans-serif; letter-spacing: 0.18em; text-transform: uppercase;
+  opacity: 0; transform: translateY(-8px); transition: opacity 0.3s, transform 0.3s; pointer-events: none;
+}
+html.neon .gx-hud.on { opacity: 1; transform: none; }
+html.neon .gx-hud .gx-row { display: flex; justify-content: space-between; }
+html.neon .gx-hud .gx-row b { color: #ffb36b; }
+html.neon .gx-hud .gx-bar { height: 6px; margin: 8px 0 6px; border-radius: 999px; background: rgba(255, 255, 255, 0.1); overflow: hidden; }
+html.neon .gx-hud .gx-bar i { display: block; height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg, #b04dff, #ff2bd6, #ffb36b); box-shadow: 0 0 12px #ff2bd6; transition: width 0.6s cubic-bezier(.2, 1.2, .4, 1); }
+html.neon .gx-hud .gx-dots { display: flex; gap: 5px; margin-top: 6px; }
+html.neon .gx-hud .gx-dots i { flex: 1; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.15); }
+html.neon .gx-hud .gx-dots i.on { background: #7dffb2; box-shadow: 0 0 8px rgba(125, 255, 178, 0.7); }
+/* ---- XP toast ---- */
+html.neon .gx-toast {
+  position: fixed; left: 50%; top: 92px; z-index: 70; transform: translate(-50%, -14px) scale(0.96); opacity: 0; pointer-events: none;
+  padding: 12px 22px; border-radius: 16px; text-align: center; color: #fff; background: var(--gx-panel); border: 1px solid var(--gx-edge); box-shadow: var(--gx-glow-hot);
+  font: 700 0.75rem/1.4 Oswald, sans-serif; letter-spacing: 0.25em; text-transform: uppercase; transition: opacity 0.3s, transform 0.35s cubic-bezier(.2, 1.4, .4, 1);
+}
+html.neon .gx-toast.on { opacity: 1; transform: translate(-50%, 0) scale(1); }
+html.neon .gx-toast b { display: block; font-size: 1.15rem; letter-spacing: 0.12em; text-shadow: 0 0 18px #ff2bd6; }
+html.neon .gx-toast em { font-style: normal; color: #ffb36b; }
+@media (max-width: 760px) {
+  html.neon .gx-hud { top: 64px; right: 10px; width: 150px; padding: 9px 10px; font-size: 0.6rem; }
+  html.neon .gx-toast { top: 120px; width: calc(100% - 40px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html.neon:not(#_):not(#__) :is(.service-card, .feature-body):hover { transform: none; }
+}
+/* Feature sections lay out side by side (flex row): let the STAGE tag take a whole row above them. */
+html.neon:not(#_):not(#__) .feature { flex-wrap: wrap !important; }
+html.neon .gx-stage { flex: 0 0 100%; width: 100%; }
+@media (max-width: 760px) {
+  html.neon .gx-hud { width: 124px; padding: 7px 9px; }
+  html.neon .gx-hud .gx-dots { display: none; }
+  html.neon .gx-stage::before, html.neon .gx-stage::after { display: none; }
+  html.neon .gx-stage { gap: 8px; letter-spacing: 0.2em; }
+}
