@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Synthwave vs Cyberpunk</title>
+<!--
+  versus.html: a just-for-fun Tenshi redesign, "synthwave vs cyberpunk", as one long SIDEWAYS scroll.
+  Scroll down (or swipe, or use the arrow keys) and the page slides left through five full-screen panels that take
+  turns between the two styles:
+    0  VS       both styles split down the middle; the split follows your mouse
+    1  BUILD    synthwave: sunset, moving grid floor, mountains
+    2  LAUNCH   cyberpunk: rain, flickering neon signs, a terminal that deploys a site
+    3  GROW     synthwave: numbers that count up
+    4  START    cyberpunk: a glitchy call to action
+  Reactive bits: layers shift with the mouse (parallax), the whole strip leans when you scroll fast, signs flicker
+  when you hover them, headlines glitch on hover, and the rain only falls on the cyberpunk panels.
+  Everything is in this one file. Nothing flashes quickly; "reduce motion" turns the animations off.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --night: #0b0420; --pink: #ff2bd6; --orange: #ff8a2b; --purple: #8a3ffc; --violet: #2e0b57;
+    --acid: #f5ff3a; --cyan: #00f0ff; --steel: #0a0f14; --text: #f4ecff;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --night: #0b0420; } }
+  :root[data-theme="dark"] { --night: #0b0420; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--night); color: var(--text); font-family: "Rajdhani", system-ui, sans-serif; }
+  a { color: inherit; }
+
+  /* ---------- The sideways scroll: a tall page whose sticky window slides a wide strip left ---------- */
+  .scroller { position: relative; }                 /* its height is set by the script: one screen per panel */
+  .window { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+  .strip { display: flex; height: 100%; will-change: transform; }
+  .panel { position: relative; flex: none; width: 100vw; height: 100%; overflow: hidden; display: grid; place-items: center; }
+  .content { position: relative; z-index: 5; width: min(1100px, 100% - 32px); }
+
+  /* ---------- Synthwave pieces ---------- */
+  .synth { background: linear-gradient(180deg, #12002b 0%, #3b0a5c 48%, #ff2f9a 62%, #12002b 62.2%); }
+  .sun { position: absolute; left: 50%; top: 18%; width: min(46vw, 420px); aspect-ratio: 1; transform: translateX(-50%); border-radius: 50%;
+         background: linear-gradient(180deg, #ffd36b, #ff7a3d 45%, #ff2f9a 85%);
+         -webkit-mask: linear-gradient(#000 52%, transparent 52% 56%, #000 56% 64%, transparent 64% 69%, #000 69% 76%, transparent 76% 82%, #000 82%);
+                 mask: linear-gradient(#000 52%, transparent 52% 56%, #000 56% 64%, transparent 64% 69%, #000 69% 76%, transparent 76% 82%, #000 82%);
+         box-shadow: 0 0 90px rgba(255, 60, 170, .55); }
+  .mountains { position: absolute; left: -5%; right: -5%; top: 44%; height: 20%; background: #1a0636;
+               clip-path: polygon(0 100%, 0 60%, 8% 30%, 15% 55%, 24% 10%, 33% 50%, 41% 25%, 50% 60%, 58% 20%, 67% 45%, 76% 5%, 85% 50%, 93% 30%, 100% 55%, 100% 100%); }
+  .mountains::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255, 43, 214, .35), transparent 40%); }
+  .floor { position: absolute; left: -50%; right: -50%; top: 62%; height: 80%; transform-origin: 50% 0; transform: perspective(300px) rotateX(62deg);
+           background:
+             linear-gradient(90deg, rgba(255, 43, 214, .9) 2px, transparent 2px) 0 0 / 60px 60px,
+             linear-gradient(0deg, rgba(255, 43, 214, .9) 2px, transparent 2px) 0 0 / 60px 60px;
+           animation: floor-run 1.2s linear infinite; }
+  .floor::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, #12002b 0%, transparent 35%); }
+  @keyframes floor-run { to { background-position: 0 60px, 0 60px; } }
+  .stars { position: absolute; inset: 0 0 50% 0; background-image: radial-gradient(1.5px 1.5px at 20% 30%, #fff, transparent), radial-gradient(1px 1px at 70% 20%, #fff, transparent),
+           radial-gradient(1.5px 1.5px at 40% 70%, #ffd1f0, transparent), radial-gradient(1px 1px at 85% 55%, #fff, transparent), radial-gradient(1px 1px at 10% 80%, #fff, transparent);
+           background-size: 300px 200px; opacity: .7; animation: twinkle 4s ease-in-out infinite alternate; }
+  @keyframes twinkle { to { opacity: .35; } }
+  .chrome { font-family: "Orbitron", sans-serif; font-weight: 900; font-size: clamp(3rem, 12vw, 9rem); line-height: .9; margin: 0; letter-spacing: .02em;
+            background: linear-gradient(180deg, #fff 0%, #ffd1f0 38%, #7b2ff7 50%, #ff8a2b 51%, #ffe0a8 75%, #fff 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            filter: drop-shadow(0 4px 0 #2e0b57) drop-shadow(0 0 24px rgba(255, 43, 214, .6)); }
+  .script { font-family: "Brush Script MT", "Segoe Script", cursive; color: var(--pink); font-size: clamp(1.6rem, 4vw, 3rem); transform: rotate(-6deg); display: inline-block;
+            text-shadow: 0 0 10px var(--pink), 0 0 30px var(--pink); margin: -.3em 0 .4em 1em; }
+
+  /* ---------- Cyberpunk pieces ---------- */
+  .cyber { background: radial-gradient(circle at 70% 30%, #0e2a33, #05080b 60%); }
+  .cyber::before { content: ""; position: absolute; inset: 0; z-index: 4; pointer-events: none;      /* scanlines */
+                   background: repeating-linear-gradient(0deg, rgba(0, 0, 0, .25) 0 1px, transparent 1px 3px); }
+  .skyline { position: absolute; inset: auto 0 0 0; height: 70%; display: flex; align-items: flex-end; gap: 6px; padding: 0 2%; opacity: .9; }
+  .skyline i { flex: 1; background: linear-gradient(180deg, #0f1a22, #05080b); border-top: 2px solid rgba(0, 240, 255, .4);
+               background-image: radial-gradient(circle, rgba(245, 255, 58, .7) 1px, transparent 1.5px); background-size: 9px 12px; }
+  .sign { position: absolute; z-index: 3; font-family: "Orbitron", sans-serif; font-weight: 800; padding: .3em .6em; border: 2px solid currentColor; border-radius: 6px;
+          text-shadow: 0 0 8px currentColor, 0 0 22px currentColor; box-shadow: 0 0 14px currentColor, inset 0 0 14px currentColor; cursor: pointer; user-select: none;
+          animation: buzz 6s steps(1) infinite; }
+  .sign.jp { writing-mode: vertical-rl; letter-spacing: .1em; }
+  .sign:hover, .sign.broken { animation: flicker .9s steps(1) infinite; }
+  @keyframes buzz { 0%, 92%, 100% { opacity: 1; } 93% { opacity: .4; } 95% { opacity: 1; } 97% { opacity: .6; } }
+  @keyframes flicker { 0%, 40%, 60%, 100% { opacity: 1; } 45% { opacity: .2; } 50% { opacity: .9; } 55% { opacity: .3; } }
+  .glitch { position: relative; font-family: "Orbitron", sans-serif; font-weight: 900; font-size: clamp(3rem, 12vw, 9rem); line-height: .9; margin: 0; color: var(--acid);
+            text-shadow: 3px 0 var(--cyan), -3px 0 var(--pink); }
+  .glitch::before, .glitch::after { content: attr(data-text); position: absolute; inset: 0; opacity: 0; }
+  .glitch::before { color: var(--cyan); }
+  .glitch::after { color: var(--pink); }
+  .glitch:hover::before, .glitch.go::before { opacity: .9; animation: slice-a .5s steps(2) infinite; }
+  .glitch:hover::after, .glitch.go::after { opacity: .9; animation: slice-b .5s steps(2) infinite; }
+  @keyframes slice-a { 0% { clip-path: inset(10% 0 60% 0); transform: translate(-6px, -2px); } 50% { clip-path: inset(55% 0 20% 0); transform: translate(5px, 2px); } 100% { clip-path: inset(30% 0 45% 0); transform: translate(-3px, 0); } }
+  @keyframes slice-b { 0% { clip-path: inset(65% 0 5% 0); transform: translate(6px, 1px); } 50% { clip-path: inset(15% 0 70% 0); transform: translate(-5px, -2px); } 100% { clip-path: inset(40% 0 30% 0); transform: translate(3px, 1px); } }
+  .hud { border: 1px solid rgba(0, 240, 255, .5); background: rgba(0, 20, 26, .65); padding: 18px 20px; position: relative;
+         clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px)); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+  .hud h3 { margin: 0 0 6px; font-family: "Orbitron", sans-serif; color: var(--cyan); letter-spacing: .12em; font-size: .9rem; }
+  .terminal { font-family: ui-monospace, Consolas, monospace; color: #9dffb0; font-size: clamp(.8rem, 1.6vw, 1rem); min-height: 12em; white-space: pre-wrap; }
+  .terminal .cursor { display: inline-block; width: .6em; height: 1.1em; background: #9dffb0; vertical-align: -2px; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ---------- Shared bits ---------- */
+  .lead { font-size: clamp(1.1rem, 2.2vw, 1.5rem); max-width: 34em; margin: 12px 0 22px; }
+  .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .card { padding: 18px; border-radius: 14px; background: rgba(46, 11, 87, .55); border: 1px solid rgba(255, 43, 214, .45);
+          box-shadow: 0 0 24px rgba(255, 43, 214, .25); transition: transform .3s, box-shadow .3s; }
+  .card:hover { transform: translateY(-6px) rotate(-1deg); box-shadow: 0 0 40px rgba(255, 43, 214, .55); }
+  .card b { display: block; font-family: "Orbitron", sans-serif; color: #ffd1f0; margin-bottom: 4px; }
+  .big-num { font-family: "Orbitron", sans-serif; font-size: clamp(2rem, 6vw, 4rem); font-weight: 900; color: #fff; text-shadow: 0 0 20px var(--pink); }
+  .btn { display: inline-block; padding: 16px 30px; font-family: "Orbitron", sans-serif; font-weight: 800; letter-spacing: .1em; text-decoration: none; border: 0; cursor: pointer; }
+  .btn.synth-btn { background: #fff; color: var(--violet); border-radius: 999px; box-shadow: 0 0 30px rgba(255, 43, 214, .6); }
+  .btn.cyber-btn { background: var(--acid); color: #05080b; clip-path: polygon(0 0, 100% 0, 100% 70%, 92% 100%, 0 100%); box-shadow: 0 0 30px rgba(245, 255, 58, .5); }
+  .btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
+  .depth { will-change: transform; transition: transform .2s ease-out; }   /* layers that shift with the mouse */
+
+  /* ---------- Panel 0: the VS split ---------- */
+  .vs .half { position: absolute; inset: 0; display: grid; place-items: center; }
+  .vs .cyberside { clip-path: inset(0 0 0 var(--split, 50%)); }
+  .vs .seam { position: absolute; top: 0; bottom: 0; left: var(--split, 50%); width: 3px; z-index: 6; background: #fff; box-shadow: 0 0 20px #fff, 0 0 40px var(--pink); }
+  .vs .seam::after { content: "VS"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70px; height: 70px; border-radius: 50%;
+                     display: grid; place-items: center; background: #fff; color: var(--violet); font: 900 1.4rem "Orbitron", sans-serif; box-shadow: 0 0 30px #fff; }
+  .vs .tag { font-family: "Orbitron", sans-serif; letter-spacing: .3em; font-size: .85rem; opacity: .8; }
+
+  /* ---------- Fixed overlays: rain, progress bar, panel dots, hint ---------- */
+  #rain { position: fixed; inset: 0; z-index: 20; pointer-events: none; }
+  .progress { position: fixed; left: 0; top: 0; height: 4px; z-index: 30; background: linear-gradient(90deg, var(--pink), var(--orange), var(--cyan)); width: 0; }
+  .dots { position: fixed; right: 18px; top: 50%; transform: translateY(-50%); z-index: 30; display: flex; flex-direction: column; gap: 10px; }
+  .dots button { width: 12px; height: 12px; border-radius: 50%; border: 2px solid #fff; background: transparent; cursor: pointer; padding: 0; }
+  .dots button.on { background: #fff; box-shadow: 0 0 12px #fff; }
+  .hint { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 30; font: 700 .8rem "Orbitron", sans-serif; letter-spacing: .25em; opacity: .75; animation: nudge 1.6s ease-in-out infinite; }
+  @keyframes nudge { 50% { transform: translateX(-50%) translateX(10px); } }
+  .home { position: fixed; left: 16px; top: 14px; z-index: 30; font: 800 .8rem "Orbitron", sans-serif; letter-spacing: .2em; text-decoration: none; padding: 8px 12px; border: 1px solid rgba(255, 255, 255, .5); border-radius: 8px; background: rgba(0, 0, 0, .3); }
+
+  @media (max-width: 700px) { .dots { right: 8px; } .sign { font-size: .7rem; } .hud { padding: 14px; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<a class="home" href="../index.html">← TENSHI</a>
+<div class="progress" id="progress"></div>
+<nav class="dots" id="dots" aria-label="Panels"></nav>
+<div class="hint" id="hint">SCROLL →</div>
+<canvas id="rain" aria-hidden="true"></canvas>
+
+<div class="scroller" id="scroller">
+  <div class="window">
+    <div class="strip" id="strip">
+
+      <!-- 0. VS -->
+      <section class="panel vs" data-style="mix" aria-label="Synthwave versus cyberpunk">
+        <div class="half synth">
+          <div class="stars"></div><div class="sun depth" data-depth="10"></div><div class="mountains depth" data-depth="18"></div><div class="floor"></div>
+          <div class="content" style="text-align:left">
+            <p class="tag">SYNTHWAVE</p>
+            <h1 class="chrome depth" data-depth="-14">TENSHI</h1>
+            <span class="script">Every small business deserves a chance.</span>
+          </div>
+        </div>
+        <div class="half cyber cyberside">
+          <div class="skyline"><i style="height:60%"></i><i style="height:85%"></i><i style="height:45%"></i><i style="height:95%"></i><i style="height:70%"></i><i style="height:55%"></i><i style="height:80%"></i><i style="height:40%"></i></div>
+          <span class="sign jp depth" data-depth="20" style="right:12%;top:12%;color:var(--pink)">天使システム</span>
+          <div class="content" style="text-align:left">
+            <p class="tag" style="color:var(--cyan)">CYBERPUNK</p>
+            <h1 class="glitch go depth" data-depth="-14" data-text="TENSHI">TENSHI</h1>
+            <p class="lead" style="color:var(--acid)">// DEPLOY YOUR FUTURE_</p>
+          </div>
+        </div>
+        <div class="seam"></div>
+      </section>
+
+      <!-- 1. BUILD (synthwave) -->
+      <section class="panel synth" data-style="synth" aria-label="Build">
+        <div class="stars"></div><div class="sun depth" data-depth="8"></div><div class="mountains depth" data-depth="16"></div><div class="floor"></div>
+        <div class="content">
+          <h2 class="chrome depth" data-depth="-10">BUILD</h2>
+          <span class="script">websites that glow</span>
+          <div class="row">
+            <div class="card"><b>WEB DESIGN</b>Clean, fast pages that look great on every screen.</div>
+            <div class="card"><b>PAGE BUILDER</b>Click any text and type. Drag blocks. Done.</div>
+            <div class="card"><b>MEDIA CENTER</b>Drop in photos; they're resized and optimised for you.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. LAUNCH (cyberpunk) -->
+      <section class="panel cyber" data-style="cyber" aria-label="Launch">
+        <div class="skyline"><i style="height:50%"></i><i style="height:90%"></i><i style="height:65%"></i><i style="height:40%"></i><i style="height:75%"></i><i style="height:95%"></i><i style="height:55%"></i><i style="height:70%"></i><i style="height:45%"></i></div>
+        <span class="sign depth" data-depth="22" style="left:6%;top:14%;color:var(--cyan)">OPEN 24/7</span>
+        <span class="sign jp depth" data-depth="14" style="right:8%;top:10%;color:var(--pink)">起動</span>
+        <span class="sign depth" data-depth="30" style="right:20%;bottom:16%;color:var(--acid)">NO LOCK-IN</span>
+        <div class="content">
+          <h2 class="glitch depth" data-depth="-10" data-text="LAUNCH">LAUNCH</h2>
+          <p class="lead">One click and your site is live. Watch it happen:</p>
+          <div class="hud"><h3>// DEPLOY.LOG</h3><div class="terminal" id="terminal"></div></div>
+        </div>
+      </section>
+
+      <!-- 3. GROW (synthwave) -->
+      <section class="panel synth" data-style="synth" aria-label="Grow">
+        <div class="stars"></div><div class="sun depth" data-depth="8"></div><div class="mountains depth" data-depth="16"></div><div class="floor"></div>
+        <div class="content">
+          <h2 class="chrome depth" data-depth="-10">GROW</h2>
+          <span class="script">and own all of it</span>
+          <div class="row">
+            <div class="card"><div class="big-num" data-count="1">0</div>second to publish</div>
+            <div class="card"><div class="big-num" data-count="10">0</div>languages built in</div>
+            <div class="card"><div class="big-num" data-count="100" data-suffix="%">0</div>yours to export, anytime</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. START (cyberpunk) -->
+      <section class="panel cyber" data-style="cyber" aria-label="Start">
+        <div class="skyline"><i style="height:70%"></i><i style="height:45%"></i><i style="height:95%"></i><i style="height:60%"></i><i style="height:85%"></i><i style="height:50%"></i><i style="height:75%"></i></div>
+        <span class="sign depth" data-depth="18" style="left:8%;top:18%;color:var(--pink)">FREE TO USE</span>
+        <span class="sign depth" data-depth="26" style="right:10%;top:22%;color:var(--cyan)">OPEN SOURCE</span>
+        <div class="content" style="text-align:center">
+          <h2 class="glitch depth" data-depth="-10" data-text="START NOW">START NOW</h2>
+          <p class="lead" style="margin-inline:auto">Tell us about your business. We'll do the rest.</p>
+          <a class="btn cyber-btn" href="../launch.html">DEPLOY YOUR FUTURE →</a>
+          &nbsp; <a class="btn synth-btn" href="../contact.html">TALK TO US</a>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// =====================================================================================================================
+// The sideways scroll, mouse parallax, scroll-speed lean, rain, terminal and counters.
+// =====================================================================================================================
+(function () {
+  const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const scroller = document.getElementById("scroller");
+  const strip = document.getElementById("strip");
+  const panels = [...strip.children];
+  const count = panels.length;
+
+  // One screen of scrolling per panel, plus one so the last panel can be reached.
+  function size() { scroller.style.height = count * window.innerHeight + "px"; }
+  size();
+  window.addEventListener("resize", size);
+
+  // Panel dots on the right: click one to jump there.
+  const dots = document.getElementById("dots");
+  panels.forEach((p, i) => {
+    const b = document.createElement("button");
+    b.setAttribute("aria-label", "Go to " + (p.getAttribute("aria-label") || "panel " + (i + 1)));
+    b.addEventListener("click", () => window.scrollTo({ top: i * window.innerHeight, behavior: calm ? "auto" : "smooth" }));
+    dots.appendChild(b);
+  });
+
+  // Arrow keys move one panel left or right.
+  window.addEventListener("keydown", e => {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    const now = Math.round(window.scrollY / window.innerHeight) + (e.key === "ArrowRight" ? 1 : -1);
+    window.scrollTo({ top: Math.max(0, Math.min(count - 1, now)) * window.innerHeight, behavior: calm ? "auto" : "smooth" });
+  });
+
+  // Mouse parallax: every .depth layer moves a little with the pointer (bigger data-depth = moves more).
+  const layers = [...document.querySelectorAll(".depth")];
+  let mx = 0, my = 0;
+  window.addEventListener("pointermove", e => {
+    mx = e.clientX / window.innerWidth - 0.5;
+    my = e.clientY / window.innerHeight - 0.5;
+    // The VS split follows the mouse across the first panel.
+    document.querySelector(".vs").style.setProperty("--split", Math.max(8, Math.min(92, (e.clientX / window.innerWidth) * 100)) + "%");
+  });
+
+  let lastY = window.scrollY, lean = 0, current = -1;
+  const progress = document.getElementById("progress"), hint = document.getElementById("hint");
+  function frame() {
+    const maxScroll = (count - 1) * window.innerHeight;
+    const y = Math.min(window.scrollY, maxScroll);
+    const x = (y / window.innerHeight) * window.innerWidth;     // how far sideways the strip has slid
+
+    // Lean: the strip skews a little in the direction you're scrolling, more when you scroll fast.
+    const speed = window.scrollY - lastY;
+    lastY = window.scrollY;
+    lean += (Math.max(-12, Math.min(12, speed * 0.15)) - lean) * 0.12;
+    strip.style.transform = `translateX(${-x}px)` + (calm ? "" : ` skewX(${-lean * 0.4}deg)`);
+
+    if (!calm) for (const el of layers) {
+      const d = Number(el.dataset.depth) || 0;
+      const base = el.classList.contains("sun") ? "translateX(-50%) " : "";
+      el.style.transform = `${base}translate(${mx * d}px, ${my * d}px)`;
+    }
+
+    progress.style.width = (y / maxScroll) * 100 + "%";
+    const index = Math.round(y / window.innerHeight);
+    if (index !== current) {
+      current = index;
+      [...dots.children].forEach((b, i) => b.classList.toggle("on", i === index));
+      hint.style.opacity = index === count - 1 ? 0 : "";
+      onPanel(index);
+    }
+    rainAmount = cyberShare(x);
+    requestAnimationFrame(frame);
+  }
+
+  // How much of the screen is showing a cyberpunk panel right now (0 .. 1). The VS panel counts as half.
+  function cyberShare(x) {
+    let share = 0;
+    panels.forEach((p, i) => {
+      const left = i * window.innerWidth - x;
+      const seen = Math.max(0, Math.min(window.innerWidth, left + window.innerWidth) - Math.max(0, left)) / window.innerWidth;
+      share += seen * (p.dataset.style === "cyber" ? 1 : p.dataset.style === "mix" ? 0.5 : 0);
+    });
+    return share;
+  }
+
+  // Things that start when you arrive on a panel: the deploy terminal and the counters.
+  const done = new Set();
+  function onPanel(i) {
+    if (done.has(i)) return;
+    done.add(i);
+    if (panels[i].querySelector("#terminal")) typeTerminal();
+    panels[i].querySelectorAll("[data-count]").forEach(countUp);
+  }
+
+  function countUp(el) {
+    const target = Number(el.dataset.count), suffix = el.dataset.suffix || "", start = performance.now();
+    (function step(now) {
+      const t = calm ? 1 : Math.min(1, (now - start) / 1400);
+      el.textContent = Math.round(target * (1 - Math.pow(1 - t, 3))) + suffix;
+      if (t < 1) requestAnimationFrame(step);
+    })(start);
+  }
+
+  function typeTerminal() {
+    const term = document.getElementById("terminal");
+    const lines = ["$ tenshi deploy sakura-bakery", "> building pages ........ ok", "> optimising 12 photos ... ok",
+                   "> uploading ............. ok", "> securing with https .... ok", "", "✓ live at sakura-bakery.tenshi.systems in 0.9s"];
+    let li = 0, ci = 0, text = "";
+    (function type() {
+      if (li >= lines.length) { term.innerHTML = text.replace(/</g, "&lt;") + '<span class="cursor"></span>'; return; }
+      text += ci < lines[li].length ? lines[li][ci++] : (li++, ci = 0, "\n");
+      term.innerHTML = text.replace(/</g, "&lt;") + '<span class="cursor"></span>';
+      setTimeout(type, calm ? 0 : ci === 0 ? 260 : 22);
+    })();
+  }
+
+  // Click a neon sign to break it (it flickers until you click again).
+  document.querySelectorAll(".sign").forEach(s => s.addEventListener("click", () => s.classList.toggle("broken")));
+
+  // ---- Rain: falls only while cyberpunk panels are on screen ----
+  const rain = document.getElementById("rain"), rc = rain.getContext("2d");
+  let rainAmount = 0, drops = [];
+  function rainSize() { rain.width = window.innerWidth; rain.height = window.innerHeight; }
+  rainSize();
+  window.addEventListener("resize", rainSize);
+  function rainFrame() {
+    rc.clearRect(0, 0, rain.width, rain.height);
+    const wanted = Math.round(rainAmount * 260);
+    while (drops.length < wanted) drops.push({ x: Math.random() * rain.width, y: Math.random() * -rain.height, v: 9 + Math.random() * 9, l: 10 + Math.random() * 18 });
+    if (drops.length > wanted) drops.length = wanted;
+    rc.strokeStyle = "rgba(160, 230, 255, .45)";
+    rc.lineWidth = 1;
+    rc.beginPath();
+    for (const d of drops) {
+      d.y += d.v; d.x += d.v * 0.15 + mx * 4;     // the rain leans with the mouse, too
+      if (d.y > rain.height) { d.y = -20; d.x = Math.random() * rain.width; }
+      rc.moveTo(d.x, d.y);
+      rc.lineTo(d.x - d.l * 0.15, d.y - d.l);
+    }
+    rc.stroke();
+    requestAnimationFrame(rainFrame);
+  }
+
+  requestAnimationFrame(frame);
+  if (!calm) requestAnimationFrame(rainFrame);
+})();
+</script>
+</body>
+</html>
