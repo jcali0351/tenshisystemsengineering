@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="neon">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tenshi Systems Engineering | Osaka, Japan</title>
   <meta name="description" content="Tenshi Systems Engineering delivers innovative, dependable, and scalable engineering solutions from Osaka, Japan.">
-  <meta name="theme-color" content="#c8102e">
+  <meta name="theme-color" content="#6c10c8">
   <meta property="og:title" content="Tenshi Systems Engineering">
   <meta property="og:description" content="Engineering Reliable Solutions for Tomorrow, from Osaka, Japan.">
   <meta property="og:type" content="website">
@@ -25,8 +25,13 @@
   <link rel="stylesheet" href="slogan.css?v=026f80a4">
   <link rel="stylesheet" href="buttons.css?v=f676c1a0">
   <link rel="stylesheet" href="custom.css?v=743f7d62">
+  <link rel="stylesheet" href="sandbox/neon-recolor.css">
+  <link rel="stylesheet" href="sandbox/neon-theme.css">
+  <script src="sandbox/neon-recolor-live.js"></script>
 </head>
 <body>
+  <canvas id="neon-bg" aria-hidden="true"></canvas>
+  <canvas id="neon-particles" aria-hidden="true"></canvas>
   <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
 
   <header class="site-header">
@@ -248,7 +253,7 @@
     </section>
 
     <!-- parallax1:start (written by tools/build-pages.mjs from data/parallax.json; words in translations.js) -->
-    <section class="parallax" data-parallax data-speed="0.35" data-fx-letters="rise" data-fx-gray="enter" style="--px-h:70vh;--px-overlay:#1a080c;--px-op:0.45;--px-pos:center center;--pxl-step:40ms;--pxl-dur:0.8s;--pxl-delay:0.1s;--pxg-dur:1.8s;--pxg-delay:0.25s;--pxg-amt:1" aria-labelledby="parallax-px1-title">
+    <section class="parallax" data-parallax data-speed="0.35" data-fx-letters="rise" data-fx-gray="enter" style="--px-h:70vh;--px-overlay:#11081a;--px-op:0.45;--px-pos:center center;--pxl-step:40ms;--pxl-dur:0.8s;--pxl-delay:0.1s;--pxg-dur:1.8s;--pxg-delay:0.25s;--pxg-amt:1" aria-labelledby="parallax-px1-title">
       <div class="parallax-viewport">
         <div class="parallax-layer" aria-hidden="true">
           <img src="img/parallax/px1.jpg" alt="Kobe skyline and harbor" data-i18n-attr="alt:px1Alt" width="1920" height="1080" loading="lazy" decoding="async" data-still data-still-color>
@@ -530,7 +535,7 @@
             <li><a href="portal.html" data-nav="portal" data-i18n="navPortal">Portal</a></li>
           </ul>
       </nav>
-      <p class="footer-meta"><span data-i18n="location">Osaka, Japan</span> · © <span id="year">2026</span> Tenshi Systems Engineering</p>
+      <p class="footer-meta"><span data-i18n="location">Osaka, Japan</span> · © <span id="year">2026</span> Tenshi Systems Engineering · <a href="classic.html">Classic site</a></p>
       <img class="footer-badge" src="brand/sdvosb-badge.png?v=20261119" alt="Service-Disabled Veteran-Owned Small Business (SDVOSB) certified" width="260" height="260" loading="lazy" decoding="async">
       <p class="photo-credits">
         <span data-i18n="photoCredits">Skyline photos from Wikimedia Commons, resized and tinted:</span>
@@ -562,5 +567,12 @@
   <script src="design.js?v=e4ade4cb"></script>
   <script src="rain.js?v=1d215429"></script>
   <script src="chat.js?v=e6aee4be"></script>
+  <script src="sandbox/neon-bg.js"></script>
+  <script src="sandbox/neon-fx.js"></script>
+  <script src="sandbox/neon-header.js"></script>
+  <script src="sandbox/neon-audio.js"></script>
+  <script src="sandbox/neon-geo.js"></script>
+  <script src="sandbox/neon-beasts.js"></script>
+  <script src="sandbox/neon-game.js"></script>
 </body>
 </html>
