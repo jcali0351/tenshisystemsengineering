@@ -369,3 +369,12 @@ html.neon .hero-card .kx-reel .kx-word {
 }
 html.neon .hero-card .hero-lead { text-shadow: var(--dark-halo) !important; font-weight: 600; }
 html.neon .hero-logo { filter: drop-shadow(0 0 12px var(--neon-pink)) drop-shadow(0 0 22px rgba(8, 2, 24, .8)) !important; }
+
+/* Score panel on phones and narrow windows: a slim one-line bar under the header, over the sky, clear of the text. */
+@media (max-width: 760px) {
+  .neon-hud { top: 72px; bottom: auto; left: 10px; right: auto; min-width: 0; display: flex; align-items: center; gap: 10px;
+              padding: 5px 8px 5px 10px; font-size: .66rem; border-radius: 999px; }
+  .neon-hud-row { gap: 4px; }
+  .neon-hud-tip { display: none; }
+  .neon-hud button { margin: 0; width: auto; padding: 3px 8px; border-radius: 999px; font-size: .6rem; letter-spacing: .12em; }
+}
