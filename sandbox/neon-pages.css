@@ -108,3 +108,7 @@ html.neon.gx-page:not(#_):not(#__) main :is(a.btn, button.btn, .btn-primary, .bt
   text-align: center !important; line-height: 1 !important; padding-top: 0 !important; padding-bottom: 0 !important;
   min-height: 44px; height: auto !important;
 }
+
+/* Plain site background: one flat purple behind everything (no grid lines, no glow). */
+html.neon.gx-page:not(#_):not(#__) body { background: rgb(12, 4, 30) !important; background-image: none !important; }
+html.neon.gx-page:not(#_):not(#__) .site-footer { background: rgb(12, 4, 30) !important; background-image: none !important; }

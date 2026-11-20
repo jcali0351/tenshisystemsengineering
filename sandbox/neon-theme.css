@@ -775,3 +775,6 @@ html.neon:not(#_):not(#__) .contact .contact-form .btn.btn-primary.btn-primary {
   text-align: center !important; line-height: 1 !important; padding-top: 0 !important; padding-bottom: 0 !important;
   min-height: 44px; height: 44px !important;
 }
+
+/* Plain site background: one flat purple behind everything (no grid lines, no glow bands). */
+html.neon:not(#_):not(#__) :is(.band, .services, .feature, .contact, .site-footer) { background: rgb(12, 4, 30) !important; background-image: none !important; }
