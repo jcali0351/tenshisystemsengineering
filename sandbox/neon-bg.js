@@ -53,11 +53,38 @@ const clamp01 = t => Math.max(0, Math.min(1, t));
 const CAMERA_HEIGHT = 1.1;
 const NEAREST = 0.6;          // don't draw anything closer than this (it would be huge)
 
+// Phone tilt: tilting a phone nudges the camera, so the floor shifts as if you were leaning over it.
+const tilt = { x: 0, y: 0, tx: 0, ty: 0 };
+window.addEventListener("deviceorientation", e => {
+  if (e.gamma == null) return;
+  tilt.tx = Math.max(-1, Math.min(1, e.gamma / 35));
+  tilt.ty = Math.max(-1, Math.min(1, (e.beta - 45) / 35));
+});
+// iPhones ask permission for motion first; ask on the first tap.
+window.addEventListener("pointerdown", () => {
+  if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === "function") DeviceOrientationEvent.requestPermission().catch(() => {});
+}, { once: true });
+
 function project(x, z) {
   const focal = H * 0.85;                  // a bit like a camera lens: bigger = more zoomed in
-  const horizonY = H * SETTINGS.horizon;
-  return [W / 2 + (x * focal) / z, horizonY + (CAMERA_HEIGHT * focal) / z];
+  const horizonY = H * SETTINGS.horizon + tilt.y * H * 0.03;
+  return [W / 2 + tilt.x * W * 0.06 + (x * focal) / z, horizonY + (CAMERA_HEIGHT * focal) / z];
 }
+
+// Day and night: once the sun has risen, it slowly sets and rises again (one full day = DAY_SECONDS).
+const DAY_SECONDS = 100;
+const DAY_STARTS_AT = 8;     // seconds after the page opens
+function nightness(time) {
+  if (time < DAY_STARTS_AT) return 0;
+  return (1 - Math.cos(((time - DAY_STARTS_AT) / DAY_SECONDS) * Math.PI * 2)) / 2;   // 0 = day, 1 = deepest night
+}
+// Stars that come out at night (fixed positions, worked out once).
+const nightStars = Array.from({ length: 140 }, (_, i) => [((i * 7919) % 1000) / 1000, ((i * 104729) % 1000) / 1000, ((i * 31) % 10) / 10]);
+
+// Weather: now and then it rains for a while, with the odd flash of lightning over the city.
+const drops = Array.from({ length: 160 }, () => ({ x: Math.random(), y: Math.random(), v: 0.6 + Math.random() * 0.6 }));
+let lightning = 0, nextLightning = 0, bolt = null;
+const isRaining = time => window.neonInsane || (time % 75) > 50;
 
 // ---------------------------------------------------------------------------------------------
 // The background: dark sky, the faint "ceiling" lines above the horizon, and a glowing horizon band.
@@ -72,6 +99,24 @@ function drawBackground(time) {
   sky.addColorStop(1, "#0a0624");
   ctx.fillStyle = sky;
   ctx.fillRect(0, 0, W, H);
+
+  // Night: the sky darkens and stars come out.
+  const night = nightness(time);
+  if (night > 0.01) {
+    ctx.fillStyle = `rgba(3, 0, 14, ${0.5 * night})`;
+    ctx.fillRect(0, 0, W, horizonY);
+    ctx.fillStyle = "#fff";
+    for (const [sx, sy, tw] of nightStars) {
+      ctx.globalAlpha = night * (0.4 + 0.6 * Math.abs(Math.sin(time * (1 + tw) + sx * 50)));
+      ctx.fillRect(sx * W, sy * horizonY * 0.95, 1.5, 1.5);
+    }
+    ctx.globalAlpha = 1;
+  }
+  // Lightning lights up the whole sky for a moment.
+  if (lightning > 0.01) {
+    ctx.fillStyle = `rgba(200, 170, 255, ${lightning * 0.22})`;
+    ctx.fillRect(0, 0, W, horizonY);
+  }
 
   // Ceiling lines: like the floor's lines but upside down, very faint, running to the same vanishing point.
   ctx.lineWidth = 1;
@@ -103,7 +148,7 @@ function drawBackground(time) {
   // The glowing band along the horizon.
   const glow = ctx.createLinearGradient(0, horizonY - H * 0.12, 0, horizonY + H * 0.12);
   glow.addColorStop(0, "rgba(255, 40, 140, 0)");
-  glow.addColorStop(0.5, `rgba(255, 40, 140, ${0.15 + 0.3 * sunrise(time)})`);
+  glow.addColorStop(0.5, `rgba(255, 40, 140, ${(0.15 + 0.3 * sunrise(time)) * (1 - nightness(time) * 0.5)})`);
   glow.addColorStop(1, "rgba(255, 40, 140, 0)");
   ctx.fillStyle = glow;
   ctx.fillRect(0, horizonY - H * 0.12, W, H * 0.24);
@@ -125,14 +170,16 @@ const sunCtx = sunCanvas.getContext("2d");
 
 function drawSun(time) {
   const horizonY = H * SETTINGS.horizon;
-  const R = Math.min(W * 0.19, H * 0.25);       // the sun's radius
+  const beat = window.neonBeat ? window.neonBeat() : 0;
+  const R = Math.min(W * 0.19, H * 0.25) * (1 + beat * 0.03);   // the sun's radius (it throbs on the beat)
+  const night = nightness(time);
   const rise = sunrise(time);
   // It starts fully below the horizon and rises until it sits sunk just a little into it.
-  const cx = W / 2, cy = horizonY + R * 1.05 - R * 0.93 * rise;
+  const cx = W / 2 + tilt.x * W * 0.03, cy = horizonY + R * 1.05 - R * 0.93 * rise + R * 1.1 * night;   // it sinks at night
 
   // A soft pink halo around it.
   const halo = ctx.createRadialGradient(cx, cy, R * 0.6, cx, cy, R * 2.2);
-  halo.addColorStop(0, `rgba(255, 70, 170, ${0.15 + 0.4 * rise})`);   // the halo swells as it rises
+  halo.addColorStop(0, `rgba(255, 70, 170, ${(0.15 + 0.4 * rise) * (1 - night * 0.7)})`);   // the halo swells as it rises
   halo.addColorStop(1, "rgba(255, 70, 170, 0)");
   ctx.fillStyle = halo;
   ctx.fillRect(cx - R * 2.2, horizonY - R * 2.2, R * 4.4, R * 2.2);
@@ -162,6 +209,12 @@ function drawSun(time) {
     const thickness = 1 + f * R * 0.09;
     sunCtx.fillRect(0, y, size, thickness);
   }
+  // The 天 logo, cut out of the sun so the sky shows through it.
+  sunCtx.font = "900 " + Math.round(R * 0.8) + "px 'Yu Gothic', 'Hiragino Sans', 'Noto Sans JP', Meiryo, sans-serif";
+  sunCtx.textAlign = "center"; sunCtx.textBaseline = "middle";
+  sunCtx.globalAlpha = 0.85;
+  sunCtx.fillText("天", R, R * 0.55);
+  sunCtx.globalAlpha = 1;
 
   // Put it on the screen, cut off at the horizon.
   ctx.save();
@@ -380,9 +433,24 @@ function tracePath(points) {
   ctx.closePath();
 }
 
+// How far the floor has travelled. Added up frame by frame, so speeding up (insane mode) doesn't make it jump.
+let travel = 0, lastFloorTime = null;
+function floorGlide(time) {
+  if (lastFloorTime !== null) travel += (time - lastFloorTime) * SETTINGS.glideSpeed * (window.neonInsane ? 3 : 1);
+  lastFloorTime = time;
+  return travel;
+}
+
+// Cracks: the game calls neonCrackAt(x, y, radius) when a bomb or beam hits the floor; tiles there splinter.
+const cracks = [];
+window.neonCrackAt = (x, y, radius) => cracks.push({ x, y, r: radius, until: performance.now() + 300 });
+
 function drawFloor(time) {
+  const beat = window.neonBeat ? window.neonBeat() : 0;
+  const insaneHue = window.neonInsane ? (time * 90) % 360 : 0;
+  for (let k = cracks.length - 1; k >= 0; k--) if (performance.now() > cracks[k].until) cracks.splice(k, 1);
   const { columns, rows } = SETTINGS;
-  const glide = time * SETTINGS.glideSpeed;   // how far the floor has moved, in tiles
+  const glide = floorGlide(time);             // how far the floor has moved, in tiles
   const shift = glide % 1;                    // the part of a tile it has moved (0 .. 1)
   const passed = Math.floor(glide);           // whole tiles that have gone past the camera
   warpTime = time;
@@ -425,6 +493,8 @@ function drawFloor(time) {
       let heat = warmth.get(key) || 0;
       heat = pointerDistance < HOVER.radius * 2.4 + tileWidth * 0.5 ? Math.min(1, heat + 0.15) : Math.max(0, heat - HOVER.cool);
       if (heat > 0) warmth.set(key, heat); else warmth.delete(key);
+      const cracked = cracks.some(k => Math.hypot(tx - k.x, ty - k.y) < k.r + tileWidth * 0.5);
+      if (cracked) gone = Math.min(0.99, gone + 0.25);
       if (pointerDistance < HOVER.radius + tileWidth * 0.4) {
         const before = gone;
         gone = Math.min(1, gone + HOVER.vanish);
@@ -455,9 +525,9 @@ function drawFloor(time) {
       const centre = Math.exp(-((c / (columns * 0.45)) ** 2));
       // Tiles warmed up by the pointer glow orange (and a little brighter) until they cool down again.
       const warm = warmth.get(key) || 0;
-      const hue = warm > 0.12 ? 22 + hot * 14 : baseHue + (hot - 0.5) * 40;
+      const hue = (warm > 0.12 ? 22 + hot * 14 : baseHue + (hot - 0.5) * 40) + insaneHue;
       const isHot = hot > 0.72;
-      const glowAmount = Math.min(1, (0.1 + 0.75 * pulse * (isHot ? 1 : 0.3)) * fade * enter * (0.35 + 0.65 * centre) * flicker * (1 + warm * 1.2) + warm * 0.25 * fade);
+      const glowAmount = Math.min(1, (0.1 + 0.75 * pulse * (isHot ? 1 : 0.3)) * fade * enter * (0.35 + 0.65 * centre) * flicker * (1 + warm * 1.2 + beat * 0.6) + warm * 0.25 * fade);
 
       if (glowAmount < 0.01) continue;   // too faint to see: skip it and save time
 
@@ -545,8 +615,46 @@ function drawFloor(time) {
 // One frame = background + floor. requestAnimationFrame calls it again and again, forever.
 // ---------------------------------------------------------------------------------------------
 function draw(time) {
+  tilt.x += (tilt.tx - tilt.x) * 0.08; tilt.y += (tilt.ty - tilt.y) * 0.08;
+  const shake = window.neonShake || { x: 0, y: 0 };
+  ctx.save();
+  ctx.translate(shake.x, shake.y);              // the game shakes the screen on big hits
   drawBackground(time);
   drawFloor(time);
+  drawWeather(time);
+  ctx.restore();
+}
+
+function drawWeather(time) {
+  lightning *= 0.88;
+  if (!isRaining(time)) { bolt = null; return; }
+  // Rain: thin slanted streaks.
+  ctx.strokeStyle = "rgba(200, 180, 255, .35)";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  for (const d of drops) {
+    d.y += d.v * 0.025; if (d.y > 1) { d.y = 0; d.x = Math.random(); }
+    const x = d.x * W, y = d.y * H;
+    ctx.moveTo(x, y); ctx.lineTo(x - 4, y - 16);
+  }
+  ctx.stroke();
+  // Lightning: rare (at least 8 seconds apart), one soft flash and a jagged bolt down to the skyline.
+  if (time > nextLightning && Math.random() < 0.01) {
+    nextLightning = time + 8 + Math.random() * 10;
+    lightning = 1;
+    let x = W * (0.15 + Math.random() * 0.7), y = 0;
+    bolt = [[x, y]];
+    while (y < H * SETTINGS.horizon * 0.9) { x += (Math.random() - 0.5) * 50; y += 20 + Math.random() * 25; bolt.push([x, y]); }
+  }
+  if (bolt && lightning > 0.05) {
+    ctx.strokeStyle = `rgba(255, 240, 255, ${lightning})`;
+    ctx.lineWidth = 2;
+    ctx.shadowColor = "#c9a6ff"; ctx.shadowBlur = 16;
+    ctx.beginPath();
+    bolt.forEach(([x, y], k) => (k ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+  }
 }
 
 function loop(now) {
