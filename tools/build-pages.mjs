@@ -1939,6 +1939,8 @@ if (!existsSync("custom.css")) writeFileSync("custom.css", "/* Custom CSS (Tensh
   }
   console.log(`buttons.css written; buttons.css and custom.css linked last on ${linked} pages`);
 }
+// The neon game look on every page but the homepage (links after custom.css, the quest script): tools/neon-pages.mjs
+await import("./neon-pages.mjs");
 
 /* ---------- Footer search (search.js, search.css): data/search/<lang>.json ----------
    One small index per language of every page the build writes, plus the homepage: its address, title, description,

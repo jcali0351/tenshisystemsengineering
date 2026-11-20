@@ -1,0 +1,103 @@
+/* =====================================================================================================================
+   neon-pages.css: the game look for every page other than the homepage (About, Services, Technology, Team, Contact,
+   News, Blog and its posts, Portfolio, Launch, Portal, the service and project pages).
+   Pages load it with neon-theme.css (white logos, glass header, red turned purple) and <html class="neon gx-page">.
+   The look matches the game's GAME OVER screen: purple glass panels with a pink glow, glowing uppercase headings,
+   orange "score" labels, white pill buttons and glowing inputs, over a faint game grid. neon-quest.js adds stages and XP.
+   Every rule starts with html.neon.gx-page, so the homepage (which has its own) is never touched.
+   ===================================================================================================================== */
+html.neon.gx-page {
+  --gx-panel: linear-gradient(160deg, #2e0b57, #14052b);
+  --gx-edge: rgba(255, 43, 214, 0.45);
+  --gx-glow: 0 0 0 1px rgba(255, 43, 214, 0.18), 0 0 38px rgba(176, 77, 255, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --gx-glow-hot: 0 0 0 1px rgba(255, 43, 214, 0.5), 0 0 54px rgba(255, 43, 214, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+/* The page: deep space purple with a faint game grid. */
+html.neon.gx-page:not(#_):not(#__) body {
+  background:
+    radial-gradient(ellipse 80% 40% at 50% 0%, rgba(176, 77, 255, 0.18), transparent 70%) fixed,
+    linear-gradient(rgba(176, 77, 255, 0.05) 1px, transparent 1px) 0 0 / 44px 44px,
+    linear-gradient(90deg, rgba(176, 77, 255, 0.05) 1px, transparent 1px) 0 0 / 44px 44px,
+    rgb(12, 4, 30) !important;
+  color: #fff;
+}
+/* Header: dark frosted glass (there's no animated hero behind it on these pages). */
+html.neon.gx-page .site-header:not(#_):not(#__) {
+  background: rgba(12, 4, 30, 0.72) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(160%); backdrop-filter: blur(14px) saturate(160%);
+  border-bottom: 1px solid rgba(255, 43, 214, 0.22) !important;
+}
+/* Sections: no backgrounds of their own (the grid shows through), white text. The page banner keeps its picture. */
+html.neon.gx-page:not(#_):not(#__) main :is(section, .page-section, .tinted):not(.svc-hero):not(.px-hero) {
+  background: transparent !important; color: #fff !important;
+}
+html.neon.gx-page:not(#_):not(#__) main :is(h1, h2, h3, h4, h5, h6, p, li, dt, dd, label, small, strong, em, b, span, figcaption, blockquote, td, th, time):not(.tpl-mock *):not(.btn *):not(.btn):not([class*="btn"] *):not(.svc-cta a *):not(button *) {
+  color: #fff !important; -webkit-text-fill-color: #fff !important;
+}
+html.neon.gx-page:not(#_):not(#__) main :is(p, li, dd, td):not(.tpl-mock *) { color: rgba(255, 255, 255, 0.86) !important; -webkit-text-fill-color: rgba(255, 255, 255, 0.86) !important; }
+/* Headings glow like GAME OVER. */
+html.neon.gx-page:not(#_):not(#__) main :is(h1, h2):not(.tpl-mock *) {
+  font-family: Oswald, sans-serif !important; text-transform: uppercase; letter-spacing: 0.04em;
+  text-shadow: 0 0 22px #ff2bd6, 0 0 2px rgba(255, 255, 255, 0.6) !important;
+}
+html.neon.gx-page:not(#_):not(#__) main h3:not(.tpl-mock *) {
+  font-family: Oswald, sans-serif !important; text-transform: uppercase; letter-spacing: 0.08em !important;
+  text-shadow: 0 0 14px rgba(255, 43, 214, 0.65) !important;
+}
+/* Small labels: spaced-out caps in "score" orange. */
+html.neon.gx-page:not(#_):not(#__) main :is(.eyebrow, .kicker, [class*="eyebrow"], [class*="-meta"], .news-cat, .blog-meta):not(.tpl-mock *),
+html.neon.gx-page:not(#_):not(#__) main :is(.eyebrow, .kicker, [class*="eyebrow"], [class*="-meta"]) * {
+  font-family: Oswald, sans-serif !important; letter-spacing: 0.22em !important; text-transform: uppercase;
+  color: #ffb36b !important; -webkit-text-fill-color: #ffb36b !important;
+}
+/* Panels: cards, boxes and forms become the GAME OVER box. */
+html.neon.gx-page:not(#_):not(#__) main :is(
+  .service-card, .svc-detail, .blog-card, .tpl-card, .ab-focus, .ab-mv-card, .team-detail, .news-panel, .portal-card,
+  .tech-group, .lx-panel, .svc-wide, .contact-form, .prj-fair, .share-block, [class*="-card"]:not([class*="-card-"]):not(.tpl-mock *)
+) {
+  background: var(--gx-panel) !important;
+  border: 1px solid var(--gx-edge) !important;
+  border-radius: 20px !important;
+  box-shadow: var(--gx-glow) !important;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+html.neon.gx-page:not(#_):not(#__) main :is(.service-card, .svc-detail, .blog-card, .tpl-card, .ab-focus, .team-detail, .news-panel):hover {
+  transform: translateY(-4px); box-shadow: var(--gx-glow-hot) !important;
+}
+/* Lists inside text: leaderboard rows. */
+html.neon.gx-page:not(#_):not(#__) main :is(.svc-body, .blog-post-section, .ab-std, .svc-benefits, .svc-depth) li:not(.tpl-mock *) {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-top: 6px; padding-bottom: 6px;
+}
+/* Links: lilac. Buttons: white pills with dark purple text (PLAY AGAIN). */
+html.neon.gx-page:not(#_):not(#__) main a:not(.btn):not([class*="btn"]):not(.tpl-mock *):not(:has(img)),
+html.neon.gx-page:not(#_):not(#__) .site-footer a:not(.btn) { color: #d7b8ff !important; -webkit-text-fill-color: #d7b8ff !important; }
+html.neon.gx-page:not(#_):not(#__) main :is(a.btn, button.btn, .btn-primary, .btn-more, [class*="btn-"]:is(a, button), .svc-cta a, button[type="submit"], .prj-actions a, .tpl-actions a):not(.tpl-mock *) {
+  display: inline-block; padding: 11px 20px !important; border-radius: 999px !important; border: 0 !important;
+  background: #fff !important; color: #2e0b57 !important; -webkit-text-fill-color: #2e0b57 !important;
+  font: 800 0.8rem/1 Oswald, sans-serif !important; letter-spacing: 0.15em !important; text-transform: uppercase; text-decoration: none !important;
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.18) !important; transition: transform 0.2s, box-shadow 0.2s;
+}
+html.neon.gx-page:not(#_):not(#__) main :is(a.btn, button.btn, .btn-primary, .btn-more, [class*="btn-"]:is(a, button), .svc-cta a, button[type="submit"], .prj-actions a, .tpl-actions a):not(.tpl-mock *) * {
+  color: #2e0b57 !important; -webkit-text-fill-color: #2e0b57 !important;
+}
+html.neon.gx-page:not(#_):not(#__) main :is(a.btn, button.btn, .btn-primary, .btn-more, [class*="btn-"]:is(a, button), .svc-cta a, button[type="submit"]):hover {
+  transform: translateY(-2px) scale(1.03); box-shadow: 0 0 26px rgba(255, 43, 214, 0.55) !important;
+}
+/* Inputs: the initials box. */
+html.neon.gx-page:not(#_):not(#__) main :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+  background: #14052b !important; color: #fff !important; -webkit-text-fill-color: #fff !important;
+  border: 1px solid #b04dff !important; border-radius: 10px !important;
+}
+html.neon.gx-page:not(#_):not(#__) main :is(input, select, textarea):focus { outline: none !important; box-shadow: 0 0 0 3px rgba(176, 77, 255, 0.45), 0 0 18px rgba(255, 43, 214, 0.35) !important; }
+html.neon.gx-page:not(#_):not(#__) main :is(input, textarea)::placeholder { color: rgba(255, 255, 255, 0.45) !important; -webkit-text-fill-color: rgba(255, 255, 255, 0.45) !important; }
+html.neon.gx-page:not(#_):not(#__) main form label { font-family: Oswald, sans-serif !important; letter-spacing: 0.2em !important; text-transform: uppercase; font-size: 0.72rem !important; }
+/* Images inside panels: rounded, so they sit nicely in the glass. */
+html.neon.gx-page:not(#_):not(#__) main :is(.service-card, .blog-card, .svc-detail, .team-detail) img { border-radius: 12px; }
+/* The page banner: its picture stays, the title glows. */
+html.neon.gx-page:not(#_):not(#__) .svc-hero :is(h1, .svc-hero-title) { text-shadow: 0 0 26px #ff2bd6, 0 2px 12px rgba(0, 0, 0, 0.7) !important; }
+/* Rules, dividers and table lines: faint white. */
+html.neon.gx-page:not(#_):not(#__) main :is(hr, table, td, th) { border-color: rgba(255, 255, 255, 0.12) !important; }
+html.neon.gx-page:not(#_):not(#__) main :is(code, pre) { background: #14052b !important; color: #ffb36b !important; border-radius: 8px; }
+@media (prefers-reduced-motion: reduce) {
+  html.neon.gx-page:not(#_):not(#__) main :is(.service-card, .svc-detail, .blog-card, .tpl-card, .ab-focus, .team-detail, .news-panel):hover { transform: none; }
+}
