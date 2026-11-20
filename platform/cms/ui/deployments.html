@@ -11,7 +11,7 @@
     <h2>Instance</h2>
     <p><span class="badge badge-{{ site.status }}">{{ site.status }}</span></p>
     <p><b>Address</b><br><a href="{{ site_url(site.subdomain) }}" target="_blank" rel="noopener">{{ site.subdomain }}.{{ sites_domain }}</a></p>
-    <p class="small muted">On a production server this is {{ site.subdomain }}.tenshi.systems, with HTTPS from the wildcard certificate.</p>
+    <p class="small muted">On a production server this is {{ site.subdomain }}.tenshisystems.com, with HTTPS from the wildcard certificate.</p>
     {% if user.role == 'admin' %}
     <div class="row">
       {% if site.status == 'live' %}<button class="btn btn-small" data-status="paused">Pause site</button>

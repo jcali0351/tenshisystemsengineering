@@ -4,7 +4,7 @@
 
 Tenshi (天使) means angel. The platform exists to take the technical weight off small businesses: a business owner
 describes their business, picks a look, presses **Deploy**, and gets a working website with hosting, a content
-manager, lead forms and analytics at `theirname.tenshi.systems`. They can export all of it and leave at any time.
+manager, lead forms and analytics at `theirname.tenshisystems.com`. They can export all of it and leave at any time.
 
 Every decision below is tested against one question: **does this help a small business succeed?**
 
@@ -22,7 +22,7 @@ What exists today, in this repository:
 | **The Tenshi CMS** (dashboard, sites, page builder, Media Center, portfolio, galleries, templates with versions, deployments with rollback, backups, clone, leads, export, users) | `platform/cms/` (FastAPI + SQLite + Jinja2) | Working, runs on one computer or server; see `platform/README.md` |
 
 **How the CMS maps onto this plan.** It already follows the architecture below on a small scale: one database
-(SQLite instead of PostgreSQL), sites served by host name (`<address>.localhost`, later `*.tenshi.systems`),
+(SQLite instead of PostgreSQL), sites served by host name (`<address>.localhost`, later `*.tenshisystems.com`),
 deployments as static builds kept for rollback, and media stored per site (a folder instead of object storage).
 Moving to production means swapping those three pieces (`cms/db.py`, the build folder, the media folder) for
 PostgreSQL, object storage and the CDN edge, without changing the screens or the templates.
@@ -38,7 +38,7 @@ The core idea: **the business is the data; the website is just one way of showin
 
 ```
           ┌──────────────────────────┐
- Visitor ─▶  tenshi.systems           │  Marketing site + Launch Sequence (static, this repo)
+ Visitor ─▶  tenshisystems.com           │  Marketing site + Launch Sequence (static, this repo)
           └────────────┬─────────────┘
                        │ POST /deployments  (the business profile, JSON)
           ┌────────────▼─────────────┐       ┌───────────────────┐
@@ -53,7 +53,7 @@ The core idea: **the business is the data; the website is just one way of showin
    │  Jinja2)      │   └────┬──────────────┘
    └───────────────┘        │
                      ┌──────▼───────────────────────────┐
-  Site visitor ─────▶│ Edge (CDN + a small router)       │  *.tenshi.systems and custom domains:
+  Site visitor ─────▶│ Edge (CDN + a small router)       │  *.tenshisystems.com and custom domains:
                      │ reads the Host, serves that site  │  looks up the site, serves its files
                      └──────────────────────────────────┘
           ┌──────────────────────────┐
@@ -235,13 +235,13 @@ Today, on `launch.html`:
 2. **Step 1, Business:** name, category, website goal, business type.
 3. **Step 2, Profile:** phone, email, address, service areas, description, logo (drag and drop), social links.
 4. **Step 3, Launch preview:** the recommended design drawn with their name, the web address
-   (`johnsons-plumbing-heating.tenshi.systems`, editable), the included features, **Deploy now**.
+   (`johnsons-plumbing-heating.tenshisystems.com`, editable), the included features, **Deploy now**.
 
 The answers become a business profile in exactly the schema above (`buildProfile()` in `launch.js`). Answers are
 kept in the visitor's own browser until they finish, so a refresh loses nothing.
 
 When the API exists, set `LAUNCH_ENDPOINT` in `launch.js`. Deploy now then POSTs the profile, the API answers with
-`{ "admin_url": "https://<name>.tenshi.systems/admin" }`, and the visitor lands in their Control Center. Until
+`{ "admin_url": "https://<name>.tenshisystems.com/admin" }`, and the visitor lands in their Control Center. Until
 then, Deploy now prepares the same profile as a launch request the visitor emails to the team (and can download as
 JSON), and the done screen says so plainly: nothing claims a site exists before it does.
 
@@ -261,8 +261,8 @@ created for a new site:
 | Reserve the subdomain | `UNIQUE` constraint on `sites.subdomain` | included |
 | "Create database" | Nothing to create: the shared database with row-level security | 0 |
 | "Create storage" | A key prefix `sites/<site_id>/` in object storage | 0 |
-| "Configure DNS" | One wildcard record `*.tenshi.systems` made once, years ago | 0 |
-| "Create SSL certificate" | One wildcard certificate for `*.tenshi.systems`, renewed automatically | 0 |
+| "Configure DNS" | One wildcard record `*.tenshisystems.com` made once, years ago | 0 |
+| "Create SSL certificate" | One wildcard certificate for `*.tenshisystems.com`, renewed automatically | 0 |
 | Build the site | Render ~5-10 pages with Jinja2 and upload them | 1-3 s |
 | Process the logo | Resize and convert | ~1 s |
 | Switch the site live | Set `sites.current_build_id`; the edge router now serves it | ~10 ms |
@@ -271,7 +271,7 @@ created for a new site:
 **Total: about 3-5 seconds**, well under the 30-second target. The build runs on a job queue (Redis + RQ or Celery,
 or PostgreSQL `SKIP LOCKED` queues to start with); the Launch screen shows the real steps as they finish.
 
-**Custom domains** (`www.johnsonsplumbing.jp`): the owner adds a CNAME to `edge.tenshi.systems`; the edge issues
+**Custom domains** (`www.johnsonsplumbing.jp`): the owner adds a CNAME to `edge.tenshisystems.com`; the edge issues
 a certificate on first visit (Cloudflare for SaaS custom hostnames, or Caddy's on-demand TLS) after checking the
 domain is registered to a site.
 

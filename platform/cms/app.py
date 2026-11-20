@@ -67,12 +67,12 @@ TRANSPARENT_GIF = bytes.fromhex("47494638396101000100800000000000ffffff21f904010
 async def serve_client_sites(request: Request, call_next):
     """
     A client's website, not the CMS, is asked for in two ways:
-      <subdomain>.localhost/<page>     its own address (the normal way; *.tenshi.systems in production)
+      <subdomain>.localhost/<page>     its own address (the normal way; *.tenshisystems.com in production)
       <cms address>/s/<subdomain>/<page>   the same site under the CMS's address, for when only one address exists
                                             (e.g. a temporary review link). Built sites use relative links, so both work.
     """
     match = SITE_HOST.match(request.headers.get("host", "").lower())
-    if match:
+    if match and match.group(1) not in sites.RESERVED:      # cms.<domain> (and www, api...) is the CMS itself, not a client site
         return await serve_site(request, match.group(1), request.url.path)
     under = re.match(r"^/s/([a-z0-9-]+)(/.*)?$", request.url.path)
     if under:

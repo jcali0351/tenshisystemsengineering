@@ -1213,7 +1213,7 @@ const groupName = (id) => (GALLERY.groups.find((g) => g.id === id) || { name: ""
 // A small picture of a website, drawn with boxes in the design's own colours. tpl = one design from data/templates.json.
 // Exported for the Launch page too, which draws the same picture with the visitor's business name.
 const mockSite = (tpl) => `<div class="tpl-mock tpl-${esc(tpl.style)}" aria-hidden="true" style="--p:${esc(tpl.colors.primary)};--a:${esc(tpl.colors.accent)};--s:${esc(tpl.colors.surface)};--i:${esc(tpl.colors.ink)}">
-                <div class="tpl-chrome"><span></span><span></span><span></span><i>${esc(tpl.id)}.tenshi.systems</i></div>
+                <div class="tpl-chrome"><span></span><span></span><span></span><i>${esc(tpl.id)}.tenshisystems.com</i></div>
                 <div class="tpl-site">
                   <div class="tpl-nav"><b class="tpl-logo">${esc(tpl.sample)}</b><span class="tpl-links"><span></span><span></span><span></span></span><span class="tpl-cta"></span></div>
                   <div class="tpl-hero"><strong class="tpl-head">${esc(tpl.headline)}</strong><span class="tpl-sub"></span><span class="tpl-btn"></span></div>
@@ -1482,7 +1482,7 @@ ${field("lx-desc", "Business description", '<textarea id="lx-desc" name="company
                   <a class="lx-link" href="portfolio.html" target="_blank" rel="noopener">See all designs</a>
                 </dd></div>
                 <div><dt><label for="lx-sub">Your address</label></dt><dd>
-                  <span class="lx-domain"><input id="lx-sub" name="site.subdomain" type="text" required maxlength="40" spellcheck="false" autocapitalize="off" aria-describedby="lx-sub-hint lx-sub-error"><span>.tenshi.systems</span></span>
+                  <span class="lx-domain"><input id="lx-sub" name="site.subdomain" type="text" required maxlength="40" spellcheck="false" autocapitalize="off" aria-describedby="lx-sub-hint lx-sub-error"><span>.tenshisystems.com</span></span>
                   <span class="lx-hint" id="lx-sub-hint">Letters, numbers and dashes. You can add your own domain later.</span>
                   <span class="lx-error" id="lx-sub-error" aria-live="polite"></span>
                 </dd></div>

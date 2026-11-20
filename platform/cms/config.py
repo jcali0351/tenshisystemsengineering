@@ -34,7 +34,7 @@ HOST = os.environ.get("TENSHI_HOST", "127.0.0.1")
 PORT = int(os.environ.get("TENSHI_PORT", "8000"))
 
 # Client sites live at <subdomain>.<SITES_DOMAIN>. On your computer that's "localhost": browsers send
-# johnsons-plumbing.localhost straight to this computer, no setup needed. On a real server it becomes "tenshi.systems".
+# johnsons-plumbing.localhost straight to this computer, no setup needed. On a real server it becomes "tenshisystems.com".
 SITES_DOMAIN = os.environ.get("TENSHI_SITES_DOMAIN", "localhost")
 
 # The address the CMS itself is reached at (used for links in emails and in built sites' forms)
@@ -49,8 +49,16 @@ IMAGE_SIZES = [320, 800, 1600]          # every uploaded photo is also saved at 
 IMAGE_QUALITY = 82                       # WebP quality for those copies (0-100)
 
 
+# Behind a web server (Caddy, nginx) the public address isn't the CMS's own port: set TENSHI_SITES_SCHEME=https
+# (and TENSHI_SITES_PORT only if it's not the usual one) so client-site links come out as https://name.example.com/
+SITES_SCHEME = os.environ.get("TENSHI_SITES_SCHEME", "")
+SITES_PORT = os.environ.get("TENSHI_SITES_PORT", "")
+
+
 def site_url(subdomain):
     """The address of a client's live site, e.g. http://johnsons-plumbing.localhost:8000/"""
+    if SITES_SCHEME:
+        return f"{SITES_SCHEME}://{subdomain}.{SITES_DOMAIN}{':' + SITES_PORT if SITES_PORT else ''}/"
     port = "" if PORT in (80, 443) else f":{PORT}"
     scheme = "https" if PORT == 443 else "http"
     return f"{scheme}://{subdomain}.{SITES_DOMAIN}{port}/"

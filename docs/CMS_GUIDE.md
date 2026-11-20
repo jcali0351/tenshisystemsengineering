@@ -11,7 +11,7 @@ Think of Tenshi as **a factory for small-business websites**.
 
 | Piece | What it is | Where it lives |
 |---|---|---|
-| **The public website** | tenshi.systems's own marketing site. It now has **Portfolio** and **Launch** in its menu, and the hero button "Deploy Your Future" opens the Launch page. | The main project folder (live on GitHub Pages) |
+| **The public website** | tenshisystems.com's own marketing site. It now has **Portfolio** and **Launch** in its menu, and the hero button "Deploy Your Future" opens the Launch page. | The main project folder (live on GitHub Pages) |
 | **The Launch page** | A 3-step questionnaire where a business owner describes their business and presses **Deploy now**. | `launch.html` |
 | **The Tenshi CMS** | The control centre. It creates, edits, publishes and exports many client websites. **This is the product.** | `platform/cms/` |
 | **Client websites** | The finished websites the CMS makes, one per business, each at its own address. | Made by the CMS |
@@ -226,7 +226,7 @@ under **Settings & theme → Delete site**.
 - **Everything the CMS stores is in `platform\cms_data\`** (the database, media, deployments, backups, exports).
   It isn't saved to GitHub. Back up that folder to keep your sites. Deleting it starts completely fresh.
 - **Client addresses:** on this computer they're `<address>.localhost:8000`. On a real server they become
-  `<address>.tenshi.systems`.
+  `<address>.tenshisystems.com`.
 - **Not built yet:** the AI assistant (writing descriptions, alt text and SEO suggestions), custom domains
   (www.example.com), invoices and the sales pipeline, and running on a permanent public server.
 

@@ -18,7 +18,7 @@
     "goal": "leads",
     "template": "contractor",
     "subdomain": "johnsons-plumbing-heating",
-    "domain": "johnsons-plumbing-heating.tenshi.systems"
+    "domain": "johnsons-plumbing-heating.tenshisystems.com"
   },
   "services": [
     { "name": "Leak repair", "description": "Dripping taps to burst pipes, found and fixed the same day.", "price": "From ¥8,000" },

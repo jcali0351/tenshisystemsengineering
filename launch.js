@@ -21,16 +21,16 @@
 
   /* ---------- 1. Settings ---------- */
 
-  // When the Tenshi platform server exists, put its address here, e.g. "https://api.tenshi.systems/deployments".
+  // When the Tenshi platform server exists, put its address here, e.g. "https://api.tenshisystems.com/deployments".
   // Deploy now will then send the business profile there, and the server answers with the new site's admin address,
-  // e.g. { "admin_url": "https://johnsplumbing.tenshi.systems/admin" }, and the visitor is taken straight there.
+  // e.g. { "admin_url": "https://johnsplumbing.tenshisystems.com/admin" }, and the visitor is taken straight there.
   // While it is empty, Deploy now prepares a launch request that the visitor emails to the Tenshi team.
-  var LAUNCH_ENDPOINT = "";
+  var LAUNCH_ENDPOINT = "https://cms.tenshisystems.com/api/launch";
 
   // Where launch requests go by email. app.js already has the address (CONTACT_EMAIL), so use that when it exists.
   var TEAM_EMAIL = (typeof CONTACT_EMAIL !== "undefined" && CONTACT_EMAIL) || "tenshisystemsengineering@gmail.com";
 
-  var BASE_DOMAIN = "tenshi.systems";       // every site gets <name>.tenshi.systems
+  var BASE_DOMAIN = "tenshisystems.com";       // every site gets <name>.tenshisystems.com
   var LOGO_MAX_BYTES = 2 * 1024 * 1024;     // 2 MB
   var DRAFT_KEY = "tenshi-launch-draft";    // where unfinished answers are kept in this browser
 
