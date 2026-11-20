@@ -340,3 +340,32 @@ html.neon .hero a, html.neon .hero button { cursor: pointer; }
 .neon-hud.is-paused { box-shadow: 0 0 0 2px #ff8a2b; }
 .neon-hud-tip { margin: 6px 0 0; font-size: .65rem; opacity: .65; text-align: center; letter-spacing: .1em; }
 @media (max-width: 700px) { .neon-hud { top: auto; bottom: 86px; right: 10px; min-width: 120px; font-size: .7rem; } }
+
+/* =====================================================================================================================
+   READABILITY: keeping the hero text clear with all the animation going on
+   1. Layers: the sparks and the game draw BEHIND the page content (the floor, sun and city already are).
+   2. A soft dark oval behind the hero text, darkest in the middle and fading out, so the neon still shows round it.
+   3. A dark outer glow under every headline word, message word and the lead text (under the neon glow, not instead of it).
+   ===================================================================================================================== */
+#neon-particles { z-index: 1 !important; }
+html.neon main, html.neon footer { z-index: 2 !important; }
+
+html.neon .hero-card { isolation: isolate; }
+html.neon .hero-card::before {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  left: 50%; top: 50%; width: min(980px, 110%); height: 130%; transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse at center, rgba(8, 2, 24, .62) 0%, rgba(8, 2, 24, .42) 38%, rgba(8, 2, 24, 0) 70%);
+}
+
+/* The dark halo, defined once and added underneath each text glow. */
+html.neon { --dark-halo: 0 2px 4px rgba(8, 2, 24, .9), 0 0 18px rgba(8, 2, 24, .85), 0 0 42px rgba(8, 2, 24, .7); }
+html.neon .hero-card h1.kx .kx-word,
+html.neon .hero-card .kx-reel .kx-word {
+  text-shadow: -3px 0 rgba(176, 77, 255, .7), 3px 0 rgba(255, 43, 214, .7), 0 0 26px var(--kx-color, #fff), var(--dark-halo);
+}
+@keyframes kx-breathe {
+  0%, 100% { text-shadow: -2px 0 rgba(176, 77, 255, .55), 2px 0 rgba(255, 43, 214, .55), 0 0 16px rgba(255, 80, 200, .45), var(--dark-halo); }
+  50%      { text-shadow: -3px 0 rgba(176, 77, 255, .75), 3px 0 rgba(255, 43, 214, .75), 0 0 32px rgba(255, 80, 200, .7), var(--dark-halo); }
+}
+html.neon .hero-card .hero-lead { text-shadow: var(--dark-halo) !important; font-weight: 600; }
+html.neon .hero-logo { filter: drop-shadow(0 0 12px var(--neon-pink)) drop-shadow(0 0 22px rgba(8, 2, 24, .8)) !important; }

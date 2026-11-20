@@ -29,7 +29,8 @@
   const canvas = document.createElement("canvas");
   canvas.id = "neon-game";
   canvas.setAttribute("aria-hidden", "true");
-  canvas.style.cssText = "position:fixed;inset:0;width:100vw;height:100vh;z-index:6;pointer-events:none";
+  // z-index 1: above the neon floor but BEHIND the page content, so the flying objects never cover the headline.
+  canvas.style.cssText = "position:fixed;inset:0;width:100vw;height:100vh;z-index:1;pointer-events:none";
   document.body.appendChild(canvas);
   const ctx = canvas.getContext("2d");
   let W = 0, H = 0;
