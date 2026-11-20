@@ -94,6 +94,12 @@
     achievement: t => [784, 988, 1175, 1568].forEach((f, k) => tone("triangle", f, t + k * 0.08, 0.25, 0.12)),
     bomb: t => { tone("sine", 70, t, 0.6, 0.7, { slideTo: 30 }); hiss(t, 0.6, 0.5, "lowpass", 400); },
     car: t => tone("sawtooth", 220, t, 0.3, 0.1, { slideTo: 110, lowpass: 900 }),
+    mg: t => { hiss(t, 0.05, 0.25, "bandpass", 2400, 1.5); tone("square", 160, t, 0.04, 0.08); },
+    rocket: t => { hiss(t, 0.6, 0.3, "bandpass", 700, 0.7); tone("sawtooth", 90, t, 0.5, 0.12, { slideTo: 220, lowpass: 600 }); },
+    shotgun: t => { hiss(t, 0.3, 0.7, "lowpass", 2200); tone("sine", 140, t, 0.2, 0.5, { slideTo: 50 }); },
+    rail: t => { tone("sawtooth", 2400, t, 0.35, 0.14, { slideTo: 120, slideTime: 0.3, lowpass: 5000 }); hiss(t, 0.3, 0.3, "highpass", 3000); },
+    zap: t => { for (let k = 0; k < 4; k++) hiss(t + k * 0.03, 0.05, 0.3, "bandpass", 3000 + k * 800, 3); tone("square", 880, t, 0.15, 0.06, { slideTo: 1760 }); },
+    select: t => tone("triangle", 660, t, 0.06, 0.08, { slideTo: 990 }),
   };
 
   // ---- The 🔊 button ----

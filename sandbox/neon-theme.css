@@ -450,3 +450,48 @@ html.neon-insane #neon-bg { filter: saturate(1.6) contrast(1.1); }
   .neon-bubble { right: 14px; bottom: 80px; max-width: 200px; font-size: .8rem; }
   .neon-tip { bottom: 76px; font-size: .82rem; }
 }
+
+/* ---------- Weapon bar (bottom centre): click a weapon, or press 1–6 ---------- */
+.neon-weapons { position: fixed; left: 50%; bottom: 14px; z-index: 62; transform: translateX(-50%); display: flex; gap: 6px; padding: 6px;
+                border-radius: 16px; background: rgba(18, 10, 42, .62); border: 1px solid rgba(255, 255, 255, .22);
+                -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 0 22px rgba(176, 77, 255, .35); transition: opacity .3s; }
+.neon-weapons button { position: relative; display: grid; justify-items: center; gap: 1px; min-width: 64px; padding: 6px 8px 5px; border-radius: 11px; cursor: pointer;
+                       border: 1px solid transparent; background: transparent; color: #fff; font: 800 .58rem/1 Oswald, sans-serif; letter-spacing: .12em; }
+.neon-weapons button .ico { font-size: 1.15rem; line-height: 1.2; color: var(--wc); text-shadow: 0 0 10px var(--wc); }
+.neon-weapons button kbd { position: absolute; top: 3px; left: 5px; font: 700 .55rem Oswald, sans-serif; opacity: .55; }
+.neon-weapons button:hover { background: rgba(255, 255, 255, .08); }
+.neon-weapons button.on { border-color: var(--wc); background: rgba(255, 255, 255, .1); box-shadow: 0 0 14px var(--wc), inset 0 0 10px rgba(255, 255, 255, .08); }
+.neon-hud.is-hidden ~ .neon-weapons, html.neon-scrolled .neon-weapons { opacity: 0; pointer-events: none; }
+/* The service tip sits above the weapon bar. */
+.neon-tip { bottom: 92px !important; }
+@media (max-width: 760px) {
+  .neon-weapons { bottom: 8px; gap: 2px; padding: 4px; max-width: calc(100vw - 16px); }
+  .neon-weapons button { min-width: 0; padding: 5px 6px 4px; }
+  .neon-weapons button .nm { display: none; }
+  .neon-weapons button kbd { display: none; }
+  .neon-sound { bottom: 70px; }
+  .neon-tip { bottom: 70px !important; }
+}
+
+/* Weapon bar, take two: a vertical column on the left edge, so it never covers the headline or the Deploy button. */
+.neon-weapons { left: 12px; top: 50%; bottom: auto; transform: translateY(-50%); flex-direction: column; gap: 4px; padding: 5px; }
+.neon-weapons button { min-width: 70px; }
+.neon-tip { bottom: 14px !important; }
+@media (max-width: 760px) {
+  .neon-weapons { left: 6px; top: 46%; bottom: auto; max-width: none; }
+  .neon-weapons button { padding: 6px 7px; }
+  .neon-tip { bottom: 70px !important; }
+}
+/* Phones: the weapon bar becomes a slim row of icons in the bottom-left corner (beside the Ask Tanaka button). */
+@media (max-width: 760px) {
+  .neon-weapons { left: 8px; top: auto; bottom: 8px; transform: none; flex-direction: row; gap: 2px; padding: 3px; }
+  .neon-weapons button { min-width: 0; padding: 5px 6px; }
+  .neon-weapons button .ico { font-size: 1.05rem; }
+  .neon-sound { bottom: 58px; left: 8px; }
+  .neon-tip { bottom: 104px !important; }
+}
+@media (max-width: 760px) {
+  .neon-weapons { bottom: 54px; }       /* above the sound button, clear of the Ask Tanaka button */
+  .neon-sound { bottom: 10px; }
+  .neon-tip { bottom: 104px !important; }
+}
