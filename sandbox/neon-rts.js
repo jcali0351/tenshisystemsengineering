@@ -88,6 +88,7 @@
     canvas.width = Math.round(W * ratio); canvas.height = Math.round(H * ratio);
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
     zoom = W < 760 ? 0.75 : clamp(W / 1300, 0.55, 1);   // phones: a little closer, so units are big enough to tap
+    zoom = Math.max(zoom, W / MAP.w, H / MAP.h);          // the map always covers the whole window, edge to edge
     clampCamera();
   }
   window.addEventListener("resize", resize);
@@ -596,7 +597,6 @@
     for (let x = 0; x <= MAP.w; x += 200) { ctx.moveTo(x, 0); ctx.lineTo(x, MAP.h); }
     for (let y = 0; y <= MAP.h; y += 200) { ctx.moveTo(0, y); ctx.lineTo(MAP.w, y); }
     ctx.stroke();
-    ctx.strokeStyle = "rgba(255, 43, 214, 0.3)"; ctx.lineWidth = 2; ctx.setLineDash([12, 10]); ctx.strokeRect(0, 0, MAP.w, MAP.h); ctx.setLineDash([]);
     ctx.restore();
     // Asteroids, slowly tumbling.
     for (const k of rocks) {
@@ -862,7 +862,7 @@
   window.addEventListener("keyup", e => { keys[e.key.toLowerCase()] = false; });
   function clampCamera() {
     const under = W < 760 ? 300 / zoom : 0;   // on phones the panels cover the bottom, so let the camera go a bit past the map's edge
-    cam.x = clamp(cam.x, -40, MAP.w - W / zoom + 40); cam.y = clamp(cam.y, -40, MAP.h - H / zoom + 40 + under);
+    cam.x = clamp(cam.x, 0, Math.max(0, MAP.w - W / zoom)); cam.y = clamp(cam.y, 0, Math.max(0, MAP.h - H / zoom) + under);   // never past the map's edge
   }
   function scrollCamera(dt) {
     const speed = 0.7 * dt / zoom, edge = 26;
