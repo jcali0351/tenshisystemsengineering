@@ -21,7 +21,7 @@
   const TYPES = {
     drone:  { points: 10,  size: 16, speed: [1.2, 2.2], color: "#ff2bd6", weight: 5 },
     saucer: { points: 25,  size: 22, speed: [2.2, 3.4], color: "#b04dff", weight: 3 },
-    cube:   { points: 15,  size: 18, speed: [1.0, 1.8], color: "#00e5ff", weight: 3 },
+    cube:   { points: 15,  size: 18, speed: [1.0, 1.8], color: ["#ff8a2b", "#b04dff"], weight: 3 },   // each cube is orange or purple
     star:   { points: 100, size: 14, speed: [3.6, 4.8], color: "#ff8a2b", weight: 0.5 },
   };
 
@@ -84,7 +84,8 @@
     const fromLeft = Math.random() < 0.5;
     const speed = rand(...t.speed) * (1 + (level - 1) * 0.15);
     objects.push({
-      kind, size: t.size, color: t.color, points: t.points,
+      kind, size: t.size, points: t.points,
+      color: Array.isArray(t.color) ? t.color[Math.floor(Math.random() * t.color.length)] : t.color,   // a list = pick one
       x: fromLeft ? -40 : W + 40, y: rand(H * 0.12, H * 0.62), baseY: 0,
       vx: fromLeft ? speed : -speed, wobble: rand(10, 40), freq: rand(0.01, 0.025), phase: Math.random() * 6.28,
       spin: Math.random() * 6.28, born: performance.now(),
