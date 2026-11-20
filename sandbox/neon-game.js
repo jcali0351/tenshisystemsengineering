@@ -17,6 +17,7 @@
     comboWindow: 1600,     // ms you have to land the next hit to keep a combo going
     baseSpawnEvery: 1300,  // ms between new objects at level 1 (gets shorter each level)
     pointsPerLevel: 250,   // score needed to go up a level
+    targetOpacity: 0.6,    // how see-through the flying targets are (1 = solid, 0.3 = faint)
   };
   const TYPES = {
     drone:  { points: 10,  size: 16, speed: [1.2, 2.2], color: "#ff2bd6", weight: 5 },
@@ -160,6 +161,8 @@
   function drawObject(o, now) {
     ctx.save();
     ctx.translate(o.x, o.y);
+    const A = GAME.targetOpacity;                     // every part of a target is drawn at this opacity
+    ctx.globalAlpha = A;
     ctx.strokeStyle = o.color; ctx.fillStyle = o.color; ctx.lineWidth = 2;
     glow(o.color, 14);
     const s = o.size;
@@ -167,13 +170,13 @@
       ctx.rotate(Math.sin(now / 300 + o.phase) * 0.3);
       ctx.beginPath(); ctx.moveTo(0, -s); ctx.lineTo(s * 0.7, 0); ctx.lineTo(0, s); ctx.lineTo(-s * 0.7, 0); ctx.closePath(); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(-s * 0.7, 0); ctx.lineTo(-s * 1.4, -s * 0.3); ctx.moveTo(s * 0.7, 0); ctx.lineTo(s * 1.4, -s * 0.3); ctx.stroke();
-      ctx.globalAlpha = 0.5 + 0.5 * Math.sin(now / 120 + o.phase);
+      ctx.globalAlpha = A * (0.5 + 0.5 * Math.sin(now / 120 + o.phase));
       ctx.beginPath(); ctx.arc(0, 0, s * 0.25, 0, 6.28); ctx.fill();
     } else if (o.kind === "saucer") {                 // a flying saucer: dome, body, a row of chasing lights
       ctx.beginPath(); ctx.ellipse(0, 0, s * 1.4, s * 0.45, 0, 0, 6.28); ctx.stroke();
       ctx.beginPath(); ctx.arc(0, -s * 0.2, s * 0.55, Math.PI, 0); ctx.stroke();
       for (let i = 0; i < 5; i++) {
-        ctx.globalAlpha = ((Math.floor(now / 120) + i) % 5 === 0) ? 1 : 0.3;
+        ctx.globalAlpha = A * (((Math.floor(now / 120) + i) % 5 === 0) ? 1 : 0.3);
         ctx.beginPath(); ctx.arc(-s + i * s * 0.5, s * 0.05, 2.2, 0, 6.28); ctx.fillStyle = i % 2 ? "#ff8a2b" : "#ffffff"; ctx.fill();
       }
     } else if (o.kind === "cube") {                   // a spinning wireframe cube
@@ -191,7 +194,7 @@
       ctx.rotate(now / 250);
       ctx.beginPath();
       for (let i = 0; i < 10; i++) { const r = i % 2 ? s * 0.45 : s; ctx.lineTo(Math.cos(i * Math.PI / 5) * r, Math.sin(i * Math.PI / 5) * r); }
-      ctx.closePath(); ctx.globalAlpha = 0.35; ctx.fill(); ctx.globalAlpha = 1; ctx.stroke();
+      ctx.closePath(); ctx.globalAlpha = A * 0.35; ctx.fill(); ctx.globalAlpha = A; ctx.stroke();
     }
     ctx.restore();
   }
