@@ -1,15 +1,22 @@
 // neon-beasts.js: a DRAGON and a PHOENIX made of thousands of tiny fizzing particles, chasing each other round the
 // sky behind the headline (neon preview only).
 //
-//   Dragon  (~2,700 specks): a long Eastern-style serpent, purple fading to pink. Shimmering scales, a ridge of spikes
-//           along its back, a horned head with a glowing eye, long rippling whiskers and four little claws.
-//           It sheds drifting violet sparks.
+//   Dragon  (~5,000 specks): a Chinese PARADE dragon (the kind carried on poles at New Year). A big box-shaped head
+//           with a wide-open mouth, teeth and a curling tongue, huge round eyes under bushy brows, branching antlers,
+//           a shaggy mane and a long hanging beard. A thick, even tube of a body with gold bands, a gold fin along the
+//           back and a fringe of hair swaying underneath. It moves in big up-and-down humps, as if the dancers below
+//           were lifting it in turn, and ends in a fan-shaped tail tuft. It sheds drifting violet sparks.
 //   Phoenix (~1,900 specks): gold, orange and pink. Flapping feathered wings, a crested head and five long tail
 //           plumes that curl and end in glowing "eyes". It sheds rising fire embers.
 //
 // "Fizzy": every speck is tiny (1–2 px), flickers every frame and jitters a fraction of a pixel, so the creatures
 // look like they're made of crackling static light. They loop round each other like yin and yang, and drift
 // towards the mouse when it's over the sky. They pulse with the music's beat. "Reduce motion" turns them off.
+//
+// They can be SHOT (neon-game.js asks through window.neonBeasts). Every hit knocks specks off where it lands, and
+// as they get weaker they fall apart piece by piece: the dragon loses its tail a chunk at a time, the phoenix its
+// tail plumes and outer feathers. At zero health the whole creature bursts into a cloud of specks (100 points in
+// the game), then re-forms a little later.
 (function () {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -23,6 +30,9 @@
     sparksPerFrame: 22,      // how many loose sparks they shed each frame
     opacity: 1,           // overall strength
     followMouse: 0.25,       // how strongly they drift towards the mouse over the sky (0 = not at all)
+    dragonHealth: 14,        // how much damage the dragon takes before it explodes (a laser hit does 1, a rocket 6)
+    phoenixHealth: 10,       // the same for the phoenix
+    respawnSeconds: 25,      // how long until an exploded creature re-forms
   };
   // ==========================================================================================================
 
@@ -59,15 +69,19 @@
   const dragon = { x: 0, y: 0, angle: 0 };
 
   // Body specks: each belongs to a body piece and sits somewhere across the body's width.
+  // Every sixth piece is a gold band (like the hoops of a parade dragon's fabric body).
   const bodySpecks = [];
   for (let s = 0; s < BEASTS.dragonSegments; s++) {
-    const t = s / BEASTS.dragonSegments;
-    const color = mixColor(PURPLE, PINK, Math.min(1, t * 1.4));
+    const t = s / BEASTS.dragonSegments, band = s % 6 === 0;
+    const color = band ? GOLD : mixColor(PURPLE, PINK, Math.min(1, t * 1.3));
     for (let k = 0; k < 40; k++) bodySpecks.push({ s, across: rand(-1, 1), along: rand(-0.6, 0.6), size: rand(0.8, 1.8), color: css(k % 7 === 0 ? LILAC : color), phase: Math.random() * 6.28 });
-    for (let k = 0; k < 5; k++) bodySpecks.push({ s, ridge: k / 5, size: rand(1, 1.8), color: css(mixColor(PINK, LILAC, t)), phase: Math.random() * 6.28 });   // back spikes
+    for (let k = 0; k < 6; k++) bodySpecks.push({ s, ridge: k / 6, size: rand(1, 1.9), color: css(k % 2 ? GOLD : ORANGE), phase: Math.random() * 6.28 });   // gold back fin
+    for (let k = 0; k < 9; k++) bodySpecks.push({ s, fringe: Math.random(), sway: rand(-1, 1), size: rand(0.8, 1.5), color: css(mixColor(GOLD, WHITE, Math.random() * 0.6)), phase: Math.random() * 6.28 });   // hair underneath
   }
-  // The body's thickness along its length: a neck, thickest at the shoulders, tapering to a fine tail.
-  const thickness = t => BEASTS.dragonThickness * (t < 0.06 ? 0.6 + t * 6 : Math.pow(1 - (t - 0.06) / 0.94, 0.85)) + 1.5;
+  // The tail tuft: a fan of long hair at the very end.
+  for (let k = 0; k < 260; k++) bodySpecks.push({ s: BEASTS.dragonSegments - 1, tuft: Math.random(), fan: rand(-1, 1), size: rand(0.9, 1.8), color: css(mixColor(GOLD, PINK, Math.random())), phase: Math.random() * 6.28 });
+  // The body's thickness along its length: a short neck, then an even, fat tube, narrowing only near the tail.
+  const thickness = t => BEASTS.dragonThickness * (t < 0.05 ? 0.75 + t * 5 : t < 0.85 ? 1 - 0.15 * (t - 0.05) / 0.8 : 0.85 - 3 * (t - 0.85)) + 1.5;
 
   // The head, drawn in its own little map (x points forward, y points down), scaled up when drawn.
   const headSpecks = [];
@@ -91,14 +105,38 @@
       if (inside) { list.push({ x, y, size: rand(0.8, 1.6), color: css(color), phase: Math.random() * 6.28 }); made++; }
     }
   }
-  const skull = [[-0.2, -0.35], [0.4, -0.45], [0.9, -0.32], [1.45, -0.18], [1.7, 0], [1.45, 0.12], [0.9, 0.18], [1.3, 0.34], [0.7, 0.42], [0.1, 0.35], [-0.25, 0.15]];
-  addFill(headSpecks, skull, 650, PINK);
-  addLine(headSpecks, skull.concat([skull[0]]), 280, LILAC, [1, 1.9]);                              // glowing outline
-  addLine(headSpecks, [[0.2, -0.4], [-0.3, -0.85], [-0.75, -1.05], [-1.05, -0.95]], 50, LILAC, [1, 2]);   // horns
-  addLine(headSpecks, [[0.45, -0.42], [0.1, -0.95], [-0.25, -1.2]], 40, LILAC, [1, 2]);
-  addLine(headSpecks, [[-0.25, -0.2], [-0.7, -0.45], [-0.6, 0.0], [-0.95, 0.15], [-0.55, 0.35]], 70, PURPLE, [0.9, 1.7], 0.06);   // mane
-  for (let k = 0; k < 30; k++) headSpecks.push({ x: 0.85 + rand(-0.07, 0.07), y: -0.12 + rand(-0.05, 0.05), size: rand(1.2, 2.4), color: css(k % 3 ? ORANGE : WHITE), phase: 0, eye: true });   // the eye
-  const HEAD_SCALE = 44;
+  // Parade-dragon head (x forward, y down). Upper head and snout (the snout curls up at the tip into a big nose).
+  const upper = [[-0.35, -0.55], [0.25, -0.75], [0.85, -0.68], [1.35, -0.52], [1.7, -0.62], [1.95, -0.48], [1.9, -0.25], [1.55, -0.12], [0.9, -0.1], [0.3, -0.02], [-0.35, 0.1]];
+  addFill(headSpecks, upper, 900, PURPLE);
+  addLine(headSpecks, upper.concat([upper[0]]), 320, GOLD, [1, 1.9]);                                    // gold trim
+  for (let k = 0; k < 70; k++) { const a = Math.random() * 6.28, r = Math.sqrt(Math.random()) * 0.17; headSpecks.push({ x: 1.82 + Math.cos(a) * r, y: -0.5 + Math.sin(a) * r, size: rand(1, 1.8), color: css(PINK), phase: Math.random() * 6.28 }); }   // nose bulb
+  // Lower jaw: hinged at the back, so the whole mouth swings open (marked "jaw").
+  const jawStart = headSpecks.length;
+  const lower = [[0.15, 0.08], [0.9, 0.12], [1.5, 0.2], [1.6, 0.32], [1.0, 0.4], [0.2, 0.32]];
+  addFill(headSpecks, lower, 320, PINK);
+  addLine(headSpecks, lower.concat([lower[0]]), 130, GOLD, [1, 1.8]);
+  addLine(headSpecks, [[0.4, 0.1], [0.9, 0.0], [1.3, -0.1], [1.65, -0.35], [1.9, -0.2]], 70, FIRE_PINK, [1.1, 2], 0.03);   // tongue curling out
+  for (let k = 0; k < 7; k++) addLine(headSpecks, [[0.5 + k * 0.15, 0.13], [0.53 + k * 0.15, 0.03]], 6, WHITE, [1.1, 1.8]);  // bottom teeth
+  // The beard: long strands hanging from the chin (move with the jaw).
+  for (let k = 0; k < 9; k++) addLine(headSpecks, [[0.3 + k * 0.13, 0.36], [0.2 + k * 0.1, 0.85 + Math.random() * 0.35], [0.05 + k * 0.08, 1.2 + Math.random() * 0.3]], 26, k % 2 ? GOLD : WHITE, [0.8, 1.5], 0.025);
+  for (let i = jawStart; i < headSpecks.length; i++) headSpecks[i].jaw = true;
+  for (let k = 0; k < 8; k++) addLine(headSpecks, [[0.55 + k * 0.17, -0.1], [0.58 + k * 0.17, 0.0]], 6, WHITE, [1.1, 1.8]);  // top teeth
+  // Huge round eyes: a white rim, an orange iris and a dark-gold pupil, under a bushy brow.
+  for (let k = 0; k < 110; k++) { const a = Math.random() * 6.28, r = 0.2 + rand(-0.025, 0.025); headSpecks.push({ x: 0.75 + Math.cos(a) * r, y: -0.5 + Math.sin(a) * r, size: rand(1, 1.8), color: css(WHITE), phase: 0, eye: true }); }
+  for (let k = 0; k < 60; k++) { const a = Math.random() * 6.28, r = Math.sqrt(Math.random()) * 0.13; headSpecks.push({ x: 0.78 + Math.cos(a) * r, y: -0.5 + Math.sin(a) * r, size: rand(1.1, 2.2), color: css(r < 0.05 ? WHITE : ORANGE), phase: 0, eye: true }); }
+  addLine(headSpecks, [[0.45, -0.72], [0.7, -0.88], [1.0, -0.82], [1.15, -0.7]], 110, GOLD, [1, 2], 0.06);   // bushy brow
+  // Branching antlers.
+  addLine(headSpecks, [[0.3, -0.72], [0.0, -1.2], [-0.35, -1.55], [-0.7, -1.7]], 70, LILAC, [1.1, 2]);
+  addLine(headSpecks, [[0.0, -1.2], [0.2, -1.55]], 20, LILAC, [1.1, 2]);
+  addLine(headSpecks, [[-0.35, -1.55], [-0.25, -1.9]], 20, LILAC, [1.1, 2]);
+  addLine(headSpecks, [[0.55, -0.75], [0.4, -1.25], [0.15, -1.6]], 50, GOLD, [1.1, 2]);
+  addLine(headSpecks, [[0.4, -1.25], [0.62, -1.48]], 16, GOLD, [1.1, 2]);
+  // A big shaggy mane fanning out behind the head.
+  for (let k = 0; k < 520; k++) {
+    const a = rand(-2.4, 2.4), r = rand(0.45, 1.15);
+    headSpecks.push({ x: -0.25 - Math.cos(a) * r * 0.75, y: -0.15 + Math.sin(a) * r, size: rand(0.8, 1.7), color: css(k % 3 ? mixColor(PINK, GOLD, Math.random()) : WHITE), phase: Math.random() * 6.28, mane: rand(0.5, 1) });
+  }
+  const HEAD_SCALE = 52;
 
   // Whiskers: two long feelers that ripple behind the head (positions worked out each frame).
   const whiskerSpecks = [];
@@ -133,6 +171,94 @@
     for (let k = 0; k < 22; k++) tailSpecks.push({ plume, s: 1, eyeAngle: Math.random() * 6.28, eyeR: Math.random(), size: rand(1, 1.9), color: css(k % 4 ? GOLD : WHITE), phase: 0 });   // the "eye" at the end
   }
 
+  // ================================================ HEALTH ================================================
+  // Each creature: its health, whether it's dead, and every list of specks it's made of (so hits can knock them off).
+  const LIFE = {
+    dragon: { name: "DRAGON", color: "#d7aaff", max: BEASTS.dragonHealth, hp: BEASTS.dragonHealth, dead: false, respawnAt: 0, alpha: 1, flash: 0,
+              lists: [bodySpecks, headSpecks, whiskerSpecks, clawSpecks], at: dragon },
+    phoenix: { name: "PHOENIX", color: "#ffc45a", max: BEASTS.phoenixHealth, hp: BEASTS.phoenixHealth, dead: false, respawnAt: 0, alpha: 1, flash: 0,
+               lists: [birdSpecks, wingSpecks, tailSpecks], at: phoenix },
+  };
+  let cur = LIFE.dragon;          // the creature being drawn right now
+
+  // Specks knocked off fly away, tumble a little and fade.
+  const debris = [];
+  function knockOff(o, fromX, fromY, power) {
+    if (o.gone || o.sx === undefined) return;
+    o.gone = true;
+    const dx = o.sx - fromX, dy = o.sy - fromY, d = Math.hypot(dx, dy) || 1, v = rand(0.6, 1.4) * power;
+    debris.push({ x: o.sx, y: o.sy, vx: (dx / d) * v + rand(-0.6, 0.6), vy: (dy / d) * v + rand(-0.6, 0.6), life: 1, fade: rand(0.008, 0.02), size: o.size * rand(1, 1.6), color: o.color });
+  }
+  const alive = b => !b.dead && b.alpha > 0.6;     // still re-forming = can't be hit yet
+  function forEachSpeck(b, fn) { for (const list of b.lists) for (const o of list) if (!o.gone && o.sx !== undefined) fn(o); }
+
+  // Damage a creature. `test(o)` says which specks the hit itself knocks off.
+  function damage(b, dmg, test, hitX, hitY) {
+    const now = performance.now();
+    forEachSpeck(b, o => { if (test(o)) knockOff(o, hitX, hitY, 3); });
+    b.hp -= dmg; b.flash = 1;
+    const left = Math.max(0, b.hp / b.max);
+    // Falling apart piece by piece as it weakens.
+    if (b === LIFE.dragon) {
+      const cut = BEASTS.dragonSegments * (0.3 + 0.7 * left);             // the tail drops off a chunk at a time
+      for (const o of bodySpecks) if (o.s >= cut) knockOff(o, o.sx, o.sy - 1, 1.2);
+      for (const o of clawSpecks) if (o.s >= cut) knockOff(o, o.sx, o.sy - 1, 1.2);
+      if (left < 0.5) for (const o of whiskerSpecks) if (o.s > left * 2) knockOff(o, o.sx, o.sy - 1, 1);
+    } else {
+      for (const o of tailSpecks) if (o.s > 0.2 + 0.8 * left) knockOff(o, o.sx, o.sy - 1, 1.2);   // tail plumes shorten
+      for (const o of wingSpecks) if (o.f > 13 * (0.35 + 0.65 * left)) knockOff(o, o.sx, o.sy - 1, 1.2);   // outer feathers go
+    }
+    const result = { name: b.name, color: b.color, killed: false, x: b.at.x, y: b.at.y, hitX, hitY };
+    if (b.hp <= 0) {                                                        // BOOM: everything left bursts outwards
+      forEachSpeck(b, o => knockOff(o, b.at.x, b.at.y, rand(3, 9)));
+      for (let k = 0; k < 120; k++) { const a = Math.random() * 6.28, v = rand(2, 10); debris.push({ x: b.at.x, y: b.at.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 1, fade: rand(0.01, 0.025), size: rand(1.5, 3), color: k % 3 ? b.color : "#ffffff" }); }
+      b.dead = true; b.respawnAt = now + BEASTS.respawnSeconds * 1000;
+      result.killed = true;
+    }
+    return result;
+  }
+  // Which living creature has a speck closest to (x, y), within `reach`?
+  function closest(x, y, reach) {
+    let best = null, bestD = reach;
+    for (const b of Object.values(LIFE)) if (alive(b)) forEachSpeck(b, o => { const d = Math.hypot(o.sx - x, o.sy - y); if (d < bestD) { bestD = d; best = { b, x: o.sx, y: o.sy }; } });
+    return best;
+  }
+  function distToLine(px, py, x1, y1, x2, y2) {
+    const dx = x2 - x1, dy = y2 - y1, t = Math.max(0, Math.min(1, ((px - x1) * dx + (py - y1) * dy) / (dx * dx + dy * dy)));
+    return Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy));
+  }
+
+  // What the game calls. Each returns what was hit (or nothing): name, colour, killed, where.
+  window.neonBeasts = {
+    // One shot at a point (laser, shotgun pellet, bullet, lightning).
+    hitAt(x, y, reach, dmg) {
+      const c = closest(x, y, reach); if (!c) return null;
+      const r = Math.min(60, 16 + dmg * 7);
+      return damage(c.b, dmg, o => Math.hypot(o.sx - c.x, o.sy - c.y) < r, c.x, c.y);
+    },
+    // An explosion: every creature inside the radius is hit.
+    hitArea(x, y, radius, dmg) {
+      const out = [];
+      for (const b of Object.values(LIFE)) {
+        if (!alive(b)) continue;
+        let inside = false; forEachSpeck(b, o => { if (!inside && Math.hypot(o.sx - x, o.sy - y) < radius) inside = true; });
+        if (inside) out.push(damage(b, dmg, o => Math.hypot(o.sx - x, o.sy - y) < radius * 0.7, x, y));
+      }
+      return out;
+    },
+    // A beam: every creature the line passes through is hit, with a groove cut along the line.
+    hitLine(x1, y1, x2, y2, reach, dmg) {
+      const out = [];
+      for (const b of Object.values(LIFE)) {
+        if (!alive(b)) continue;
+        let near = null; forEachSpeck(b, o => { if (!near && distToLine(o.sx, o.sy, x1, y1, x2, y2) < reach) near = o; });
+        if (near) out.push(damage(b, dmg, o => distToLine(o.sx, o.sy, x1, y1, x2, y2) < reach * 1.6, near.sx, near.sy));
+      }
+      return out;
+    },
+    state: () => Object.fromEntries(Object.entries(LIFE).map(([k, b]) => [k, { hp: +b.hp.toFixed(1), dead: b.dead, x: Math.round(b.at.x), y: Math.round(b.at.y) }])),
+  };
+
   // ================================================ LOOSE SPARKS ================================================
   const sparks = [];
   function shed(x, y, color, rise) {
@@ -141,10 +267,13 @@
 
   // ================================================ DRAWING HELPERS ================================================
   let beat = 0;
-  // One fizzy speck: it flickers and jitters every frame.
-  function speck(x, y, size, color, phase, strength = 1) {
-    ctx.globalAlpha = BEASTS.opacity * strength * (0.45 + Math.random() * 0.55) * (0.85 + beat * 0.3);
-    ctx.fillStyle = color;
+  // One fizzy speck: it flickers and jitters every frame. It remembers where it was drawn (so shots can find it),
+  // and isn't drawn once it's been knocked off.
+  function speck(o, x, y, size, color, phase, strength = 1) {
+    o.sx = x; o.sy = y;
+    if (o.gone) return;
+    ctx.globalAlpha = BEASTS.opacity * strength * cur.alpha * (0.45 + Math.random() * 0.55) * (0.85 + beat * 0.3);
+    ctx.fillStyle = cur.flash > 0.2 && Math.random() < cur.flash ? "#ffffff" : color;   // flashes white when hit
     const s = size * (1 + beat * 0.3);
     ctx.fillRect(x + rand(-0.5, 0.5) - s / 2, y + rand(-0.5, 0.5) - s / 2, s, s);
   }
@@ -185,6 +314,14 @@
 
     ctx.globalCompositeOperation = "lighter";
 
+    // ---- Health: re-form after exploding (fading back in, whole again); the white hit-flash fades ----
+    for (const b of Object.values(LIFE)) {
+      if (b.dead && now > b.respawnAt) { b.dead = false; b.hp = b.max; b.alpha = 0; for (const list of b.lists) for (const o of list) o.gone = false; }
+      if (!b.dead && b.alpha < 1) b.alpha = Math.min(1, b.alpha + 0.008);
+      b.flash = Math.max(0, b.flash - 0.08);
+    }
+    cur = LIFE.dragon;
+
     // ---- Dragon body: walk back along the trail, placing a body piece every few pixels ----
     const spine = [];
     let dist = 0, next = 0;
@@ -199,54 +336,70 @@
         const len = Math.hypot(tx, ty) || 1;
         let nx = -ty / len, ny = tx / len;
         if (ny > 0) { nx = -nx; ny = -ny; }                // "up" side of the body, so the spikes stay on its back
-        spine.push({ x, y, nx, ny, wave: Math.sin(spine.length * 0.35 - now * 0.004) * 3 });
+        spine.push({ x, y, nx, ny, wave: Math.sin(spine.length * 0.16 - now * 0.0035) * 18 * Math.min(1, spine.length / 10) });
         next += BEASTS.dragonSpacing;
       }
     }
-    if (spine.length > 4) {
+    if (spine.length > 4 && !LIFE.dragon.dead) {
       for (const p of bodySpecks) {
         const seg = spine[p.s]; if (!seg) continue;
         const tt = p.s / BEASTS.dragonSegments, r = thickness(tt);
-        if (p.ridge !== undefined) {                         // spikes along the back, flicking up and down
-          const spike = r + 4 + 7 * Math.abs(Math.sin(p.s * 0.9 + now * 0.003)) * (1 - tt) + p.ridge * 4;
-          speck(seg.x + seg.nx * spike, seg.y + seg.ny * spike + seg.wave, p.size, p.color, p.phase);
+        if (p.tuft !== undefined) {                          // tail tuft: a fan of hair streaming back off the tail
+          const prev = spine[p.s - 1] || seg, bx = seg.x - prev.x, by = seg.y - prev.y, bl = Math.hypot(bx, by) || 1;
+          const len = 10 + p.tuft * 60, spread = p.fan * (8 + p.tuft * 30) + Math.sin(now * 0.006 + p.tuft * 5) * 6 * p.tuft;
+          speck(p, seg.x + (bx / bl) * len + seg.nx * spread, seg.y + (by / bl) * len + seg.ny * spread + seg.wave, p.size, p.color, p.phase, 1 - p.tuft * 0.5);
+          continue;
+        }
+        if (p.fringe !== undefined) {                        // hair hanging under the belly, swaying
+          const hang = r + 2 + p.fringe * 14, sway = Math.sin(now * 0.005 + p.s * 0.5) * 4 * p.fringe + p.sway * 3;
+          speck(p, seg.x - seg.nx * hang + sway, seg.y - seg.ny * hang + seg.wave, p.size, p.color, p.phase, 1 - p.fringe * 0.5);
+          continue;
+        }
+        if (p.ridge !== undefined) {                         // gold fin along the back, rippling
+          const spike = r + 3 + 6 * Math.abs(Math.sin(p.s * 0.9 + now * 0.003)) + p.ridge * 5;
+          speck(p, seg.x + seg.nx * spike, seg.y + seg.ny * spike + seg.wave, p.size, p.color, p.phase);
           continue;
         }
         // Scales: a shimmer that ripples down the body.
         const shimmer = 0.55 + 0.45 * Math.sin(p.s * 1.3 + p.across * 3 - now * 0.006);
         // Spread each speck a little along the body too (towards the next piece), so the body is one continuous mass.
         const along = p.along * BEASTS.dragonSpacing;
-        speck(seg.x + seg.nx * p.across * r + seg.ny * along, seg.y + seg.ny * p.across * r - seg.nx * along + seg.wave, p.size, p.color, p.phase, shimmer);
+        speck(p, seg.x + seg.nx * p.across * r + seg.ny * along, seg.y + seg.ny * p.across * r - seg.nx * along + seg.wave, p.size, p.color, p.phase, shimmer);
       }
       for (const c of clawSpecks) {                          // claws reach down and curl
         const seg = spine[c.s]; if (!seg) continue;
-        const r = thickness(c.s / BEASTS.dragonSegments), reach = r + 16 * c.along;
+        const r = thickness(c.s / BEASTS.dragonSegments), reach = r + 8 + 18 * c.along;
         const curl = (c.toe - 1) * 5 * c.along + Math.sin(now * 0.005 + c.s) * 3;
-        speck(seg.x - seg.nx * reach + curl, seg.y - seg.ny * reach + seg.wave, c.size, c.color, c.phase);
+        speck(c, seg.x - seg.nx * reach + curl, seg.y - seg.ny * reach + seg.wave, c.size, c.color, c.phase);
       }
       // ---- Dragon head ----
       const mirror = Math.cos(dragon.angle) < 0;
-      const jaw = Math.max(0, Math.sin(now * 0.002)) * 0.15;   // the mouth opens now and then
+      const jaw = 0.12 + 0.32 * Math.max(0, Math.sin(now * 0.0022));   // the mouth snaps wide open and shut
+      const cj = Math.cos(jaw), sj = Math.sin(jaw);
       for (const h of headSpecks) {
-        const ly = h.y > 0.2 && h.x > 0.6 ? h.y + jaw : h.y;
-        const [x, y] = place(dragon.x, dragon.y, dragon.angle, HEAD_SCALE, h.x, ly, mirror);
-        speck(x, y, h.size * (h.eye ? 1 + beat : 1), h.color, h.phase, h.eye ? 1.4 : 1);
+        let lx = h.x, ly = h.y;
+        if (h.jaw) { const ox = lx - 0.15, oy = ly - 0.08; lx = 0.15 + ox * cj - oy * sj; ly = 0.08 + ox * sj + oy * cj; }   // swing round the hinge
+        if (h.mane) { lx += Math.sin(now * 0.006 + h.y * 4) * 0.06 * h.mane; ly += Math.cos(now * 0.005 + h.x * 4) * 0.04 * h.mane; }
+        const [x, y] = place(dragon.x, dragon.y, dragon.angle, HEAD_SCALE, lx, ly, mirror);
+        speck(h, x, y, h.size * (h.eye ? 1 + beat : 1), h.color, h.phase, h.eye ? 1.4 : 1);
       }
       // Whiskers ripple back from the snout.
       for (const w of whiskerSpecks) {
-        const lx = 1.4 - w.s * 4.2, ly = w.side * (0.2 + w.s * 0.6) + Math.sin(w.s * 7 - now * 0.006 + w.side) * 0.35 * w.s;
+        const lx = 1.75 - w.s * 3.8, ly = -0.3 + w.side * (0.15 + w.s * 0.7) + Math.sin(w.s * 7 - now * 0.006 + w.side) * 0.35 * w.s;
         const [x, y] = place(dragon.x, dragon.y, dragon.angle, HEAD_SCALE, lx, ly, mirror);
-        speck(x, y, w.size, w.color, w.phase, 1 - w.s * 0.6);
+        speck(w, x, y, w.size, w.color, w.phase, 1 - w.s * 0.6);
       }
       // Violet sparks shed from the body.
       for (let k = 0; k < BEASTS.sparksPerFrame / 2; k++) {
-        const seg = spine[Math.floor(Math.random() * spine.length)];
-        shed(seg.x + rand(-6, 6), seg.y + rand(-6, 6), Math.random() < 0.5 ? "rgb(200,140,255)" : "rgb(255,110,210)", false);
+        const seg = spine[Math.floor(Math.random() * spine.length * (0.3 + 0.7 * Math.max(0, LIFE.dragon.hp / LIFE.dragon.max)))];
+        if (seg) shed(seg.x + rand(-6, 6), seg.y + rand(-6, 6), Math.random() < 0.5 ? "rgb(200,140,255)" : "rgb(255,110,210)", false);
       }
     }
 
     // ---- Phoenix ----
     phoenix.flap += 0.11 * speed * (1 + beat * 0.5);
+    cur = LIFE.phoenix;
+    if (!LIFE.phoenix.dead) {
     const pm = Math.cos(phoenix.angle) < 0, pa = phoenix.angle;
     // Tail plumes: follow the phoenix's own trail, fanning out and curling.
     for (const tp of tailSpecks) {
@@ -255,7 +408,7 @@
       const fan = (tp.plume - 2) * (12 + tp.s * 40) + Math.sin(tp.s * 9 - now * 0.005 + tp.plume) * 10 * tp.s;
       let x = bx - Math.sin(pa) * fan, y = by + Math.cos(pa) * fan * (pm ? -1 : 1);
       if (tp.eyeAngle !== undefined) { x += Math.cos(tp.eyeAngle) * 6 * tp.eyeR; y += Math.sin(tp.eyeAngle) * 6 * tp.eyeR; }
-      speck(x, y, tp.size, tp.color, tp.phase, tp.s === 1 ? 1.3 : 1 - tp.s * 0.4);
+      speck(tp, x, y, tp.size, tp.color, tp.phase, tp.s === 1 ? 1.3 : 1 - tp.s * 0.4);
     }
     // Wings: two wings beating up and down around the shoulders; feathers fan backwards from the wing bone.
     const beatAngle = Math.sin(phoenix.flap);
@@ -266,17 +419,29 @@
       const lx = 0.2 - bone * 0.35 - w.along * featherLen;                 // swept back
       const ly = -bone * lift - w.along * 0.25 * Math.sign(lift || 1);
       const [x, y] = place(phoenix.x, phoenix.y, pa, P, lx, ly, pm);
-      speck(x, y, w.size, w.color, w.phase);
+      speck(w, x, y, w.size, w.color, w.phase);
     }
     for (const b of birdSpecks) {
       const [x, y] = place(phoenix.x, phoenix.y, pa, P, b.x, b.y, pm);
-      speck(x, y, b.size * (b.eye ? 1 + beat : 1), b.color, b.phase, b.eye ? 1.5 : 1);
+      speck(b, x, y, b.size * (b.eye ? 1 + beat : 1), b.color, b.phase, b.eye ? 1.5 : 1);
     }
     // Fire embers rise from the phoenix and its tail.
     for (let k = 0; k < BEASTS.sparksPerFrame; k++) {
       const [bx, by] = phoenixTrail[Math.floor(Math.random() * Math.min(80, phoenixTrail.length))] || [phoenix.x, phoenix.y];
       shed(bx + rand(-12, 12), by + rand(-10, 10), Math.random() < 0.6 ? "rgb(255,170,70)" : "rgb(255,100,160)", true);
     }
+    }
+
+    // ---- Knocked-off specks fly apart, slow down, fall a little and fade ----
+    for (let i = debris.length - 1; i >= 0; i--) {
+      const d = debris[i];
+      d.x += d.vx; d.y += d.vy; d.vx *= 0.96; d.vy = d.vy * 0.96 + 0.04; d.life -= d.fade;
+      if (d.life <= 0) { debris.splice(i, 1); continue; }
+      ctx.globalAlpha = d.life * (0.5 + Math.random() * 0.5);
+      ctx.fillStyle = d.color;
+      ctx.fillRect(d.x, d.y, d.size, d.size);
+    }
+    if (debris.length > 6000) debris.splice(0, debris.length - 6000);
 
     // ---- Loose sparks drift, flicker and die ----
     for (let i = sparks.length - 1; i >= 0; i--) {
