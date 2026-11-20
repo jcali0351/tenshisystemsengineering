@@ -1,0 +1,143 @@
+/* =====================================================================================================================
+   chaos.css: a deliberately weird, animated mess of a redesign, just for fun (sandbox/chaos-home.html only).
+   The real site never loads this file. Everything still works: links, menu, chat, forms. It's just... wobbly.
+
+   What's going on:
+     - a lava-lamp background of drifting colour blobs that slowly change colour
+     - sections that float and tilt, each on its own rhythm; cards that wobble and spin on hover
+     - menu items that swing like hanging signs
+     - a bouncy, letter-by-letter headline in a goofy font (chaos.js splits it into letters)
+     - stickers stuck on at odd angles, a crooked "under construction" tape, googly eyes on the logo
+     - a sparkle trail behind the mouse and confetti on every click (chaos.js)
+   Nothing flashes quickly. People who turn on "reduce motion" get the same look standing still.
+   ===================================================================================================================== */
+
+html.chaos { --c1: #ff3cac; --c2: #784ba0; --c3: #2b86c5; --c4: #ffd23f; --c5: #3bceac; --ink: #1b1036; }
+html.chaos body { background: #fff6e9; overflow-x: hidden; }
+
+/* ---------- The lava lamp behind everything ---------- */
+#chaos-blobs { position: fixed; inset: -20vmax; z-index: 0; pointer-events: none; filter: blur(60px) saturate(1.4); animation: chaos-hue 30s linear infinite; }
+#chaos-blobs span { position: absolute; width: 45vmax; height: 45vmax; border-radius: 50%; opacity: .55; mix-blend-mode: multiply; }
+#chaos-blobs span:nth-child(1) { background: var(--c1); left: 5%;  top: 10%; animation: chaos-drift-a 19s ease-in-out infinite alternate; }
+#chaos-blobs span:nth-child(2) { background: var(--c4); left: 55%; top: 5%;  animation: chaos-drift-b 23s ease-in-out infinite alternate; }
+#chaos-blobs span:nth-child(3) { background: var(--c3); left: 30%; top: 55%; animation: chaos-drift-c 27s ease-in-out infinite alternate; }
+#chaos-blobs span:nth-child(4) { background: var(--c5); left: 70%; top: 60%; animation: chaos-drift-a 31s ease-in-out infinite alternate-reverse; }
+@keyframes chaos-hue { to { filter: blur(60px) saturate(1.4) hue-rotate(360deg); } }
+@keyframes chaos-drift-a { to { transform: translate(18vmax, 12vmax) scale(1.3); } }
+@keyframes chaos-drift-b { to { transform: translate(-22vmax, 16vmax) scale(.8); } }
+@keyframes chaos-drift-c { to { transform: translate(10vmax, -20vmax) scale(1.2); } }
+html.chaos main, html.chaos footer, html.chaos .site-header { position: relative; z-index: 1; }
+
+/* ---------- Goofy lettering everywhere ---------- */
+html.chaos h1, html.chaos h2, html.chaos h3 {
+  font-family: "Comic Sans MS", "Chalkboard SE", "Comic Neue", "Marker Felt", cursive !important;
+  letter-spacing: 0 !important;
+}
+
+/* ---------- The header: a crooked strip of tape ---------- */
+html.chaos .ticker { display: none !important; }
+html.chaos .site-header:not(#_):not(#__) { background: transparent !important; border: 0 !important; }
+html.chaos .site-header:not(#_):not(#__)::before {
+  background: repeating-linear-gradient(-45deg, #ffd23f 0 22px, #1b1036 22px 44px) !important;
+  opacity: .92; transform: rotate(-1.2deg) scaleX(1.05); -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+  animation: none !important;
+}
+html.chaos .brand { background: #fff; border: 3px solid var(--ink); border-radius: 14px; padding: 4px 10px; transform: rotate(-4deg); box-shadow: 4px 4px 0 var(--ink); position: relative; }
+/* Menu items swing like signs hanging from a nail, each a little out of step. */
+html.chaos .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav > ul {
+  background: #fff !important; border: 3px solid var(--ink) !important; box-shadow: 5px 5px 0 var(--ink) !important; border-radius: 12px !important;
+}
+html.chaos .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav > ul > li { transform-origin: 50% -6px; animation: chaos-swing 3s ease-in-out infinite; }
+html.chaos .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav > ul > li:nth-child(2n) { animation-duration: 2.4s; animation-direction: reverse; }
+html.chaos .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav > ul > li:nth-child(3n) { animation-duration: 3.7s; }
+html.chaos .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav > ul > li:hover { animation: chaos-spin .6s ease-in-out; }
+@keyframes chaos-swing { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+@keyframes chaos-spin { to { transform: rotate(360deg) scale(1.15); } }
+html.chaos .lang-current { transform: rotate(6deg); border: 3px solid var(--ink) !important; box-shadow: 3px 3px 0 var(--ink) !important; background: #3bceac !important; }
+
+/* Googly eyes stuck on the logo (chaos.js adds them and makes the pupils follow the mouse). */
+.chaos-eyes { position: absolute; top: -12px; right: -14px; display: flex; gap: 2px; transform: rotate(10deg); }
+.chaos-eye { width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 2px solid var(--ink); position: relative; }
+.chaos-eye i { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: var(--ink); left: 3px; top: 3px; transition: transform .08s; }
+
+/* ---------- The hero ---------- */
+html.chaos .hero { background: transparent !important; }
+html.chaos .hero-slides, html.chaos .hero-wash { display: none !important; }
+html.chaos .hero-stripes span { animation: chaos-flap 4s ease-in-out infinite; }
+html.chaos .hero-stripes span:nth-child(2) { animation-delay: -1.3s; }
+html.chaos .hero-stripes span:nth-child(3) { animation-delay: -2.6s; }
+@keyframes chaos-flap { 0%, 100% { transform: skewY(0); } 50% { transform: skewY(8deg) translateY(-12px); } }
+html.chaos .hero-card {
+  background: #fff !important; border: 4px solid var(--ink) !important; box-shadow: 10px 10px 0 var(--ink) !important;
+  -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+  width: auto !important; max-width: 760px !important; margin-inline: auto !important; border-radius: 28px !important;
+  padding-inline: clamp(20px, 4vw, 48px) !important;
+  animation: chaos-float 6s ease-in-out infinite !important;
+}
+@keyframes chaos-float { 0%, 100% { transform: rotate(-2deg) translateY(0); } 50% { transform: rotate(1.5deg) translateY(-14px); } }
+html.chaos .hero-logo { animation: chaos-wobble 2.2s ease-in-out infinite; }
+@keyframes chaos-wobble { 0%, 100% { transform: rotate(-8deg) scale(1); } 50% { transform: rotate(8deg) scale(1.08); } }
+
+/* The bouncy headline: every letter bobs on its own beat and changes colour slowly. */
+html.chaos .hero-card h1 { color: var(--ink) !important; -webkit-text-fill-color: currentColor !important; }
+.chaos-letter { display: inline-block; animation: chaos-bob 1.4s ease-in-out infinite; animation-delay: calc(var(--i) * -90ms); }
+.chaos-letter:nth-child(5n + 1) { color: #ff3cac; } .chaos-letter:nth-child(5n + 2) { color: #784ba0; }
+.chaos-letter:nth-child(5n + 3) { color: #2b86c5; } .chaos-letter:nth-child(5n + 4) { color: #e8a400; }
+.chaos-letter:nth-child(5n)     { color: #1fa386; }
+@keyframes chaos-bob { 0%, 100% { transform: translateY(0) rotate(-6deg); } 50% { transform: translateY(-10px) rotate(6deg); } }
+html.chaos .hero-card h1:hover .chaos-letter { animation-duration: .35s; }   /* hover the headline: it gets excited */
+html.chaos .hero-lead { color: var(--ink) !important; font-style: italic; }
+
+/* The button: a big squishy jelly. */
+html.chaos .hero-cta-glass .hg-btn:not(#_):not(#__):not(#___) {
+  background: #ffd23f !important; color: var(--ink) !important; border: 3px solid var(--ink) !important;
+  box-shadow: 6px 6px 0 var(--ink) !important; animation: chaos-jelly 2.6s ease-in-out infinite;
+}
+html.chaos .hero-cta-glass .hg-btn:not(#_):not(#__):not(#___) .hg-text { color: var(--ink) !important; -webkit-text-fill-color: var(--ink) !important; }
+@keyframes chaos-jelly { 0%, 100% { transform: scale(1, 1); } 30% { transform: scale(1.12, .9); } 45% { transform: scale(.93, 1.08); } 60% { transform: scale(1.04, .97); } }
+
+/* "Under construction" tape running diagonally across the hero. */
+.chaos-tape {
+  position: absolute; left: -10%; right: -10%; bottom: 60px; z-index: 3; pointer-events: none; overflow: hidden;
+  transform: rotate(-4deg); background: #1b1036; border-block: 4px solid #ffd23f; padding: 8px 0; white-space: nowrap;
+}
+.chaos-tape span { display: inline-block; padding-left: 100%; animation: chaos-scroll 22s linear infinite; color: #ffd23f; font: 800 1.05rem/1 "Comic Sans MS", cursive; letter-spacing: .08em; }
+@keyframes chaos-scroll { to { transform: translateX(-100%); } }
+
+/* Stickers stuck on at odd angles (chaos.js places them). */
+.chaos-sticker {
+  position: absolute; z-index: 4; padding: 10px 14px; border: 3px solid var(--ink); border-radius: 50px; box-shadow: 4px 4px 0 var(--ink);
+  font: 800 .95rem/1 "Comic Sans MS", cursive; color: var(--ink); pointer-events: auto; cursor: grab; user-select: none;
+  animation: chaos-sticker 5s ease-in-out infinite;
+}
+.chaos-sticker:active { cursor: grabbing; }
+@keyframes chaos-sticker { 0%, 100% { transform: rotate(var(--r, -10deg)) scale(1); } 50% { transform: rotate(calc(var(--r, -10deg) * -1)) scale(1.06); } }
+
+/* ---------- Everything below the hero: floating, tilted, wobbly ---------- */
+html.chaos main > section:not(.hero) { animation: chaos-tilt 9s ease-in-out infinite; transform-origin: 50% 50%; }
+html.chaos main > section:nth-of-type(2n) { animation-duration: 11s; animation-direction: reverse; }
+html.chaos main > section:nth-of-type(3n) { animation-duration: 13s; }
+@keyframes chaos-tilt { 0%, 100% { transform: rotate(-.8deg); } 50% { transform: rotate(.8deg) translateY(-6px); } }
+html.chaos .service-card, html.chaos .fw-card, html.chaos .feature-figure, html.chaos article {
+  border: 3px solid var(--ink) !important; box-shadow: 6px 6px 0 var(--ink) !important; border-radius: 18px !important;
+  transition: transform .35s cubic-bezier(.3, 1.6, .5, 1) !important;
+}
+html.chaos .service-card:nth-child(odd) { transform: rotate(-2deg); }
+html.chaos .service-card:nth-child(even) { transform: rotate(2deg); }
+html.chaos .service-card:hover, html.chaos .fw-card:hover, html.chaos article:hover { transform: rotate(0) scale(1.06) !important; }
+html.chaos img:not(.brand-logo):not(.hero-logo):not(.footer-logo):not(.tk-badge):hover { animation: chaos-wobble .8s ease-in-out infinite; }
+html.chaos .band { background: repeating-linear-gradient(90deg, #ff3cac 0 40px, #784ba0 40px 80px, #2b86c5 80px 120px) !important; background-size: 240px 100% !important; animation: chaos-stripes 6s linear infinite !important; }
+@keyframes chaos-stripes { to { background-position: 240px 0; } }
+
+/* The sparkle trail and confetti pieces (chaos.js makes them). */
+.chaos-spark, .chaos-confetti { position: fixed; z-index: 9999; pointer-events: none; }
+.chaos-spark { width: 14px; height: 14px; margin: -7px 0 0 -7px; animation: chaos-spark .8s ease-out forwards; }
+.chaos-spark::before { content: "✦"; position: absolute; inset: 0; font-size: 14px; line-height: 14px; color: var(--c, #ff3cac); }
+@keyframes chaos-spark { to { transform: translateY(20px) scale(0) rotate(180deg); opacity: 0; } }
+.chaos-confetti { width: 10px; height: 14px; border-radius: 2px; }
+
+/* ---------- People who asked for less motion: the same mess, standing still ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html.chaos *, html.chaos *::before, html.chaos *::after { animation: none !important; transition: none !important; }
+  .chaos-spark, .chaos-confetti { display: none !important; }
+}

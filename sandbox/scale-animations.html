@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scale Animations</title>
+<!--
+  scale-animations.html: five ways to make things grow and shrink forever (large -> small -> large ...).
+
+  Each card on the page uses a different technique, from simplest to most flexible:
+    1. Pure CSS          @keyframes, no JavaScript at all
+    2. Web Animations    element.animate(...) with iterations: Infinity
+    3. requestAnimationFrame + a sine wave (full control, frame by frame)
+    4. A staggered wave  many dots, each a little behind the one before
+    5. Heartbeat         a custom rhythm with several keyframes
+
+  Hover a card to pause it. People who turn on "reduce motion" in their system settings see everything still.
+  Open this file straight in a browser: nothing to install.
+-->
+<style>
+  :root {
+    --bg: #f5f6f8; --card: #ffffff; --ink: #2b2f35; --muted: #6b7280;
+    --red: #c8102e; --slate: #3d4249; --line: #e3e5e9;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #15171a; --card: #1f2226; --ink: #eceef1; --muted: #9aa1ab; --slate: #9aa1ab; --line: #2e3237; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 1100px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1 { margin: 0 0 4px; font-size: 1.6rem; }
+  p.lead { margin: 0 0 24px; color: var(--muted); }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
+  .card h2 { margin: 0; font-size: 1rem; }
+  .card p { margin: 4px 0 0; font-size: .85rem; color: var(--muted); }
+  /* The stage is the square area where each animation plays. overflow: hidden keeps big shapes inside the card. */
+  .stage { height: 180px; display: grid; place-items: center; overflow: hidden; margin-bottom: 12px; }
+
+  .shape { width: 70px; height: 70px; border-radius: 50%; background: var(--red); }
+  .square { border-radius: 14px; background: var(--slate); }
+
+  /* ---------- 1. Pure CSS ----------
+     "alternate" plays the animation forwards then backwards, so it goes big -> small -> big smoothly.
+     "infinite" means it never stops. */
+  .css-pulse { animation: grow-shrink 1.6s ease-in-out infinite alternate; }
+  @keyframes grow-shrink {
+    from { transform: scale(0.4); }
+    to   { transform: scale(1.6); }
+  }
+
+  /* ---------- 4. The wave's dots ---------- */
+  .wave { display: grid; grid-template-columns: repeat(5, 22px); gap: 10px; }
+  .wave span { width: 22px; height: 22px; border-radius: 50%; background: var(--red); }
+
+  /* ---------- 5. Heart shape (a rotated square with two circles) ---------- */
+  .heart { position: relative; width: 50px; height: 50px; background: var(--red); transform: rotate(45deg); }
+  .heart::before, .heart::after { content: ""; position: absolute; width: 50px; height: 50px; border-radius: 50%; background: var(--red); }
+  .heart::before { left: -25px; }
+  .heart::after { top: -25px; }
+
+  /* Paused cards: CSS animations stop when their card is hovered. (The JavaScript ones check this too.) */
+  .card:hover .css-pulse { animation-play-state: paused; }
+
+  /* Respect people who get dizzy from motion. */
+  @media (prefers-reduced-motion: reduce) {
+    .css-pulse { animation: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Endless scale animations</h1>
+  <p class="lead">Five techniques, each growing and shrinking forever. Hover a card to pause it.</p>
+
+  <div class="grid">
+    <section class="card">
+      <div class="stage"><div class="shape css-pulse"></div></div>
+      <h2>1. Pure CSS</h2>
+      <p>@keyframes with <code>infinite alternate</code>. Simplest, and the browser does all the work.</p>
+    </section>
+
+    <section class="card" id="card-waapi">
+      <div class="stage"><div class="shape square" id="waapi"></div></div>
+      <h2>2. Web Animations API</h2>
+      <p><code>element.animate()</code> with <code>iterations: Infinity</code>. CSS speed, JavaScript control.</p>
+    </section>
+
+    <section class="card" id="card-raf">
+      <div class="stage"><div class="shape" id="raf"></div></div>
+      <h2>3. requestAnimationFrame</h2>
+      <p>A sine wave worked out every frame. Full control over every moment.</p>
+    </section>
+
+    <section class="card" id="card-wave">
+      <div class="stage"><div class="wave" id="wave"></div></div>
+      <h2>4. Staggered wave</h2>
+      <p>25 dots, each starting a little later, so a ripple runs across them.</p>
+    </section>
+
+    <section class="card" id="card-heart">
+      <div class="stage"><div class="heart" id="heart"></div></div>
+      <h2>5. Heartbeat</h2>
+      <p>Several keyframes for a beat-beat-rest rhythm instead of a smooth swing.</p>
+    </section>
+  </div>
+</main>
+
+<script>
+// ---------------------------------------------------------------------------------------------
+// Shared helpers
+// ---------------------------------------------------------------------------------------------
+
+// True when the person has asked their computer for less motion. We then show everything still.
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// Pause an animation while the mouse is over its card, and play it again when the mouse leaves.
+function pauseOnHover(cardId, animations) {
+  const card = document.getElementById(cardId);
+  card.addEventListener("mouseenter", () => animations.forEach(a => a.pause()));
+  card.addEventListener("mouseleave", () => animations.forEach(a => a.play()));
+}
+
+// ---------------------------------------------------------------------------------------------
+// 2. Web Animations API
+//    Give the browser a list of "keyframes" and some timing. It runs smoothly and we get back an
+//    Animation object we can pause, play, speed up (playbackRate) or reverse.
+// ---------------------------------------------------------------------------------------------
+const waapi = document.getElementById("waapi").animate(
+  [
+    { transform: "scale(0.4) rotate(0deg)" },    // small
+    { transform: "scale(1.6) rotate(90deg)" },   // large (and a quarter turn, just for fun)
+  ],
+  {
+    duration: 1400,        // milliseconds for one trip, small -> large
+    iterations: Infinity,  // repeat forever
+    direction: "alternate",// then large -> small, then small -> large ...
+    easing: "ease-in-out", // slow at the ends, fast in the middle
+  }
+);
+pauseOnHover("card-waapi", [waapi]);
+
+// ---------------------------------------------------------------------------------------------
+// 3. requestAnimationFrame + a sine wave
+//    The browser calls our function about 60 times a second. We work out the size from the time:
+//    Math.sin() swings smoothly between -1 and 1 forever, which we turn into a scale between MIN and MAX.
+// ---------------------------------------------------------------------------------------------
+(function sineWave() {
+  const el = document.getElementById("raf");
+  const card = document.getElementById("card-raf");
+  const MIN = 0.4, MAX = 1.6;   // smallest and largest size
+  const SECONDS_PER_CYCLE = 2;  // one full big-and-small loop
+
+  let paused = false;
+  let elapsed = 0;   // how far into the animation we are, in seconds (stops counting while paused)
+  let last = null;   // the time of the previous frame
+
+  card.addEventListener("mouseenter", () => (paused = true));
+  card.addEventListener("mouseleave", () => (paused = false));
+
+  function frame(now) {
+    if (last !== null && !paused) elapsed += (now - last) / 1000;
+    last = now;
+
+    // sin goes -1 .. 1; (sin + 1) / 2 goes 0 .. 1; then stretch that to MIN .. MAX.
+    const wave = (Math.sin((elapsed / SECONDS_PER_CYCLE) * Math.PI * 2) + 1) / 2;
+    const scale = MIN + (MAX - MIN) * wave;
+    el.style.transform = `scale(${scale})`;
+
+    // Bonus: fade the colour slightly as it shrinks.
+    el.style.opacity = 0.5 + wave * 0.5;
+
+    requestAnimationFrame(frame); // ask for the next frame: this is what makes it endless
+  }
+  if (!reduceMotion) requestAnimationFrame(frame);
+})();
+
+// ---------------------------------------------------------------------------------------------
+// 4. Staggered wave
+//    25 dots all use the same animation, but each one starts a bit later (a negative "delay" starts
+//    it part-way through), based on its distance from the top-left corner. That makes a diagonal ripple.
+// ---------------------------------------------------------------------------------------------
+(function staggeredWave() {
+  const box = document.getElementById("wave");
+  const SIZE = 5;          // 5 x 5 dots
+  const DURATION = 1200;
+  const animations = [];
+
+  for (let row = 0; row < SIZE; row++) {
+    for (let col = 0; col < SIZE; col++) {
+      const dot = document.createElement("span");
+      box.appendChild(dot);
+      animations.push(
+        dot.animate(
+          [{ transform: "scale(0.2)", opacity: 0.4 }, { transform: "scale(1.3)", opacity: 1 }],
+          {
+            duration: DURATION,
+            iterations: Infinity,
+            direction: "alternate",
+            easing: "ease-in-out",
+            delay: -(row + col) * 120, // each step along the diagonal is 120 ms behind
+          }
+        )
+      );
+    }
+  }
+  pauseOnHover("card-wave", animations);
+})();
+
+// ---------------------------------------------------------------------------------------------
+// 5. Heartbeat
+//    Instead of a smooth swing, the keyframes describe a rhythm. "offset" says where in the cycle
+//    (0 = start, 1 = end) each size happens: two quick beats, then a rest.
+// ---------------------------------------------------------------------------------------------
+const heart = document.getElementById("heart").animate(
+  [
+    { transform: "rotate(45deg) scale(0.8)", offset: 0 },
+    { transform: "rotate(45deg) scale(1.3)", offset: 0.14 },  // beat
+    { transform: "rotate(45deg) scale(0.9)", offset: 0.28 },
+    { transform: "rotate(45deg) scale(1.4)", offset: 0.42 },  // bigger beat
+    { transform: "rotate(45deg) scale(0.8)", offset: 0.7 },   // relax...
+    { transform: "rotate(45deg) scale(0.8)", offset: 1 },     // ...and rest until the next loop
+  ],
+  { duration: 1300, iterations: Infinity, easing: "ease-in-out" }
+);
+pauseOnHover("card-heart", [heart]);
+
+// When reduced motion is on, stop the JavaScript animations too (the CSS one is handled in the <style>).
+if (reduceMotion) document.getAnimations().forEach(a => a.cancel());
+</script>
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>How Sites Go Live</title>
+<!--
+  deploy-infographic.html: an animated, scroll-driven infographic of the whole journey of putting a website online,
+  from picking a name to keeping it healthy. Everything is in this one file.
+
+  How it moves:
+    - background layers (stars, floating shapes, a grid) drift at different speeds as you scroll: parallax
+    - a glowing pipeline draws itself down the middle as you scroll, with a "data packet" riding along it
+    - each step swoops in when it reaches the screen and throws a burst of sparkles; its icon animates
+    - cards tilt towards the mouse
+    - the finale counts up and throws confetti
+  To change the wording, edit the STEPS list in the script near the bottom.
+  Nothing flashes quickly; "reduce motion" turns the animations off and shows everything at once.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --night: #0b0420; --deep: #1a0636; --pink: #ff2bd6; --orange: #ff8a2b; --purple: #8a3ffc; --cyan: #00e5ff; --text: #f4ecff; --muted: #c9b8ea; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --night: #0b0420; } }
+  :root[data-theme="dark"] { --night: #0b0420; }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--night); color: var(--text); font: 500 18px/1.55 "Rajdhani", system-ui, sans-serif; overflow-x: hidden; }
+
+  /* ---------- Parallax background layers (fixed; the script moves them at different speeds) ---------- */
+  .layer { position: fixed; inset: -50vh 0; pointer-events: none; will-change: transform; }
+  .layer.stars { background-image: radial-gradient(1.5px 1.5px at 15% 20%, #fff, transparent), radial-gradient(1px 1px at 60% 10%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 80% 40%, #ffd1f0, transparent), radial-gradient(1px 1px at 35% 65%, #fff, transparent), radial-gradient(1px 1px at 90% 85%, #c9b8ea, transparent);
+      background-size: 340px 280px; opacity: .8; }
+  .layer.grid { background: linear-gradient(90deg, rgba(138, 63, 252, .12) 1px, transparent 1px) 0 0 / 80px 80px,
+                            linear-gradient(0deg, rgba(138, 63, 252, .12) 1px, transparent 1px) 0 0 / 80px 80px;
+                -webkit-mask: radial-gradient(ellipse at center, #000 30%, transparent 75%); mask: radial-gradient(ellipse at center, #000 30%, transparent 75%); }
+  .shape { position: absolute; opacity: .5; animation: spin 24s linear infinite; }
+  .shape.tri { width: 0; height: 0; border-left: 30px solid transparent; border-right: 30px solid transparent; border-bottom: 52px solid rgba(255, 43, 214, .35); }
+  .shape.ring { width: 70px; height: 70px; border-radius: 50%; border: 3px solid rgba(0, 229, 255, .4); }
+  .shape.box { width: 46px; height: 46px; border: 3px solid rgba(255, 138, 43, .45); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ---------- Hero ---------- */
+  header { position: relative; min-height: 100vh; min-height: 100svh; display: grid; place-items: center; text-align: center; padding: 40px 16px; overflow: hidden; }
+  .sun { position: absolute; left: 50%; bottom: 8%; width: min(70vw, 560px); aspect-ratio: 1; transform: translateX(-50%); border-radius: 50%;
+         background: linear-gradient(180deg, #ffd36b, #ff7a3d 45%, #ff2f9a 85%);
+         -webkit-mask: linear-gradient(#000 50%, transparent 50% 54%, #000 54% 62%, transparent 62% 67%, #000 67% 74%, transparent 74% 80%, #000 80% 86%, transparent 86%);
+                 mask: linear-gradient(#000 50%, transparent 50% 54%, #000 54% 62%, transparent 62% 67%, #000 67% 74%, transparent 74% 80%, #000 80% 86%, transparent 86%);
+         opacity: .9; filter: drop-shadow(0 0 60px rgba(255, 60, 170, .6)); }
+  .eyebrow { font: 700 .85rem "Orbitron", sans-serif; letter-spacing: .35em; color: var(--cyan); }
+  h1 { position: relative; margin: 10px 0 12px; font: 900 clamp(2.4rem, 8vw, 6rem)/.95 "Orbitron", sans-serif;
+       background: linear-gradient(90deg, #fff, #ffd1f0, var(--pink), var(--orange), #fff) 0 0 / 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
+       animation: shimmer 6s linear infinite; filter: drop-shadow(0 0 22px rgba(255, 43, 214, .5)); }
+  @keyframes shimmer { to { background-position: 300% 0; } }
+  .intro { position: relative; max-width: 36em; margin: 0 auto; font-size: 1.25rem; color: #fff; text-shadow: 0 2px 10px rgba(11, 4, 32, .95), 0 0 24px rgba(11, 4, 32, .9); }
+  .eyebrow, .scroll-cue { position: relative; text-shadow: 0 2px 10px rgba(11, 4, 32, .95); }
+  .scroll-cue { position: relative; margin-top: 34px; font: 700 .8rem "Orbitron", sans-serif; letter-spacing: .3em; animation: bob 1.6s ease-in-out infinite; }
+  @keyframes bob { 50% { transform: translateY(10px); } }
+
+  /* ---------- The timeline ---------- */
+  .timeline { position: relative; max-width: 1100px; margin: 0 auto; padding: 60px 16px 120px; }
+  .pipe { position: absolute; left: 50%; top: 0; bottom: 0; width: 4px; transform: translateX(-50%); background: rgba(138, 63, 252, .2); border-radius: 4px; }
+  .pipe-fill { position: absolute; left: 0; top: 0; width: 100%; height: 0; border-radius: 4px; background: linear-gradient(180deg, var(--cyan), var(--pink), var(--orange)); box-shadow: 0 0 18px var(--pink); }
+  .packet { position: absolute; left: 50%; top: 0; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; background: #fff; z-index: 3;
+            box-shadow: 0 0 0 4px rgba(255, 43, 214, .5), 0 0 30px var(--pink), 0 0 60px var(--orange); }
+  .packet::after { content: ""; position: absolute; inset: -12px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, .5); animation: ping 1.4s ease-out infinite; }
+  @keyframes ping { from { transform: scale(.5); opacity: 1; } to { transform: scale(1.6); opacity: 0; } }
+
+  .step { position: relative; display: grid; grid-template-columns: 1fr 90px 1fr; align-items: center; margin: 70px 0; }
+  .step .card { grid-column: 1; perspective: 900px; }
+  .step:nth-child(even) .card { grid-column: 3; }
+  .step .node { grid-column: 2; grid-row: 1; justify-self: center; width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; z-index: 2;
+                background: var(--deep); border: 3px solid var(--purple); font: 900 1.3rem "Orbitron", sans-serif; transition: transform .6s cubic-bezier(.2, 1.6, .4, 1), border-color .4s, box-shadow .4s; transform: scale(.4); }
+  .step.in .node { transform: scale(1); border-color: var(--pink); box-shadow: 0 0 24px var(--pink); }
+  .inner { position: relative; padding: 24px 24px 22px; border-radius: 20px; background: linear-gradient(160deg, rgba(46, 11, 87, .85), rgba(20, 6, 40, .85));
+           border: 1px solid rgba(255, 43, 214, .35); box-shadow: 0 20px 50px -20px rgba(0, 0, 0, .8), 0 0 30px rgba(138, 63, 252, .2);
+           transform-style: preserve-3d; transition: transform .2s ease-out, opacity .8s, translate .9s cubic-bezier(.2, .9, .3, 1.2);
+           opacity: 0; translate: -80px 30px; }
+  .step:nth-child(even) .inner { translate: 80px 30px; }
+  .step.in .inner { opacity: 1; translate: 0 0; }
+  .inner::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;     /* a light that runs round the edge */
+                   background: conic-gradient(from var(--a, 0deg), transparent 0 70%, var(--pink) 80%, var(--orange) 88%, transparent 95%);
+                   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
+                   animation: edge 5s linear infinite; }
+  @property --a { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+  @keyframes edge { to { --a: 360deg; } }
+  .inner h2 { margin: 0 0 6px; font: 900 clamp(1.2rem, 2.6vw, 1.7rem) "Orbitron", sans-serif; color: #fff; }
+  .inner p { margin: 0 0 12px; color: var(--muted); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chips span { font-size: .85rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: rgba(255, 43, 214, .15); border: 1px solid rgba(255, 43, 214, .4); color: #ffd1f0; }
+  .chips span.cost { background: rgba(255, 138, 43, .15); border-color: rgba(255, 138, 43, .5); color: #ffd6b0; }
+  .icon { float: right; width: 74px; height: 74px; margin: -6px -4px 6px 12px; transform: translateZ(40px); }
+  .icon * { vector-effect: non-scaling-stroke; }
+
+  /* Icon animations, one per step (they play once the step is on screen). */
+  .step.in .a-spin { animation: spin 8s linear infinite; transform-origin: 50% 50%; transform-box: fill-box; }
+  .step.in .a-bob { animation: bob 2s ease-in-out infinite; }
+  .step.in .a-blink { animation: led 1.2s steps(1) infinite; }
+  .step.in .a-blink:nth-of-type(2) { animation-delay: .4s; }
+  .step.in .a-blink:nth-of-type(3) { animation-delay: .8s; }
+  @keyframes led { 50% { opacity: .2; } }
+  .step.in .a-draw { stroke-dasharray: 120; animation: draw 2.4s ease-in-out infinite; }
+  @keyframes draw { from { stroke-dashoffset: 120; } 60%, to { stroke-dashoffset: 0; } }
+  .step.in .a-launch { animation: launch 2.2s ease-in-out infinite; }
+  @keyframes launch { 0%, 100% { transform: translateY(4px); } 50% { transform: translateY(-8px); } }
+  .step.in .a-pulse { animation: pulse 1.8s ease-in-out infinite; transform-origin: 50% 50%; transform-box: fill-box; }
+  @keyframes pulse { 50% { transform: scale(1.12); } }
+
+  /* ---------- Finale ---------- */
+  .finale { position: relative; min-height: 90vh; display: grid; place-items: center; text-align: center; padding: 60px 16px; }
+  .finale h2 { font: 900 clamp(2.4rem, 9vw, 6.5rem)/.9 "Orbitron", sans-serif; margin: 0; color: #fff; text-shadow: 0 0 30px var(--pink), 0 0 60px var(--orange); }
+  .stats { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; margin: 30px 0; }
+  .stat { min-width: 170px; padding: 18px; border-radius: 16px; background: rgba(46, 11, 87, .7); border: 1px solid rgba(0, 229, 255, .4); }
+  .stat b { display: block; font: 900 2.4rem "Orbitron", sans-serif; color: var(--cyan); text-shadow: 0 0 16px var(--cyan); }
+  .btn { display: inline-block; padding: 16px 30px; border-radius: 999px; background: #fff; color: #2e0b57; font: 900 .95rem "Orbitron", sans-serif; letter-spacing: .08em;
+         text-decoration: none; box-shadow: 0 0 30px rgba(255, 43, 214, .6); transition: transform .2s; }
+  .btn:hover { transform: translateY(-3px) scale(1.04); }
+
+  .spark { position: fixed; z-index: 50; pointer-events: none; width: 6px; height: 6px; border-radius: 50%; }
+  .progress { position: fixed; left: 0; top: 0; height: 4px; width: 0; z-index: 60; background: linear-gradient(90deg, var(--cyan), var(--pink), var(--orange)); }
+  .home { position: fixed; left: 14px; top: 12px; z-index: 60; font: 700 .75rem "Orbitron", sans-serif; letter-spacing: .2em; color: #fff; text-decoration: none; padding: 8px 12px; border: 1px solid rgba(255, 255, 255, .4); border-radius: 8px; background: rgba(11, 4, 32, .6); }
+
+  /* Phones: one column, with the pipeline down the left side. */
+  @media (max-width: 760px) {
+    .pipe, .packet { left: 30px; }
+    .step { grid-template-columns: 60px 1fr; }
+    .step .card, .step:nth-child(even) .card { grid-column: 2; }
+    .step .node { grid-column: 1; width: 48px; height: 48px; font-size: 1rem; }
+    .inner, .step:nth-child(even) .inner { translate: 40px 20px; }
+    .icon { width: 56px; height: 56px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .inner { opacity: 1 !important; translate: 0 0 !important; } .step .node { transform: none !important; }
+  }
+</style>
+</head>
+<body>
+<a class="home" href="../index.html">← TENSHI</a>
+<div class="progress" id="progress"></div>
+
+<!-- Parallax layers -->
+<div class="layer stars" data-speed="0.15"></div>
+<div class="layer grid" data-speed="0.35"></div>
+<div class="layer" data-speed="0.6" aria-hidden="true">
+  <span class="shape tri" style="left:8%;top:30%"></span><span class="shape ring" style="left:85%;top:22%"></span>
+  <span class="shape box" style="left:72%;top:60%"></span><span class="shape tri" style="left:20%;top:78%;animation-duration:30s"></span>
+  <span class="shape ring" style="left:45%;top:95%;animation-duration:18s"></span><span class="shape box" style="left:5%;top:120%"></span>
+  <span class="shape ring" style="left:90%;top:140%"></span><span class="shape tri" style="left:60%;top:170%"></span>
+</div>
+
+<header>
+  <div class="sun layer-free" id="sun"></div>
+  <div>
+    <div class="eyebrow">TENSHI SYSTEMS · HOW IT WORKS</div>
+    <h1>HOW A WEBSITE<br>GOES LIVE</h1>
+    <p class="intro">From a name you like to a site anyone in the world can open: the whole journey in nine steps.</p>
+    <div class="scroll-cue">SCROLL ↓</div>
+  </div>
+</header>
+
+<section class="timeline" id="timeline" aria-label="The nine steps">
+  <div class="pipe"><div class="pipe-fill" id="fill"></div></div>
+  <div class="packet" id="packet" aria-hidden="true"></div>
+  <!-- The steps are added here by the script, from the STEPS list. -->
+</section>
+
+<section class="finale" id="finale">
+  <div>
+    <h2>YOU'RE LIVE!</h2>
+    <div class="stats">
+      <div class="stat"><b data-count="9">0</b>steps</div>
+      <div class="stat"><b data-count="15" data-prefix="~$">0</b>a month, all in</div>
+      <div class="stat"><b data-count="1" data-suffix="s">0</b>to publish changes</div>
+    </div>
+    <a class="btn" href="../launch.html">LAUNCH YOURS →</a>
+  </div>
+</section>
+
+<script>
+// =====================================================================================================================
+// The nine steps. Change the words here; the page builds itself from this list.
+//   icon: which little animated picture to show (see ICONS below)
+// =====================================================================================================================
+const STEPS = [
+  { title: "Pick a name", icon: "globe",
+    text: "Search for a domain like yourbusiness.com and buy it from a registrar. It's yours for as long as you renew it each year.",
+    chips: ["Cloudflare Registrar", "Namecheap", "Porkbun"], cost: "~$10–15 / year" },
+  { title: "Point the name (DNS)", icon: "signpost",
+    text: "DNS is the internet's phone book. You add records that say \"this name lives at that server\", and a wildcard so every client site works automatically.",
+    chips: ["A record", "CNAME", "*.wildcard"], cost: "Free" },
+  { title: "Rent a home (hosting)", icon: "server",
+    text: "Your site needs a computer that's always on. Static sites can live free on GitHub Pages; the CMS needs a small rented server.",
+    chips: ["GitHub Pages", "VPS", "Hetzner / DigitalOcean"], cost: "$0–12 / month" },
+  { title: "Save the code (Git)", icon: "branch",
+    text: "Every change is saved as a commit and pushed to GitHub, so nothing is ever lost and any version can come back.",
+    chips: ["git commit", "git push", "history"], cost: "Free" },
+  { title: "Build it", icon: "gears",
+    text: "An automatic build turns templates, text and photos into finished pages: compressing images and stamping files so browsers always get the newest.",
+    chips: ["npm run build", "GitHub Actions", "image resizing"], cost: "Free" },
+  { title: "Ship it (deploy)", icon: "rocket",
+    text: "The finished files are copied to the server and switched on in one go. If anything's wrong, roll back to the last good version in a click.",
+    chips: ["one-click deploy", "rollback", "zero downtime"], cost: "Free" },
+  { title: "Lock it (HTTPS)", icon: "lock",
+    text: "A security certificate makes the padlock appear and encrypts everything between visitors and your site. It renews itself.",
+    chips: ["Let's Encrypt", "Cloudflare SSL", "firewall"], cost: "Free" },
+  { title: "Speed it up (CDN)", icon: "bolt",
+    text: "Copies of your site are kept in data centres around the world, so pages open fast whether a visitor is in Osaka or Ohio.",
+    chips: ["Cloudflare CDN", "caching", "attack protection"], cost: "Free plan" },
+  { title: "Keep it healthy", icon: "heart",
+    text: "Uptime checks ping your site every minute, backups run every night, and health checks flag anything that needs a fix.",
+    chips: ["uptime alerts", "daily backups", "health score"], cost: "$1–5 / month" },
+];
+
+// Little animated pictures (simple shapes, coloured with the page's neon palette).
+const ICONS = {
+  globe: `<svg viewBox="0 0 64 64" fill="none" stroke="#00e5ff" stroke-width="2.5"><g class="a-spin"><circle cx="32" cy="32" r="22"/><ellipse cx="32" cy="32" rx="10" ry="22"/><path d="M10 32h44M14 20h36M14 44h36"/></g></svg>`,
+  signpost: `<svg viewBox="0 0 64 64" fill="none" stroke="#ff2bd6" stroke-width="2.5"><path d="M32 8v48"/><g class="a-bob"><path d="M14 16h30l6 6-6 6H14z" fill="rgba(255,43,214,.2)"/><path d="M50 34H20l-6 6 6 6h30z" fill="rgba(255,138,43,.2)" stroke="#ff8a2b"/></g></svg>`,
+  server: `<svg viewBox="0 0 64 64" fill="none" stroke="#c9b8ea" stroke-width="2.5"><rect x="12" y="10" width="40" height="13" rx="3"/><rect x="12" y="26" width="40" height="13" rx="3"/><rect x="12" y="42" width="40" height="13" rx="3"/><circle class="a-blink" cx="20" cy="16.5" r="2.5" fill="#3bff9d" stroke="none"/><circle class="a-blink" cx="20" cy="32.5" r="2.5" fill="#3bff9d" stroke="none"/><circle class="a-blink" cx="20" cy="48.5" r="2.5" fill="#3bff9d" stroke="none"/></svg>`,
+  branch: `<svg viewBox="0 0 64 64" fill="none" stroke="#ff8a2b" stroke-width="2.5"><circle cx="18" cy="12" r="5"/><circle cx="18" cy="52" r="5"/><circle cx="46" cy="24" r="5"/><path class="a-draw" d="M18 17v30M46 29c0 12-28 8-28 18"/></svg>`,
+  gears: `<svg viewBox="0 0 64 64" fill="none" stroke="#8a3ffc" stroke-width="2.5"><g class="a-spin"><circle cx="24" cy="26" r="9"/><path d="M24 11v6M24 35v6M9 26h6M33 26h6M13 15l4 4M31 33l4 4M13 37l4-4M31 19l4-4"/></g><g class="a-spin" style="animation-direction:reverse"><circle cx="44" cy="44" r="7"/><path d="M44 32v5M44 51v5M32 44h5M51 44h5"/></g></svg>`,
+  rocket: `<svg viewBox="0 0 64 64" fill="none" stroke="#ff2bd6" stroke-width="2.5"><g class="a-launch"><path d="M32 6c10 8 12 22 8 34H24C20 28 22 14 32 6z" fill="rgba(255,43,214,.2)"/><circle cx="32" cy="22" r="4"/><path d="M24 40l-6 8 8-2M40 40l6 8-8-2"/><path d="M28 46c0 6 4 10 4 12 0-2 4-6 4-12" stroke="#ff8a2b"/></g></svg>`,
+  lock: `<svg viewBox="0 0 64 64" fill="none" stroke="#3bff9d" stroke-width="2.5"><path d="M20 28v-8a12 12 0 0124 0v8"/><rect class="a-pulse" x="14" y="28" width="36" height="26" rx="5" fill="rgba(59,255,157,.12)"/><path d="M32 38v8"/></svg>`,
+  bolt: `<svg viewBox="0 0 64 64" fill="none" stroke="#ffd23f" stroke-width="2.5"><path class="a-pulse" d="M36 6L14 36h16l-4 22 24-32H34z" fill="rgba(255,210,63,.2)"/></svg>`,
+  heart: `<svg viewBox="0 0 64 64" fill="none" stroke="#ff2bd6" stroke-width="2.5"><path class="a-pulse" d="M32 54S10 40 10 24a11 11 0 0122-4 11 11 0 0122 4c0 16-22 30-22 30z" fill="rgba(255,43,214,.15)"/><path class="a-draw" d="M14 32h10l4-8 6 16 4-8h12" stroke="#00e5ff"/></svg>`,
+};
+
+(function () {
+  const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const timeline = document.getElementById("timeline");
+
+  // Build the steps from the list.
+  STEPS.forEach((s, i) => {
+    const el = document.createElement("article");
+    el.className = "step";
+    el.innerHTML = `<div class="card"><div class="inner">
+        <div class="icon" aria-hidden="true">${ICONS[s.icon] || ""}</div>
+        <h2>${s.title}</h2><p>${s.text}</p>
+        <div class="chips">${s.chips.map(c => `<span>${c}</span>`).join("")}<span class="cost">${s.cost}</span></div>
+      </div></div><div class="node" aria-hidden="true">${i + 1}</div>`;
+    timeline.appendChild(el);
+  });
+  const steps = [...timeline.querySelectorAll(".step")];
+
+  // A step swoops in when it reaches the screen, with a burst of sparkles from its number.
+  const seen = new IntersectionObserver(entries => {
+    for (const e of entries) {
+      if (!e.isIntersecting || e.target.classList.contains("in")) continue;
+      e.target.classList.add("in");
+      const r = e.target.querySelector(".node").getBoundingClientRect();
+      sparkle(r.left + r.width / 2, r.top + r.height / 2, 22);
+    }
+  }, { threshold: 0.35 });
+  steps.forEach(s => seen.observe(s));
+
+  // Cards tilt towards the mouse.
+  if (!calm) document.addEventListener("pointermove", e => {
+    for (const s of steps) {
+      const inner = s.querySelector(".inner"), r = inner.getBoundingClientRect();
+      const dx = (e.clientX - (r.left + r.width / 2)) / r.width, dy = (e.clientY - (r.top + r.height / 2)) / r.height;
+      const near = Math.abs(dx) < 1 && Math.abs(dy) < 1;
+      inner.style.transform = near ? `rotateY(${dx * 10}deg) rotateX(${-dy * 10}deg)` : "";
+    }
+  });
+
+  // Scroll: parallax layers, the pipeline filling up, the packet riding along, the progress bar.
+  const layers = [...document.querySelectorAll(".layer")];
+  const fill = document.getElementById("fill"), packet = document.getElementById("packet"), progress = document.getElementById("progress"), sun = document.getElementById("sun");
+  function onScroll() {
+    const y = window.scrollY;
+    if (!calm) {
+      layers.forEach(l => l.style.transform = `translateY(${-y * Number(l.dataset.speed)}px)`);
+      sun.style.transform = `translateX(-50%) translateY(${y * 0.35}px)`;   // the sun sinks as you scroll away from it
+    }
+    const t = timeline.getBoundingClientRect();
+    const reach = Math.max(0, Math.min(1, (window.innerHeight * 0.55 - t.top) / t.height));
+    fill.style.height = reach * 100 + "%";
+    packet.style.top = reach * t.height + "px";
+    progress.style.width = (y / (document.documentElement.scrollHeight - window.innerHeight)) * 100 + "%";
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  // Sparkles: little dots that burst out from a point and fall away.
+  const COLORS = ["#ff2bd6", "#ff8a2b", "#00e5ff", "#ffffff", "#8a3ffc", "#ffd23f"];
+  function sparkle(x, y, n) {
+    if (calm) return;
+    for (let i = 0; i < n; i++) {
+      const s = document.createElement("span");
+      s.className = "spark";
+      s.style.left = x + "px"; s.style.top = y + "px";
+      s.style.background = COLORS[i % COLORS.length];
+      s.style.boxShadow = `0 0 8px ${s.style.background}`;
+      document.body.appendChild(s);
+      const a = Math.random() * Math.PI * 2, d = 40 + Math.random() * 90;
+      s.animate([{ transform: "translate(0,0) scale(1)", opacity: 1 },
+                 { transform: `translate(${Math.cos(a) * d}px, ${Math.sin(a) * d + 40}px) scale(0)`, opacity: 0 }],
+                { duration: 800 + Math.random() * 500, easing: "cubic-bezier(.2,.8,.3,1)" }).onfinish = () => s.remove();
+    }
+  }
+
+  // Finale: count up and throw confetti when it arrives.
+  const finale = document.getElementById("finale");
+  new IntersectionObserver(([e], obs) => {
+    if (!e.isIntersecting) return;
+    obs.disconnect();
+    finale.querySelectorAll("[data-count]").forEach(el => {
+      const target = Number(el.dataset.count), pre = el.dataset.prefix || "", suf = el.dataset.suffix || "", start = performance.now();
+      (function step(now) {
+        const k = calm ? 1 : Math.min(1, (now - start) / 1500);
+        el.textContent = pre + Math.round(target * (1 - Math.pow(1 - k, 3))) + suf;
+        if (k < 1) requestAnimationFrame(step);
+      })(start);
+    });
+    const r = finale.querySelector("h2").getBoundingClientRect();
+    for (let k = 0; k < 4; k++) setTimeout(() => sparkle(r.left + Math.random() * r.width, r.top + Math.random() * r.height, 30), k * 250);
+  }, { threshold: 0.5 }).observe(finale);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neon Grid</title>
+<!--
+  neon-grid.html: a full-screen animation of a glowing tiled floor that stretches to the horizon.
+  Every tile grows and shrinks forever, each on its own beat, while the floor slowly glides towards you.
+
+  How it works, in short:
+    - One <canvas> fills the whole window and is redrawn about 60 times a second.
+    - The floor is a grid of squares in an imaginary 3D world. A simple "perspective" formula turns each
+      3D corner into a point on the screen: things further away get smaller and closer to the horizon.
+    - Each tile's size comes from Math.sin(), which swings smoothly between -1 and 1 forever.
+
+  Things you can safely change are in SETTINGS just below <script>. Open the file in a browser: nothing to install.
+-->
+<style>
+  /* The scene is always night-time, so light and dark mode use the same colour. */
+  :root { --night: #07051a; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --night: #07051a; } }
+  :root[data-theme="dark"] { --night: #07051a; }
+  html, body { margin: 0; height: 100%; background: var(--night); overflow: hidden; }
+  canvas { display: block; width: 100vw; height: 100vh; }
+</style>
+</head>
+<body>
+<canvas id="scene" aria-label="Animated neon grid floor"></canvas>
+
+<script>
+// ============================== SETTINGS (try changing these) ==============================
+const SETTINGS = {
+  columns: 16,          // tiles to the left and to the right of the middle
+  rows: 46,             // how far into the distance the floor goes
+  glideSpeed: 0.35,     // how fast the floor moves towards you (tiles per second). 0 = still
+  pulseSpeed: 1.6,      // how fast tiles grow and shrink
+  smallest: 0.15,       // smallest tile size (1 = touching its neighbours)
+  largest: 0.95,        // largest tile size
+  horizon: 0.40,        // where the horizon sits, from the top (0.40 = 40% down the screen)
+  // Colours by distance: near tiles, middle tiles, far tiles (hue numbers on the colour wheel, 0-360).
+  hueNear: 195,         // cyan
+  hueMiddle: 300,       // magenta
+  hueFar: 350,          // red
+};
+// ==========================================================================================
+
+const canvas = document.getElementById("scene");
+const ctx = canvas.getContext("2d");
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+let W = 0, H = 0;   // the screen size in CSS pixels
+
+// Make the canvas match the window (and stay sharp on high-resolution screens).
+function resize() {
+  const ratio = Math.min(window.devicePixelRatio || 1, 2);
+  W = window.innerWidth;
+  H = window.innerHeight;
+  canvas.width = Math.round(W * ratio);
+  canvas.height = Math.round(H * ratio);
+  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  if (reduceMotion) draw(0);   // nothing is animating, so redraw once at the new size
+}
+window.addEventListener("resize", resize);
+
+// A repeatable "random" number between 0 and 1 for each tile, so every tile keeps its own personality.
+function tileRandom(col, row, salt) {
+  const n = Math.sin(col * 127.1 + row * 311.7 + salt * 74.7) * 43758.5453;
+  return n - Math.floor(n);
+}
+
+// Blend between two numbers: t = 0 gives a, t = 1 gives b.
+const mix = (a, b, t) => a + (b - a) * t;
+const clamp01 = t => Math.max(0, Math.min(1, t));
+
+// ---------------------------------------------------------------------------------------------
+// Perspective: turn a point on the floor (x across, z into the distance) into a point on the screen.
+// The camera floats above the floor; the further away (bigger z), the closer to the horizon it lands.
+// ---------------------------------------------------------------------------------------------
+const CAMERA_HEIGHT = 1.1;
+const NEAREST = 0.6;          // don't draw anything closer than this (it would be huge)
+
+function project(x, z) {
+  const focal = H * 0.85;                  // a bit like a camera lens: bigger = more zoomed in
+  const horizonY = H * SETTINGS.horizon;
+  return [W / 2 + (x * focal) / z, horizonY + (CAMERA_HEIGHT * focal) / z];
+}
+
+// ---------------------------------------------------------------------------------------------
+// The background: dark sky, the faint "ceiling" lines above the horizon, and a glowing horizon band.
+// ---------------------------------------------------------------------------------------------
+function drawBackground(time) {
+  const horizonY = H * SETTINGS.horizon;
+
+  const sky = ctx.createLinearGradient(0, 0, 0, H);
+  sky.addColorStop(0, "#05041a");
+  sky.addColorStop(SETTINGS.horizon * 0.8, "#1a0b3d");
+  sky.addColorStop(SETTINGS.horizon, "#3a0d4f");
+  sky.addColorStop(1, "#0a0624");
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, W, H);
+
+  // Ceiling lines: like the floor's lines but upside down, very faint, running to the same vanishing point.
+  ctx.lineWidth = 1;
+  for (let i = -40; i <= 40; i++) {
+    const x = i * 0.9;
+    const [x1, y1] = [W / 2 + x * 2, horizonY - 2];
+    const [x2, y2] = [W / 2 + x * H * 0.9, horizonY - H * 1.2];
+    ctx.strokeStyle = `hsla(${i % 3 === 0 ? 330 : 230}, 90%, 65%, ${0.05 + 0.05 * tileRandom(i, 0, 3)})`;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+  }
+  // Horizontal ceiling lines that drift slowly upwards, for a feeling of depth above as well.
+  for (let k = 0; k < 18; k++) {
+    const depth = ((k + time * SETTINGS.glideSpeed) % 18) + 0.6;
+    const y = horizonY - (CAMERA_HEIGHT * 1.6 * H * 0.85) / (depth * 2.2);
+    ctx.strokeStyle = `rgba(120, 110, 255, ${0.10 * (1 - depth / 18)})`;
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(W, y);
+    ctx.stroke();
+  }
+
+  // The glowing band along the horizon.
+  const glow = ctx.createLinearGradient(0, horizonY - H * 0.12, 0, horizonY + H * 0.12);
+  glow.addColorStop(0, "rgba(255, 40, 140, 0)");
+  glow.addColorStop(0.5, "rgba(255, 40, 140, 0.35)");
+  glow.addColorStop(1, "rgba(255, 40, 140, 0)");
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, horizonY - H * 0.12, W, H * 0.24);
+}
+
+// ---------------------------------------------------------------------------------------------
+// The floor: thin grid lines, then the pulsing tiles on top.
+// ---------------------------------------------------------------------------------------------
+function drawFloor(time) {
+  const { columns, rows } = SETTINGS;
+  const glide = time * SETTINGS.glideSpeed;   // how far the floor has moved, in tiles
+  const shift = glide % 1;                    // the part of a tile it has moved (0 .. 1)
+  const passed = Math.floor(glide);           // whole tiles that have gone past the camera
+
+  // Grid lines running into the distance (one per column edge).
+  ctx.lineWidth = 1;
+  for (let c = -columns; c <= columns + 1; c++) {
+    const [x1, y1] = project(c - 0.5, NEAREST);
+    const [x2, y2] = project(c - 0.5, rows);
+    ctx.strokeStyle = "rgba(140, 90, 255, 0.18)";
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+  }
+
+  // "lighter" adds colours together where they overlap, which is what makes neon look like it glows.
+  ctx.globalCompositeOperation = "lighter";
+
+  // Draw from far to near, so near tiles are painted on top of far ones.
+  for (let r = rows; r >= 0; r--) {
+    const zFront = r - shift + NEAREST;        // the tile row's near edge
+    if (zFront < NEAREST * 0.9) continue;
+    const zMid = zFront + 0.5;
+    const rowId = r + passed;                  // stays the same for a tile as it glides towards you
+
+    const distance = clamp01((zMid - NEAREST) / rows);        // 0 = right in front, 1 = horizon
+    const fade = Math.pow(1 - distance, 1.4);                 // far tiles fade into the haze
+    // Near rows rise in brightness gradually instead of popping in at the bottom edge.
+    const enter = clamp01((zFront - NEAREST * 0.9) / 0.6);
+
+    // Colour by distance: near (cyan) -> middle (magenta) -> far (red).
+    const d2 = clamp01(distance * 4);
+    const baseHue = d2 < 0.5 ? mix(SETTINGS.hueNear, SETTINGS.hueMiddle, d2 * 2)
+                             : mix(SETTINGS.hueMiddle, SETTINGS.hueFar, (d2 - 0.5) * 2);
+
+    for (let c = -columns; c <= columns; c++) {
+      // Each tile has its own beat (phase) and its own "hotness" (some tiles glow much brighter).
+      const phase = tileRandom(c, rowId, 1) * Math.PI * 2;
+      const hot = tileRandom(c, rowId, 2);
+      const pulse = 0.5 + 0.5 * Math.sin(time * SETTINGS.pulseSpeed + phase);   // 0 .. 1, forever
+      const size = mix(SETTINGS.smallest, SETTINGS.largest, pulse);
+      const half = size / 2;
+
+      // The tile's four corners on the floor, then on the screen.
+      const cx = c, cz = zMid;
+      const p1 = project(cx - half, cz - half);
+      const p2 = project(cx + half, cz - half);
+      const p3 = project(cx + half, cz + half);
+      const p4 = project(cx - half, cz + half);
+
+      // Tiles away from the middle are dimmer, like the photo's bright centre patch.
+      const centre = Math.exp(-((c / (columns * 0.45)) ** 2));
+      const hue = baseHue + (hot - 0.5) * 40;
+      const isHot = hot > 0.72;
+      const glowAmount = (0.1 + 0.75 * pulse * (isHot ? 1 : 0.3)) * fade * enter * (0.35 + 0.65 * centre);
+
+      if (glowAmount < 0.01) continue;   // too faint to see: skip it and save time
+
+      ctx.beginPath();
+      ctx.moveTo(p1[0], p1[1]);
+      ctx.lineTo(p2[0], p2[1]);
+      ctx.lineTo(p3[0], p3[1]);
+      ctx.lineTo(p4[0], p4[1]);
+      ctx.closePath();
+
+      ctx.fillStyle = `hsla(${hue}, 95%, ${45 + 25 * pulse}%, ${glowAmount})`;
+      ctx.fill();
+      ctx.strokeStyle = `hsla(${hue}, 100%, 75%, ${Math.min(1, glowAmount * 1.8)})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Hot tiles near their biggest get a halo: a wide, faint outline (much faster than a real blur).
+      if (isHot && pulse > 0.5) {
+        ctx.strokeStyle = `hsla(${hue}, 100%, 65%, ${glowAmount * 0.35})`;
+        ctx.lineWidth = 8 * fade;
+        ctx.stroke();
+      }
+    }
+  }
+
+  ctx.globalCompositeOperation = "source-over";
+}
+
+// ---------------------------------------------------------------------------------------------
+// One frame = background + floor. requestAnimationFrame calls it again and again, forever.
+// ---------------------------------------------------------------------------------------------
+function draw(time) {
+  drawBackground(time);
+  drawFloor(time);
+}
+
+function loop(now) {
+  draw(now / 1000);                // now is in milliseconds; the drawing works in seconds
+  requestAnimationFrame(loop);
+}
+
+resize();
+if (reduceMotion) draw(0);         // people who asked for less motion get a still picture
+else requestAnimationFrame(loop);
+</script>
+</body>
+</html>

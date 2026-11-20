@@ -1,0 +1,380 @@
+/* =====================================================================================================================
+   neon-theme.css: a TEMPORARY, just-for-fun redesign of the homepage (sandbox/neon-home.html only).
+   The real site never loads this file.
+
+   What it changes:
+     - The neon grid animation (neon-bg.js) fills the screen behind the hero.
+     - Every logo turns pure white, with a soft pink glow.
+     - The header, menu bar, dropdowns and phone menu become dark frosted glass with white text.
+     - The hero panel becomes clear glass, so the grid shows through.
+   Everything below the hero keeps its normal look and simply scrolls up over the grid.
+
+   Every rule starts with html.neon and uses !important where the site's own styles do, so it always wins.
+   To undo: delete this file and neon-home.html. Nothing else depends on them.
+   ===================================================================================================================== */
+
+html.neon { --neon-glass: rgba(255, 255, 255, .12); --neon-blur: blur(14px) saturate(170%); --neon-line: rgba(255, 255, 255, .22); --neon-pink: rgba(255, 70, 190, .55); }
+html.neon body { background: #07051a; }
+
+/* The animation canvas: fixed behind everything. The page content sits above it. */
+#neon-bg { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; }
+html.neon main, html.neon footer { position: relative; z-index: 1; }
+
+/* ---------- White logos ----------
+   The pictures are swapped for all-white versions (made from the real logos): a white rounded square with the
+   天 character cut out, so the neon shows through it. */
+html.neon .brand-logo,
+html.neon .footer-logo { content: url("horizontal-white.png"); }
+html.neon .hero-logo { content: url("logo-white.png"); }
+html.neon .brand-logo,
+html.neon .hero-logo,
+html.neon .footer-logo { filter: drop-shadow(0 0 12px var(--neon-pink)) !important; }
+
+/* ---------- The header: no background at all, just the logo, the glass menu bar and the language button ---------- */
+html.neon .ticker { display: none !important; }
+html.neon .site-header:not(#_):not(#__) {
+  --nav-ink: #ffffff;
+  --nav-ink-strong: #ffffff;
+  --nav-line: var(--neon-line);
+  --nav-accent: #ff4fbf;
+  border-bottom: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+html.neon .site-header:not(#_):not(#__)::before { display: none !important; }
+html.neon .site-header .site-nav a { text-shadow: 0 1px 8px rgba(0, 0, 0, .5); }
+
+/* The menu bar */
+/* No bar behind the menu: the words float on the grid. */
+html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav > ul {
+  background: transparent !important;
+  border-color: transparent !important;
+  -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav > ul::before { display: none !important; }
+/* The glass block only appears while the mouse is over the menu (it normally rests on the current page too). */
+html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav > ul:not(:hover):not(:focus-within) .nav-glow { opacity: 0 !important; }
+html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav > ul > li > .sub-toggle { color: rgba(255, 255, 255, .7) !important; }
+/* The block that glides to the hovered item */
+html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav .nav-glow {
+  background: linear-gradient(180deg, rgba(255, 255, 255, .2), rgba(255, 255, 255, .08)) !important;
+  border-color: rgba(255, 255, 255, .35) !important;
+  box-shadow: 0 0 18px -4px var(--neon-pink), inset 0 1px 0 rgba(255, 255, 255, .3) !important;
+}
+html.neon .site-header:not(.nav-ready):not(#_):not(#__) .site-nav > ul > li > a[aria-current="page"] {
+  background: transparent !important; box-shadow: none !important;
+}
+html.neon .site-header:not(.nav-ready):not(#_):not(#__) .site-nav > ul > li > a:hover {
+  background: rgba(255, 255, 255, .14) !important; box-shadow: inset 0 0 0 1px var(--neon-line) !important;
+}
+/* The current page is marked by a thin pink line under it instead. */
+html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav > ul > li > a[aria-current="page"] {
+  box-shadow: inset 0 -2px 0 #ff4fbf !important;
+}
+
+/* Dropdown panels and their little pointer */
+html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav ul.sub {
+  background: rgba(18, 10, 42, .72) !important;
+  border-color: var(--neon-line) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .15), 0 24px 48px -16px rgba(0, 0, 0, .7) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(170%) !important; backdrop-filter: blur(18px) saturate(170%) !important;
+}
+html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav .has-sub::after {
+  background: rgba(18, 10, 42, .9) !important; border-color: var(--neon-line) !important;
+}
+html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav ul.sub a:hover,
+html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav ul.sub a:focus-visible,
+html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav ul.sub a[aria-current="page"] {
+  background: rgba(255, 255, 255, .1) !important; box-shadow: inset 0 0 0 1px var(--neon-line) !important; color: #fff !important;
+}
+
+/* Phones: the Menu pill and the fold-out panel */
+html.neon .site-header:not(#_):not(#__) .nav-toggle {
+  background: var(--neon-glass) !important; border-color: var(--neon-line) !important; color: #fff !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2) !important;
+}
+html.neon .site-header:not(#_):not(#__) .nav-toggle-icon::before,
+html.neon .site-header:not(#_):not(#__) .nav-toggle-icon::after,
+html.neon .site-header:not(#_):not(#__) .nav-toggle-icon > span { background: #fff !important; }
+html.neon .site-header.nav-mobile:not(#_):not(#__) .site-nav {
+  background: rgba(18, 10, 42, .82) !important; border-color: var(--neon-line) !important;
+}
+html.neon .site-header.nav-mobile:not(#_):not(#__) .site-nav li,
+html.neon .site-header.nav-mobile:not(#_):not(#__) .site-nav li.has-sub > .sub-toggle { border-color: rgba(255, 255, 255, .12) !important; }
+html.neon .site-header.nav-mobile:not(#_):not(#__) .site-nav ul.sub a { color: rgba(255, 255, 255, .75) !important; }
+html.neon .site-header.nav-mobile:not(#_):not(#__) .site-nav li.has-sub > .sub-toggle { color: rgba(255, 255, 255, .7) !important; }
+html.neon .site-header.nav-mobile:not(#_):not(#__) .site-nav a[aria-current="page"] { background: rgba(255, 255, 255, .1) !important; }
+
+/* The language button: the same white glass as the menu bar, white text and arrow */
+html.neon .lang-current {
+  background: var(--neon-glass) !important; border: 1px solid rgba(255, 255, 255, .32) !important; color: #fff !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), 0 10px 30px -12px rgba(0, 0, 0, .6) !important;
+  -webkit-backdrop-filter: var(--neon-blur) !important; backdrop-filter: var(--neon-blur) !important;
+}
+html.neon .lang-current .lang-code { color: #fff !important; }
+html.neon .lang-current .lang-caret,
+html.neon .lang-current .lang-caret path { stroke: #fff !important; }
+/* Its drop-down list of languages: dark glass, white text */
+html.neon .lang-menu {
+  background: rgba(18, 10, 42, .78) !important; border: 1px solid var(--neon-line) !important;
+  -webkit-backdrop-filter: var(--neon-blur) !important; backdrop-filter: var(--neon-blur) !important;
+  box-shadow: 0 24px 48px -16px rgba(0, 0, 0, .7) !important;
+}
+html.neon .lang-menu button { color: #fff !important; background: transparent !important; }
+html.neon .lang-menu button:hover,
+html.neon .lang-menu button[aria-pressed="true"] { background: rgba(255, 255, 255, .12) !important; }
+html.neon .lang-menu .lang-check path { stroke: #fff !important; }
+
+/* ---------- The hero: the grid shows through clear glass ---------- */
+html.neon .hero { background: transparent !important; min-height: calc(100vh - 80px); }
+html.neon .hero-slides,
+html.neon .hero-wash,
+html.neon .hero-stripes { display: none !important; }
+/* No panel behind the hero text either: it floats straight over the grid. (A blur here also drained the colour.) */
+html.neon .hero-card {
+  background: transparent !important; border: 0 !important; box-shadow: none !important;
+  -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+}
+/* White text. The site sets -webkit-text-fill-color, which beats color, so both are set. */
+html.neon .hero-card h1,
+html.neon .hero-card .hero-lead,
+html.neon .hero-card h1 * {
+  color: #fff !important; -webkit-text-fill-color: #fff !important;
+}
+html.neon .hero-card h1 { text-shadow: 0 0 28px rgba(255, 80, 200, .55), 0 2px 12px rgba(0, 0, 0, .5); }
+html.neon .hero-card .hero-lead { text-shadow: 0 1px 10px rgba(0, 0, 0, .7); }
+
+/* =====================================================================================================================
+   MUSIC VIDEO EFFECTS (neon-fx.js)
+   ===================================================================================================================== */
+
+/* The particle overlay: above the page content, below the header, and never catches clicks. */
+#neon-particles { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 5; pointer-events: none; }
+
+/* Kinetic headline: each word is its own box so it can scale and shake on its own. */
+html.neon .hero-card h1.kx .kx-word {
+  display: inline-block;
+  color: var(--kx-color, #fff) !important; -webkit-text-fill-color: var(--kx-color, #fff) !important;
+  /* RGB split: a cyan copy to the left and a pink copy to the right, like a TV out of alignment */
+  text-shadow: -3px 0 rgba(176, 77, 255, .75), 3px 0 rgba(255, 43, 214, .75), 0 0 30px var(--kx-color, #fff);
+  transition: color .12s, -webkit-text-fill-color .12s;
+  will-change: transform;
+}
+html.neon .hero-card h1.kx .kx-word.kx-hidden { opacity: 0; }
+
+/* A word lands: big, blurred and see-through, then slams down to its normal size. */
+html.neon .hero-card h1.kx .kx-word.kx-punch { animation: kx-punch .42s cubic-bezier(.2, 1.5, .35, 1) both; }
+/* ...with a flash: as it lands it flares bright white for a split second, then cools to its colour. */
+@keyframes kx-punch {
+  0%   { opacity: 0; transform: scale(2.2) skewX(-8deg); filter: blur(10px) brightness(1); }
+  30%  { opacity: 1; filter: blur(0) brightness(2.6) drop-shadow(0 0 18px #fff); }
+  55%  { transform: scale(.92) skewX(2deg); filter: brightness(1.3); }
+  100% { opacity: 1; transform: none; filter: none; }
+}
+
+/* Resting: white, with a slow breathing glow and a gentle RGB split. */
+html.neon .hero-card h1.kx .kx-word.kx-glow { animation: kx-breathe 2.6s ease-in-out infinite; }
+@keyframes kx-breathe {
+  0%, 100% { text-shadow: -2px 0 rgba(176, 77, 255, .6), 2px 0 rgba(255, 43, 214, .6), 0 0 18px rgba(255, 80, 200, .5); }
+  50%      { text-shadow: -4px 0 rgba(176, 77, 255, .8), 4px 0 rgba(255, 43, 214, .8), 0 0 40px rgba(255, 80, 200, .8); }
+}
+
+/* A glitch: the word jumps, slices and splits for a moment. */
+html.neon .hero-card h1.kx .kx-word.kx-glitch { animation: kx-glitch .45s steps(1) both; }
+@keyframes kx-glitch {
+  0%   { transform: translate(0); clip-path: none; }
+  15%  { transform: translate(-6px, 2px) skewX(12deg); clip-path: inset(10% 0 55% 0); text-shadow: -8px 0 #b04dff, 8px 0 #ff2bd6; }
+  30%  { transform: translate(5px, -3px); clip-path: inset(50% 0 12% 0); }
+  45%  { transform: translate(-3px, 0) skewX(-10deg); clip-path: inset(25% 0 35% 0); text-shadow: 6px 0 #ff8a2b, -6px 0 #b04dff; }
+  60%  { transform: translate(4px, 1px); clip-path: none; }
+  100% { transform: none; clip-path: none; }
+}
+
+/* The message reel sits exactly on top of the headline, in the same big lettering. */
+html.neon .hero-card { position: relative; }
+html.neon .hero-card .kx-reel {
+  position: absolute; left: 0; right: 0; z-index: 2; pointer-events: none;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; align-content: center; column-gap: .28em;
+  font-family: inherit; font-size: clamp(1.75rem, 5.06vw, 2.6rem); font-weight: 800; line-height: 1.15; text-transform: uppercase;
+  padding-inline: max(var(--gutter, 16px), calc((100% - 736px) / 2));
+}
+html.neon .hero-card h1.kx { transition: opacity .25s; }
+html.neon .hero-card h1.kx.kx-away { opacity: 0; }
+html.neon .hero-card .kx-reel .kx-word {
+  display: inline-block; font-size: 1.35em;
+  color: var(--kx-color, #fff); -webkit-text-fill-color: var(--kx-color, #fff);
+  text-shadow: -3px 0 rgba(176, 77, 255, .75), 3px 0 rgba(255, 43, 214, .75), 0 0 30px var(--kx-color, #fff);
+}
+html.neon .hero-card .kx-reel .kx-word.kx-hidden { opacity: 0; }
+html.neon .hero-card .kx-reel .kx-word.kx-punch { animation: kx-punch .42s cubic-bezier(.2, 1.5, .35, 1) both; }
+html.neon .hero-card .kx-reel .kx-word.kx-glitch { animation: kx-glitch .45s steps(1) both; }
+
+/* Fizzle: the word flickers like a neon tube losing power, drifts up a touch and burns out (embers come from neon-fx.js). */
+html.neon .hero-card h1.kx .kx-word.kx-fizzle,
+html.neon .hero-card .kx-reel .kx-word.kx-fizzle { animation: kx-fizzle .55s ease-out both; }
+@keyframes kx-fizzle {
+  0%   { opacity: 1;   filter: brightness(1.9); transform: none; }
+  15%  { opacity: .5;  }
+  30%  { opacity: .9;  transform: translateY(-1px); }
+  50%  { opacity: .35; filter: brightness(1.2) blur(1px); }
+  65%  { opacity: .6;  }
+  100% { opacity: 0;   filter: brightness(.6) blur(4px); transform: translateY(-6px) scale(1.04); }
+}
+
+/* ---------- The hero button ("Deploy Your Future"): white with dark purple text ----------
+   (Extra :not(#…) parts make this rule stronger than the site's own button styles.) */
+html.neon { --neon-ink: #2e0b57; --neon-purple: #6d28d9; --neon-purple-dark: #4c1d95; }
+html.neon .hero-cta-glass .hg-btn:not(#_):not(#__):not(#___) {
+  background: #ffffff !important;
+  color: var(--neon-ink) !important;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .6), 0 0 28px rgba(255, 43, 214, .45), 0 10px 30px -10px rgba(46, 11, 87, .8) !important;
+}
+html.neon .hero-cta-glass .hg-btn:not(#_):not(#__):not(#___) .hg-text { color: var(--neon-ink) !important; -webkit-text-fill-color: var(--neon-ink) !important; }
+html.neon .hero-cta-glass .hg-btn:not(#_):not(#__):not(#___):hover {
+  background: #f6efff !important;
+  box-shadow: 0 0 0 1px #fff, 0 0 42px rgba(255, 43, 214, .7), 0 14px 34px -10px rgba(46, 11, 87, .9) !important;
+}
+html.neon .hero-cta-glass .hg-btn:not(#_):not(#__):not(#___) .hg-icon { background: var(--neon-ink) !important; box-shadow: 0 0 10px rgba(255, 43, 214, .5) !important; }
+html.neon .hero-cta-glass .hg-btn:not(#_):not(#__):not(#___) .hg-svg,
+html.neon .hero-cta-glass .hg-btn:not(#_):not(#__):not(#___) .hg-svg path { fill: #ffffff !important; }
+
+/* ---------- "Ask Tanaka" chat: white and purple instead of white and red ---------- */
+html.neon .tk-launch { color: var(--neon-ink); background: #fff; border: 1.5px solid var(--neon-purple); box-shadow: 0 0 22px rgba(176, 77, 255, .45); }
+html.neon .tk-launch:hover { background: var(--neon-purple); color: #fff; border-color: var(--neon-purple); box-shadow: 0 0 30px rgba(176, 77, 255, .7); }
+html.neon .tk-launch:focus-visible { outline-color: var(--neon-purple); }
+html.neon .tk-orb { box-shadow: 0 0 0 2px var(--neon-purple); }
+
+/* The "online" light: a pink-to-orange dot that pulses, with a ring rippling out from it. */
+html.neon .tk-dot,
+html.neon .tk-ava::after {
+  background: radial-gradient(circle at 35% 35%, #ffd0a0, #ff8a2b 45%, #ff2bd6 100%) !important;
+  border-color: #fff !important;
+  animation: neon-online 1.6s ease-in-out infinite;
+}
+@keyframes neon-online {
+  0%   { box-shadow: 0 0 0 0 rgba(255, 90, 160, .75), 0 0 8px rgba(255, 138, 43, .9); transform: scale(1); }
+  50%  { box-shadow: 0 0 0 7px rgba(255, 90, 160, 0), 0 0 14px rgba(255, 43, 214, 1); transform: scale(1.15); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 90, 160, 0), 0 0 8px rgba(255, 138, 43, .9); transform: scale(1); }
+}
+
+/* Inside the chat panel: purple everywhere the red accent used to be. */
+html.neon .tk-hbtn:focus-visible { outline-color: var(--neon-purple); }
+html.neon .tk-intro-cap em { color: var(--neon-purple); }
+html.neon .tk-row.me .tk-bub { background: var(--neon-purple); }
+html.neon .tk-bub a, html.neon .tk-links a { color: var(--neon-purple); }
+html.neon .tk-row.me .tk-bub a { color: #fff; }
+html.neon .tk-links a:hover { border-color: var(--neon-purple); color: var(--neon-purple-dark); }
+html.neon .tk-typing i { background: var(--neon-purple); }
+html.neon .tk-chips button:hover, html.neon .tk-chips button.human:hover { border-color: var(--neon-purple); color: var(--neon-purple); }
+html.neon .tk-chips button:focus-visible { outline-color: var(--neon-purple); }
+html.neon .tk-input textarea:focus { border-color: var(--neon-purple); box-shadow: 0 0 0 3px rgba(109, 40, 217, .18); }
+html.neon .tk-send { background: var(--neon-purple); }
+html.neon .tk-send:hover { background: var(--neon-purple-dark); }
+html.neon .tk-send:focus-visible { outline-color: var(--neon-purple); }
+html.neon .tk-foot button { color: var(--neon-purple); }
+html.neon .tk-foot button:hover { color: var(--neon-purple-dark); }
+html.neon .tk-form textarea:focus { border-color: var(--neon-purple); box-shadow: 0 0 0 3px rgba(109, 40, 217, .18); }
+html.neon .tk-form .tk-check input { accent-color: var(--neon-purple); }
+html.neon .tk-err { color: var(--neon-purple-dark); }
+html.neon .tk-form-actions button { background: var(--neon-purple); border-color: var(--neon-purple); }
+html.neon .tk-form-actions button:hover { background: var(--neon-purple-dark); border-color: var(--neon-purple-dark); }
+html.neon .tk-form-actions .tk-copy { background: #fff; color: var(--neon-purple); border-color: #e5e5ea; }
+html.neon .tk-form-actions .tk-copy:hover { border-color: var(--neon-purple); color: var(--neon-purple-dark); }
+
+/* People who asked for less motion: the online light stays still. */
+@media (prefers-reduced-motion: reduce) {
+  html.neon .tk-dot, html.neon .tk-ava::after { animation: none; }
+}
+
+/* ---------- Tanaka as a purple robot: every picture of him is swapped for tanaka-robot.svg ---------- */
+html.neon img[src*="tanaka.svg"] { content: url("tanaka-robot.svg"); }
+html.neon .tk-orb, html.neon .tk-ava, html.neon .tk-badge-lg { background: #2e0b57; box-shadow: 0 0 0 2px #a855f7, 0 0 14px rgba(168, 85, 247, .6) !important; }
+
+/* ---------- The header over WHITE content (neon-header.js adds .neon-light while white is underneath) ----------
+   Logo: all black with a light gray outer glow. Menu and language button: dark text. Everything fades between looks. */
+html.neon .brand-logo, html.neon .site-header .site-nav a, html.neon .lang-current { transition: filter .45s ease, color .45s ease, background-color .45s ease, text-shadow .45s ease; }
+html.neon.neon-light .brand-logo {
+  filter: brightness(0) drop-shadow(0 0 5px rgba(215, 215, 222, .95)) drop-shadow(0 0 14px rgba(200, 200, 208, .75)) !important;
+}
+html.neon.neon-light .site-header:not(#_):not(#__) { --nav-ink: #15101f; --nav-ink-strong: #000000; }
+html.neon.neon-light .site-header .site-nav a { text-shadow: 0 0 8px rgba(235, 235, 240, .95); }
+html.neon.neon-light .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav > ul > li > .sub-toggle { color: #15101f !important; }
+html.neon.neon-light .lang-current {
+  background: rgba(255, 255, 255, .7) !important; color: #15101f !important; border-color: rgba(21, 16, 31, .18) !important;
+  box-shadow: 0 0 12px rgba(200, 200, 208, .7) !important;
+}
+html.neon.neon-light .lang-current .lang-code { color: #15101f !important; }
+html.neon.neon-light .lang-current .lang-caret, html.neon.neon-light .lang-current .lang-caret path { stroke: #15101f !important; }
+html.neon.neon-light .site-header:not(#_):not(#__) .nav-toggle { background: rgba(255, 255, 255, .7) !important; color: #15101f !important; border-color: rgba(21, 16, 31, .18) !important; }
+html.neon.neon-light .site-header:not(#_):not(#__) .nav-toggle-icon::before,
+html.neon.neon-light .site-header:not(#_):not(#__) .nav-toggle-icon::after,
+html.neon.neon-light .site-header:not(#_):not(#__) .nav-toggle-icon > span { background: #15101f !important; }
+
+/* ---------- The shooting game (neon-game.js) ---------- */
+/* A crosshair over the hero, so it feels like aiming; links and buttons keep their normal pointer. */
+html.neon .hero { cursor: crosshair; }
+html.neon .hero a, html.neon .hero button { cursor: pointer; }
+/* The neon-fx click shockwave already fires on every click; it doubles as the laser's impact ring. */
+
+/* The score panel, top right under the header. */
+.neon-hud {
+  position: fixed; right: 16px; top: 88px; z-index: 60; min-width: 150px; padding: 10px 12px 8px;
+  font: 700 .78rem/1.3 Oswald, "Arial Narrow", sans-serif; letter-spacing: .14em; color: #fff;
+  background: rgba(18, 10, 42, .55); border: 1px solid rgba(255, 255, 255, .25); border-radius: 12px;
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 0 22px rgba(176, 77, 255, .35);
+  transition: opacity .3s, transform .3s;
+}
+.neon-hud.is-hidden { opacity: 0; pointer-events: none; transform: translateY(-8px); }
+.neon-hud-row { display: flex; justify-content: space-between; gap: 14px; }
+.neon-hud-row span { opacity: .7; }
+.neon-hud-row b { color: #fff; text-shadow: 0 0 10px #ff2bd6; font-weight: 800; }
+.neon-hud-row.best b { color: #ffb36b; text-shadow: 0 0 10px #ff8a2b; }
+.neon-hud.bump { animation: hud-bump .35s ease-out; }
+@keyframes hud-bump { 40% { transform: scale(1.08); box-shadow: 0 0 34px rgba(255, 43, 214, .7); } }
+.neon-hud button {
+  margin-top: 8px; width: 100%; padding: 6px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, .35); cursor: pointer;
+  background: rgba(255, 255, 255, .12); color: #fff; font: inherit; letter-spacing: .2em;
+}
+.neon-hud button:hover { background: rgba(255, 43, 214, .35); }
+.neon-hud.is-paused { box-shadow: 0 0 0 2px #ff8a2b; }
+.neon-hud-tip { margin: 6px 0 0; font-size: .65rem; opacity: .65; text-align: center; letter-spacing: .1em; }
+@media (max-width: 700px) { .neon-hud { top: auto; bottom: 86px; right: 10px; min-width: 120px; font-size: .7rem; } }
+
+/* =====================================================================================================================
+   READABILITY: keeping the hero text clear with all the animation going on
+   1. Layers: the sparks and the game draw BEHIND the page content (the floor, sun and city already are).
+   2. A soft dark oval behind the hero text, darkest in the middle and fading out, so the neon still shows round it.
+   3. A dark outer glow under every headline word, message word and the lead text (under the neon glow, not instead of it).
+   ===================================================================================================================== */
+#neon-particles { z-index: 1 !important; }
+html.neon main, html.neon footer { z-index: 2 !important; }
+
+html.neon .hero-card { isolation: isolate; }
+html.neon .hero-card::before {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  left: 50%; top: 50%; width: min(980px, 110%); height: 130%; transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse at center, rgba(8, 2, 24, .62) 0%, rgba(8, 2, 24, .42) 38%, rgba(8, 2, 24, 0) 70%);
+}
+
+/* The dark halo, defined once and added underneath each text glow. */
+html.neon { --dark-halo: 0 2px 4px rgba(8, 2, 24, .9), 0 0 18px rgba(8, 2, 24, .85), 0 0 42px rgba(8, 2, 24, .7); }
+html.neon .hero-card h1.kx .kx-word,
+html.neon .hero-card .kx-reel .kx-word {
+  text-shadow: -3px 0 rgba(176, 77, 255, .7), 3px 0 rgba(255, 43, 214, .7), 0 0 26px var(--kx-color, #fff), var(--dark-halo);
+}
+@keyframes kx-breathe {
+  0%, 100% { text-shadow: -2px 0 rgba(176, 77, 255, .55), 2px 0 rgba(255, 43, 214, .55), 0 0 16px rgba(255, 80, 200, .45), var(--dark-halo); }
+  50%      { text-shadow: -3px 0 rgba(176, 77, 255, .75), 3px 0 rgba(255, 43, 214, .75), 0 0 32px rgba(255, 80, 200, .7), var(--dark-halo); }
+}
+html.neon .hero-card .hero-lead { text-shadow: var(--dark-halo) !important; font-weight: 600; }
+html.neon .hero-logo { filter: drop-shadow(0 0 12px var(--neon-pink)) drop-shadow(0 0 22px rgba(8, 2, 24, .8)) !important; }
+
+/* Score panel on phones and narrow windows: a slim one-line bar under the header, over the sky, clear of the text. */
+@media (max-width: 760px) {
+  .neon-hud { top: 72px; bottom: auto; left: 10px; right: auto; min-width: 0; display: flex; align-items: center; gap: 10px;
+              padding: 5px 8px 5px 10px; font-size: .66rem; border-radius: 999px; }
+  .neon-hud-row { gap: 4px; }
+  .neon-hud-tip { display: none; }
+  .neon-hud button { margin: 0; width: auto; padding: 3px 8px; border-radius: 999px; font-size: .6rem; letter-spacing: .12em; }
+}
