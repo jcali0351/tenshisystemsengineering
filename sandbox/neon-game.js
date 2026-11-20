@@ -136,6 +136,7 @@
     objects.length = shards.length = beams.length = popups.length = bombs.length = cars.length = bossBeams.length = 0;
     if (typeof projectiles !== "undefined") projectiles.length = rails.length = bolts.length = 0;
     over.hidden = true; bossbar.hidden = true; started = false;
+    recharges = 0; awaySince = 0; runEnded = false;
     if (window.neonMonstersReset) window.neonMonstersReset();
     hud.querySelector(".neon-hud-tip").textContent = "Click the sky to start";
     updateHud();
@@ -558,10 +559,18 @@
     popups.push({ x, y: floorY() - 20, text: how, life: 1, color: "#ff8a2b" });
     if (shields === 1) cheer("Shields almost gone! Shoot the bombs! 💣");
     updateHud(true);
-    if (shields <= 0) gameOver();
+    if (shields <= 0) {                                 // endless: the shields recharge and the run carries on
+      shields = GAME.shields; recharges++;
+      showBanner("SHIELDS RECHARGED", 1600); sfx("power");
+      cheer("Shields back up! Keep the city safe! 🛡️");
+      updateHud(true);
+    }
   }
 
   // ================================================ GAME OVER & TOP 10 ================================================
+  // The run only ends when the player scrolls away from the hero (see frame()); the score panel then shows when they
+  // come back up, so it never pops up over the rest of the page.
+  var recharges = 0, awaySince = 0, runEnded = false;   // var: reset() runs before this line on load
   function gameOver() {
     over_ = true; boss = null; bossbar.hidden = true;
     $("final").textContent = score;
@@ -1120,6 +1129,10 @@
   function frame(now) {
     const realDt = Math.min(50, now - lastTime); lastTime = now;
     const visible = heroOnScreen();
+    if (started && !over_ && score > 0) {
+      if (!visible) { if (!awaySince) awaySince = now; else if (now - awaySince > 1500) runEnded = true; }
+      else { awaySince = 0; if (runEnded) { runEnded = false; gameOver(); } }
+    }
     const ts = paused || over_ || !visible ? 0 : timeScale(now), dt = (realDt / 16.7) * ts;   // frozen while scrolled away
     ctx.clearRect(0, 0, W, H);
     hud.classList.toggle("is-hidden", !visible);
@@ -1317,5 +1330,5 @@
   requestAnimationFrame(frame);
 
   // Handy for testing from the browser console: neonGame.boss(), neonGame.power(), neonGame.end()
-  window.neonGame = { monster: t => spawnMonster(t), placeMonster: (i, x) => { if (monsters[i]) monsters[i].x = x; }, monsters: () => monsters.map(m => ({ type: m.type, hp: +m.hp.toFixed(1), state: m.state, x: Math.round(m.x), target: m.target, smashes: m.smashes, parts: m.circles.length, cy: m.circles.length ? Math.round(m.circles[0].y) : 0 })), boss: spawnBoss, power: spawnPower, end: gameOver, state: () => ({ score, level, shields, combo, boss: !!boss, objects: objects.length, kinds: objects.map(o => o.kind + "@" + Math.round(o.x) + "," + Math.round(o.y)).join(" "), power: power && power.type }) };
+  window.neonGame = { cityHit: () => hitCity(W / 2, "TEST"), monster: t => spawnMonster(t), placeMonster: (i, x) => { if (monsters[i]) monsters[i].x = x; }, monsters: () => monsters.map(m => ({ type: m.type, hp: +m.hp.toFixed(1), state: m.state, x: Math.round(m.x), target: m.target, smashes: m.smashes, parts: m.circles.length, cy: m.circles.length ? Math.round(m.circles[0].y) : 0 })), boss: spawnBoss, power: spawnPower, end: gameOver, state: () => ({ score, level, shields, combo, boss: !!boss, objects: objects.length, kinds: objects.map(o => o.kind + "@" + Math.round(o.x) + "," + Math.round(o.y)).join(" "), power: power && power.type }) };
 })();
