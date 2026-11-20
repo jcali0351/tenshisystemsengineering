@@ -57,6 +57,7 @@
     <canvas class="rts-canvas" aria-label="Station Defense space strategy game"></canvas>
     <div class="rts-top">
       <button type="button" class="rts-exit" hidden>✕ EXIT</button>
+      <button type="button" class="rts-full" hidden>⛶ FULLSCREEN</button>
       <div class="rts-res" hidden><span class="rts-credits">◆ 0</span><span class="rts-supply">0 / ${SUPPLY_CAP}</span><span class="rts-wave"></span></div>
     </div>
     <canvas class="rts-mini" width="208" height="120" hidden></canvas>
@@ -78,7 +79,7 @@
   const mini = root.querySelector(".rts-mini"), mctx = mini.getContext("2d");
   const panel = root.querySelector(".rts-panel"), msgEl = root.querySelector(".rts-msg"), intro = root.querySelector(".rts-intro");
   const resEl = root.querySelector(".rts-res"), creditsEl = root.querySelector(".rts-credits"), supplyEl = root.querySelector(".rts-supply"), waveEl = root.querySelector(".rts-wave");
-  const exitBtn = root.querySelector(".rts-exit"), touchBar = root.querySelector(".rts-touch");
+  const exitBtn = root.querySelector(".rts-exit"), fullBtn = root.querySelector(".rts-full"), touchBar = root.querySelector(".rts-touch");
 
   let W = 0, H = 0, zoom = 1;
   function resize() {
@@ -564,7 +565,8 @@
     for (const [x, y, r, c, a] of blobs) { const g = n.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, `rgba(${c},${a})`); g.addColorStop(1, `rgba(${c},0)`); n.fillStyle = g; n.fillRect(0, 0, 1024, 640); }
   })();
   function drawSpace(now) {
-    const px = cam.x / MAP.w, py = cam.y / MAP.h;
+    const px = Math.max(0, cam.x / MAP.w), py = Math.max(0, cam.y / MAP.h);
+    ctx.fillStyle = "#04020a"; ctx.fillRect(0, 0, W, H);   // solid space underneath, so no gap ever shows at the edges
     ctx.drawImage(nebula, -px * W * 0.25, -py * H * 0.25, W * 1.3, H * 1.3);
     // A ringed planet far away, drifting very slowly.
     const plx = W * 0.82 - px * W * 0.08, ply = H * 0.78 - py * H * 0.08, plr = Math.min(W, H) * 0.22;
@@ -870,8 +872,40 @@
   }
 
   // ================================================ START, END, LOOP ================================================
-  function showUI(on) { for (const el of [exitBtn, resEl, mini, panel]) el.hidden = !on; touchBar.hidden = !on || !matchMedia("(pointer: coarse)").matches; section.classList.toggle("rts-on", on); }
+  function showUI(on) {
+    for (const el of [resEl, mini, panel]) el.hidden = !on;
+    exitBtn.hidden = !(on || takeover);                     // while the game fills the window you can always get out
+    touchBar.hidden = !on || !matchMedia("(pointer: coarse)").matches; section.classList.toggle("rts-on", on);
+  }
+  // ---- The game window: while you play, the game fills the whole browser window edge to edge (the site's header,
+  // chat button and HUDs step aside and the page stops scrolling). FULLSCREEN goes further: real fullscreen. ----
+  let takeover = false, scrollBack = 0;
+  const canFull = !!(section.requestFullscreen || section.webkitRequestFullscreen);
+  function enterWindow() {
+    if (takeover) return;
+    takeover = true; scrollBack = window.scrollY;
+    document.documentElement.classList.add("rts-takeover");
+    fullBtn.hidden = !canFull;
+    requestAnimationFrame(resize); setTimeout(resize, 150);
+  }
+  function leaveWindow() {
+    if (!takeover) return;
+    takeover = false; fullBtn.hidden = true;
+    if (document.fullscreenElement || document.webkitFullscreenElement) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    document.documentElement.classList.remove("rts-takeover");
+    window.scrollTo({ top: scrollBack, behavior: "instant" });
+    requestAnimationFrame(resize); setTimeout(resize, 150);
+  }
+  fullBtn.addEventListener("click", () => {
+    if (document.fullscreenElement || document.webkitFullscreenElement) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    else { const r = (section.requestFullscreen || section.webkitRequestFullscreen).call(section); if (r && r.catch) r.catch(() => {}); }
+  });
+  for (const ev of ["fullscreenchange", "webkitfullscreenchange"]) document.addEventListener(ev, () => {
+    fullBtn.textContent = document.fullscreenElement || document.webkitFullscreenElement ? "⤢ EXIT FULLSCREEN" : "⛶ FULLSCREEN";
+    setTimeout(resize, 80);
+  });
   function start() {
+    enterWindow();
     resize(); newGame(); state = "play";
     intro.hidden = true; showUI(true); renderPanel();
     say("Mine crystals, build a fleet, destroy the alien hive!", 2600);
@@ -888,12 +922,14 @@
   }
   root.addEventListener("click", e => { if (e.target.closest(".rts-play")) start(); });
   exitBtn.addEventListener("click", () => {
-    state = "paused"; showUI(false);
-    intro.innerHTML = `<p class="rts-kicker">PAUSED</p><h3>Station Defense</h3><button type="button" class="rts-play rts-resume">▶ RESUME</button> <button type="button" class="rts-play">↺ NEW GAME</button>`;
-    intro.hidden = false;
+    if (state === "play") {
+      state = "paused";
+      intro.innerHTML = `<p class="rts-kicker">PAUSED</p><h3>Station Defense</h3><button type="button" class="rts-play rts-resume">▶ RESUME</button> <button type="button" class="rts-play">↺ NEW GAME</button>`;
+    }
+    leaveWindow(); showUI(false); intro.hidden = false;
   });
   intro.addEventListener("click", e => {
-    if (e.target.closest(".rts-resume")) { e.stopPropagation(); state = "play"; intro.hidden = true; showUI(true); renderPanel(); }
+    if (e.target.closest(".rts-resume")) { e.stopPropagation(); enterWindow(); state = "play"; intro.hidden = true; showUI(true); renderPanel(); }
   }, true);
 
   new IntersectionObserver(es => { onScreen = es[0].isIntersecting; }, { threshold: 0.35 }).observe(section);

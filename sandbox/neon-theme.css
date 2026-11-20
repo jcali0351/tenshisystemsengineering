@@ -750,3 +750,28 @@ html.neon .gx-stage { flex: 0 0 100%; width: 100%; }
   html.neon .gx-stage::before, html.neon .gx-stage::after { display: none; }
   html.neon .gx-stage { gap: 8px; letter-spacing: 0.2em; }
 }
+
+/* ---- Station Defense game window: while playing, the game fills the whole browser window ---- */
+html.neon.rts-takeover, html.neon.rts-takeover body { overflow: hidden !important; }
+html.neon.rts-takeover .parallax.rts-zone {
+  position: fixed !important; inset: 0 !important; width: 100vw !important; max-width: none !important;
+  height: 100vh !important; height: 100dvh !important; min-height: 0 !important; margin: 0 !important; z-index: 5000 !important;
+}
+html.neon.rts-takeover :is(.site-header, .gx-hud, .gx-toast, .tk-root, .neon-weapons, .neon-hud, .neon-banner, .neon-bubble, .neon-tip, .neon-bossbar, #neon-beasts, #neon-game, #neon-geo, #neon-particles) { visibility: hidden !important; }
+html.neon.rts-takeover main { z-index: 5000 !important; }
+html.neon.rts-takeover .neon-sound { z-index: 5001 !important; }
+html.neon.rts-takeover .rts-top, html.neon .rts-zone:fullscreen .rts-top { top: 14px; }
+html.neon .rts-zone:fullscreen { width: 100vw !important; height: 100vh !important; margin: 0 !important; }
+html.neon .rts-top .rts-full { margin-left: 8px; }
+@media (max-width: 760px) { html.neon.rts-takeover .rts-top { top: 10px; } }
+
+/* Ask Tanaka (the chat button and panel) is switched off for now, on every page. Delete this rule to bring it back. */
+html.neon .tk-root, html.neon .neon-bubble, html.neon .chat-card { display: none !important; }
+
+/* Buttons: text centred both ways (the site gives them a fixed height, so lay the label out with flexbox). */
+html.neon:not(#_):not(#__) .services .service-card a.btn-more.btn-more,
+html.neon:not(#_):not(#__) .contact .contact-form .btn.btn-primary.btn-primary {
+  display: inline-flex !important; align-items: center !important; justify-content: center !important;
+  text-align: center !important; line-height: 1 !important; padding-top: 0 !important; padding-bottom: 0 !important;
+  min-height: 44px; height: 44px !important;
+}
