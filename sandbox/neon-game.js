@@ -790,17 +790,20 @@
   // ================================================ THE LOOP ================================================
   // ================================================ GIANT MONSTERS ================================================
   // Two giants stomp into the skyline behind the headline and wreck the city a chunk at a time:
-  //   IRON RONIN  a giant robot: boxy armour, glowing visor and chest reactor. Punches buildings, fires eye lasers.
+  //   IRON RONIN  a giant mech-beast robot: armoured body, a long snout with a toothed steel jaw. It leans down,
+//               chomps the tops off buildings and swallows the rubble.
   //   TOKAGE      a giant lizard kaiju: horned head, glowing crystal spines, a long tail. Breathes a plasma beam.
   // Each is a jointed 3D model (legs, arms, head, jaw, tail) lit by the lighting engine, walking and attacking with
   // real animation. Shoot them with any weapon. Every building they flatten costs a shield; bring one down for
   // 500 points. They only come once the game has started.
   const MONSTER = {
     firstAfter: 25000,          // ms after the first shot before the first one arrives
+    attractAfter: 6000,         // before anyone plays, one still stomps in after this long (just a show: no shields lost)
+    attractSmashes: 10,         // ...and leaves after this many blows
     every: 45000,               // ms between arrivals (after one is beaten)
     health: { robot: 38, kaiju: 44 },
     points: 500,
-    height: 0.3,                // how tall, as a share of the screen height
+    height: 0.35,               // how tall, as a share of the screen height (tops just clear the menu bar)
     opacity: 0.94,
     smashEvery: 1500,           // ms between blows on a building
     buildingsPerShield: 2,      // every this many flattened buildings costs a shield
@@ -877,9 +880,16 @@
     kLathe(m, [[0.25, 0], [0.3, -0.5], [0.001, -0.55]], 6, "glow", [0, 1.6, -0.8]);                                   // back thruster
     P.torso = m;
     m = kMesh();
-    kBox(m, [0, 0.45, 0], [0.9, 0.8, 0.85], "hull"); kBox(m, [0.05, 0.5, 0.0], [0.95, 0.18, 0.9], "glow");             // head with a visor band
-    kCone(m, [0, 0.85, 0], [0, 1.4, 0], 0.08, "trim", 4); kBox(m, [0, 0.95, 0], [1.1, 0.1, 0.12], "trim");            // crest
+    // Head: a long armoured snout, glowing eyes, a crest of fins and a row of steel teeth on the upper jaw.
+    kBox(m, [0.1, 0.5, 0], [1.1, 0.9, 1.0], "hull"); kBox(m, [1.0, 0.45, 0], [1.2, 0.55, 0.8], "hull"); kBox(m, [1.55, 0.6, 0], [0.3, 0.25, 0.7], "trim");
+    for (const z of [-0.3, 0.3]) kBox(m, [0.55, 0.8, z], [0.3, 0.14, 0.12], "glow");                                  // eyes
+    for (let k = 0; k < 3; k++) kCone(m, [-0.2 + k * 0.3, 0.95, 0], [-0.55 + k * 0.3, 1.5 - k * 0.12, 0], 0.13, "trim", 4);   // crest fins
+    for (let k = 0; k < 6; k++) for (const z of [-0.3, 0.3]) kCone(m, [0.55 + k * 0.2, 0.18, z], [0.55 + k * 0.2, -0.12, z], 0.06, "horn", 3);   // top teeth
     P.head = m;
+    m = kMesh();                                                                                  // the lower jaw, hinged at the back
+    kBox(m, [0.75, -0.12, 0], [1.4, 0.3, 0.75], "dark"); kBox(m, [0.75, -0.3, 0], [1.3, 0.08, 0.7], "trim");
+    for (let k = 0; k < 6; k++) for (const z of [-0.28, 0.28]) kCone(m, [0.25 + k * 0.2, 0.02, z], [0.25 + k * 0.2, 0.3, z], 0.06, "horn", 3);   // bottom teeth
+    P.jaw = m;
     m = kMesh(); kBox(m, [0, -0.6, 0], [0.55, 1.3, 0.6], "hull"); P.upper = m;
     m = kMesh(); kBox(m, [0, -0.55, 0], [0.6, 1.1, 0.65], "trim"); kBox(m, [0, -1.35, 0], [0.8, 0.6, 0.75], "dark"); P.lower = m;   // forearm + fist
     m = kMesh(); kBox(m, [0, -0.8, 0], [0.7, 1.6, 0.75], "hull"); P.thigh = m;
@@ -888,7 +898,7 @@
   })();
   const KPAINT = {
     kaiju: { skin: [125, 92, 165], belly: [195, 150, 180], dark: [40, 28, 58], horn: [235, 225, 245], spine: [255, 90, 220], glow: [255, 150, 60] },
-    robot: { hull: [150, 150, 175], trim: [255, 138, 43], dark: [45, 42, 62], glow: [255, 70, 220] },
+    robot: { hull: [150, 150, 175], trim: [255, 138, 43], dark: [45, 42, 62], glow: [255, 70, 220], horn: [235, 235, 245] },
   };
   const GLOWY = new Set(["glow", "spine"]);
 
@@ -898,15 +908,15 @@
   function spawnMonster(type) {
     const dir = Math.random() < 0.5 ? 1 : -1, s = monsterScale();
     monsters.push({ type, dir, x: dir > 0 ? -5 * s : W + 5 * s, hp: MONSTER.health[type], max: MONSTER.health[type], state: "walk", t: 0, walk: 0, flash: 0, target: null, lastSmash: 0, smashes: 0, circles: [], fall: 0, yaw: 0, beam: 0 });
-    showBanner(type === "kaiju" ? "⚠ KAIJU ATTACK!" : "⚠ GIANT ROBOT!", 1800); sfx("bomb"); shakeIt(6);
-    cheer(type === "kaiju" ? "A kaiju is wrecking the city! Shoot it! 🦖" : "A giant robot! Stop it before it flattens Osaka! 🤖");
+    showBanner(type === "kaiju" ? "⚠ KAIJU ATTACK!" : "⚠ IRON RONIN IS EATING THE CITY!", 1800); sfx("bomb"); shakeIt(6);
+    if (started) cheer(type === "kaiju" ? "A kaiju is wrecking the city! Shoot it! 🦖" : "A giant robot is EATING the city! Stop it! 🤖");
   }
   // Pick the next building to wreck: the nearest one still standing ahead (or anywhere if none ahead).
   function pickTarget(mo) {
     const city = window.neonCity, ground = city ? city.ground() : H * 0.4;
     if (!city) return null;
     let best = null, bd = Infinity;
-    for (let x = 30; x < W - 30; x += 26) {
+    for (let x = W * 0.14; x < W * 0.86; x += 26) {                             // away from the edges, so they stay in view
       const roof = city.roofAt(x);
       if (roof === null || roof > ground - 34) continue;                       // only buildings worth wrecking
       const ahead = (x - mo.x) * mo.dir, d = ahead > 0 ? ahead : Math.abs(ahead) + W;
@@ -915,8 +925,8 @@
     return best;
   }
   function updateMonsters(now, dt) {
-    if (!started || over_) return;
-    if (!nextMonsterAt) nextMonsterAt = now + MONSTER.firstAfter;
+    if (over_) return;
+    if (!nextMonsterAt) nextMonsterAt = now + (started ? MONSTER.firstAfter : MONSTER.attractAfter);
     const alive = monsters.filter(m => m.state !== "dying").length;
     if (now > nextMonsterAt && (alive === 0 || (alive < 2 && level >= 3))) {
       spawnMonster(nextMonsterType); nextMonsterType = nextMonsterType === "kaiju" ? "robot" : "kaiju"; nextMonsterAt = now + MONSTER.every;
@@ -926,10 +936,17 @@
       const mo = monsters[i];
       mo.t += dt * 16.7; mo.flash = Math.max(0, mo.flash - dt * 0.08);
       if (mo.state === "dying") { mo.fall = Math.min(1, mo.fall + dt * 0.012); if (mo.fall >= 1 && mo.t > 2200) monsters.splice(i, 1); continue; }
+      // Before anyone plays it is just a show: after a few blows it stomps off the edge of the screen.
+      if (!started && mo.smashes >= MONSTER.attractSmashes) mo.leaving = true;
+      if (mo.leaving) { mo.state = "walk"; mo.walk += dt * 0.09; mo.x += mo.dir * dt * 0.9; if (mo.x < -8 * s || mo.x > W + 8 * s) monsters.splice(i, 1); continue; }
       if (mo.target === null || mo.target === undefined) { mo.target = pickTarget(mo); if (mo.target === null) { mo.state = "walk"; mo.x += mo.dir * dt * 0.6; continue; } }
-      const reach = (mo.type === "kaiju" ? 3.4 : 2.3) * s;
-      const standAt = mo.target - mo.dir * reach;
-      if (Math.sign(mo.target - mo.x) !== mo.dir && Math.abs(mo.target - mo.x) > reach * 0.5) mo.dir = -mo.dir;   // turn round
+      const reach = (mo.type === "kaiju" ? 3.4 : 2.6) * s;
+      // Stand beside the building on whichever side keeps the monster on screen (and is closer), facing it.
+      const margin = 2.2 * s, left = mo.target - reach, right = mo.target + reach;
+      const leftOk = left > margin, rightOk = right < W - margin;
+      const side = leftOk && rightOk ? (Math.abs(mo.x - left) < Math.abs(mo.x - right) ? -1 : 1) : leftOk ? -1 : 1;
+      const standAt = side < 0 ? left : right;
+      if (Math.abs(mo.x - standAt) > 6) mo.dir = Math.sign(standAt - mo.x) || mo.dir; else mo.dir = side < 0 ? 1 : -1;
       if (Math.abs(mo.x - standAt) > 6) { mo.state = "walk"; mo.x += Math.sign(standAt - mo.x) * dt * 0.7; mo.walk += dt * 0.09; continue; }
       mo.state = "attack";
       if (now - mo.lastSmash > MONSTER.smashEvery) {
@@ -937,7 +954,7 @@
         const roof = city.roofAt(mo.target);
         if (roof === null || roof > city.ground() - 10) {                      // that building is gone: costs a shield
           popups.push({ x: mo.target, y: city.ground() - 30, text: "BUILDING DESTROYED!", life: 1, color: "#ff8a2b" });
-          if (++buildingsLost % MONSTER.buildingsPerShield === 0) hitCity(mo.target, "CITY HIT!");
+          if (started && ++buildingsLost % MONSTER.buildingsPerShield === 0) hitCity(mo.target, "CITY HIT!");
           mo.target = null; continue;
         }
         setTimeout(() => {                                                       // the blow lands a moment into the swing
@@ -989,16 +1006,22 @@
       const hip = [0, 3.4 + lift, 0];
       const pel = joint(root, [0, 0, 0], hip, rZ(0));
       add(ROBOT.pelvis, pel.R, pel.at, "robot");
-      const torso = joint(pel.R, pel.at, [0, 0.4, 0], mMul(rY(Math.sin(t * 1.2) * 0.1 + attack * 0.3), rZ(-attack * 0.12)));
+      // Munching: it leans right down over the building, the jaw gapes open, then SNAPS shut on the roof.
+      const ph = mo.state === "attack" ? Math.min(1, (now - (mo.attackAt || 0)) / 900) : 1;
+      const lean = Math.sin(ph * Math.PI), gape = ph < 0.42 ? ph / 0.42 : Math.max(0, 1 - (ph - 0.42) * 7);
+      const chew = mo.state === "attack" ? Math.max(0, Math.sin(t * 14)) * 0.15 : 0;                      // chewing between bites
+      const torso = joint(pel.R, pel.at, [0, 0.4, 0], mMul(rY(Math.sin(t * 1.2) * 0.1), rZ(-lean * 0.75)));
       add(ROBOT.torso, torso.R, torso.at, "robot");
-      const head = joint(torso.R, torso.at, [0, 2.6, 0], rZ(-0.1 + Math.sin(t * 1.7) * 0.05 - attack * 0.2));
+      const head = joint(torso.R, torso.at, [0.2, 2.6, 0], rZ(-0.05 + Math.sin(t * 1.7) * 0.05 - lean * 0.55));
       add(ROBOT.head, head.R, head.at, "robot");
-      mo.mouth = { at: mApp(head.R, [0.5, 0.5, 0]).map((v, i) => v + head.at[i]) };
+      const jaw = joint(head.R, head.at, [0.1, 0.15, 0], rZ(-0.08 - gape * 0.75 - chew));
+      add(ROBOT.jaw, jaw.R, jaw.at, "robot");
+      mo.mouth = { at: mApp(head.R, [1.2, 0.05, 0]).map((v, i) => v + head.at[i]) };
       for (const side of [-1, 1]) {
-        const punch = side === 1 ? attack : 0;
-        const up = joint(torso.R, torso.at, [0, 2.05, side * 1.45], rZ(-swing * 0.45 * side + punch * 2.2 - (punch ? 0.3 : 0)));
+        const grab = lean;                                                                                 // both claws reach down and grab
+        const up = joint(torso.R, torso.at, [0.1, 2.05, side * 1.45], rZ(-swing * 0.45 * side + grab * 1.3));
         add(ROBOT.upper, up.R, up.at, "robot");
-        const lo = joint(up.R, up.at, [0, -1.25, 0], rZ(0.5 - punch * 0.4));
+        const lo = joint(up.R, up.at, [0, -1.25, 0], rZ(0.5 + grab * 0.5));
         add(ROBOT.lower, lo.R, lo.at, "robot");
         const th = joint(pel.R, pel.at, [0, 0, side * 0.55], rZ(swing * 0.5 * side));
         add(ROBOT.thigh, th.R, th.at, "robot");
@@ -1048,13 +1071,19 @@
     const attack = mo.state === "attack" ? Math.max(0, 1 - (now - (mo.attackAt || 0)) / 900) : 0;
     if (attack > 0.15 && mo.mouth && mo.target !== null && window.neonCity) {
       const [mx, my] = toScreen(mo.mouth.at), roof = window.neonCity.roofAt(mo.target) ?? ground;
-      const robotPunch = mo.type === "robot" && Math.floor(mo.lastSmash / MONSTER.smashEvery) % 2 === 0;
-      if (!robotPunch) {
-        const color = mo.type === "kaiju" ? "#ff9a3c" : "#ff3ad8";
+      if (mo.type === "robot") {                                                // rubble torn off the roof flies into its jaws
+        const ph = Math.min(1, (now - (mo.attackAt || 0)) / 900);
+        if (ph > 0.35) for (let k = 0; k < 10; k++) {
+          const q = Math.min(1, (ph - 0.35) / 0.4 + k * 0.04), wob = Math.sin(k * 2.3) * 14 * (1 - q);
+          const bx = mo.target + (mx - mo.target) * q + wob, by = roof + (my - roof) * q - Math.sin(q * Math.PI) * 30;
+          if (q < 1) { ctx.fillStyle = k % 3 ? "#2b0f4a" : "#ff8a5a"; ctx.fillRect(bx - 3, by - 3, 4 + (k % 3) * 2, 4 + (k % 2) * 2); }
+        }
+      } else {
+        const color = "#ff9a3c";
         ctx.save(); ctx.globalCompositeOperation = "lighter";
-        ctx.strokeStyle = color; glow(color, 24); ctx.lineWidth = (mo.type === "kaiju" ? 10 : 4) * attack;
+        ctx.strokeStyle = color; glow(color, 24); ctx.lineWidth = 10 * attack;
         ctx.beginPath(); ctx.moveTo(mx, my); ctx.lineTo(mo.target, roof); ctx.stroke();
-        ctx.strokeStyle = "#ffffff"; ctx.lineWidth = (mo.type === "kaiju" ? 4 : 1.5) * attack; ctx.stroke();
+        ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 4 * attack; ctx.stroke();
         ctx.restore(); ctx.shadowBlur = 0;
       }
     }
