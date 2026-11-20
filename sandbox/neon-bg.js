@@ -352,11 +352,42 @@ document.documentElement.addEventListener("pointerleave", () => { pointer.x = po
 const dissolve = new Map();
 const warmth = new Map();   // for each tile, how orange it has been warmed by the pointer (0 .. 1)
 
+// Bend: around the pointer the whole floor bulges outwards, ripples in rings and swirls, as if the pointer were
+// pressing into it. "energy" builds up while the pointer is over the floor and drains away when it leaves.
+const BEND = {
+  reach: 170,      // how far around the pointer the floor bends, in pixels
+  strength: 34,    // how far points are pushed outwards
+  swirl: 18,       // how much they twist around the pointer
+  crackle: 5,      // how jagged the grid lines get near the pointer (the "splintering" lines)
+};
+let energy = 0, warpTime = 0;
+function warp(p, jag = 0) {
+  if (energy < 0.01) return p;
+  const dx = p[0] - pointer.x, dy = p[1] - pointer.y, d = Math.hypot(dx, dy) + 0.001;
+  if (d > BEND.reach * 2.2) return p;
+  const fall = Math.exp(-((d / BEND.reach) ** 2));                      // strongest at the pointer, fading out
+  const push = energy * BEND.strength * fall * (0.55 + 0.45 * Math.sin(d * 0.05 - warpTime * 7));   // rippling rings
+  const swirl = energy * BEND.swirl * fall * Math.cos(d * 0.03 - warpTime * 4);
+  const crack = jag ? energy * BEND.crackle * fall * Math.sin(jag * 12.9898 + warpTime * 23) : 0;   // jittery cracks
+  return [p[0] + (dx / d) * push - (dy / d) * (swirl + crack), p[1] + (dy / d) * push * 0.7 + (dx / d) * (swirl + crack) * 0.7];
+}
+
+// Draw one outline (a list of [x, y] points) as a filled, outlined neon shape.
+function tracePath(points) {
+  ctx.beginPath();
+  ctx.moveTo(points[0][0], points[0][1]);
+  for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0], points[i][1]);
+  ctx.closePath();
+}
+
 function drawFloor(time) {
   const { columns, rows } = SETTINGS;
   const glide = time * SETTINGS.glideSpeed;   // how far the floor has moved, in tiles
   const shift = glide % 1;                    // the part of a tile it has moved (0 .. 1)
   const passed = Math.floor(glide);           // whole tiles that have gone past the camera
+  warpTime = time;
+  const overFloor = pointer.y > H * SETTINGS.horizon && pointer.y < H && pointer.x > 0 && pointer.x < W;
+  energy = overFloor ? Math.min(1, energy + 0.05) : Math.max(0, energy - 0.03);
 
 
   // "lighter" adds colours together where they overlap, which is what makes neon look like it glows.
@@ -408,17 +439,17 @@ function drawFloor(time) {
       if (gone > 0) dissolve.set(key, gone); else dissolve.delete(key);
       if (gone >= 1) continue;   // fully fizzled away
 
-      // A dissolving tile shrinks and flickers.
-      const size = mix(SETTINGS.smallest, SETTINGS.largest, pulse) * (1 - 0.6 * gone);
+      // A dissolving tile flickers (and splinters, below).
+      const size = mix(SETTINGS.smallest, SETTINGS.largest, pulse) * (1 - 0.15 * gone);
       const half = size / 2;
       const flicker = gone > 0 ? (1 - gone) * (0.45 + Math.random() * 0.55) : 1;
 
       // The tile's four corners on the floor, then on the screen.
       const cx = c, cz = zMid;
-      const p1 = project(cx - half, cz - half);
-      const p2 = project(cx + half, cz - half);
-      const p3 = project(cx + half, cz + half);
-      const p4 = project(cx - half, cz + half);
+      const p1 = warp(project(cx - half, cz - half));
+      const p2 = warp(project(cx + half, cz - half));
+      const p3 = warp(project(cx + half, cz + half));
+      const p4 = warp(project(cx - half, cz + half));
 
       // Tiles away from the middle are dimmer, like the photo's bright centre patch.
       const centre = Math.exp(-((c / (columns * 0.45)) ** 2));
@@ -430,21 +461,35 @@ function drawFloor(time) {
 
       if (glowAmount < 0.01) continue;   // too faint to see: skip it and save time
 
-      ctx.beginPath();
-      ctx.moveTo(p1[0], p1[1]);
-      ctx.lineTo(p2[0], p2[1]);
-      ctx.lineTo(p3[0], p3[1]);
-      ctx.lineTo(p4[0], p4[1]);
-      ctx.closePath();
-
-      ctx.fillStyle = `hsla(${hue}, 95%, ${45 + 25 * pulse}%, ${glowAmount})`;
-      ctx.fill();
-      ctx.strokeStyle = `hsla(${hue}, 100%, 75%, ${Math.min(1, glowAmount * 1.8)})`;
-      ctx.lineWidth = 1;
-      ctx.stroke();
+      // Whole tile = one shape. Splintering tile = four triangular shards (centre to each edge) that fly outwards,
+      // spin and drop, each in its own slightly random way.
+      let shapes = [[p1, p2, p3, p4]];
+      if (gone > 0) {
+        const mid = warp(project(cx, cz)), corners = [p1, p2, p3, p4];
+        shapes = corners.map((a, i) => {
+          const b = corners[(i + 1) % 4];
+          const rnd = tileRandom(c, rowId, 10 + i);
+          const ex = (a[0] + b[0]) / 2 - mid[0], ey = (a[1] + b[1]) / 2 - mid[1], len = Math.hypot(ex, ey) + 0.001;
+          const fly = gone * tileWidth * (0.5 + rnd * 0.9);
+          const ox = (ex / len) * fly, oy = (ey / len) * fly + gone * gone * tileWidth * 0.6;   // outwards, then falling
+          const shard = [mid, a, b].map(q => [q[0] + ox, q[1] + oy]);
+          const gx = (shard[0][0] + shard[1][0] + shard[2][0]) / 3, gy = (shard[0][1] + shard[1][1] + shard[2][1]) / 3;
+          const spin = (rnd - 0.5) * 3 * gone, cs = Math.cos(spin), sn = Math.sin(spin);
+          return shard.map(([x, y]) => [gx + (x - gx) * cs - (y - gy) * sn, gy + (x - gx) * sn + (y - gy) * cs]);
+        });
+      }
+      for (const shape of shapes) {
+        tracePath(shape);
+        ctx.fillStyle = `hsla(${hue}, 95%, ${45 + 25 * pulse}%, ${glowAmount})`;
+        ctx.fill();
+        ctx.strokeStyle = `hsla(${hue}, 100%, 75%, ${Math.min(1, glowAmount * 1.8)})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+      tracePath(shapes[0]);
 
       // Hot tiles near their biggest get a halo: a wide, faint outline (much faster than a real blur).
-      if (isHot && pulse > 0.5) {
+      if (gone === 0 && isHot && pulse > 0.5) {
         ctx.strokeStyle = `hsla(${hue}, 100%, 65%, ${glowAmount * 0.35})`;
         ctx.lineWidth = 8 * fade;
         ctx.stroke();
@@ -466,12 +511,15 @@ function drawFloor(time) {
     line.addColorStop(0.7, `rgba(255, 80, 210, ${strength * 0.35})`);
     line.addColorStop(1, "rgba(255, 80, 210, 0)");
     ctx.strokeStyle = line;
+    const bending = energy > 0.01;
+    const pieces = bending ? 40 : 1;          // a straight line needs one piece; a bent one needs many
     ctx.beginPath();
     for (let c = -columns; c <= columns + 1; c++) {
-      const [x1, y1] = project(c - 0.5, NEAREST);
-      const [x2, y2] = project(c - 0.5, rows);
-      ctx.moveTo(x1, y1);
-      ctx.lineTo(x2, y2);
+      for (let k = 0; k <= pieces; k++) {
+        const z = NEAREST * Math.pow(rows / NEAREST, k / pieces);   // more pieces close up, where lines are long
+        const pt = warp(project(c - 0.5, z), bending ? c * 31 + k : 0);
+        if (k === 0) ctx.moveTo(pt[0], pt[1]); else ctx.lineTo(pt[0], pt[1]);
+      }
     }
     ctx.stroke();
     for (let r = 0; r <= rows; r++) {
@@ -483,8 +531,11 @@ function drawFloor(time) {
       const fade = Math.pow(1 - clamp01((z - NEAREST) / rows), 2.2);
       ctx.strokeStyle = `rgba(255, 80, 210, ${strength * fade})`;
       ctx.beginPath();
-      ctx.moveTo(xl, y);
-      ctx.lineTo(xr, y);
+      const across = bending ? 60 : 1;
+      for (let k = 0; k <= across; k++) {
+        const pt = warp([mix(xl, xr, k / across), y], bending ? r * 17 + k : 0);
+        if (k === 0) ctx.moveTo(pt[0], pt[1]); else ctx.lineTo(pt[0], pt[1]);
+      }
       ctx.stroke();
     }
   }

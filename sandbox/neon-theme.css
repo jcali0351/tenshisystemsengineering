@@ -290,3 +290,23 @@ html.neon .tk-form-actions .tk-copy:hover { border-color: var(--neon-purple); co
 /* ---------- Tanaka as a purple robot: every picture of him is swapped for tanaka-robot.svg ---------- */
 html.neon img[src*="tanaka.svg"] { content: url("tanaka-robot.svg"); }
 html.neon .tk-orb, html.neon .tk-ava, html.neon .tk-badge-lg { background: #2e0b57; box-shadow: 0 0 0 2px #a855f7, 0 0 14px rgba(168, 85, 247, .6) !important; }
+
+/* ---------- The header over WHITE content (neon-header.js adds .neon-light while white is underneath) ----------
+   Logo: all black with a light gray outer glow. Menu and language button: dark text. Everything fades between looks. */
+html.neon .brand-logo, html.neon .site-header .site-nav a, html.neon .lang-current { transition: filter .45s ease, color .45s ease, background-color .45s ease, text-shadow .45s ease; }
+html.neon.neon-light .brand-logo {
+  filter: brightness(0) drop-shadow(0 0 5px rgba(215, 215, 222, .95)) drop-shadow(0 0 14px rgba(200, 200, 208, .75)) !important;
+}
+html.neon.neon-light .site-header:not(#_):not(#__) { --nav-ink: #15101f; --nav-ink-strong: #000000; }
+html.neon.neon-light .site-header .site-nav a { text-shadow: 0 0 8px rgba(235, 235, 240, .95); }
+html.neon.neon-light .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav > ul > li > .sub-toggle { color: #15101f !important; }
+html.neon.neon-light .lang-current {
+  background: rgba(255, 255, 255, .7) !important; color: #15101f !important; border-color: rgba(21, 16, 31, .18) !important;
+  box-shadow: 0 0 12px rgba(200, 200, 208, .7) !important;
+}
+html.neon.neon-light .lang-current .lang-code { color: #15101f !important; }
+html.neon.neon-light .lang-current .lang-caret, html.neon.neon-light .lang-current .lang-caret path { stroke: #15101f !important; }
+html.neon.neon-light .site-header:not(#_):not(#__) .nav-toggle { background: rgba(255, 255, 255, .7) !important; color: #15101f !important; border-color: rgba(21, 16, 31, .18) !important; }
+html.neon.neon-light .site-header:not(#_):not(#__) .nav-toggle-icon::before,
+html.neon.neon-light .site-header:not(#_):not(#__) .nav-toggle-icon::after,
+html.neon.neon-light .site-header:not(#_):not(#__) .nav-toggle-icon > span { background: #15101f !important; }
