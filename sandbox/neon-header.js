@@ -5,7 +5,7 @@
 (function () {
   const header = document.querySelector(".site-header");
   if (!header) return;
-  const DARK = ".hero, .parallax, .band, footer, .site-footer";   // the areas with dark backgrounds
+  const DARK = ".hero, .parallax, .band, .services, .feature, .contact, footer, .site-footer";   // the areas with dark backgrounds (all of them, for now)
 
   function check() {
     // What's just below the header, in the middle of the screen?
