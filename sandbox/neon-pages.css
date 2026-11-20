@@ -101,3 +101,10 @@ html.neon.gx-page:not(#_):not(#__) main :is(code, pre) { background: #14052b !im
 @media (prefers-reduced-motion: reduce) {
   html.neon.gx-page:not(#_):not(#__) main :is(.service-card, .svc-detail, .blog-card, .tpl-card, .ab-focus, .team-detail, .news-panel):hover { transform: none; }
 }
+
+/* Buttons: text centred both ways (some have a fixed height, so lay the label out with flexbox). */
+html.neon.gx-page:not(#_):not(#__) main :is(a.btn, button.btn, .btn-primary, .btn-more, [class*="btn-"]:is(a, button), .svc-cta a, button[type="submit"], .prj-actions a, .tpl-actions a):not(.tpl-mock *) {
+  display: inline-flex !important; align-items: center !important; justify-content: center !important;
+  text-align: center !important; line-height: 1 !important; padding-top: 0 !important; padding-bottom: 0 !important;
+  min-height: 44px; height: auto !important;
+}

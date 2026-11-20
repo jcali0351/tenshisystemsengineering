@@ -147,7 +147,7 @@
 
   // ---- Messages ----
   let bannerTimer, tipTimer, toastTimer, bubbleTimer;
-  function showBanner(text, ms = 1800) { banner.textContent = text; banner.classList.add("on"); clearTimeout(bannerTimer); bannerTimer = setTimeout(() => banner.classList.remove("on"), ms); }
+  function showBanner(text, ms = 1800) { if (!heroOnScreen()) return; banner.textContent = text; banner.classList.add("on"); clearTimeout(bannerTimer); bannerTimer = setTimeout(() => banner.classList.remove("on"), ms); }
   function showTip(title, text) { tipEl.innerHTML = `<b>${title}</b> ${text}`; tipEl.classList.add("on"); clearTimeout(tipTimer); tipTimer = setTimeout(() => tipEl.classList.remove("on"), 3200); }
   function cheer(text) {
     // Tanaka's speech bubble, next to his chat button.
