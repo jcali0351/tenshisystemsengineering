@@ -57,8 +57,9 @@
   const ACHIEVEMENTS = {
     first: "FIRST BLOOD", combo: "COMBO KING (x9)", star: "STAR HUNTER", boss: "BOSS SLAYER", power: "POWERED UP",
     untouch: "UNTOUCHABLE (level 3, full shields)", city: "SAVED THE CITY (2,000 points)", insane: "INSANE MODE", bomb: "BOMB SQUAD (10 bombs)",
-    dragon: "DRAGON SLAYER", phoenix: "PHOENIX DOWN",
+    dragon: "DRAGON SLAYER", phoenix: "PHOENIX DOWN", slogan: "SLOGAN SMASHER (the whole headline)",
   };
+  const LETTER = { points: 10, wordBonus: 50, sloganBonus: 250, backAfter: [7000, 11000] };   // shooting the headline's letters
   const BEAST_POINTS = 100;      // for blowing up the dragon or the phoenix
   // ==========================================================================================================
 
@@ -333,6 +334,7 @@
     for (const c of [...cars]) if (nearLine(c.x, c.y, x1, y1, x2, y2, 14)) hitCar(c);
     if (boss && nearLine(boss.x, boss.y, x1, y1, x2, y2, 50)) { damageBoss(boss.x, boss.y, now, bossDmg); hit = true; }
     if (window.neonBeasts) for (const r of window.neonBeasts.hitLine(x1, y1, x2, y2, 14, bossDmg)) { beastHit(r); hit = true; }
+    for (const l of liveLetters()) { const c = centre(l); if (nearLine(c.x, c.y, x1, y1, x2, y2, 22)) { shootLetter(l); hit = true; } }
     return hit;
   }
 
@@ -350,6 +352,16 @@
       bolts.push({ pts: jag(jumps === 0 && !hit ? W / 2 : from[0], jumps === 0 && !hit ? H : from[1], best.x, best.y), life: 1 });
       if (best.kind === "bomb") defuse(best.o); else killTarget(best.o, now);
       from = [best.x, best.y]; reach = 230; jumps++; hit = true;
+    }
+    if (!hit) {                                        // a letter? the bolt jumps along to up to four more
+      let letter = letterAt(x, y, 10), from = [W / 2, H];
+      for (let k = 0; letter && k < 5; k++) {
+        const c = centre(letter);
+        bolts.push({ pts: jag(from[0], from[1], c.x, c.y), life: 1 });
+        shootLetter(letter); hit = true; from = [c.x, c.y];
+        letter = null; let bestD = 160;
+        for (const l of liveLetters()) { const d = Math.hypot(centre(l).x - c.x, centre(l).y - c.y); if (d < bestD) { bestD = d; letter = l; } }
+      }
     }
     if (!hit && window.neonBeasts) {                   // nothing else near: strike the dragon or phoenix
       const r = window.neonBeasts.hitAt(x, y, 70, bossDmg);
@@ -377,6 +389,7 @@
     for (const c of [...cars]) if (Math.hypot(c.x - x, c.y - y) < radius * 0.8) hitCar(c);
     if (boss && Math.abs(boss.x - x) < 120 + radius * 0.6 && Math.abs(boss.y - y) < 45 + radius * 0.6) damageBoss(x, y, now, bossDmg);
     if (window.neonBeasts) for (const r of window.neonBeasts.hitArea(x, y, radius, bossDmg)) beastHit(r);
+    for (const l of liveLetters()) { const c = centre(l); if (Math.hypot(c.x - x, c.y - y) < radius) shootLetter(l); }
   }
 
   function defuse(b) {
@@ -398,7 +411,10 @@
     for (const c of cars) if (Math.hypot(c.x - x, c.y - y) < 22) { hitCar(c); return true; }
     let target = null, bestD = Infinity;
     for (const o of objects) { const d = Math.hypot(o.x - x, o.y - y); if (d < o.size * GAME.hitRadius + 6 + extraReach && d < bestD) { target = o; bestD = d; } }
-    if (!target) {                                     // nothing else there: maybe the dragon or phoenix
+    if (!target) {
+      const letter = letterAt(x, y, 4 + extraReach);   // a letter of the headline?
+      if (letter) { shootLetter(letter); return true; }
+      // nothing else there: maybe the dragon or phoenix
       const r = window.neonBeasts && window.neonBeasts.hitAt(x, y, 24 + extraReach, bossDmg);
       if (!r) return false;
       beastHit(r);
@@ -406,6 +422,51 @@
     }
     killTarget(target, now);
     return true;
+  }
+
+  // ---- The headline's letters (neon-fx.js wraps each one in <span class="kx-letter">) ----
+  // Letters that are on screen and can be hit (not already spinning away, and not faded out by the headline animation).
+  function liveLetters() {
+    return [...document.querySelectorAll(".hero-card .kx-letter")].filter(l =>
+      !l.classList.contains("kx-shot") && !l.classList.contains("kx-gone") && l.textContent.trim() &&
+      !l.closest(".kx-away, .kx-hidden, .kx-fizzle"));
+  }
+  function centre(l) { const r = l.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2, r }; }
+  function letterAt(x, y, reach) {
+    for (const l of liveLetters()) {
+      const { r } = centre(l);
+      if (x > r.left - reach && x < r.right + reach && y > r.top - reach && y < r.bottom + reach) return l;
+    }
+    return null;
+  }
+  // Hit: the letter spins off and shrinks, explodes when it's done, and spins back in a few seconds later.
+  function shootLetter(l) {
+    if (l.classList.contains("kx-shot") || l.classList.contains("kx-gone")) return;
+    const { x, y } = centre(l), color = pick(["#ff2bd6", "#b04dff", "#ffb347", "#ffffff"]);
+    l.classList.remove("kx-back");
+    l.style.setProperty("--dir", Math.random() < 0.5 ? -1 : 1);
+    l.style.setProperty("--dx", Math.round(rand(-90, 90)));
+    l.style.setProperty("--dy", Math.round(rand(-110, -20)));
+    l.classList.add("kx-shot");
+    burst(x, y, color, 8, 1); sfx("hit");
+    addScore(LETTER.points, x, y, color, l.textContent.toUpperCase());
+    setTimeout(() => {
+      const r = l.getBoundingClientRect();
+      explode({ x: r.left + r.width / 2, y: r.top + r.height / 2, size: 12, color }, 0.9);
+      sfx("boom"); shakeIt(3);
+      l.classList.remove("kx-shot"); l.classList.add("kx-gone");
+    }, 450);
+    setTimeout(() => { l.classList.remove("kx-gone"); void l.offsetWidth; l.classList.add("kx-back"); }, rand(...LETTER.backAfter));
+    // Bonuses: every letter of a word, then every letter of the headline.
+    const down = el => [...el.querySelectorAll(".kx-letter")].every(k => !k.textContent.trim() || k.classList.contains("kx-shot") || k.classList.contains("kx-gone"));
+    const word = l.closest(".kx-word");
+    if (word && down(word)) addScore(LETTER.wordBonus, x, y - 24, "#ffb347", "WORD DOWN: " + word.textContent.toUpperCase());
+    const headline = l.closest("h1");
+    if (headline && down(headline)) {
+      addScore(LETTER.sloganBonus, W / 2, y - 50, "#ffffff", "SLOGAN SMASHED");
+      showBanner("SLOGAN SMASHED!", 1800); achieve("slogan"); sfx("bigboom"); shakeIt(12); hitStop(100);
+      cheer("Hey, I need that headline! 😅");
+    }
   }
 
   // The dragon or phoenix was hit: sparks and a crunch; if that blew it up, 100 points and a big moment.
@@ -459,6 +520,7 @@
       objects.length = 0; bombs.length = 0;
       if (boss) { boss.hp -= 8; boss.hitFlash = 1; }
       if (window.neonBeasts) for (const r of window.neonBeasts.hitArea(W / 2, H / 2, Math.hypot(W, H), 8)) beastHit(r);
+      liveLetters().forEach((l, k) => setTimeout(() => shootLetter(l), k * 25));
       sfx("bigboom"); shakeIt(14); hitStop(120);
       return;
     }
@@ -544,35 +606,151 @@
   function glow(color, blur) { ctx.shadowColor = color; ctx.shadowBlur = blur; }
 
   // ================================================ DRAWING ================================================
+  // ---- 3D targets: little see-through glass models, lit from the top left, tumbling as they fly ----
+  // Each model is a list of corners (x, y, z) and faces (lists of corner numbers, going round the face).
+  function lathe(profile, n) {            // spin a side profile [[radius, y], ...] round the vertical axis
+    const v = [], f = [];
+    for (const [r, y] of profile) for (let i = 0; i < n; i++) v.push([Math.cos(i / n * 6.283) * r, y, Math.sin(i / n * 6.283) * r]);
+    for (let k = 0; k < profile.length - 1; k++) for (let i = 0; i < n; i++) {
+      const a = k * n + i, b = k * n + (i + 1) % n;
+      f.push([a, b, b + n, a + n]);
+    }
+    return { v, f };
+  }
+  const MODELS = {
+    // A long diamond body with two swept fins.
+    drone: { v: [[0, -1, 0], [0.7, 0, 0], [0, 1, 0], [-0.7, 0, 0], [0, 0, 0.4], [0, 0, -0.4], [1.45, -0.35, 0], [-1.45, -0.35, 0], [1.0, 0.25, 0], [-1.0, 0.25, 0]],
+             f: [[0, 1, 4], [1, 2, 4], [2, 3, 4], [3, 0, 4], [0, 5, 1], [1, 5, 2], [2, 5, 3], [3, 5, 0], [1, 6, 8], [3, 9, 7]] },
+    // A flying saucer: flat disc with a dome on top.
+    saucer: lathe([[0, -0.8], [0.4, -0.7], [0.55, -0.25], [1.4, 0], [0.95, 0.3], [0.001, 0.36]], 14),
+    cube: { v: [[-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1], [-1, -1, 1], [1, -1, 1], [1, 1, 1], [-1, 1, 1]].map(p => p.map(c => c * 0.62)),
+            f: [[0, 1, 2, 3], [5, 4, 7, 6], [4, 0, 3, 7], [1, 5, 6, 2], [4, 5, 1, 0], [3, 2, 6, 7]] },
+    // A chunky five-pointed star with a raised point on both sides.
+    star: (() => {
+      const v = [];
+      for (let i = 0; i < 10; i++) { const r = i % 2 ? 0.45 : 1; v.push([Math.cos(i * Math.PI / 5 - Math.PI / 2) * r, Math.sin(i * Math.PI / 5 - Math.PI / 2) * r, 0]); }
+      v.push([0, 0, -0.45], [0, 0, 0.45]);
+      const f = [];
+      for (let i = 0; i < 10; i++) { f.push([10, i, (i + 1) % 10]); f.push([11, (i + 1) % 10, i]); }
+      return { v, f };
+    })(),
+  };
+  // ---- The lighting engine ----
+  // Every model is lit by the scene, worked out once per frame:
+  //   - the SUN on the horizon: a warm orange-pink key light from behind and below
+  //   - your MOUSE: a cool lilac light that follows the cursor (things near it light up)
+  //   - EXPLOSIONS: every blast flashes light onto anything nearby, fading as the flash fades
+  //   - a dim purple ambient fill, so the dark sides never go fully black
+  // Each face gets diffuse light from each source, a shiny highlight (specular), and a pink glow on edges that
+  // face sideways (rim light).
+  const LIGHTS = {
+    ambient: [70, 30, 110],                      // the fill colour (0-255)
+    sun:   { color: [255, 140, 90],  strength: 0.9, height: 0.36, depth: 260 },
+    mouse: { color: [200, 160, 255], strength: 1.3, reach: 420, depth: -160 },
+    blast: { color: [255, 170, 80],  strength: 2.2, reach: 300, depth: -120 },
+    shine: 28,                                   // specular sharpness: bigger = smaller, sharper highlight
+    rim:   [255, 60, 200],                       // rim-light colour
+  };
+  const rgbOf = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
+  let sceneAt = -1, scene = [];
+  function sceneLights(now) {
+    if (now === sceneAt) return scene;
+    sceneAt = now; scene = [];
+    scene.push({ x: W / 2, y: H * LIGHTS.sun.height, z: LIGHTS.sun.depth, color: LIGHTS.sun.color, strength: LIGHTS.sun.strength, reach: 0 });
+    if (holdX || holdY) scene.push({ x: holdX, y: holdY, z: LIGHTS.mouse.depth, color: LIGHTS.mouse.color, strength: LIGHTS.mouse.strength, reach: LIGHTS.mouse.reach });
+    for (const sh of shards) if (sh.flash && sh.life > 0.05) scene.push({ x: sh.x, y: sh.y, z: LIGHTS.blast.depth, color: LIGHTS.blast.color, strength: LIGHTS.blast.strength * sh.life, reach: LIGHTS.blast.reach });
+    return scene;
+  }
+  // The colour of one face: base colour x (ambient + each light's diffuse) + specular highlights + rim glow.
+  function shadeFace(base, n, ox, oy, lights) {
+    let r = base[0] * LIGHTS.ambient[0] / 255, g = base[1] * LIGHTS.ambient[1] / 255, b = base[2] * LIGHTS.ambient[2] / 255;
+    let spec = 0;
+    for (const L of lights) {
+      let lx = L.x - ox, ly = L.y - oy, lz = L.z;
+      const dist = Math.hypot(lx, ly, lz) || 1; lx /= dist; ly /= dist; lz /= dist;
+      const fall = L.reach ? Math.max(0, 1 - Math.hypot(L.x - ox, L.y - oy) / L.reach) ** 2 : 1;   // point lights fade with distance
+      if (!fall) continue;
+      const diff = Math.max(0, n[0] * lx + n[1] * ly + n[2] * lz) * L.strength * fall;
+      r += base[0] * diff * L.color[0] / 255; g += base[1] * diff * L.color[1] / 255; b += base[2] * diff * L.color[2] / 255;
+      // Shiny highlight (Blinn-Phong): halfway between the light and the viewer (who looks along +z, from -z).
+      let hx = lx, hy = ly, hz = lz - 1; const hl = Math.hypot(hx, hy, hz) || 1;
+      spec += Math.pow(Math.max(0, (n[0] * hx + n[1] * hy + n[2] * hz) / hl), LIGHTS.shine) * L.strength * fall;
+    }
+    const rim = Math.pow(1 - Math.min(1, Math.abs(n[2])), 3) * 0.8;   // faces turned side-on glow pink
+    r += spec * 255 + LIGHTS.rim[0] * rim; g += spec * 255 + LIGHTS.rim[1] * rim; b += spec * 255 + LIGHTS.rim[2] * rim;
+    return { color: `rgb(${Math.min(255, r | 0)},${Math.min(255, g | 0)},${Math.min(255, b | 0)})`, bright: Math.min(1, (r + g + b) / 600), spec: Math.min(1, spec) };
+  }
+
+  // Turn, light and draw one model. Returns the corners on screen (for extras like the saucer's lights).
+  function drawModel(o, model, s, alpha, now) {
+    if (o.rx === undefined) { o.rx = rand(0, 6.28); o.ry = rand(0, 6.28); o.rz = rand(0, 6.28); o.vrx = rand(0.008, 0.025); o.vry = rand(0.015, 0.04); o.vrz = rand(-0.01, 0.01); }
+    o.rx += o.vrx; o.ry += o.vry; o.rz += o.vrz;
+    const tilt = o.kind === "saucer" ? 0.35 : 1;                  // saucers stay mostly level and spin flat
+    const [cx, sx] = [Math.cos(o.rx * tilt), Math.sin(o.rx * tilt)], [cy, sy] = [Math.cos(o.ry), Math.sin(o.ry)], [cz, sz] = [Math.cos(o.rz * tilt), Math.sin(o.rz * tilt)];
+    const P = model.v.map(([x, y, z]) => {
+      let x1 = x * cy + z * sy, z1 = -x * sy + z * cy;           // turn round the vertical axis
+      let y1 = y * cx - z1 * sx; z1 = y * sx + z1 * cx;           // tip forwards and back
+      const x2 = x1 * cz - y1 * sz, y2 = x1 * sz + y1 * cz;       // roll
+      const f = 3.2 / (3.2 + z1);                                 // perspective: nearer corners look bigger
+      return { x: x2, y: y2, z: z1, sx: x2 * f * s, sy: y2 * f * s };
+    });
+    const base = rgbOf(o.color), lights = sceneLights(now);
+    // Faces: back to front. Each face's normal is made to point outwards, then lit by the scene.
+    const faces = model.f.map(idx => {
+      const a = P[idx[0]], b = P[idx[1]], c = P[idx[2]];
+      const ux = b.x - a.x, uy = b.y - a.y, uz = b.z - a.z, vx = c.x - a.x, vy = c.y - a.y, vz = c.z - a.z;
+      let nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx;
+      const nl = Math.hypot(nx, ny, nz) || 1; nx /= nl; ny /= nl; nz /= nl;
+      const mx = idx.reduce((t, i) => t + P[i].x, 0) / idx.length, my = idx.reduce((t, i) => t + P[i].y, 0) / idx.length, mz = idx.reduce((t, i) => t + P[i].z, 0) / idx.length;
+      if (nx * mx + ny * my + nz * mz < 0) { nx = -nx; ny = -ny; nz = -nz; }   // point away from the middle
+      return { idx, depth: mz, facing: -nz, n: [nx, ny, nz] };
+    }).sort((p, q) => q.depth - p.depth);
+    ctx.shadowBlur = 0;
+    for (const f of faces) {
+      const front = f.facing > 0;
+      const lit = shadeFace(base, f.n, o.x, o.y, lights);
+      ctx.globalAlpha = alpha * (front ? 0.25 + 0.55 * lit.bright : 0.07);
+      ctx.fillStyle = lit.color;
+      ctx.beginPath(); f.idx.forEach((i, k) => k ? ctx.lineTo(P[i].sx, P[i].sy) : ctx.moveTo(P[i].sx, P[i].sy)); ctx.closePath(); ctx.fill();
+      // Edges: lit and glowing at the front (hotter where the highlight is), faint at the back.
+      ctx.globalAlpha = alpha * (front ? 0.7 + 0.3 * lit.bright : 0.22);
+      ctx.strokeStyle = front ? lit.color : o.color;
+      ctx.lineWidth = front ? 1.4 + lit.spec * 1.2 : 1;
+      if (front) glow(lit.spec > 0.3 ? "#ffffff" : o.color, 8 + 10 * lit.bright); else ctx.shadowBlur = 0;
+      ctx.stroke();
+    }
+    ctx.shadowBlur = 0;
+    return P;
+  }
+
   function drawTarget(o, now) {
     ctx.save();
     ctx.translate(o.x, o.y);
-    const A = GAME.targetOpacity;
+    // Dynamic opacity: each target swells nearer and drifts further away, brightening and fading as it goes,
+    // with a slow shimmer on top, so the sky never looks flat.
+    const near = Math.sin(now / 900 + o.phase * 1.7);                       // -1 far ... 1 near
+    const shimmer = 0.5 + 0.5 * Math.sin(now / 340 + o.phase * 3);
+    const A = Math.min(1, GAME.targetOpacity * (0.55 + 0.35 * (near + 1) / 2 + 0.25 * shimmer));
     ctx.globalAlpha = A; ctx.strokeStyle = o.color; ctx.fillStyle = o.color; ctx.lineWidth = 2; glow(o.color, 14);
-    const s = o.size;
+    const s = o.size * (1 + 0.18 * near);
     if (o.kind === "drone") {
-      ctx.rotate(Math.sin(now / 300 + o.phase) * 0.3);
-      ctx.beginPath(); ctx.moveTo(0, -s); ctx.lineTo(s * 0.7, 0); ctx.lineTo(0, s); ctx.lineTo(-s * 0.7, 0); ctx.closePath(); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(-s * 0.7, 0); ctx.lineTo(-s * 1.4, -s * 0.3); ctx.moveTo(s * 0.7, 0); ctx.lineTo(s * 1.4, -s * 0.3); ctx.stroke();
-      ctx.globalAlpha = A * (0.5 + 0.5 * Math.sin(now / 120 + o.phase)); ctx.beginPath(); ctx.arc(0, 0, s * 0.25, 0, 6.28); ctx.fill();
+      drawModel(o, MODELS.drone, s, A, now);
+      ctx.globalAlpha = A * (0.5 + 0.5 * Math.sin(now / 120 + o.phase)); glow(o.color, 16); ctx.fillStyle = "#ffffff";
+      ctx.beginPath(); ctx.arc(0, 0, s * 0.18, 0, 6.28); ctx.fill();                                  // pulsing core
     } else if (o.kind === "saucer") {
-      ctx.beginPath(); ctx.ellipse(0, 0, s * 1.4, s * 0.45, 0, 0, 6.28); ctx.stroke();
-      ctx.beginPath(); ctx.arc(0, -s * 0.2, s * 0.55, Math.PI, 0); ctx.stroke();
-      for (let i = 0; i < 5; i++) { ctx.globalAlpha = A * (((Math.floor(now / 120) + i) % 5 === 0) ? 1 : 0.3); ctx.beginPath(); ctx.arc(-s + i * s * 0.5, s * 0.05, 2.2, 0, 6.28); ctx.fillStyle = i % 2 ? "#ffb347" : "#ffffff"; ctx.fill(); }
-    } else if (o.kind === "cube") {
-      o.spin += 0.04;
-      const pts = [];
-      for (const x of [-1, 1]) for (const y of [-1, 1]) for (const z of [-1, 1]) {
-        const c1 = Math.cos(o.spin), s1 = Math.sin(o.spin), c2 = Math.cos(o.spin * 0.7), s2 = Math.sin(o.spin * 0.7);
-        const x1 = x * c1 - z * s1, z1 = x * s1 + z * c1; pts.push([x1 * s * 0.6, (y * c2 - z1 * s2) * s * 0.6]);
+      drawModel(o, MODELS.saucer, s, A, now);
+      // Lights round the rim: bright on the near side, dim behind.
+      const t = now / 500 + o.phase, tiltY = Math.sin(o.rx * 0.35);
+      for (let i = 0; i < 8; i++) {
+        const a = t + i * 0.785, z = Math.sin(a), f = 3.2 / (3.2 + z * 1.4);
+        ctx.globalAlpha = A * (z < 0 ? (((Math.floor(now / 120) + i) % 4 === 0) ? 1 : 0.6) : 0.15);
+        ctx.fillStyle = i % 2 ? "#ffb347" : "#ffffff"; glow(ctx.fillStyle, 8);
+        ctx.beginPath(); ctx.arc(Math.cos(a) * 1.4 * s * f, z * tiltY * 1.4 * s * f, 2.2, 0, 6.28); ctx.fill();
       }
-      ctx.beginPath();
-      for (const [a, b] of [[0,1],[0,2],[0,4],[1,3],[1,5],[2,3],[2,6],[3,7],[4,5],[4,6],[5,7],[6,7]]) { ctx.moveTo(...pts[a]); ctx.lineTo(...pts[b]); }
-      ctx.stroke();
+    } else if (o.kind === "cube") {
+      drawModel(o, MODELS.cube, s, A, now);
     } else if (o.kind === "star") {
-      ctx.rotate(now / 250); ctx.beginPath();
-      for (let i = 0; i < 10; i++) { const r = i % 2 ? s * 0.45 : s; ctx.lineTo(Math.cos(i * Math.PI / 5) * r, Math.sin(i * Math.PI / 5) * r); }
-      ctx.closePath(); ctx.globalAlpha = A * 0.35; ctx.fill(); ctx.globalAlpha = A; ctx.stroke();
+      drawModel(o, MODELS.star, s, Math.min(1, A * 1.3), now);
     } else if (o.kind === "power") {                       // power-up: a pulsing double ring with its letter (drawn fully solid)
       ctx.globalAlpha = 1;
       const pulse = 1 + 0.15 * Math.sin(now / 150);

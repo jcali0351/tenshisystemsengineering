@@ -344,6 +344,16 @@
   let words = [];
   let lastText = "";
 
+  // Each word is made of one <span class="kx-letter"> per letter, so the game can shoot letters one at a time.
+  function fillLetters(span, word) {
+    for (const ch of word) {
+      const letter = document.createElement("span");
+      letter.className = "kx-letter";
+      letter.textContent = ch;
+      span.appendChild(letter);
+    }
+  }
+
   // Split the headline into one <span> per word. Done again whenever the text changes (e.g. a language switch).
   function split() {
     const text = h1.textContent.trim();
@@ -353,7 +363,7 @@
     words = text.split(/\s+/).map((word, i) => {
       const span = document.createElement("span");
       span.className = "kx-word";
-      span.textContent = word;
+      fillLetters(span, word);
       h1.appendChild(span);
       if (i < text.split(/\s+/).length - 1) h1.appendChild(document.createTextNode(" "));
       return span;
@@ -417,7 +427,7 @@
       const spans = message.split(/\s+/).map(word => {
         const span = document.createElement("span");
         span.className = "kx-word kx-hidden";
-        span.textContent = word;
+        fillLetters(span, word);
         reel.appendChild(span);
         reel.appendChild(document.createTextNode(" "));
         return span;
