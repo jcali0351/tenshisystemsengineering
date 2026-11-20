@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% block title %}Pages · {{ site.name }}{% endblock %}
+{% block heading %}Pages{% endblock %}
+{% block actions %}<button class="btn btn-primary" id="new-page">+ New page</button>{% endblock %}
+{% block body %}
+<section class="card">
+  <p class="muted small">Drag pages to change their order in the menu. Open one to edit it visually.</p>
+  <ul class="blist sortable" id="page-list">
+    {% for p in rows %}{% set n = (p.blocks_json | j([])) | length %}
+    <li draggable="true" data-id="{{ p.id }}">
+      <span class="grip" aria-hidden="true">⋮⋮</span>
+      <span class="bname"><b>{{ p.title }}</b> {% if not p.in_menu %}<span class="badge">not in menu</span>{% endif %}
+        <small>/{{ '' if p.slug == 'index' else p.slug ~ '.html' }} · {{ n }} block{{ '' if n == 1 else 's' }} · edited {{ p.updated_at | when }}</small></span>
+      <a class="btn btn-small btn-primary" href="/sites/{{ site.id }}/builder/{{ p.id }}">Edit visually</a>
+      <a class="btn btn-small" href="/sites/{{ site.id }}/preview/{{ p.slug }}" target="_blank" rel="noopener">Preview</a>
+      <button class="btn btn-small" data-copy-page="{{ p.id }}" data-title="{{ p.title }}">Duplicate</button>
+      {% if p.slug != 'index' %}<button class="btn btn-small btn-danger" data-delete-page="{{ p.id }}" data-title="{{ p.title }}">Delete</button>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  var T = Tenshi, list = document.getElementById("page-list"), dragged = null;
+  document.getElementById("new-page").onclick = function () {
+    var title = prompt("Title of the new page:");
+    if (title) T.api("POST", "/api/sites/{{ site.id }}/pages", { title: title }).then(function (r) { location.href = r.url; });
+  };
+  list.addEventListener("click", function (e) {
+    var copy = e.target.closest("[data-copy-page]"), del = e.target.closest("[data-delete-page]");
+    if (copy) {
+      var title = prompt("Title of the copy:", copy.dataset.title + " (copy)");
+      if (title) T.api("POST", "/api/sites/{{ site.id }}/pages", { title: title, copy_from: +copy.dataset.copyPage }).then(function (r) { location.href = r.url; });
+    }
+    if (del && confirm("Delete the page “" + del.dataset.title + "”? This can't be undone.")) {
+      T.api("DELETE", "/api/pages/" + del.dataset.deletePage).then(function () { location.reload(); });
+    }
+  });
+  /* Drag to reorder */
+  list.addEventListener("dragstart", function (e) { dragged = e.target.closest("li"); e.dataTransfer.effectAllowed = "move"; });
+  list.addEventListener("dragover", function (e) {
+    e.preventDefault();
+    var over = e.target.closest("li");
+    T.$$("li", list).forEach(function (li) { li.classList.toggle("drag-over", li === over && li !== dragged); });
+  });
+  list.addEventListener("drop", function (e) {
+    e.preventDefault();
+    var over = e.target.closest("li");
+    T.$$("li", list).forEach(function (li) { li.classList.remove("drag-over"); });
+    if (!over || over === dragged) return;
+    list.insertBefore(dragged, over);
+    T.api("POST", "/api/sites/{{ site.id }}/pages/order", { ids: T.$$("li", list).map(function (li) { return li.dataset.id; }) })
+      .then(function () { T.toast("Menu order saved"); });
+  });
+})();
+</script>
+{% endblock %}

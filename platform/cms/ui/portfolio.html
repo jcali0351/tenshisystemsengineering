@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+{% block title %}Portfolio · {{ site.name }}{% endblock %}
+{% block heading %}Portfolio{% endblock %}
+{% block actions %}<button class="btn btn-primary" id="new-item">+ New project</button>{% endblock %}
+{% block body %}
+<p class="muted">Projects show on any page with a <b>Portfolio</b> block: with category filters, a lightbox, and a before/after slider
+  when a project has both pictures. Drag cards to change their order.</p>
+{% if categories %}<p class="small">Categories: {% for c in categories %}<span class="badge">{{ c }}</span> {% endfor %}</p>{% endif %}
+<div class="pcards sortable" id="items">
+  {% for it in items %}
+  <article class="card pcard" draggable="true" data-id="{{ it.id }}">
+    {% if it.cover_thumb or it.after_thumb %}<img src="{{ it.cover_thumb or it.after_thumb }}" alt="">{% else %}<div class="noimg">No picture yet</div>{% endif %}
+    <div class="pbody">
+      {% if it.category %}<span class="badge">{{ it.category }}</span>{% endif %}
+      {% if it.before_thumb and it.after_thumb %}<span class="badge badge-live">Before / after</span>{% endif %}
+      <h3 style="margin:6px 0 2px">{{ it.title }}</h3>
+      <p class="small muted">{{ (it.summary or '')[:90] }}</p>
+    </div>
+  </article>
+  {% else %}
+  <div class="empty" style="grid-column:1/-1">No projects yet. Add your best work, with before and after photos if you have them.</div>
+  {% endfor %}
+</div>
+
+<dialog id="item-dlg" class="wide">
+  <form class="dlg" id="item-form">
+    <h2 id="item-title">Project</h2>
+    <input type="hidden" name="id">
+    <div class="grid grid-2">
+      <div>
+        <label class="field"><span>Title <span class="req">*</span></span><input type="text" name="title" required></label>
+        <div class="grid grid-2">
+          <label class="field"><span>Category</span><input type="text" name="category" list="cat-list" placeholder="e.g. Kitchens"></label>
+          <label class="field"><span>Tags</span><input type="text" name="tags" placeholder="comma separated"></label>
+        </div>
+        <datalist id="cat-list">{% for c in categories %}<option value="{{ c }}">{% endfor %}</datalist>
+        <label class="field"><span>Short summary</span><textarea name="summary" rows="2"></textarea></label>
+        <label class="field"><span>Full story</span><textarea name="body" rows="5" placeholder="The challenge, what you did, the result."></textarea></label>
+      </div>
+      <div>
+        <div class="field"><span>Main picture</span><div class="media-field" data-site="{{ site.id }}"><input type="hidden" name="cover_media_id"></div></div>
+        <div class="field"><span>Before</span><div class="media-field" data-site="{{ site.id }}"><input type="hidden" name="before_media_id"></div></div>
+        <div class="field"><span>After</span><div class="media-field" data-site="{{ site.id }}"><input type="hidden" name="after_media_id"></div><small>With both Before and After, the site shows a comparison slider.</small></div>
+        <label class="field"><span>Photo album for this project</span><select name="album_id"><option value="">None</option>{% for a in albums %}<option value="{{ a.id }}">{{ a.name }}</option>{% endfor %}</select></label>
+      </div>
+    </div>
+  </form>
+  <div class="dlg-foot"><button class="btn btn-danger" id="item-delete" type="button" style="margin-right:auto">Delete</button><button class="btn" type="button" data-close>Cancel</button><button class="btn btn-primary" type="submit" form="item-form">Save project</button></div>
+</dialog>
+<script id="items-data" type="application/json">{{ items | tojson }}</script>
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  var T = Tenshi, siteId = {{ site.id }}, ITEMS = JSON.parse(document.getElementById("items-data").textContent);
+  var dlg = document.getElementById("item-dlg"), form = document.getElementById("item-form"), grid = document.getElementById("items");
+  function open(item) {
+    item = item || {};
+    ["id", "title", "category", "tags", "summary", "body", "cover_media_id", "before_media_id", "after_media_id", "album_id"].forEach(function (k) {
+      form.elements[k].value = item[k] == null ? "" : item[k];
+    });
+    T.$$(".media-field", form).forEach(function (b) { T.mediaField(b); });
+    document.getElementById("item-title").textContent = item.id ? "Edit project" : "New project";
+    document.getElementById("item-delete").hidden = !item.id;
+    dlg.showModal();
+  }
+  document.getElementById("new-item").onclick = function () { open(); };
+  grid.addEventListener("click", function (e) {
+    var card = e.target.closest("[data-id]");
+    if (card) open(ITEMS.filter(function (i) { return i.id === +card.dataset.id; })[0]);
+  });
+  dlg.querySelector("[data-close]").onclick = function () { dlg.close(); };
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var body = {};
+    Array.prototype.forEach.call(form.elements, function (el) { if (el.name) body[el.name] = el.value; });
+    if (!body.id) delete body.id;
+    T.busy(dlg.querySelector("[type=submit]"), T.api("POST", "/api/sites/" + siteId + "/portfolio", body).then(function () { location.reload(); }));
+  });
+  document.getElementById("item-delete").onclick = function () {
+    if (confirm("Delete this project? Its pictures stay in the Media Center.")) T.api("DELETE", "/api/portfolio/" + form.elements.id.value).then(function () { location.reload(); });
+  };
+  /* Drag cards to reorder */
+  var dragged;
+  grid.addEventListener("dragstart", function (e) { dragged = e.target.closest("[data-id]"); });
+  grid.addEventListener("dragover", function (e) { e.preventDefault(); });
+  grid.addEventListener("drop", function (e) {
+    e.preventDefault();
+    var over = e.target.closest("[data-id]");
+    if (!over || !dragged || over === dragged) return;
+    grid.insertBefore(dragged, over);
+    T.api("POST", "/api/sites/" + siteId + "/portfolio/order", { ids: T.$$("[data-id]", grid).map(function (c) { return c.dataset.id; }) }).then(function () { T.toast("Order saved"); });
+  });
+})();
+</script>
+{% endblock %}

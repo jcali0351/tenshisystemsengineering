@@ -1,0 +1,81 @@
+{#- The frame of every CMS screen: the sidebar (global sections, the site switcher, the chosen site's sections)
+    and the top bar. Screens extend this and fill {% block body %}. -#}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>{% block title %}Tenshi CMS{% endblock %} · Tenshi</title>
+  <link rel="stylesheet" href="/static/cms.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
+  <symbol id="i-sites" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></symbol>
+  <symbol id="i-tpl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="4"/><path d="M2 21c1-4 4-6 7-6s6 2 7 6"/><path d="M16 4a4 4 0 0 1 0 8M19 15c1.5.8 2.6 2.7 3 6"/></symbol>
+  <symbol id="i-overview" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+  <symbol id="i-pages" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/></symbol>
+  <symbol id="i-biz" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></symbol>
+  <symbol id="i-media" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></symbol>
+  <symbol id="i-work" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4z"/><path d="M13 17h7M16.5 13.5v7"/></symbol>
+  <symbol id="i-gal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="6" width="15" height="13" rx="2"/><path d="M3 15V5a2 2 0 0 1 2-2h11"/><path d="m21 15-4-4-6 6"/></symbol>
+  <symbol id="i-leads" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
+  <symbol id="i-deploy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3c4 3 5 7 4 11l-4 3-4-3c-1-4 0-8 4-11z"/><circle cx="12" cy="10" r="1.6"/><path d="M8 14l-3 2 1 4 3-2M16 14l3 2-1 4-3-2"/></symbol>
+  <symbol id="i-export" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 15V3M7 8l5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-2.9-1.2l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.7 1.7 0 0 0 3 15.1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.2-2.9l-.1-.1A2 2 0 1 1 7 5.3l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V4a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+</svg>
+<div class="app">
+  <aside class="side" aria-label="CMS menu">
+    <a class="logo" href="/"><span class="logo-mark">天</span> Tenshi CMS</a>
+    {% set path = request.url.path %}
+    <nav>
+      <a href="/" {% if path == '/' %}aria-current="page"{% endif %}><svg class="ico"><use href="#i-home"/></svg>Dashboard</a>
+      <a href="/sites" {% if path == '/sites' %}aria-current="page"{% endif %}><svg class="ico"><use href="#i-sites"/></svg>All sites</a>
+      <a href="/templates" {% if path.startswith('/templates') %}aria-current="page"{% endif %}><svg class="ico"><use href="#i-tpl"/></svg>Templates</a>
+      {% if user.role == 'admin' %}<a href="/users" {% if path == '/users' %}aria-current="page"{% endif %}><svg class="ico"><use href="#i-users"/></svg>Users</a>{% endif %}
+    </nav>
+    <p class="side-label">Website</p>
+    <div class="site-switch">
+      <select id="site-switch" aria-label="Choose a website">
+        <option value="">Choose a site…</option>
+        {% for s in sites_menu %}<option value="{{ s.id }}" {% if site and site.id == s.id %}selected{% endif %}>{{ s.name }}</option>{% endfor %}
+      </select>
+    </div>
+    {% if site %}
+    <nav>
+      {% set base = '/sites/' ~ site.id %}
+      {% for key, label, icon, href in [
+        ('overview', 'Overview', 'overview', base), ('pages', 'Pages & builder', 'pages', base ~ '/pages'),
+        ('business', 'Business data', 'biz', base ~ '/business'), ('media', 'Media Center', 'media', base ~ '/media'),
+        ('portfolio', 'Portfolio', 'work', base ~ '/portfolio'), ('galleries', 'Galleries', 'gal', base ~ '/galleries'),
+        ('leads', 'Leads', 'leads', base ~ '/leads'), ('deployments', 'Deployments', 'deploy', base ~ '/deployments'),
+        ('export', 'Export', 'export', base ~ '/export'), ('settings', 'Settings & theme', 'settings', base ~ '/settings')] %}
+      <a href="{{ href }}" {% if section == key %}aria-current="page"{% endif %}><svg class="ico"><use href="#i-{{ icon }}"/></svg>{{ label }}</a>
+      {% endfor %}
+    </nav>
+    {% endif %}
+    <div class="side-foot">
+      <div>{{ user.name }} · {{ user.role }}</div>
+      <form method="post" action="/logout"><button type="submit">Sign out</button></form>
+      <div class="muted" style="margin-top:6px">Tenshi CMS {{ version }}</div>
+    </div>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <button class="btn btn-small menu-toggle" type="button">Menu</button>
+      <div>
+        {% if site %}<div class="crumb">{{ site.name }} · <a href="{{ site_url(site.subdomain) }}" target="_blank" rel="noopener">{{ site.subdomain }}.{{ sites_domain }}</a></div>{% endif %}
+        <h1>{% block heading %}{% endblock %}</h1>
+      </div>
+      <span class="spacer"></span>
+      {% block actions %}{% endblock %}
+    </header>
+    {% block full %}<main class="content">{% block body %}{% endblock %}</main>{% endblock %}
+  </div>
+</div>
+<script src="/static/cms.js"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

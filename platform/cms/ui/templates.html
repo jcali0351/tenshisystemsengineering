@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block title %}Templates{% endblock %}
+{% block heading %}Template Gallery{% endblock %}
+{% block actions %}{% if user.role == 'admin' %}<button class="btn btn-primary" id="new-tpl">+ New template</button>{% endif %}{% endblock %}
+{% block body %}
+<p class="muted">Templates are the look of a site, nothing else: business data, pages and media belong to the site, so any site can switch
+  template at any time. <b>Deploy</b> makes a new site from a template in one click.</p>
+<div class="tcards">
+  {% for t in items %}
+  <article class="card tcard">
+    <div class="swatch" style="--p:{{ t.colors.primary }};--a:{{ t.colors.accent }};--s:{{ t.colors.surface }};--i:{{ t.colors.ink }}">
+      <span class="sw-nav"></span><span class="sw-hero">{{ t.headline or t.name }}</span><span class="sw-foot"><i></i><i></i><i></i></span>
+    </div>
+    <div class="tbody">
+      <div class="row"><b>{{ t.name }}</b><span class="badge" style="margin-left:auto">v{{ t.version }}</span></div>
+      <span class="small muted">{{ t.for or t.description or t.source }}</span>
+      <span class="small muted">{{ t.style | title }}{% if t.group %} · {{ t.group | title }}{% endif %} · used by {{ t.used_by }} site{{ '' if t.used_by == 1 else 's' }}</span>
+      <div class="row">
+        <a class="btn btn-small" href="/templates/{{ t.id }}/preview" target="_blank" rel="noopener">Preview</a>
+        <button class="btn btn-small btn-primary" data-new-site data-template="{{ t.id }}">Deploy</button>
+        {% if user.role == 'admin' %}
+        <a class="btn btn-small" href="/templates/{{ t.id }}">Edit</a>
+        <button class="btn btn-small" data-clone="{{ t.id }}" data-name="{{ t.name }}">Clone</button>
+        {% if not t.used_by %}<button class="btn btn-small btn-danger" data-delete="{{ t.id }}" data-name="{{ t.name }}">Delete</button>{% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </article>
+  {% endfor %}
+</div>
+{% set templates_list = items %}
+{% include "_new_site.html" %}
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  var T = Tenshi, nt = document.getElementById("new-tpl");
+  if (nt) nt.onclick = function () {
+    var name = prompt("Name of the new template (it starts as a copy of the starter design):");
+    if (name) T.api("POST", "/api/templates", { name: name }).then(function (r) { location.href = r.url; });
+  };
+  document.addEventListener("click", function (e) {
+    var c = e.target.closest("[data-clone]"), d = e.target.closest("[data-delete]");
+    if (c) { var name = prompt("Name of the copy:", c.dataset.name + " (copy)"); if (name) T.api("POST", "/api/templates", { name: name, from: c.dataset.clone }).then(function (r) { location.href = r.url; }); }
+    if (d && confirm("Delete the template “" + d.dataset.name + "” and all its versions?")) T.api("DELETE", "/api/templates/" + d.dataset.delete).then(function () { location.reload(); });
+  });
+})();
+</script>
+{% endblock %}

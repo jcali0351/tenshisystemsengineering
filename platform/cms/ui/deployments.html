@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+{% block title %}Deployments · {{ site.name }}{% endblock %}
+{% block heading %}Deployments{% endblock %}
+{% block actions %}
+<a class="btn" href="{{ site_url(site.subdomain) }}" target="_blank" rel="noopener">View live site</a>
+<button class="btn btn-primary" id="deploy">Deploy now</button>
+{% endblock %}
+{% block body %}
+<div class="grid grid-3" style="margin-bottom:18px">
+  <section class="card">
+    <h2>Instance</h2>
+    <p><span class="badge badge-{{ site.status }}">{{ site.status }}</span></p>
+    <p><b>Address</b><br><a href="{{ site_url(site.subdomain) }}" target="_blank" rel="noopener">{{ site.subdomain }}.{{ sites_domain }}</a></p>
+    <p class="small muted">On a production server this is {{ site.subdomain }}.tenshi.systems, with HTTPS from the wildcard certificate.</p>
+    {% if user.role == 'admin' %}
+    <div class="row">
+      {% if site.status == 'live' %}<button class="btn btn-small" data-status="paused">Pause site</button>
+      {% elif site.current_build_id %}<button class="btn btn-small" data-status="live">Go live again</button>{% endif %}
+    </div>
+    {% endif %}
+  </section>
+  <section class="card">
+    <h2>Health {% set v = health.score %}<span class="row"><span class="score {{ 'low' if v < 50 else 'mid' if v < 80 else '' }}" style="--v:{{ v }}"><span>{{ v }}</span></span></span></h2>
+    <ul class="checks small">
+      {% for ok, text, where in health.checks %}<li class="{{ 'yes' if ok else 'no' }}"><span>{{ text }}</span>{% if not ok and where != 'deployments' %}<a href="/sites/{{ site.id }}/{{ where }}">Fix</a>{% endif %}</li>{% endfor %}
+    </ul>
+  </section>
+  <section class="card">
+    <h2>Clone website</h2>
+    <p class="small muted">A complete copy (pages, media, galleries, portfolio, theme) at a new address. Handy for a second branch or a new client in the same trade.</p>
+    {% if user.role == 'admin' %}
+    <label class="field"><span>Name of the copy</span><input type="text" id="clone-name" value="{{ site.name }} (copy)"></label>
+    <label class="field"><span>Address</span><input type="text" id="clone-sub" placeholder="made from the name"></label>
+    <button class="btn" id="clone">Clone</button>
+    {% else %}<p class="muted small">Only admins can clone sites.</p>{% endif %}
+  </section>
+</div>
+
+<section class="card" style="margin-bottom:18px">
+  <h2>History <span class="muted small" style="font-weight:400">Every deployment is kept (the newest 10 on disk), so you can go back</span></h2>
+  {% if builds %}
+  <div class="table-wrap"><table class="table">
+    <thead><tr><th>#</th><th>When</th><th>By</th><th>Note</th><th>Status</th><th>Pages</th><th>Size</th><th>Time</th><th></th></tr></thead>
+    <tbody>
+    {% for b in builds %}
+    <tr>
+      <td>{{ b.id }}</td><td class="small">{{ b.created_at | when }}</td><td class="small">{{ b.user_name or 'Launch page' }}</td><td class="small">{{ b.note }}</td>
+      <td>{% if b.id == site.current_build_id %}<span class="badge badge-live">live</span>{% else %}<span class="badge badge-{{ b.status }}">{{ b.status }}</span>{% endif %}</td>
+      <td>{{ b.pages }}</td><td class="small">{{ b.bytes | size }}</td><td class="small">{{ '%.2f' | format(b.seconds) }} s</td>
+      <td>{% if b.status == 'ready' and b.id != site.current_build_id and user.role == 'admin' %}<button class="btn btn-small" data-rollback="{{ b.id }}">Make live</button>{% endif %}
+          {% if b.status == 'failed' %}<details class="small"><summary>Why</summary>{{ b.log }}</details>{% endif %}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  {% else %}<div class="empty">Not deployed yet. Press <b>Deploy now</b>: it takes a second or two.</div>{% endif %}
+</section>
+
+<section class="card">
+  <h2>Backups <span class="row"><button class="btn btn-small" id="backup">Back up now</button></span></h2>
+  <p class="small muted">A backup holds the site's pages, business data, galleries, portfolio, leads and every media file. Restoring takes a fresh backup first, so it can be undone too.</p>
+  {% if backups %}
+  <table class="table">
+    <thead><tr><th>When</th><th>Note</th><th>Size</th><th></th></tr></thead>
+    <tbody>{% for b in backups %}<tr><td class="small">{{ b.created_at | when }}</td><td class="small">{{ b.note }}</td><td class="small">{{ b.bytes | size }}</td>
+      <td><div class="row" style="justify-content:flex-end">{% if user.role == 'admin' %}<a class="btn btn-small" href="/backups/{{ b.id }}/download">Download</a><button class="btn btn-small" data-restore="{{ b.id }}">Restore</button>{% endif %}</div></td></tr>{% endfor %}</tbody>
+  </table>
+  {% else %}<p class="muted">No backups yet.</p>{% endif %}
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  var T = Tenshi, siteId = {{ site.id }};
+  document.getElementById("deploy").onclick = function () {
+    var note = prompt("What changed? (optional, for the history)", "") ;
+    if (note === null) return;
+    T.busy(this, T.api("POST", "/api/sites/" + siteId + "/deploy", { note: note }).then(function (r) {
+      T.toast("Live in " + r.build.seconds.toFixed(2) + " s"); setTimeout(function () { location.reload(); }, 700);
+    }));
+  };
+  document.getElementById("backup").onclick = function () {
+    T.busy(this, T.api("POST", "/api/sites/" + siteId + "/backup", { note: "Manual backup" }).then(function () { location.reload(); }));
+  };
+  var clone = document.getElementById("clone");
+  if (clone) clone.onclick = function () {
+    T.busy(clone, T.api("POST", "/api/sites/" + siteId + "/clone", { name: document.getElementById("clone-name").value, subdomain: document.getElementById("clone-sub").value })
+      .then(function (r) { T.toast("Cloned"); location.href = r.url; }));
+  };
+  document.addEventListener("click", function (e) {
+    var rb = e.target.closest("[data-rollback]"), rs = e.target.closest("[data-restore]"), st = e.target.closest("[data-status]");
+    if (rb && confirm("Make deployment #" + rb.dataset.rollback + " the live site again?")) T.api("POST", "/api/sites/" + siteId + "/rollback/" + rb.dataset.rollback).then(function () { location.reload(); });
+    if (rs && confirm("Restore this backup? The site's current content is backed up first, then replaced.")) T.busy(rs, T.api("POST", "/api/backups/" + rs.dataset.restore + "/restore").then(function () { T.toast("Restored. Deploy to put it live."); setTimeout(function () { location.reload(); }, 900); }));
+    if (st) T.api("POST", "/api/sites/" + siteId + "/status/" + st.dataset.status).then(function () { location.reload(); });
+  });
+})();
+</script>
+{% endblock %}

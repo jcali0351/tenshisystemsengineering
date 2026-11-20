@@ -4,8 +4,21 @@
     {
       "name": "site",
       "runtimeExecutable": "C:/Program Files/nodejs/node.exe",
-      "runtimeArgs": ["C:/Users/jcali/AppData/Local/Temp/claude/3b6fdd8783caae98/bffafb97-6767-424b-89f8-b4595ef26c98/scratchpad/serve.mjs", "C:/Users/jcali/OneDrive/Documentos/GitHub/tenshisystemsengineering", "8080"],
+      "runtimeArgs": [
+        "C:/Users/jcali/AppData/Local/Temp/claude/3b6fdd8783caae98/bffafb97-6767-424b-89f8-b4595ef26c98/scratchpad/serve.mjs",
+        "C:/Users/jcali/OneDrive/Documentos/GitHub/tenshisystemsengineering",
+        "8080"
+      ],
       "port": 8080
+    },
+    {
+      "name": "tenshi-cms",
+      "runtimeExecutable": "platform/.venv/Scripts/python.exe",
+      "runtimeArgs": [
+        "platform/run_cms.py",
+        "--demo"
+      ],
+      "port": 8000
     }
   ]
 }

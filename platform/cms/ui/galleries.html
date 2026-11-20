@@ -1,0 +1,86 @@
+{% extends "layout.html" %}
+{% block title %}Galleries · {{ site.name }}{% endblock %}
+{% block heading %}{% if current %}Gallery: {{ current.name }}{% else %}Galleries{% endif %}{% endblock %}
+{% block actions %}
+{% if current %}<a class="btn" href="/sites/{{ site.id }}/galleries">All galleries</a><button class="btn btn-primary" id="add-pics">+ Add pictures</button>
+{% else %}<button class="btn btn-primary" id="new-album">+ New album</button>{% endif %}
+{% endblock %}
+{% block body %}
+{% if not current %}
+<p class="muted">An album is a set of pictures from the Media Center. Show one on any page with a <b>Gallery</b> block, as masonry,
+  a grid or a carousel, opening full screen in a lightbox. The same picture can be in many albums.</p>
+<div class="pcards">
+  {% for a in albums %}
+  <a class="card pcard" href="?album={{ a.id }}" style="text-decoration:none;color:inherit">
+    {% if a.cover_url %}<img src="{{ a.cover_url }}" alt="">{% else %}<div class="noimg">Empty</div>{% endif %}
+    <div class="pbody"><h3 style="margin:0 0 2px">{{ a.name }}</h3><p class="small muted">{{ a.n }} picture{{ '' if a.n == 1 else 's' }} · {{ a.layout }}{% if a.category %} · {{ a.category }}{% endif %}</p></div>
+  </a>
+  {% else %}
+  <div class="empty" style="grid-column:1/-1">No albums yet. Make one for each set of photos: a project, your shop, your team at work…</div>
+  {% endfor %}
+</div>
+{% else %}
+<section class="card" style="margin-bottom:18px">
+  <div class="grid grid-4">
+    <label class="field"><span>Name</span><input type="text" data-a="name" value="{{ current.name }}"></label>
+    <label class="field"><span>Layout</span><select data-a="layout">{% for v, l in [('masonry', 'Masonry'), ('grid', 'Grid'), ('carousel', 'Carousel')] %}<option value="{{ v }}" {% if current.layout == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></label>
+    <label class="field"><span>Category</span><input type="text" data-a="category" value="{{ current.category }}"></label>
+    <div class="field"><span>&nbsp;</span><button class="btn btn-danger" id="delete-album">Delete album</button></div>
+  </div>
+  <p class="small muted">Drag pictures to reorder them. Captions show in the lightbox. Deleting the album keeps the pictures in the Media Center.</p>
+</section>
+<div class="mgrid sortable" id="album-items">
+  {% for it in items %}
+  <div class="mitem" draggable="true" data-item="{{ it.item_id }}">
+    <div class="thumb"><img src="{{ it.thumb }}" alt=""></div>
+    <input type="text" data-caption value="{{ it.item_caption }}" placeholder="Caption" style="border:0;border-top:1px solid var(--line);border-radius:0;font-size:.8rem">
+    <button class="icon-btn" data-remove title="Remove from album" style="position:absolute;top:4px;right:4px;background:var(--panel)">✕</button>
+  </div>
+  {% else %}
+  <div class="empty" style="grid-column:1/-1">This album is empty. Press “Add pictures”.</div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  var T = Tenshi, siteId = {{ site.id }};
+  {% if not current %}
+  document.getElementById("new-album").onclick = function () {
+    var name = prompt("Name of the new album:");
+    if (name) T.api("POST", "/api/sites/" + siteId + "/albums", { name: name }).then(function (r) { location.href = "?album=" + r.id; });
+  };
+  {% else %}
+  var albumId = {{ current.id }}, grid = document.getElementById("album-items");
+  T.$$("[data-a]").forEach(function (input) {
+    input.addEventListener("change", function () { var b = {}; b[input.dataset.a] = input.value; T.api("PATCH", "/api/albums/" + albumId, b).then(function () { T.toast("Saved"); }); });
+  });
+  document.getElementById("add-pics").onclick = function () {
+    T.pickMedia(siteId, { kind: "image", multiple: true }).then(function (items) {
+      if (items.length) T.api("POST", "/api/albums/" + albumId + "/items", { media_ids: items.map(function (m) { return m.id; }) }).then(function () { location.reload(); });
+    });
+  };
+  document.getElementById("delete-album").onclick = function () {
+    if (confirm("Delete this album? The pictures stay in the Media Center.")) T.api("DELETE", "/api/albums/" + albumId).then(function () { location.href = "/sites/" + siteId + "/galleries"; });
+  };
+  grid.addEventListener("change", function (e) {
+    if (e.target.matches("[data-caption]")) T.api("PATCH", "/api/album-items/" + e.target.closest("[data-item]").dataset.item, { caption: e.target.value }).then(function () { T.toast("Caption saved"); });
+  });
+  grid.addEventListener("click", function (e) {
+    if (e.target.closest("[data-remove]")) T.api("DELETE", "/api/album-items/" + e.target.closest("[data-item]").dataset.item).then(function () { location.reload(); });
+  });
+  var dragged;
+  grid.addEventListener("dragstart", function (e) { dragged = e.target.closest("[data-item]"); });
+  grid.addEventListener("dragover", function (e) { e.preventDefault(); });
+  grid.addEventListener("drop", function (e) {
+    e.preventDefault();
+    var over = e.target.closest("[data-item]");
+    if (!over || over === dragged) return;
+    grid.insertBefore(dragged, over);
+    T.api("PATCH", "/api/albums/" + albumId, { order: T.$$("[data-item]", grid).map(function (x) { return x.dataset.item; }) }).then(function () { T.toast("Order saved"); });
+  });
+  {% endif %}
+})();
+</script>
+{% endblock %}

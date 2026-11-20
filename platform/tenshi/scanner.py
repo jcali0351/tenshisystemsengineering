@@ -39,10 +39,10 @@ def scan_source(source, env=None):
 
 
 def scan_folder(folder):
-    """Scan every template file (*.j2) in a design's folder and return all paths, sorted."""
+    """Scan every template file (*.j2) in a design's folder (and its sub-folders) and return all paths, sorted."""
     env = Environment()
     found = set()
-    for file in sorted(Path(folder).glob("*.j2")):
+    for file in sorted(Path(folder).rglob("*.j2")):          # every template, including sub-folders like blocks/
         found |= scan_source(file.read_text(encoding="utf-8"), env)
     return tidy(found)
 
@@ -91,7 +91,9 @@ def _walk(node, scope, found):
     # {% set x = … %} creates a name of the template's own: remember it so we don't list it
     if isinstance(node, nodes.Assign):
         _walk(node.node, scope, found)
-        for name_node in node.target.find_all(nodes.Name):
+        # find_all() skips the node itself, so a single name (`set b = …`) is handled on its own
+        targets = [node.target] if isinstance(node.target, nodes.Name) else list(node.target.find_all(nodes.Name))
+        for name_node in targets:
             scope[name_node.name] = None
         return
 

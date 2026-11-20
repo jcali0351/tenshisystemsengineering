@@ -1,1 +1,12 @@
-jinja2>=3.1,<4
+# The Tenshi platform (platform/): the CMS server and the business-data tools.
+# Install:  py -m venv .venv   then   .venv\Scripts\python -m pip install -r requirements.txt
+jinja2>=3.1,<4            # templates (site designs and the CMS screens)
+fastapi>=0.115            # the CMS web server and its API
+uvicorn[standard]>=0.30   # runs the server
+pillow>=10.4              # Media Center: compress, resize, crop, rotate pictures
+python-multipart>=0.0.9   # file uploads
+itsdangerous>=2.2         # signed login cookies
+
+# Only for running the tests (tests/test_cms.py)
+httpx>=0.27
+pytest>=8

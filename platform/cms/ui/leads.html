@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block title %}Leads · {{ site.name }}{% endblock %}
+{% block heading %}Leads{% endblock %}
+{% block actions %}<a class="btn" href="/sites/{{ site.id }}/leads.csv">Download CSV</a>{% endblock %}
+{% block body %}
+<p class="muted">Messages sent through the forms on this site. Mark each one as you follow it up.</p>
+<section class="card">
+  {% if rows %}
+  <div class="table-wrap"><table class="table">
+    <thead><tr><th>Received</th><th>From</th><th>Message</th><th>Page</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    {% for l in rows %}{% set d = l.data_json | j %}
+    <tr data-lead="{{ l.id }}">
+      <td class="small">{{ l.created_at | when }}</td>
+      <td><b>{{ d.name }}</b>{% if d.email %}<br><a href="mailto:{{ d.email }}">{{ d.email }}</a>{% endif %}{% if d.phone %}<br><a href="tel:{{ d.phone }}">{{ d.phone }}</a>{% endif %}</td>
+      <td style="max-width:420px">{% if d.service %}<span class="badge">{{ d.service }}</span><br>{% endif %}{{ d.message }}</td>
+      <td class="small">{{ l.page }}</td>
+      <td><select data-status>{% for s in ['new', 'contacted', 'won', 'lost'] %}<option {% if l.status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select></td>
+      <td><button class="btn btn-small btn-danger" data-delete>Delete</button></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  {% else %}
+  <div class="empty">No messages yet. Add a <b>Form</b> block to a page, deploy, and messages arrive here.</div>
+  {% endif %}
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+document.addEventListener("change", function (e) {
+  if (e.target.matches("[data-status]")) Tenshi.api("PATCH", "/api/leads/" + e.target.closest("tr").dataset.lead, { status: e.target.value }).then(function () { Tenshi.toast("Updated"); });
+});
+document.addEventListener("click", function (e) {
+  if (e.target.matches("[data-delete]") && confirm("Delete this message?")) {
+    var row = e.target.closest("tr");
+    Tenshi.api("DELETE", "/api/leads/" + row.dataset.lead).then(function () { row.remove(); });
+  }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+{% block title %}{{ meta.name }} · Template{% endblock %}
+{% block heading %}Template: {{ meta.name }}{% endblock %}
+{% block actions %}
+<a class="btn" href="/templates">All templates</a>
+<a class="btn" href="/templates/{{ meta.id }}/preview" target="_blank" rel="noopener">Preview</a>
+{% if user.role == 'admin' %}<button class="btn btn-primary" id="save-version">Save as version {{ meta.version + 1 }}</button>{% endif %}
+{% endblock %}
+{% block body %}
+<div class="grid split" style="--cols: 300px minmax(0, 1fr)">
+  <div>
+    <section class="card" style="margin-bottom:18px">
+      <h2>Details</h2>
+      <label class="field"><span>Name</span><input type="text" data-m="name" value="{{ meta.name }}"></label>
+      <label class="field"><span>Best for</span><input type="text" data-m="for" value="{{ meta.for }}"></label>
+      <label class="field"><span>Shape</span><select data-m="style">{% for v in ['clean', 'bold', 'elegant'] %}<option {% if meta.style == v %}selected{% endif %}>{{ v }}</option>{% endfor %}</select></label>
+      <div class="grid grid-2">
+        {% for k in ['primary', 'accent', 'surface', 'ink'] %}<label class="field"><span>{{ k | title }}</span><input type="color" data-c="{{ k }}" value="{{ meta.colors[k] }}"></label>{% endfor %}
+      </div>
+      <div class="grid grid-2">
+        <label class="field"><span>Headings</span><select data-fnt="heading">{% for k, f in fonts.items() %}<option value="{{ k }}" {% if meta.fonts.heading == k %}selected{% endif %}>{{ f[0] }}</option>{% endfor %}</select></label>
+        <label class="field"><span>Body</span><select data-fnt="body">{% for k, f in fonts.items() %}<option value="{{ k }}" {% if meta.fonts.body == k %}selected{% endif %}>{{ f[0] }}</option>{% endfor %}</select></label>
+      </div>
+      <button class="btn" id="save-meta">Save details</button>
+      <p class="small muted" style="margin-top:10px">Used by: {% for s in used_by %}<a href="/sites/{{ s.id }}">{{ s.name }}</a>{% if not loop.last %}, {% endif %}{% else %}no sites{% endfor %}</p>
+    </section>
+    <section class="card">
+      <h2>Versions</h2>
+      <ul class="feed small">
+        {% for v in meta.versions | reverse %}
+        <li><span><b>v{{ v.n }}</b> {{ v.note }}<br><span class="muted">{{ v.date | when }}</span></span>{% if user.role == 'admin' %}<button class="btn btn-small" data-restore="{{ v.n }}">Restore</button>{% endif %}</li>
+        {% endfor %}
+      </ul>
+    </section>
+  </div>
+  <section class="card">
+    <div class="row" style="margin-bottom:10px">
+      <h2 style="margin:0">Source</h2>
+      <select id="file" style="width:auto">{% for f in files %}<option {% if f == file %}selected{% endif %}>{{ f }}</option>{% endfor %}</select>
+      <span style="flex:1"></span>
+      <span class="small muted">Changes reach sites on their next deploy.</span>
+      {% if user.role == 'admin' %}<button class="btn btn-primary" id="save-file">Save file</button>{% endif %}
+    </div>
+    <textarea class="code" id="code" spellcheck="false" {% if user.role != 'admin' %}readonly{% endif %}>{{ code }}</textarea>
+    <p class="small muted">Templates use Jinja2: <code>{{ '{{ company.name }}' }}</code>, <code>{{ '{% for service in services %}' }}</code>. A typo is caught before saving, so it can't break a site.
+      Fields you use here appear automatically in each site's Business data form.</p>
+  </section>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  var T = Tenshi, id = "{{ meta.id }}", code = document.getElementById("code"), dirty = false;
+  document.getElementById("file").addEventListener("change", function () {
+    if (dirty && !confirm("Leave without saving this file?")) { this.value = "{{ file }}"; return; }
+    location.href = "/templates/" + id + "?file=" + encodeURIComponent(this.value);
+  });
+  code.addEventListener("input", function () { dirty = true; });
+  code.addEventListener("keydown", function (e) {      // Tab types two spaces instead of leaving the box
+    if (e.key !== "Tab") return;
+    e.preventDefault();
+    var s = code.selectionStart; code.setRangeText("  ", s, code.selectionEnd, "end"); dirty = true;
+  });
+  var sf = document.getElementById("save-file");
+  if (sf) sf.onclick = function () {
+    T.busy(sf, T.api("PUT", "/api/templates/" + id + "/file", { path: document.getElementById("file").value, text: code.value }).then(function () { dirty = false; T.toast("File saved"); }));
+  };
+  document.addEventListener("keydown", function (e) { if ((e.ctrlKey || e.metaKey) && e.key === "s" && sf) { e.preventDefault(); sf.click(); } });
+  document.getElementById("save-meta").onclick = function () {
+    var colors = {}, fonts = {}, body = {};
+    T.$$("[data-c]").forEach(function (c) { colors[c.dataset.c] = c.value; });
+    T.$$("[data-fnt]").forEach(function (s) { fonts[s.dataset.fnt] = s.value; });
+    T.$$("[data-m]").forEach(function (m) { body[m.dataset.m] = m.value; });
+    body.colors = colors; body.fonts = fonts;
+    T.busy(this, T.api("PATCH", "/api/templates/" + id, body).then(function () { T.toast("Details saved"); }));
+  };
+  var sv = document.getElementById("save-version");
+  if (sv) sv.onclick = function () {
+    var note = prompt("What's in this version?", "");
+    if (note !== null) T.api("POST", "/api/templates/" + id + "/versions", { note: note }).then(function () { location.reload(); });
+  };
+  document.addEventListener("click", function (e) {
+    var r = e.target.closest("[data-restore]");
+    if (r && confirm("Put version " + r.dataset.restore + " back? The current files are saved as a new version first.")) T.api("POST", "/api/templates/" + id + "/versions/" + r.dataset.restore + "/restore").then(function () { location.reload(); });
+  });
+  window.addEventListener("beforeunload", function (e) { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
+})();
+</script>
+{% endblock %}

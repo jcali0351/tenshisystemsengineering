@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block title %}All sites{% endblock %}
+{% block heading %}All sites{% endblock %}
+{% block actions %}<button class="btn btn-primary" data-new-site>+ New site</button>{% endblock %}
+{% block body %}
+<section class="card">
+  {% if rows %}
+  <div class="table-wrap"><table class="table">
+    <thead><tr><th>Site</th><th>Address</th><th>Template</th><th>Status</th><th>Health</th><th>Updated</th><th></th></tr></thead>
+    <tbody>
+    {% for s in rows %}
+    <tr>
+      <td><a href="/sites/{{ s.id }}"><b>{{ s.name }}</b></a></td>
+      <td><a href="{{ site_url(s.subdomain) }}" target="_blank" rel="noopener">{{ s.subdomain }}.{{ sites_domain }}</a></td>
+      <td>{{ s.template_id }}</td>
+      <td><span class="badge badge-{{ s.status }}">{{ s.status }}</span></td>
+      <td><span class="score {{ 'low' if s.health < 50 else 'mid' if s.health < 80 else '' }}" style="--v:{{ s.health }}"><span>{{ s.health }}</span></span></td>
+      <td class="small muted">{{ s.updated_at | when }}</td>
+      <td><div class="row" style="justify-content:flex-end"><a class="btn btn-small" href="/sites/{{ s.id }}/pages">Edit</a><button class="btn btn-small" data-deploy="{{ s.id }}">Deploy</button></div></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  {% else %}
+  <div class="empty"><p>No sites yet.</p><button class="btn btn-primary" data-new-site>Create your first site</button></div>
+  {% endif %}
+</section>
+{% include "_new_site.html" %}
+{% endblock %}

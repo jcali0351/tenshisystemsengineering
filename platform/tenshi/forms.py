@@ -21,7 +21,7 @@ import html
 TYPE_HINTS = [
     (("email",), "email"),
     (("phone", "tel", "fax"), "tel"),
-    (("logo", "photo", "image", "picture", "src", "before", "after", "avatar"), "image"),
+    (("logo", "photo", "image", "picture", "src", "before", "after", "avatar", "media"), "image"),
     (("description", "about", "bio", "summary", "quote", "body", "message"), "textarea"),
     (("url", "link", "website", "facebook", "instagram", "linkedin", "youtube", "x", "tiktok"), "url"),
     (("rating",), "rating"),
@@ -57,6 +57,8 @@ def make_label(path):
     last = parts[-1]
     if last in ("src", "url") and len(parts) > 1:      # "logo.src" is really "the logo"
         last = parts[-2]
+    if last.endswith("_media"):                        # "logo_media" (a picture from the Media Center) -> "Logo"
+        last = last[:-6]
     if last == "alt":                                  # the hidden text that describes a picture
         return "Picture description"
     words = last.replace("_", " ").strip()

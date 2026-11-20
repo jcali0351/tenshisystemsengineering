@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block title %}{{ page.title }} · Page builder{% endblock %}
+{% block heading %}{{ page.title }}{% endblock %}
+{% block actions %}
+<span class="save-state" id="save-state">All changes saved</span>
+<select id="page-jump" aria-label="Edit another page" style="width:auto">
+  {% for p in all_pages %}<option value="{{ p.id }}" {% if p.id == page.id %}selected{% endif %}>{{ p.title }}</option>{% endfor %}
+</select>
+<a class="btn" href="/sites/{{ site.id }}/preview/{{ page.slug }}" target="_blank" rel="noopener" id="open-preview">Preview</a>
+<button class="btn btn-primary" data-deploy="{{ site.id }}" data-note="Published from the page builder">Publish</button>
+{% endblock %}
+{% block full %}
+<div class="builder" id="builder" data-site="{{ site.id }}" data-page="{{ page.id }}" data-slug="{{ page.slug }}">
+  <!-- Left: the page's blocks (drag to reorder) and the "Add block" list -->
+  <div class="b-left">
+    <h2>Blocks</h2>
+    <ul class="blist" id="blocks"></ul>
+    <button class="btn" id="add-block" style="width:100%">+ Add block</button>
+    <div id="palette" hidden style="margin-top:12px">
+      <p class="small muted">Click to add after the selected block, or drag into the list.</p>
+      <div class="palette">
+        {% for kind, b in block_types.items() %}<button type="button" draggable="true" data-kind="{{ kind }}"><b>{{ b.label }}</b><small>{{ b.about }}</small></button>{% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Middle: the live preview. Click a block to select it; click words to type over them. -->
+  <div class="b-center">
+    <div class="b-toolbar">
+      <div class="row" role="group" aria-label="Preview size">
+        <button class="btn btn-small" data-device="desktop" aria-pressed="true">Desktop</button>
+        <button class="btn btn-small" data-device="tablet" aria-pressed="false">Tablet</button>
+        <button class="btn btn-small" data-device="phone" aria-pressed="false">Phone</button>
+      </div>
+      <span class="spacer" style="flex:1"></span>
+      <span class="small muted">Tip: click any text in the preview and type.</span>
+    </div>
+    <div class="b-stage" id="stage"><iframe id="frame" title="Page preview" src="/sites/{{ site.id }}/preview/{{ page.slug }}?edit=1"></iframe></div>
+  </div>
+
+  <!-- Right: settings for the selected block, or for the page -->
+  <div class="b-right" id="panel"></div>
+</div>
+<script id="builder-data" type="application/json">{{ {
+  "blocks": page.blocks_json | j([]), "types": block_types, "pages": all_pages, "albums": albums, "categories": categories,
+  "page": {"id": page.id, "title": page.title, "slug": page.slug, "in_menu": page.in_menu, "seo_title": page.seo_title, "seo_description": page.seo_description}
+} | tojson }}</script>
+{% endblock %}
+{% block scripts %}<script src="/static/builder.js"></script>{% endblock %}

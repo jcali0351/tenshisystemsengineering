@@ -1,10 +1,72 @@
-# Tenshi platform prototype (Python)
+# Tenshi platform (Python)
 
-The Business Data Engine in a few small, well-commented Python files. A business is described **once**, as a JSON
-"business profile"; every website design is a folder of Jinja2 templates that shows that profile. The full plan is in
-[`docs/ARCHITECTURE.md`](../docs/ARCHITECTURE.md).
+Two things live here:
 
-## Try it (Windows, from this `platform` folder)
+1. **The Tenshi CMS** (`cms/`), the product: a web app that creates, edits, deploys and exports client websites.
+2. **The Business Data Engine tools** (`tenshi/`): the business profile, the template scanner that builds CMS forms
+   automatically, and a small command-line builder. The CMS uses them.
+
+A business is described **once**, as a JSON "business profile"; every template is just a way of showing it.
+The full plan is in [`docs/ARCHITECTURE.md`](../docs/ARCHITECTURE.md).
+
+## Run the CMS (Windows)
+
+From the repository folder, the first time:
+
+```powershell
+py -m venv platform\.venv
+platform\.venv\Scripts\python -m pip install -r platform\requirements.txt
+platform\.venv\Scripts\python platform\run_cms.py --demo
+```
+
+Then open **http://localhost:8000**. The first visit asks you to create the admin account. `--demo` adds a sample
+business ("Ridgeline Builders") so there's something to look at; leave it off afterwards.
+Client sites are served at **http://&lt;address&gt;.localhost:8000** (e.g. http://ridgeline-builders.localhost:8000)
+once deployed. Everything the CMS stores is in `platform/cms_data/` (not in git): delete that folder to start fresh.
+
+What's in the CMS (left menu):
+
+| Section | What it does |
+|---|---|
+| Dashboard | Sites, deployments, storage, leads, visits (no cookies), recent activity, tasks from every site's health checks, updates |
+| All sites, New site | Create a site from any template in about a second, deployed straight away |
+| Templates | The Template Gallery: preview, deploy in one click, create, clone, delete, edit the source, save and restore versions |
+| Users | Admins and editors (editors can't delete, export, clone, manage users or edit template code) |
+| Overview | One site's numbers, health score and checklist, live version, most visited pages |
+| Pages & builder | Visual page builder: blocks (hero, text, services, gallery, portfolio, before/after, team, testimonials, call to action, form, contact, image, video, custom HTML, spacer), drag to reorder, click text in the preview and type, desktop/tablet/phone preview, page SEO |
+| Business data | The business profile, as a form built automatically from the template's fields plus the standard schema; earlier versions can be restored |
+| Media Center | Folders, categories, tags, search, bulk upload by drag and drop, compression and resized copies, crop/resize/rotate, video, PDF, SVG (cleaned), alt text, "used on", bulk move/tag/delete |
+| Portfolio | Projects with categories, tags, cover, before/after pictures and an album |
+| Galleries | Albums of pictures (masonry, grid or carousel) with captions, drag to reorder |
+| Leads | Messages from the sites' forms, with status and CSV download |
+| Deployments | Deploy, history with "make live" (rollback), pause, health, clone website, backups with restore and download |
+| Export | One ZIP with any of: website, media, database (JSON + SQLite), theme, configuration |
+| Settings & theme | Template switch, colours, fonts, shape, language, address, delete site |
+
+The public website's Launch page can create sites here too: set `LAUNCH_ENDPOINT` in `launch.js` to
+`<CMS address>/api/launch` once the CMS runs on a public server (allowed origins: `TENSHI_LAUNCH_ORIGINS`, see `cms/config.py`).
+
+Run the tests (they use a throw-away data folder):
+
+```powershell
+platform\.venv\Scripts\python platform\tests\test_cms.py
+```
+
+### Where things are
+
+| Folder / file | What |
+|---|---|
+| `cms/app.py` | The web server: every screen, the JSON API (`/api/docs` lists it), serving client sites |
+| `cms/sites.py` | Create, deploy, rollback, clone, backup/restore, health, export, leads, visits |
+| `cms/media.py` | Upload checks, compression, resizing, cropping, SVG cleaning |
+| `cms/render.py` | Turns business data + pages + template into HTML (preview, hosted and export versions) |
+| `cms/blocks.py` | The page builder's block types and their settings |
+| `cms/templates.py` | The Template Gallery store (versions, clone, restore) and font choices |
+| `cms/db.py`, `cms/auth.py`, `cms/config.py` | Database tables, passwords, settings |
+| `cms/ui/`, `cms/static/` | The CMS screens (Jinja2) and their CSS/JavaScript (`builder.js` is the page builder, `media.js` the Media Center) |
+| `designs/starter/` | The starter design every template is copied from: `layout.html.j2`, `page.html.j2`, `blocks/*.html.j2`, `style.css`, `site.js` |
+
+## The command-line tools (from this `platform` folder)
 
 ```powershell
 py -m venv .venv

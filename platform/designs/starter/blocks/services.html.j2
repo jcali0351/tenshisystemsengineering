@@ -1,0 +1,20 @@
+{#- SERVICES: drawn from the business profile's services list (edit them under Business data). -#}
+{% set b = block.data %}
+<section class="band services-block">
+  <div class="wrap">
+    <h2 data-edit="heading">{{ b.heading or 'What we do' }}</h2>
+    {% if b.intro %}<p class="intro" data-edit="intro">{{ b.intro }}</p>{% endif %}
+    <div class="cards cards-{{ b.columns or 3 }}">
+      {%- for service in services[: (b.limit | int) if b.limit else 99] %}
+      <article class="card">
+        {% if service.image_media %}<img class="card-pic" src="{{ media(service.image_media, 800) }}" alt="{{ media_alt(service.image_media) }}" loading="lazy">{% endif %}
+        <h3>{{ service.name }}</h3>
+        <p>{{ service.description }}</p>
+        {% if b.show_prices and service.price %}<p class="price">{{ service.price }}</p>{% endif %}
+      </article>
+      {%- else %}
+      <p class="empty-note">Add services under Business data and they appear here.</p>
+      {%- endfor %}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,84 @@
+{% extends "layout.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block heading %}Dashboard{% endblock %}
+{% block actions %}<button class="btn btn-primary" data-new-site>+ New site</button>{% endblock %}
+{% block body %}
+<div class="grid grid-4" style="margin-bottom:18px">
+  <a class="card stat" href="/sites" style="text-decoration:none"><span class="ico-badge"><svg class="ico"><use href="#i-sites"/></svg></span><b>{{ stats.sites }}</b><span>Sites · {{ stats.live }} live</span></a>
+  <div class="card stat"><span class="ico-badge"><svg class="ico"><use href="#i-deploy"/></svg></span><b>{{ stats.deploys_week }}</b>
+    <span>Deployments this week{% if stats.last_deploy %} · last: {{ stats.last_deploy.site_name }}, {{ stats.last_deploy.created_at | when }}{% endif %}</span></div>
+  <div class="card stat"><span class="ico-badge"><svg class="ico"><use href="#i-leads"/></svg></span><b>{{ stats.leads_new }}</b><span>New leads · {{ stats.leads_week }} this week</span></div>
+  <div class="card stat"><span class="ico-badge"><svg class="ico"><use href="#i-overview"/></svg></span><b>{{ stats.visits_week }}</b><span>Visits in the last 7 days</span></div>
+</div>
+
+<div class="grid split" style="--cols: 2fr 1fr; margin-bottom:18px">
+  <section class="card">
+    <h2>Sites</h2>
+    {% if all_sites %}
+    <div class="table-wrap"><table class="table">
+      <thead><tr><th>Site</th><th>Status</th><th>Health</th><th>Visits (7 days)</th><th>New leads</th><th></th></tr></thead>
+      <tbody>
+      {% for s in all_sites %}
+      {% set v = s.health.score %}
+      <tr>
+        <td><a href="/sites/{{ s.id }}"><b>{{ s.name }}</b></a><br><a class="small" href="{{ site_url(s.subdomain) }}" target="_blank" rel="noopener">{{ s.subdomain }}.{{ sites_domain }}</a></td>
+        <td><span class="badge badge-{{ s.status }}">{{ s.status }}</span></td>
+        <td><span class="score {{ 'low' if v < 50 else 'mid' if v < 80 else '' }}" style="--v:{{ v }}"><span>{{ v }}</span></span></td>
+        <td>{{ s.visits }}</td>
+        <td>{% if s.leads_new %}<a href="/sites/{{ s.id }}/leads"><span class="badge badge-new">{{ s.leads_new }}</span></a>{% else %}0{% endif %}</td>
+        <td><div class="row" style="justify-content:flex-end"><a class="btn btn-small" href="/sites/{{ s.id }}/pages">Edit</a><button class="btn btn-small" data-deploy="{{ s.id }}">Deploy</button></div></td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+    {% else %}
+    <div class="empty"><p>No sites yet.</p><button class="btn btn-primary" data-new-site>Create your first site</button></div>
+    {% endif %}
+  </section>
+
+  <section class="card">
+    <h2>Visits, last 14 days</h2>
+    {% set top = (chart | map(attribute=1) | max) or 1 %}
+    <div class="bars" aria-label="Visits per day">
+      {% for day, n in chart %}<span style="height: {{ (n / top * 100) | round }}%" data-tip="{{ day[5:] }}: {{ n }}"></span>{% endfor %}
+    </div>
+    <p class="small muted" style="margin-top:8px">Counted without cookies or personal data.</p>
+    <h2 style="margin-top:18px">Storage</h2>
+    {% set total = stats.storage_total or 1 %}
+    <p><b>{{ stats.storage_total | size }}</b> <span class="muted small">in use</span></p>
+    <div class="meter"><i style="width:{{ stats.storage.media / total * 100 }}%;background:var(--red)"></i><i style="width:{{ stats.storage.builds / total * 100 }}%;background:#3d4249"></i><i style="width:{{ stats.storage.backups / total * 100 }}%;background:#b26b00"></i></div>
+    <p class="small muted" style="margin-top:6px"><span style="color:var(--red)">■</span> Media {{ stats.storage.media | size }} · ■ Deployments {{ stats.storage.builds | size }} · <span style="color:#b26b00">■</span> Backups {{ stats.storage.backups | size }}</p>
+  </section>
+</div>
+
+<div class="grid grid-3">
+  <section class="card">
+    <h2>Tasks</h2>
+    {% if tasks %}
+    <ul class="checks">
+      {% for s, text, where in tasks %}<li class="no"><span><b>{{ s.name }}:</b> {{ text }}</span><a href="/sites/{{ s.id }}/{{ where }}">Fix</a></li>{% endfor %}
+    </ul>
+    {% else %}<p class="muted">Nothing to do. Every site passes its checks.</p>{% endif %}
+  </section>
+  <section class="card">
+    <h2>Recent activity</h2>
+    <ul class="feed">
+      {% for a in activity %}<li><span><b>{{ a.action }}</b> {{ a.details }}{% if a.site_name %} <span class="muted">· {{ a.site_name }}</span>{% endif %}</span><time>{{ a.created_at | when }}</time></li>
+      {% else %}<li class="muted">Nothing yet.</li>{% endfor %}
+    </ul>
+  </section>
+  <section class="card">
+    <h2>Latest leads</h2>
+    <ul class="feed">
+      {% for l in leads %}{% set d = l.data_json | j %}<li><span><a href="/sites/{{ l.site_id }}/leads"><b>{{ d.name or d.email or 'Message' }}</b></a> <span class="muted">· {{ l.site_name }}</span><br><span class="small">{{ (d.message or '')[:70] }}</span></span><time>{{ l.created_at | when }}</time></li>
+      {% else %}<li class="muted">No messages yet. They arrive from the forms on your sites.</li>{% endfor %}
+    </ul>
+    <h2 style="margin-top:18px">Updates</h2>
+    <ul class="feed small">
+      <li><span><b>Tenshi CMS {{ version }}</b>: Media Center, visual page builder, portfolio and galleries, template versions, deployments with rollback, backups, clone, export.</span></li>
+      <li><span>Coming next: AI assistant, custom domains, invoices and CRM pipeline.</span></li>
+    </ul>
+  </section>
+</div>
+{% include "_new_site.html" %}
+{% endblock %}

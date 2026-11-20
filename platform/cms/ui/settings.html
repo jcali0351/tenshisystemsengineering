@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+{% block title %}Settings · {{ site.name }}{% endblock %}
+{% block heading %}Settings & theme{% endblock %}
+{% block actions %}<button class="btn btn-primary" id="save">Save</button>{% endblock %}
+{% block body %}
+{% set colors = theme.colors or {} %}{% set tfonts = theme.fonts or {} %}
+<div class="grid grid-2" style="align-items:start">
+  <section class="card">
+    <h2>Template</h2>
+    <p class="small muted">The template is the design. Switching keeps all business data, pages, media and galleries: only the look changes.</p>
+    <label class="field"><span>Template</span><select id="template">
+      {% for t in templates_list %}<option value="{{ t.id }}" {% if t.id == site.template_id %}selected{% endif %}>{{ t.name }}</option>{% endfor %}
+    </select></label>
+    <a class="btn btn-small" id="tpl-preview" href="/templates/{{ site.template_id }}/preview" target="_blank" rel="noopener">Preview template</a>
+
+    <h2 style="margin-top:20px">Colours</h2>
+    <p class="small muted">Leave a colour as it is to use the template's. <button class="btn btn-small" id="reset-colors" type="button">Use the template's colours</button></p>
+    <div class="grid grid-2">
+      {% for key, label in [('primary', 'Main colour (buttons, header)'), ('accent', 'Accent (highlights)'), ('surface', 'Page background'), ('ink', 'Text')] %}
+      <label class="field"><span>{{ label }}</span><span class="row"><input type="color" data-color="{{ key }}" value="{{ colors[key] or template.colors[key] }}" data-default="{{ template.colors[key] }}"><code>{{ colors[key] or template.colors[key] }}</code></span></label>
+      {% endfor %}
+    </div>
+  </section>
+  <section class="card">
+    <h2>Typography and shape</h2>
+    <div class="grid grid-2">
+      <label class="field"><span>Headings</span><select data-font="heading"><option value="">Template's choice</option>{% for k, f in fonts.items() %}<option value="{{ k }}" {% if tfonts.heading == k %}selected{% endif %} style="font-family:{{ f[1] }}">{{ f[0] }}</option>{% endfor %}</select></label>
+      <label class="field"><span>Body text</span><select data-font="body"><option value="">Template's choice</option>{% for k, f in fonts.items() %}<option value="{{ k }}" {% if tfonts.body == k %}selected{% endif %} style="font-family:{{ f[1] }}">{{ f[0] }}</option>{% endfor %}</select></label>
+    </div>
+    <label class="field"><span>Shape</span><select id="style"><option value="">Template's choice ({{ template.style }})</option>
+      {% for v, l in [('clean', 'Clean: light and rounded'), ('bold', 'Bold: square and strong'), ('elegant', 'Elegant: serif and calm')] %}<option value="{{ v }}" {% if theme.style == v %}selected{% endif %}>{{ l }}</option>{% endfor %}
+    </select></label>
+    <label class="field"><span>Site language (for browsers and search engines)</span><select id="lang">
+      {% for v, l in [('en', 'English'), ('ja', 'Japanese'), ('ko', 'Korean'), ('zh', 'Chinese'), ('es', 'Spanish'), ('de', 'German'), ('fr', 'French')] %}<option value="{{ v }}" {% if (theme.lang or 'en') == v %}selected{% endif %}>{{ l }}</option>{% endfor %}
+    </select></label>
+
+    <h2 style="margin-top:20px">Address</h2>
+    <label class="field"><span>Web address</span><span class="row" style="flex-wrap:nowrap"><input type="text" id="subdomain" value="{{ site.subdomain }}" {% if user.role != 'admin' %}disabled{% endif %}><span class="muted">.{{ sites_domain }}</span></span>
+      <small>Changing it moves the live site to the new address straight away. A custom domain (www.example.com) comes with the production server.</small></label>
+
+    {% if user.role == 'admin' %}
+    <h2 style="margin-top:20px;color:var(--bad)">Delete this site</h2>
+    <p class="small muted">Removes the site, its pages, media, deployments, backups and leads. Export it first if you might need it.</p>
+    <button class="btn btn-danger" id="delete-site" type="button">Delete site…</button>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  var T = Tenshi, siteId = {{ site.id }}, changedColors = {};
+  T.$$("[data-color]").forEach(function (c) {
+    c.addEventListener("input", function () { changedColors[c.dataset.color] = c.value; c.nextElementSibling.textContent = c.value; });
+  });
+  var themeColors = {{ (theme.colors or {}) | tojson }};
+  document.getElementById("reset-colors").onclick = function () {
+    themeColors = {}; changedColors = {};
+    T.$$("[data-color]").forEach(function (c) { c.value = c.dataset.default; c.nextElementSibling.textContent = c.value; });
+    T.toast("Template colours restored. Press Save.");
+  };
+  document.getElementById("template").addEventListener("change", function () { document.getElementById("tpl-preview").href = "/templates/" + this.value + "/preview"; });
+  document.getElementById("save").onclick = function () {
+    var fonts = {};
+    T.$$("[data-font]").forEach(function (s) { if (s.value) fonts[s.dataset.font] = s.value; });
+    var body = {
+      theme: { colors: Object.assign({}, themeColors, changedColors), fonts: fonts, style: document.getElementById("style").value, lang: document.getElementById("lang").value },
+      template: document.getElementById("template").value,
+      subdomain: document.getElementById("subdomain").value
+    };
+    T.busy(this, T.api("POST", "/api/sites/" + siteId + "/settings", body).then(function () { T.toast("Saved. Deploy to put it live."); setTimeout(function () { location.reload(); }, 700); }));
+  };
+  var del = document.getElementById("delete-site");
+  if (del) del.onclick = function () {
+    var typed = prompt("This can't be undone. Type the site's address ({{ site.subdomain }}) to delete it:");
+    if (typed === "{{ site.subdomain }}") T.api("DELETE", "/api/sites/" + siteId).then(function () { location.href = "/sites"; });
+    else if (typed !== null) T.toast("The address didn't match, so nothing was deleted.", true);
+  };
+})();
+</script>
+{% endblock %}

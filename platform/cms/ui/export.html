@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block title %}Export · {{ site.name }}{% endblock %}
+{% block heading %}Export Manager{% endblock %}
+{% block body %}
+<div class="grid split" style="--cols: minmax(0, 1.4fr) minmax(0, 1fr)">
+  <section class="card">
+    <h2>What to include</h2>
+    {% if user.role == 'admin' %}
+    <form method="post" action="/sites/{{ site.id }}/export" id="export-form">
+      {% for key, text in parts.items() %}
+      <label class="check" style="align-items:flex-start;margin-bottom:12px"><input type="checkbox" name="parts" value="{{ key }}" checked style="margin-top:4px">
+        <span><b>{{ {'website': 'Website', 'media': 'Media', 'database': 'Database', 'theme': 'Theme', 'config': 'Configuration'}[key] }}</b><br><span class="muted" style="font-weight:400">{{ text }}</span></span></label>
+      {% endfor %}
+      <button class="btn btn-primary" type="submit">Download ZIP package</button>
+    </form>
+    {% else %}<p class="muted">Only admins can export sites.</p>{% endif %}
+  </section>
+  <section class="card">
+    <h2>No lock-in</h2>
+    <p>The business owns everything. The <b>Website</b> part is a finished static site: it opens straight from the folder
+      and runs on any web host (GitHub Pages, Netlify, Cloudflare Pages, any server) with nothing from Tenshi behind it.
+      Its forms send email instead of arriving in Leads.</p>
+    <p>The business profile uses the open Tenshi format and the theme is plain Jinja2, so the site can be rebuilt or moved
+      to any Tenshi installation.</p>
+  </section>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+var f = document.getElementById("export-form");
+if (f) f.addEventListener("submit", function (e) {
+  if (!f.querySelector("input:checked")) { e.preventDefault(); Tenshi.toast("Choose at least one part", true); return; }
+  Tenshi.toast("Building the package… the download starts in a moment.");
+});
+</script>
+{% endblock %}

@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
+<title>Welcome · Tenshi CMS</title><link rel="stylesheet" href="/static/cms.css"></head>
+<body>
+<main class="auth">
+  <form class="card" method="post" action="/setup">
+    <div class="logo"><span class="logo-mark">天</span> Tenshi CMS</div>
+    <h1>Welcome</h1>
+    <p class="muted">Create the first admin account. You can add more people later under Users.</p>
+    {% if error %}<p class="error-box" role="alert">{{ error }}</p>{% endif %}
+    <label class="field"><span>Your name</span><input type="text" name="name" autocomplete="name" required autofocus></label>
+    <label class="field"><span>Email</span><input type="email" name="email" autocomplete="username" required></label>
+    <label class="field"><span>Password</span><input type="password" name="password" autocomplete="new-password" minlength="8" required><small>At least 8 characters.</small></label>
+    <button class="btn btn-primary" type="submit" style="width:100%">Create admin account</button>
+  </form>
+</main>
+</body>
+</html>

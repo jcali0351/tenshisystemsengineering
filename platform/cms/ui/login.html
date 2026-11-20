@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
+<title>Sign in · Tenshi CMS</title><link rel="stylesheet" href="/static/cms.css"></head>
+<body>
+<main class="auth">
+  <form class="card" method="post" action="/login">
+    <div class="logo"><span class="logo-mark">天</span> Tenshi CMS</div>
+    <h1>Sign in</h1>
+    {% if error %}<p class="error-box" role="alert">{{ error }}</p>{% endif %}
+    <input type="hidden" name="next" value="{{ next }}">
+    <label class="field"><span>Email</span><input type="email" name="email" autocomplete="username" required autofocus></label>
+    <label class="field"><span>Password</span><input type="password" name="password" autocomplete="current-password" required></label>
+    <button class="btn btn-primary" type="submit" style="width:100%">Sign in</button>
+  </form>
+</main>
+</body>
+</html>

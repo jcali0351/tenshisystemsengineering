@@ -19,6 +19,14 @@ What exists today, in this repository:
 | One list of designs for everything | `data/templates.json` | Live |
 | Business profile schema | `platform/schema/business.schema.json` | Prototype |
 | Blueprints, template scanner, auto CMS forms, builder, ZIP export | `platform/tenshi/` (Python + Jinja2) | Working prototype, see `platform/README.md` |
+| **The Tenshi CMS** (dashboard, sites, page builder, Media Center, portfolio, galleries, templates with versions, deployments with rollback, backups, clone, leads, export, users) | `platform/cms/` (FastAPI + SQLite + Jinja2) | Working, runs on one computer or server; see `platform/README.md` |
+
+**How the CMS maps onto this plan.** It already follows the architecture below on a small scale: one database
+(SQLite instead of PostgreSQL), sites served by host name (`<address>.localhost`, later `*.tenshi.systems`),
+deployments as static builds kept for rollback, and media stored per site (a folder instead of object storage).
+Moving to production means swapping those three pieces (`cms/db.py`, the build folder, the media folder) for
+PostgreSQL, object storage and the CDN edge, without changing the screens or the templates.
+AI assistance (descriptions, alt text, SEO suggestions), custom domains, invoices and the CRM pipeline are next.
 
 The rest of this document is the plan for the full platform.
 

@@ -1,0 +1,20 @@
+{#- TEAM: drawn from the profile's staff list (Business data › Team). -#}
+{% set b = block.data %}
+<section class="band team-block">
+  <div class="wrap">
+    <h2 data-edit="heading">{{ b.heading or 'Meet the team' }}</h2>
+    {% if b.intro %}<p class="intro" data-edit="intro">{{ b.intro }}</p>{% endif %}
+    <div class="cards cards-4">
+      {%- for person in staff %}
+      <article class="person">
+        {% if person.photo_media %}<img src="{{ media(person.photo_media, 800) }}" alt="{{ person.name }}" loading="lazy">{% else %}<span class="person-initial" aria-hidden="true">{{ (person.name or '?')[:1] }}</span>{% endif %}
+        <h3>{{ person.name }}</h3>
+        {% if person.role %}<p class="role">{{ person.role }}</p>{% endif %}
+        {% if person.bio %}<p>{{ person.bio }}</p>{% endif %}
+      </article>
+      {%- else %}
+      <p class="empty-note">Add team members under Business data and they appear here.</p>
+      {%- endfor %}
+    </div>
+  </div>
+</section>

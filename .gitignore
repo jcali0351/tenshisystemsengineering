@@ -4,3 +4,4 @@ node_modules/
 platform/.venv/
 platform/out/
 __pycache__/
+platform/cms_data/

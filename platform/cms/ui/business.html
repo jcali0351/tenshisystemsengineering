@@ -1,0 +1,120 @@
+{% extends "layout.html" %}
+{% block title %}Business data · {{ site.name }}{% endblock %}
+{% block heading %}Business data{% endblock %}
+{% block actions %}
+<span class="save-state" id="save-state"></span>
+<button class="btn btn-primary" id="save">Save</button>
+{% endblock %}
+{% block body %}
+<p class="muted">Everything about the business, kept once and used on every page. This form is built automatically from the
+  fields the <b>{{ site.template_id }}</b> template uses ({{ used_count }}) plus the standard Tenshi business schema, so switching
+  templates never loses anything.</p>
+<div class="grid split split-side" style="--cols: minmax(0, 1fr) 280px">
+  <form id="biz" autocomplete="off"></form>
+  <aside class="card">
+    <h2>Jump to</h2>
+    <ul class="feed">{% for s in form %}<li><a href="#sec-{{ s.section | replace('.', '-') }}">{{ s.title }}</a>{% if s.required %}<span class="req">*</span>{% endif %}</li>{% endfor %}</ul>
+    <h2 style="margin-top:16px">Earlier versions</h2>
+    <ul class="feed small">
+      {% for r in revisions %}<li><span>{{ r.created_at | when }}{% if r.user_name %} · {{ r.user_name }}{% endif %}</span><button class="btn btn-small" data-undo="{{ r.id }}">Restore</button></li>
+      {% else %}<li class="muted">None yet. Every save keeps the previous version here.</li>{% endfor %}
+    </ul>
+  </aside>
+</div>
+<script id="biz-data" type="application/json">{{ {"form": form, "profile": profile} | tojson }}</script>
+{% endblock %}
+{% block scripts %}
+<script>
+/* Draws the Business data form from its description (built on the server from the template) and saves the profile.
+   A field's "path" says where its value lives, e.g. "company.phone" or "services[].name" (one per service). */
+(function () {
+  var T = Tenshi, esc = T.esc, DATA = JSON.parse(document.getElementById("biz-data").textContent), profile = DATA.profile;
+  var siteId = {{ site.id }}, form = document.getElementById("biz"), dirty = false;
+
+  function get(obj, path) { return path.split(".").reduce(function (o, k) { return o == null ? undefined : o[k]; }, obj); }
+  function set(obj, path, value) {
+    var keys = path.split("."), o = obj;
+    keys.slice(0, -1).forEach(function (k) { if (o[k] == null || typeof o[k] !== "object") o[k] = {}; o = o[k]; });
+    o[keys[keys.length - 1]] = value;
+  }
+  // "services[].name" → list path "services", item key "name";  "company.hours[].days" → "company.hours", "days"
+  function split(path) { var i = path.indexOf("[]"); return i < 0 ? null : { list: path.slice(0, i), key: path.slice(i + 3) }; }
+
+  function box(f, value, name) {
+    var v = value == null ? "" : value, attrs = ' data-path="' + esc(name) + '"';
+    if (f.type === "textarea") return '<textarea rows="3"' + attrs + ">" + esc(v) + "</textarea>";
+    if (f.type === "image") return '<div class="media-field" data-site="' + siteId + '" data-kind="image"><input type="hidden"' + attrs + ' value="' + esc(v) + '"></div>';
+    if (f.type === "list") return '<input type="text"' + attrs + ' data-list value="' + esc(Array.isArray(v) ? v.join(", ") : v) + '" placeholder="Separate with commas">';
+    if (f.type === "rating") return '<select' + attrs + ' data-number>' + [5, 4, 3, 2, 1].map(function (n) { return "<option" + (+v === n ? " selected" : "") + ">" + n + "</option>"; }).join("") + "</select>";
+    var t = { email: "email", tel: "tel", url: "url" }[f.type] || "text";
+    return '<input type="' + t + '"' + attrs + ' value="' + esc(v) + '">';
+  }
+  function label(f, inner) {
+    return '<label class="field"><span>' + esc(f.label) + (f.required ? ' <span class="req">*</span>' : "") + "</span>" + inner + (f.help ? "<small>" + esc(f.help) + "</small>" : "") + "</label>";
+  }
+
+  function draw() {
+    form.innerHTML = DATA.form.map(function (s) {
+      var head = '<section class="card bsection" id="sec-' + s.section.replace(".", "-") + '"><h2>' + esc(s.title) + (s.required ? ' <span class="req">*</span>' : "") + "</h2>" + (s.help ? '<p class="small muted">' + esc(s.help) + "</p>" : "");
+      if (!s.repeat) {
+        return head + '<div class="grid grid-2">' + s.fields.map(function (f) {
+          var wide = f.type === "textarea" || f.type === "image" ? ' style="grid-column:1/-1"' : "";
+          return "<div" + wide + ">" + label(f, box(f, get(profile, f.path), f.path)) + "</div>";
+        }).join("") + "</div></section>";
+      }
+      var listPath = split(s.fields[0].path).list, items = get(profile, listPath) || [];
+      return head + '<div data-list-of="' + esc(listPath) + '">' + items.map(function (item, i) {
+        return '<div class="ritem"><div class="rtools"><button type="button" class="icon-btn" data-move="-1" title="Move up">↑</button><button type="button" class="icon-btn" data-move="1" title="Move down">↓</button><button type="button" class="icon-btn" data-remove title="Remove">✕</button></div>' +
+          '<div class="grid grid-2">' + s.fields.map(function (f) {
+            var key = split(f.path).key, wide = f.type === "textarea" ? ' style="grid-column:1/-1"' : "";
+            return "<div" + wide + ">" + label(f, box(f, item[key], listPath + "." + i + "." + key)) + "</div>";
+          }).join("") + "</div></div>";
+      }).join("") + '</div><button type="button" class="btn btn-small" data-add="' + esc(listPath) + '">+ Add ' + esc(s.title.toLowerCase().replace(/s$/, "")) + "</button></section>";
+    }).join("");
+    T.$$(".media-field", form).forEach(function (b) { T.mediaField(b, function () { read(); mark(); }); });
+  }
+
+  // Copy every box back into the profile
+  function read() {
+    T.$$("[data-path]", form).forEach(function (input) {
+      var path = input.dataset.path.replace(/\.(\d+)\./g, ".$1.");
+      var value = input.value;
+      if (input.hasAttribute("data-list")) value = value.split(",").map(function (s) { return s.trim(); }).filter(Boolean);
+      else if (input.hasAttribute("data-number") || (input.type === "hidden" && /^\d+$/.test(value))) value = value === "" ? "" : +value;
+      set(profile, path, value);
+    });
+  }
+  function mark() { dirty = true; document.getElementById("save-state").textContent = "Unsaved changes"; }
+
+  form.addEventListener("input", mark);
+  form.addEventListener("click", function (e) {
+    var add = e.target.closest("[data-add]"), rm = e.target.closest("[data-remove]"), mv = e.target.closest("[data-move]");
+    if (!add && !rm && !mv) return;
+    read();
+    if (add) { var list = get(profile, add.dataset.add); if (!Array.isArray(list)) { list = []; set(profile, add.dataset.add, list); } list.push({}); }
+    else {
+      var wrap = e.target.closest("[data-list-of]"), arr = get(profile, wrap.dataset.listOf), items = T.$$(".ritem", wrap), i = items.indexOf(e.target.closest(".ritem"));
+      if (rm) arr.splice(i, 1);
+      if (mv) { var j = i + +mv.dataset.move; if (j >= 0 && j < arr.length) arr.splice(j, 0, arr.splice(i, 1)[0]); }
+    }
+    mark(); draw();
+  });
+  document.getElementById("save").onclick = function () {
+    read();
+    if (!(profile.company && String(profile.company.name || "").trim())) { T.toast("The business needs a name.", true); return; }
+    T.busy(this, T.api("POST", "/api/sites/" + siteId + "/profile", profile).then(function () {
+      dirty = false; document.getElementById("save-state").textContent = "Saved. Deploy to put it live.";
+      T.toast("Business data saved");
+    }));
+  };
+  document.addEventListener("click", function (e) {
+    var u = e.target.closest("[data-undo]");
+    if (u && confirm("Put back this earlier version of the business data? (The current one is kept as a version too.)")) {
+      T.api("POST", "/api/sites/" + siteId + "/profile/undo/" + u.dataset.undo).then(function () { location.reload(); });
+    }
+  });
+  window.addEventListener("beforeunload", function (e) { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
+  draw();
+})();
+</script>
+{% endblock %}

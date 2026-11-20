@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% block title %}{{ site.name }}{% endblock %}
+{% block heading %}Overview{% endblock %}
+{% block actions %}
+<a class="btn" href="{{ site_url(site.subdomain) }}" target="_blank" rel="noopener">View live site</a>
+<button class="btn btn-primary" data-deploy="{{ site.id }}">Deploy now</button>
+{% endblock %}
+{% block body %}
+<div class="grid grid-4" style="margin-bottom:18px">
+  <a class="card stat" href="/sites/{{ site.id }}/pages" style="text-decoration:none"><b>{{ numbers.pages }}</b><span>Pages</span></a>
+  <a class="card stat" href="/sites/{{ site.id }}/media" style="text-decoration:none"><b>{{ numbers.media }}</b><span>Media files · {{ numbers.storage | size }}</span></a>
+  <a class="card stat" href="/sites/{{ site.id }}/leads" style="text-decoration:none"><b>{{ numbers.leads }}</b><span>New leads</span></a>
+  <div class="card stat"><b>{{ numbers.visits }}</b><span>Visits in the last 7 days</span></div>
+</div>
+<div class="grid grid-3">
+  <section class="card">
+    <h2>Site health <span class="row">{% set v = health.score %}<span class="score {{ 'low' if v < 50 else 'mid' if v < 80 else '' }}" style="--v:{{ v }}"><span>{{ v }}</span></span></span></h2>
+    <ul class="checks">
+      {% for ok, text, where in health.checks %}<li class="{{ 'yes' if ok else 'no' }}"><span>{{ text }}</span>{% if not ok %}<a href="/sites/{{ site.id }}/{{ where }}">Fix</a>{% endif %}</li>{% endfor %}
+    </ul>
+  </section>
+  <section class="card">
+    <h2>Live version</h2>
+    <p><span class="badge badge-{{ site.status }}">{{ site.status }}</span>
+      <a href="{{ site_url(site.subdomain) }}" target="_blank" rel="noopener">{{ site.subdomain }}.{{ sites_domain }}</a></p>
+    {% if build %}<p class="small">Deployment #{{ build.id }}, {{ build.created_at | when }} · {{ build.pages }} pages · {{ build.bytes | size }} · built in {{ '%.2f' | format(build.seconds) }} s</p>
+    {% else %}<p class="muted">Not deployed yet. Press Deploy now to publish it.</p>{% endif %}
+    <p class="small">Template: <a href="/templates/{{ template.id }}">{{ template.name }}</a></p>
+    <h2 style="margin-top:16px">Most visited (7 days)</h2>
+    <ul class="feed">{% for p in top_pages %}<li><span>{{ p.page }}</span><time>{{ p.n }}</time></li>{% else %}<li class="muted">No visits yet.</li>{% endfor %}</ul>
+  </section>
+  <section class="card">
+    <h2>Quick actions</h2>
+    <div class="grid" style="gap:8px">
+      <a class="btn" href="/sites/{{ site.id }}/pages">Edit pages visually</a>
+      <a class="btn" href="/sites/{{ site.id }}/business">Edit business details</a>
+      <a class="btn" href="/sites/{{ site.id }}/media">Upload photos and videos</a>
+      <a class="btn" href="/sites/{{ site.id }}/portfolio">Add a project</a>
+      <a class="btn" href="/sites/{{ site.id }}/export">Export the whole site</a>
+    </div>
+    <h2 style="margin-top:16px">Recent activity</h2>
+    <ul class="feed">{% for a in activity %}<li><span><b>{{ a.action }}</b> {{ a.details }}</span><time>{{ a.created_at | when }}</time></li>{% else %}<li class="muted">Nothing yet.</li>{% endfor %}</ul>
+  </section>
+</div>
+{% endblock %}

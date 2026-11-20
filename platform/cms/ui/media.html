@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% block title %}Media Center · {{ site.name }}{% endblock %}
+{% block heading %}Media Center{% endblock %}
+{% block actions %}
+<span class="muted small">{{ total }} files · {{ storage | size }}</span>
+<label class="btn btn-primary">Upload files<input type="file" id="upload-input" multiple hidden></label>
+{% endblock %}
+{% block body %}
+<div class="media-layout" id="media-app" data-site="{{ site.id }}" data-max="{{ max_mb }}">
+  <aside class="card folders">
+    <h2>Folders</h2>
+    <a href="#" data-folder="" class="on">All files <span>{{ total }}</span></a>
+    <a href="#" data-folder="none">Not in a folder</a>
+    {% for f in folders %}<a href="#" data-folder="{{ f.id }}" data-name="{{ f.name }}">{{ f.name }} <span>{{ f.n }}</span></a>{% endfor %}
+    <div class="row" style="margin-top:10px">
+      <button class="btn btn-small" id="new-folder">+ Folder</button>
+      <button class="btn btn-small" id="rename-folder" hidden>Rename</button>
+      <button class="btn btn-small btn-danger" id="delete-folder" hidden>Delete</button>
+    </div>
+    <h2 style="margin-top:18px">Show</h2>
+    <select id="f-kind"><option value="">Every kind</option><option value="image">Pictures</option><option value="video">Videos</option><option value="pdf">PDFs</option><option value="svg">SVG drawings</option><option value="audio">Audio</option></select>
+    <select id="f-cat" style="margin-top:8px"><option value="">Every category</option></select>
+    <select id="f-tag" style="margin-top:8px"><option value="">Every tag</option></select>
+  </aside>
+
+  <section>
+    <div class="row" style="margin-bottom:12px">
+      <input type="search" id="f-q" placeholder="Search names, descriptions, tags…" style="max-width:360px">
+      <span class="muted small" id="m-count"></span>
+      <span style="flex:1"></span>
+      <button class="btn btn-small" id="select-all">Select all</button>
+    </div>
+    <div class="bulkbar" id="bulkbar" hidden>
+      <b id="bulk-n"></b>
+      <select id="bulk-folder"><option value="">Move to…</option><option value="none">Not in a folder</option>{% for f in folders %}<option value="{{ f.id }}">{{ f.name }}</option>{% endfor %}</select>
+      <input type="text" id="bulk-tag" placeholder="Add tags (comma separated)"><button class="btn btn-small" id="bulk-tag-go">Tag</button>
+      <input type="text" id="bulk-cat" placeholder="Category"><button class="btn btn-small" id="bulk-cat-go">Set</button>
+      <span style="flex:1"></span>
+      <button class="btn btn-small btn-danger" id="bulk-delete">Delete</button>
+      <button class="btn btn-small" id="bulk-clear">Done</button>
+    </div>
+    <ul class="upload-list" id="upload-list"></ul>
+    <div class="mgrid" id="grid"></div>
+  </section>
+
+  <aside class="card details details-col" id="details">
+    <p class="muted">Choose a file to see and edit its details.<br><br>Upload by dropping files anywhere on this page. Pictures are compressed and resized automatically; SVGs are cleaned of anything unsafe.</p>
+  </aside>
+</div>
+<div class="dropzone" id="dropzone" hidden>Drop files to upload</div>
+
+<dialog id="crop-dlg" class="wide">
+  <div class="dlg">
+    <div class="row" style="margin-bottom:12px"><h2 style="margin:0">Crop, resize and rotate</h2><span style="flex:1"></span>
+      <label>Shape <select id="crop-ratio"><option value="">Free</option><option value="1">Square</option><option value="1.3333">4:3</option><option value="1.7778">16:9</option><option value="0.8">Portrait 4:5</option></select></label>
+      <button class="btn btn-small" id="rotate">Rotate ↻</button></div>
+    <div style="text-align:center"><div class="cropper" id="cropper"><img id="crop-img" alt=""><div class="crop-box" id="crop-box"><i></i></div></div></div>
+    <div class="row" style="margin-top:12px"><label>New width <input type="number" id="crop-width" min="50" style="width:110px"> px</label><span class="muted small" id="crop-info"></span></div>
+  </div>
+  <div class="dlg-foot"><button class="btn" data-close>Cancel</button><button class="btn btn-primary" id="crop-save">Save changes</button></div>
+</dialog>
+{% endblock %}
+{% block scripts %}<script src="/static/media.js"></script>{% endblock %}

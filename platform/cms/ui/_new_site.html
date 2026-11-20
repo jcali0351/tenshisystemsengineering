@@ -1,0 +1,44 @@
+{#- The "New site" window, shared by the Dashboard, All sites and Templates. Open it with a button that has data-new-site
+    (and optionally data-template="<id>" to preselect a template). -#}
+<dialog id="new-site">
+  <form class="dlg" id="new-site-form">
+    <h2>New website</h2>
+    <label class="field"><span>Business name <span class="req">*</span></span><input type="text" name="name" required></label>
+    <label class="field"><span>Web address</span>
+      <span class="row" style="flex-wrap:nowrap"><input type="text" name="subdomain" placeholder="made from the name" pattern="[a-z0-9][a-z0-9-]{1,38}[a-z0-9]"><span class="muted">.{{ sites_domain }}</span></span></label>
+    <label class="field"><span>Template</span><select name="template">
+      {% for t in templates_list %}<option value="{{ t.id }}">{{ t.name }}{% if t.group %} · {{ t.group | title }}{% endif %}</option>{% endfor %}
+    </select></label>
+    <div class="grid grid-2">
+      <label class="field"><span>Phone</span><input type="tel" name="phone"></label>
+      <label class="field"><span>Email</span><input type="email" name="email"></label>
+    </div>
+    <label class="field"><span>Short description</span><textarea name="description" rows="2"></textarea></label>
+    <label class="check"><input type="checkbox" name="deploy" checked> Deploy it straight away</label>
+  </form>
+  <div class="dlg-foot"><button class="btn" type="button" data-close>Cancel</button><button class="btn btn-primary" type="submit" form="new-site-form">Create site</button></div>
+</dialog>
+<script>
+(function () {
+  var dlg = document.getElementById("new-site"), form = document.getElementById("new-site-form");
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-new-site]");
+    if (b) { if (b.dataset.template) form.template.value = b.dataset.template; dlg.showModal(); form.name.focus(); }
+  });
+  dlg.querySelector("[data-close]").onclick = function () { dlg.close(); };
+  form.name.addEventListener("input", function () {
+    form.subdomain.placeholder = form.name.value.toLowerCase().replace(/&/g, " ").replace(/'/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40) || "made from the name";
+  });
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var btn = dlg.querySelector("[type=submit]");
+    var body = { name: form.name.value, subdomain: form.subdomain.value, template: form.template.value, phone: form.phone.value,
+                 email: form.email.value, description: form.description.value, deploy: form.deploy.checked };
+    var started = performance.now();
+    Tenshi.busy(btn, Tenshi.api("POST", "/api/sites", body).then(function (res) {
+      Tenshi.toast("Site ready in " + ((performance.now() - started) / 1000).toFixed(2) + " s");
+      location.href = res.url;
+    }));
+  });
+})();
+</script>
