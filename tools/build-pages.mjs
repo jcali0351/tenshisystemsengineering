@@ -4,6 +4,7 @@
 //     Optimization panels)
 //   - the photo header of every interior page (data/parallax.json "pageHeader", see heroPx)
 //   - about.html, services.html, contact.html, news.html, blog.html
+//   - portfolio.html (designs from data/templates.json + our own software) and launch.html (the Launch Sequence)
 //   - services/<slug>.html, one full page per service
 //   - blog/<slug>.html, one page per long-form post that has a slug in data/blog.json
 //   - data/search/<lang>.json, the footer search's index of every page and blog post in all ten languages (search.js)
@@ -508,8 +509,8 @@ const FOOTER = index.match(/  <footer class="site-footer">[\s\S]*?<\/footer>/)[0
 const FORM = index.match(/        <form class="contact-form"[\s\S]*?<\/form>/)[0];
 
 // The header menu's dropdowns: a page in a dropdown also marks its top-level item (on Team, About shows as current).
-// The footer menu is flat, so only the page itself is marked there. Project pages pass ["projects", "p-<slug>"] already.
-const NAV_PARENT = { team: "about", technology: "about", blog: "news", portal: "contact" };
+// The footer menu is flat, so only the page itself is marked there. Project pages pass ["portfolio", "p-<slug>"] already.
+const NAV_PARENT = { team: "about", technology: "about", blog: "news", portal: "contact", "p-storycaster": "portfolio", "p-master-baiter-pro": "portfolio" };
 const navCurrent = (current) => [].concat(current).flatMap((c) => NAV_PARENT[c] ? [c, NAV_PARENT[c]] : [c]);
 // Point the copied links at the right folder and mark the current menu item.
 function chrome(html, prefix, current) {
@@ -517,7 +518,7 @@ function chrome(html, prefix, current) {
     .replace('href="#top"', `href="${prefix}index.html"`)
     .replace(/src="((?:brand|img)\/[\w.\/-]+)"/g, `src="${prefix}$1"`)
     .replace(/href="((?:news|blog)\.html#[^"]*)"/g, `href="${prefix}$1"`)
-    .replace(/href="((?:index|about|services|contact|team|technology|projects|news|blog|portal)\.html|projects\/[a-z-]+\.html|blog\/[a-z-]+\.html)"/g, `href="${prefix}$1"`);
+    .replace(/href="((?:index|about|services|contact|team|technology|projects|portfolio|launch|news|blog|portal)\.html|projects\/[a-z-]+\.html|blog\/[a-z-]+\.html)"/g, `href="${prefix}$1"`);
 }
 
 function frame({ prefix, current, titleKey, descKey, title, description, bodyClass, main, photoCredits = "", extraHead = "", extraScripts = "" }) {
@@ -1202,11 +1203,84 @@ ${cfButton(p.editions[0]) ? "                " + cfButton(p.editions[0]) + "\n" 
             </div>
           </article>`;
 
-const projectsPage = frame({
-  prefix: "", current: "projects", titleKey: "navProjects", descKey: "projectsLead", bodyClass: "page projects-page",
-  main: `${banner("", [{ key: "navProjects" }], "projectsTitle", "projectsLead", `<div class="prj-hero-logos" aria-hidden="true">${PROJECTS.map((p) => `<img src="img/projects/${p.logo}.webp" alt="" width="150" height="150">`).join("")}</div>`)}
+/* ---------- Portfolio: the Tenshi Design Gallery, plus our own software ----------
+   The designs come from data/templates.json (the same file the Launch page and the Python prototype read), so add or
+   change a design there, then rebuild. Every design card has a little drawing of the site in its own colours (made
+   with HTML and CSS, styled in portfolio.css), a Preview button (portfolio.js) and a "Launch with this design" link. */
+const GALLERY = readJson("data/templates.json", { groups: [], templates: [] });
+const groupName = (id) => (GALLERY.groups.find((g) => g.id === id) || { name: "" }).name;
 
-    <section class="page-section prj-section" aria-labelledby="games-title">
+// A small picture of a website, drawn with boxes in the design's own colours. tpl = one design from data/templates.json.
+// Exported for the Launch page too, which draws the same picture with the visitor's business name.
+const mockSite = (tpl) => `<div class="tpl-mock tpl-${esc(tpl.style)}" aria-hidden="true" style="--p:${esc(tpl.colors.primary)};--a:${esc(tpl.colors.accent)};--s:${esc(tpl.colors.surface)};--i:${esc(tpl.colors.ink)}">
+                <div class="tpl-chrome"><span></span><span></span><span></span><i>${esc(tpl.id)}.tenshi.systems</i></div>
+                <div class="tpl-site">
+                  <div class="tpl-nav"><b class="tpl-logo">${esc(tpl.sample)}</b><span class="tpl-links"><span></span><span></span><span></span></span><span class="tpl-cta"></span></div>
+                  <div class="tpl-hero"><strong class="tpl-head">${esc(tpl.headline)}</strong><span class="tpl-sub"></span><span class="tpl-btn"></span></div>
+                  <div class="tpl-tiles"><span></span><span></span><span></span></div>
+                </div>
+              </div>`;
+
+const designCard = (tpl) => `          <article class="tpl-card" data-group="${esc(tpl.group)}" data-id="${esc(tpl.id)}">
+            <div class="tpl-card-media">
+              ${mockSite(tpl)}
+            </div>
+            <div class="tpl-card-body">
+              <span class="tpl-kicker">${esc(groupName(tpl.group))}</span>
+              <h3>${esc(tpl.name)}</h3>
+              <span class="tpl-for">${esc(tpl.for)}</span>
+              <span class="tpl-pages">${tpl.pages.length} pages · ${esc(tpl.pages.join(", "))}</span>
+              <div class="tpl-actions">
+                <button type="button" class="btn btn-quiet tpl-preview" data-preview="${esc(tpl.id)}">Preview<span class="sr-only">: ${esc(tpl.name)}</span></button>
+                <a class="btn btn-primary" href="launch.html?template=${encodeURIComponent(tpl.id)}">Launch with this design<span class="sr-only">: ${esc(tpl.name)}</span></a>
+              </div>
+            </div>
+          </article>`;
+
+// The designs as data for the browser (the Preview window and the Launch page).
+// "<" is escaped so nothing in the JSON can close the script tag early.
+const galleryJson = () => `<script type="application/json" id="tpl-data">${JSON.stringify({ groups: GALLERY.groups, templates: GALLERY.templates }).replace(/</g, "\\u003c")}</script>`;
+
+const portfolioPage = frame({
+  prefix: "", current: "portfolio", titleKey: "portfolioTitle", descKey: "portfolioLead", bodyClass: "page portfolio-page",
+  extraHead: `  <link rel="stylesheet" href="portfolio.css">
+`, extraScripts: `  <script src="portfolio.js"></script>
+`,
+  main: `${banner("", [{ key: "navPortfolio" }], "portfolioTitle", "portfolioLead", ART.services)}
+
+    <!-- The Design Gallery: every design, with filters by kind of business -->
+    <section class="page-section tpl-gallery" aria-labelledby="gallery-title">
+      <div class="page-inner">
+        <h2 id="gallery-title" class="section-title center">The Tenshi Design Gallery</h2>
+        <p class="section-intro center">Each design is a complete website: pages, forms, galleries, search-friendly structure and a content manager.
+          The businesses shown are samples so you can see the style. Pick one and your own name, words and photos take their place.
+          You can switch designs later and your business details stay put.</p>
+        <div class="tpl-filter" role="group" aria-label="Show designs for">
+          <button type="button" class="tpl-chip" data-filter="all" aria-pressed="true">All designs</button>
+${GALLERY.groups.map((g) => `          <button type="button" class="tpl-chip" data-filter="${esc(g.id)}" aria-pressed="false">${esc(g.name)}</button>`).join("\n")}
+        </div>
+        <p class="tpl-count" aria-live="polite"><span class="tpl-count-n">${GALLERY.templates.length}</span> designs</p>
+        <div class="tpl-grid">
+${GALLERY.templates.map(designCard).join("\n")}
+        </div>
+      </div>
+    </section>
+
+    <!-- How launching works, in three steps -->
+    <section class="page-section tinted tpl-how" aria-labelledby="how-title">
+      <div class="page-inner">
+        <h2 id="how-title" class="section-title center">From design to live website</h2>
+        <ol class="tpl-steps">
+          <li><span class="tpl-step-n" aria-hidden="true">01</span><h3>Pick a design</h3><p>Choose the look that fits your business, or let us recommend one from your answers.</p></li>
+          <li><span class="tpl-step-n" aria-hidden="true">02</span><h3>Tell us about you</h3><p>Your name, services, contact details and logo. A few minutes, no code.</p></li>
+          <li><span class="tpl-step-n" aria-hidden="true">03</span><h3>Press Deploy</h3><p>Your site, hosting and content manager are set up at your own address, ready to edit.</p></li>
+        </ol>
+        <p class="tpl-how-cta"><a class="btn btn-primary btn-launch" href="launch.html"><span data-i18n="launchCta">${tx("launchCta")}</span> <span class="btn-launch-arrow" aria-hidden="true">→</span></a></p>
+      </div>
+    </section>
+
+    <!-- Our own software (these used to be the Projects page) -->
+    <section class="page-section prj-section" id="our-software" aria-labelledby="games-title">
       <div class="page-inner">
         ${t("p", "projectsIntro", 'class="section-intro prj-intro"')}
         <div class="prj-group-head">
@@ -1222,17 +1296,246 @@ ${PROJECTS.map((p) => projCard(p, "")).join("\n")}
       </div>
     </section>
 
+    <!-- The Preview window (filled in by portfolio.js when a Preview button is pressed) -->
+    <dialog class="tpl-dialog" aria-labelledby="tpl-dialog-title">
+      <div class="tpl-dialog-inner">
+        <button type="button" class="tpl-dialog-close" aria-label="Close preview">×</button>
+        <div class="tpl-dialog-view">
+          <div class="tpl-device" role="group" aria-label="Preview size">
+            <button type="button" data-device="desktop" aria-pressed="true">Desktop</button>
+            <button type="button" data-device="mobile" aria-pressed="false">Mobile</button>
+          </div>
+          <div class="tpl-dialog-stage"></div>
+        </div>
+        <div class="tpl-dialog-info">
+          <span class="tpl-kicker"></span>
+          <h2 id="tpl-dialog-title">Preview</h2>
+          <span class="tpl-for"></span>
+          <h3 class="tpl-dialog-sub">Starts with these pages</h3>
+          <ul class="tpl-dialog-pages"></ul>
+          <h3 class="tpl-dialog-sub">Special features</h3>
+          <ul class="tpl-dialog-features tpl-special"></ul>
+          <h3 class="tpl-dialog-sub">Every design includes</h3>
+          <ul class="tpl-dialog-features">
+            <li>Content manager: edit any text or photo</li><li>Media library</li><li>Lead forms</li><li>Search-friendly setup</li><li>Visitor analytics</li><li>Export your whole site, any time</li>
+          </ul>
+          <a class="btn btn-primary tpl-dialog-launch" href="launch.html">Launch with this design</a>
+        </div>
+      </div>
+    </dialog>
+    ${galleryJson()}
+
 ${cta("contact.html")}`,
 });
-writePage("projects.html", projectsPage);
+writePage("portfolio.html", portfolioPage);
+
+// Old links to projects.html still work: they are sent on to the software section of the Portfolio page.
+writeFileSync("projects.html", `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Written by tools/build-pages.mjs. The Projects page moved into the Portfolio page. -->
+  <title>Portfolio | ${tx("brandName")}</title>
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="portfolio.html">
+  <meta http-equiv="refresh" content="0; url=portfolio.html#our-software">
+</head>
+<body>
+  <p>Our projects are now on the <a href="portfolio.html#our-software">Portfolio page</a>.</p>
+</body>
+</html>
+`);
+
+/* ---------- Launch: the Tenshi Launch Sequence ----------
+   A full-screen, three-step wizard (launch.js, launch.css): a welcome screen, then 1 Business, 2 Profile, 3 Launch preview
+   and Deploy. The visitor's answers become one business profile (the Business Data Engine's shape, see
+   docs/ARCHITECTURE.md). The words on the screens are here; the behaviour is in launch.js. */
+const OPT = (pairs) => pairs.map(([v, label]) => `                <option value="${v}">${label}</option>`).join("\n");
+// Business categories and website goals. The values must match "categories" and "goals" in data/templates.json,
+// which is how the wizard recommends a design.
+const CATEGORIES = [["contractor", "Construction &amp; contracting"], ["home", "Home services &amp; landscaping"], ["automotive", "Automotive"],
+  ["restaurant", "Restaurant, café &amp; food"], ["retail", "Retail &amp; online shop"], ["realestate", "Real estate"], ["legal", "Legal &amp; financial"],
+  ["medical", "Health &amp; medical"], ["consulting", "Consulting &amp; agency"], ["creative", "Photography &amp; creative"], ["freelance", "Freelancer"],
+  ["agriculture", "Farming &amp; agriculture"], ["nonprofit", "Nonprofit &amp; charity"], ["community", "Community &amp; organization"], ["other", "Something else"]];
+const GOALS = [["leads", "Get more customers (lead generation)"], ["services", "Show my services"], ["portfolio", "Show off my work (portfolio)"],
+  ["ecommerce", "Sell products (e-commerce)"], ["directory", "List things people can browse (directory)"], ["nonprofit", "Support a cause (nonprofit)"], ["community", "Bring people together (community)"]];
+const TYPES = [["storefront", "Storefront", "Customers visit you"], ["service-area", "Service area", "You go to customers"], ["online", "Online only", "Everything happens online"], ["organization", "Organization", "Club, charity or group"]];
+
+const field = (id, label, input, { req = false, hint = "", wide = false } = {}) => `            <div class="lx-field${wide ? " lx-wide" : ""}">
+              <label for="${id}">${label}${req ? ' <span class="lx-req" aria-hidden="true">*</span>' : ' <span class="lx-opt">optional</span>'}</label>
+              ${input}
+${hint ? `              <span class="lx-hint" id="${id}-hint">${hint}</span>\n` : ""}              <span class="lx-error" id="${id}-error" aria-live="polite"></span>
+            </div>`;
+
+const launchPage = frame({
+  prefix: "", current: "launch", titleKey: "launchTitle", descKey: "launchLead", bodyClass: "page launch-page",
+  extraHead: `  <link rel="stylesheet" href="portfolio.css">
+  <link rel="stylesheet" href="launch.css">
+`,   // portfolio.css draws the preview picture
+  extraScripts: `  <script src="launch.js"></script>
+`,
+  main: `    <!-- The Tenshi Launch Sequence. data-still keeps the site's scroll animations (design.js) away from it. -->
+    <section class="lx" data-still aria-label="Launch your business">
+
+      <!-- Progress: "Step 1 of 3" and three segments. Hidden on the welcome screen. -->
+      <div class="lx-progress" hidden>
+        <p class="lx-progress-text" aria-live="polite">Step <b class="lx-step-n">1</b> of 3</p>
+        <ol class="lx-progress-bar">
+          <li data-for="1"><span>Business</span></li>
+          <li data-for="2"><span>Profile</span></li>
+          <li data-for="3"><span>Launch</span></li>
+        </ol>
+      </div>
+
+      <form class="lx-form" novalidate>
+
+        <!-- Welcome: the full-screen opening -->
+        <section class="lx-panel lx-welcome is-active" data-step="0" aria-labelledby="lx-t0">
+          <div class="lx-orbit" aria-hidden="true"><span></span><span></span><span></span></div>
+          <p class="lx-eyebrow">Tenshi · 天使 · Angel</p>
+          <h1 id="lx-t0" tabindex="-1">Launch your business into the digital marketplace</h1>
+          <p class="lx-lead">A professional website, hosting, a content manager, media galleries and lead forms, set up for you. Answer a few questions and press Deploy.</p>
+          <button type="button" class="btn btn-primary btn-launch lx-start">Let's get started <span class="btn-launch-arrow" aria-hidden="true">→</span></button>
+          <p class="lx-small">About 3 minutes · No code · Your website stays yours: export it any time</p>
+        </section>
+
+        <!-- Step 1: the business -->
+        <section class="lx-panel" data-step="1" aria-labelledby="lx-t1" hidden>
+          <p class="lx-eyebrow">Step 1 · Welcome to Tenshi</p>
+          <h2 id="lx-t1" tabindex="-1">Tell us about your business</h2>
+          <div class="lx-grid">
+${field("lx-name", "Business name", '<input id="lx-name" name="company.name" type="text" autocomplete="organization" required maxlength="80" placeholder="e.g. Johnson Plumbing">', { req: true, wide: true })}
+${field("lx-category", "Business category", `<select id="lx-category" name="company.category" required>
+                <option value="">Choose one…</option>
+${OPT(CATEGORIES)}
+              </select>`, { req: true })}
+${field("lx-goal", "Website goal", `<select id="lx-goal" name="site.goal" required>
+                <option value="">Choose one…</option>
+${OPT(GOALS)}
+              </select>`, { req: true })}
+            <fieldset class="lx-field lx-wide lx-types">
+              <legend>Business type <span class="lx-req" aria-hidden="true">*</span></legend>
+              <div class="lx-choices">
+${TYPES.map(([v, name, sub], i) => `                <label class="lx-choice"><input type="radio" name="company.type" value="${v}" required${i === 0 ? ' id="lx-type"' : ""}><span><b>${name}</b><small>${sub}</small></span></label>`).join("\n")}
+              </div>
+              <span class="lx-error" id="lx-type-error" aria-live="polite"></span>
+            </fieldset>
+          </div>
+          <div class="lx-nav">
+            <button type="button" class="btn btn-quiet lx-back">Back</button>
+            <button type="button" class="btn btn-primary lx-next">Continue <span aria-hidden="true">→</span></button>
+          </div>
+        </section>
+
+        <!-- Step 2: the profile -->
+        <section class="lx-panel" data-step="2" aria-labelledby="lx-t2" hidden>
+          <p class="lx-eyebrow">Step 2 · Business profile</p>
+          <h2 id="lx-t2" tabindex="-1">Let's build your foundation</h2>
+          <div class="lx-grid">
+${field("lx-phone", "Phone number", '<input id="lx-phone" name="company.phone" type="tel" autocomplete="tel" maxlength="40">')}
+${field("lx-email", "Email address", '<input id="lx-email" name="company.email" type="email" autocomplete="email" required maxlength="120">', { req: true, hint: "Where we send your Control Center login." })}
+${field("lx-address", "Business address", '<input id="lx-address" name="company.address" type="text" autocomplete="street-address" maxlength="160">', { wide: true, hint: "Leave empty if you don't want it on your site." })}
+${field("lx-areas", "Service areas", '<input id="lx-areas" name="company.service_areas" type="text" maxlength="200" placeholder="e.g. Osaka, Kobe, Kyoto">', { wide: true, hint: "Separate places with commas." })}
+${field("lx-desc", "Business description", '<textarea id="lx-desc" name="company.description" rows="4" required maxlength="1200" placeholder="What you do, who you do it for, and what makes you different."></textarea>', { req: true, wide: true })}
+            <div class="lx-field lx-wide">
+              <span class="lx-label" id="lx-logo-label">Logo <span class="lx-opt">optional</span></span>
+              <label class="lx-drop" for="lx-logo">
+                <input id="lx-logo" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" aria-labelledby="lx-logo-label">
+                <img class="lx-logo-preview" alt="Your logo" hidden>
+                <span class="lx-drop-text"><b>Drop your logo here</b> or click to choose a file<small>PNG, JPG, WebP or SVG, up to 2 MB</small></span>
+              </label>
+              <button type="button" class="lx-link lx-logo-clear" hidden>Remove logo</button>
+              <span class="lx-error" id="lx-logo-error" aria-live="polite"></span>
+            </div>
+            <fieldset class="lx-field lx-wide lx-social">
+              <legend>Social media links <span class="lx-opt">optional</span></legend>
+              <div class="lx-social-grid">
+                <label><span>Facebook</span><input name="social.facebook" type="url" inputmode="url" placeholder="https://facebook.com/…"></label>
+                <label><span>Instagram</span><input name="social.instagram" type="url" inputmode="url" placeholder="https://instagram.com/…"></label>
+                <label><span>X</span><input name="social.x" type="url" inputmode="url" placeholder="https://x.com/…"></label>
+                <label><span>LinkedIn</span><input name="social.linkedin" type="url" inputmode="url" placeholder="https://linkedin.com/…"></label>
+              </div>
+              <span class="lx-error" id="lx-social-error" aria-live="polite"></span>
+            </fieldset>
+          </div>
+          <div class="lx-nav">
+            <button type="button" class="btn btn-quiet lx-back">Back</button>
+            <button type="button" class="btn btn-primary lx-next">Continue <span aria-hidden="true">→</span></button>
+          </div>
+        </section>
+
+        <!-- Step 3: the launch preview -->
+        <section class="lx-panel" data-step="3" aria-labelledby="lx-t3" hidden>
+          <p class="lx-eyebrow">Step 3 · Design &amp; deployment</p>
+          <h2 id="lx-t3" tabindex="-1">Your website is ready for launch</h2>
+          <div class="lx-review">
+            <div class="lx-preview-col">
+              <div class="lx-preview" aria-hidden="true"></div>
+              <p class="lx-preview-note">A preview of your design with your name. You'll fill in the rest in your Control Center.</p>
+            </div>
+            <div class="lx-summary">
+              <dl class="lx-facts">
+                <div><dt>Business</dt><dd class="lx-sum-name"></dd></div>
+                <div><dt>Design</dt><dd>
+                  <select class="lx-template" name="site.template" aria-label="Design"></select>
+                  <span class="lx-recommended" hidden>Recommended for you</span>
+                  <a class="lx-link" href="portfolio.html" target="_blank" rel="noopener">See all designs</a>
+                </dd></div>
+                <div><dt><label for="lx-sub">Your address</label></dt><dd>
+                  <span class="lx-domain"><input id="lx-sub" name="site.subdomain" type="text" required maxlength="40" spellcheck="false" autocapitalize="off" aria-describedby="lx-sub-hint lx-sub-error"><span>.tenshi.systems</span></span>
+                  <span class="lx-hint" id="lx-sub-hint">Letters, numbers and dashes. You can add your own domain later.</span>
+                  <span class="lx-error" id="lx-sub-error" aria-live="polite"></span>
+                </dd></div>
+              </dl>
+              <h3 class="lx-included-title">Included features</h3>
+              <ul class="lx-included">
+                <li>Enterprise CMS</li><li>Media Library</li><li>Portfolio System</li><li>Lead Forms</li><li>SEO Toolkit</li><li>Analytics</li><li>Export Manager</li>
+              </ul>
+            </div>
+          </div>
+          <div class="lx-nav">
+            <button type="button" class="btn btn-quiet lx-back">Back</button>
+            <button type="submit" class="btn btn-primary btn-launch lx-deploy">Deploy now <span class="btn-launch-arrow" aria-hidden="true">→</span></button>
+          </div>
+        </section>
+
+        <!-- Deploying: the launch steps tick off one by one (launch.js) -->
+        <section class="lx-panel lx-deploying" data-step="4" aria-labelledby="lx-t4" hidden>
+          <div class="lx-rocket" aria-hidden="true"><span></span></div>
+          <h2 id="lx-t4" tabindex="-1">Launching <span class="lx-sum-domain"></span></h2>
+          <ol class="lx-tasks" aria-live="polite"></ol>
+        </section>
+
+        <!-- Done -->
+        <section class="lx-panel lx-done" data-step="5" aria-labelledby="lx-t5" hidden>
+          <div class="lx-seal" aria-hidden="true">✓</div>
+          <h2 id="lx-t5" tabindex="-1">Your launch request is ready</h2>
+          <p class="lx-lead lx-done-text"></p>
+          <ol class="lx-next-steps">
+            <li><b>We set up your site</b> at <span class="lx-sum-domain"></span> with your design, details and logo.</li>
+            <li><b>You get your Control Center login</b> by email, at <span class="lx-sum-email"></span>.</li>
+            <li><b>You start editing.</b> Pages, photos, galleries and forms, no code needed.</li>
+          </ol>
+          <div class="lx-done-actions">
+            <a class="btn btn-primary lx-mail" href="#">Send my launch request by email</a>
+            <button type="button" class="btn btn-quiet lx-download">Download my business profile</button>
+            <button type="button" class="lx-link lx-restart">Start over</button>
+          </div>
+        </section>
+      </form>
+    </section>
+    ${galleryJson()}
+`,
+});
+writePage("launch.html", launchPage);
 
 function projectPage(p) {
   const others = PROJECTS.filter((o) => o !== p);
   const [first, ...rest] = p.shots;
   const shot = ([file, w, h], n, lazy) => `<img src="../img/projects/${file}" alt="${tx(pk(p, "alt" + n))}" data-i18n-attr="alt:${pk(p, "alt" + n)}" width="${w}" height="${h}"${lazy ? ' loading="lazy"' : ""}>`;
   return frame({
-    prefix: "../", current: ["projects", "p-" + p.slug], titleKey: pk(p, "name"), descKey: pk(p, "tag"), bodyClass: "page prj-page",
-    main: `${banner("../", [{ key: "navProjects", href: "../projects.html" }, { key: pk(p, "name") }], pk(p, "name"), pk(p, "tag"), `<div class="prj-hero-logo">${logoPic(p, "../", "prj-logo", 220)}</div>`)}
+    prefix: "../", current: ["portfolio", "p-" + p.slug], titleKey: pk(p, "name"), descKey: pk(p, "tag"), bodyClass: "page prj-page",
+    main: `${banner("../", [{ key: "navPortfolio", href: "../portfolio.html" }, { key: pk(p, "name") }], pk(p, "name"), pk(p, "tag"), `<div class="prj-hero-logo">${logoPic(p, "../", "prj-logo", 220)}</div>`)}
 
     <section class="svc-body prj-body" aria-labelledby="intro-title">
       <div class="svc-body-inner">
@@ -1325,7 +1628,7 @@ ${[1, 2, 3, 4].map((n) => `          <li class="svc-step">
         <div class="prj-grid">
 ${others.map((o) => projCard(o, "../")).join("\n")}
         </div>
-        <p class="svc-back"><a href="../projects.html" data-i18n="projAll">${tx("projAll")}</a></p>
+        <p class="svc-back"><a href="../portfolio.html#our-software" data-i18n="projAll">${tx("projAll")}</a></p>
       </div>
     </section>
 
@@ -1400,7 +1703,7 @@ const POSTS = BLOGDATA.posts || [];
 const postHref = (url, prefix) => {
   if (/^https?:\/\//.test(url || "")) return url;
   if (/^#/.test(url || "")) return url;
-  if (/^(?:index|about|services|contact|team|technology|projects|news|blog|portal)\.html(?:#[\w.-]+)?$/.test(url || "")) return prefix + url;
+  if (/^(?:index|about|services|contact|team|technology|projects|portfolio|launch|news|blog|portal)\.html(?:#[\w.-]+)?$/.test(url || "")) return prefix + url;
   return "#";
 };
 const inlineFmt = (s, prefix) => esc(s)

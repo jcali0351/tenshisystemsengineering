@@ -1,0 +1,46 @@
+{#- ==================================================================================================================
+    THE CONTRACTOR DESIGN: the frame every page shares (header, menu, footer).
+    Pages "extend" this file and fill in the {% block content %} part.
+
+    Everything inside {{ … }} comes from the business profile (platform/examples/johnsons-plumbing.json is one).
+    The CMS form for this design is built automatically from these names: see platform/tenshi/scanner.py.
+    ================================================================================================================== -#}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ seo.title or company.name }}{% endblock %}</title>
+  <meta name="description" content="{{ seo.description or company.description | truncate(155) }}">
+  <link rel="stylesheet" href="style.css">
+  {#- The design's colours come from data/templates.json, so the site matches its picture in the Portfolio. #}
+  <style>:root { --primary: {{ design.colors.primary }}; --accent: {{ design.colors.accent }}; --surface: {{ design.colors.surface }}; --ink: {{ design.colors.ink }}; }</style>
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="index.html">
+      {%- if company.logo and company.logo.src %}<img src="{{ company.logo.src }}" alt="{{ company.name }}" height="44">{% else %}{{ company.name }}{% endif -%}
+    </a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    {% if company.phone %}<a class="call" href="tel:{{ company.phone | tel }}">Call {{ company.phone }}</a>{% endif %}
+  </header>
+
+  <main>
+{% block content %}{% endblock %}
+  </main>
+
+  <footer class="bottom">
+    <p><strong>{{ company.name }}</strong>{% if company.service_areas %} · Serving {{ company.service_areas | join(", ") }}{% endif %}</p>
+    {% if social %}
+    <p class="social">
+      {%- for network, link in social.items() %}<a href="{{ link }}" rel="noopener">{{ network | title }}</a>{% if not loop.last %} · {% endif %}{% endfor -%}
+    </p>
+    {% endif %}
+    <p class="made">Website by Tenshi Systems · © {{ year }} {{ company.name }}</p>
+  </footer>
+</body>
+</html>

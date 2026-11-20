@@ -1,0 +1,23 @@
+{#- Contact page with a lead form. On Tenshi hosting the form posts to the platform's /forms endpoint (a lead in the
+    CRM); in an exported site it falls back to email (mailto), so the site still works anywhere. -#}
+{% extends "base.html.j2" %}
+{% block title %}Contact | {{ company.name }}{% endblock %}
+
+{% block content %}
+    <section class="band contact">
+      <h1>Get a free estimate</h1>
+      <ul class="facts">
+        {% if company.phone %}<li>Phone: <a href="tel:{{ company.phone | tel }}">{{ company.phone }}</a></li>{% endif %}
+        {% if company.email %}<li>Email: <a href="mailto:{{ company.email }}">{{ company.email }}</a></li>{% endif %}
+        {% if company.address %}<li>Address: {{ company.address }}</li>{% endif %}
+        {% if company.service_areas %}<li>We work in: {{ company.service_areas | join(", ") }}</li>{% endif %}
+      </ul>
+      <form class="lead" method="post" action="{{ form_action }}">
+        <input type="hidden" name="_site" value="{{ site.subdomain }}">
+        <label>Your name <input name="name" required></label>
+        <label>Phone or email <input name="reach" required></label>
+        <label>What do you need? <textarea name="message" rows="5" required></textarea></label>
+        <button class="button" type="submit">Send</button>
+      </form>
+    </section>
+{% endblock %}

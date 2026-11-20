@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Launch Your Business | Tenshi Systems </title>
+  <meta name="description" content="Tell us about your business, press Deploy, and we set up your website, hosting and content manager.">
+  <meta name="theme-color" content="#c8102e">
+  <meta property="og:title" content="Launch Your Business | Tenshi Systems ">
+  <meta property="og:description" content="Tell us about your business, press Deploy, and we set up your website, hosting and content manager.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="brand/favicon-32.png?v=20261119" type="image/png" sizes="32x32">
+  <link rel="icon" href="brand/favicon-192.png?v=20261119" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="brand/tenshi-apple-touch-icon.png?v=20261119">
+  <link rel="stylesheet" href="tailwind.css?v=093e6a7b">
+  <link rel="stylesheet" href="styles.css?v=6a668ee1">
+  <link rel="stylesheet" href="design.css?v=ea6e1648">
+  <link rel="stylesheet" href="chat.css?v=2395252a">
+  <link rel="stylesheet" href="site-theme.css?v=803c384b">
+  <link rel="stylesheet" href="search.css?v=e44023c1">
+  <link rel="stylesheet" href="nav.css?v=52ad1576">
+  <link rel="stylesheet" href="fx.css?v=1f2472f8">
+  <link rel="stylesheet" href="portfolio.css?v=98af7be2">
+  <link rel="stylesheet" href="launch.css?v=ab051453">
+  <link rel="stylesheet" href="buttons.css?v=f676c1a0">
+  <link rel="stylesheet" href="custom.css?v=743f7d62">
+</head>
+<body class="page launch-page" data-title-key="launchTitle" data-desc-key="launchLead">
+  <!-- Written by tools/build-pages.mjs: edit translations.js and the script, not this file. -->
+  <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
+
+  <header class="site-header">
+    <div class="ticker" data-ticker hidden>
+      <p class="ticker-label"><span data-i18n="tickerLabel">Japan markets</span> <small data-i18n="tickerDelayed">Delayed prices</small></p>
+      <div class="ticker-window"><ul class="ticker-track"></ul></div>
+      <p class="ticker-time"></p>
+    </div>
+    <div class="header-inner">
+      <a class="brand" href="index.html" aria-label="Tenshi Systems" data-i18n-attr="aria-label:brandLabel">
+     <img
+  class="brand-logo"
+  src="brand/tenshi-horizontal.png?v=20261119"
+  alt="Tenshi Systems Engineering"
+  width="601"
+  height="186"
+>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span class="nav-toggle-icon" aria-hidden="true"><span></span></span><span class="nav-toggle-text" data-i18n="navMenu">Menu</span></button>
+      <nav class="site-nav" id="site-nav" aria-label="Main menu" data-i18n-attr="aria-label:navLabel">
+        <ul>
+          <li><a href="index.html" data-nav="home" data-i18n="navHome">Home</a></li>
+          <li class="has-sub"><a href="about.html" id="nav-about" data-nav="about" data-i18n="navAbout">About</a><button class="sub-toggle" type="button" aria-expanded="false" aria-controls="sub-about" aria-labelledby="nav-about"></button>
+            <ul class="sub" id="sub-about">
+              <li><a href="team.html" data-nav="team" data-i18n="navTeam">Team</a></li>
+              <li><a href="technology.html" data-nav="technology" data-i18n="navTech">Technology</a></li>
+            </ul>
+          </li>
+          <li><a href="services.html" data-nav="services" data-i18n="navServices">Services</a></li>
+          <li class="has-sub"><a href="portfolio.html" id="nav-portfolio" data-nav="portfolio" data-i18n="navPortfolio">Portfolio</a><button class="sub-toggle" type="button" aria-expanded="false" aria-controls="sub-portfolio" aria-labelledby="nav-portfolio"></button>
+            <ul class="sub" id="sub-portfolio">
+              <li><a href="projects/storycaster.html" data-nav="p-storycaster">StoryCaster</a></li>
+              <li><a href="projects/master-baiter-pro.html" data-nav="p-master-baiter-pro">Master Baiter Pro</a></li>
+            </ul>
+          </li>
+          <li class="has-sub"><a href="news.html" id="nav-news" data-nav="news" data-i18n="navNews">News</a><button class="sub-toggle" type="button" aria-expanded="false" aria-controls="sub-news" aria-labelledby="nav-news"></button>
+            <ul class="sub" id="sub-news">
+              <li><a href="blog.html" data-nav="blog" data-i18n="navBlog">Blog</a></li>
+            </ul>
+          </li>
+          <!-- Launch: opens the Tenshi Launch Sequence (launch.html) -->
+          <li class="nav-launch-item"><a class="nav-launch" href="launch.html" aria-current="page" data-nav="launch" data-i18n="navLaunch">Launch</a></li>
+          <li class="has-sub"><a href="contact.html" id="nav-contact" data-nav="contact" data-i18n="navContact">Contact</a><button class="sub-toggle" type="button" aria-expanded="false" aria-controls="sub-contact" aria-labelledby="nav-contact"></button>
+            <ul class="sub" id="sub-contact">
+              <li><a href="portal.html" data-nav="portal" data-i18n="navPortal">Portal</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <div class="lang-picker">
+        <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+          <symbol id="flag-en" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect y="0" width="30" height="1.54" fill="#b22234"/><rect y="3.08" width="30" height="1.54" fill="#b22234"/><rect y="6.15" width="30" height="1.54" fill="#b22234"/><rect y="9.23" width="30" height="1.54" fill="#b22234"/><rect y="12.31" width="30" height="1.54" fill="#b22234"/><rect y="15.38" width="30" height="1.54" fill="#b22234"/><rect y="18.46" width="30" height="1.54" fill="#b22234"/><rect width="12" height="10.77" fill="#3c3b6e"/><circle cx="1" cy="1" r=".45" fill="#fff"/><circle cx="3" cy="1" r=".45" fill="#fff"/><circle cx="5" cy="1" r=".45" fill="#fff"/><circle cx="7" cy="1" r=".45" fill="#fff"/><circle cx="9" cy="1" r=".45" fill="#fff"/><circle cx="11" cy="1" r=".45" fill="#fff"/><circle cx="2" cy="3.15" r=".45" fill="#fff"/><circle cx="4" cy="3.15" r=".45" fill="#fff"/><circle cx="6" cy="3.15" r=".45" fill="#fff"/><circle cx="8" cy="3.15" r=".45" fill="#fff"/><circle cx="10" cy="3.15" r=".45" fill="#fff"/><circle cx="1" cy="5.3" r=".45" fill="#fff"/><circle cx="3" cy="5.3" r=".45" fill="#fff"/><circle cx="5" cy="5.3" r=".45" fill="#fff"/><circle cx="7" cy="5.3" r=".45" fill="#fff"/><circle cx="9" cy="5.3" r=".45" fill="#fff"/><circle cx="11" cy="5.3" r=".45" fill="#fff"/><circle cx="2" cy="7.45" r=".45" fill="#fff"/><circle cx="4" cy="7.45" r=".45" fill="#fff"/><circle cx="6" cy="7.45" r=".45" fill="#fff"/><circle cx="8" cy="7.45" r=".45" fill="#fff"/><circle cx="10" cy="7.45" r=".45" fill="#fff"/><circle cx="1" cy="9.6" r=".45" fill="#fff"/><circle cx="3" cy="9.6" r=".45" fill="#fff"/><circle cx="5" cy="9.6" r=".45" fill="#fff"/><circle cx="7" cy="9.6" r=".45" fill="#fff"/><circle cx="9" cy="9.6" r=".45" fill="#fff"/><circle cx="11" cy="9.6" r=".45" fill="#fff"/></symbol>
+          <symbol id="flag-ja" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><circle cx="15" cy="10" r="6" fill="#bc002d"/></symbol>
+          <symbol id="flag-ko" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><g transform="rotate(33.69 15 10)"><circle cx="15" cy="10" r="5" fill="#cd2e3a"/><path d="M10 10a5 5 0 0 0 10 0a2.5 2.5 0 0 0-5 0a2.5 2.5 0 0 1-5 0z" fill="#0047a0"/></g><g transform="rotate(-56.31 6.7 4.5)" fill="#000"><rect x="4.7" y="2.95" width="4" height=".75"/><rect x="4.7" y="4.05" width="4" height=".75"/><rect x="4.7" y="5.15" width="4" height=".75"/></g><g transform="rotate(-56.31 23.3 15.5)" fill="#000"><rect x="21.3" y="13.95" width="1.7" height=".75"/><rect x="23.6" y="13.95" width="1.7" height=".75"/><rect x="21.3" y="15.05" width="1.7" height=".75"/><rect x="23.6" y="15.05" width="1.7" height=".75"/><rect x="21.3" y="16.15" width="1.7" height=".75"/><rect x="23.6" y="16.15" width="1.7" height=".75"/></g><g transform="rotate(56.31 23.3 4.5)" fill="#000"><rect x="21.3" y="2.95" width="1.7" height=".75"/><rect x="23.6" y="2.95" width="1.7" height=".75"/><rect x="21.3" y="4.05" width="4" height=".75"/><rect x="21.3" y="5.15" width="1.7" height=".75"/><rect x="23.6" y="5.15" width="1.7" height=".75"/></g><g transform="rotate(56.31 6.7 15.5)" fill="#000"><rect x="4.7" y="13.95" width="4" height=".75"/><rect x="4.7" y="15.05" width="1.7" height=".75"/><rect x="7" y="15.05" width="1.7" height=".75"/><rect x="4.7" y="16.15" width="4" height=".75"/></g></symbol>
+          <symbol id="flag-de" viewBox="0 0 30 20"><rect width="30" height="6.67" fill="#000"/><rect y="6.67" width="30" height="6.67" fill="#dd0000"/><rect y="13.33" width="30" height="6.67" fill="#ffce00"/></symbol>
+          <symbol id="flag-zh" viewBox="0 0 30 20"><rect width="30" height="20" fill="#ee1c25"/><polygon points="5,2 5.67,4.07 7.85,4.07 6.09,5.35 6.76,7.43 5,6.15 3.24,7.43 3.91,5.35 2.15,4.07 4.33,4.07" fill="#ffde00"/><polygon points="10.39,1.08 10.33,1.8 11,2.09 10.29,2.25 10.22,2.97 9.85,2.35 9.14,2.52 9.62,1.97 9.25,1.34 9.91,1.63" fill="#ffde00"/><polygon points="12.72,3.31 12.38,3.95 12.88,4.47 12.17,4.34 11.83,4.98 11.73,4.27 11.01,4.14 11.66,3.82 11.56,3.1 12.07,3.62" fill="#ffde00"/><polygon points="12.94,6.66 12.37,7.11 12.62,7.79 12.01,7.38 11.44,7.83 11.64,7.13 11.04,6.72 11.76,6.7 11.97,6 12.21,6.68" fill="#ffde00"/><polygon points="10.36,8.07 10.32,8.79 11,9.05 10.3,9.24 10.26,9.97 9.86,9.36 9.16,9.54 9.62,8.98 9.22,8.37 9.9,8.63" fill="#ffde00"/></symbol>
+          <symbol id="flag-es" viewBox="0 0 30 20"><rect width="30" height="20" fill="#aa151b"/><rect y="5" width="30" height="10" fill="#f1bf00"/></symbol>
+          <symbol id="flag-pl" viewBox="0 0 30 20"><rect width="30" height="10" fill="#fff"/><rect y="10" width="30" height="10" fill="#dc143c"/></symbol>
+          <symbol id="flag-pcm" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect width="10" height="20" fill="#008751"/><rect x="20" width="10" height="20" fill="#008751"/></symbol>
+          <symbol id="flag-ar" viewBox="0 0 30 20"><rect width="30" height="20" fill="#1a7a4c"/><text x="15" y="15" text-anchor="middle" font-size="14" font-weight="700" fill="#fff" font-family="Segoe UI, Tahoma, Arial, sans-serif">ع</text></symbol>
+          <symbol id="flag-fa" viewBox="0 0 30 20"><rect width="30" height="6.67" fill="#239f40"/><rect y="6.67" width="30" height="6.67" fill="#fff"/><rect y="13.33" width="30" height="6.67" fill="#da0000"/></symbol>
+        </svg>
+        <button type="button" class="lang-current" aria-haspopup="true" aria-expanded="false" aria-controls="lang-menu" aria-label="Choose language" data-i18n-attr="aria-label:langMenu">
+          <svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-en"/></svg><span class="lang-code">EN</span><svg class="lang-caret" viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+        </button>
+        <ul class="lang-menu" id="lang-menu" hidden>
+            <li><button type="button" data-lang="en" lang="en" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-en"/></svg><span>English</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="ja" lang="ja" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-ja"/></svg><span>日本語</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="ko" lang="ko" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-ko"/></svg><span>한국어</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="de" lang="de" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-de"/></svg><span>Deutsch</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="zh" lang="zh" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-zh"/></svg><span>中文</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="es" lang="es" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-es"/></svg><span>Español</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="pl" lang="pl" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-pl"/></svg><span>Polski</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="pcm" lang="pcm" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-pcm"/></svg><span>Naijá (Pidgin)</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="ar" lang="ar" dir="rtl" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-ar"/></svg><span>العربية</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+            <li><button type="button" data-lang="fa" lang="fa" dir="rtl" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-fa"/></svg><span>فارسی</span><svg class="lang-check" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg></button></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- The Tenshi Launch Sequence. data-still keeps the site's scroll animations (design.js) away from it. -->
+    <section class="lx" data-still aria-label="Launch your business">
+
+      <!-- Progress: "Step 1 of 3" and three segments. Hidden on the welcome screen. -->
+      <div class="lx-progress" hidden>
+        <p class="lx-progress-text" aria-live="polite">Step <b class="lx-step-n">1</b> of 3</p>
+        <ol class="lx-progress-bar">
+          <li data-for="1"><span>Business</span></li>
+          <li data-for="2"><span>Profile</span></li>
+          <li data-for="3"><span>Launch</span></li>
+        </ol>
+      </div>
+
+      <form class="lx-form" novalidate>
+
+        <!-- Welcome: the full-screen opening -->
+        <section class="lx-panel lx-welcome is-active" data-step="0" aria-labelledby="lx-t0">
+          <div class="lx-orbit" aria-hidden="true"><span></span><span></span><span></span></div>
+          <p class="lx-eyebrow">Tenshi · 天使 · Angel</p>
+          <h1 id="lx-t0" tabindex="-1">Launch your business into the digital marketplace</h1>
+          <p class="lx-lead">A professional website, hosting, a content manager, media galleries and lead forms, set up for you. Answer a few questions and press Deploy.</p>
+          <button type="button" class="btn btn-primary btn-launch lx-start">Let's get started <span class="btn-launch-arrow" aria-hidden="true">→</span></button>
+          <p class="lx-small">About 3 minutes · No code · Your website stays yours: export it any time</p>
+        </section>
+
+        <!-- Step 1: the business -->
+        <section class="lx-panel" data-step="1" aria-labelledby="lx-t1" hidden>
+          <p class="lx-eyebrow">Step 1 · Welcome to Tenshi</p>
+          <h2 id="lx-t1" tabindex="-1">Tell us about your business</h2>
+          <div class="lx-grid">
+            <div class="lx-field lx-wide">
+              <label for="lx-name">Business name <span class="lx-req" aria-hidden="true">*</span></label>
+              <input id="lx-name" name="company.name" type="text" autocomplete="organization" required maxlength="80" placeholder="e.g. Johnson Plumbing">
+              <span class="lx-error" id="lx-name-error" aria-live="polite"></span>
+            </div>
+            <div class="lx-field">
+              <label for="lx-category">Business category <span class="lx-req" aria-hidden="true">*</span></label>
+              <select id="lx-category" name="company.category" required>
+                <option value="">Choose one…</option>
+                <option value="contractor">Construction &amp; contracting</option>
+                <option value="home">Home services &amp; landscaping</option>
+                <option value="automotive">Automotive</option>
+                <option value="restaurant">Restaurant, café &amp; food</option>
+                <option value="retail">Retail &amp; online shop</option>
+                <option value="realestate">Real estate</option>
+                <option value="legal">Legal &amp; financial</option>
+                <option value="medical">Health &amp; medical</option>
+                <option value="consulting">Consulting &amp; agency</option>
+                <option value="creative">Photography &amp; creative</option>
+                <option value="freelance">Freelancer</option>
+                <option value="agriculture">Farming &amp; agriculture</option>
+                <option value="nonprofit">Nonprofit &amp; charity</option>
+                <option value="community">Community &amp; organization</option>
+                <option value="other">Something else</option>
+              </select>
+              <span class="lx-error" id="lx-category-error" aria-live="polite"></span>
+            </div>
+            <div class="lx-field">
+              <label for="lx-goal">Website goal <span class="lx-req" aria-hidden="true">*</span></label>
+              <select id="lx-goal" name="site.goal" required>
+                <option value="">Choose one…</option>
+                <option value="leads">Get more customers (lead generation)</option>
+                <option value="services">Show my services</option>
+                <option value="portfolio">Show off my work (portfolio)</option>
+                <option value="ecommerce">Sell products (e-commerce)</option>
+                <option value="directory">List things people can browse (directory)</option>
+                <option value="nonprofit">Support a cause (nonprofit)</option>
+                <option value="community">Bring people together (community)</option>
+              </select>
+              <span class="lx-error" id="lx-goal-error" aria-live="polite"></span>
+            </div>
+            <fieldset class="lx-field lx-wide lx-types">
+              <legend>Business type <span class="lx-req" aria-hidden="true">*</span></legend>
+              <div class="lx-choices">
+                <label class="lx-choice"><input type="radio" name="company.type" value="storefront" required id="lx-type"><span><b>Storefront</b><small>Customers visit you</small></span></label>
+                <label class="lx-choice"><input type="radio" name="company.type" value="service-area" required><span><b>Service area</b><small>You go to customers</small></span></label>
+                <label class="lx-choice"><input type="radio" name="company.type" value="online" required><span><b>Online only</b><small>Everything happens online</small></span></label>
+                <label class="lx-choice"><input type="radio" name="company.type" value="organization" required><span><b>Organization</b><small>Club, charity or group</small></span></label>
+              </div>
+              <span class="lx-error" id="lx-type-error" aria-live="polite"></span>
+            </fieldset>
+          </div>
+          <div class="lx-nav">
+            <button type="button" class="btn btn-quiet lx-back">Back</button>
+            <button type="button" class="btn btn-primary lx-next">Continue <span aria-hidden="true">→</span></button>
+          </div>
+        </section>
+
+        <!-- Step 2: the profile -->
+        <section class="lx-panel" data-step="2" aria-labelledby="lx-t2" hidden>
+          <p class="lx-eyebrow">Step 2 · Business profile</p>
+          <h2 id="lx-t2" tabindex="-1">Let's build your foundation</h2>
+          <div class="lx-grid">
+            <div class="lx-field">
+              <label for="lx-phone">Phone number <span class="lx-opt">optional</span></label>
+              <input id="lx-phone" name="company.phone" type="tel" autocomplete="tel" maxlength="40">
+              <span class="lx-error" id="lx-phone-error" aria-live="polite"></span>
+            </div>
+            <div class="lx-field">
+              <label for="lx-email">Email address <span class="lx-req" aria-hidden="true">*</span></label>
+              <input id="lx-email" name="company.email" type="email" autocomplete="email" required maxlength="120">
+              <span class="lx-hint" id="lx-email-hint">Where we send your Control Center login.</span>
+              <span class="lx-error" id="lx-email-error" aria-live="polite"></span>
+            </div>
+            <div class="lx-field lx-wide">
+              <label for="lx-address">Business address <span class="lx-opt">optional</span></label>
+              <input id="lx-address" name="company.address" type="text" autocomplete="street-address" maxlength="160">
+              <span class="lx-hint" id="lx-address-hint">Leave empty if you don't want it on your site.</span>
+              <span class="lx-error" id="lx-address-error" aria-live="polite"></span>
+            </div>
+            <div class="lx-field lx-wide">
+              <label for="lx-areas">Service areas <span class="lx-opt">optional</span></label>
+              <input id="lx-areas" name="company.service_areas" type="text" maxlength="200" placeholder="e.g. Osaka, Kobe, Kyoto">
+              <span class="lx-hint" id="lx-areas-hint">Separate places with commas.</span>
+              <span class="lx-error" id="lx-areas-error" aria-live="polite"></span>
+            </div>
+            <div class="lx-field lx-wide">
+              <label for="lx-desc">Business description <span class="lx-req" aria-hidden="true">*</span></label>
+              <textarea id="lx-desc" name="company.description" rows="4" required maxlength="1200" placeholder="What you do, who you do it for, and what makes you different."></textarea>
+              <span class="lx-error" id="lx-desc-error" aria-live="polite"></span>
+            </div>
+            <div class="lx-field lx-wide">
+              <span class="lx-label" id="lx-logo-label">Logo <span class="lx-opt">optional</span></span>
+              <label class="lx-drop" for="lx-logo">
+                <input id="lx-logo" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" aria-labelledby="lx-logo-label">
+                <img class="lx-logo-preview" alt="Your logo" hidden>
+                <span class="lx-drop-text"><b>Drop your logo here</b> or click to choose a file<small>PNG, JPG, WebP or SVG, up to 2 MB</small></span>
+              </label>
+              <button type="button" class="lx-link lx-logo-clear" hidden>Remove logo</button>
+              <span class="lx-error" id="lx-logo-error" aria-live="polite"></span>
+            </div>
+            <fieldset class="lx-field lx-wide lx-social">
+              <legend>Social media links <span class="lx-opt">optional</span></legend>
+              <div class="lx-social-grid">
+                <label><span>Facebook</span><input name="social.facebook" type="url" inputmode="url" placeholder="https://facebook.com/…"></label>
+                <label><span>Instagram</span><input name="social.instagram" type="url" inputmode="url" placeholder="https://instagram.com/…"></label>
+                <label><span>X</span><input name="social.x" type="url" inputmode="url" placeholder="https://x.com/…"></label>
+                <label><span>LinkedIn</span><input name="social.linkedin" type="url" inputmode="url" placeholder="https://linkedin.com/…"></label>
+              </div>
+              <span class="lx-error" id="lx-social-error" aria-live="polite"></span>
+            </fieldset>
+          </div>
+          <div class="lx-nav">
+            <button type="button" class="btn btn-quiet lx-back">Back</button>
+            <button type="button" class="btn btn-primary lx-next">Continue <span aria-hidden="true">→</span></button>
+          </div>
+        </section>
+
+        <!-- Step 3: the launch preview -->
+        <section class="lx-panel" data-step="3" aria-labelledby="lx-t3" hidden>
+          <p class="lx-eyebrow">Step 3 · Design &amp; deployment</p>
+          <h2 id="lx-t3" tabindex="-1">Your website is ready for launch</h2>
+          <div class="lx-review">
+            <div class="lx-preview-col">
+              <div class="lx-preview" aria-hidden="true"></div>
+              <p class="lx-preview-note">A preview of your design with your name. You'll fill in the rest in your Control Center.</p>
+            </div>
+            <div class="lx-summary">
+              <dl class="lx-facts">
+                <div><dt>Business</dt><dd class="lx-sum-name"></dd></div>
+                <div><dt>Design</dt><dd>
+                  <select class="lx-template" name="site.template" aria-label="Design"></select>
+                  <span class="lx-recommended" hidden>Recommended for you</span>
+                  <a class="lx-link" href="portfolio.html" target="_blank" rel="noopener">See all designs</a>
+                </dd></div>
+                <div><dt><label for="lx-sub">Your address</label></dt><dd>
+                  <span class="lx-domain"><input id="lx-sub" name="site.subdomain" type="text" required maxlength="40" spellcheck="false" autocapitalize="off" aria-describedby="lx-sub-hint lx-sub-error"><span>.tenshi.systems</span></span>
+                  <span class="lx-hint" id="lx-sub-hint">Letters, numbers and dashes. You can add your own domain later.</span>
+                  <span class="lx-error" id="lx-sub-error" aria-live="polite"></span>
+                </dd></div>
+              </dl>
+              <h3 class="lx-included-title">Included features</h3>
+              <ul class="lx-included">
+                <li>Enterprise CMS</li><li>Media Library</li><li>Portfolio System</li><li>Lead Forms</li><li>SEO Toolkit</li><li>Analytics</li><li>Export Manager</li>
+              </ul>
+            </div>
+          </div>
+          <div class="lx-nav">
+            <button type="button" class="btn btn-quiet lx-back">Back</button>
+            <button type="submit" class="btn btn-primary btn-launch lx-deploy">Deploy now <span class="btn-launch-arrow" aria-hidden="true">→</span></button>
+          </div>
+        </section>
+
+        <!-- Deploying: the launch steps tick off one by one (launch.js) -->
+        <section class="lx-panel lx-deploying" data-step="4" aria-labelledby="lx-t4" hidden>
+          <div class="lx-rocket" aria-hidden="true"><span></span></div>
+          <h2 id="lx-t4" tabindex="-1">Launching <span class="lx-sum-domain"></span></h2>
+          <ol class="lx-tasks" aria-live="polite"></ol>
+        </section>
+
+        <!-- Done -->
+        <section class="lx-panel lx-done" data-step="5" aria-labelledby="lx-t5" hidden>
+          <div class="lx-seal" aria-hidden="true">✓</div>
+          <h2 id="lx-t5" tabindex="-1">Your launch request is ready</h2>
+          <p class="lx-lead lx-done-text"></p>
+          <ol class="lx-next-steps">
+            <li><b>We set up your site</b> at <span class="lx-sum-domain"></span> with your design, details and logo.</li>
+            <li><b>You get your Control Center login</b> by email, at <span class="lx-sum-email"></span>.</li>
+            <li><b>You start editing.</b> Pages, photos, galleries and forms, no code needed.</li>
+          </ol>
+          <div class="lx-done-actions">
+            <a class="btn btn-primary lx-mail" href="#">Send my launch request by email</a>
+            <button type="button" class="btn btn-quiet lx-download">Download my business profile</button>
+            <button type="button" class="lx-link lx-restart">Start over</button>
+          </div>
+        </section>
+      </form>
+    </section>
+    <script type="application/json" id="tpl-data">{"groups":[{"id":"trades","name":"Trades & Home Services"},{"id":"food","name":"Food & Hospitality"},{"id":"professional","name":"Professional Services"},{"id":"retail","name":"Retail & Marketplaces"},{"id":"community","name":"Community & Nonprofit"},{"id":"creative","name":"Creative & Portfolio"}],"templates":[{"id":"corporate","name":"Tenshi Corporate","group":"professional","for":"Consultancies, agencies, B2B companies","sample":"Northwind Partners","headline":"Strategy that moves you forward","colors":{"primary":"#c8102e","accent":"#3d4249","surface":"#ffffff","ink":"#2b2f35"},"style":"clean","pages":["Home","About","Services","Team","Case Studies","Contact"],"features":["Team profiles","Case study pages","Lead form with topic picker"],"goals":["leads","services"],"categories":["consulting","other"]},{"id":"contractor","name":"Local Contractor","group":"trades","for":"General contractors, builders, remodelers","sample":"Ridgeline Builders","headline":"Built right. Built to last.","colors":{"primary":"#e07a1f","accent":"#263238","surface":"#f7f5f2","ink":"#263238"},"style":"bold","pages":["Home","Services","Projects","Reviews","Free Estimate"],"features":["Before & after gallery","Free estimate form","Service area map"],"goals":["leads","services","portfolio"],"categories":["contractor","home"]},{"id":"roofing","name":"Roofing Pro","group":"trades","for":"Roofers, gutters, siding, storm repair","sample":"Summit Roofing Co.","headline":"Storm damage? We're on the way.","colors":{"primary":"#1f4e79","accent":"#f2a900","surface":"#ffffff","ink":"#1b2733"},"style":"bold","pages":["Home","Roofing","Storm Repair","Gallery","Get a Quote"],"features":["Emergency call button","Insurance claim guide","Project gallery"],"goals":["leads","services"],"categories":["contractor","home"]},{"id":"landscaping","name":"Landscaping","group":"trades","for":"Landscapers, lawn care, tree service","sample":"Greenleaf Grounds","headline":"Your yard, beautifully handled","colors":{"primary":"#2e7d32","accent":"#a5d6a7","surface":"#f4f8f2","ink":"#1e3320"},"style":"clean","pages":["Home","Services","Seasonal Plans","Gallery","Contact"],"features":["Seasonal service plans","Photo gallery","Quote request form"],"goals":["leads","services","portfolio"],"categories":["home","contractor"]},{"id":"automotive","name":"Automotive Shop","group":"trades","for":"Repair shops, detailers, tire and body shops","sample":"Redline Auto Care","headline":"Honest repairs. Fast turnaround.","colors":{"primary":"#b71c1c","accent":"#212121","surface":"#f5f5f5","ink":"#151515"},"style":"bold","pages":["Home","Services","Specials","Gallery","Book Service"],"features":["Service booking form","Monthly specials","Vehicle gallery"],"goals":["leads","services"],"categories":["automotive"]},{"id":"restaurant","name":"Restaurant","group":"food","for":"Restaurants, cafés, bakeries, food trucks","sample":"Hanami Kitchen","headline":"Seasonal plates, made with care","colors":{"primary":"#8d2b1e","accent":"#e9b44c","surface":"#fbf6ef","ink":"#2d1a14"},"style":"elegant","pages":["Home","Menu","Gallery","Reservations","Visit Us"],"features":["Menu builder with photos","Opening hours","Reservation requests"],"goals":["services","ecommerce"],"categories":["restaurant"]},{"id":"realestate","name":"Real Estate Agency","group":"professional","for":"Agents, brokers, property managers","sample":"Harbor & Main Realty","headline":"Find the place you'll call home","colors":{"primary":"#0d3b66","accent":"#c9a227","surface":"#ffffff","ink":"#14213d"},"style":"elegant","pages":["Home","Listings","Sell With Us","Agents","Contact"],"features":["Listing gallery with filters","Agent profiles","Home valuation form"],"goals":["leads","directory"],"categories":["realestate"]},{"id":"lawfirm","name":"Law Firm","group":"professional","for":"Attorneys, accountants, financial advisors","sample":"Whitmore & Lane","headline":"Clear advice when it matters most","colors":{"primary":"#1c2541","accent":"#a68a64","surface":"#fdfcfa","ink":"#1c2541"},"style":"elegant","pages":["Home","Practice Areas","Attorneys","Results","Consultation"],"features":["Practice area pages","Attorney profiles","Confidential consultation form"],"goals":["leads","services"],"categories":["legal","consulting"]},{"id":"medical","name":"Medical Clinic","group":"professional","for":"Clinics, dentists, therapists, wellness","sample":"Brightside Family Clinic","headline":"Care that puts you first","colors":{"primary":"#00838f","accent":"#80deea","surface":"#f5fbfc","ink":"#12343b"},"style":"clean","pages":["Home","Services","Our Doctors","Patient Info","Book a Visit"],"features":["Appointment requests","Doctor profiles","Patient forms to download"],"goals":["leads","services"],"categories":["medical"]},{"id":"ecommerce","name":"Online Store","group":"retail","for":"Shops, makers, boutiques","sample":"Kumo Goods","headline":"Small batch. Big heart.","colors":{"primary":"#6a1b9a","accent":"#ffb300","surface":"#ffffff","ink":"#24112e"},"style":"clean","pages":["Home","Shop","Product","About","Contact"],"features":["Product catalog","Product photo galleries","Order enquiry form"],"goals":["ecommerce"],"categories":["retail"]},{"id":"farm-equipment","name":"Farm Equipment Marketplace","group":"retail","for":"Equipment dealers, farm supply, auctions","sample":"Prairie Iron Exchange","headline":"Quality equipment, fair deals","colors":{"primary":"#33691e","accent":"#fbc02d","surface":"#f9f8f3","ink":"#22301a"},"style":"bold","pages":["Home","Inventory","Sell Equipment","Financing","Contact"],"features":["Inventory listings with photos","Sell-your-equipment form","Category filters"],"goals":["directory","ecommerce","leads"],"categories":["agriculture","retail"]},{"id":"classifieds","name":"Classifieds","group":"retail","for":"Local buy-and-sell boards, job boards","sample":"Town Square Classifieds","headline":"Buy, sell and trade locally","colors":{"primary":"#e65100","accent":"#455a64","surface":"#ffffff","ink":"#263238"},"style":"clean","pages":["Home","Browse","Post an Ad","Categories","Contact"],"features":["Ad listings by category","Post-an-ad form","Search and filters"],"goals":["directory","community"],"categories":["community","retail"]},{"id":"directory","name":"Business Directory","group":"community","for":"Chambers of commerce, local guides","sample":"Maple Valley Guide","headline":"Everything local, in one place","colors":{"primary":"#00695c","accent":"#ffca28","surface":"#f6faf9","ink":"#1a2f2c"},"style":"clean","pages":["Home","Browse","Categories","Add a Listing","About"],"features":["Listings with maps","Category browsing","Add-a-listing form"],"goals":["directory","community"],"categories":["community"]},{"id":"nonprofit","name":"Nonprofit","group":"community","for":"Charities, churches, foundations, clubs","sample":"Open Hands Foundation","headline":"Together we can do more","colors":{"primary":"#c62828","accent":"#ffcc80","surface":"#fffaf5","ink":"#3a1d1d"},"style":"clean","pages":["Home","Our Mission","Programs","Volunteer","Donate"],"features":["Volunteer sign-up","Programs pages","Impact stories"],"goals":["nonprofit","community"],"categories":["nonprofit"]},{"id":"community","name":"Community Portal","group":"community","for":"Neighborhoods, schools, sports leagues","sample":"Cedar Park Neighbors","headline":"What's happening around here","colors":{"primary":"#3949ab","accent":"#ffb74d","surface":"#f7f8fd","ink":"#1d2246"},"style":"clean","pages":["Home","News","Events","Groups","Contact"],"features":["News and events","Group pages","Newsletter sign-up"],"goals":["community","nonprofit"],"categories":["community","nonprofit"]},{"id":"portfolio","name":"Creative Portfolio","group":"creative","for":"Photographers, artists, designers, freelancers","sample":"Mika Sato Photography","headline":"Light, moments, stories","colors":{"primary":"#111111","accent":"#c8102e","surface":"#ffffff","ink":"#111111"},"style":"elegant","pages":["Home","Work","About","Services","Contact"],"features":["Masonry gallery with lightbox","Portfolio categories","Booking form"],"goals":["portfolio","services"],"categories":["creative","freelance"]}]}</script>
+
+  </main>
+
+  <footer class="site-footer">
+    <!-- widgets:start (written by tools/build-pages.mjs from data/news.json and data/blog.json) -->
+    <div class="footer-widgets">
+      <section class="fw" aria-labelledby="fw-news">
+        <h2 id="fw-news" class="fw-title"><a href="news.html" data-i18n="newsHeadTitle">Latest from Japan</a></h2>
+        <ul class="fw-list">
+          <li class="fw-item">
+            <img class="fw-thumb" src="img/stories/549909cee5334c8f.jpg" alt="" width="96" height="72" loading="lazy" decoding="async">
+            <div class="fw-text">
+              <p class="fw-meta"><span data-i18n="newsCatStocks">Stock Exchange</span> · <time datetime="2026-11-16">Nov 16</time></p>
+              <a class="fw-link" href="https://news.google.com/rss/articles/CBMilgFBVV95cUxNeWN3clJ6TG1pcjF1X1RPSkVrSy1xamxEbkFlUU01Q3FRTlpIY3dna2lCRmNDU2FSeHM1T2U4dnFULVNNUjB2UFJUUmpwWTNOMUI0T3l5aDhKTkJIdXdQVG5ZbUZ5d1c5NlNkaXJXOVNkRUdHRHM0a0NOa29WNndva05tRmlGNXpibFlhY2M3QkFYZDJncXc?oc=5" target="_blank" rel="noopener">Yen caught in tug-of-war between bulls and bears amid clashing market forces! Goldman Sachs bets on rebound, while Morgan Stanley predicts drop to 162.<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a>
+              <p class="fw-src">富途牛牛 · <span data-i18n="photoLabel">Photo</span>: Japanexperterna.se (<a href="https://creativecommons.org/licenses/by-sa/3.0" target="_blank" rel="noopener">CC BY-SA 3.0</a>)</p>
+            </div>
+          </li>
+          <li class="fw-item">
+            <img class="fw-thumb" src="img/stories/e9f9498238154376.jpg" alt="" width="96" height="72" loading="lazy" decoding="async">
+            <div class="fw-text">
+              <p class="fw-meta"><span data-i18n="newsCatBusiness">Business</span> · <time datetime="2026-11-16">Nov 16</time></p>
+              <a class="fw-link" href="https://news.google.com/rss/articles/CBMidkFVX3lxTE1OT3BHYXo0SzBmZkcwQlhHMjNfZG9yMWlRSG82U05iZTVQdHlvcFo2VWljaDhwbFViWWRwVVN4WGg3U0JZeUEtODVuVkt6dFE5RXdGQzNqZ2FNNTloZmdhbk14cUZySkViSHk0QzF4bGstS3d5a2c?oc=5" target="_blank" rel="noopener">Japan's Economy Stalls in Q3 as Weak Yen, Middle East Conflict Fuel Inflation; BOJ December Rate Hike Expected<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a>
+              <p class="fw-src">finance.biggo.com · <span data-i18n="photoLabel">Photo</span>: Unknown (<a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener">CC0</a>)</p>
+            </div>
+          </li>
+          <li class="fw-item">
+            <img class="fw-thumb" src="img/stories/0e77fd93844316bc.jpg" alt="" width="96" height="72" loading="lazy" decoding="async">
+            <div class="fw-text">
+              <p class="fw-meta"><span data-i18n="newsCatWeather">Weather</span> · <time datetime="2026-11-16">Nov 16</time></p>
+              <a class="fw-link" href="https://news.google.com/rss/articles/CBMiWkFVX3lxTE1jVjlCU1ZXNE9uNGZfX0R6aXNJUDNKaTc0ZXRNS0hhZGJlWmFLUjVIaDhOYmxHcFBZNEhiRGZTa0hKMWNSSW9FS0ItVk03MG1FRWtOMWZjWDJYZw?oc=5" target="_blank" rel="noopener">Japan to launch network to improve weather disaster warnings in Asia<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a>
+              <p class="fw-src">Japan Wire by Kyodo News · <span data-i18n="photoLabel">Photo</span>: Clark Moreland (<a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener">CC0</a>)</p>
+            </div>
+          </li>
+          <li class="fw-item">
+            <img class="fw-thumb" src="img/stories/4ff564220545c534.jpg" alt="" width="96" height="72" loading="lazy" decoding="async">
+            <div class="fw-text">
+              <p class="fw-meta"><span data-i18n="newsCatSports">Sports</span> · <time datetime="2026-11-16">Nov 16</time></p>
+              <a class="fw-link" href="https://www.japantimes.co.jp/sports/2026/11/16/tennis/mirra-andreeva-wta-finals/" target="_blank" rel="noopener">Mirra Andreeva beats Elina Svitolina to capture WTA Finals crown<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a>
+              <p class="fw-src">The Japan Times · <span data-i18n="photoLabel">Photo</span>: Matt Moloney (<a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener">CC0</a>)</p>
+            </div>
+          </li>
+          <li class="fw-item">
+            <img class="fw-thumb" src="img/stories/728b8e54120ba5b2.jpg" alt="" width="96" height="72" loading="lazy" decoding="async">
+            <div class="fw-text">
+              <p class="fw-meta"><span data-i18n="newsCatHealth">Health</span> · <time datetime="2026-11-16">Nov 16</time></p>
+              <a class="fw-link" href="https://news.google.com/rss/articles/CBMiX0FVX3lxTE4tSlJzVXFEZDFRcUkxRWtWMENrLTVYQUY2WUxnU0xMalJyQ1lpM0NtMnpLY25sLUlpSTkzRWpUdEwzbEVDOVlMd3A4QkZTWFVJMUxJZnNJTkx0MVNnTzZv?oc=5" target="_blank" rel="noopener">Deficits Reported at Nearly 40 Pct of Care Facilities in Japan<span class="sr-only"> <span data-i18n="techNewTab">(opens in a new tab)</span></span></a>
+              <p class="fw-src">jiji press · <span data-i18n="photoLabel">Photo</span>: Unknown (<a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener">CC0</a>)</p>
+            </div>
+          </li>
+        </ul>
+        <a class="fw-more" href="news.html"><span data-i18n="homeNewsAll">All news</span></a>
+      </section>
+      <section class="fw" aria-labelledby="fw-blog">
+        <h2 id="fw-blog" class="fw-title"><a href="blog.html" data-i18n="homeBlogTitle">From the blog</a></h2>
+        <ul class="fw-list">
+          <li class="fw-item">
+            <img class="fw-thumb" src="img/covers/blog.svg" alt="" width="96" height="72" loading="lazy" decoding="async">
+            <div class="fw-text">
+              <p class="fw-meta">Technology · <time datetime="2026-11-17">Nov 17</time></p>
+              <a class="fw-link" href="blog/domain-names-and-business-email-getting-your-online-foundations-right.html">Domain Names and Business Email: Getting Your Online Foundations Right</a>
+              <p class="fw-src">6 <span data-i18n="blogMin">min read</span></p>
+            </div>
+          </li>
+          <li class="fw-item">
+            <img class="fw-thumb" src="img/covers/blog.svg" alt="" width="96" height="72" loading="lazy" decoding="async">
+            <div class="fw-text">
+              <p class="fw-meta">Technology · <time datetime="2026-11-17">Nov 17</time></p>
+              <a class="fw-link" href="blog/choosing-web-hosting-for-your-business-a-plain-english-guide.html">Choosing Web Hosting for Your Business: A Plain-English Guide</a>
+              <p class="fw-src">5 <span data-i18n="blogMin">min read</span></p>
+            </div>
+          </li>
+          <li class="fw-item">
+            <img class="fw-thumb" src="img/covers/blog.svg" alt="" width="96" height="72" loading="lazy" decoding="async">
+            <div class="fw-text">
+              <p class="fw-meta">Technology · <time datetime="2026-11-16">Nov 16</time></p>
+              <a class="fw-link" href="blog/website-analytics-in-plain-english-for-business-owners.html">Website Analytics in Plain English: How to Tell If Your Site Is Doing Its Job</a>
+              <p class="fw-src">5 <span data-i18n="blogMin">min read</span></p>
+            </div>
+          </li>
+          <li class="fw-item">
+            <img class="fw-thumb" src="img/covers/blog.svg" alt="" width="96" height="72" loading="lazy" decoding="async">
+            <div class="fw-text">
+              <p class="fw-meta">Services · <time datetime="2026-11-16">Nov 16</time></p>
+              <a class="fw-link" href="blog/design-development-optimization-ai.html">Design, Development, Optimization and AI: How One Partner Can Carry Your Business Online</a>
+              <p class="fw-src">4 <span data-i18n="blogMin">min read</span></p>
+            </div>
+          </li>
+        </ul>
+        <a class="fw-more" href="blog.html"><span data-i18n="homeBlogAll">All posts</span></a>
+      </section>
+    </div>    <!-- widgets:end -->
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img class="footer-logo" src="brand/tenshi-horizontal.png?v=20261119" alt="Tenshi Systems Engineering" width="601" height="186">
+        <div class="tse-finder" data-search data-search-v="cf4df561">
+          <form class="tse-finder__form" role="search" autocomplete="off" aria-label="Search the site" data-i18n-attr="aria-label:searchLabel">
+            <label class="sr-only" for="tse-finder-q" data-i18n="searchLabel">Search the site</label>
+            <div class="tse-finder__outer">
+              <div class="tse-finder__inner">
+                <span class="tse-finder__icon" aria-hidden="true"></span>
+                <input class="tse-finder__input" id="tse-finder-q" type="search" name="q" dir="auto" enterkeyhint="search" spellcheck="false" placeholder="Search the site…" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="tse-finder-list" data-i18n-attr="placeholder:searchPlaceholder">
+              </div>
+            </div>
+            <ul class="tse-finder__list" id="tse-finder-list" role="listbox" aria-label="Search the site" data-i18n-attr="aria-label:searchLabel" hidden></ul>
+            <p class="tse-finder__empty" hidden data-i18n="searchNoResults">No results</p>
+            <p class="sr-only" aria-live="polite" data-search-status></p>
+          </form>
+        </div>
+      </div>
+      <nav class="footer-nav" aria-label="Main menu" data-i18n-attr="aria-label:navLabel">
+          <ul>
+            <li><a href="index.html" data-nav="home" data-i18n="navHome">Home</a></li>
+            <li><a href="about.html" data-nav="about" data-i18n="navAbout">About</a></li>
+            <li><a href="team.html" data-nav="team" data-i18n="navTeam">Team</a></li>
+            <li><a href="services.html" data-nav="services" data-i18n="navServices">Services</a></li>
+            <li><a href="technology.html" data-nav="technology" data-i18n="navTech">Technology</a></li>
+            <li><a href="portfolio.html" data-nav="portfolio" data-i18n="navPortfolio">Portfolio</a></li>
+            <li><a href="news.html" data-nav="news" data-i18n="navNews">News</a></li>
+            <li><a href="blog.html" data-nav="blog" data-i18n="navBlog">Blog</a></li>
+            <li><a href="launch.html" aria-current="page" data-nav="launch" data-i18n="navLaunch">Launch</a></li>
+            <li><a href="contact.html" data-nav="contact" data-i18n="navContact">Contact</a></li>
+            <li><a href="portal.html" data-nav="portal" data-i18n="navPortal">Portal</a></li>
+          </ul>
+      </nav>
+      <p class="footer-meta"><span data-i18n="location">Osaka, Japan</span> · © <span id="year">2026</span> Tenshi Systems Engineering</p>
+      <img class="footer-badge" src="brand/sdvosb-badge.png?v=20261119" alt="Service-Disabled Veteran-Owned Small Business (SDVOSB) certified" width="260" height="260" loading="lazy" decoding="async">
+    </div>
+  </footer>
+
+  <script src="translations.js?v=a81f3b33"></script>
+  <script src="app.js?v=3e59591d"></script>
+  <script src="nav.js?v=70de5473"></script>
+  <script src="fx-data.js?v=9b0709d9"></script>
+  <script src="fx.js?v=5a67a4ab"></script>
+  <script src="search.js?v=6e09d35a"></script>
+  <script src="design.js?v=e4ade4cb"></script>
+  <script src="chat.js?v=e6aee4be"></script>
+  <script src="launch.js?v=964866ce"></script>
+</body>
+</html>

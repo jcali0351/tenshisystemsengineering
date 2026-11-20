@@ -1,0 +1,160 @@
+/* =====================================================================================================================
+   PORTFOLIO: the Tenshi Design Gallery (portfolio.html) and the little website pictures (.tpl-mock).
+   The Launch page loads this file too, for its preview picture.
+
+   Each picture takes its colours from four variables set on it (they come from data/templates.json):
+     --p  primary (header bar, buttons)   --a  accent (highlights)   --s  surface (page background)   --i  ink (text)
+   and one of three shapes: .tpl-bold (chunky, square), .tpl-clean (light, rounded), .tpl-elegant (thin, centred, serif).
+
+   Sections: 1. The website picture   2. The gallery: filters, cards   3. How it works   4. The Preview window   5. Phones
+   ===================================================================================================================== */
+
+
+/* ---------- 0. Buttons used on the Portfolio and Launch pages ---------- */
+.btn-launch { text-transform: uppercase; letter-spacing: .12em; padding-inline: 30px; }
+.btn-launch-arrow { display: inline-block; transition: transform .25s; }
+.btn-launch:hover .btn-launch-arrow, .btn-launch:focus-visible .btn-launch-arrow { transform: translateX(4px); }
+/* A quiet outline button, for the second choice next to a red one */
+.btn-quiet { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+.btn-quiet:hover { background: #fff; border-color: var(--ink); transform: translateY(-1px); }
+.btn-quiet:focus-visible { outline-color: var(--shu, var(--red)); }
+
+
+/* ---------- 1. The website picture ---------- */
+.tpl-mock {
+  --p: #c8102e; --a: #3d4249; --s: #fff; --i: #222;   /* fallbacks */
+  container-type: inline-size;                        /* sizes inside are a share of the picture's width (cqw) */
+  width: 100%; aspect-ratio: 16 / 10.5; overflow: hidden;
+  background: var(--s); color: var(--i);
+  border: 1px solid rgba(19, 19, 21, .12); border-radius: 6px;
+  box-shadow: 0 18px 40px -26px rgba(19, 19, 21, .55);
+  display: flex; flex-direction: column;
+  font-family: var(--font, sans-serif); text-align: start;
+}
+/* The browser's top bar: three dots and the web address */
+.tpl-chrome { flex: none; display: flex; align-items: center; gap: 1.1cqw; padding: 1.6cqw 2.2cqw; background: #eceae6; border-bottom: 1px solid rgba(19, 19, 21, .08); }
+.tpl-chrome span { width: 1.6cqw; height: 1.6cqw; border-radius: 50%; background: #d3cfc8; }
+.tpl-chrome span:first-child { background: #ec6a5e; } .tpl-chrome span:nth-child(2) { background: #f4bf4f; } .tpl-chrome span:nth-child(3) { background: #61c554; }
+.tpl-chrome i { flex: 1; margin-inline-start: 2cqw; padding: .5cqw 2cqw; font-style: normal; font-size: 2.3cqw; color: #77736c; background: #fff; border-radius: 99px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.tpl-site { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+/* Top menu: the business name, three links and a button */
+.tpl-nav { display: flex; align-items: center; gap: 2cqw; padding: 2.4cqw 4cqw; }
+.tpl-logo { font-size: 3cqw; font-weight: 800; letter-spacing: -.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 50%; color: var(--i); }
+.tpl-logo-img { height: 4.4cqw; width: auto; max-width: 12cqw; object-fit: contain; }
+.tpl-links { display: flex; gap: 2cqw; margin-inline-start: auto; }
+.tpl-links span { width: 6cqw; height: 1.1cqw; border-radius: 1cqw; background: currentColor; opacity: .25; }
+.tpl-cta { width: 11cqw; height: 4.2cqw; border-radius: 1cqw; background: var(--p); }
+/* The big top section: a headline, a line of text and a button, on the primary colour */
+.tpl-hero {
+  flex: 1.3; display: flex; flex-direction: column; justify-content: center; gap: 2cqw;
+  padding: 3cqw 4cqw; color: #fff;
+  background:
+    radial-gradient(circle at 85% 25%, color-mix(in srgb, var(--a) 55%, transparent), transparent 42%),
+    linear-gradient(135deg, var(--p), color-mix(in srgb, var(--p) 70%, #000));
+}
+.tpl-head { display: block; font-size: 5.4cqw; line-height: 1.05; font-weight: 800; letter-spacing: -.02em; max-width: 72%; text-wrap: balance; }
+.tpl-sub { width: 46%; height: 1.3cqw; border-radius: 1cqw; background: rgba(255, 255, 255, .55); }
+.tpl-btn { width: 17cqw; height: 4.8cqw; border-radius: 1cqw; background: var(--a); }
+/* Three cards below */
+.tpl-tiles { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.4cqw; padding: 3cqw 4cqw; }
+.tpl-tiles span { border-radius: 1.2cqw; background: color-mix(in srgb, var(--i) 7%, var(--s)); border-top: .7cqw solid var(--a); }
+
+/* Three shapes */
+.tpl-bold .tpl-head { text-transform: uppercase; font-size: 5cqw; }
+.tpl-bold :is(.tpl-cta, .tpl-btn, .tpl-tiles span) { border-radius: 0; }
+.tpl-bold .tpl-nav { background: var(--i); }
+.tpl-bold .tpl-logo { color: #fff; }
+.tpl-bold .tpl-links span { background: #fff; }
+.tpl-clean :is(.tpl-cta, .tpl-btn) { border-radius: 99px; }
+.tpl-clean .tpl-tiles span { border-top: 0; box-shadow: 0 1.5cqw 3cqw -2cqw rgba(0, 0, 0, .35); background: #fff; }
+.tpl-clean .tpl-hero { border-radius: 0 0 3cqw 3cqw; margin: 0 2cqw; }
+.tpl-elegant .tpl-hero { align-items: center; text-align: center; }
+.tpl-elegant .tpl-head { font-family: Georgia, "Times New Roman", serif; font-weight: 400; font-style: italic; max-width: 82%; }
+.tpl-elegant .tpl-logo { font-family: Georgia, "Times New Roman", serif; font-weight: 400; letter-spacing: .08em; text-transform: uppercase; }
+.tpl-elegant :is(.tpl-cta, .tpl-btn) { background: transparent; border: .35cqw solid var(--a); border-radius: 0; }
+.tpl-elegant .tpl-tiles span { border-top-width: .3cqw; border-radius: 0; }
+
+
+/* ---------- 2. The gallery: filters and cards ---------- */
+.tpl-gallery .section-intro, .tpl-how .section-intro { color: var(--text); }   /* the site's default intro is white, for red sections */
+.tpl-filter { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 2em 0 .6em; }
+.tpl-chip {
+  min-height: 42px; padding: 8px 16px; cursor: pointer;
+  font: 700 .82rem/1.2 var(--font); letter-spacing: .04em; color: var(--ink);
+  background: #fff; border: 1px solid var(--line); border-radius: 99px;
+  transition: background-color .2s, color .2s, border-color .2s;
+}
+.tpl-chip:hover { border-color: var(--ink); }
+.tpl-chip[aria-pressed="true"] { background: var(--shu, var(--red)); border-color: var(--shu, var(--red)); color: #fff; }
+.tpl-count { text-align: center; font-size: .82rem; color: var(--muted); margin: 0 0 1.6em; }
+
+.tpl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: clamp(18px, 2.4vw, 30px); }
+.tpl-card {
+  display: flex; flex-direction: column; overflow: hidden;
+  background: #fff; border: 1px solid var(--line); border-radius: 4px;
+  transition: transform .3s cubic-bezier(.2, .7, .2, 1), box-shadow .3s;
+}
+.tpl-card[hidden] { display: none; }
+.tpl-card:hover { transform: translateY(-4px); box-shadow: 0 26px 50px -30px rgba(19, 19, 21, .5); }
+.tpl-card-media { padding: 18px 18px 0; background: linear-gradient(180deg, var(--pale), #fff); }
+.tpl-card-media .tpl-mock { transition: transform .5s cubic-bezier(.2, .7, .2, 1); }
+.tpl-card:hover .tpl-card-media .tpl-mock { transform: scale(1.025); }
+.tpl-card-body { flex: 1; display: flex; flex-direction: column; gap: 6px; padding: 18px 20px 20px; }
+.tpl-kicker { font-size: .7rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: var(--shu, var(--red)); }
+.tpl-card h3:not(#_):not(#__) { text-align: start !important; font-size: 1.35rem !important; margin: 0; }
+.tpl-for { color: var(--text); font-size: .92rem; line-height: 1.45; }
+.tpl-pages { color: var(--muted); font-size: .76rem; line-height: 1.45; }
+.tpl-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 12px; }
+.tpl-actions .btn { min-height: 44px; padding: 8px 14px; font-size: .8rem; flex: 1 1 auto; }
+
+
+/* ---------- 3. How it works ---------- */
+.tpl-steps { list-style: none; margin: 2em 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2.4vw, 30px); counter-reset: none; }
+.tpl-steps li { margin: 0 !important; padding: 24px; background: #fff; border: 1px solid var(--line); border-top: 3px solid var(--shu, var(--red)); border-radius: 4px; }
+.tpl-step-n { display: block; font: 700 2rem/1 var(--font-heading); color: var(--shu, var(--red)); margin-bottom: 10px; }
+.tpl-steps h3:not(#_):not(#__) { text-align: start !important; margin: 0 0 6px; font-size: 1.25rem !important; }
+.tpl-steps p { margin: 0; font-size: .92rem; }
+.tpl-how-cta { text-align: center; margin-top: 2.2em !important; }
+
+
+/* ---------- 4. The Preview window ---------- */
+.tpl-dialog { width: min(1180px, calc(100vw - 24px)); max-height: calc(100vh - 24px); padding: 0; border: 0; border-radius: 6px; background: #faf8f4; box-shadow: 0 40px 100px -30px rgba(0, 0, 0, .6); }
+.tpl-dialog::backdrop { background: rgba(19, 19, 21, .62); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+.tpl-dialog[open] { animation: tpl-pop .35s cubic-bezier(.2, .7, .2, 1); }
+@keyframes tpl-pop { from { opacity: 0; transform: translateY(18px) scale(.98); } to { opacity: 1; transform: none; } }
+.tpl-dialog-inner { position: relative; display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); }
+.tpl-dialog-close { position: absolute; top: 8px; inset-inline-end: 10px; z-index: 2; width: 44px; height: 44px; font-size: 1.8rem; line-height: 1; color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 50%; cursor: pointer; }
+.tpl-dialog-view { padding: 26px; background: linear-gradient(160deg, #efece6, #faf8f4); display: flex; flex-direction: column; gap: 16px; align-items: center; }
+.tpl-device { display: inline-flex; border: 1px solid var(--line); border-radius: 99px; background: #fff; padding: 3px; }
+.tpl-device button { min-height: 36px; padding: 6px 16px; font: 700 .78rem/1 var(--font); color: var(--muted); background: none; border: 0; border-radius: 99px; cursor: pointer; }
+.tpl-device button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+.tpl-dialog-stage { width: 100%; display: flex; justify-content: center; }
+.tpl-dialog-stage .tpl-mock { max-width: 100%; transition: max-width .45s cubic-bezier(.2, .7, .2, 1), aspect-ratio .45s; }
+.tpl-dialog-stage.is-mobile .tpl-mock { max-width: 300px; aspect-ratio: 9 / 16; }
+.tpl-dialog-stage.is-mobile .tpl-links { display: none; }
+.tpl-dialog-stage.is-mobile .tpl-tiles { grid-template-columns: 1fr; }
+.tpl-dialog-stage.is-mobile .tpl-head { font-size: 8cqw; max-width: 100%; }
+.tpl-dialog-info { padding: 30px 28px; display: flex; flex-direction: column; gap: 6px; overflow: auto; max-height: calc(100vh - 24px); }
+.tpl-dialog-info h2 { font-size: clamp(1.6rem, 3vw, 2.2rem) !important; margin: 0; }
+.tpl-dialog-sub:not(#_):not(#__) { text-align: start !important; font-size: .74rem !important; letter-spacing: .16em !important; margin: 16px 0 4px; }
+.tpl-dialog-pages { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.tpl-dialog-pages li { margin: 0 !important; padding: 4px 10px; font-size: .78rem; font-weight: 700; color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 99px; }
+.tpl-dialog-features { list-style: none; margin: 0; padding: 0; }
+.tpl-dialog-features li { margin: 4px 0 0 !important; display: flex; gap: 8px; font-size: .9rem; color: var(--ink); }
+.tpl-dialog-features li::before { content: "✓"; color: var(--shu, var(--red)); font-weight: 900; }
+.tpl-dialog-launch { margin-top: 18px; }
+html.tpl-locked { overflow: hidden; }
+
+
+/* ---------- 5. Phones, and less motion ---------- */
+@media (max-width: 860px) {
+  .tpl-dialog-inner { grid-template-columns: 1fr; }
+  .tpl-dialog-info { max-height: none; }
+  .tpl-dialog { overflow: auto; }
+  .tpl-steps { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tpl-card, .tpl-card-media .tpl-mock, .tpl-dialog[open], .tpl-dialog-stage .tpl-mock { transition: none; animation: none; }
+  .tpl-card:hover, .tpl-card:hover .tpl-card-media .tpl-mock { transform: none; }
+}

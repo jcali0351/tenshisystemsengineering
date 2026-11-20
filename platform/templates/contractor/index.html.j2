@@ -1,0 +1,48 @@
+{#- The home page of the Contractor design. -#}
+{% extends "base.html.j2" %}
+
+{% block content %}
+    <section class="hero">
+      <h1>{{ company.tagline or company.name }}</h1>
+      <p>{{ company.description }}</p>
+      <a class="button" href="contact.html">Get a free estimate</a>
+    </section>
+
+    {% if services %}
+    <section class="band">
+      <h2>What we do</h2>
+      <div class="cards">
+        {%- for service in services[:3] %}
+        <article class="card">
+          <h3>{{ service.name }}</h3>
+          <p>{{ service.description }}</p>
+        </article>
+        {%- endfor %}
+      </div>
+      <p><a href="services.html">All services →</a></p>
+    </section>
+    {% endif %}
+
+    {% if gallery %}
+    <section class="band">
+      <h2>Recent work</h2>
+      <div class="gallery">
+        {%- for image in gallery %}
+        <figure><img src="{{ image.src }}" alt="{{ image.alt }}" loading="lazy">{% if image.caption %}<figcaption>{{ image.caption }}</figcaption>{% endif %}</figure>
+        {%- endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    {% if testimonials %}
+    <section class="band quotes">
+      <h2>What customers say</h2>
+      {%- for review in testimonials %}
+      <blockquote>
+        <p>“{{ review.quote }}”</p>
+        <footer>{{ "★" * (review.rating or 5) }} · {{ review.author }}</footer>
+      </blockquote>
+      {%- endfor %}
+    </section>
+    {% endif %}
+{% endblock %}

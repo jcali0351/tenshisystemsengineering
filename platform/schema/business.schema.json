@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tenshi.systems/schema/business/1",
+  "title": "Tenshi business profile",
+  "description": "The Business Data Engine's one shape. Every design reads this; the Launch Sequence (launch.js) writes it. Version 1.",
+  "type": "object",
+  "required": ["schema", "company", "site"],
+  "properties": {
+    "schema": { "const": "tenshi.business/1" },
+    "created_at": { "type": "string", "format": "date-time" },
+
+    "company": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "maxLength": 80 },
+        "category": { "type": "string", "description": "contractor, restaurant, medical … (the Launch list)" },
+        "category_label": { "type": "string" },
+        "type": { "enum": ["storefront", "service-area", "online", "organization", ""] },
+        "tagline": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "address": { "type": "string" },
+        "city": { "type": "string" },
+        "state": { "type": "string" },
+        "service_areas": { "type": "array", "items": { "type": "string" } },
+        "hours": { "type": "array", "items": { "type": "object", "properties": { "days": { "type": "string" }, "time": { "type": "string" } } } },
+        "description": { "type": "string" },
+        "logo": { "type": ["object", "null"], "properties": { "src": { "type": "string" }, "filename": { "type": "string" }, "data_url": { "type": "string" } } }
+      }
+    },
+
+    "site": {
+      "type": "object",
+      "required": ["template", "subdomain"],
+      "properties": {
+        "goal": { "type": "string" },
+        "template": { "type": "string", "description": "An id from data/templates.json" },
+        "subdomain": { "type": "string", "pattern": "^[a-z0-9](?:[a-z0-9-]{1,38}[a-z0-9])$" },
+        "domain": { "type": "string" },
+        "custom_domain": { "type": "string" }
+      }
+    },
+
+    "services":     { "type": "array", "items": { "$ref": "#/$defs/item" } },
+    "products":     { "type": "array", "items": { "$ref": "#/$defs/item" } },
+    "staff":        { "type": "array", "items": { "type": "object", "properties": { "name": { "type": "string" }, "role": { "type": "string" }, "bio": { "type": "string" }, "photo": { "$ref": "#/$defs/image" } } } },
+    "gallery":      { "type": "array", "items": { "$ref": "#/$defs/image" } },
+    "portfolio":    { "type": "array", "items": { "type": "object", "properties": { "title": { "type": "string" }, "category": { "type": "string" }, "summary": { "type": "string" }, "before": { "$ref": "#/$defs/image" }, "after": { "$ref": "#/$defs/image" } } } },
+    "testimonials": { "type": "array", "items": { "type": "object", "properties": { "quote": { "type": "string" }, "author": { "type": "string" }, "rating": { "type": "integer", "minimum": 1, "maximum": 5 } } } },
+    "social":       { "type": "object", "additionalProperties": { "type": "string", "format": "uri" } },
+    "seo":          { "type": "object", "properties": { "title": { "type": "string" }, "description": { "type": "string", "maxLength": 160 } } }
+  },
+
+  "$defs": {
+    "item": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "string", "description": "Free text, e.g. 'From ¥8,000'" },
+        "image": { "$ref": "#/$defs/image" }
+      }
+    },
+    "image": {
+      "type": "object",
+      "properties": { "src": { "type": "string" }, "alt": { "type": "string" }, "caption": { "type": "string" } }
+    }
+  }
+}

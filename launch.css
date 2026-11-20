@@ -1,0 +1,218 @@
+/* =====================================================================================================================
+   LAUNCH: the Tenshi Launch Sequence (launch.html + launch.js). Loaded only on launch.html, after portfolio.css,
+   so nothing here changes the rest of the site.
+
+   Colours come from the site's own tokens (styles.css, design.css, site-theme.css):
+     --red / --shu  vermilion, the brand colour      --ink   dark text       --text / --muted  body text
+     --line         thin borders                     --pale  light grey backgrounds
+   Change those in the Tenshi Editor (Design) and this page follows.
+
+   Sections below, in order:
+     1. The menu's Launch item         4. The progress bar          7. Step 3: the launch preview
+     2. Launch buttons                 5. Panels and moving between  8. Deploying and done
+     3. The wizard's full-screen frame 6. Form fields               9. Phones, and visitors who prefer less motion
+   ===================================================================================================================== */
+
+
+/* Note: the site theme (site-theme.css) styles headings with ":not(#_):not(#__)" to win every tie, so the few
+   headings below that need a different alignment use the same trick. */
+
+/* (Sections 1 and 2, the Launch buttons, are at the top of portfolio.css, which this page also loads.
+   The menu's Launch item looks like every other menu item, so the site's look stays as it is.) */
+
+/* ---------- 3. The wizard's full-screen frame ---------- */
+.launch-page { background: #faf8f4; }   /* rice paper, like the header */
+.lx {
+  position: relative;
+  /* Fill the screen under the sticky header (about 90px; app.js sets --header-h if it can measure it) */
+  min-height: calc(100svh - var(--header-h, 90px));
+  display: flex; flex-direction: column;
+  padding: clamp(20px, 4vw, 48px) var(--gutter);
+  overflow: hidden;
+  isolation: isolate;
+}
+/* Soft background: a vermilion sun and faint grid lines */
+.lx::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(circle at 85% 18%, rgba(200, 16, 46, .10), transparent 32%),
+    radial-gradient(circle at 10% 90%, rgba(200, 16, 46, .06), transparent 38%),
+    linear-gradient(rgba(19, 19, 21, .035) 1px, transparent 1px) 0 0 / 46px 46px,
+    linear-gradient(90deg, rgba(19, 19, 21, .035) 1px, transparent 1px) 0 0 / 46px 46px;
+}
+.lx-form { flex: 1; display: grid; position: relative; }   /* panels sit on top of each other in one grid cell */
+
+
+/* ---------- 4. The progress bar: "Step 1 of 3" and three segments ---------- */
+.lx-progress { width: 100%; max-width: 980px; margin: 0 auto clamp(18px, 3vw, 34px); }
+.lx-progress-text { margin: 0 0 10px; font-size: .78rem; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; color: var(--shu, var(--red)); }
+.lx-progress-bar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.lx-progress-bar li { margin: 0 !important; }
+.lx-progress-bar li::before {   /* the coloured bar */
+  content: ""; display: block; height: 5px; border-radius: 3px; background: var(--line);
+  background-image: linear-gradient(90deg, var(--shu, var(--red)), #ff5c74);
+  background-size: 0% 100%; background-repeat: no-repeat; transition: background-size .6s cubic-bezier(.2, .7, .2, 1);
+}
+.lx-progress-bar li.is-done::before, .lx-progress-bar li.is-current::before { background-size: 100% 100%; }
+.lx-progress-bar span { display: block; margin-top: 6px; font-size: .74rem; font-weight: 700; color: var(--muted); letter-spacing: .06em; }
+.lx-progress-bar li.is-current span { color: var(--ink); }
+
+
+/* ---------- 5. Panels (one screen each) and moving between them ---------- */
+.lx-panel {
+  grid-area: 1 / 1;                 /* every panel in the same spot, so they can slide over each other */
+  width: 100%; max-width: 980px; margin: 0 auto; align-self: center;
+}
+.lx-panel[hidden] { display: none; }
+/* Sliding in from the right (going forward) or the left (going back); launch.js adds these classes */
+.lx-panel.is-entering { animation: lx-in .55s cubic-bezier(.2, .7, .2, 1) both; }
+.lx-panel.is-entering.from-left { animation-name: lx-in-left; }
+.lx-panel.is-leaving { animation: lx-out .35s ease both; pointer-events: none; }
+.lx-panel.is-leaving.to-right { animation-name: lx-out-right; }
+@keyframes lx-in { from { opacity: 0; transform: translateX(60px); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes lx-in-left { from { opacity: 0; transform: translateX(-60px); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes lx-out { to { opacity: 0; transform: translateX(-60px); } }
+@keyframes lx-out-right { to { opacity: 0; transform: translateX(60px); } }
+/* Things inside a new panel rise in one after another */
+.lx-panel.is-entering :is(.lx-eyebrow, h1, h2, .lx-lead, .lx-field, .lx-nav, .lx-review, .btn) { animation: lx-rise .6s cubic-bezier(.2, .7, .2, 1) both; }
+.lx-panel.is-entering :is(h1, h2) { animation-delay: .06s; }
+.lx-panel.is-entering :is(.lx-lead, .lx-field:nth-child(1)) { animation-delay: .12s; }
+.lx-panel.is-entering .lx-field:nth-child(2) { animation-delay: .17s; }
+.lx-panel.is-entering .lx-field:nth-child(3) { animation-delay: .22s; }
+.lx-panel.is-entering .lx-field:nth-child(n + 4) { animation-delay: .27s; }
+.lx-panel.is-entering :is(.lx-nav, .lx-review) { animation-delay: .3s; }
+@keyframes lx-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+.lx-eyebrow { margin: 0 0 10px; font-size: .78rem; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; color: var(--shu, var(--red)); }
+.lx h1, .lx h2 { outline: none; }
+.lx h2 { font-size: clamp(1.9rem, 4.6vw, 3rem) !important; margin: 0 0 clamp(18px, 3vw, 30px); }
+.lx-lead { font-size: clamp(1rem, 2vw, 1.2rem); max-width: 40em; }
+.lx-small { font-size: .82rem; color: var(--muted); margin-top: 1.4em; }
+
+/* The welcome screen: centred, big, with three slowly turning rings */
+.lx-welcome { text-align: center; display: flex; flex-direction: column; align-items: center; position: relative; padding: 4vh 0; }
+.lx-welcome h1 { font-size: clamp(2.3rem, 7vw, 4.8rem) !important; max-width: 14em; margin: 0 auto .35em; text-wrap: balance; }
+.lx-welcome .lx-lead { margin: 0 auto 1.8em; }
+.lx-welcome .lx-start { font-size: 1rem; min-height: 60px; padding-inline: 40px; }
+.lx-orbit { position: absolute; inset: 50% auto auto 50%; width: min(760px, 120vw); aspect-ratio: 1; transform: translate(-50%, -50%); z-index: -1; pointer-events: none; }
+.lx-orbit span { position: absolute; inset: 0; border-radius: 50%; border: 1px solid rgba(200, 16, 46, .14); animation: lx-turn 40s linear infinite; }
+.lx-orbit span:nth-child(2) { inset: 12%; border-style: dashed; animation-duration: 60s; animation-direction: reverse; }
+.lx-orbit span:nth-child(3) { inset: 26%; border-color: rgba(200, 16, 46, .08); }
+.lx-orbit span::after { content: ""; position: absolute; top: -5px; left: 50%; width: 10px; height: 10px; border-radius: 50%; background: var(--shu, var(--red)); box-shadow: 0 0 18px rgba(200, 16, 46, .6); }
+.lx-orbit span:nth-child(3)::after { display: none; }
+@keyframes lx-turn { to { transform: rotate(360deg); } }
+
+/* Back / Continue */
+.lx-nav { display: flex; justify-content: space-between; gap: 12px; margin-top: clamp(22px, 3vw, 34px); }
+.lx-panel[data-step="1"] .lx-back { visibility: visible; }
+
+
+/* ---------- 6. Form fields ---------- */
+.lx-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 22px; }
+.lx-field { display: flex; flex-direction: column; gap: 6px; min-width: 0; margin: 0; padding: 0; border: 0; }
+.lx-wide { grid-column: 1 / -1; }
+.lx-field > label, .lx-field > legend, .lx-label { font-size: .86rem; font-weight: 700; color: var(--ink); padding: 0; }
+.lx-req { color: var(--shu, var(--red)); }
+.lx-opt { font-weight: 400; font-size: .76rem; color: var(--muted); margin-inline-start: 4px; }
+.lx input[type="text"], .lx input[type="email"], .lx input[type="tel"], .lx input[type="url"], .lx select, .lx textarea {
+  width: 100%; min-height: 50px; padding: 12px 14px;
+  font: inherit; font-size: 1rem; color: var(--ink);
+  background: #fff; border: 1px solid var(--line); border-radius: 4px;
+  transition: border-color .2s, box-shadow .2s;
+}
+.lx textarea { resize: vertical; min-height: 110px; }
+.lx :is(input, select, textarea):focus { outline: none; border-color: var(--shu, var(--red)); box-shadow: 0 0 0 3px rgba(200, 16, 46, .15); }
+.lx-hint { font-size: .78rem; color: var(--muted); }
+.lx-error { font-size: .8rem; font-weight: 700; color: var(--shu, var(--red)); min-height: 0; }
+.lx-error:empty { display: none; }
+.lx .has-error :is(input, select, textarea), .lx :is(input, select, textarea)[aria-invalid="true"] { border-color: var(--shu, var(--red)); background: #fff7f8; }
+
+/* Business type: four big choice tiles */
+.lx-choices { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.lx-choice { position: relative; cursor: pointer; }
+.lx-choice input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.lx-choice span { display: flex; flex-direction: column; gap: 2px; height: 100%; padding: 14px; background: #fff; border: 1px solid var(--line); border-radius: 4px; transition: border-color .2s, box-shadow .2s, transform .2s; }
+.lx-choice b { color: var(--ink); font-size: .95rem; }
+.lx-choice small { color: var(--muted); font-size: .78rem; line-height: 1.35; }
+.lx-choice:hover span { border-color: var(--ink); transform: translateY(-1px); }
+.lx-choice input:checked + span { border-color: var(--shu, var(--red)); box-shadow: inset 0 0 0 1px var(--shu, var(--red)), 0 8px 20px -12px rgba(200, 16, 46, .6); }
+.lx-choice input:checked + span b::before { content: "✓ "; color: var(--shu, var(--red)); }
+.lx-choice input:focus-visible + span { outline: 3px solid var(--shu, var(--red)); outline-offset: 2px; }
+
+/* Logo: a drop zone */
+.lx-drop {
+  position: relative; display: flex; align-items: center; gap: 16px; min-height: 96px; padding: 16px 18px; cursor: pointer;
+  background: #fff; border: 2px dashed var(--line); border-radius: 6px; transition: border-color .2s, background-color .2s;
+}
+.lx-drop:hover, .lx-drop.is-over { border-color: var(--shu, var(--red)); background: #fff7f8; }
+.lx-drop input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.lx-drop:focus-within { outline: 3px solid var(--shu, var(--red)); outline-offset: 2px; }
+.lx-drop-text { display: flex; flex-direction: column; gap: 2px; color: var(--text); font-size: .92rem; }
+.lx-drop-text b { color: var(--ink); }
+.lx-drop-text small { color: var(--muted); font-size: .76rem; }
+.lx-logo-preview { width: 72px; height: 72px; object-fit: contain; background: var(--pale); border-radius: 4px; padding: 6px; }
+.lx-link { background: none; border: 0; padding: 0; font: inherit; font-size: .84rem; font-weight: 700; color: var(--shu, var(--red)); text-decoration: underline; cursor: pointer; align-self: flex-start; }
+
+/* Social links: four small labelled boxes */
+.lx-social-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 16px; }
+.lx-social-grid label { display: flex; flex-direction: column; gap: 4px; font-size: .78rem; font-weight: 700; color: var(--muted); }
+
+
+/* ---------- 7. Step 3: the launch preview ---------- */
+.lx-review { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: clamp(20px, 3vw, 40px); align-items: start; }
+.lx-preview { filter: drop-shadow(0 30px 40px rgba(19, 19, 21, .18)); }
+.lx-preview .tpl-mock { transform: perspective(1200px) rotateY(-6deg) rotateX(2deg); transition: transform .6s cubic-bezier(.2, .7, .2, 1); }
+.lx-preview:hover .tpl-mock { transform: none; }
+.lx-preview-note { font-size: .8rem; color: var(--muted); margin-top: 14px; }
+.lx-summary { background: #fff; border: 1px solid var(--line); border-top: 3px solid var(--shu, var(--red)); border-radius: 4px; padding: clamp(18px, 2.5vw, 28px); }
+.lx-facts { margin: 0; display: grid; gap: 16px; }
+.lx-facts > div { display: grid; gap: 6px; }
+.lx-facts dt { font-size: .72rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.lx-facts dd { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; color: var(--ink); }
+.lx-sum-name { font-size: 1.25rem; font-weight: 700; }
+.lx-recommended { font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #fff; background: var(--shu, var(--red)); padding: 3px 8px; border-radius: 2px; }
+.lx-domain { display: flex; align-items: stretch; width: 100%; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; background: #fff; }
+.lx-domain:focus-within { border-color: var(--shu, var(--red)); box-shadow: 0 0 0 3px rgba(200, 16, 46, .15); }
+.lx .lx-domain input { border: 0 !important; box-shadow: none !important; min-width: 0; font-weight: 700; text-align: end; padding-inline-end: 2px; }
+.lx-domain > span { display: flex; align-items: center; padding: 0 14px 0 2px; color: var(--muted); font-weight: 700; white-space: nowrap; }
+.lx-included-title:not(#_):not(#__) { text-align: start !important; font-size: .78rem !important; letter-spacing: .16em !important; margin: 22px 0 10px; }
+.lx-included { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 14px; }
+.lx-included li { margin: 0 !important; display: flex; gap: 8px; align-items: baseline; color: var(--ink); font-size: .92rem; }
+.lx-included li::before { content: "✓"; color: var(--shu, var(--red)); font-weight: 900; }
+
+
+/* ---------- 8. Deploying and done ---------- */
+.lx-deploying, .lx-done { text-align: center; max-width: 720px; }
+.lx-deploying h2, .lx-done h2 { font-size: clamp(1.7rem, 4vw, 2.6rem) !important; overflow-wrap: anywhere; }
+.lx-rocket { width: 92px; height: 92px; margin: 0 auto 18px; border-radius: 50%; border: 3px solid var(--line); border-top-color: var(--shu, var(--red)); animation: lx-turn 1s linear infinite; }
+.lx-tasks { list-style: none; margin: 0 auto; padding: 0; text-align: start; max-width: 460px; }
+.lx-tasks li { display: flex; gap: 12px; align-items: center; margin: 0 !important; padding: 9px 0; border-bottom: 1px solid var(--line); color: var(--muted); opacity: .45; transition: opacity .3s, color .3s; }
+.lx-tasks li::before { content: ""; flex: none; width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--line); }
+.lx-tasks li.is-working { opacity: 1; color: var(--ink); }
+.lx-tasks li.is-working::before { border-color: var(--line); border-top-color: var(--shu, var(--red)); animation: lx-turn .8s linear infinite; }
+.lx-tasks li.is-done { opacity: 1; color: var(--ink); }
+.lx-tasks li.is-done::before { content: "✓"; display: grid; place-items: center; font-size: .72rem; font-weight: 900; color: #fff; background: var(--shu, var(--red)); border-color: var(--shu, var(--red)); }
+.lx-seal { width: 92px; height: 92px; margin: 0 auto 18px; display: grid; place-items: center; font-size: 2.6rem; color: #fff; background: var(--shu, var(--red)); border-radius: 50%; box-shadow: 0 0 0 8px rgba(200, 16, 46, .12), 0 20px 40px -18px rgba(200, 16, 46, .8); animation: lx-stamp .7s cubic-bezier(.2, 1.4, .4, 1) both; }
+@keyframes lx-stamp { from { transform: scale(1.8) rotate(-12deg); opacity: 0; } to { transform: none; opacity: 1; } }
+.lx-done .lx-lead { margin: 0 auto 1.4em; }
+.lx-next-steps { text-align: start; max-width: 520px; margin: 0 auto; padding-inline-start: 1.3em; color: var(--text); }
+.lx-next-steps b { color: var(--ink); }
+.lx-done-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; align-items: center; margin-top: 1.8em; }
+.lx-sum-domain { color: var(--shu, var(--red)); text-transform: none; }
+
+
+/* ---------- 9. Phones, and visitors who prefer less motion ---------- */
+@media (max-width: 760px) {
+  .lx-grid, .lx-review, .lx-social-grid { grid-template-columns: 1fr; }
+  .lx-choices { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lx-nav { position: sticky; bottom: 0; margin-inline: calc(var(--gutter) * -1); padding: 12px var(--gutter); background: rgba(250, 248, 244, .95); border-top: 1px solid var(--line); z-index: 2; }
+  .lx-nav .btn { flex: 1; }
+  .lx-preview .tpl-mock { transform: none; }
+
+}
+@media (max-width: 420px) {
+  .lx-included { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lx *, .lx *::before, .lx *::after { animation: none !important; transition: none !important; }
+}

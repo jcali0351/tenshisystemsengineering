@@ -1,1 +1,6 @@
 node_modules/
+
+# Python prototype (platform/): local virtual environment and build output
+platform/.venv/
+platform/out/
+__pycache__/

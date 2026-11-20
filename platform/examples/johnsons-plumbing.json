@@ -1,0 +1,40 @@
+{
+  "schema": "tenshi.business/1",
+  "created_at": "2026-11-19T09:00:00Z",
+  "company": {
+    "name": "Johnson's Plumbing & Heating",
+    "category": "contractor",
+    "category_label": "Construction & contracting",
+    "type": "service-area",
+    "tagline": "Fixed right the first time",
+    "phone": "+81 6 1234 5678",
+    "email": "owner@example.com",
+    "address": "",
+    "service_areas": ["Osaka", "Kobe", "Kyoto"],
+    "description": "Family-run plumbing and heating since 1998. We fix leaks, install boilers and answer emergency calls day and night.",
+    "logo": null
+  },
+  "site": {
+    "goal": "leads",
+    "template": "contractor",
+    "subdomain": "johnsons-plumbing-heating",
+    "domain": "johnsons-plumbing-heating.tenshi.systems"
+  },
+  "services": [
+    { "name": "Leak repair", "description": "Dripping taps to burst pipes, found and fixed the same day.", "price": "From ¥8,000" },
+    { "name": "Boiler installation", "description": "New, efficient boilers fitted and registered, with a 5-year guarantee.", "price": "" },
+    { "name": "Emergency call-out", "description": "Day or night, someone answers and is on the way.", "price": "From ¥12,000" }
+  ],
+  "products": [],
+  "staff": [],
+  "gallery": [],
+  "portfolio": [],
+  "testimonials": [
+    { "quote": "Came out at 2 a.m., fixed it in an hour, and left the place cleaner than they found it.", "author": "A. Tanaka, Kobe", "rating": 5 }
+  ],
+  "social": { "instagram": "https://instagram.com/example" },
+  "seo": {
+    "title": "Johnson's Plumbing & Heating | Construction & contracting",
+    "description": "Family-run plumbing and heating since 1998. We fix leaks, install boilers and answer emergency calls day and night."
+  }
+}

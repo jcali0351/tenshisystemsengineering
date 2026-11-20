@@ -1,0 +1,51 @@
+{
+  "_readme": "A blueprint: everything the platform needs to know about one design, apart from how it looks. See platform/README.md.",
+
+  "template": "contractor",
+  "industry": "Contractor",
+  "version": 1,
+
+  "required_fields": [
+    "company.name",
+    "company.phone",
+    "company.email",
+    "company.description",
+    "services"
+  ],
+
+  "pages": {
+    "index.html": "index.html.j2",
+    "services.html": "services.html.j2",
+    "contact.html": "contact.html.j2"
+  },
+
+  "labels": {
+    "company.name": "Business name",
+    "company.description": "About your business",
+    "company.service_areas": "Places you work",
+    "services[].name": "Service name",
+    "services[].description": "What it includes",
+    "services[].price": "Starting price (optional)",
+    "testimonials[].quote": "What the customer said",
+    "testimonials[].author": "Customer name",
+    "gallery[].src": "Photo",
+    "gallery[].alt": "Describe the photo (for blind visitors and Google)"
+  },
+
+  "help": {
+    "company.description": "Two or three sentences: what you do, who for, and why people pick you.",
+    "services": "Add each job you want customers to find, e.g. 'Leak repair' or 'Boiler installation'."
+  },
+
+  "onboarding": [
+    { "step": "Business", "fields": ["company.name", "company.category", "site.goal", "company.type"] },
+    { "step": "Profile",  "fields": ["company.phone", "company.email", "company.address", "company.service_areas", "company.description", "company.logo"] },
+    { "step": "Services", "fields": ["services"] }
+  ],
+
+  "ai": {
+    "company.description": "Write a warm, plain-English description of {company.name}, a {company.category_label} serving {company.service_areas}. 2-3 sentences.",
+    "services": "Suggest 4 common services for a {company.category_label}, each with a one-sentence description.",
+    "gallery[].alt": "Describe this photo of a {company.category_label} project in under 15 words."
+  }
+}

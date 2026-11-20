@@ -1,0 +1,19 @@
+{#- Every service, with its price if one is given. -#}
+{% extends "base.html.j2" %}
+{% block title %}Services | {{ company.name }}{% endblock %}
+
+{% block content %}
+    <section class="band">
+      <h1>Services</h1>
+      <div class="cards">
+        {%- for service in services %}
+        <article class="card">
+          {% if service.image and service.image.src %}<img src="{{ service.image.src }}" alt="{{ service.image.alt }}">{% endif %}
+          <h3>{{ service.name }}</h3>
+          <p>{{ service.description }}</p>
+          {% if service.price %}<p class="price">{{ service.price }}</p>{% endif %}
+        </article>
+        {%- endfor %}
+      </div>
+    </section>
+{% endblock %}
