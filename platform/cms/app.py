@@ -65,13 +65,26 @@ TRANSPARENT_GIF = bytes.fromhex("47494638396101000100800000000000ffffff21f904010
 
 @app.middleware("http")
 async def serve_client_sites(request: Request, call_next):
-    """Requests for <subdomain>.localhost are a client's website, not the CMS."""
+    """
+    A client's website, not the CMS, is asked for in two ways:
+      <subdomain>.localhost/<page>     its own address (the normal way; *.tenshi.systems in production)
+      <cms address>/s/<subdomain>/<page>   the same site under the CMS's address, for when only one address exists
+                                            (e.g. a temporary review link). Built sites use relative links, so both work.
+    """
     match = SITE_HOST.match(request.headers.get("host", "").lower())
-    if not match:
-        return await call_next(request)
-    subdomain = match.group(1)
+    if match:
+        return await serve_site(request, match.group(1), request.url.path)
+    under = re.match(r"^/s/([a-z0-9-]+)(/.*)?$", request.url.path)
+    if under:
+        if under.group(2) is None:                            # /s/name  →  /s/name/ so relative links work
+            return RedirectResponse(request.url.path + "/", 301)
+        return await serve_site(request, under.group(1), under.group(2))
+    return await call_next(request)
+
+
+async def serve_site(request: Request, subdomain: str, path: str):
+    """Answer one request for a client's live website: a page or file of its current deployment, a form, a visit."""
     folder, site = sites.live_folder(subdomain)
-    path = request.url.path
     if site and path == "/__form" and request.method == "POST":
         form = await request.form()
         if form.get("_hp"):                                   # the hidden box only robots fill in

@@ -105,8 +105,10 @@ def test_everything():
 
         # A visitor sends the form: it becomes a lead; the robot trap is ignored
         assert c.post("/__form", data={"name": "Ken", "email": "ken@example.com", "message": "Table for 4?"}, headers={"host": "hanami-kitchen.localhost"}).json()["ok"]
+        assert c.get("/s/hanami-kitchen/").status_code == 200 and "Tasting menu" in c.get("/s/hanami-kitchen/").text
+        assert c.post("/s/hanami-kitchen/__form", data={"name": "Mia", "message": "Hello"}).json()["ok"]
         c.post("/__form", data={"name": "Bot", "_hp": "spam"}, headers={"host": "hanami-kitchen.localhost"})
-        assert db.one("SELECT COUNT(*) AS n FROM leads WHERE site_id = ?", sid)["n"] == 1
+        assert db.one("SELECT COUNT(*) AS n FROM leads WHERE site_id = ?", sid)["n"] == 2
         assert "Ken" in c.get(f"/sites/{sid}/leads").text
         assert "Ken" in c.get(f"/sites/{sid}/leads.csv").text
 

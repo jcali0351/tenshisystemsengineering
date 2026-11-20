@@ -184,8 +184,9 @@ class SiteRenderer:
         p = self.profile
         hosted = self.mode == "hosted"
         email = p["company"].get("email", "")
-        form_action = "/__form" if hosted else ("#" if self.mode == "preview" else (f"mailto:{email}" if email else "#"))
-        tracking = Markup(f'<img src="/__visit?p={escape(page["slug"])}" alt="" width="1" height="1" style="position:absolute;left:-9999px">') if hosted else ""
+        # Relative ("__form", not "/__form"), so it works at the site's own address and under /s/<address>/
+        form_action = "__form" if hosted else ("#" if self.mode == "preview" else (f"mailto:{email}" if email else "#"))
+        tracking = Markup(f'<img src="__visit?p={escape(page["slug"])}" alt="" width="1" height="1" style="position:absolute;left:-9999px">') if hosted else ""
         return {
             **p, "site": {"name": self.site.get("name"), "subdomain": self.site.get("subdomain")},
             "theme": self.theme, "page": page, "pages": menu_pages, "blocks": db.j(page.get("blocks_json"), []) if "blocks_json" in page else page.get("blocks", []),
