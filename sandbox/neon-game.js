@@ -57,7 +57,9 @@
   const ACHIEVEMENTS = {
     first: "FIRST BLOOD", combo: "COMBO KING (x9)", star: "STAR HUNTER", boss: "BOSS SLAYER", power: "POWERED UP",
     untouch: "UNTOUCHABLE (level 3, full shields)", city: "SAVED THE CITY (2,000 points)", insane: "INSANE MODE", bomb: "BOMB SQUAD (10 bombs)",
+    dragon: "DRAGON SLAYER", phoenix: "PHOENIX DOWN",
   };
+  const BEAST_POINTS = 100;      // for blowing up the dragon or the phoenix
   // ==========================================================================================================
 
   const store = {
@@ -330,6 +332,7 @@
     for (const b of [...bombs]) if (nearLine(b.x, b.y, x1, y1, x2, y2, 16)) { defuse(b); hit = true; }
     for (const c of [...cars]) if (nearLine(c.x, c.y, x1, y1, x2, y2, 14)) hitCar(c);
     if (boss && nearLine(boss.x, boss.y, x1, y1, x2, y2, 50)) { damageBoss(boss.x, boss.y, now, bossDmg); hit = true; }
+    if (window.neonBeasts) for (const r of window.neonBeasts.hitLine(x1, y1, x2, y2, 14, bossDmg)) { beastHit(r); hit = true; }
     return hit;
   }
 
@@ -347,6 +350,10 @@
       bolts.push({ pts: jag(jumps === 0 && !hit ? W / 2 : from[0], jumps === 0 && !hit ? H : from[1], best.x, best.y), life: 1 });
       if (best.kind === "bomb") defuse(best.o); else killTarget(best.o, now);
       from = [best.x, best.y]; reach = 230; jumps++; hit = true;
+    }
+    if (!hit && window.neonBeasts) {                   // nothing else near: strike the dragon or phoenix
+      const r = window.neonBeasts.hitAt(x, y, 70, bossDmg);
+      if (r) { bolts.push({ pts: jag(W / 2, H, r.hitX, r.hitY), life: 1 }); beastHit(r); hit = true; }
     }
     if (!hit) bolts.push({ pts: jag(W / 2, H, x, y), life: 0.7 });
     return hit;
@@ -369,6 +376,7 @@
     for (const b of [...bombs]) if (Math.hypot(b.x - x, b.y - y) < radius) defuse(b);
     for (const c of [...cars]) if (Math.hypot(c.x - x, c.y - y) < radius * 0.8) hitCar(c);
     if (boss && Math.abs(boss.x - x) < 120 + radius * 0.6 && Math.abs(boss.y - y) < 45 + radius * 0.6) damageBoss(x, y, now, bossDmg);
+    if (window.neonBeasts) for (const r of window.neonBeasts.hitArea(x, y, radius, bossDmg)) beastHit(r);
   }
 
   function defuse(b) {
@@ -390,9 +398,26 @@
     for (const c of cars) if (Math.hypot(c.x - x, c.y - y) < 22) { hitCar(c); return true; }
     let target = null, bestD = Infinity;
     for (const o of objects) { const d = Math.hypot(o.x - x, o.y - y); if (d < o.size * GAME.hitRadius + 6 + extraReach && d < bestD) { target = o; bestD = d; } }
-    if (!target) return false;
+    if (!target) {                                     // nothing else there: maybe the dragon or phoenix
+      const r = window.neonBeasts && window.neonBeasts.hitAt(x, y, 24 + extraReach, bossDmg);
+      if (!r) return false;
+      beastHit(r);
+      return true;
+    }
     killTarget(target, now);
     return true;
+  }
+
+  // The dragon or phoenix was hit: sparks and a crunch; if that blew it up, 100 points and a big moment.
+  function beastHit(r) {
+    burst(r.hitX, r.hitY, r.color, 8, 1.2);
+    if (!r.killed) { sfx("hit"); shakeIt(2); return; }
+    addScore(BEAST_POINTS, r.x, r.y, r.color, r.name + " DESTROYED");
+    explode({ x: r.x, y: r.y, size: 40, color: r.color }, 2.2);
+    sfx("bigboom"); shakeIt(14); hitStop(120);
+    showBanner(r.name + " DESTROYED!", 1800);
+    achieve(r.name === "DRAGON" ? "dragon" : "phoenix");
+    cheer(r.name === "DRAGON" ? "You took down the dragon! 🐉💥" : "The phoenix is ash... for now! 🔥");
   }
 
   // A target (or power-up) is destroyed: score, combo, effects, achievements, tips; cubes split in two.
@@ -433,6 +458,7 @@
       for (const o of [...objects]) { if (o.kind !== "power") { addScore(o.points, o.x, o.y, o.color, ""); explode(o, 1); } }
       objects.length = 0; bombs.length = 0;
       if (boss) { boss.hp -= 8; boss.hitFlash = 1; }
+      if (window.neonBeasts) for (const r of window.neonBeasts.hitArea(W / 2, H / 2, Math.hypot(W, H), 8)) beastHit(r);
       sfx("bigboom"); shakeIt(14); hitStop(120);
       return;
     }
