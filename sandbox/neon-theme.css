@@ -555,3 +555,10 @@ html.neon .kx-letter.kx-back { animation: kx-spin-back .6s cubic-bezier(.2, 1.4,
   0%   { transform: rotate(calc(var(--dir, 1) * -360deg)) scale(0); opacity: 0; }
   100% { transform: none; opacity: 1; }
 }
+/* Service pictures: the site blends them with "darken" (which hid their white backgrounds on white cards); on
+   black cards that turns them black, so show them normally: black and white, slightly dimmed, rounded corners. */
+html.neon:not(#_):not(#__) .services .service-pic {
+  mix-blend-mode: normal !important;
+  filter: grayscale(1) brightness(.85) contrast(1.05) !important;
+  border-radius: 10px;
+}
