@@ -344,11 +344,13 @@ const HOVER = {
   radius: 70,        // pixels around the pointer where tiles fizzle away
   vanish: 0.1,       // how quickly a hovered tile disappears (bigger = faster)
   rebuild: 0.012,    // how quickly it comes back afterwards (smaller = slower)
+  cool: 0.02,        // how quickly tiles warmed orange by the pointer cool back to purple (smaller = longer trail)
 };
 const pointer = { x: -9999, y: -9999 };
 window.addEventListener("pointermove", e => { pointer.x = e.clientX; pointer.y = e.clientY; });
 document.documentElement.addEventListener("pointerleave", () => { pointer.x = pointer.y = -9999; });
 const dissolve = new Map();
+const warmth = new Map();   // for each tile, how orange it has been warmed by the pointer (0 .. 1)
 
 function drawFloor(time) {
   const { columns, rows } = SETTINGS;
@@ -388,7 +390,11 @@ function drawFloor(time) {
       let gone = dissolve.get(key) || 0;
       const [tx, ty] = project(c, zMid);
       const tileWidth = Math.abs(project(c + 0.5, zMid)[0] - project(c - 0.5, zMid)[0]);
-      if (Math.hypot(tx - pointer.x, ty - pointer.y) < HOVER.radius + tileWidth * 0.4) {
+      const pointerDistance = Math.hypot(tx - pointer.x, ty - pointer.y);
+      let heat = warmth.get(key) || 0;
+      heat = pointerDistance < HOVER.radius * 2.4 + tileWidth * 0.5 ? Math.min(1, heat + 0.15) : Math.max(0, heat - HOVER.cool);
+      if (heat > 0) warmth.set(key, heat); else warmth.delete(key);
+      if (pointerDistance < HOVER.radius + tileWidth * 0.4) {
         const before = gone;
         gone = Math.min(1, gone + HOVER.vanish);
         // The moment it starts to go, embers spit off it (the embers live in neon-fx.js).
@@ -416,9 +422,11 @@ function drawFloor(time) {
 
       // Tiles away from the middle are dimmer, like the photo's bright centre patch.
       const centre = Math.exp(-((c / (columns * 0.45)) ** 2));
-      const hue = baseHue + (hot - 0.5) * 40;
+      // Tiles warmed up by the pointer glow orange (and a little brighter) until they cool down again.
+      const warm = warmth.get(key) || 0;
+      const hue = warm > 0.12 ? 22 + hot * 14 : baseHue + (hot - 0.5) * 40;
       const isHot = hot > 0.72;
-      const glowAmount = (0.1 + 0.75 * pulse * (isHot ? 1 : 0.3)) * fade * enter * (0.35 + 0.65 * centre) * flicker;
+      const glowAmount = Math.min(1, (0.1 + 0.75 * pulse * (isHot ? 1 : 0.3)) * fade * enter * (0.35 + 0.65 * centre) * flicker * (1 + warm * 1.2) + warm * 0.25 * fade);
 
       if (glowAmount < 0.01) continue;   // too faint to see: skip it and save time
 
