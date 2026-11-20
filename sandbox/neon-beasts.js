@@ -268,20 +268,46 @@
   // ================================================ DRAWING HELPERS ================================================
   let beat = 0;
   // One fizzy speck: it flickers and jitters every frame. It remembers where it was drawn (so shots can find it),
-  // and isn't drawn once it's been knocked off.
-  function speck(o, x, y, size, color, phase, strength = 1) {
+  // and isn't drawn once it's been knocked off. `depth` (0 far ... 1 near) makes the far side dimmer and smaller.
+  function speck(o, x, y, size, color, phase, strength = 1, depth = 1, scale = 1) {
     o.sx = x; o.sy = y;
     if (o.gone) return;
-    ctx.globalAlpha = BEASTS.opacity * strength * cur.alpha * (0.45 + Math.random() * 0.55) * (0.85 + beat * 0.3);
+    ctx.globalAlpha = BEASTS.opacity * strength * (0.25 + 0.75 * depth) * cur.alpha * (0.45 + Math.random() * 0.55) * (0.85 + beat * 0.3);
     ctx.fillStyle = cur.flash > 0.2 && Math.random() < cur.flash ? "#ffffff" : color;   // flashes white when hit
-    const s = size * (1 + beat * 0.3);
+    const s = size * scale * (0.75 + 0.35 * depth) * (1 + beat * 0.3);
     ctx.fillRect(x + rand(-0.5, 0.5) - s / 2, y + rand(-0.5, 0.5) - s / 2, s, s);
   }
-  // Turn a point from a creature's little map into screen pixels (and mirror it when flying left, so it's never upside down).
-  function place(cx, cy, angle, scale, lx, ly, mirror) {
-    const y = mirror ? -ly : ly, c = Math.cos(angle), s = Math.sin(angle);
-    return [cx + (lx * c - y * s) * scale, cy + (lx * s + y * c) * scale];
+
+  // ---- 3D ----
+  // Each creature is a little 3D model: x points forward, y down, z out to its right side. It's turned by
+  // roll (round its own length), pitch (nose up/down) and yaw (turning towards or away from you), then laid along
+  // its flight direction on screen, with perspective: nearer parts are bigger and brighter.
+  const FOV = 900;
+  const persp = z => FOV / (FOV + z);
+  function orient(b) {
+    const cr = Math.cos(b.roll), sr = Math.sin(b.roll), cp = Math.cos(b.pitch), sp = Math.sin(b.pitch);
+    const cy = Math.cos(b.yaw), sy = Math.sin(b.yaw), ca = Math.cos(b.angle), sa = Math.sin(b.angle);
+    return { cr, sr, cp, sp, cy, sy, ca, sa };
   }
+  // Model point -> [screen x, screen y, depth 0..1, perspective scale].
+  function project(b, R, scale, lx, ly, lz) {
+    const y1 = ly * R.cr - lz * R.sr, z1 = ly * R.sr + lz * R.cr;                   // roll
+    const x2 = lx * R.cp - y1 * R.sp, y2 = lx * R.sp + y1 * R.cp;                   // pitch
+    const x3 = x2 * R.cy + z1 * R.sy, z3 = -x2 * R.sy + z1 * R.cy;                   // yaw
+    const X = x3 * R.ca - y2 * R.sa, Y = x3 * R.sa + y2 * R.ca;                      // along the flight direction
+    const f = persp(b.z + z3 * scale);
+    return [b.x + X * scale * f, b.y + Y * scale * f, clamp01(0.5 - z3 * 0.6), f];
+  }
+  const clamp01 = v => Math.max(0, Math.min(1, v));
+  // Every so often, a full barrel roll (smoothly, over a second and a half).
+  function barrel(now, every, offset) {
+    const k = ((now + offset) % every) / 1500;
+    return k < 1 ? (1 - Math.cos(k * Math.PI)) * Math.PI : 0;
+  }
+  // Give the flat little maps some thickness: each speck gets a depth (z), once.
+  function thicken(list, fn) { for (const o of list) if (o.z === undefined) o.z = fn(o); }
+  thicken(headSpecks, h => h.eye ? (Math.random() < 0.5 ? -0.32 : 0.32) : h.mane ? rand(-0.9, 0.9) : Math.abs(h.y) > 0.9 ? (Math.random() < 0.5 ? -0.28 : 0.28) : rand(-0.38, 0.38));
+  thicken(birdSpecks, b => b.eye ? (Math.random() < 0.5 ? -0.16 : 0.16) : b.y < -0.4 ? rand(-0.06, 0.06) : rand(-0.3, 0.3));
 
   // ================================================ THE LOOP ================================================
   const hero = document.querySelector(".hero");
@@ -309,8 +335,19 @@
       if (Math.hypot(nx - b.x, ny - b.y) > 0.05) b.angle = Math.atan2(ny - b.y, nx - b.x);
       b.x = nx; b.y = ny;
     }
-    trail.unshift([dragon.x, dragon.y]); if (trail.length > 2400) trail.length = 2400;
-    phoenixTrail.unshift([phoenix.x, phoenix.y]); if (phoenixTrail.length > 300) phoenixTrail.length = 300;
+    // ---- 3D motion: they swoop towards you and away (one near while the other is far), bank, turn and roll ----
+    dragon.z = Math.sin(t * 1.5) * 300;
+    phoenix.z = Math.sin(t * 1.5 + Math.PI) * 300;
+    for (const [b, k] of [[dragon, 0], [phoenix, 1]]) {
+      // Flying left would put them upside down, so they roll over smoothly to stay upright (unless mid-stunt).
+      const want = Math.cos(b.angle) < 0 ? Math.PI : 0;
+      b.flip = b.flip === undefined ? want : b.flip + (want - b.flip) * 0.05;
+      b.roll = b.flip + Math.sin(now * (k ? 0.0006 : 0.00042)) * (k ? 1.25 : 0.9) + barrel(now, k ? 11000 : 14000, k ? 4000 : 0);
+      b.yaw = Math.sin(now * (k ? 0.00033 : 0.00027) + k) * (k ? 1.15 : 0.85);
+      b.pitch = Math.sin(now * 0.0005 + k * 2) * 0.3;
+    }
+    trail.unshift([dragon.x, dragon.y, dragon.z]); if (trail.length > 2400) trail.length = 2400;
+    phoenixTrail.unshift([phoenix.x, phoenix.y, phoenix.z]); if (phoenixTrail.length > 300) phoenixTrail.length = 300;
 
     ctx.globalCompositeOperation = "lighter";
 
@@ -326,68 +363,71 @@
     const spine = [];
     let dist = 0, next = 0;
     for (let i = 1; i < trail.length && spine.length < BEASTS.dragonSegments; i++) {
-      const [ax, ay] = trail[i - 1], [bx, by] = trail[i];
+      const [ax, ay, az] = trail[i - 1], [bx, by, bz] = trail[i];
       const step = Math.hypot(bx - ax, by - ay);
       dist += step;
       while (dist >= next && spine.length < BEASTS.dragonSegments) {
         const f = step ? 1 - (dist - next) / step : 0;
-        const x = lerp(ax, bx, f), y = lerp(ay, by, f);
+        const x = lerp(ax, bx, f), y = lerp(ay, by, f), z = lerp(az || 0, bz || 0, f);
         const tx = ax - bx || 0.001, ty = ay - by;
         const len = Math.hypot(tx, ty) || 1;
         let nx = -ty / len, ny = tx / len;
-        if (ny > 0) { nx = -nx; ny = -ny; }                // "up" side of the body, so the spikes stay on its back
-        spine.push({ x, y, nx, ny, wave: Math.sin(spine.length * 0.16 - now * 0.0035) * 18 * Math.min(1, spine.length / 10) });
+        if (ny > 0) { nx = -nx; ny = -ny; }                // "up" side of the body
+        // The body is a tube. It twists round as the dragon rolls (the twist travels down the body a little late).
+        const twist = (dragon.roll - dragon.flip) * Math.max(0, 1 - spine.length / 160) + Math.sin(spine.length * 0.12 - now * 0.002) * 0.5;
+        spine.push({ x, y, z, nx, ny, f: persp(z), twist, wave: Math.sin(spine.length * 0.16 - now * 0.0035) * 18 * Math.min(1, spine.length / 10) });
         next += BEASTS.dragonSpacing;
       }
+    }
+    // A point on the tube: `around` is the angle round the body (0 = top), `out` how far from the middle.
+    function tube(seg, around, out, alongX = 0, alongY = 0) {
+      const a = around + seg.twist, c = Math.cos(a), sn = Math.sin(a), f = seg.f;
+      return [seg.x + (seg.nx * c * out + alongX) * f, seg.y + (seg.ny * c * out + alongY) * f + seg.wave * f, clamp01(0.5 - sn * 0.6), f];
     }
     if (spine.length > 4 && !LIFE.dragon.dead) {
       for (const p of bodySpecks) {
         const seg = spine[p.s]; if (!seg) continue;
         const tt = p.s / BEASTS.dragonSegments, r = thickness(tt);
+        let pt, strength = 1;
         if (p.tuft !== undefined) {                          // tail tuft: a fan of hair streaming back off the tail
           const prev = spine[p.s - 1] || seg, bx = seg.x - prev.x, by = seg.y - prev.y, bl = Math.hypot(bx, by) || 1;
           const len = 10 + p.tuft * 60, spread = p.fan * (8 + p.tuft * 30) + Math.sin(now * 0.006 + p.tuft * 5) * 6 * p.tuft;
-          speck(p, seg.x + (bx / bl) * len + seg.nx * spread, seg.y + (by / bl) * len + seg.ny * spread + seg.wave, p.size, p.color, p.phase, 1 - p.tuft * 0.5);
-          continue;
+          pt = tube(seg, p.fan > 0 ? 0 : Math.PI, Math.abs(spread), (bx / bl) * len, (by / bl) * len); strength = 1 - p.tuft * 0.5;
+        } else if (p.fringe !== undefined) {                 // hair hanging under the belly, swaying
+          pt = tube(seg, Math.PI + p.sway * 0.5 + Math.sin(now * 0.005 + p.s * 0.5) * 0.2 * p.fringe, r + 2 + p.fringe * 14); strength = 1 - p.fringe * 0.5;
+        } else if (p.ridge !== undefined) {                  // gold fin along the back, rippling
+          pt = tube(seg, (p.ridge - 0.5) * 0.25, r + 3 + 6 * Math.abs(Math.sin(p.s * 0.9 + now * 0.003)) + p.ridge * 5);
+        } else {
+          // Scales all the way round the tube, with a shimmer rippling down the body.
+          const shimmer = 0.55 + 0.45 * Math.sin(p.s * 1.3 + p.across * 3 - now * 0.006);
+          const along = p.along * BEASTS.dragonSpacing;
+          pt = tube(seg, p.across * Math.PI, r, seg.ny * along, -seg.nx * along); strength = shimmer;
         }
-        if (p.fringe !== undefined) {                        // hair hanging under the belly, swaying
-          const hang = r + 2 + p.fringe * 14, sway = Math.sin(now * 0.005 + p.s * 0.5) * 4 * p.fringe + p.sway * 3;
-          speck(p, seg.x - seg.nx * hang + sway, seg.y - seg.ny * hang + seg.wave, p.size, p.color, p.phase, 1 - p.fringe * 0.5);
-          continue;
-        }
-        if (p.ridge !== undefined) {                         // gold fin along the back, rippling
-          const spike = r + 3 + 6 * Math.abs(Math.sin(p.s * 0.9 + now * 0.003)) + p.ridge * 5;
-          speck(p, seg.x + seg.nx * spike, seg.y + seg.ny * spike + seg.wave, p.size, p.color, p.phase);
-          continue;
-        }
-        // Scales: a shimmer that ripples down the body.
-        const shimmer = 0.55 + 0.45 * Math.sin(p.s * 1.3 + p.across * 3 - now * 0.006);
-        // Spread each speck a little along the body too (towards the next piece), so the body is one continuous mass.
-        const along = p.along * BEASTS.dragonSpacing;
-        speck(p, seg.x + seg.nx * p.across * r + seg.ny * along, seg.y + seg.ny * p.across * r - seg.nx * along + seg.wave, p.size, p.color, p.phase, shimmer);
+        speck(p, pt[0], pt[1], p.size, p.color, p.phase, strength, pt[2], pt[3]);
       }
-      for (const c of clawSpecks) {                          // claws reach down and curl
+      for (const c of clawSpecks) {                          // claws reach down from the belly and curl
         const seg = spine[c.s]; if (!seg) continue;
         const r = thickness(c.s / BEASTS.dragonSegments), reach = r + 8 + 18 * c.along;
-        const curl = (c.toe - 1) * 5 * c.along + Math.sin(now * 0.005 + c.s) * 3;
-        speck(c, seg.x - seg.nx * reach + curl, seg.y - seg.ny * reach + seg.wave, c.size, c.color, c.phase);
+        const pt = tube(seg, Math.PI + (c.toe - 1) * 0.35 * c.along + (c.s % 2 ? 0.5 : -0.5), reach);
+        speck(c, pt[0], pt[1], c.size, c.color, c.phase, 1, pt[2], pt[3]);
       }
-      // ---- Dragon head ----
-      const mirror = Math.cos(dragon.angle) < 0;
+      // ---- Dragon head (full 3D) ----
+      const R = orient(dragon);
       const jaw = 0.12 + 0.32 * Math.max(0, Math.sin(now * 0.0022));   // the mouth snaps wide open and shut
       const cj = Math.cos(jaw), sj = Math.sin(jaw);
       for (const h of headSpecks) {
         let lx = h.x, ly = h.y;
         if (h.jaw) { const ox = lx - 0.15, oy = ly - 0.08; lx = 0.15 + ox * cj - oy * sj; ly = 0.08 + ox * sj + oy * cj; }   // swing round the hinge
         if (h.mane) { lx += Math.sin(now * 0.006 + h.y * 4) * 0.06 * h.mane; ly += Math.cos(now * 0.005 + h.x * 4) * 0.04 * h.mane; }
-        const [x, y] = place(dragon.x, dragon.y, dragon.angle, HEAD_SCALE, lx, ly, mirror);
-        speck(h, x, y, h.size * (h.eye ? 1 + beat : 1), h.color, h.phase, h.eye ? 1.4 : 1);
+        const [x, y, d, f] = project(dragon, R, HEAD_SCALE, lx, ly, h.z);
+        speck(h, x, y, h.size * (h.eye ? 1 + beat : 1), h.color, h.phase, h.eye ? 1.4 : 1, d, f);
       }
-      // Whiskers ripple back from the snout.
+      // Whiskers ripple back from the snout, one on each side.
       for (const w of whiskerSpecks) {
-        const lx = 1.75 - w.s * 3.8, ly = -0.3 + w.side * (0.15 + w.s * 0.7) + Math.sin(w.s * 7 - now * 0.006 + w.side) * 0.35 * w.s;
-        const [x, y] = place(dragon.x, dragon.y, dragon.angle, HEAD_SCALE, lx, ly, mirror);
-        speck(w, x, y, w.size, w.color, w.phase, 1 - w.s * 0.6);
+        const lx = 1.75 - w.s * 3.8, ly = -0.3 + 0.2 * w.s + Math.sin(w.s * 7 - now * 0.006 + w.side) * 0.3 * w.s;
+        const lz = w.side * (0.25 + w.s * 0.9) + Math.cos(w.s * 6 - now * 0.005) * 0.2 * w.s;
+        const [x, y, d, f] = project(dragon, R, HEAD_SCALE, lx, ly, lz);
+        speck(w, x, y, w.size, w.color, w.phase, 1 - w.s * 0.6, d, f);
       }
       // Violet sparks shed from the body.
       for (let k = 0; k < BEASTS.sparksPerFrame / 2; k++) {
@@ -396,40 +436,41 @@
       }
     }
 
-    // ---- Phoenix ----
+    // ---- Phoenix (full 3D) ----
     phoenix.flap += 0.11 * speed * (1 + beat * 0.5);
     cur = LIFE.phoenix;
     if (!LIFE.phoenix.dead) {
-    const pm = Math.cos(phoenix.angle) < 0, pa = phoenix.angle;
-    // Tail plumes: follow the phoenix's own trail, fanning out and curling.
-    for (const tp of tailSpecks) {
-      const idx = Math.min(phoenixTrail.length - 1, Math.floor(tp.s * 160));
-      const [bx, by] = phoenixTrail[idx] || [phoenix.x, phoenix.y];
-      const fan = (tp.plume - 2) * (12 + tp.s * 40) + Math.sin(tp.s * 9 - now * 0.005 + tp.plume) * 10 * tp.s;
-      let x = bx - Math.sin(pa) * fan, y = by + Math.cos(pa) * fan * (pm ? -1 : 1);
-      if (tp.eyeAngle !== undefined) { x += Math.cos(tp.eyeAngle) * 6 * tp.eyeR; y += Math.sin(tp.eyeAngle) * 6 * tp.eyeR; }
-      speck(tp, x, y, tp.size, tp.color, tp.phase, tp.s === 1 ? 1.3 : 1 - tp.s * 0.4);
-    }
-    // Wings: two wings beating up and down around the shoulders; feathers fan backwards from the wing bone.
-    const beatAngle = Math.sin(phoenix.flap);
-    for (const w of wingSpecks) {
-      const lift = (w.side < 0 ? -1 : 0.55) * (0.9 + 0.75 * beatAngle);   // far wing above, near wing below
-      const bone = (w.f / 13) * 2.6;                                       // how far out along the wing bone
-      const featherLen = 1.1 * (1 - w.f / 13 * 0.35);
-      const lx = 0.2 - bone * 0.35 - w.along * featherLen;                 // swept back
-      const ly = -bone * lift - w.along * 0.25 * Math.sign(lift || 1);
-      const [x, y] = place(phoenix.x, phoenix.y, pa, P, lx, ly, pm);
-      speck(w, x, y, w.size, w.color, w.phase);
-    }
-    for (const b of birdSpecks) {
-      const [x, y] = place(phoenix.x, phoenix.y, pa, P, b.x, b.y, pm);
-      speck(b, x, y, b.size * (b.eye ? 1 + beat : 1), b.color, b.phase, b.eye ? 1.5 : 1);
-    }
-    // Fire embers rise from the phoenix and its tail.
-    for (let k = 0; k < BEASTS.sparksPerFrame; k++) {
-      const [bx, by] = phoenixTrail[Math.floor(Math.random() * Math.min(80, phoenixTrail.length))] || [phoenix.x, phoenix.y];
-      shed(bx + rand(-12, 12), by + rand(-10, 10), Math.random() < 0.6 ? "rgb(255,170,70)" : "rgb(255,100,160)", true);
-    }
+      const R = orient(phoenix), pa = phoenix.angle;
+      // Tail plumes: follow the phoenix's own trail, fanning out; the fan turns with the bird's roll.
+      const rc = Math.cos(phoenix.roll - phoenix.flip), rs = Math.sin(phoenix.roll - phoenix.flip);
+      for (const tp of tailSpecks) {
+        const idx = Math.min(phoenixTrail.length - 1, Math.floor(tp.s * 160));
+        const [bx, by, bz] = phoenixTrail[idx] || [phoenix.x, phoenix.y, phoenix.z];
+        const fan = (tp.plume - 2) * (12 + tp.s * 40) + Math.sin(tp.s * 9 - now * 0.005 + tp.plume) * 10 * tp.s;
+        const f = persp((bz || 0) + fan * rs);
+        let x = bx - Math.sin(pa) * fan * rc * f, y = by + Math.cos(pa) * fan * rc * f;
+        if (tp.eyeAngle !== undefined) { x += Math.cos(tp.eyeAngle) * 6 * tp.eyeR * f; y += Math.sin(tp.eyeAngle) * 6 * tp.eyeR * f; }
+        speck(tp, x, y, tp.size, tp.color, tp.phase, tp.s === 1 ? 1.3 : 1 - tp.s * 0.4, clamp01(0.5 - (fan * rs) / 80), f);
+      }
+      // Wings: they stick out to the sides (z) and beat up and down; feathers sweep back from the wing bone.
+      const a = 0.2 + 0.85 * Math.sin(phoenix.flap);
+      for (const w of wingSpecks) {
+        const bone = (w.f / 13) * 2.6, featherLen = 1.1 * (1 - w.f / 13 * 0.35);
+        const lx = 0.25 - bone * 0.3 - w.along * featherLen;
+        const ly = -Math.sin(a) * bone * 0.9 - w.along * 0.12;
+        const lz = w.side * (0.2 + Math.cos(a) * bone);
+        const [x, y, d, f] = project(phoenix, R, P, lx, ly, lz);
+        speck(w, x, y, w.size, w.color, w.phase, 1, d, f);
+      }
+      for (const b of birdSpecks) {
+        const [x, y, d, f] = project(phoenix, R, P, b.x, b.y, b.z);
+        speck(b, x, y, b.size * (b.eye ? 1 + beat : 1), b.color, b.phase, b.eye ? 1.5 : 1, d, f);
+      }
+      // Fire embers rise from the phoenix and its tail.
+      for (let k = 0; k < BEASTS.sparksPerFrame; k++) {
+        const [bx, by] = phoenixTrail[Math.floor(Math.random() * Math.min(80, phoenixTrail.length))] || [phoenix.x, phoenix.y];
+        shed(bx + rand(-12, 12), by + rand(-10, 10), Math.random() < 0.6 ? "rgb(255,170,70)" : "rgb(255,100,160)", true);
+      }
     }
 
     // ---- Knocked-off specks fly apart, slow down, fall a little and fade ----
