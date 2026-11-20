@@ -623,4 +623,4 @@ html.neon .rts-zone.rts-on .parallax-copy, html.neon .rts-zone.rts-on .parallax-
 html.neon:not(#_):not(#__) .rts-intro h3 { color: #fff !important; -webkit-text-fill-color: #fff !important; text-shadow: 0 0 18px rgba(255, 43, 214, .55) !important; }
 
 /* Page background: deep space purple instead of black (behind every section, and the bits between them). */
-html.neon:not(#_):not(#__) body, html.neon:not(#_):not(#__) main { background-color: rgb(12, 4, 30) !important; }
+html.neon:not(#_):not(#__) body { background-color: rgb(12, 4, 30) !important; }   /* not on <main>: it would cover the animated canvases */

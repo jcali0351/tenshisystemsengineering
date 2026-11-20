@@ -57,7 +57,7 @@
   const ACHIEVEMENTS = {
     first: "FIRST BLOOD", combo: "COMBO KING (x9)", star: "STAR HUNTER", boss: "BOSS SLAYER", power: "POWERED UP",
     untouch: "UNTOUCHABLE (level 3, full shields)", city: "SAVED THE CITY (2,000 points)", insane: "INSANE MODE", bomb: "BOMB SQUAD (10 bombs)",
-    dragon: "DRAGON SLAYER", phoenix: "PHOENIX DOWN", slogan: "SLOGAN SMASHER (the whole headline)",
+    dragon: "DRAGON SLAYER", phoenix: "PHOENIX DOWN", kaiju: "KAIJU HUNTER", robot: "SCRAP METAL", slogan: "SLOGAN SMASHER (the whole headline)",
   };
   const LETTER = { points: 10, wordBonus: 50, sloganBonus: 250, backAfter: [7000, 11000] };   // shooting the headline's letters
   const BEAST_POINTS = 100;      // for blowing up the dragon or the phoenix
@@ -136,6 +136,7 @@
     objects.length = shards.length = beams.length = popups.length = bombs.length = cars.length = bossBeams.length = 0;
     if (typeof projectiles !== "undefined") projectiles.length = rails.length = bolts.length = 0;
     over.hidden = true; bossbar.hidden = true; started = false;
+    if (window.neonMonstersReset) window.neonMonstersReset();
     hud.querySelector(".neon-hud-tip").textContent = "Click the sky to start";
     updateHud();
   }
@@ -335,6 +336,7 @@
     if (boss && nearLine(boss.x, boss.y, x1, y1, x2, y2, 50)) { damageBoss(boss.x, boss.y, now, bossDmg); hit = true; }
     if (window.neonBeasts) for (const r of window.neonBeasts.hitLine(x1, y1, x2, y2, 14, bossDmg)) { beastHit(r); hit = true; }
     for (const l of liveLetters()) { const c = centre(l); if (nearLine(c.x, c.y, x1, y1, x2, y2, 22)) { shootLetter(l); hit = true; } }
+    for (const mo of monstersOnLine(x1, y1, x2, y2)) { hitMonster(mo, bossDmg, mo.x, mo.circles[0].y); hit = true; }
     return hit;
   }
 
@@ -363,6 +365,7 @@
         for (const l of liveLetters()) { const d = Math.hypot(centre(l).x - c.x, centre(l).y - c.y); if (d < bestD) { bestD = d; letter = l; } }
       }
     }
+    if (!hit) { const mo = monsterAt(x, y, 40); if (mo) { bolts.push({ pts: jag(W / 2, H, x, y), life: 1 }); hitMonster(mo, bossDmg, x, y); hit = true; } }
     if (!hit && window.neonBeasts) {                   // nothing else near: strike the dragon or phoenix
       const r = window.neonBeasts.hitAt(x, y, 70, bossDmg);
       if (r) { bolts.push({ pts: jag(W / 2, H, r.hitX, r.hitY), life: 1 }); beastHit(r); hit = true; }
@@ -390,6 +393,7 @@
     if (boss && Math.abs(boss.x - x) < 120 + radius * 0.6 && Math.abs(boss.y - y) < 45 + radius * 0.6) damageBoss(x, y, now, bossDmg);
     if (window.neonBeasts) for (const r of window.neonBeasts.hitArea(x, y, radius, bossDmg)) beastHit(r);
     for (const l of liveLetters()) { const c = centre(l); if (Math.hypot(c.x - x, c.y - y) < radius) shootLetter(l); }
+    for (const mo of monstersInRadius(x, y, radius)) hitMonster(mo, bossDmg, x, y);
   }
 
   function defuse(b) {
@@ -414,6 +418,8 @@
     if (!target) {
       const letter = letterAt(x, y, 4 + extraReach);   // a letter of the headline?
       if (letter) { shootLetter(letter); return true; }
+      const mo = monsterAt(x, y, extraReach);            // the robot or the kaiju?
+      if (mo) { hitMonster(mo, bossDmg, x, y); return true; }
       // nothing else there: maybe the dragon or phoenix
       const r = window.neonBeasts && window.neonBeasts.hitAt(x, y, 24 + extraReach, bossDmg);
       if (!r) return false;
@@ -521,6 +527,7 @@
       if (boss) { boss.hp -= 8; boss.hitFlash = 1; }
       if (window.neonBeasts) for (const r of window.neonBeasts.hitArea(W / 2, H / 2, Math.hypot(W, H), 8)) beastHit(r);
       liveLetters().forEach((l, k) => setTimeout(() => shootLetter(l), k * 25));
+      for (const mo of liveMonsters()) hitMonster(mo, 8, mo.x, mo.circles.length ? mo.circles[0].y : H * 0.3);
       sfx("bigboom"); shakeIt(14); hitStop(120);
       return;
     }
@@ -781,6 +788,306 @@
   }
 
   // ================================================ THE LOOP ================================================
+  // ================================================ GIANT MONSTERS ================================================
+  // Two giants stomp into the skyline behind the headline and wreck the city a chunk at a time:
+  //   IRON RONIN  a giant robot: boxy armour, glowing visor and chest reactor. Punches buildings, fires eye lasers.
+  //   TOKAGE      a giant lizard kaiju: horned head, glowing crystal spines, a long tail. Breathes a plasma beam.
+  // Each is a jointed 3D model (legs, arms, head, jaw, tail) lit by the lighting engine, walking and attacking with
+  // real animation. Shoot them with any weapon. Every building they flatten costs a shield; bring one down for
+  // 500 points. They only come once the game has started.
+  const MONSTER = {
+    firstAfter: 25000,          // ms after the first shot before the first one arrives
+    every: 45000,               // ms between arrivals (after one is beaten)
+    health: { robot: 38, kaiju: 44 },
+    points: 500,
+    height: 0.3,                // how tall, as a share of the screen height
+    opacity: 0.94,
+    smashEvery: 1500,           // ms between blows on a building
+    buildingsPerShield: 2,      // every this many flattened buildings costs a shield
+  };
+  // ---- A little kit for building jointed models (x right, y up, z towards you) ----
+  const kMesh = () => ({ v: [], f: [] });
+  function kFace(m, i, mat, c) { m.f.push({ i, mat, c }); }
+  function kLathe(m, prof, n, mat, at = [0, 0, 0], sx = 1, sz = 1) {          // round shapes standing up the y axis
+    const b = m.v.length;
+    for (const [r, y] of prof) for (let k = 0; k < n; k++) { const a = k / n * 6.2832; m.v.push([at[0] + Math.cos(a) * r * sx, at[1] + y, at[2] + Math.sin(a) * r * sz]); }
+    for (let p = 0; p < prof.length - 1; p++) for (let k = 0; k < n; k++) { const a = b + p * n + k, c2 = b + p * n + (k + 1) % n; kFace(m, [a, c2, c2 + n, a + n], typeof mat === "function" ? mat(p) : mat, [at[0], at[1] + (prof[0][1] + prof[prof.length - 1][1]) / 2, at[2]]); }
+  }
+  function kBox(m, at, size, mat) {
+    const [x, y, z] = at, [a, b, c] = size.map(v => v / 2), base = m.v.length;
+    for (const dx of [-a, a]) for (const dy of [-b, b]) for (const dz of [-c, c]) m.v.push([x + dx, y + dy, z + dz]);
+    for (const q of [[0, 1, 3, 2], [4, 6, 7, 5], [0, 4, 5, 1], [2, 3, 7, 6], [0, 2, 6, 4], [1, 5, 7, 3]]) kFace(m, q.map(i => base + i), mat, at);
+  }
+  function kCone(m, base, tip, r, mat, n = 5) {                                // a spike from base to tip
+    const d = tip.map((v, i) => v - base[i]), len = Math.hypot(...d), u = d.map(v => v / len);
+    const t1 = Math.abs(u[1]) < 0.9 ? [u[2], 0, -u[0]] : [0, -u[2], u[1]], l1 = Math.hypot(...t1), a1 = t1.map(v => v / l1);
+    const a2 = [u[1] * a1[2] - u[2] * a1[1], u[2] * a1[0] - u[0] * a1[2], u[0] * a1[1] - u[1] * a1[0]], b0 = m.v.length;
+    for (let k = 0; k < n; k++) { const a = k / n * 6.2832; m.v.push(base.map((v, i) => v + (a1[i] * Math.cos(a) + a2[i] * Math.sin(a)) * r)); }
+    m.v.push(tip);
+    const c = base.map((v, i) => v + d[i] * 0.3);
+    for (let k = 0; k < n; k++) kFace(m, [b0 + k, b0 + (k + 1) % n, b0 + n], mat, c);
+  }
+  const ball = (r, y0 = 0, n = 6, sy = 1) => Array.from({ length: n + 1 }, (_, i) => { const a = -Math.PI / 2 + i / n * Math.PI; return [Math.cos(a) * r + 0.001, y0 + Math.sin(a) * r * sy]; });
+  // Rotation matrices and joints.
+  const rX = a => { const c = Math.cos(a), s = Math.sin(a); return [[1, 0, 0], [0, c, -s], [0, s, c]]; };
+  const rY = a => { const c = Math.cos(a), s = Math.sin(a); return [[c, 0, s], [0, 1, 0], [-s, 0, c]]; };
+  const rZ = a => { const c = Math.cos(a), s = Math.sin(a); return [[c, -s, 0], [s, c, 0], [0, 0, 1]]; };
+  const mMul = (A, B) => A.map(r => [0, 1, 2].map(j => r[0] * B[0][j] + r[1] * B[1][j] + r[2] * B[2][j]));
+  const mApp = (A, v) => [A[0][0] * v[0] + A[0][1] * v[1] + A[0][2] * v[2], A[1][0] * v[0] + A[1][1] * v[1] + A[1][2] * v[2], A[2][0] * v[0] + A[2][1] * v[1] + A[2][2] * v[2]];
+
+  // ---- TOKAGE, the kaiju ----
+  // Parts: [name, parent, pivot (in the parent's space), mesh]
+  const KAIJU = (() => {
+    const P = {};
+    let m = kMesh();                                                             // body: a big pear leaning forward
+    kLathe(m, [[0.001, -0.3], [1.15, 0.2], [1.45, 1.3], [1.25, 2.6], [0.85, 3.5], [0.5, 4.0]], 9, p => p === 2 ? "belly" : "skin", [0, 0, 0], 1, 0.9);
+    for (let k = 0; k < 6; k++) { const y = 0.6 + k * 0.55, x = -1.1 - Math.sin(k * 0.5) * 0.25; kCone(m, [x + 0.15, y, 0], [x - 0.7 + k * 0.05, y + 0.55, 0], 0.28, "spine"); }   // crystal spines on the back
+    for (let k = 0; k < 3; k++) kBox(m, [1.2, 1.2 + k * 0.6, 0], [0.12, 0.3, 0.9], "glow");                                      // glowing chest vents
+    P.body = m;
+    m = kMesh();                                                                 // head: skull, snout, brow, horns, eyes
+    kBox(m, [0.5, 0.25, 0], [1.3, 0.9, 1.0], "skin"); kBox(m, [1.35, 0.1, 0], [0.9, 0.55, 0.75], "skin"); kBox(m, [0.45, 0.72, 0], [1.0, 0.18, 1.05], "dark");
+    for (const s of [-1, 1]) { kCone(m, [0.15, 0.7, s * 0.35], [-0.65, 1.45, s * 0.75], 0.17, "horn"); kCone(m, [0.55, 0.75, s * 0.4], [0.25, 1.25, s * 0.85], 0.12, "horn"); kBox(m, [0.95, 0.5, s * 0.5], [0.22, 0.14, 0.06], "glow"); }
+    for (let k = 0; k < 4; k++) kCone(m, [1.1 + k * 0.22, -0.15, 0.3], [1.1 + k * 0.22, -0.4, 0.3], 0.06, "horn", 3);   // teeth
+    P.head = m;
+    m = kMesh(); kBox(m, [0.8, -0.18, 0], [1.4, 0.3, 0.8], "belly"); for (let k = 0; k < 4; k++) kCone(m, [1.1 + k * 0.22, -0.03, 0.3], [1.1 + k * 0.22, 0.2, 0.3], 0.06, "horn", 3); P.jaw = m;
+    m = kMesh(); kLathe(m, [[0.001, 0.2], [0.75, 0], [0.7, -1.3], [0.45, -1.8]], 7, "skin"); P.thigh = m;
+    m = kMesh(); kLathe(m, [[0.45, 0], [0.42, -1.1], [0.5, -1.4]], 7, "skin"); kBox(m, [0.35, -1.55, 0], [1.3, 0.3, 0.8], "dark"); for (const z of [-0.25, 0, 0.25]) kCone(m, [0.95, -1.55, z], [1.3, -1.7, z], 0.1, "horn", 3); P.shin = m;
+    m = kMesh(); kLathe(m, [[0.001, 0.15], [0.32, 0], [0.28, -1.0], [0.2, -1.2]], 6, "skin"); P.arm = m;
+    m = kMesh(); kLathe(m, [[0.2, 0], [0.18, -0.8]], 6, "skin"); for (const z of [-0.12, 0.12]) kCone(m, [0, -0.8, z], [0.3, -1.15, z], 0.07, "horn", 3); P.forearm = m;
+    const tails = [];
+    for (let k = 0; k < 7; k++) {                                                // a tail of tapering segments, each with a spine
+      const r = 0.85 * (1 - k / 8.5); m = kMesh();
+      kLathe(m, [[0.001, 0.15], [r, 0], [r * 0.92, -1.1], [0.001, -1.25]], 7, "skin");
+      kCone(m, [-0.1, -0.5, -r * 0.6], [-0.1, -0.55, -r * 0.6 - 0.45 * (1 - k / 9)], 0.16, "spine");
+      tails.push(m);
+    }
+    P.tails = tails;
+    return P;
+  })();
+  // ---- IRON RONIN, the robot ----
+  const ROBOT = (() => {
+    const P = {};
+    let m = kMesh();
+    kBox(m, [0, 0.3, 0], [1.5, 0.6, 1.1], "dark");                                // pelvis
+    P.pelvis = m;
+    m = kMesh();
+    kBox(m, [0, 1.4, 0], [2.3, 1.9, 1.4], "hull"); kBox(m, [0, 2.45, 0], [1.4, 0.3, 1.1], "trim"); kBox(m, [0, 0.45, 0], [1.6, 0.35, 1.2], "dark");
+    kLathe(m, [[0.001, 0.08], [0.38, 0.05], [0.38, -0.05]].map(([r, y]) => [r, y]), 10, "glow", [0, 1.5, 0.72]);   // chest reactor (facing you)
+    for (const s of [-1, 1]) { kBox(m, [s * 1.45, 2.05, 0], [0.9, 0.8, 1.3], "trim"); kCone(m, [s * 1.6, 2.4, 0], [s * 1.9, 3.0, 0], 0.14, "dark", 4); }   // shoulder pads with fins
+    kLathe(m, [[0.25, 0], [0.3, -0.5], [0.001, -0.55]], 6, "glow", [0, 1.6, -0.8]);                                   // back thruster
+    P.torso = m;
+    m = kMesh();
+    kBox(m, [0, 0.45, 0], [0.9, 0.8, 0.85], "hull"); kBox(m, [0.05, 0.5, 0.0], [0.95, 0.18, 0.9], "glow");             // head with a visor band
+    kCone(m, [0, 0.85, 0], [0, 1.4, 0], 0.08, "trim", 4); kBox(m, [0, 0.95, 0], [1.1, 0.1, 0.12], "trim");            // crest
+    P.head = m;
+    m = kMesh(); kBox(m, [0, -0.6, 0], [0.55, 1.3, 0.6], "hull"); P.upper = m;
+    m = kMesh(); kBox(m, [0, -0.55, 0], [0.6, 1.1, 0.65], "trim"); kBox(m, [0, -1.35, 0], [0.8, 0.6, 0.75], "dark"); P.lower = m;   // forearm + fist
+    m = kMesh(); kBox(m, [0, -0.8, 0], [0.7, 1.6, 0.75], "hull"); P.thigh = m;
+    m = kMesh(); kBox(m, [0, -0.85, 0], [0.75, 1.7, 0.8], "trim"); kBox(m, [0.2, -1.8, 0], [1.3, 0.3, 0.95], "dark"); kBox(m, [0.3, -0.1, 0.0], [0.4, 0.35, 0.85], "dark"); P.shin = m;
+    return P;
+  })();
+  const KPAINT = {
+    kaiju: { skin: [125, 92, 165], belly: [195, 150, 180], dark: [40, 28, 58], horn: [235, 225, 245], spine: [255, 90, 220], glow: [255, 150, 60] },
+    robot: { hull: [150, 150, 175], trim: [255, 138, 43], dark: [45, 42, 62], glow: [255, 70, 220] },
+  };
+  const GLOWY = new Set(["glow", "spine"]);
+
+  const monsters = [];
+  let nextMonsterAt = 0, nextMonsterType = "kaiju", buildingsLost = 0;
+  function monsterScale() { return H * MONSTER.height / 8.5; }
+  function spawnMonster(type) {
+    const dir = Math.random() < 0.5 ? 1 : -1, s = monsterScale();
+    monsters.push({ type, dir, x: dir > 0 ? -5 * s : W + 5 * s, hp: MONSTER.health[type], max: MONSTER.health[type], state: "walk", t: 0, walk: 0, flash: 0, target: null, lastSmash: 0, smashes: 0, circles: [], fall: 0, yaw: 0, beam: 0 });
+    showBanner(type === "kaiju" ? "⚠ KAIJU ATTACK!" : "⚠ GIANT ROBOT!", 1800); sfx("bomb"); shakeIt(6);
+    cheer(type === "kaiju" ? "A kaiju is wrecking the city! Shoot it! 🦖" : "A giant robot! Stop it before it flattens Osaka! 🤖");
+  }
+  // Pick the next building to wreck: the nearest one still standing ahead (or anywhere if none ahead).
+  function pickTarget(mo) {
+    const city = window.neonCity, ground = city ? city.ground() : H * 0.4;
+    if (!city) return null;
+    let best = null, bd = Infinity;
+    for (let x = 30; x < W - 30; x += 26) {
+      const roof = city.roofAt(x);
+      if (roof === null || roof > ground - 34) continue;                       // only buildings worth wrecking
+      const ahead = (x - mo.x) * mo.dir, d = ahead > 0 ? ahead : Math.abs(ahead) + W;
+      if (d < bd) { bd = d; best = x; }
+    }
+    return best;
+  }
+  function updateMonsters(now, dt) {
+    if (!started || over_) return;
+    if (!nextMonsterAt) nextMonsterAt = now + MONSTER.firstAfter;
+    const alive = monsters.filter(m => m.state !== "dying").length;
+    if (now > nextMonsterAt && (alive === 0 || (alive < 2 && level >= 3))) {
+      spawnMonster(nextMonsterType); nextMonsterType = nextMonsterType === "kaiju" ? "robot" : "kaiju"; nextMonsterAt = now + MONSTER.every;
+    }
+    const s = monsterScale(), city = window.neonCity;
+    for (let i = monsters.length - 1; i >= 0; i--) {
+      const mo = monsters[i];
+      mo.t += dt * 16.7; mo.flash = Math.max(0, mo.flash - dt * 0.08);
+      if (mo.state === "dying") { mo.fall = Math.min(1, mo.fall + dt * 0.012); if (mo.fall >= 1 && mo.t > 2200) monsters.splice(i, 1); continue; }
+      if (mo.target === null || mo.target === undefined) { mo.target = pickTarget(mo); if (mo.target === null) { mo.state = "walk"; mo.x += mo.dir * dt * 0.6; continue; } }
+      const reach = (mo.type === "kaiju" ? 3.4 : 2.3) * s;
+      const standAt = mo.target - mo.dir * reach;
+      if (Math.sign(mo.target - mo.x) !== mo.dir && Math.abs(mo.target - mo.x) > reach * 0.5) mo.dir = -mo.dir;   // turn round
+      if (Math.abs(mo.x - standAt) > 6) { mo.state = "walk"; mo.x += Math.sign(standAt - mo.x) * dt * 0.7; mo.walk += dt * 0.09; continue; }
+      mo.state = "attack";
+      if (now - mo.lastSmash > MONSTER.smashEvery) {
+        mo.lastSmash = now; mo.attackAt = now;
+        const roof = city.roofAt(mo.target);
+        if (roof === null || roof > city.ground() - 10) {                      // that building is gone: costs a shield
+          popups.push({ x: mo.target, y: city.ground() - 30, text: "BUILDING DESTROYED!", life: 1, color: "#ff8a2b" });
+          if (++buildingsLost % MONSTER.buildingsPerShield === 0) hitCity(mo.target, "CITY HIT!");
+          mo.target = null; continue;
+        }
+        setTimeout(() => {                                                       // the blow lands a moment into the swing
+          if (mo.state === "dying" || !city) return;
+          const r = city.roofAt(mo.target); if (r === null) return;
+          city.smash(mo.target + rand(-5, 5), r + 4, rand(9, 13) * Math.max(0.8, W / 1280));   // one bite at a time, from the roof down
+          burst(mo.target, r, "#ffb347", 14, 1.2); sfx("boom"); shakeIt(5);
+          mo.smashes++;
+        }, 380);
+      }
+    }
+  }
+  // Pose the joints for this frame, then gather every face of every part, lit and sorted back to front.
+  function poseMonster(mo, now) {
+    const t = mo.t / 1000, walking = mo.state === "walk", attack = mo.state === "attack" ? Math.max(0, 1 - (now - (mo.attackAt || 0)) / 900) : 0;
+    const swing = walking ? Math.sin(mo.walk) : 0, lift = walking ? Math.abs(Math.cos(mo.walk)) * 0.15 : 0;
+    const parts = [];
+    // Root: turned three-quarters towards you, facing its walking direction; topples when dying.
+    const yaw = (mo.dir > 0 ? -0.55 : Math.PI + 0.55) + Math.sin(t * 0.7) * 0.12;
+    let root = mMul(rY(yaw), rZ(-mo.fall * 1.45 * (mo.dir > 0 ? 1 : 1)));
+    const add = (mesh, R, at, mat) => parts.push({ mesh, R, at, mat });
+    const joint = (parentR, parentAt, pivot, R) => ({ R: mMul(parentR, R), at: mApp(parentR, pivot).map((v, i) => v + parentAt[i]) });
+    if (mo.type === "kaiju") {
+      const hip = [0, 3.0 + lift, 0];
+      const body = joint(root, [0, 0, 0], hip, rZ(-0.38 + Math.sin(t * 2) * 0.03 - attack * 0.15));
+      add(KAIJU.body, body.R, body.at, "kaiju");
+      const head = joint(body.R, body.at, [0.55, 3.85, 0], rZ(0.35 - attack * 0.5 + Math.sin(t * 2.4) * 0.05));
+      add(KAIJU.head, head.R, head.at, "kaiju");
+      const jaw = joint(head.R, head.at, [0.3, 0, 0], rZ(-0.12 - attack * 0.55));
+      add(KAIJU.jaw, jaw.R, jaw.at, "kaiju");
+      mo.mouth = { at: mApp(head.R, [1.8, -0.1, 0]).map((v, i) => v + head.at[i]) };
+      for (const side of [-1, 1]) {
+        const th = joint(root, [0, 0, 0], [0.1, 3.0 + lift, side * 0.8], rZ(swing * 0.55 * side));
+        add(KAIJU.thigh, th.R, th.at, "kaiju");
+        const sh = joint(th.R, th.at, [0, -1.7, 0], rZ(-0.3 - Math.max(0, swing * side) * 0.5));
+        add(KAIJU.shin, sh.R, sh.at, "kaiju");
+        const ar = joint(body.R, body.at, [0.9, 2.6, side * 1.0], rZ(0.4 - swing * 0.4 * side + attack * 0.6));
+        add(KAIJU.arm, ar.R, ar.at, "kaiju");
+        const fa = joint(ar.R, ar.at, [0, -1.05, 0], rZ(0.9));
+        add(KAIJU.forearm, fa.R, fa.at, "kaiju");
+      }
+      // The tail: each segment hangs off the last, swaying in a wave.
+      let seg = joint(body.R, body.at, [-0.9, 0.4, 0], rZ(-1.05));             // sweeps out backwards
+      for (let k = 0; k < KAIJU.tails.length; k++) {
+        add(KAIJU.tails[k], seg.R, seg.at, "kaiju");
+        seg = joint(seg.R, seg.at, [0, -1.15, 0], mMul(rZ(0.07 + Math.sin(t * 2.2 - k * 0.6) * 0.07), rX(Math.sin(t * 1.8 - k * 0.7) * 0.22)));   // droops to the ground, swishing
+      }
+    } else {
+      const hip = [0, 3.4 + lift, 0];
+      const pel = joint(root, [0, 0, 0], hip, rZ(0));
+      add(ROBOT.pelvis, pel.R, pel.at, "robot");
+      const torso = joint(pel.R, pel.at, [0, 0.4, 0], mMul(rY(Math.sin(t * 1.2) * 0.1 + attack * 0.3), rZ(-attack * 0.12)));
+      add(ROBOT.torso, torso.R, torso.at, "robot");
+      const head = joint(torso.R, torso.at, [0, 2.6, 0], rZ(-0.1 + Math.sin(t * 1.7) * 0.05 - attack * 0.2));
+      add(ROBOT.head, head.R, head.at, "robot");
+      mo.mouth = { at: mApp(head.R, [0.5, 0.5, 0]).map((v, i) => v + head.at[i]) };
+      for (const side of [-1, 1]) {
+        const punch = side === 1 ? attack : 0;
+        const up = joint(torso.R, torso.at, [0, 2.05, side * 1.45], rZ(-swing * 0.45 * side + punch * 2.2 - (punch ? 0.3 : 0)));
+        add(ROBOT.upper, up.R, up.at, "robot");
+        const lo = joint(up.R, up.at, [0, -1.25, 0], rZ(0.5 - punch * 0.4));
+        add(ROBOT.lower, lo.R, lo.at, "robot");
+        const th = joint(pel.R, pel.at, [0, 0, side * 0.55], rZ(swing * 0.5 * side));
+        add(ROBOT.thigh, th.R, th.at, "robot");
+        const sh = joint(th.R, th.at, [0, -1.6, 0], rZ(-Math.max(0, swing * side) * 0.6));
+        add(ROBOT.shin, sh.R, sh.at, "robot");
+      }
+    }
+    return parts;
+  }
+  function drawMonster(mo, now) {
+    const s = monsterScale(), ground = window.neonCity ? window.neonCity.ground() : H * 0.4, lights = sceneLights(now);
+    const parts = poseMonster(mo, now), faces = [], circles = [];
+    const toScreen = w => [mo.x + w[0] * s, ground - w[1] * s];
+    for (const p of parts) {
+      const W3 = p.mesh.v.map(v => mApp(p.R, v).map((c, i) => c + p.at[i]));
+      const S = W3.map(toScreen);
+      // Hit circle for this part (centre and size on screen).
+      let cx = 0, cy = 0; for (const q of S) { cx += q[0]; cy += q[1]; } cx /= S.length; cy /= S.length;
+      let rr = 0; for (const q of S) rr = Math.max(rr, Math.hypot(q[0] - cx, q[1] - cy));
+      circles.push({ x: cx, y: cy, r: rr * 0.8 });
+      for (const f of p.mesh.f) {
+        const a = W3[f.i[0]], b = W3[f.i[1]], c = W3[f.i[2]];
+        let n = [(b[1] - a[1]) * (c[2] - a[2]) - (b[2] - a[2]) * (c[1] - a[1]), (b[2] - a[2]) * (c[0] - a[0]) - (b[0] - a[0]) * (c[2] - a[2]), (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])];
+        const nl = Math.hypot(...n); if (nl < 1e-9) continue; n = n.map(v => v / nl);
+        const pc = mApp(p.R, f.c).map((v, i) => v + p.at[i]), mid = [0, 1, 2].map(k => f.i.reduce((tt, i) => tt + W3[i][k], 0) / f.i.length);
+        if ((mid[0] - pc[0]) * n[0] + (mid[1] - pc[1]) * n[1] + (mid[2] - pc[2]) * n[2] < 0) n = n.map(v => -v);
+        if (n[2] <= 0.03) continue;                                             // facing away from you
+        faces.push({ pts: f.i.map(i => S[i]), z: mid[2], n, mat: f.mat, paint: KPAINT[p.mat] });
+      }
+    }
+    mo.circles = circles;
+    faces.sort((p, q) => p.z - q.z);
+    ctx.save();
+    ctx.globalCompositeOperation = "source-over";
+    ctx.globalAlpha = MONSTER.opacity * (mo.state === "dying" ? Math.max(0, 1 - Math.max(0, mo.fall - 0.7) * 3) : 1);
+    for (const f of faces) {
+      const base = f.paint[f.mat] || f.paint.skin || f.paint.hull;
+      let col;
+      if (GLOWY.has(f.mat)) col = `rgb(${base.join(",")})`;
+      else col = shadeFace(base, [f.n[0], -f.n[1], -f.n[2]], f.pts[0][0], f.pts[0][1], lights).color;
+      if (mo.flash > 0.05) col = mo.flash > 0.5 ? "#ffffff" : col;
+      ctx.fillStyle = col; ctx.strokeStyle = col; ctx.lineWidth = 0.7;
+      ctx.beginPath(); f.pts.forEach((q, k) => k ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1])); ctx.closePath(); ctx.fill(); ctx.stroke();
+    }
+    ctx.restore();
+    // Breath / eye-laser beam while attacking.
+    const attack = mo.state === "attack" ? Math.max(0, 1 - (now - (mo.attackAt || 0)) / 900) : 0;
+    if (attack > 0.15 && mo.mouth && mo.target !== null && window.neonCity) {
+      const [mx, my] = toScreen(mo.mouth.at), roof = window.neonCity.roofAt(mo.target) ?? ground;
+      const robotPunch = mo.type === "robot" && Math.floor(mo.lastSmash / MONSTER.smashEvery) % 2 === 0;
+      if (!robotPunch) {
+        const color = mo.type === "kaiju" ? "#ff9a3c" : "#ff3ad8";
+        ctx.save(); ctx.globalCompositeOperation = "lighter";
+        ctx.strokeStyle = color; glow(color, 24); ctx.lineWidth = (mo.type === "kaiju" ? 10 : 4) * attack;
+        ctx.beginPath(); ctx.moveTo(mx, my); ctx.lineTo(mo.target, roof); ctx.stroke();
+        ctx.strokeStyle = "#ffffff"; ctx.lineWidth = (mo.type === "kaiju" ? 4 : 1.5) * attack; ctx.stroke();
+        ctx.restore(); ctx.shadowBlur = 0;
+      }
+    }
+    // Health bar over its head.
+    if (mo.state !== "dying") {
+      const top = Math.min(...circles.map(c => c.y - c.r)) - 14, w = 90;
+      ctx.fillStyle = "rgba(0,0,0,.55)"; ctx.fillRect(mo.x - w / 2, top, w, 5);
+      ctx.fillStyle = mo.type === "kaiju" ? "#ff9a3c" : "#ff2bd6"; ctx.fillRect(mo.x - w / 2, top, w * Math.max(0, mo.hp / mo.max), 5);
+    }
+  }
+  // Hitting them.
+  const liveMonsters = () => monsters.filter(m => m.state !== "dying");
+  function monsterAt(x, y, reach = 0) { for (const mo of liveMonsters()) for (const c of mo.circles) if (Math.hypot(c.x - x, c.y - y) < c.r + reach) return mo; return null; }
+  function hitMonster(mo, dmg, x, y) {
+    if (mo.state === "dying") return;
+    mo.hp -= dmg; mo.flash = 1;
+    burst(x, y, mo.type === "kaiju" ? "#ff9a3c" : "#ffd28a", 8, 1.1); sfx("hit");
+    if (mo.hp > 0) return;
+    mo.state = "dying"; mo.t = 0; mo.fall = 0;
+    const s = monsterScale(), ground = window.neonCity ? window.neonCity.ground() : H * 0.4;
+    for (let k = 0; k < 9; k++) setTimeout(() => { explode({ x: mo.x + rand(-2.5, 2.5) * s, y: ground - rand(0.5, 7) * s, size: 26, color: pick(["#ff2bd6", "#ff8a2b", "#ffb347", "#ffffff"]) }, 1.8); sfx("boom"); shakeIt(9); }, k * 160);
+    setTimeout(() => sfx("bigboom"), 900);
+    addScore(MONSTER.points, mo.x, ground - 6 * s, "#ffffff", mo.type === "kaiju" ? "KAIJU DOWN" : "ROBOT DOWN");
+    showBanner(mo.type === "kaiju" ? "TOKAGE DEFEATED!" : "IRON RONIN DESTROYED!", 2200);
+    achieve(mo.type === "kaiju" ? "kaiju" : "robot"); hitStop(140); shakeIt(16);
+    cheer(mo.type === "kaiju" ? "The kaiju is down! Osaka is saved! 🎉" : "Robot scrapped! Nice shooting! 🔧");
+    nextMonsterAt = performance.now() + MONSTER.every;
+  }
+  function monstersInRadius(x, y, r) { return liveMonsters().filter(mo => mo.circles.some(c => Math.hypot(c.x - x, c.y - y) < c.r + r)); }
+  function monstersOnLine(x1, y1, x2, y2) { return liveMonsters().filter(mo => mo.circles.some(c => nearLine(c.x, c.y, x1, y1, x2, y2, c.r))); }
+
+  window.neonMonstersReset = () => { monsters.length = 0; nextMonsterAt = 0; buildingsLost = 0; nextMonsterType = "kaiju"; if (window.neonCity) window.neonCity.rebuild(); };
+
   function frame(now) {
     const realDt = Math.min(50, now - lastTime); lastTime = now;
     const visible = heroOnScreen();
@@ -805,6 +1112,10 @@
     }
     if (combo > 1 && now - lastHit > GAME.comboWindow) { combo = 1; updateHud(); }
     if (power && now > power.until) { power = null; updateHud(); } else if (power && Math.random() < 0.05) updateHud();
+
+    // Giant monsters wrecking the skyline (drawn solid, behind everything else in the game).
+    if (visible && !paused && !over_) updateMonsters(now, dt);
+    if (visible) for (const mo of monsters) drawMonster(mo, now);
 
     ctx.globalCompositeOperation = "lighter";
 
@@ -885,7 +1196,7 @@
         if (visible) { ctx.strokeStyle = "#ffd28a"; ctx.lineWidth = 2; glow("#ffb347", 10); ctx.beginPath(); ctx.moveTo(p.x - p.ux * 22, p.y - p.uy * 22); ctx.lineTo(p.x, p.y); ctx.stroke(); }
       } else {
         // A rocket explodes when it reaches the click, or early if it touches something on the way.
-        const touched = objects.some(o => Math.hypot(o.x - p.x, o.y - p.y) < o.size + 8) || (boss && Math.abs(p.x - boss.x) < 120 && Math.abs(p.y - boss.y) < 40);
+        const touched = objects.some(o => Math.hypot(o.x - p.x, o.y - p.y) < o.size + 8) || (boss && Math.abs(p.x - boss.x) < 120 && Math.abs(p.y - boss.y) < 40) || !!monsterAt(p.x, p.y);
         if (arrived || touched) { blast(p.x, p.y, 110, now, p.bossDmg); projectiles.splice(i, 1); continue; }
         if (Math.random() < 0.8) shards.push({ x: p.x - p.ux * 10, y: p.y - p.uy * 10, vx: rand(-0.5, 0.5), vy: rand(-0.5, 0.5), life: 0.8, size: rand(2, 4), color: Math.random() < 0.5 ? "#b9a3d9" : "#ff8a2b" });   // smoke + flame trail
         if (visible) {
@@ -977,5 +1288,5 @@
   requestAnimationFrame(frame);
 
   // Handy for testing from the browser console: neonGame.boss(), neonGame.power(), neonGame.end()
-  window.neonGame = { boss: spawnBoss, power: spawnPower, end: gameOver, state: () => ({ score, level, shields, combo, boss: !!boss, objects: objects.length, kinds: objects.map(o => o.kind + "@" + Math.round(o.x) + "," + Math.round(o.y)).join(" "), power: power && power.type }) };
+  window.neonGame = { monster: t => spawnMonster(t), placeMonster: (i, x) => { if (monsters[i]) monsters[i].x = x; }, monsters: () => monsters.map(m => ({ type: m.type, hp: +m.hp.toFixed(1), state: m.state, x: Math.round(m.x), target: m.target, smashes: m.smashes, parts: m.circles.length, cy: m.circles.length ? Math.round(m.circles[0].y) : 0 })), boss: spawnBoss, power: spawnPower, end: gameOver, state: () => ({ score, level, shields, combo, boss: !!boss, objects: objects.length, kinds: objects.map(o => o.kind + "@" + Math.round(o.x) + "," + Math.round(o.y)).join(" "), power: power && power.type }) };
 })();

@@ -372,9 +372,61 @@ function buildCity() {
 
 function pickColor(r, list) { return list[Math.floor(r * list.length) % list.length]; }
 
+// ---------------------------------------------------------------------------------------------
+// Wrecking the city: neon-game.js's giant robot and kaiju smash it a chunk at a time. Each smash cuts a jagged
+// bite out of the skyline, throws debris and leaves a fire burning. A new game rebuilds the city.
+// ---------------------------------------------------------------------------------------------
+const wreck = { fires: [], debris: [] };
+window.neonCity = {
+  ground: () => Math.round(H * SETTINGS.horizon),
+  // The screen y of the highest bit of building at x (or null when there's nothing left standing there).
+  roofAt(x) {
+    if (!city) return null;
+    const col = Math.max(0, Math.min(W - 1, Math.round(x)));
+    const data = city.canvas.getContext("2d").getImageData(col, 0, 1, city.canvas.height).data;
+    for (let y = 0; y < city.canvas.height - 3; y++) if (data[y * 4 + 3] > 60) return city.top + y;
+    return null;
+  },
+  // Knock a jagged chunk of radius r out of the city at screen point (x, y).
+  smash(x, y, r) {
+    if (!city) return;
+    const g = city.canvas.getContext("2d"), ly = y - city.top;
+    g.save(); g.globalCompositeOperation = "destination-out"; g.beginPath();
+    for (let k = 0; k < 11; k++) { const a = k / 11 * Math.PI * 2, rr = r * (0.55 + Math.random() * 0.6); g.lineTo(x + Math.cos(a) * rr, ly + Math.sin(a) * rr * 1.25); }
+    g.closePath(); g.fill();
+    g.fillRect(x - r * 0.45, ly - r * 3, r * 0.9, r * 3);                        // nothing floats above the bite
+    g.restore();
+    for (let k = 0; k < 22; k++) wreck.debris.push({ x: x + (Math.random() - 0.5) * r, y: y + (Math.random() - 0.5) * r, vx: (Math.random() - 0.5) * 3, vy: -Math.random() * 3, s: 1 + Math.random() * 3.5, life: 1 });
+    wreck.fires.push({ x, y: Math.min(y + r * 0.6, city.top + city.canvas.height - 2), born: performance.now(), size: r * (0.6 + Math.random() * 0.5) });
+    if (wreck.fires.length > 40) wreck.fires.shift();
+  },
+  rebuild() { city = null; wreck.fires.length = 0; wreck.debris.length = 0; },
+};
+
 function drawCity(time) {
   if (!city || city.canvas.width !== W) buildCity();
   ctx.drawImage(city.canvas, 0, city.top);
+  // Fires where the city was hit (flickering, with a column of smoke) and falling debris.
+  const nowMs = performance.now(), ground = city.top + city.canvas.height;
+  for (const f of wreck.fires) {
+    const age = (nowMs - f.born) / 1000, flick = 0.7 + 0.3 * Math.sin(time * 23 + f.x) * Math.sin(time * 17 + f.y);
+    const g = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.size * 1.6);
+    g.addColorStop(0, `rgba(255, 200, 120, ${0.8 * flick})`); g.addColorStop(0.4, `rgba(255, 110, 40, ${0.45 * flick})`); g.addColorStop(1, "rgba(255, 60, 20, 0)");
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(f.x, f.y, f.size * 1.6, 0, Math.PI * 2); ctx.fill();
+    for (let k = 0; k < 4; k++) {                                                  // smoke puffs rising and drifting
+      const t = ((time * 0.35 + k / 4 + f.x * 0.01) % 1), sy = f.y - t * 70, sx = f.x + Math.sin(t * 5 + f.x) * 8 + t * 14;
+      ctx.fillStyle = `rgba(60, 40, 80, ${0.35 * (1 - t) * Math.min(1, age)})`;
+      ctx.beginPath(); ctx.arc(sx, sy, 4 + t * 14, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+  for (let i = wreck.debris.length - 1; i >= 0; i--) {
+    const d = wreck.debris[i];
+    d.vy += 0.15; d.x += d.vx; d.y += d.vy;
+    if (d.y > ground) { d.y = ground; d.vx *= 0.5; d.life -= 0.04; }
+    if (d.life <= 0) { wreck.debris.splice(i, 1); continue; }
+    ctx.fillStyle = `rgba(43, 15, 74, ${d.life})`; ctx.fillRect(d.x, d.y, d.s, d.s);
+    ctx.fillStyle = `rgba(255, 120, 60, ${0.6 * d.life})`; ctx.fillRect(d.x, d.y, d.s * 0.5, d.s * 0.5);
+  }
   // Blinking aircraft-warning lights on the antennas and towers.
   city.lights.forEach(([x, y], i) => {
     const on = Math.sin(time * 2.2 + i * 1.7) > 0.4;
