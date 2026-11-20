@@ -131,6 +131,7 @@
     bombsShot = 0; hits = 0; over_ = false; nextBossAt = GAME.bossEvery;
     nextPower = performance.now() + rand(...GAME.powerEvery) * 0.5;
     objects.length = shards.length = beams.length = popups.length = bombs.length = cars.length = bossBeams.length = 0;
+    if (typeof projectiles !== "undefined") projectiles.length = rails.length = bolts.length = 0;
     over.hidden = true; bossbar.hidden = true; started = false;
     hud.querySelector(".neon-hud-tip").textContent = "Click the sky to start";
     updateHud();
@@ -202,24 +203,71 @@
     sfx("bomb");
   }
 
-  // ================================================ SHOOTING ================================================
+  // ================================================ WEAPONS ================================================
+  // Pick one with the number keys 1–6 or the weapon bar at the bottom. Each has its own feel, sound and boss damage.
+  //   cooldown: ms between shots   auto: keeps firing while you hold the mouse   boss: damage per hit on the mothership
+  const WEAPONS = [
+    { id: "laser",   key: "1", name: "LASER",       icon: "⚡", color: "#ff6ec7", cooldown: 0,   auto: false, boss: 1,   tip: "Twin beams, instant hits. Click fast!" },
+    { id: "mg",      key: "2", name: "MACHINE GUN", icon: "⁘", color: "#ffb347", cooldown: 70,  auto: true,  boss: 0.4, tip: "Hold the mouse to spray tracer bullets." },
+    { id: "rocket",  key: "3", name: "ROCKET",      icon: "➶", color: "#ff8a2b", cooldown: 650, auto: false, boss: 6,   tip: "Slow, but the blast wipes out everything nearby." },
+    { id: "shotgun", key: "4", name: "SHOTGUN",     icon: "✶", color: "#ffe08a", cooldown: 420, auto: false, boss: 0.7, tip: "Seven pellets in a wide spread. Great up close." },
+    { id: "rail",    key: "5", name: "RAILGUN",     icon: "═", color: "#c48bff", cooldown: 900, auto: false, boss: 5,   tip: "Pierces everything in a line across the screen." },
+    { id: "chain",   key: "6", name: "LIGHTNING",   icon: "ϟ", color: "#efe0ff", cooldown: 480, auto: false, boss: 3,   tip: "Zaps a target, then jumps to four more nearby." },
+  ];
+  let weapon = WEAPONS[store.get("weapon", 0)] || WEAPONS[0], lastShot = 0;
+  const projectiles = [], rails = [], bolts = [];
+
+  // The weapon bar.
+  const bar = document.createElement("div");
+  bar.className = "neon-weapons";
+  bar.setAttribute("role", "toolbar");
+  bar.setAttribute("aria-label", "Choose a weapon");
+  bar.innerHTML = WEAPONS.map((w, i) => `<button type="button" data-w="${i}" style="--wc:${w.color}" title="${w.name} (key ${w.key})"><kbd>${w.key}</kbd><span class="ico" aria-hidden="true">${w.icon}</span><span class="nm">${w.name}</span></button>`).join("");
+  ui.appendChild(bar);
+  function selectWeapon(i) {
+    weapon = WEAPONS[i];
+    store.set("weapon", i);
+    bar.querySelectorAll("button").forEach((b, k) => { b.classList.toggle("on", k === i); b.setAttribute("aria-pressed", String(k === i)); });
+    showTip(weapon.name, weapon.tip);
+    sfx("select");
+    clearInterval(rapidTimer);
+  }
+  bar.addEventListener("click", e => { const b = e.target.closest("button[data-w]"); if (b) selectWeapon(Number(b.dataset.w)); });
+  window.addEventListener("keydown", e => {
+    if (e.target.closest && e.target.closest("input, textarea, select")) return;
+    const i = WEAPONS.findIndex(w => w.key === e.key);
+    if (i >= 0) selectWeapon(i);
+  });
+  bar.querySelectorAll("button").forEach((b, k) => { b.classList.toggle("on", WEAPONS[k] === weapon); b.setAttribute("aria-pressed", String(WEAPONS[k] === weapon)); });
+
+  // ================================================ FIRING ================================================
   let holding = false, holdX = 0, holdY = 0, rapidTimer = null;
-  function blocked(target) { return target.closest("a, button, input, textarea, select, label, form, .site-header, .tk-root, .neon-hud, .neon-over, .neon-sound, .chaos-sticker"); }
+  function blocked(target) { return target.closest("a, button, input, textarea, select, label, form, .site-header, .tk-root, .neon-hud, .neon-over, .neon-sound, .neon-weapons, .chaos-sticker"); }
+  const rapidOn = () => power && power.type === "R" && power.until > performance.now();
 
   window.addEventListener("pointerdown", e => {
     if (paused || over_ || e.button !== 0 || !heroOnScreen() || blocked(e.target)) return;
     holding = true; holdX = e.clientX; holdY = e.clientY;
-    fire(holdX, holdY);
-    if (power && power.type === "R" && power.until > performance.now()) {
-      clearInterval(rapidTimer);
-      rapidTimer = setInterval(() => { if (holding && power && power.until > performance.now()) fire(holdX, holdY); else clearInterval(rapidTimer); }, 95);
+    tryFire();
+    clearInterval(rapidTimer);
+    // Machine gun (or any weapon with RAPID FIRE) keeps shooting while the mouse is held.
+    if (weapon.auto || rapidOn()) {
+      const every = Math.max(55, (weapon.cooldown || 95) * (rapidOn() ? 0.5 : 1));
+      rapidTimer = setInterval(() => { if (holding && !paused && !over_) tryFire(); else clearInterval(rapidTimer); }, every);
     }
   });
   window.addEventListener("pointermove", e => { holdX = e.clientX; holdY = e.clientY; });
   window.addEventListener("pointerup", () => { holding = false; clearInterval(rapidTimer); });
 
-  function fire(x, y) {
+  function tryFire() {
     const now = performance.now();
+    const cooldown = weapon.cooldown * (rapidOn() ? 0.4 : 1);
+    if (now - lastShot < cooldown) return;
+    lastShot = now;
+    fire(holdX, holdY, now);
+  }
+
+  function fire(x, y, now) {
     if (!started) {                                   // the first shot starts the game for real
       started = true;
       showBanner("GAME ON!", 1100);
@@ -227,39 +275,131 @@
       for (const o of objects) o.nextBomb = now + rand(5000, 9000);
     }
     const spread = power && power.type === "S" && power.until > now;
-    const shots = spread ? [[0, 0], [-70, -20], [70, -20], [-140, -40], [140, -40]] : [[0, 0]];
-    let anyHit = false;
-    sfx("laser");
-    for (const [dx, dy] of shots) {
-      const sx = x + dx, sy = y + dy;
-      beams.push({ x: sx, y: sy, life: 1 });
-      if (hitSomething(sx, sy, now)) anyHit = true;
+    const fan = spread ? [[0, 0], [-70, -20], [70, -20], [-140, -40], [140, -40]] : [[0, 0]];
+    let hit = false, instant = true;
+    const turretX = W / 2, turretY = H;
+
+    if (weapon.id === "laser") {
+      sfx("laser");
+      for (const [dx, dy] of fan) { beams.push({ x: x + dx, y: y + dy, life: 1, kind: "laser" }); if (hitSomething(x + dx, y + dy, now, weapon.boss)) hit = true; }
+    } else if (weapon.id === "mg") {
+      sfx("mg"); instant = false;
+      for (const [dx, dy] of fan) launch("bullet", turretX + rand(-8, 8), turretY, x + dx + rand(-16, 16), y + dy + rand(-16, 16), 30, weapon.boss);
+    } else if (weapon.id === "rocket") {
+      sfx("rocket"); instant = false;
+      for (const [dx, dy] of fan) launch("rocket", turretX, turretY, x + dx, y + dy, 5, weapon.boss);
+    } else if (weapon.id === "shotgun") {
+      sfx("shotgun"); shakeIt(3);
+      for (const [dx, dy] of fan) for (let k = 0; k < 7; k++) {
+        const a = Math.random() * 6.28, r = Math.sqrt(Math.random()) * 80;
+        const px = x + dx + Math.cos(a) * r, py = y + dy + Math.sin(a) * r * 0.7;
+        beams.push({ x: px, y: py, life: 0.8, kind: "pellet" });
+        if (hitSomething(px, py, now, weapon.boss)) hit = true;
+      }
+    } else if (weapon.id === "rail") {
+      sfx("rail"); shakeIt(6); hitStop(40);
+      // From the turret, through the click, all the way to the edge of the screen.
+      const dx = x - turretX, dy = y - turretY, len = Math.hypot(dx, dy) || 1, far = Math.hypot(W, H);
+      const x2 = turretX + (dx / len) * far, y2 = turretY + (dy / len) * far;
+      rails.push({ x1: turretX, y1: turretY, x2, y2, life: 1 });
+      hit = pierce(turretX, turretY, x2, y2, now, weapon.boss);
+    } else if (weapon.id === "chain") {
+      sfx("zap");
+      hit = chain(x, y, now, weapon.boss);
     }
-    if (!anyHit) { combo = 1; burst(x, y, "#ffffff", 6, 2); sfx("miss"); }
-    updateHud(anyHit);
+    if (instant && !hit) { combo = 1; burst(x, y, "#ffffff", 6, 2); sfx("miss"); }
+    updateHud(hit);
   }
 
-  function hitSomething(x, y, now) {
-    // The boss first: anywhere on its body counts.
-    if (boss && Math.abs(x - boss.x) < 120 && Math.abs(y - boss.y) < 45) { damageBoss(x, y, now); return true; }
-    // Bombs.
-    for (const b of bombs) if (Math.hypot(b.x - x, b.y - y) < 18) {
-      bombs.splice(bombs.indexOf(b), 1); bombsShot++; addScore(5, b.x, b.y, "#ffb347", "BOMB DEFUSED");
-      burst(b.x, b.y, "#ffb347", 18, 1.4); sfx("hit"); if (bombsShot >= 10) achieve("bomb"); return true;
-    }
-    // Flying cars: you shouldn't!
-    for (const c of cars) if (Math.hypot(c.x - x, c.y - y) < 22) {
-      cars.splice(cars.indexOf(c), 1); combo = 1; score = Math.max(0, score - 50);
-      popups.push({ x: c.x, y: c.y - 12, text: "CIVILIAN! -50", life: 1, color: "#ff8a2b" });
-      burst(c.x, c.y, "#ffffff", 16, 1.2); sfx("car"); cheer("Hey! That was somebody's car! 🚗"); return true;
-    }
-    // Targets and power-ups: the nearest one within reach.
-    let target = null, bestD = Infinity;
-    for (const o of objects) { const d = Math.hypot(o.x - x, o.y - y); if (d < o.size * GAME.hitRadius + 6 && d < bestD) { target = o; bestD = d; } }
-    if (!target) return false;
-    objects.splice(objects.indexOf(target), 1);
-    if (target.kind === "power") { activatePower(target.type, now); explode(target, 1.4); return true; }
+  // A travelling shot: bullets fly straight and fast; rockets start slow and speed up.
+  function launch(type, x, y, tx, ty, speed, bossDmg) {
+    const d = Math.hypot(tx - x, ty - y) || 1;
+    projectiles.push({ type, x, y, tx, ty, ux: (tx - x) / d, uy: (ty - y) / d, speed, bossDmg, age: 0 });
+  }
 
+  // Is the point (px, py) within `reach` of the line from (x1, y1) to (x2, y2)?
+  function nearLine(px, py, x1, y1, x2, y2, reach) {
+    const dx = x2 - x1, dy = y2 - y1, t = Math.max(0, Math.min(1, ((px - x1) * dx + (py - y1) * dy) / (dx * dx + dy * dy)));
+    return Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy)) < reach;
+  }
+
+  // Railgun: everything along the line is hit.
+  function pierce(x1, y1, x2, y2, now, bossDmg) {
+    let hit = false;
+    for (const o of [...objects]) if (nearLine(o.x, o.y, x1, y1, x2, y2, o.size + 10)) { killTarget(o, now); hit = true; }
+    for (const b of [...bombs]) if (nearLine(b.x, b.y, x1, y1, x2, y2, 16)) { defuse(b); hit = true; }
+    for (const c of [...cars]) if (nearLine(c.x, c.y, x1, y1, x2, y2, 14)) hitCar(c);
+    if (boss && nearLine(boss.x, boss.y, x1, y1, x2, y2, 50)) { damageBoss(boss.x, boss.y, now, bossDmg); hit = true; }
+    return hit;
+  }
+
+  // Lightning: hit the nearest thing to the click, then jump to up to four more nearby.
+  function chain(x, y, now, bossDmg) {
+    const candidates = () => [...objects.map(o => ({ o, x: o.x, y: o.y, kind: "target" })), ...bombs.map(b => ({ o: b, x: b.x, y: b.y, kind: "bomb" }))];
+    let from = [x, y], reach = 150, jumps = 0, hit = false;
+    if (boss && Math.abs(x - boss.x) < 130 && Math.abs(y - boss.y) < 55) {
+      bolts.push({ pts: jag(W / 2, H, boss.x, boss.y), life: 1 }); damageBoss(boss.x, boss.y, now, bossDmg); from = [boss.x, boss.y]; hit = true; reach = 230;
+    }
+    while (jumps < 5) {
+      let best = null, bestD = Infinity;
+      for (const c of candidates()) { const d = Math.hypot(c.x - from[0], c.y - from[1]); if (d < reach && d < bestD) { best = c; bestD = d; } }
+      if (!best) break;
+      bolts.push({ pts: jag(jumps === 0 && !hit ? W / 2 : from[0], jumps === 0 && !hit ? H : from[1], best.x, best.y), life: 1 });
+      if (best.kind === "bomb") defuse(best.o); else killTarget(best.o, now);
+      from = [best.x, best.y]; reach = 230; jumps++; hit = true;
+    }
+    if (!hit) bolts.push({ pts: jag(W / 2, H, x, y), life: 0.7 });
+    return hit;
+  }
+  // A jagged lightning path between two points.
+  function jag(x1, y1, x2, y2) {
+    const pts = [[x1, y1]], steps = 9;
+    for (let i = 1; i < steps; i++) { const t = i / steps; pts.push([x1 + (x2 - x1) * t + rand(-18, 18), y1 + (y2 - y1) * t + rand(-18, 18)]); }
+    pts.push([x2, y2]);
+    return pts;
+  }
+
+  // Rocket blast: everything within the radius is destroyed.
+  function blast(x, y, radius, now, bossDmg) {
+    explode({ x, y, size: radius / 2.2, color: "#ffb347" }, 2);
+    burst(x, y, "#ff8a2b", 30, 2.2);
+    shards.push({ x, y, flash: true, life: 1, size: radius * 1.6, color: "#ff8a2b" });
+    sfx("boom"); shakeIt(10); hitStop(50);
+    for (const o of [...objects]) if (Math.hypot(o.x - x, o.y - y) < radius + o.size) killTarget(o, now);
+    for (const b of [...bombs]) if (Math.hypot(b.x - x, b.y - y) < radius) defuse(b);
+    for (const c of [...cars]) if (Math.hypot(c.x - x, c.y - y) < radius * 0.8) hitCar(c);
+    if (boss && Math.abs(boss.x - x) < 120 + radius * 0.6 && Math.abs(boss.y - y) < 45 + radius * 0.6) damageBoss(x, y, now, bossDmg);
+  }
+
+  function defuse(b) {
+    const i = bombs.indexOf(b); if (i < 0) return;
+    bombs.splice(i, 1); bombsShot++; addScore(5, b.x, b.y, "#ffb347", "BOMB DEFUSED");
+    burst(b.x, b.y, "#ffb347", 18, 1.4); sfx("hit"); if (bombsShot >= 10) achieve("bomb");
+  }
+  function hitCar(c) {
+    const i = cars.indexOf(c); if (i < 0) return;
+    cars.splice(i, 1); combo = 1; score = Math.max(0, score - 50);
+    popups.push({ x: c.x, y: c.y - 12, text: "CIVILIAN! -50", life: 1, color: "#ff8a2b" });
+    burst(c.x, c.y, "#ffffff", 16, 1.2); sfx("car"); cheer("Hey! That was somebody's car! 🚗");
+  }
+
+  // One shot at one point: the boss, a bomb, a car, or the nearest target within reach.
+  function hitSomething(x, y, now, bossDmg = 1, extraReach = 0) {
+    if (boss && Math.abs(x - boss.x) < 120 && Math.abs(y - boss.y) < 45) { damageBoss(x, y, now, bossDmg); return true; }
+    for (const b of bombs) if (Math.hypot(b.x - x, b.y - y) < 18 + extraReach) { defuse(b); return true; }
+    for (const c of cars) if (Math.hypot(c.x - x, c.y - y) < 22) { hitCar(c); return true; }
+    let target = null, bestD = Infinity;
+    for (const o of objects) { const d = Math.hypot(o.x - x, o.y - y); if (d < o.size * GAME.hitRadius + 6 + extraReach && d < bestD) { target = o; bestD = d; } }
+    if (!target) return false;
+    killTarget(target, now);
+    return true;
+  }
+
+  // A target (or power-up) is destroyed: score, combo, effects, achievements, tips; cubes split in two.
+  function killTarget(target, now) {
+    const i = objects.indexOf(target); if (i < 0) return;
+    objects.splice(i, 1);
+    if (target.kind === "power") { activatePower(target.type, now); explode(target, 1.4); return; }
     combo = now - lastHit < GAME.comboWindow ? Math.min(combo + 1, 9) : 1;
     lastHit = now; hits++;
     if (combo > 1) sfx("combo");
@@ -272,7 +412,6 @@
     if (hits % 6 === 1) showTip(target.service[0], target.service[1]);   // teach a service now and then
     if (target.kind === "cube" && target.size > 10)                       // cubes split in two
       for (const dir of [-1, 1]) objects.push({ ...target, size: target.size * 0.62, points: target.points + 5, vx: target.vx * 1.4, baseY: target.y + dir * 14, y: target.y, phase: target.phase + dir });
-    return true;
   }
 
   function addScore(points, x, y, color, label) {
@@ -301,8 +440,9 @@
     if (type === "T") slowUntil = power.until;
   }
 
-  function damageBoss(x, y, now) {
-    boss.hp--; boss.hitFlash = 1;
+  function damageBoss(x, y, now, dmg = 1) {
+    if (!boss) return;
+    boss.hp -= dmg; boss.hitFlash = 1;
     burst(x, y, "#ff2bd6", 10, 1.2); sfx("hit"); shakeIt(3); hitStop(35);
     bossbar.querySelector("b").style.width = Math.max(0, boss.hp / boss.maxHp) * 100 + "%";
     if (boss.hp > 0) return;
@@ -528,11 +668,65 @@
     }
     ctx.shadowBlur = 0;
 
-    // Laser beams from the bottom corners.
+    // Travelling shots: machine-gun tracers and rockets.
+    for (let i = projectiles.length - 1; i >= 0; i--) {
+      const p = projectiles[i];
+      const move = dt || (paused || over_ ? 0 : 1);
+      if (p.type === "rocket") p.speed = Math.min(22, p.speed + 0.55 * move);
+      p.x += p.ux * p.speed * move; p.y += p.uy * p.speed * move; p.age += move;
+      const arrived = Math.hypot(p.tx - p.x, p.ty - p.y) < p.speed * Math.max(move, 1) || p.y < -40 || p.x < -40 || p.x > W + 40;
+      if (p.type === "bullet") {
+        if (hitSomething(p.x, p.y, now, p.bossDmg, 4)) { burst(p.x, p.y, "#ffb347", 5, 1); projectiles.splice(i, 1); continue; }
+        if (arrived) { burst(p.x, p.y, "#ffe0a8", 3, 0.8); projectiles.splice(i, 1); continue; }
+        if (visible) { ctx.strokeStyle = "#ffd28a"; ctx.lineWidth = 2; glow("#ffb347", 10); ctx.beginPath(); ctx.moveTo(p.x - p.ux * 22, p.y - p.uy * 22); ctx.lineTo(p.x, p.y); ctx.stroke(); }
+      } else {
+        // A rocket explodes when it reaches the click, or early if it touches something on the way.
+        const touched = objects.some(o => Math.hypot(o.x - p.x, o.y - p.y) < o.size + 8) || (boss && Math.abs(p.x - boss.x) < 120 && Math.abs(p.y - boss.y) < 40);
+        if (arrived || touched) { blast(p.x, p.y, 110, now, p.bossDmg); projectiles.splice(i, 1); continue; }
+        if (Math.random() < 0.8) shards.push({ x: p.x - p.ux * 10, y: p.y - p.uy * 10, vx: rand(-0.5, 0.5), vy: rand(-0.5, 0.5), life: 0.8, size: rand(2, 4), color: Math.random() < 0.5 ? "#b9a3d9" : "#ff8a2b" });   // smoke + flame trail
+        if (visible) {
+          ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(Math.atan2(p.uy, p.ux));
+          glow("#ff8a2b", 14); ctx.fillStyle = "#ffffff"; ctx.fillRect(-9, -3, 16, 6);
+          ctx.fillStyle = "#ff8a2b"; ctx.beginPath(); ctx.moveTo(-9, -3); ctx.lineTo(-18 - Math.random() * 8, 0); ctx.lineTo(-9, 3); ctx.fill();
+          ctx.restore();
+        }
+      }
+    }
+    ctx.shadowBlur = 0;
+
+    // Railgun beams: a thick violet line with a white-hot core, fading fast.
+    for (let i = rails.length - 1; i >= 0; i--) {
+      const r = rails[i];
+      r.life -= 0.05;
+      if (r.life <= 0) { rails.splice(i, 1); continue; }
+      ctx.globalAlpha = r.life;
+      ctx.strokeStyle = "#c48bff"; ctx.lineWidth = 16 * r.life; glow("#b04dff", 26);
+      ctx.beginPath(); ctx.moveTo(r.x1, r.y1); ctx.lineTo(r.x2, r.y2); ctx.stroke();
+      ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(r.x1, r.y1); ctx.lineTo(r.x2, r.y2); ctx.stroke();
+    }
+    // Lightning bolts: jagged white-violet lines that flicker as they fade.
+    for (let i = bolts.length - 1; i >= 0; i--) {
+      const b = bolts[i];
+      b.life -= 0.07;
+      if (b.life <= 0) { bolts.splice(i, 1); continue; }
+      ctx.globalAlpha = b.life * (0.6 + Math.random() * 0.4);
+      ctx.strokeStyle = "#f3e6ff"; ctx.lineWidth = 2.5; glow("#c48bff", 20);
+      ctx.beginPath(); b.pts.forEach(([x, y], k) => (k ? ctx.lineTo(x + rand(-2, 2), y + rand(-2, 2)) : ctx.moveTo(x, y))); ctx.stroke();
+    }
+    ctx.shadowBlur = 0; ctx.globalAlpha = 1;
+
+    // Laser beams from the bottom corners (and shotgun pellet streaks from the middle).
     for (let i = beams.length - 1; i >= 0; i--) {
       const b = beams[i];
-      b.life -= 0.09;
+      b.life -= b.kind === "pellet" ? 0.12 : 0.09;
       if (b.life <= 0) { beams.splice(i, 1); continue; }
+      if (b.kind === "pellet") {
+        ctx.globalAlpha = b.life; ctx.strokeStyle = "#ffe08a"; ctx.lineWidth = 1.5; glow("#ffb347", 10);
+        ctx.beginPath(); ctx.moveTo(W / 2, H); ctx.lineTo(b.x, b.y); ctx.stroke();
+        ctx.beginPath(); ctx.arc(b.x, b.y, 4 * b.life + 1, 0, 6.28); ctx.fillStyle = "#fff4d6"; ctx.fill();
+        continue;
+      }
       for (const bx of [W * 0.06, W * 0.94]) {
         ctx.globalAlpha = b.life;
         ctx.strokeStyle = "#ff6ec7"; ctx.lineWidth = 6 * b.life; glow("#ff2bd6", 18);
