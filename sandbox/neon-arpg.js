@@ -881,9 +881,10 @@
     const saved = store.get();
     intro.querySelector(".arpg-buttons").innerHTML = saved
       ? `<button type="button" class="arpg-play" data-go="continue">▶ CONTINUE · LV ${saved.lvl} · FLOOR ${saved.floor}</button><button type="button" class="arpg-play arpg-alt" data-go="new">✦ NEW HERO</button>`
-      : `<button type="button" class="arpg-play" data-go="new">▶ PLAY</button>`;
+      : `<button type="button" class="arpg-play" data-go="new">▶ PLAY UNDERCITY</button>`;
   }
   function start(mode) {
+    if (!artGone) { clearTimeout(artTimer); fadeArt(); }
     intro.classList.remove("arpg-intro-cover");
     enterWindow(); resize();
     const saved = store.get();
@@ -903,14 +904,17 @@
   });
   intro.addEventListener("click", e => { if (e.target.closest('[data-go="resume"]')) { e.stopPropagation(); enterWindow(); state = "play"; intro.hidden = true; showUI(true); } }, true);
 
-  new IntersectionObserver(es => { onScreen = es[0].isIntersecting; }, { threshold: 0.3 }).observe(section);
+  // The cover art shows for 5 seconds after the section comes into view, then fades to the live game behind the Play button.
+  let artGone = false, artTimer = 0;
+  const fadeArt = () => { artGone = true; root.querySelector(".arpg-art").classList.add("is-faded"); };
+  new IntersectionObserver(es => { onScreen = es[0].isIntersecting; if (onScreen && !artGone && !artTimer) artTimer = setTimeout(fadeArt, 5000); }, { threshold: 0.3 }).observe(section);
   let last = performance.now(), hudAt = 0, attract = null, artReady = false;
   { const probe = new Image(); probe.onload = () => { artReady = true; }; probe.src = (document.querySelector('script[src*="neon-arpg.js"]')?.src || "").replace(/neon-arpg\.js.*$/, "art/undercity-small.webp"); }
   function loop(now) {
     const dt = Math.min(50, now - last); last = now;
     if (onScreen && W) {
       if (state === "play" && hero) { update(dt); if (now > hudAt) { renderHud(); hudAt = now + 100; } draw(now); }
-      else if (artReady) { /* the cover art is showing */ }
+      else if (artReady && !artGone) { /* the cover art is showing */ }
       else if (hero && grid) draw(now);
       else drawAttract(now);
     }

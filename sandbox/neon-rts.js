@@ -53,7 +53,6 @@
   const TRAINS = { core: ["spark", "blade", "lancer"], outpost: ["spark"], yard: ["blade", "lancer"] };   // who builds which ships
   const BUILDS = ["tower", "depot", "outpost", "yard"];                                                    // what miners can build
   const ZOOM = { start: 1.4, max: 5 };
-  const GFX = { gpu: true, textures: 1, metal: 1, dynamicLights: true, movingSun: true, shadows: true };   // gpu: draw the 3D models with WebGL (sandbox/tenshi-gl.js) when it can   // graphics: texture strength, metal shine, lights from weapons/engines, drifting sun   // camera: how close it starts (1 = the old view) and the closest you can zoom in
   const BUILD = { radius: 420, supplyMax: 80 };   // build within this distance of the station or an outpost; most ships depots can allow
   const CRYSTAL = { amount: 1200, carry: 8, mineTime: 1100 };
   // How many aliens: guarding the hive at the start, and in each wave (base + growth x wave number, rounded down).
@@ -63,7 +62,7 @@
     waveGrowth: { mite: 2, brute: 0.5, spitter: 0.5 },
     maxAlive: 150,              // a wave stops adding aliens once this many are alive
   };
-  TUNE(MAP, CFG.map); TUNE(START, CFG.start); TUNE(WAVES, CFG.waves); TUNE(UNITS, CFG.units); TUNE(CRYSTAL, CFG.crystal); TUNE(ENEMIES, CFG.enemies); TUNE(BUILD, CFG.build); TUNE(ZOOM, CFG.zoom); TUNE(GFX, CFG.graphics);
+  TUNE(MAP, CFG.map); TUNE(START, CFG.start); TUNE(WAVES, CFG.waves); TUNE(UNITS, CFG.units); TUNE(CRYSTAL, CFG.crystal); TUNE(ENEMIES, CFG.enemies); TUNE(BUILD, CFG.build); TUNE(ZOOM, CFG.zoom);
   // ==========================================================================================================
 
   const sfx = n => window.neonAudio && window.neonAudio.sfx(n);
@@ -95,23 +94,12 @@
       <p class="rts-kicker">STATION DEFENSE · A SPACE STRATEGY GAME</p>
       <h3>Mine. Build. Defend the Station.</h3>
       <p>An alien hive is sending swarms at your space station. Mine crystals, build a fleet and wipe out the hive.</p>
-      <button type="button" class="rts-play">▶ PLAY</button>
+      <button type="button" class="rts-play">▶ PLAY STATION DEFENSE</button>
       <p class="rts-help">Drag to select · Right-click to command · A attack-move · Q W E train · Miners: 1 2 3 4 build · Wheel / + − zoom · Space whole fleet</p>
     </div>`;
   section.appendChild(root);   // on the section itself (the site moves things inside the viewport for its parallax effect)
   const canvas = root.querySelector(".rts-canvas"), mainCtx = canvas.getContext("2d");
-  let ctx = mainCtx;   // the 2D layer being drawn on (with the GPU renderer: the background layer, or the top layer)
-  // ---- GPU renderer (sandbox/tenshi-gl.js): models go to a WebGL canvas under this one; space and anything under the
-  // models are painted on bgCanvas, which becomes the WebGL background. Falls back to the 2D renderer. ----
-  const glCanvas = document.createElement("canvas"); glCanvas.className = "rts-gl"; glCanvas.style.display = "none"; root.insertBefore(glCanvas, canvas);
-  const bgCanvas = document.createElement("canvas"), bgx = bgCanvas.getContext("2d");
-  let GL3 = null, glTried = false, glOn = false;
-  function glReady() {
-    if (!GFX.gpu) return null;
-    if (!GL3 && !glTried && window.TenshiGL) { glTried = true; try { GL3 = window.TenshiGL.create(glCanvas); } catch (err) { console.warn("[rts] GPU renderer failed, using 2D", err); GL3 = null; } if (GL3 && W) GL3.resize(W, H); }
-    return GL3;
-  }
-  const layer = top => { ctx = glOn && !top ? bgx : mainCtx; };
+  const ctx = mainCtx;
   const mini = root.querySelector(".rts-mini"), mctx = mini.getContext("2d");
   const panel = root.querySelector(".rts-panel"), msgEl = root.querySelector(".rts-msg"), intro = root.querySelector(".rts-intro");
   const resEl = root.querySelector(".rts-res"), creditsEl = root.querySelector(".rts-credits"), supplyEl = root.querySelector(".rts-supply"), waveEl = root.querySelector(".rts-wave");
@@ -125,8 +113,6 @@
     W = r.width; H = r.height;
     canvas.width = Math.round(W * ratio); canvas.height = Math.round(H * ratio);
     mainCtx.setTransform(ratio, 0, 0, ratio, 0, 0);
-    const bgRatio = Math.min(ratio, 1.5); bgCanvas.width = Math.round(W * bgRatio); bgCanvas.height = Math.round(H * bgRatio); bgx.setTransform(bgRatio, 0, 0, bgRatio, 0, 0);
-    if (GL3) GL3.resize(W, H);
     fitZoom = Math.max(W / MAP.w, H / MAP.h);             // the furthest out: the map still covers the whole window
     baseZoom = Math.max(W < 760 ? 0.75 : clamp(W / 1300, 0.55, 1), fitZoom);   // phones: a little closer, so units are big enough to tap
     applyZoom();
@@ -726,79 +712,11 @@
     rock: { stone: true, hull: [95, 80, 120], trim: [120, 100, 150], dark: [40, 30, 55], glass: [0, 0, 0], glow: [0, 0, 0], rim: [140, 80, 220] },
     crystal: { crystal: true, hull: [0, 0, 0], trim: [0, 0, 0], dark: [0, 0, 0], glass: [255, 110, 235], glow: [255, 160, 250], rim: [255, 120, 255] },
   };
-  // ---- Lighting: a white-gold star (drifting slowly across the sky), a faint pink bounce from the planet below and a
-  // purple ambient, plus moving point lights: lasers, shells, explosions, engines, crystals, the station and the hive.
+  // ---- Lighting: a white-gold star top-left, a faint pink bounce from the planet below, purple ambient ----
   const norm = v => { const l = Math.hypot(...v) || 1; return v.map(c => c / l); };
-  const VIEW = norm([0, 0.62, 0.78]), LIGHT_FILL = norm([0.5, 0.6, -0.3]), SUN = [255, 240, 225];
-  let LIGHT_KEY = norm([-0.55, -0.45, 0.7]), HALF = norm(LIGHT_KEY.map((c, i) => c + VIEW[i]));
+  const LIGHT_KEY = norm([-0.55, -0.45, 0.7]), LIGHT_FILL = norm([0.5, 0.6, -0.3]), VIEW = norm([0, 0.62, 0.78]);
+  const HALF = norm(LIGHT_KEY.map((c, i) => c + VIEW[i]));
   const TILT = { y: 0.62, z: 0.8 };   // how the camera looks down: depth squashes y, height lifts things up the screen
-  function moveSun(now) {
-    if (!GFX.movingSun) return;
-    const az = -2.46 + Math.sin(now / 52000) * 0.55, el = 0.78 + Math.sin(now / 37000) * 0.14;
-    LIGHT_KEY = [Math.cos(az) * Math.cos(el), Math.sin(az) * Math.cos(el), Math.sin(el)];
-    HALF = norm(LIGHT_KEY.map((c, i) => c + VIEW[i]));
-  }
-  // Materials. metal: how much it mirrors its surroundings (tinted by its colour); shine: how tight the highlights are;
-  // tex: how strongly the metal panel texture shows.
-  const MAT = {
-    hull: { metal: 0.55, shine: 24, tex: 1 },   trim: { metal: 0.45, shine: 30, tex: 0.7 }, dark: { metal: 0.7, shine: 16, tex: 1 },
-    pod:  { metal: 0.65, shine: 26, tex: 1 },   nose: { metal: 0.35, shine: 34, tex: 0.5 },
-    glass: { metal: 0, mirror: 0.8, shine: 70, tex: 0 },
-  };
-  const ORGANIC = { metal: 0, shine: 40, tex: 0, wet: 0.7 };          // alien chitin: no metal, wet highlights
-  const STONE = { metal: 0.04, shine: 8, tex: 1, rock: true };          // asteroids
-  // What a mirror pointing in direction (rx, ry, rz) sees: bright nebula above, purple at the horizon, the dark pink
-  // planet below, with a pink streak that slides round as ships turn.
-  const ENV_TOP = [215, 195, 255], ENV_MID = [110, 64, 185], ENV_LOW = [60, 18, 52];
-  function env(rx, ry, rz) {
-    const t = Math.max(-1, Math.min(1, rz)), A = t >= 0 ? ENV_TOP : ENV_LOW, k = Math.abs(t);
-    const streak = Math.max(0, Math.sin(Math.atan2(ry, rx) * 2 + 0.8)) ** 4 * 0.5;
-    return [ENV_MID[0] + (A[0] - ENV_MID[0]) * k + 255 * streak, ENV_MID[1] + (A[1] - ENV_MID[1]) * k + 80 * streak, ENV_MID[2] + (A[2] - ENV_MID[2]) * k + 210 * streak];
-  }
-  // ---- Metal textures (drawn once): brushed streaks, staggered panel seams with lit edges, rivets and grime, on a mid
-  // grey so they can be laid over any colour ("overlay": darker = seams and grime, lighter = highlights). Tileable. ----
-  function makeTexture(rock) {
-    const N = 128, c = document.createElement("canvas"); c.width = c.height = N;
-    const g = c.getContext("2d"); let seed = rock ? 7 : 3; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-    g.fillStyle = "rgb(128,128,128)"; g.fillRect(0, 0, N, N);
-    const wrap = (fn) => { for (const ox of [-N, 0, N]) for (const oy of [-N, 0, N]) fn(ox, oy); };
-    if (rock) {
-      for (let i = 0; i < 160; i++) { const x = rnd() * N, y = rnd() * N, r = 2 + rnd() * 10, v = 90 + rnd() * 80; wrap((ox, oy) => { g.fillStyle = `rgba(${v},${v},${v},0.35)`; g.beginPath(); g.arc(x + ox, y + oy, r, 0, 6.28); g.fill(); }); }
-      for (let i = 0; i < 40; i++) { const x = rnd() * N, y = rnd() * N, r = 2 + rnd() * 5; wrap((ox, oy) => { g.strokeStyle = "rgba(50,50,50,0.5)"; g.lineWidth = 1; g.beginPath(); g.arc(x + ox, y + oy, r, 0, 6.28); g.stroke(); g.strokeStyle = "rgba(200,200,200,0.35)"; g.beginPath(); g.arc(x + ox + 0.8, y + oy + 0.8, r, 3.4, 5.6); g.stroke(); }); }
-      return c;
-    }
-    for (let i = 0; i < 420; i++) { const x = rnd() * N, y = rnd() * N, l = 10 + rnd() * 70, v = 128 + (rnd() - 0.5) * 70; wrap((ox, oy) => { g.fillStyle = `rgba(${v | 0},${v | 0},${v | 0},0.4)`; g.fillRect(x + ox, y + oy, l, 1); }); }   // brushed
-    const rows = [0, 40, 82], cols = [[0, 64], [30, 96], [12, 76]];                                                   // staggered panels
-    for (let r = 0; r < rows.length; r++) {
-      const y0 = rows[r], y1 = rows[r + 1] ?? N;
-      for (const x of cols[r]) { g.fillStyle = "rgba(30,30,34,0.85)"; g.fillRect(x, y0, 1.5, y1 - y0); g.fillStyle = "rgba(215,215,220,0.45)"; g.fillRect(x + 1.5, y0, 1, y1 - y0); }
-      g.fillStyle = "rgba(30,30,34,0.85)"; g.fillRect(0, y0, N, 1.5); g.fillStyle = "rgba(215,215,220,0.45)"; g.fillRect(0, y0 + 1.5, N, 1);
-      for (let x = 4; x < N; x += 9) { g.fillStyle = "rgba(40,40,44,0.7)"; g.fillRect(x, y0 + 4, 1.5, 1.5); g.fillStyle = "rgba(230,230,235,0.5)"; g.fillRect(x + 0.6, y0 + 4, 0.8, 0.8); }   // rivets
-    }
-    for (let i = 0; i < 26; i++) { const x = rnd() * N, y = rnd() * N, w = 6 + rnd() * 22; g.fillStyle = `rgba(60,55,60,${0.08 + rnd() * 0.12})`; g.beginPath(); g.ellipse(x, y, w, w * 0.4, rnd() * 3, 0, 6.28); g.fill(); }   // grime
-    for (let i = 0; i < 18; i++) { const x = rnd() * N, y = rnd() * N; g.strokeStyle = "rgba(225,225,230,0.35)"; g.lineWidth = 0.6; g.beginPath(); g.moveTo(x, y); g.lineTo(x + (rnd() - 0.5) * 24, y + (rnd() - 0.5) * 8); g.stroke(); }   // scratches
-    return c;
-  }
-  const TEX = { metal: ctx.createPattern(makeTexture(false), "repeat"), rock: ctx.createPattern(makeTexture(true), "repeat") };
-  // ---- Point lights for this frame (built in draw()) ----
-  let lights = [];
-  const rgbOf = (() => { const cache = {}; return c => cache[c] || (cache[c] = c[0] === "#" ? [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16)) : c.split(",").map(Number)); })();
-  function collectLights() {
-    const out = [], x0 = cam.x - 200, y0 = cam.y - 200, x1 = cam.x + W / zoom + 200, y1 = cam.y + H / zoom + 200;
-    const add = (x, y, z, rgb, range, power) => { if (x > x0 && x < x1 && y > y0 && y < y1 && power > 0.02) out.push({ x, y, z, rgb, range, power }); };
-    for (const f of fx) {
-      if (f.beam) { const c = rgbOf(f.color); add(f.tx, f.ty, f.h || 12, c, 95, 1.3 * f.life); add((f.x + f.tx) / 2, (f.y + f.ty) / 2, f.h || 12, c, 70, 0.6 * f.life); }
-      else if (f.ring) add(f.x, f.y, 22, rgbOf(f.color), 70 + f.r * 7, 2.2 * f.life);
-    }
-    for (const sh of shots) { const t = sh.t / sh.dur; add(sh.x + (sh.tx - sh.x) * t, sh.y + (sh.ty - sh.y) * t, 14 + (sh.arc ? Math.sin(t * Math.PI) * 50 : 0), sh.team === "p" ? [220, 150, 255] : [180, 255, 90], 90, 1); }
-    for (const e of ents) {
-      if (e.type === "core") add(e.x, e.y, 90, [176, 77, 255], 260, 0.22);
-      else if (e.type === "hive") add(e.x, e.y, 80, [180, 255, 90], 260, 0.25);
-      else if (e.team === "p" && !e.T.building && e.moving) add(e.x - Math.cos(e.face) * e.r * 1.6, e.y - Math.sin(e.face) * e.r * 1.6, 18, rgbOf(ENGINE[e.type] || "255,90,230"), 34, 0.3);
-    }
-    for (const k of crystals) if (k.left > 0) add(k.x, k.y, 14, [255, 90, 230], 110, 0.3);
-    return out.length > 48 ? out.sort((a, b) => b.power - a.power).slice(0, 48) : out;
-  }
 
   // ---- Blender models (models/models.json): a slot's model in this game's axes, or null for the built-in one ----
   const SLOT = { tower: "rts.turret", depot: "rts.depot", outpost: "rts.outpost", yard: "rts.shipyard", core: "rts.station", spark: "rts.miner", blade: "rts.interceptor", lancer: "rts.gunship", mite: "rts.swarmling", brute: "rts.behemoth", spitter: "rts.spitter", hive: "rts.hive", crystal: "rts.crystal", rock: "rts.asteroid" };
@@ -814,26 +732,8 @@
   }
   if (window.TenshiModels) window.TenshiModels.whenReady(() => { for (const k in BLENDER) delete BLENDER[k]; });
 
-  // A model's shadow: every face pushed along the star's light down to the floor, filled as one soft dark shape.
-  function drawShadow(m, x, y, z, yaw, size) {
-    const cy = Math.cos(yaw), sy = Math.sin(yaw), L = LIGHT_KEY, kx = L[0] / L[2], ky = L[1] / L[2];
-    const S = m.v.map(([mx, my, mz]) => {
-      const X = (mx * cy - my * sy) * size + x, Y = (mx * sy + my * cy) * size + y, Z = mz * size + z;
-      return [sx(X - kx * Z), sy_(Y - ky * Z)];
-    });
-    ctx.beginPath();
-    for (const f of m.f) {
-      // Every face the same way round, so overlapping faces add up to one solid outline (no holes).
-      let ar = 0; for (let k = 0, L2 = f.i.length; k < L2; k++) { const p1 = S[f.i[k]], p2 = S[f.i[(k + 1) % L2]]; ar += p1[0] * p2[1] - p2[0] * p1[1]; }
-      if (Math.abs(ar) < 6) continue;   // tiny faces add nothing to the outline
-      const idx = ar > 0 ? f.i : f.i.slice().reverse();
-      ctx.moveTo(S[idx[0]][0], S[idx[0]][1]); for (let k = 1; k < idx.length; k++) ctx.lineTo(S[idx[k]][0], S[idx[k]][1]); ctx.closePath();
-    }
-    ctx.fillStyle = "rgba(4,0,12,0.42)"; ctx.fill("nonzero");
-  }
   // Draw one model at map position (x, y), height z, facing `yaw`, banked by `roll`, `size` = unit radius.
   function drawModel(m, x, y, z, yaw, roll, size, paint, flash = 0, alpha = 1) {
-    if (glOn) { GL3.draw(m, paint, x, y, z, yaw, roll, size, flash, alpha); return; }
     const cy = Math.cos(yaw), sy = Math.sin(yaw), cr = Math.cos(roll), sr = Math.sin(roll);
     const P = m.v.map(([mx, my, mz]) => {
       const y1 = my * cr - mz * sr, z1 = my * sr + mz * cr;
@@ -854,47 +754,21 @@
       // Size on screen: faces too small to see are skipped (keeps detailed ships fast when zoomed out).
       let area = 0; for (let k = 0, L = f.i.length; k < L; k++) { const p1 = P[f.i[k]], p2 = P[f.i[(k + 1) % L]]; area += p1[3] * p2[4] - p2[3] * p1[4]; }
       area = Math.abs(area) / 2; if (area < 0.5) continue;
-      faces.push({ f, n, facing, area, mid, depth: mid[1] * TILT.y + mid[2] * TILT.z });
+      faces.push({ f, n, facing, area, depth: mid[1] * TILT.y + mid[2] * TILT.z });
     }
     faces.sort((p, q) => p.depth - q.depth);
-    // The lights close enough to touch this model.
-    const reach = size * 1.6, near = GFX.dynamicLights ? lights.filter(L => (L.x - x) ** 2 + (L.y - y) ** 2 < (L.range + reach) ** 2) : [];
-    // The texture follows the model: centred on it, turned with it, squashed by the camera tilt, scaled to its size.
-    let texMatrix = null;
-    const metalK = GFX.metal;
     ctx.globalAlpha = alpha;
-    for (const { f, n, facing, area, mid } of faces) {
+    for (const { f, n, facing, area } of faces) {
       const base = f.rgb || paint[f.mat] || paint.hull;      // Blender faces carry their own material colour
       let col;
-      const M = paint.organic ? ORGANIC : paint.stone ? STONE : (paint === PAINT.crystal ? MAT.glass : MAT[f.mat] || MAT.hull);
-      if (f.mat === "glow" || f.mat === "flame") col = base;
+      if (f.mat === "glow") col = base;
       else {
         const key = Math.max(0, n[0] * LIGHT_KEY[0] + n[1] * LIGHT_KEY[1] + n[2] * LIGHT_KEY[2]);
         const fill = Math.max(0, n[0] * LIGHT_FILL[0] + n[1] * LIGHT_FILL[1] + n[2] * LIGHT_FILL[2]) * 0.35;
-        const nh = Math.max(0, n[0] * HALF[0] + n[1] * HALF[1] + n[2] * HALF[2]);
-        const fres = Math.pow(1 - facing, 3);
-        const metal = (M.metal || 0) * metalK, mirror = (M.mirror || 0) * metalK;
-        const spec = Math.pow(nh, M.shine) * (M.mirror ? 1.6 : M.wet ? 1.2 : 0.9) * key ** 0.3;
-        // Reflection: the view direction bounced off the face, looked up in the surroundings.
-        const r0 = 2 * facing * n[0] - VIEW[0], r1 = 2 * facing * n[1] - VIEW[1], r2 = 2 * facing * n[2] - VIEW[2];
-        const E = metal || mirror ? env(r0, r1, r2) : null, refl = metal * (0.4 + 0.6 * fres) + mirror * (0.2 + 0.8 * fres);
-        const diffuse = (0.2 + key * 0.95 + fill) * (1 - metal * 0.55);
-        col = [0, 1, 2].map(k => {
-          const tint = metal ? 0.35 + 0.65 * base[k] / 255 : 1;                 // metal reflections take on the metal's colour
-          return base[k] * diffuse + (E ? E[k] * tint * refl : 0) + SUN[k] * spec * (metal ? 0.55 + 0.45 * base[k] / 255 : 1) + paint.rim[k] * fres * 0.45;
-        });
-        // Point lights: each lights the faces turned towards it, fading with distance, with a little highlight.
-        if (near.length) {
-          const wx = x + mid[0] * size, wy = y + mid[1] * size, wz = z + mid[2] * size;
-          for (const L of near) {
-            const dx = L.x - wx, dy = L.y - wy, dz = L.z - wz, d = Math.hypot(dx, dy, dz) || 1;
-            if (d > L.range) continue;
-            const nd = (n[0] * dx + n[1] * dy + n[2] * dz) / d;
-            if (nd <= 0) continue;
-            const att = (1 - d / L.range) ** 2 * L.power, glint = nd ** 10 * (0.4 + metal);
-            for (let k = 0; k < 3; k++) col[k] += (base[k] * nd * 1.1 + 255 * glint) * L.rgb[k] / 255 * att;
-          }
-        }
+        const spec = Math.pow(Math.max(0, n[0] * HALF[0] + n[1] * HALF[1] + n[2] * HALF[2]), f.mat === "glass" ? 40 : 18) * (f.mat === "glass" ? 1.4 : 0.8);
+        const rim = Math.pow(1 - facing, 3) * 0.9;
+        const light = 0.22 + key * 0.95 + fill;
+        col = [0, 1, 2].map(k => base[k] * light + (k === 2 ? 255 : k === 1 ? 240 : 255) * spec + paint.rim[k] * rim * 0.5 + (k === 2 ? 0.25 : 0.1) * base[k] * fill);
       }
       if (flash) col = col.map(v => v + (255 - v) * flash);
       const css = `rgb(${Math.min(255, col[0] | 0)},${Math.min(255, col[1] | 0)},${Math.min(255, col[2] | 0)})`;
@@ -903,15 +777,6 @@
       ctx.closePath();
       ctx.fillStyle = css; ctx.fill();
       if (area > 40) { ctx.strokeStyle = css; ctx.lineWidth = 0.6; ctx.stroke(); }   // seals hairline gaps between faces (only visible on big ones)
-      // Metal panel texture over the bigger faces.
-      if (GFX.textures > 0 && M.tex && area > 70 && f.mat !== "glow") {
-        const pat = M.rock ? TEX.rock : TEX.metal;
-        if (!texMatrix) { const k = size * zoom / 60; texMatrix = new DOMMatrix().translateSelf(sx(x), sy_(y) - z * zoom * TILT.z).scaleSelf(1, TILT.y).rotateSelf(yaw * 57.2958).scaleSelf(k, k); }
-        pat.setTransform(texMatrix);
-        ctx.globalCompositeOperation = "overlay"; ctx.globalAlpha = alpha * Math.min(1, M.tex * GFX.textures * Math.min(1, (area - 70) / 200 + 0.5));
-        ctx.fillStyle = pat; ctx.fill();
-        ctx.globalCompositeOperation = "source-over"; ctx.globalAlpha = alpha;
-      }
     }
     ctx.globalAlpha = 1;
   }
@@ -959,12 +824,7 @@
   }
 
   function draw(now) {
-    moveSun(now); lights = GFX.dynamicLights ? collectLights() : [];
-    glOn = !!glReady();
-    glCanvas.style.display = glOn ? "" : "none";
-    mainCtx.clearRect(0, 0, W, H);
-    if (glOn) { bgx.clearRect(0, 0, W, H); GL3.begin({ W, H, zoom, camx: cam.x, camy: cam.y, key: LIGHT_KEY, lights: lights.slice().sort((a, b) => b.power - a.power), bg: bgCanvas }); }
-    layer(false);
+    ctx.clearRect(0, 0, W, H);
     drawSpace(now);
     // A faint tactical grid and the map edge.
     ctx.save(); ctx.scale(zoom, zoom); ctx.translate(-cam.x, -cam.y);
@@ -993,7 +853,6 @@
     ctx.shadowBlur = 0;
     // Units, back to front.
     for (const e of [...ents].sort((a, b) => a.y - b.y)) { if (isSeen(e)) drawEnt(e, now); }
-    layer(true);                                                  // everything from here on goes on top of the models
     // Rally point.
     const c = core();
     if (c && c.rally && selected.includes(c)) { ctx.setLineDash([6, 6]); ctx.strokeStyle = "rgba(215,170,255,.6)"; ctx.beginPath(); ctx.moveTo(sx(c.x), sy(c.y)); ctx.lineTo(sx(c.rally.x), sy(c.rally.y)); ctx.stroke(); ctx.setLineDash([]); }
@@ -1023,7 +882,6 @@
     }
     if (amoveMode) { ctx.fillStyle = "#ff8a2b"; ctx.font = "700 12px Oswald, sans-serif"; ctx.fillText("ATTACK-MOVE: click where to go", 16, H - 200); }
     drawMinimap();
-    if (glOn) GL3.end();
   }
 
   // Height each kind floats at, and how big its model is compared with its hit circle.
@@ -1033,17 +891,13 @@
   function drawEnt(e, now) {
     const T = e.T, paint = PAINT[e.type] || PAINT[e.team], flash = Math.min(1, e.flash);
     const h = HOVER[e.type] + (T.building ? 0 : Math.sin(now / 420 + e.bob) * 3), size = e.r * SIZE[e.type];
-    // Shadow: the model's real outline, cast by the star onto the "floor" of space (moves as the star drifts).
-    const own0 = blender(e.type), shadowModel = own0 || (e.type === "core" ? MODELS.ring : MODELS[e.type]);
-    layer(false);
-    if (glOn) {} else if (shadowModel && GFX.shadows) drawShadow(shadowModel, e.x, e.y, h, T.building ? (e.type === "outpost" ? now / 8000 : YAW[e.type] || 0) : e.face, size * (own0 ? 1.15 : 1) * (e.type === "core" ? 1 : 1));
-    else { ctx.fillStyle = "rgba(0,0,0,0.35)"; ctx.beginPath(); ctx.ellipse(sx(e.x + h * 0.35), sy(e.y + h * 0.25), size * zoom, size * zoom * TILT.y * 0.8, 0, 0, 6.28); ctx.fill(); }
+    // Shadow on the "floor" of space (a faint dark patch, offset away from the star).
+    ctx.fillStyle = "rgba(0,0,0,0.35)"; ctx.beginPath(); ctx.ellipse(sx(e.x + h * 0.35), sy(e.y + h * 0.25), size * zoom, size * zoom * TILT.y * 0.8, 0, 0, 6.28); ctx.fill();
     const X = sx(e.x), Y = sy(e.y) - h * zoom * TILT.z;
     if (e.type === "core") {
       bloom(X, Y - size * 0.6 * zoom, size * 2.2 * zoom, "176,77,255", 0.35);
       if (blender("core")) drawModel(blender("core"), e.x, e.y, h, now / 9000, 0, size * 1.3, paint, flash);
       else { drawModel(MODELS.ring, e.x, e.y, h, now / 2600, 0.25, size, paint, flash); drawModel(MODELS.core, e.x, e.y, h, 0, 0, size, paint, flash); }
-      layer(true);
       ctx.fillStyle = "#fff"; ctx.font = `900 ${Math.round(22 * zoom)}px 'Noto Sans JP', sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
       ctx.fillText("天", X, Y - size * 0.85 * zoom); ctx.textAlign = "start";
       for (let k = 0; k < 3; k++) { const a = k / 3 * 6.2832 + 0.5; if ((Math.floor(now / 500) + k) % 3 === 0) bloom(X + Math.cos(a) * size * 1.2 * zoom, Y + Math.sin(a) * size * 1.2 * zoom * TILT.y, 8 * zoom, "255,90,230", 1); }
@@ -1059,10 +913,8 @@
         ctx.stroke();
       }
       drawModel(blender("hive") || MODELS.hive, e.x, e.y, h, now / 6000, 0, size * pulse, paint, flash);
-      layer(true);
     } else if (T.building) {
       drawBuilding(e, now, X, Y, h, size, paint, flash);
-      layer(true);
     } else {
       // Ships bank into turns; aliens wobble.
       const turn = Math.atan2(Math.sin(e.face - (e.lastFace ?? e.face)), Math.cos(e.face - (e.lastFace ?? e.face)));
@@ -1075,7 +927,6 @@
       const own = blender(e.type);
       drawModel(own || MODELS[e.type], e.x, e.y, h, e.face, roll, size * (own ? 1.15 : 1), paint, flash);
       if (e.type === "lancer" && !own) drawModel(MODELS.turret, e.x, e.y, h + size * 0.35, e.aim ?? e.face, 0, size, paint, flash);
-      layer(true);
       if (builtIn && e.type === "mite") drawWings(e, now, X, Y, size);
       // Engine glow at the back of your ships (brighter when moving).
       if (e.team === "p") {
@@ -1110,7 +961,6 @@
       const q = e.queue[0], p = 1 - q.left / (UNITS[q.type].time * 1000);
       ctx.strokeStyle = "#7dffb2"; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(GX, GY, size * 1.5 * zoom, size * 1.5 * zoom * TILT.y, 0, -1.57, -1.57 + p * 6.28); ctx.stroke();
     }
-    layer(true);
     if (e.rally && selected.includes(e) && done(e)) { ctx.setLineDash([6, 6]); ctx.strokeStyle = "rgba(215,170,255,.6)"; ctx.beginPath(); ctx.moveTo(GX, GY); ctx.lineTo(sx(e.rally.x), sy(e.rally.y)); ctx.stroke(); ctx.setLineDash([]); }
   }
   // Choosing where to build: the build zones (dashed) and a ghost of the building, green where it fits, red where not.
@@ -1348,6 +1198,7 @@
     setTimeout(resize, 80);
   });
   function start() {
+    if (!artGone) { clearTimeout(artTimer); fadeArt(); }
     intro.classList.remove("rts-intro-cover");
     enterWindow();
     resize(); newGame(); state = "play";
@@ -1376,7 +1227,10 @@
     if (e.target.closest(".rts-resume")) { e.stopPropagation(); enterWindow(); state = "play"; intro.hidden = true; showUI(true); renderPanel(); }
   }, true);
 
-  new IntersectionObserver(es => { onScreen = es[0].isIntersecting; }, { threshold: 0.35 }).observe(section);
+  // The cover art shows for 5 seconds after the section comes into view, then fades to the live game behind the Play button.
+  let artGone = false, artTimer = 0;
+  const fadeArt = () => { artGone = true; root.querySelector(".rts-art").classList.add("is-faded"); };
+  new IntersectionObserver(es => { onScreen = es[0].isIntersecting; if (onScreen && !artGone && !artTimer) artTimer = setTimeout(fadeArt, 5000); }, { threshold: 0.35 }).observe(section);
   let last = performance.now(), frameMs = 0, artReady = false;
   { const probe = new Image(); probe.onload = () => { artReady = true; }; probe.src = (document.querySelector('script[src*="neon-rts.js"]')?.src || "").replace(/neon-rts\.js.*$/, "art/station-defense-small.webp"); }
   function loop(now) {
@@ -1384,7 +1238,8 @@
     if (onScreen && W) {
       const t0 = performance.now();
       if (state === "play") { scrollCamera(dt); update(dt); hud(); }
-      if (state === "play" || !artReady) draw(now);
+      if (state !== "play" && artGone) { cam.x += Math.sin(now / 9000) * dt * 0.025; clampCamera(); }   // a slow drift across the base behind the Play button
+      if (state === "play" || !artReady || artGone) draw(now);
       frameMs = frameMs * 0.9 + (performance.now() - t0) * 0.1;   // how long a frame's work takes (test hook)
     }
     requestAnimationFrame(loop);
@@ -1393,5 +1248,5 @@
   if (reduce) intro.querySelector(".rts-help").textContent += " · (Reduced motion: effects are toned down.)";
   requestAnimationFrame(loop);
   window.neonRTS = { state: () => ({ state, credits, clock: Math.round(clock), wave: waveNo, units: ents.filter(e => e.team === "p" && !e.T.building).length, enemies: ents.filter(e => e.team === "e").length, hive: hive() && hive().hp, core: core() && core().hp, selected: selected.length }),
-                     start, give: n => { credits += n; }, army: () => act("army"), seeAll: on => { seeAll = on; if (on) explored.fill(1); }, count: () => ents.reduce((m, e) => (m[e.type] = (m[e.type] || 0) + 1, m), {}), step: ms => { for (let t = 0; t < ms && state === "play"; t += 16) update(16); hud(); }, train, wave: sendWave, select: type => { selected = ents.filter(e => e.type === type); renderPanel(); }, command, killHive: () => { const h = hive(); if (h) damage(h, 1e6, null); }, build: (type, x, y) => { selected = ents.filter(e => e.type === "spark" && !(e.order && e.order.type === "build")).slice(0, 1); placing = { type }; return place(x, y); }, buildings: () => ents.filter(e => e.team === "p" && e.T.building).map(e => ({ type: e.type, built: +e.built.toFixed(2), hp: Math.round(e.hp), queue: e.queue.length })), canPlace, cap: () => supplyCap(), gfx: o => Object.assign(GFX, o || {}), gpu: () => ({ on: glOn, info: GL3 && GL3.info() }), frameMs: () => +frameMs.toFixed(2), drawOnce: () => { const t = performance.now(); draw(performance.now()); return +(performance.now() - t).toFixed(2); }, zoom: f => { if (f) zoomBy(f); return +zoom.toFixed(3); }, camTo: (x, y) => { cam.x = x - W / zoom / 2; cam.y = y - H / zoom / 2; clampCamera(); } };
+                     start, give: n => { credits += n; }, army: () => act("army"), seeAll: on => { seeAll = on; if (on) explored.fill(1); }, count: () => ents.reduce((m, e) => (m[e.type] = (m[e.type] || 0) + 1, m), {}), step: ms => { for (let t = 0; t < ms && state === "play"; t += 16) update(16); hud(); }, train, wave: sendWave, select: type => { selected = ents.filter(e => e.type === type); renderPanel(); }, command, killHive: () => { const h = hive(); if (h) damage(h, 1e6, null); }, build: (type, x, y) => { selected = ents.filter(e => e.type === "spark" && !(e.order && e.order.type === "build")).slice(0, 1); placing = { type }; return place(x, y); }, buildings: () => ents.filter(e => e.team === "p" && e.T.building).map(e => ({ type: e.type, built: +e.built.toFixed(2), hp: Math.round(e.hp), queue: e.queue.length })), canPlace, cap: () => supplyCap(), frameMs: () => +frameMs.toFixed(2), drawOnce: () => { const t = performance.now(); draw(performance.now()); return +(performance.now() - t).toFixed(2); }, zoom: f => { if (f) zoomBy(f); return +zoom.toFixed(3); }, camTo: (x, y) => { cam.x = x - W / zoom / 2; cam.y = y - H / zoom / 2; clampCamera(); } };
 })();

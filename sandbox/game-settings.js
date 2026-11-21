@@ -273,13 +273,6 @@ window.TENSHI_GAMES = {
    "start": 1.4,
    "max": 5
   },
-  "graphics": {
-   "gpu": true,
-   "textures": 1,
-   "metal": 1,
-   "dynamicLights": true,
-   "movingSun": true
-  },
   "build": {
    "radius": 420,
    "supplyMax": 80
