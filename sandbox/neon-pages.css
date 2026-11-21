@@ -117,3 +117,9 @@ html.neon.gx-page:not(#_):not(#__) .site-footer { background: rgb(12, 4, 30) !im
 html.neon.gx-page:not(#_):not(#__):not(#___) main .service-card .service-pic {
   width: 70% !important; align-self: center !important; margin-left: auto !important; margin-right: auto !important; display: block;
 }
+
+/* Service card text and button line up with the picture: same 70% width, same left edge. */
+html.neon.gx-page:not(#_):not(#__):not(#___) main .service-card > p {
+  width: 70% !important; margin-left: auto !important; margin-right: auto !important; align-self: center !important;
+}
+html.neon.gx-page:not(#_):not(#__):not(#___) main .service-card > .btn-more { align-self: flex-start !important; margin-left: 15% !important; }
