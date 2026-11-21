@@ -315,3 +315,4 @@ details.ph-card:not([open]) { padding-bottom: 16px; }
 .ed-btn:not(.ed-btn--ghost) { background: linear-gradient(135deg, #ff2bd6, #8b2cf5); border-color: #ff2bd6; box-shadow: 0 0 16px rgba(255, 43, 214, .35); }
 .ed-btn:not(.ed-btn--ghost):hover:not(:disabled) { background: linear-gradient(135deg, #ff5ee0, #a24bff); }
 .ed-bar { background: linear-gradient(160deg, #1e0b38, #05000a) !important; }
+.ed-brand img { filter: drop-shadow(0 0 8px rgba(255, 43, 214, .6)); }
