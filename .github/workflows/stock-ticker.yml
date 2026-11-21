@@ -1,13 +1,13 @@
 # Stock ticker: refreshes data/ticker.json (delayed prices for the scrolling ticker at the top of every page)
-# every 30 minutes while the Tokyo Stock Exchange is open (9:00-15:30 JST = 00:00-06:30 UTC, Monday to Friday),
+# every 30 minutes while the US stock market is open (9:30-16:00 ET, roughly 14:00-21:00 UTC, Monday to Friday),
 # plus once after the close. GitHub may run scheduled jobs a few minutes late.
 name: Stock ticker
 run-name: Stock ticker refresh
 
 on:
   schedule:
-    - cron: "5,35 0-6 * * 1-5"
-    - cron: "50 6 * * 1-5"
+    - cron: "5,35 14-20 * * 1-5"
+    - cron: "20 21 * * 1-5"
   workflow_dispatch:
 
 permissions:

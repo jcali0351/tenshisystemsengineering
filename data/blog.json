@@ -19,8 +19,8 @@
         {
           "ul": [
             "**Match your business name where you can.** If the exact name is taken, a short, natural addition, such as your city or your main service, usually works better than an awkward abbreviation.",
-            "**Choose the ending with your customers in mind.** A .com is widely recognized around the world. For a business serving customers in Japan, a .jp or .co.jp address signals a local presence. Note that .jp requires a local presence in Japan, and .co.jp is limited to companies registered in Japan, with one per organization.",
-            "**Consider registering close variations.** Common misspellings, or both .com and .jp, can be redirected to your main site so visitors still find you and others cannot use them to imitate you.",
+            "**Choose the ending with your customers in mind.** A .com is widely recognized around the world. For a business serving customers in one country, that country's own ending (such as .us, .ca or .de) signals a local presence. Some country endings require a local address or a registered company, so check the rules before you buy.",
+            "**Consider registering close variations.** Common misspellings, or both .com and a country ending, can be redirected to your main site so visitors still find you and others cannot use them to imitate you.",
             "**Check before you commit.** Search the name online and in trademark records to make sure you are not stepping on another company's brand, and check whether matching social media handles are available."
           ]
         },
@@ -87,7 +87,7 @@
           ]
         },
         "If you answered no or not sure to any of these, it is worth an hour of attention now. These foundations are inexpensive to set up properly and far more costly to repair in a hurry.",
-        "**Not sure who controls your domain, or why your emails land in spam?** Tenshi Systems Engineering helps businesses in Osaka and around the world set up and review domains, business email and hosting, explained in plain language. [Request a consultation](contact.html#contact) and we will help you put your online foundations on solid ground."
+        "**Not sure who controls your domain, or why your emails land in spam?** Tenshi Systems Engineering helps businesses everywhere set up and review domains, business email and hosting, explained in plain language. [Request a consultation](contact.html#contact) and we will help you put your online foundations on solid ground."
       ],
       "sources": [
         {
@@ -128,7 +128,7 @@
         "Hosting plans are often marketed with long lists of features. A few factors matter far more than the rest.",
         {
           "ul": [
-            "**Speed and location.** The physical distance between the server and your visitors affects how quickly pages arrive. If most of your customers are in Japan, a server or content delivery network with a presence nearby will generally serve them faster than one on another continent. If you serve customers worldwide, a content delivery network that copies your files to locations around the globe helps everyone.",
+            "**Speed and location.** The physical distance between the server and your visitors affects how quickly pages arrive. If most of your customers are in one region, a server or content delivery network with a presence nearby will generally serve them faster than one on another continent. If you serve customers worldwide, a content delivery network that copies your files to locations around the globe helps everyone.",
             "**Reliability.** Ask what uptime the provider commits to, what happens if it misses that commitment, and how outages are communicated. A status page and a clear history of incidents are good signs.",
             "**Security.** Look for automatic HTTPS certificates, regular software patching, firewall protection, and isolation between customers. Find out who is responsible for updating your content management system and plugins, because hosts often secure the server but leave the application to you.",
             "**Backups.** Confirm how often backups are taken, how long they are kept, where they are stored, and how quickly a site can be restored. A backup you have never tested restoring is a hope, not a plan.",
@@ -174,7 +174,7 @@
         },
         "Changing hosts is worth considering if your site is regularly slow, goes down without explanation, has been compromised, or has outgrown its plan. A careful migration copies everything to the new host, tests it thoroughly, and only then switches your domain over, ideally at a quiet time, so visitors never notice. Rushed moves are where email stops working or pages go missing, so it pays to plan.",
         "Hosting rarely gets attention when it works well, and that is exactly the goal. The right choice is one that keeps your site fast, secure, and available, without demanding your time.",
-        "**Not sure your current hosting is the right fit?** Tenshi Systems Engineering provides secure hosting, monitoring, and long-term support for businesses in Osaka and around the world, and we are happy to review your existing setup in plain language. [Request a consultation](contact.html#contact) and we will help you find a home for your website that you do not have to worry about."
+        "**Not sure your current hosting is the right fit?** Tenshi Systems Engineering provides secure hosting, monitoring, and long-term support for businesses everywhere, and we are happy to review your existing setup in plain language. [Request a consultation](contact.html#contact) and we will help you find a home for your website that you do not have to worry about."
       ],
       "sources": [],
       "min": 5
@@ -206,7 +206,7 @@
           "h2": "Set It Up So You Will Actually Use It"
         },
         "A complicated setup that nobody opens is worse than a simple one you review. Choose one analytics tool and install it correctly on every page, including the thank-you page if you have one. Popular options include Google Analytics and a number of privacy-focused alternatives; pick the one you will actually look at. Then define one to three goals that match real business outcomes, such as a completed inquiry, and decide who reviews the reports, and when.",
-        "Because analytics records information about visitors, treat it with the same care you would give any other customer data. Collect only what you need, be open about the fact that you use it, and follow the privacy rules that apply to your customers. In Japan that includes the [Act on the Protection of Personal Information](https://www.ppc.go.jp/en/); other countries have their own requirements. This is not legal advice, but it is a reason to be conservative and clear.",
+        "Because analytics records information about visitors, treat it with the same care you would give any other customer data. Collect only what you need, be open about the fact that you use it, and follow the privacy rules that apply to your customers. In the United States several states have their own privacy laws, Europe has the GDPR, and other countries have their own requirements. This is not legal advice, but it is a reason to be conservative and clear.",
         {
           "h2": "Common Mistakes to Avoid"
         },
@@ -226,7 +226,7 @@
           ]
         },
         "Keep those notes. Over a few months you will see patterns a single screenshot cannot show, which is useful when you brief a designer or developer. Launch day is only the beginning. Analytics is how you keep learning after the site is live, so each change has a reason and a way to tell whether it helped.",
-        "**Want a clearer picture of how your website is performing?** Tenshi Systems Engineering measures real-world results, sets up analytics and goals, and provides plain-language progress reports as part of our optimization work for businesses in Osaka and around the world. [Request a consultation](contact.html#contact) and we will help you see what the numbers mean and what to do next."
+        "**Want a clearer picture of how your website is performing?** Tenshi Systems Engineering measures real-world results, sets up analytics and goals, and provides plain-language progress reports as part of our optimization work for businesses everywhere. [Request a consultation](contact.html#contact) and we will help you see what the numbers mean and what to do next."
       ],
       "sources": [],
       "min": 5
@@ -239,7 +239,7 @@
       "title": "Design, Development, Optimization and AI: How One Partner Can Carry Your Business Online",
       "intro": "For many small and mid-size businesses, a website is the first place a customer meets you. Getting that right takes more than a good-looking homepage. It takes clear design, solid engineering, steady improvement after launch, and increasingly, practical use of AI.",
       "body": [
-        "At Tenshi Systems Engineering, based in Osaka, our aim is simple: engineering reliable solutions for tomorrow. Here is what each of our four services covers, and why it matters to a business like yours.",
+        "At Tenshi Systems Engineering, our aim is simple: engineering reliable solutions for tomorrow. Here is what each of our four services covers, and why it matters to a business like yours.",
         {
           "h2": "Design: Making Your Business Easy to Understand and Easy to Trust"
         },
@@ -272,7 +272,7 @@
         {
           "ul": [
             "**Speed, Core Web Vitals and accessibility audits.** Core Web Vitals are Google's measures of loading speed, responsiveness and visual stability. Accessibility checks make sure people using screen readers, keyboards or other assistive tools can use your site.",
-            "**SEO in several languages.** For businesses serving customers in Japan and abroad, we help your pages appear in search results in each language you work in, with content that reads naturally rather than like a direct translation.",
+            "**SEO in several languages.** For businesses serving customers at home and abroad, we help your pages appear in search results in each language you work in, with content that reads naturally rather than like a direct translation.",
             "**Analytics, A/B testing and monthly progress reports.** We track what visitors actually do, test alternatives and report on progress each month in plain language, so you always know what has changed and why."
           ]
         },
@@ -373,7 +373,7 @@
         },
         "If you are planning a new website or a redesign, ask your design and development team how they approach mobile. Look for wireframes or mockups of the phone layout early in the process, not as an afterthought. Ask how images will be optimized, how navigation will work on small screens, and how the site will be tested across devices before launch. It is also worth asking who will maintain the site afterward, because new content added carelessly, such as oversized photos or wide tables, can quietly undo good mobile work over time.",
         "Mobile-first design is ultimately about respect for your visitors' time and attention. When your site is easy to use on the smallest screen, it tends to be easier to use everywhere.",
-        "**Is your website working as hard on phones as it does on desktops?** Tenshi Systems Engineering designs and builds responsive, mobile-first websites for businesses in Osaka and around the world. [Request a consultation](contact.html#contact) and we will review your site's mobile experience and recommend practical next steps."
+        "**Is your website working as hard on phones as it does on desktops?** Tenshi Systems Engineering designs and builds responsive, mobile-first websites for businesses everywhere. [Request a consultation](contact.html#contact) and we will review your site's mobile experience and recommend practical next steps."
       ],
       "sources": [],
       "min": 5,
@@ -491,7 +491,7 @@
           ]
         },
         "Remember that Core Web Vitals are a means to an end. The goal is not a green number in a report; it is a website that feels fast, responsive, and dependable to the people who use it.",
-        "**Want a clear picture of your website's performance?** Tenshi Systems Engineering offers speed and Core Web Vitals optimization for businesses in Osaka and beyond. [Request a consultation](contact.html#contact) and we will review your results, explain what they mean, and outline a practical plan to improve them."
+        "**Want a clear picture of your website's performance?** Tenshi Systems Engineering offers speed and Core Web Vitals optimization for businesses everywhere. [Request a consultation](contact.html#contact) and we will review your results, explain what they mean, and outline a practical plan to improve them."
       ],
       "sources": [],
       "min": 5,
@@ -508,7 +508,7 @@
       "title": "Web Accessibility Basics: What WCAG Means for Your Business Website",
       "intro": "Imagine a customer who wants to book your service but cannot see the screen and relies on software that reads it aloud. Or someone with a tremor who navigates with a keyboard instead of a mouse. Or an older visitor who simply needs larger, higher-contrast text. If your website works for them, it is accessible. If it does not, you are turning away people who want to do business with you, often without ever knowing it.",
       "body": [
-        "Accessibility can sound like a technical specialty, but its foundations are surprisingly practical. This post explains the standard most of the world uses, why it matters in Japan and abroad, and what you can check on your own site this week.",
+        "Accessibility can sound like a technical specialty, but its foundations are surprisingly practical. This post explains the standard most of the world uses, why it matters for every business, and what you can check on your own site this week.",
         {
           "h2": "What Is WCAG?"
         },
@@ -521,7 +521,7 @@
           ]
         },
         "For most business websites, Level AA is the sensible target.",
-        "In Japan, the national standard for web accessibility is JIS X 8341-3, which is aligned with WCAG. In addition, the amended Act for Eliminating Discrimination against Persons with Disabilities made reasonable accommodation a legal obligation for private businesses starting in April 2024. If you serve customers in other countries, many have their own accessibility rules as well. A website built to WCAG AA puts you on solid ground almost everywhere.",
+        "In the United States, the Americans with Disabilities Act is widely applied to business websites, and WCAG is the usual measure. Many other countries have their own accessibility rules as well. A website built to WCAG AA puts you on solid ground almost everywhere.",
         {
           "h2": "The Four Principles, in Plain English"
         },
@@ -593,7 +593,7 @@
         "The most cost-effective time to address accessibility is at the beginning. When designers choose colors, they can check contrast immediately. When developers build components, they can use proper HTML from the start. When content writers add images, they can write alt text as they go.",
         "For an existing website, start with an audit, fix the issues that block key tasks first (like contacting you or making a purchase), and then work through the rest. Train anyone who updates the site so new content stays accessible. Finally, consider publishing an accessibility statement that explains your commitment and gives visitors a way to report problems.",
         "Accessibility is an ongoing habit, not a one-time project.",
-        "**Ready to make your website work for everyone?** Tenshi Systems Engineering provides accessibility audits and remediation aligned with WCAG for businesses in Osaka and around the world. [Request a consultation](contact.html#contact) to learn where your site stands and how to improve it."
+        "**Ready to make your website work for everyone?** Tenshi Systems Engineering provides accessibility audits and remediation aligned with WCAG for businesses everywhere. [Request a consultation](contact.html#contact) to learn where your site stands and how to improve it."
       ],
       "sources": [],
       "min": 5,
@@ -783,7 +783,7 @@
           ]
         },
         "None of these tasks takes long on its own. Together, they make your website a far less appealing target.",
-        "**Want a second pair of eyes on your website's security?** Tenshi Systems Engineering offers secure hosting, maintenance, and security reviews for businesses in Osaka and around the world. [Request a consultation](contact.html#contact) and we will help you close the gaps before they become problems."
+        "**Want a second pair of eyes on your website's security?** Tenshi Systems Engineering offers secure hosting, maintenance, and security reviews for businesses everywhere. [Request a consultation](contact.html#contact) and we will help you close the gaps before they become problems."
       ],
       "sources": [],
       "min": 5,
@@ -824,7 +824,7 @@
           "ul": [
             "\"Increase inquiry form submissions from the services pages.\"",
             "\"Let our office staff publish news without developer help.\"",
-            "\"Make the site fully usable in both Japanese and English.\"",
+            "\"Make the site fully usable in both Spanish and English.\"",
             "\"Reduce the number of phone calls asking for information that should be on the site.\""
           ]
         },
@@ -888,7 +888,7 @@
         },
         "A redesign is not finished on launch day. Over the following weeks, monitor Search Console for crawl errors and broken links, compare results against your baseline, and gather feedback from customers and staff. Expect some small fixes, and keep a shared list so nothing reported by staff or customers gets forgotten. Then shift into a rhythm of regular improvements rather than waiting years for the next big overhaul.",
         "The most effective websites evolve continuously. A well-planned redesign gives you a solid foundation to keep building on.",
-        "**Thinking about a redesign?** Tenshi Systems Engineering guides businesses in Osaka and around the world through every stage, from audit and planning to design, development, and launch. [Request a consultation](contact.html#contact) and let's map out a redesign that delivers real results."
+        "**Thinking about a redesign?** Tenshi Systems Engineering guides businesses everywhere through every stage, from audit and planning to design, development, and launch. [Request a consultation](contact.html#contact) and let's map out a redesign that delivers real results."
       ],
       "sources": [],
       "min": 5,
@@ -962,131 +962,24 @@
         "Also define colors for **feedback states**, such as success, warning, and error, and never rely on color alone to communicate them. Pair a red border with a clear text message, for example, so the meaning reaches people with color vision deficiencies too.",
         "Keep in mind that color associations vary by culture and industry. Test your palette with people from your actual audience, especially if you serve customers across different countries.",
         {
-          "h2": "Special Considerations for Japanese Typography"
+          "h2": "Special Considerations for Non-Latin Scripts"
         },
-        "If your site includes Japanese text, typography requires extra thought:",
+        "If your site includes Chinese, Korean or other non-Latin text, typography requires extra thought:",
         {
           "ul": [
-            "**Font file size:** Japanese fonts contain thousands of characters, so files are much larger than Latin fonts. Techniques such as subsetting, or using services that deliver only the characters a page needs, keep pages fast.",
-            "**Line height:** Japanese text generally benefits from more generous line spacing than English.",
+            "**Font file size:** Chinese and Korean fonts contain thousands of characters, so files are much larger than Latin fonts. Techniques such as subsetting, or using services that deliver only the characters a page needs, keep pages fast.",
+            "**Line height:** Text in these scripts generally benefits from more generous line spacing than English.",
             "**Line breaks:** Without spaces between words, line breaks can fall awkwardly. Modern CSS offers settings to improve how lines wrap.",
-            "**Pairing scripts:** When Japanese and English appear side by side, choose fonts whose Latin characters and Japanese characters feel balanced. Families like Noto Sans JP were designed with this in mind."
+            "**Pairing scripts:** When two scripts appear side by side, choose fonts whose Latin characters and non-Latin characters feel balanced. Families like Noto Sans JP were designed with this in mind."
           ]
         },
         "Thoughtful typography and color will not make a website on their own, but they quietly support everything else on the page. Once your choices are set, apply them everywhere, from email signatures to printed brochures, so customers recognize you instantly.",
-        "**Want a website that looks as professional as your work?** Tenshi Systems Engineering offers web design and branding services for businesses in Osaka and around the world. [Request a consultation](contact.html#contact) and we will help you create a visual identity that is readable, consistent, and unmistakably yours."
+        "**Want a website that looks as professional as your work?** Tenshi Systems Engineering offers web design and branding services for businesses everywhere. [Request a consultation](contact.html#contact) and we will help you create a visual identity that is readable, consistent, and unmistakably yours."
       ],
       "sources": [],
       "min": 5,
       "image": {
         "src": "img/covers/blog.svg",
-        "generated": true
-      }
-    },
-    {
-      "id": "20261108-multilingual-website",
-      "date": "2026-11-08",
-      "cat": "Content",
-      "slug": "building-a-multilingual-website-for-japan-and-the-world",
-      "title": "Building a Multilingual Website for Japan and the World",
-      "intro": "For a business based in Japan, a second language on your website can open doors: international tourists planning a visit to Osaka, overseas companies looking for a reliable partner, or foreign residents who would rather read in English. For businesses abroad, a Japanese version can be the difference between being considered and being ignored by Japanese customers, who often expect content in their own language and in a style that feels familiar.",
-      "body": [
-        "But a multilingual website is much more than a translated copy of your current pages. Done well, it feels native in every language. Done poorly, it can confuse visitors and search engines alike, and quietly undermine the trust you worked hard to build. This guide covers the decisions that matter most.",
-        {
-          "h2": "Translation Is Not the Same as Localization"
-        },
-        "**Translation** converts words from one language into another. **Localization** adapts the whole experience for a particular audience, including words, examples, formats, imagery, and even which information comes first.",
-        "Consider a few differences between Japanese and English-speaking audiences that affect a website:",
-        {
-          "ul": [
-            "**Tone and formality.** Japanese business writing typically uses polite forms and a more formal register. A casual, punchy English headline translated directly can feel out of place.",
-            "**Information density.** Japanese websites often present more detail up front, including specifications, pricing tables, and access information. Many Western sites favor shorter text and more white space. Neither is wrong; each matches different expectations.",
-            "**Formats.** Dates, addresses, names, and phone numbers follow different conventions. Japanese addresses usually run from the largest unit (prefecture) to the smallest, with a postal code first, while English addresses typically run the other way.",
-            "**Trust signals.** Company profile details, such as founding date, registered address, and representative's name, are commonly expected on Japanese business sites.",
-            "**Contact and payment preferences.** Messaging apps such as LINE are widely used in Japan, and some customers expect payment options like bank transfer or convenience store payment."
-          ]
-        },
-        "Machine translation tools have improved and can help produce first drafts. For anything customer-facing, however, have a fluent human, ideally a native speaker who knows your industry, review and adapt the result.",
-        {
-          "h2": "Choosing a URL Structure"
-        },
-        "Each language version should have its own URL so search engines can index it and visitors can share it. There are three common approaches:",
-        {
-          "table": {
-            "headers": [
-              "Structure",
-              "Example",
-              "Considerations"
-            ],
-            "rows": [
-              [
-                "Subdirectory",
-                "example.com/en/",
-                "Simple to manage; all languages share one domain's authority"
-              ],
-              [
-                "Subdomain",
-                "en.example.com",
-                "Can be hosted separately; slightly more setup"
-              ],
-              [
-                "Country domain",
-                "example.jp, example.com",
-                "Strong local signal; more domains to buy and maintain"
-              ]
-            ]
-          }
-        },
-        "For most small and mid-size businesses, **subdirectories** are the most practical choice. Whatever you choose, avoid showing different languages at the same URL based on cookies or browser settings alone, because search engines may only ever see one version.",
-        {
-          "h2": "The Technical Details That Search Engines Need"
-        },
-        "A few behind-the-scenes elements help search engines show the right version to the right person:",
-        {
-          "ol": [
-            "**The `lang` attribute.** Each page's HTML should declare its language, for example `lang=\"ja\"` or `lang=\"en\"`. This also helps screen readers pronounce content correctly.",
-            "**Hreflang tags.** These tell search engines that pages are equivalents in different languages, so a Japanese searcher sees the Japanese page and an English searcher sees the English one. Each version should list all versions, including itself.",
-            "**An x-default.** This hreflang value names a fallback page for visitors whose language you do not specifically serve.",
-            "**Translated metadata.** Page titles, meta descriptions, image alt text, and URL slugs should be localized, not left in the original language.",
-            "**Separate keyword research.** People do not search the way a dictionary translates. Research the actual terms used in each language, including whether Japanese searchers use kanji, katakana, or English loanwords for your services."
-          ]
-        },
-        "Google is the dominant search engine in Japan, and Yahoo! JAPAN's search results are powered by Google's technology, so these standard practices serve you well in both.",
-        {
-          "h2": "Designing for More Than One Language"
-        },
-        "Multilingual sites need flexible design, because languages behave differently on the page.",
-        {
-          "ul": [
-            "**Text length varies.** The same message can be noticeably longer or shorter in different languages. Buttons, menus, and headings must accommodate this without breaking.",
-            "**Fonts must support every script.** Japanese fonts are large files with thousands of characters, so plan font loading carefully to keep pages fast.",
-            "**Avoid text inside images.** Text baked into graphics cannot be translated easily, read by search engines, or resized.",
-            "**Respect line spacing.** Japanese text usually needs more generous line height than English to remain comfortable to read."
-          ]
-        },
-        {
-          "h2": "Making Language Switching Easy"
-        },
-        "Your language switcher should be easy to find and easy to understand:",
-        {
-          "ul": [
-            "Place it in a consistent spot, commonly the top right of the header.",
-            "Label languages in their own language: \"日本語\" and \"English,\" not \"Japanese\" and \"English\" for everyone.",
-            "Avoid using flags alone. Flags represent countries, not languages.",
-            "Link each page to its equivalent in the other language rather than dumping visitors on the homepage.",
-            "Suggest a language based on browser settings if you like, but never force a redirect. Let people choose."
-          ]
-        },
-        {
-          "h2": "Keeping Every Language Current"
-        },
-        "The hardest part of a multilingual site is often maintenance. A new service added only in Japanese, or a price change that never reaches the English pages, quickly erodes trust. Choose a CMS or workflow with proper multilingual support, assign responsibility for each language, and include translation time in every content update. If you cannot maintain every page in every language, it is better to offer a smaller, accurate set of translated pages than a large, outdated one. A shared glossary of key terms, such as service names, product names, and preferred phrasing, also helps different writers and translators stay consistent, and makes future updates faster and less expensive.",
-        "**Ready to reach customers in more than one language?** Tenshi Systems Engineering builds multilingual websites and provides multilingual SEO from our base in Osaka. [Request a consultation](contact.html#contact) and we will help you plan a site that feels natural in Japanese, English, and beyond."
-      ],
-      "sources": [],
-      "min": 5,
-      "image": {
-        "src": "img/covers/business.svg",
         "generated": true
       }
     },
@@ -1207,7 +1100,7 @@
           ]
         },
         "The result is a practical improvement list you can work through over time. Revisit it whenever you add a new service or section, so your structure grows deliberately instead of by accident.",
-        "**Want a website structure that works for both customers and search engines?** Tenshi Systems Engineering helps businesses in Osaka and around the world plan, build, and optimize sites for search. [Request a consultation](contact.html#contact) and we will review your structure and show you where the opportunities are."
+        "**Want a website structure that works for both customers and search engines?** Tenshi Systems Engineering helps businesses everywhere plan, build, and optimize sites for search. [Request a consultation](contact.html#contact) and we will review your structure and show you where the opportunities are."
       ],
       "sources": [],
       "min": 5,
@@ -1290,7 +1183,7 @@
           "ul": [
             "**Use HTTPS** on every page that contains a form.",
             "**Filter spam quietly.** Techniques such as hidden \"honeypot\" fields or invisible challenge services block many bots without burdening real people with difficult puzzles.",
-            "**Collect only what you need,** and explain how you will use it, with a link to your privacy policy. Businesses handling personal data in Japan should be familiar with the Act on the Protection of Personal Information, and other countries have their own privacy rules.",
+            "**Collect only what you need,** and explain how you will use it, with a link to your privacy policy. Businesses handling personal data should know the privacy rules where their customers live, such as state privacy laws in the US or the GDPR in Europe.",
             "**Limit stored data.** If submissions are emailed to you, consider whether they also need to be stored indefinitely on the website."
           ]
         },
@@ -1299,7 +1192,7 @@
         },
         "Once your form is solid, data can show you where to improve. Set up analytics to track how many people view the form, how many start it, and how many complete it. A large gap between starting and finishing suggests something in the form is causing trouble.",
         "From there, A/B testing lets you compare two versions, such as a different button label, fewer fields, or a new introduction, and measure which performs better with real visitors. Change one thing at a time, allow enough traffic for meaningful results, and keep the winning version.",
-        "**Want more of your website visitors to become inquiries?** Tenshi Systems Engineering designs and optimizes forms, runs analytics and A/B testing, and builds websites focused on results for businesses in Osaka and around the world. [Request a consultation](contact.html#contact) and we will help you turn interest into conversations."
+        "**Want more of your website visitors to become inquiries?** Tenshi Systems Engineering designs and optimizes forms, runs analytics and A/B testing, and builds websites focused on results for businesses everywhere. [Request a consultation](contact.html#contact) and we will help you turn interest into conversations."
       ],
       "sources": [],
       "min": 5,

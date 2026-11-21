@@ -1,25 +1,24 @@
-// Stock ticker data: delayed prices for Japan's main indexes, the yen and well-known Tokyo-listed companies.
+// Stock ticker data: delayed prices for the main US indexes and well-known tech and gaming companies.
 // Writes data/ticker.json, which app.js reads to fill the scrolling ticker at the top of every page.
-// Runs on GitHub every 30 minutes while the Tokyo market is open (.github/workflows/stock-ticker.yml), or by hand:
+// Runs on GitHub every 30 minutes while the US market is open (.github/workflows/stock-ticker.yml), or by hand:
 //   node tools/ticker.mjs
 // Prices come from Yahoo Finance's public chart data, with Stooq as a fallback. They are delayed, not live.
 import { writeFileSync, mkdirSync, existsSync, readFileSync } from "node:fs";
 
 export const SYMBOLS = [
-  { name: "Nikkei 225", yahoo: "^N225", stooq: "^nkx", kind: "index" },
-  { name: "TOPIX ETF", code: "1306", yahoo: "1306.T", stooq: "1306.jp" },   // the TOPIX index itself isn't offered by either source
-  { name: "USD/JPY", yahoo: "JPY=X", stooq: "usdjpy", kind: "fx" },
-  { name: "Toyota", code: "7203", yahoo: "7203.T", stooq: "7203.jp" },
-  { name: "Sony", code: "6758", yahoo: "6758.T", stooq: "6758.jp" },
-  { name: "SoftBank Group", code: "9984", yahoo: "9984.T", stooq: "9984.jp" },
-  { name: "Tokyo Electron", code: "8035", yahoo: "8035.T", stooq: "8035.jp" },
-  { name: "Advantest", code: "6857", yahoo: "6857.T", stooq: "6857.jp" },
-  { name: "Nintendo", code: "7974", yahoo: "7974.T", stooq: "7974.jp" },
-  { name: "Mitsubishi UFJ", code: "8306", yahoo: "8306.T", stooq: "8306.jp" },
-  { name: "Fast Retailing", code: "9983", yahoo: "9983.T", stooq: "9983.jp" },
-  { name: "Hitachi", code: "6501", yahoo: "6501.T", stooq: "6501.jp" },
-  { name: "Keyence", code: "6861", yahoo: "6861.T", stooq: "6861.jp" },
-  { name: "Recruit", code: "6098", yahoo: "6098.T", stooq: "6098.jp" },
+  { name: "S&P 500", yahoo: "^GSPC", stooq: "^spx", kind: "index" },
+  { name: "Nasdaq", yahoo: "^IXIC", stooq: "^ndq", kind: "index" },
+  { name: "Apple", code: "AAPL", yahoo: "AAPL", stooq: "aapl.us" },
+  { name: "Microsoft", code: "MSFT", yahoo: "MSFT", stooq: "msft.us" },
+  { name: "Nvidia", code: "NVDA", yahoo: "NVDA", stooq: "nvda.us" },
+  { name: "Alphabet", code: "GOOGL", yahoo: "GOOGL", stooq: "googl.us" },
+  { name: "Amazon", code: "AMZN", yahoo: "AMZN", stooq: "amzn.us" },
+  { name: "Meta", code: "META", yahoo: "META", stooq: "meta.us" },
+  { name: "AMD", code: "AMD", yahoo: "AMD", stooq: "amd.us" },
+  { name: "Electronic Arts", code: "EA", yahoo: "EA", stooq: "ea.us" },
+  { name: "Take-Two", code: "TTWO", yahoo: "TTWO", stooq: "ttwo.us" },
+  { name: "Roblox", code: "RBLX", yahoo: "RBLX", stooq: "rblx.us" },
+  { name: "Unity", code: "U", yahoo: "U", stooq: "u.us" },
 ];
 const UA = { "User-Agent": "Mozilla/5.0 (TenshiTicker/1.0)" };
 

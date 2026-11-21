@@ -495,11 +495,11 @@ const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
   if (year) year.textContent = new Date().getFullYear();
   const params = new URLSearchParams(location.search);
   // No language pop-up: a first visit (no saved choice, no ?lang= in the address) follows the browser language when
-  // the site has it, otherwise Japanese. The flag button at the top changes it any time.
+  // the site has it, otherwise English. The flag button at the top changes it any time.
   const saved = store.get("tse-lang");
   const browserLang = ((navigator.languages || [navigator.language || ""]).map((l) => String(l).toLowerCase().split("-")[0])
     .find((l) => ["ja", "en", "ko", "zh", "es", "de", "pl", "pcm", "ar", "fa"].includes(l)));
-  setLanguage(params.get("lang") || saved || browserLang || "ja");
+  setLanguage(params.get("lang") || saved || browserLang || "en");
   setupBand();
   startSlides();
   startCards();
@@ -871,14 +871,14 @@ const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
         const sign = up ? "▲" : down ? "▼" : "";
         const change = q.change == null ? "" : `<span class="tk-chg ${cls}">${sign} ${fmt(Math.abs(q.change), 2)} (${q.pct > 0 ? "+" : ""}${fmt(q.pct, 2)}%)</span>`;
         const label = q.code ? `${q.name} <span class="tk-code">${q.code}</span>` : q.name;
-        return `<li class="tk-item"><span class="tk-name">${label}</span> <span class="tk-price">${q.kind === "fx" ? fmt(q.price, 2) : (q.kind === "index" ? "" : "¥") + fmt(q.price, q.price < 1000 ? 1 : 0)}</span> ${change}</li>`;
+        return `<li class="tk-item"><span class="tk-name">${label}</span> <span class="tk-price">${q.kind === "fx" ? fmt(q.price, 2) : (q.kind === "index" ? "" : "$") + fmt(q.price, q.price < 1000 ? 1 : 0)}</span> ${change}</li>`;
       }).join("");
       const track = $(".ticker-track", box);
       // Two copies side by side make the loop seamless; the copy is hidden from screen readers.
       track.innerHTML = items + items.replace(/<li /g, '<li aria-hidden="true" ');
       const latest = data.quotes.map((q) => q.time).filter(Boolean).sort().pop() || data.updatedAt;
       const when = new Date(latest);
-      $(".ticker-time", box).textContent = isNaN(when) ? "" : when.toLocaleString(document.documentElement.lang || "en", { timeZone: "Asia/Tokyo", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) + " JST";
+      $(".ticker-time", box).textContent = isNaN(when) ? "" : when.toLocaleString(document.documentElement.lang || "en", { timeZone: "America/New_York", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) + " ET";
       box.hidden = false;
       track.style.setProperty("--tk-duration", Math.max(30, data.quotes.length * 4.5) + "s");
     }).catch(() => {});

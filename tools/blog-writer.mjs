@@ -1,4 +1,4 @@
-// Tenshi Blog Writer (blog bot): reads recent stories about web design, software, AI and technology in Japan from
+// Tenshi Blog Writer (blog bot): reads recent stories about web design, software, AI, gaming and technology from
 // public news feeds, then has Claude write new, original blog posts that comment on them from Tenshi's point of view.
 // Each post lists and links the reports it draws on. Posts go into data/blog.json; tools/build-pages.mjs turns that
 // file into blog.html. The first run also removes the placeholder posts.
@@ -10,13 +10,13 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { gnews, gather, askClaude, jsonIn } from "./feeds.mjs";
 
 const FEEDS = [
-  "https://japantoday.com/category/tech/feed",
+  "https://www.smashingmagazine.com/feed/",
   gnews("web design OR website OR UX trends"),
-  gnews("artificial intelligence business Japan"),
+  gnews("artificial intelligence small business"),
   gnews("software development OR cloud OR cybersecurity small business"),
-  gnews("Japan technology startup OR digital transformation"),
+  gnews("game development OR indie games OR game engine"),
 ];
-const CATS = ["Web design", "Web development", "Software", "AI", "Hosting", "Branding", "Content", "Accessibility", "Technology", "Japan tech", "Osaka", "Security"];
+const CATS = ["Web design", "Web development", "Software", "AI", "Hosting", "Branding", "Content", "Accessibility", "Technology", "Gaming", "Security"];
 const MAX_POSTS = 60;
 
 let req = {};
@@ -41,12 +41,12 @@ if (stories.length < 3) { finish(false, "Too few stories could be read from the 
 
 const existing = blog.posts.filter((p) => !p.placeholder).slice(0, 30).map((p) => "- " + p.title).join("\n") || "(none yet)";
 const list = stories.map((s, i) => `[${i + 1}] ${s.title} (${s.source}, ${s.date ? s.date.slice(0, 10) : "recent"})\n    Teaser: ${s.excerpt || "(none)"}`).join("\n");
-const prompt = `You write the blog of Tenshi Systems Engineering, a small web design, software and AI studio in Osaka, Japan, for business owners. Write ${want} new blog post(s) based on the recent news stories listed below.
+const prompt = `You write the blog of Tenshi Systems Engineering, a small web design, software and AI studio, for business owners. Write ${want} new blog post(s) based on the recent news stories listed below.
 
 Rules:
 - Each post draws on 1 to 3 of the stories and says what they mean for small and mid-sized businesses: practical takeaways, not hype.
 - Write everything in your own words. Do not copy sentences from the stories; quote at most a few words, in quotation marks, crediting the publisher.
-- Use only facts given in the headlines and teasers. Don't invent numbers, names, quotes or details. When you mention a fact from a story, name the publisher ("according to Japan Today ...").
+- Use only facts given in the headlines and teasers. Don't invent numbers, names, quotes or details. When you mention a fact from a story, name the publisher ("according to The Verge ...").
 - Pick topics that differ from each other and from these earlier posts:
 ${existing}
 - Friendly, clear, confident tone. No sales pitch beyond, at most, one closing sentence inviting readers to get in touch.

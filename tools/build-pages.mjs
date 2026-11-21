@@ -505,7 +505,7 @@ index = between(index, "parallax3", parallaxSlot(2));
 index = [0, 1, 2].reduce(panelPx, index);
 writeFileSync("index.html", index);
 const HEADER = index.match(/  <header class="site-header">[\s\S]*?<\/header>/)[0];
-const FOOTER = index.match(/  <footer class="site-footer">[\s\S]*?<\/footer>/)[0].replace(/\n\s*<p class="photo-credits">[\s\S]*?<\/p>/, "");
+const FOOTER = index.match(/  <footer class="site-footer">[\s\S]*?<\/footer>/)[0].replace(/\n\s*<(p|details) class="photo-credits">[\s\S]*?<\/\1>/, "");
 const FORM = index.match(/        <form class="contact-form"[\s\S]*?<\/form>/)[0];
 
 // The header menu's dropdowns: a page in a dropdown also marks its top-level item (on Team, About shows as current).
@@ -678,30 +678,6 @@ ${[["phone", 1], ["access", 2], ["lock", 3], ["bolt", 4]].map(([ic, n]) => `    
 
 `;
 const aboutFind = () => `
-    <section class="page-section ab-find" aria-labelledby="find-title">
-      <div class="page-inner ab-find-grid">
-        <div class="ab-find-text">
-          <h2 id="find-title" class="section-title" data-i18n="aboutFindTitle">${tx("aboutFindTitle")}</h2>
-          <p class="page-lead" data-i18n="aboutFindIntro">${tx("aboutFindIntro")}</p>
-          <dl class="ab-facts">
-            <div><dt>${abIcon("globe", "ab-dt-icon")}<span data-i18n="infoLocation">${tx("infoLocation")}</span></dt><dd><b data-i18n="aboutArea">${tx("aboutArea")}</b><span data-i18n="aboutAreaText">${tx("aboutAreaText")}</span></dd></div>
-            <div><dt>${abIcon("host", "ab-dt-icon")}<span data-i18n="aboutNearTitle">${tx("aboutNearTitle")}</span></dt><dd data-i18n="aboutNear">${tx("aboutNear")}</dd></div>
-            <div><dt>${abIcon("vision", "ab-dt-icon")}<span data-i18n="aboutVisitTitle">${tx("aboutVisitTitle")}</span></dt><dd data-i18n="aboutVisit">${tx("aboutVisit")}</dd></div>
-          </dl>
-        </div>
-        <figure class="minimap">
-          <div class="minimap-frame">
-            <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=${MAP.bbox}&amp;layer=mapnik&amp;marker=${MAP.lat}%2C${MAP.lon}" title="${tx("aboutMapLabel")}" data-i18n-attr="title:aboutMapLabel" loading="lazy" referrerpolicy="no-referrer"></iframe>
-            <span class="minimap-ping" aria-hidden="true"></span>
-            <span class="minimap-compass" aria-hidden="true">N</span>
-            <span class="minimap-corners" aria-hidden="true"></span>
-            <span class="minimap-coords" aria-hidden="true">34.6938° N · 135.5025° E</span>
-          </div>
-          <figcaption><span data-i18n="aboutArea">${tx("aboutArea")}</span> · <a href="https://www.openstreetmap.org/?mlat=${MAP.lat}&amp;mlon=${MAP.lon}#map=16/${MAP.lat}/${MAP.lon}" target="_blank" rel="noopener"><span data-i18n="aboutMapOpen">${tx("aboutMapOpen")}</span> <span aria-hidden="true">↗</span></a> · © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a></figcaption>
-        </figure>
-      </div>
-    </section>
-
     <section class="ab-global" aria-labelledby="global-title">
       <div class="page-inner ab-global-inner">
         ${abIcon("globe", "ab-icon ab-icon-lg")}
@@ -713,10 +689,6 @@ const aboutFind = () => `
 /* ---------- About ---------- */
 const about = frame({
   prefix: "", current: "about", titleKey: "aboutTitle", descKey: "aboutLead", bodyClass: "page about-page",
-  photoCredits: `      <p class="photo-credits"><span data-i18n="photoCredits">${tx("photoCredits")}</span> <span data-i18n="city0">${tx("city0")}</span> –
-        <a href="https://commons.wikimedia.org/wiki/File:Osaka,_Japan_-_Umeda_district_-_city_view_of_Osaka,_Japan.jpg">Marek Ślusarczyk (Tupungato)</a>,
-        <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a></p>
-`,
   main: `${banner("", [{ key: "navAbout" }], "aboutTitle", "aboutLead", ART.about)}
 
     <section class="page-section" aria-labelledby="who-title">
@@ -727,7 +699,6 @@ const about = frame({
           ${t("p", "aboutWho2")}
         </div>
         <aside class="name-card" aria-labelledby="name-title">
-          <span class="name-kanji" lang="ja" aria-hidden="true">天使</span>
           <h3 id="name-title" data-i18n="aboutNameTitle">${tx("aboutNameTitle")}</h3>
           ${t("p", "aboutName")}
         </aside>
@@ -747,18 +718,11 @@ ${[["reliability", 1], ["craft", 2], ["partner", 3], ["clarity", 4]].map(([ic, n
       </div>
     </section>
 
-${aboutJourney()}    <section class="page-section" aria-labelledby="osaka-title">
-      <div class="page-inner split media-split">
-        <figure class="page-photo">
-          <img src="img/photos/osaka.jpg" alt="${tx("aboutPhotoAlt")}" data-i18n-attr="alt:aboutPhotoAlt" width="1920" height="1080" loading="lazy">
-        </figure>
-        <div>
-          <h2 id="osaka-title" class="section-title" data-i18n="aboutOsakaTitle">${tx("aboutOsakaTitle")}</h2>
-          ${t("p", "aboutOsaka", 'class="page-lead"')}
-          <h3 class="sub-title" data-i18n="aboutWhatTitle">${tx("aboutWhatTitle")}</h3>
-          ${t("p", "aboutWhat")}
-          <a class="btn btn-primary" href="services.html" data-i18n="seeAll">${tx("seeAll")}</a>
-        </div>
+${aboutJourney()}    <section class="page-section" aria-labelledby="what-title">
+      <div class="page-inner">
+        <h2 id="what-title" class="section-title" data-i18n="aboutWhatTitle">${tx("aboutWhatTitle")}</h2>
+        ${t("p", "aboutWhat", 'class="page-lead"')}
+        <a class="btn btn-primary" href="services.html" data-i18n="seeAll">${tx("seeAll")}</a>
       </div>
     </section>
 
@@ -989,7 +953,7 @@ ${gr.items.map(([slug, name, url]) => `            <li class="tech-card">
       </div>
     </section>
 
-${patentSection()}${cta("contact.html")}`,
+${cta("contact.html")}`,
 });
 writePage("technology.html", techPage);
 

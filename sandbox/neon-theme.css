@@ -967,3 +967,9 @@ html.neon:not(#_):not(#__):not(#___) main :is(.ab-focus, .value-card, .ab-mv-car
   html.neon:not(#_):not(#__):not(#___) main :is(.ab-focus, .value-card, .ab-mv-card, .ab-std-card, .ab-step):hover :is(.ab-icon, .value-icon),
   html.neon:not(#_):not(#__):not(#___) main .ab-step:hover { transform: none; }
 }
+
+/* Photo credits: folded into one small link at the very bottom (the licences need the credit while the photos are used). */
+html.neon details.photo-credits { margin-top: 12px; font-size: .72rem; opacity: .6; }
+html.neon details.photo-credits summary { cursor: pointer; list-style: none; color: #b8a3dc; }
+html.neon details.photo-credits summary::-webkit-details-marker { display: none; }
+html.neon details.photo-credits[open] { opacity: .85; }

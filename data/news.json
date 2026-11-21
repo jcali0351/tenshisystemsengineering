@@ -1,210 +1,434 @@
 {
-  "generatedAt": "2026-11-16T04:01:41.644Z",
+  "generatedAt": "2026-11-21T05:25:26.903Z",
   "generator": "Tenshi Scraper",
   "categories": [
+    {
+      "id": "web",
+      "key": "newsCatWeb",
+      "items": [
+        {
+          "title": "Blanc, the browser made with AI, swaps Electron for Chromium",
+          "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE5VMVp5RjRVbFZWUm5VX0VmYWtNLXhYN3VoeFZ5YmFSWVQ3YTdPaE9Qa1UwQ0s2a0czemVKUkRwQkRMT0lVMUJjVm5jeE43aTU1QjcyQTdKejV4UGxmOUZFTG9PR0NvbG9DLWlNQ2NJVVPSAXZBVV95cUxQbzl3VC1wejVmZEJ5QVZFMkhwZ282V04yLUZ3MEhPdEppaGpBOEFCSHVKYWpMeVNLcGJuTzlxOURvd2dBSzZGY2VvVFg3RnhBUmYzckNJTDdVV1ZiVkJTclNNNVluQmc0czNqbVNzWFpidmQydUtB?oc=5",
+          "source": "OMG! Ubuntu",
+          "sourceUrl": "https://www.omgubuntu.co.uk",
+          "date": "2026-11-21T02:52:39.000Z",
+          "excerpt": ""
+        },
+        {
+          "title": "Magnetize ME Expands Web Design and Development Service for Small Businesses Across Atlanta and North Georgia",
+          "url": "https://news.google.com/rss/articles/CBMi9gFBVV95cUxPTEkyeHNwWFpCUm5ENGd3VEwtRkpadGl5OU1sSGtkNE9YQTRrVHQ0LWFQaHV3M0pzRmxrempUSThjSDJwTUh0d2dyMFlncVdQRXVfZERzbWJLMXl5cmZvNFNzc3ZoWE5CLU5ZV3RBT0UwRVRQQTNkRlR3ZXNfMVpYa0RQMzVRV0F1U2dfZDhqSjZ4MjhOQWFUT0tlZDV0V25HRk1INW1MaFh6anpsSkRTS2pKRVN6QlI2NWpoNlE0THAzX3ROX3UzazZSeHlGRFZuTnFDREdGNXZWcFh5bU5ZNjJ4M0w1SnVqWkRveHhTNVdfVzVBb0E?oc=5",
+          "source": "azcentral.com and The Arizona Republic",
+          "sourceUrl": "https://www.azcentral.com",
+          "date": "2026-11-20T21:27:35.000Z",
+          "excerpt": ""
+        },
+        {
+          "title": "How did the Mosaic browser make the World Wide Web easier to use?",
+          "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxNWVhYVmhLWlhNZERTa0FreXpSMTV1MC1RY3FnQUZra0JqMXRiUXlCSk9FR1JWaWpfRDJoSENaVHphM2p6cFFEcjdKbXRxV0w3bC1LUWhsNnQ3UXVyZUpOSVJDV0Z3MC1oRmk5ckRHYnlZSmp5Snl5VXU2d281OUkwV0hQZGRpMDhsZUhucHFfOVVONG1jajdCSVhlRXBVcW9hYUxnSg?oc=5",
+          "source": "Britannica",
+          "sourceUrl": "https://www.britannica.com",
+          "date": "2026-11-20T19:24:25.000Z",
+          "excerpt": ""
+        },
+        {
+          "title": "Fast Mobile First Trust Driven Web Design for a 2027 Ready Website by Strategic Web Designs",
+          "url": "https://news.google.com/rss/articles/CBMilgJBVV95cUxQbl93Tzk4d2QzTFFfRlJLYU04QTZfRUVGaVptR1FiRHAzWWJPcmlReUFkalN6aW1PbXVXN1RncXkyb1RNSzhYdURDanlITlhNTGtvUzdBcnVVTy1sbFZ2NEtySWZiVUtNNVg3b1lBNnU0S0dWX2stbGtILWtaMzlpdy01TFVMcGRUQzVMTXFudGM0MnVaQ1FtRG5QQkh0MVpZeHJoTXhuUElPajlwWVNUV00yZENkWG03QmgzQkdISUlOVDRxLW9zcmN4WFVyQTNOSldoYmR5UHVFYVh0RFNObXZXU3NNZlFocGZEdng0R3dlZWg2X3NvaXdiWGNFdk45OUZvbGFpV1AyYzZUamthZ25MZjIzZw?oc=5",
+          "source": "mykxlg.com",
+          "sourceUrl": "https://www.mykxlg.com",
+          "date": "2026-11-20T17:20:46.000Z",
+          "excerpt": ""
+        },
+        {
+          "title": "Andy Clarke answers six questions about Standout Designs for the Web",
+          "url": "https://css-tricks.com/andy-clarke-standout-designs-for-the-web-interview/",
+          "source": "CSS-Tricks",
+          "sourceUrl": "https://css-tricks.com",
+          "date": "2026-11-20T15:03:47.000Z",
+          "excerpt": "Web designer, author, and Stuff & Nonsense founder Andy Clarke has released Standout Designs for the Web , a new e-book that encourages designers to move beyond familiar templates and…"
+        },
+        {
+          "title": "AP Technology Web Design in OKC Launches New Website Featuring Web Design and AI SEO Services",
+          "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxPbk1kWU9PSEJGZmdwVUtPcUZ4azRvc19Eejg5SmNqeFR1OFBVQnNsY2VadHNUQ1pvMDZ2cWZCQzJwUTBZbkpLTnVIRmtMYkRlUmhsQjhMMFB3UFIwLXNqMlJraE1jV2VzV1JhNzBYMXg3d3NlWUZKN1pkOUNFQlgwRWctNlREWlZvQnM5MURkaElaZVF0aEc0dm9PRnF3VzQ?oc=5",
+          "source": "openPR.com",
+          "sourceUrl": "https://www.openpr.com",
+          "date": "2026-11-19T23:30:07.000Z",
+          "excerpt": ""
+        },
+        {
+          "title": "Mirror Dimension for Agents: Evaluating Browser-Use Agents Without the Web",
+          "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE5TMnlkYm9IeHZzVWpIVjZTMUlFV283RTR5ZE04YU0xX095akx2bngzR2FJUUxoU2ExMW5GdUhsbWJIY0tPWEZwTHVGRE5HSENVYmloZVVDdEdndUNFZHV4VXo3TENCT0lI?oc=5",
+          "source": "blog.google",
+          "sourceUrl": "https://blog.google",
+          "date": "2026-11-19T17:17:46.000Z",
+          "excerpt": ""
+        },
+        {
+          "title": "Building a Browser-Based Image Editor With Web Workers and OffscreenCanvas",
+          "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxPdlczaDlUZmRiaHVtMWV0eTZnZXp3MTFLX0RzS0YzMGx3ZjNnR1lEZDg4bUxtcjZxMnUyNjZhMjhSd05BVlVGSHQxYzZSTVJoUE8tM21WZDUwdlRDaW84bkxmZ1FYX3BoMTNMWUVJaXYzaGdyeHM5R1VfUXVHN25mVEZtaHoyVnFpRXFsQVdLV2dESUQwdzEyb1dfZURjQQ?oc=5",
+          "source": "HackerNoon",
+          "sourceUrl": "https://hackernoon.com",
+          "date": "2026-11-19T15:06:21.000Z",
+          "excerpt": ""
+        },
+        {
+          "title": "scroll-state()",
+          "url": "https://css-tricks.com/almanac/functions/s/scroll-state/",
+          "source": "CSS-Tricks",
+          "sourceUrl": "https://css-tricks.com",
+          "date": "2026-11-19T14:57:54.000Z",
+          "excerpt": "The CSS scroll-state() query, surprisingly, has nothing to do with whether you’re doom-scrolling in a state of existential dread. It does, however, allow you to change the CSS used based…"
+        },
+        {
+          "title": "From Game Coding to AI Automation: The Growth Story of RGV Web Design — ThreeBestRated",
+          "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxOTDdjaFBJOTkwMlB6a1ZQOHdiTVB4OVpnT2t3dkxQRjg3eURjQWQ4Z3Q5SjFIXzF3bzJITHF2Z0FwX2VKOWxWTDE3RWd5QnozVnhseVFqaHFSUXRoTmRBNWhVTmduMDh0UEtWZ0FmQ19DZHNFUVVnRWxPalpjX3BWN1FfeGwzNklxX1l6LUw1UnFVYXRxQXdvT1RRamJHb0JJQy01enN0UnJRWU92MV9CSFRhaFJHLVcwem9HMUt6cFk?oc=5",
+          "source": "PR Underground",
+          "sourceUrl": "http://www.prunderground.com",
+          "date": "2026-11-19T14:13:07.000Z",
+          "excerpt": ""
+        }
+      ]
+    },
+    {
+      "id": "gaming",
+      "key": "newsCatGaming",
+      "items": [
+        {
+          "title": "9 Calvin and Hobbes Comics from the 1990s that Prove Bill Watterson is a Genius",
+          "url": "https://www.polygon.com/9-perfect-calvin-and-hobbes-1990s-comics/",
+          "source": "Polygon",
+          "sourceUrl": "https://polygon.com",
+          "date": "2026-11-21T05:00:18.000Z",
+          "excerpt": "Calvin and Hobbes creator Bill Watterson is a genius. Here are nine comics which prove it."
+        },
+        {
+          "title": "Maryville Game Design Students and Alumni Help Bring Smithsonian Games to Nintendo Switch",
+          "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxOTGZheU9rSWdUdVV2bFN0Y3E5T0c1ZEJiMFB2Q0xPa2JSTkt5bV9aTkZwT2kwRjZSQldWeGNQaXZ2N29ZVFNfN0pNSGZfMUxkY2Nsc1RHcERlSFBGNmZ3MDZxUWxwQXVDMjc5ZnVnUjFHZnJQcXVGakx5Qk5sZlppWkFabVZqYmVpUWlTdmRfUmRhTl9MTDI3QXBnekhIUU5JX212bHJnZFdQY0RfcWhtdUYtYzZMdFJGQVpMV3lmRHA?oc=5",
+          "source": "Maryville University",
+          "sourceUrl": "https://www.maryville.edu",
+          "date": "2026-11-21T02:59:55.000Z",
+          "excerpt": ""
+        },
+        {
+          "title": "Pokémon's 24-Part $399 Collection Officially Launches Next Week",
+          "url": "https://www.polygon.com/pokemon-movie-collection-amazon-blu-ray-november-2026/",
+          "source": "Polygon",
+          "sourceUrl": "https://polygon.com",
+          "date": "2026-11-21T02:15:17.000Z",
+          "excerpt": "All 24 Pokémon animated movies are coming in one Blu-ray collection, thanks to Viz Media and Amazon.com."
+        },
+        {
+          "title": "Pokémon Go Pawniard Community Day event guide",
+          "url": "https://www.polygon.com/pokemon-go-pawniward-community-day-shiny-bisharp-moveset/",
+          "source": "Polygon",
+          "sourceUrl": "https://polygon.com",
+          "date": "2026-11-21T02:01:17.000Z",
+          "excerpt": "Here's all you need to know for Pokémon Go's Pawniard Community Day event, including how to find a shiny Pawniard and evolve Bisharp into Kingambit."
+        },
+        {
+          "title": "The Witcher 4 Gets Official Update on Physical Release",
+          "url": "https://www.polygon.com/the-witcher-4-physical-release-cd-projekt-red-ps5/",
+          "source": "Polygon",
+          "sourceUrl": "https://polygon.com",
+          "date": "2026-11-21T01:28:17.000Z",
+          "excerpt": "CD Projekt Red is planning a The Witcher 4 physical release, even though it admits it has \"no influence\" over PS5 and Xbox disc production"
+        },
+        {
+          "title": "Everything We Know About GTA 7",
+          "url": "https://www.polygon.com/gta-7-release-setting/",
+          "source": "Polygon",
+          "sourceUrl": "https://polygon.com",
+          "date": "2026-11-21T00:00:17.000Z",
+          "excerpt": "GTA 7 is not much more than a hypothetical at this point, with GTA 6 having just been released, but there are some hints about GTA's future."
+        },
+        {
+          "title": "8 Near-Perfect Fantasy Miniseries That Hook You in the First Episode",
+          "url": "https://www.polygon.com/8-near-perfect-fantasy-miniseries-that-hook-you-in-the-first-episode/",
+          "source": "Polygon",
+          "sourceUrl": "https://polygon.com",
+          "date": "2026-11-21T00:00:17.000Z",
+          "excerpt": "From gothic castles to hidden London underworlds, these essential fantasy miniseries cast an instant spell on viewers from episode one."
+        },
+        {
+          "title": "'Steps' Ending Explained: Director Reveals the True Meaning Behind Cinderella Adaptation",
+          "url": "https://www.polygon.com/netflix-steps-ending-explained/",
+          "source": "Polygon",
+          "sourceUrl": "https://polygon.com",
+          "date": "2026-11-21T00:00:17.000Z",
+          "excerpt": "The inclusive ending of Netflix's hottest animated hit 'Steps' is perfectly explained by its directors."
+        },
+        {
+          "title": "Who is Johannes Zuch supposed to be in GTA 6?",
+          "url": "https://www.polygon.com/gta-6-tenebrae-lux-jonathan-blow/",
+          "source": "Polygon",
+          "sourceUrl": "https://polygon.com",
+          "date": "2026-11-20T22:00:17.000Z",
+          "excerpt": "Grand Theft Auto 6 includes an arthouse game parody called Tenebrae Lux that lampoons The Witness creator Jonathan Blow."
+        },
+        {
+          "title": "10 New Movies to Watch This Weekend on Netflix, Prime Video, and HBO Max (November 20 - 22)",
+          "url": "https://www.polygon.com/new-movies-streaming-this-weekend-netflix-november-20-22/",
+          "source": "Polygon",
+          "sourceUrl": "https://polygon.com",
+          "date": "2026-11-20T22:00:17.000Z",
+          "excerpt": "On this weekend's movie streaming and VOD column, there's the biggest movie of the year, Netflix's new animated movie, and more"
+        }
+      ]
+    },
+    {
+      "id": "ai",
+      "key": "newsCatAI",
+      "items": [
+        {
+          "title": "Pediatric Bone Age Artificial Intelligence Matches Atlases Overall but Shows Individual Variability",
+          "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxQZ0g5Z01lZ1l5TmxFaXNMRTZFQmVkMi1uS0dOTTkwb0NFTG1iZDBiU2hhcjRFeDJ1bmVOclZZNFZXeFdaYU02X3FIQjdHeGhPMjUyQXEzZW95RFNCRmhQanpYcGJDMXdpakxpcERFcmVoM0x6S0I1dFdCX3NqMmEtMEdpYTdzVlRYOWV6eUtwTkpZeEh5UzZpZ3YxR09QZTkyRlUweDA0bHdFblRwdVNjMmRKOTNlVHFRcmktWVJBOEc4QQ?oc=5",
+          "source": "Bioengineer.org",
+          "sourceUrl": "https://bioengineer.org",
+          "date": "2026-11-21T05:07:16.000Z",
+          "excerpt": ""
+        },
+        {
+          "title": "Faisal Rahman Explores the Intersection of Artificial Intelligence, Cybersecurity, and Intelligent Digital Systems Through Research",
+          "url": "https://news.google.com/rss/articles/CBMi6gFBVV95cUxQY0J0RGRaRjU2OUswS0dwd2hlTWRaWHBEdURqMUV3TnJiUnFzN3QtSXJ1WGY0dDM4RWVzNXVZS3V4eXVuOERUWDU1THAyd1FPdTRNRTdldHpIWFdaUG94SVBLMUVSNlBCTFFHMUNhdXJLb0E4VVhwelRrai01aFBfUGlFNDNRTDVFUWVnY1ZzaV9TNURtTlEwZlkxdHJaY1hoTXVyN2dSc3B0eEFHSThCaUx2a1BDV1JRcW5WRXBTOVFvV3lidzlhQnpEVmNtOUVjS1AzbXo4QUNmR1F4WkF5ZGdSMzZJYmdLd1E?oc=5",
+          "source": "TechBullion",
+          "sourceUrl": "https://techbullion.com",
+          "date": "2026-11-21T03:55:58.000Z",
+          "excerpt": ""
+        },
+        {
+          "title": "Artificial Intelligence Matches Expert Performance in Tuberculosis Radiography and Genomic Diagnostics",
+          "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxPWkpsOTU3MWl1QkFpQXhyQTVpZjdTa0VqamRDU0tvZUhCcU9JbEhKN1JaREtyYVQ5bXlnVkZFZWxoWElVY0pmcEFvckVmU1BxOXJTY184cEo0NzJ0Ni1UaTNZMnYzY2NRNGdlV3JzU3kxbVJnWGZWQzV5Y0xDcW9SY0xpQk5rYkE3WFBfOHZMTXZOMFhXNjh0MlR3eFVVTk8xVHo3UEtleVhnd0IxUXZoUzNmdVRvSzhrbTdTMmszNjBiOVFpS0E?oc=5",
+          "source": "Bioengineer.org",
+          "sourceUrl": "https://bioengineer.org",
+          "date": "2026-11-21T02:54:35.000Z",
+          "excerpt": ""
+        },
+        {
+          "title": "Structured Synthesis Links Artificial Intelligence to Supply Chain Resilience Through Core Capabilities",
+          "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxPT0ZfZXJQX3RWVVZXV3otbzVpRk5ibkc5MkkwMzI3dGtqc3lEQnA3dElDc3ZpUTIxNzlFWnFQaHZFYW1CbGxFNHc2eGlQbG9xVmkwUE9VQkhiSUVrcFRhbGJYalpwMDVCWWNUMlFuaGwtTm0yVFlhZHlpRzZOanJGVzZjbS02QVFBd1NPTFB2em1HMEJqNkdieHQtdXMxcUJ4ZG5kSGhmdWtyLWtaQnMxUXBpMDlZS013MzVxWE5rY050cS10aFN3?oc=5",
+          "source": "Bioengineer.org",
+          "sourceUrl": "https://bioengineer.org",
+          "date": "2026-11-21T02:36:08.000Z",
+          "excerpt": ""
+        },
+        {
+          "title": "Symbiotic Planning Framework Governs Artificial Intelligence to Protect Urban Equity and Legitimacy",
+          "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxPWWhZNS16bzZidjRlMW1aM1pnUGZYWlB1dlRzcjVPZW0zQU9mcTBNMC0wUGZVaERnbHFsb3ZvZWV0Y2xPVnRHN2pXbGFwMnhjbEJLUjBlRXU5em1FWlFMeEo4Z04tdkE4WFprTjdLdDVuTk5hYjRyWW5oRWVUUGJaWUpZMDQyc1UtdlJKTmRLTVgzSk9PMmVCNUZ3bjhKeE1JMXRvQk5VUWxDNmRweVZqODVuaEtaVXcxSE4xdWhsYTJ2Zw?oc=5",
+          "source": "Bioengineer.org",
+          "sourceUrl": "https://bioengineer.org",
+          "date": "2026-11-21T02:11:08.000Z",
+          "excerpt": ""
+        },
+        {
+          "title": "Intensive Care Researchers Propose Adaptive Online Learning Systems for Clinical Decisions",
+          "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPVFliZ1pCdG5RakN1WjBLQ2JxU2d5Yl84eEwyZXQ4c05XRHd3d1QtRTJnT0lVY2FPWlFjZlFYUTZpWmEwaWItaUpXZXpweHpwTGI5ODJtcmxrd1BKTmthRWlSVWtRdHMtZnJxbzlyTjhrcTFVakNQZ3drS0dmRnFRZ1l4MWNzWTNyRkN5NU1VNHFIdGo3SFZFOURjYllpaEhzb2FPTFctNFJVdDBRa1FVMm5BZ1Z0dw?oc=5",
+          "source": "Bioengineer.org",
+          "sourceUrl": "https://bioengineer.org",
+          "date": "2026-11-21T01:52:30.000Z",
+          "excerpt": ""
+        },
+        {
+          "title": "Machine Learning Predicts Bearing Capacity of Fibreglass and Steel Rock Bolts",
+          "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxOaE9WdU16eDNPQ254Qjl0RGlqS3lmY0V4S2w2enFLakNLOGkwaDRxMFAtb1JNRkp1MjlQZGhQWTBwUFY1QnFQeXh4a3J6Y1BxTnF3cVM3WWpOUElnMmxWR2dEWmxiazBwXzNIWVgyeXM3TDJZbHlDMk9USW5faHo5ZFlZc3gzMkpDWXNxc0QydXhKRGRQaFhzSGNBRm1tT0NKdXJ1Wg?oc=5",
+          "source": "Bioengineer.org",
+          "sourceUrl": "https://bioengineer.org",
+          "date": "2026-11-21T00:51:08.000Z",
+          "excerpt": ""
+        },
+        {
+          "title": "Nuclear Fission and Fusion Trajectories Illuminate the Future of Artificial Intelligence",
+          "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPV0s0aHdkbnFxX1c0Q3l4SGladWZIeHdMZGYzZzNUM2lCTEpab01kVFAyN29aV3lvTzZYX2pscU9TR2ZJZG5uSXJ4cS1FSTFobElBQkhIaUo3Q1VOdjNDb0ItU0dhX0U0ekQyLTRjdFJubUJhdnFiM2xIdlJ0S1ZWR1BmaXlNZXJoOFRkYTIzNGwtMGpQcFhuanNXOVN5MHlnb3VKeEZ2cEFienBORGRUbE1yNA?oc=5",
+          "source": "Bioengineer.org",
+          "sourceUrl": "https://bioengineer.org",
+          "date": "2026-11-20T23:56:44.000Z",
+          "excerpt": ""
+        },
+        {
+          "title": "Epistemological Review Finds Artificial Intelligence Shows Critical Gaps in Orthodontic Care",
+          "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxPdGlybF84NlhYakUxZk81XzdUSkQzb1JwUDlzQlJZTEVTTWN0TEtwNzJTQVFXNjRpMlROZkxnZFFpbVpxYkhudGZPOUlzUndYdEZxZ2sxd3hKdWhCV0xhTy12OW80d0ZTbXJSazBrZWMyVHZQNXExMno0TXRvVGwycEw4OXIxWFV1aGJYaVcwU05sRW5UdVZPd2NfbkRfTXJ5UHk5QTRVSU5NOFdSNUItZjFSN0ZHYnpz?oc=5",
+          "source": "Bioengineer.org",
+          "sourceUrl": "https://bioengineer.org",
+          "date": "2026-11-20T23:46:08.000Z",
+          "excerpt": ""
+        },
+        {
+          "title": "NMSU receives DARPA award for solution to AI trust issues",
+          "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxQTDFLXzFYR2N3bkJIZzhLMVZxZHVmR0VxWVVwbzRpSE1VX2F3RlZUWEpVUVJRcXNrVnI3Qm1aaVVGdTNjRDdxUzBqNEQtVmdVdU9QUFJNZzdOZDFTVE0wODkzZ0VsNURkSHR5VkdTR0tqQVh3TlRyMFRyekZMeFkzYXp1SzJWcHdwVmswNEtNaW9icWMtNFd5TUlPaWItSksxc01xVndSR3ZfWDBudjBDdTdKZEtuSktBb1hpQnMtVHhaRFROb2c?oc=5",
+          "source": "New Mexico State University",
+          "sourceUrl": "https://newsroom.nmsu.edu",
+          "date": "2026-11-20T23:15:45.000Z",
+          "excerpt": ""
+        }
+      ]
+    },
     {
       "id": "tech",
       "key": "newsCatTech",
       "items": [
         {
-          "title": "Musk, Uber co-founder join call for Jensen Huang's return to Nvidia",
-          "url": "https://japantoday.com/category/tech/musk-uber-co-founder-join-call-for-jensen-huang%27s-return-to-nvidia",
-          "source": "Japan Today",
-          "sourceUrl": "https://japantoday.com",
-          "date": "2026-11-16T01:06:00.000Z",
-          "excerpt": "Tech tycoon Elon Musk and an Uber co-founder are, as of Sunday, among more than 158,000 signatories of an open letter calling for Jensen Huang's reinstatement as Nvidia…",
-          "image": {
-            "src": "img/stories/c8182ffe2b3278a7.jpg",
-            "query": "circuit board",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/5902389/photo-image-public-domain-technology-computer",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/d8481036-84c7-4766-9672-15ecb18f8c37/thumb/"
-          }
+          "title": "Startup sues Apple in India over tap-to-share contacts feature",
+          "url": "https://techcrunch.com/2026/11/20/startup-sues-apple-in-india-over-tap-to-share-contacts-feature/",
+          "source": "TechCrunch",
+          "sourceUrl": "https://techcrunch.com",
+          "date": "2026-11-21T04:00:00.000Z",
+          "excerpt": "A U.S. startup is seeking $162 million in damages and an injunction to impact iPhone and Apple Watch imports to India."
         },
         {
-          "title": "AI helps cosmetic giants overcome perfume's nasal 'paradoxes'",
-          "url": "https://japantoday.com/category/tech/ai-helps-cosmetic-giants-overcome-perfume%27s-nasal-%27paradoxes%27",
-          "source": "Japan Today",
-          "sourceUrl": "https://japantoday.com",
-          "date": "2026-11-15T21:21:43.000Z",
-          "excerpt": "There may be a hint of bergamot in the top notes and sweet iris as a follow-up, but there is a noticeable dose of Artificial Intelligence emerging in…",
-          "image": {
-            "src": "img/stories/cbd6c172436e674d.jpg",
-            "query": "server room",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/6042704/photo-image-public-domain-free",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/c580cdaf-7228-4c08-92cf-1401c43a5d84/thumb/"
-          }
+          "title": "East Alabama Health uses robotic technology to diagnose early lung cancer",
+          "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQNTg1SW1qZFhzZnM0TmhlZG04WmQtd1FjVXZ2QVROd0U4cUtYRFNYOUlCVEFMeFRaQ200VWtTMFUyODJlY0V5eW1jSWI4bFZRMUhRZVp5Y3hWZVozRjdsTFdYLWVJeGxWbmRObl9Za2ZYYWloWFpYUFZybW5abHBmUmtJbjIzM0djQmFrUC1EaE01LTN5cG1qU3BkdnJKam1Odzl4RlRn?oc=5",
+          "source": "WTVM.com",
+          "sourceUrl": "https://www.wtvm.com",
+          "date": "2026-11-21T03:37:00.000Z",
+          "excerpt": ""
         },
         {
-          "title": "SpaceX Starship returns to Earth in dramatic catch by launch pad arms, in photos",
-          "url": "https://japantoday.com/category/tech/spacex-starship-returns-to-earth-in-dramatic-catch-by-launch-pad-arms-in-photos",
-          "source": "Japan Today",
-          "sourceUrl": "https://japantoday.com",
-          "date": "2026-11-15T21:21:32.000Z",
-          "excerpt": "SpaceX’s Starship made a triumphant return to Earth on Saturday, caught in midair by giant mechanical arms where its journey began 22 hours earlier. It was the grand…",
-          "image": {
-            "src": "img/stories/3dc76381335eff9f.jpg",
-            "query": "rocket launch",
-            "creator": "SpaceX",
-            "creatorUrl": "https://www.spacex.com/media",
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://stocksnap.io/photo/rocket-launch-7V1JEO2YXQ",
-            "provider": "stocksnap",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/ce9272ee-6f2e-4f2a-8a58-b22584b167a7/thumb/"
-          }
+          "title": "Quantum software matches classical benchmark for a molecular interaction",
+          "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQbkFXWWNEMC1icVRhWjNzTThpbDZuam85UU5sN3FGSGR2cFVJR2pOb3RkUmZRbG9VVGk2Z1NzdDFWRDdTUFJ1WmFQX25vaUFxb1ZDa1ZqVTI0Tm9hVENETTU4UHc1Um5ldzhna0lYZ2I4eUI4cV9MY2cxYzlnQlZkNnhYSUhrZzNV?oc=5",
+          "source": "Phys.org",
+          "sourceUrl": "https://phys.org",
+          "date": "2026-11-21T03:00:01.000Z",
+          "excerpt": ""
         },
         {
-          "title": "Japan’s Defense Chief Says AI Guidelines Land Late November",
-          "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxOVTJiZWdOOVJIcXJCUTFJeTg0dWp0bmpjbnNPM0Z0TjFBeEpOeEFtZnNnM2VVaWE2WmNZQzhUZElfQWp6ZkZMemU1UDEzczJvTHlNekxTQ3dFWUlEQlF3ZmNmbWdzc0JER1c1cHNRSGg4Q3NpREVCOW9NZ2dXMWpEQURJQ2xHT1JVV2R4alplNm5hZ3BtaWJGaERlR3JJZw?oc=5",
-          "source": "JournalArta",
-          "sourceUrl": "https://journalarta.com",
-          "date": "2026-11-15T18:41:06.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/4c023cb13dc8e318.jpg",
-            "query": "server room",
-            "creator": "Alexis Lê-Quôc from New York, United States",
-            "creatorUrl": null,
-            "license": "CC BY-SA 2.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
-            "page": "https://commons.wikimedia.org/wiki/File:3PAR_SAN_in_the_server_room.jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8a/3PAR_SAN_in_the_server_room.jpg/960px-3PAR_SAN_in_the_server_room.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
+          "title": "Women's Hockey wins 4-1 at Syracuse",
+          "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxQbXdUdHZiNGprZUd1TG10RjBMRlN5dEJUaXVQVXlod0xjN2Z6b0JHTWhQOVJfSVlsWlJDcTU1TS1nXzFVeHp1U1dYQzJKMTlrUVExNGx2VF9LSjhJZkJDLTRIZGZKOGhyTzI1SVM2WTZTT0JmOW91SXBpdkdXcDEtU3RjRFF3bkU?oc=5",
+          "source": "Rochester Institute of Technology Athletics",
+          "sourceUrl": "https://ritathletics.com",
+          "date": "2026-11-21T01:42:43.000Z",
+          "excerpt": ""
         },
         {
-          "title": "Anthropic CEO sells investors on safety, 'no jerks' culture",
-          "url": "https://japantoday.com/category/tech/anthropic-ceo-sells-investors-on-safety-%27no-jerks%27-culture",
-          "source": "Japan Today",
-          "sourceUrl": "https://japantoday.com",
-          "date": "2026-11-14T21:30:01.000Z",
-          "excerpt": "Anthropic chief executive Dario Amodei pitched investors on safety and a strict hiring culture on Friday, days before the AI company's stock market debut. \"We're very paranoid\" about…",
-          "image": {
-            "src": "img/stories/448a8f138b05ddf1.jpg",
-            "query": "server room",
-            "creator": "Esquilo",
-            "creatorUrl": null,
-            "license": "CC BY-SA 3.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-            "page": "https://commons.wikimedia.org/wiki/File:PDC_server_room.jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/11/PDC_server_room.jpg/960px-PDC_server_room.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
+          "title": "Newport teacher awarded for innovative use of technology in the classroom",
+          "url": "https://news.google.com/rss/articles/CBMiggJBVV95cUxOTXhxVDk4QnR0YXRqTG9mZWxpNWktMWJsT1U2enNzNjB6VzM5RGVzek93SHFpTmZfei1TazllUkJWQTV6ZUZNbkZrWHE0SjRFYmN2Q0RxUFkzTmNoY25Gcy1XUlZSYWE3czhGTXFPcXNob0pTRTE2QU9Bb2ZjUFhqbElSVHAwdEt5VFAtOWFieTVnWDJrdXFkOWR4ZGZRQ0toNkcxM3VNTGp5b1VOUV9ZLXJ2cnctU2NWNGEtaTdKalptWU1vWE5ybXZpZGlUWWI1czB1cGVZYWpWLUZYSEsxT2RXWG1fMmdfUkY0NUFIWmEyM1VBSVhyUTFKUnlfR2hObkE?oc=5",
+          "source": "newscentermaine.com",
+          "sourceUrl": "https://www.newscentermaine.com",
+          "date": "2026-11-20T23:31:00.000Z",
+          "excerpt": ""
         },
         {
-          "title": "Japan mulls penalties for AI firms over safety risks",
-          "url": "https://japantoday.com/category/tech/japan-mulls-penalties-for-ai-firms-over-safety-risks",
-          "source": "Japan Today",
-          "sourceUrl": "https://japantoday.com",
-          "date": "2026-11-14T07:16:59.000Z",
-          "excerpt": "The Japanese government is considering requiring artificial intelligence-related businesses to take measures to ensure safety, with penalties for violations, a source familiar with the matter said, as it…",
-          "image": {
-            "src": "img/stories/dfe1af88bb665b95.jpg",
-            "query": "server room",
-            "creator": "The National Archives (UK)",
-            "creatorUrl": null,
-            "license": "CC BY 3.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
-            "page": "https://commons.wikimedia.org/wiki/File:A_view_of_the_server_room_at_The_National_Archives.jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e0/A_view_of_the_server_room_at_The_National_Archives.jpg/960px-A_view_of_the_server_room_at_The_National_Archives.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
+          "title": "Henderson Elementary School Recognized for Thoughtful, Responsible Use of Technology",
+          "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxPR05TUTVjazc3by1HTm9Vb3lOUjlmdUhKTWF0YVh4cUkwT0FhY1k0bHJtbEswWWxjOXh0dGtuemZDbEVGU3ZWQVRQT044am1kbDBmWXVqY2tOR2ZKcmNJalVaNWVWeHRXZnY1eVA5bjZKNDdDSFBiTWR5MnJwY3FEY21uNnpKeDFobnhfNG9OT1AyTVdpcGtWb3E2clZYLTFmZUxyR0FTY0xhN1lYWU5NMHF1T2pNTUU?oc=5",
+          "source": "Prince William Living",
+          "sourceUrl": "https://princewilliamliving.com",
+          "date": "2026-11-20T23:10:01.000Z",
+          "excerpt": ""
         },
         {
-          "title": "JAPAN MATERIAL: Q2 sales rose 20.4%, while operating profit grew 41.0% on semiconductor-fab demand",
-          "url": "https://news.google.com/rss/articles/CBMiiAJBVV95cUxORWtrSmpWQXZDd0haUm94dHpPRi1Ga25obGZERlc1eUhYaEVhYUtrYXNFOUlMdXdYYjQ5c2V3QzJYaGVhd0ZwRnJZMlZhVUlWTzNNNFZ0ZzhRZzdRRE1OVkZVeVdnQmdkdXdoMlBheTI4bkFCZnQ5akJBeXR1WURBa1IxZ2lpRHdBMFJjckpJV1lFNi1nQTJOZUV5dU4yQ3FOeGg5YzdYbVhsbnlzeVNpYlUwM0Vvckg5a1NHbXgzR2Y2b0dsbGNhbjVnMWV4dWtjbmgxR2xSWERqSGYzcDA5YXdaREhac294N2llM3h3MFpKejI4b3NQblQyWmxfUGhsTHc0SjJzSXM?oc=5",
-          "source": "TradingView",
-          "sourceUrl": "https://www.tradingview.com",
-          "date": "2026-11-14T05:55:00.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/c167773a4913ec3b.jpg",
-            "query": "semiconductor wafer",
-            "creator": "Ixnayonthetimmay",
-            "creatorUrl": null,
-            "license": "CC BY-SA 3.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-            "page": "https://commons.wikimedia.org/wiki/File:Wafer_prober_service_configuration.jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5b/Wafer_prober_service_configuration.jpg/960px-Wafer_prober_service_configuration.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
+          "title": "Children First: How technology is helping students find their voice",
+          "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxPUndneDV2R0pRMjkyMzUzU0I5SG1zZ1dYcUg0cnBraDhaZWpZZTJEbWRoa1MzRlhfRDZwWUlGclhKNHBVUHVpaFhNUEFQc0gxMVhTTXpzd3NVeXdrTFVQRnk0LVlaRF9maVlJVXBac01CeVFHTlE1WUR2Vk4xbXdXTzhCeWJlUVk2NVZaaWlQTjJPNlpVUlR3R9IBngFBVV95cUxQd3NUc0ZnMFZySnNQcGF2enVIUU9GdGx1ZGdfbjlQRTVobmRCZWszUGVLSTZCMTlSSERUU29rTnFwLTQ4clFEeHhYdU13eGZ4RUREMFVycmJZVmdkbXoxaDNLWTBJaDBEZEY0MWlwX2tUQUhfZkVESGZpM2NWanpsT3BzeWxtZm5nV3JpVG9wZ1lqemJaZFVNOWJfeDdzUQ?oc=5",
+          "source": "ABC30 Fresno",
+          "sourceUrl": "https://abc30.com",
+          "date": "2026-11-20T23:08:16.000Z",
+          "excerpt": ""
         },
         {
-          "title": "Microsoft outage means no incessant email chimes or message pings, but still we stayed online",
-          "url": "https://japantoday.com/category/tech/the-microsoft-outage-means-no-incessant-email-chimes-or-message-pings-but-still-we-stayed-online",
-          "source": "Japan Today",
-          "sourceUrl": "https://japantoday.com",
-          "date": "2026-11-14T03:01:53.000Z",
-          "excerpt": "It was the sound of e-silence. No Microsoft Outlook email chimes, no Teams message pings, no new notifications and, very possibly, no work getting done. Microsoft 365 teetered…",
-          "image": {
-            "src": "img/stories/6c33c9eddc65be18.jpg",
-            "query": "circuit board",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/5917157/image-background-public-domain-technology",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/58409294-1bf3-4eca-a328-9cc561b0ea7b/thumb/"
-          }
+          "title": "Tempe elementary school uses immersive technology to transform learning for gifted students",
+          "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxQTDJkdDJNNFIzX3U0c0E4dkdZb2hzRzlQZjdpQjQ0YXVJM3UxRlhWX0p5STNPaklwS19hZWFHVGwxeHc4YmNRa3ljTTlhTFVUOGN4ZUQ1UDB2MnB1LUVnNzExVlZDdFZSbi13VFlBay1xSkp5azBZNkk0X1BlcEw0N0FxMENaV0h3d0pYcDFScmpxYWtDMDhPVnMxM3BOTWlKY1Q5eXl0Tkx5dTBRM0d1SWU4VTlJeTNSLUNNYmZQekJ4R0hTeXRR?oc=5",
+          "source": "ABC15 Arizona",
+          "sourceUrl": "https://www.abc15.com",
+          "date": "2026-11-20T23:07:33.000Z",
+          "excerpt": ""
         },
         {
-          "title": "Advocacy groups sue AI giants to freeze new models, warning of 'catastrophic' risks",
-          "url": "https://japantoday.com/category/tech/advocacy-groups-sue-ai-giants-to-freeze-new-models-warning-of-%27catastrophic%27-risks",
-          "source": "Japan Today",
-          "sourceUrl": "https://japantoday.com",
-          "date": "2026-11-13T20:54:18.000Z",
-          "excerpt": "A coalition of online safety and consumer advocacy groups on Thursday sued five of the world’s leading artificial intelligence companies to halt further development, alleging the tech giants…",
-          "image": {
-            "src": "img/stories/d2415f9c15f47700.jpg",
-            "query": "server room",
-            "creator": "Intelligentguy89",
-            "creatorUrl": null,
-            "license": "CC BY-SA 3.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-            "page": "https://commons.wikimedia.org/wiki/File:RCoE_-_computer_-_Server_Room.jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://upload.wikimedia.org/wikipedia/commons/0/07/RCoE_-_computer_-_Server_Room.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
-          }
+          "title": "UltraTax CS vs. GoSystem Tax RS: Which software is best?",
+          "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOVXJDSzhfckozU282SU5xYWVqb09OYTM3NlZXN1lKR3JCMnlSVGZSMHFSaG5rdlQwRlllRXFBTHdPZm9nb3pDb3d5a1VOdk5TVlBUQnl4MDZVcEpLbU5TNjdsWGtHck4xVENOa09SY2k0eFR6dTRWcUpiU0xiY0loTExmcVppNThPTzJWVGhqWENMTjNpcV9sWkZZeXphSl9OYVc0OUtSWlNGcVZxN0xFdlE0VQ?oc=5",
+          "source": "Thomson Reuters tax",
+          "sourceUrl": "https://tax.thomsonreuters.com",
+          "date": "2026-11-20T22:56:15.000Z",
+          "excerpt": ""
         },
         {
-          "title": "Fallout from the Nvidia scandal may dampen the exuberance around the AI boom",
-          "url": "https://japantoday.com/category/tech/fallout-from-the-nvidia-scandal-may-dampen-the-exuberance-around-the-ai-boom",
-          "source": "Japan Today",
-          "sourceUrl": "https://japantoday.com",
-          "date": "2026-11-13T20:54:12.000Z",
-          "excerpt": "Nvidia CEO Jensen Huang's stunning resignation has sent ripples through the global technology industry, with rival chipmakers itching to take advantage of the uncertainty and others wondering if…",
-          "image": {
-            "src": "img/stories/077d67e54cbddc11.jpg",
-            "query": "semiconductor wafer",
-            "creator": "DrHughManning",
-            "creatorUrl": null,
-            "license": "CC BY-SA 4.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-            "page": "https://commons.wikimedia.org/wiki/File:Semiconductor_Wafer_of_Microelectronics.jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/41/Semiconductor_Wafer_of_Microelectronics.jpg/960px-Semiconductor_Wafer_of_Microelectronics.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
+          "title": "Area golfers using technology to hone skills over the colder months",
+          "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxNdUxFX2poMWo4Zk13NGYtU1I0cF8zQTI3NjdmM1ltaGNDREVJNElHVlF6MmpZQTZHemF5NExpVXg3dEIxNDlvb1RNUzgxNkd2cVBQYWZ3MlE3ZmpjdF92R05mREI5NjFmMmdObUJVcUNXMDBHZXMtOU1tdHNabFFmVjhENS1uMTFwSXR1QmVkVjN3cEZXMDF2NW83ZFk1V0JvaWVUb1B3?oc=5",
+          "source": "KVII",
+          "sourceUrl": "https://abc7amarillo.com",
+          "date": "2026-11-20T22:38:44.000Z",
+          "excerpt": ""
+        }
+      ]
+    },
+    {
+      "id": "security",
+      "key": "newsCatSecurity",
+      "items": [
+        {
+          "title": "Expert weighs in after Ochsner Health reports data breach exposing patient information",
+          "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxQbDlEeGZ5MXR1ZlpmdUVDUUVPMUlJNGUzM2lHVmRnbkpGb1ZyS3U4UnFUVWlkSGFJWDRnYmMxZHVsSDZLZUFWY3JFbTJjTFF6a25pRUlELXRkN01WaFF2V2g4M1ZLVHhHajQ2MTRzZG9CNXREQzhvNWphSHJJTmJOblFWSkd3dDBhMEI4eHhOeEpYazNqWWlHa2xnUQ?oc=5",
+          "source": "WDSU",
+          "sourceUrl": "https://www.wdsu.com",
+          "date": "2026-11-21T04:34:00.000Z",
+          "excerpt": ""
+        },
+        {
+          "title": "FBI investigating potential breach of its crime database",
+          "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQdy14X2NKM3JhWUlQazJaSFZDT3NlSFVYNExGNFA2Nk40VmkyTFNaUlJ5Mkk4LVdOU3BlcmxVNS1XaFBQbG1vNjl5WXpBMUhROXpmYnNMSU1CQ1RVYlljVVk3V2VOampEOWY5SnROLVEzdXFyTEl5Y0l0SXNDOGtiVlJoREdXMUVUcXdHNXNhcE5adTZSVTNENHJNUVNIMjB6aGpCWUdwci16Nm1ZSzlXS0Vn?oc=5",
+          "source": "NBC News",
+          "sourceUrl": "https://www.nbcnews.com",
+          "date": "2026-11-21T04:19:00.000Z",
+          "excerpt": ""
+        },
+        {
+          "title": "Hackers allegedly breach USDA system used to pay farmers: reports",
+          "url": "https://news.google.com/rss/articles/CBMivwJBVV95cUxNMWhjSWVVSzhtQ0E5RUZpRUNnS1JOU2dqVXNPVVhvU1ptMml3Q0JNZ05NaHZ5QlBBZFRabEhHQk00ejIteXQ2TC1nNlpMTnhYaEdBLXZ4MEpvV0F3M0o0TWFZRl9vUzhsWWNmUkdqU1ZrSmpyOEV1blJnZ2otYUIwU3JuOFVBcnRkZE1jLWQzdW5pTEZYNFlkY0VLVk5tUDkwYlBtRTZzRVp4ckpRcldBRjJlRVdOOVJVWHJqU2s0bDZBaHg0cEVpU01DWGQ5bkRGdGt2TUlOckJMQ2pkWDNQZVFkNTBlWThvMDVDQm5TQ0ZQWUFDQ3RIeE40d3RqSWlqWVRPSEhxb2MteEZCd0JHZkdzQ01kN2JPSjV5TWhsanplZFVRc180cVZ0V2NWdmFkSjRjdDVZMnh5a0Z3T0lZ?oc=5",
+          "source": "KATU",
+          "sourceUrl": "https://katu.com",
+          "date": "2026-11-21T03:42:50.000Z",
+          "excerpt": ""
+        },
+        {
+          "title": "The FBI was hacked again, this time the breach targeted its crime database",
+          "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxOZnJ0bzNoWGJlbG9sVk43STd6YTFMVEJCS2dHYVJVVnN2TFdWUVZlUWlRVUpBWlZOME5kOVlSV2g1a3U0ZUZJODYwVFJIVVNKRENfS21aYnRjaC1KQ2JnaUp0ZXRMb2JuV1QtU0JqcERjbXJsUlBqeFJQOG5qREozTDlmRFo?oc=5",
+          "source": "CNN",
+          "sourceUrl": "https://www.cnn.com",
+          "date": "2026-11-21T02:12:00.000Z",
+          "excerpt": ""
+        },
+        {
+          "title": "Standing Dooms Data Breach Suit Against Union Fund",
+          "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxObmRyVXVsSVBHdnotSndLNmF6SEl0VmVlWldPeU9PZ280aHlFbTY5UXd4ejY4ZHd3X2tZbThIcE02MTRGYWcwdTd0bHdpSjh0dGpaVGZtYzBnTHpzbW51eEpXN1c0R3VDcm54WEVSZ0hsVXhhbzg4WmNXb1lRMWstMU9tNC1QTUU0LUZoWUZZUElrV2o2RUtoZzhJSjZSQlF5QTMydXhJM1pwbXRzTUtOU9IBckFVX3lxTE1UTklkQjdpYWliM3BpV2ZlQk50YXphYW5FNnhjVTlDZVBuR3VyNk92X2c4dUkyc1BjaFU3NzZWVWd4OGZsc01xUXp6dTRLOGhWM2w2bHhvV09vX0UtRTBRQ1ZQd0NYeUtwUGN5ejNUX241UQ?oc=5",
+          "source": "Law360",
+          "sourceUrl": "https://www.law360.com",
+          "date": "2026-11-21T01:53:10.000Z",
+          "excerpt": ""
+        },
+        {
+          "title": "Aesto Health Data Breach Exposes Critical Cybersecurity Risks Across Health Ecosystems",
+          "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNY0xoYS1rOEV4eklESklacWZvYnZzRlZxM18xdG16ZDJGd2s1Z1JnZ0JkS2EwNm5Cb3lYNmpKcjBJb2NjeW5PSXZuTHNZYzNlZWlzM0ZPRXBSTS0xaXJDelhDbmNpS3ZKb0stR3lIanpxZXRRekhfM3ZUMkdEWUg5OUc1ajNKdHJHcnZfQ2FWSW9oNHgwV2Y4VlJRRHJGa2I5OXR3WnZNcHhJczdfY0N5aw?oc=5",
+          "source": "Bioengineer.org",
+          "sourceUrl": "https://bioengineer.org",
+          "date": "2026-11-21T01:41:41.000Z",
+          "excerpt": ""
+        },
+        {
+          "title": "Uber Says Personal Data Was Exposed in Third-Party Data Breach",
+          "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxORWhDcExobzZzQjdnNVdQVHdDeklvbFlaY3Y1d1EzLVFvX3FaVVlaQXk0ZmhNYXVUYUtGNTB6ZXRiVnAzcnpTUDdDckhCOTduZ2xKZm04cVhHOHRXNTFqTzZvMW5jUllIbU5uM2hSN0hscHh6QnowN1NGX1J0d2M2ZTZkT3ZiVjdiTV9lLWV5YVk0TGtxdHM0bEc1WEI?oc=5",
+          "source": "WSJ",
+          "sourceUrl": "https://www.wsj.com",
+          "date": "2026-11-21T01:40:08.000Z",
+          "excerpt": ""
+        },
+        {
+          "title": "Chase vendor hack could fuel wave of phishing scams, expert warns",
+          "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxOV1hXOThsY0lSbklSX0o5MW8wZXJBekgtNlQwaGRqWWx5ZW9uSG1lZGlrTG9zZ3h3VGVnXy1HWEpPVDV1SW1BRVVieXp2ZjhaaVNnSW5zZ2ZEZHNfeWFXVlNMbmxzOVhRZWR4UUJiT0VnS0lZb3RPX0R6eFlYUWVZYXpHMFRfWC1nX3lsVXNNONIBlAFBVV95cUxQU01MWVRHYk1PWVNxbzZTaWZrdmNwRkg4NllMVENmVzN1QVIxakZUZFZNT3FyX3BoRzJHQnJBSGQzdERSUmRCeEM0V3hpN2FzOEZZSk9VVTR3cnFyQnZPUGhQYTE1NG1ZMzVJd0JyUU04VHpzQ0NmYXU5QnhKVmdaY1dSYUJGY2tBVUJYMWsyLVVoaWM5?oc=5",
+          "source": "NewsNation",
+          "sourceUrl": "https://www.newsnationnow.com",
+          "date": "2026-11-21T01:13:40.000Z",
+          "excerpt": ""
+        },
+        {
+          "title": "Carnegie Endowment for International Peace reports data breach",
+          "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxNSjYzNUhXUl95NDRRSGdaVnZWakVlWm5BLURlMDZHaDhlbU52MnBXSS12YXBGanl1NGJnazAzWXBNYWgtVy05WVFscXkwZmtNYzR6TWNGZV9oaWhDR1NfbGRIbE1LV0c4alhmQlVGWV9kaDliN2d0TW84dUpkTHdpMklPaXhtRXhFd3VnelY5YVRyUTYwX0o4?oc=5",
+          "source": "SC Media",
+          "sourceUrl": "https://www.scworld.com",
+          "date": "2026-11-21T00:50:58.000Z",
+          "excerpt": ""
+        },
+        {
+          "title": "Bell Canada confirms data breach involving agentic threat actor",
+          "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxOb1dYMUdlTmY4Z2NjMHNmSVF5c0JmTzZvdWJGd1MyYXdkczVNRXE5emFHUWdHVEhQYzlNelIySnh6VkwyalZXd255SDJfLWxzX2RLZWtpNVZUM2dUNzBxZ3RJbWhBcHVVMHpwXzgxdklTZ09FN29ucG5ZZWNFWlFRUTdqVERJdnpGbWdQRkFYbEZ1RVRkUzdnWA?oc=5",
+          "source": "SC Media",
+          "sourceUrl": "https://www.scworld.com",
+          "date": "2026-11-21T00:46:14.000Z",
+          "excerpt": ""
         }
       ]
     },
@@ -213,1034 +437,90 @@
       "key": "newsCatBusiness",
       "items": [
         {
-          "title": "Japan's Economy Stalls in Q3 as Weak Yen, Middle East Conflict Fuel Inflation; BOJ December Rate Hike Expected",
-          "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE1OT3BHYXo0SzBmZkcwQlhHMjNfZG9yMWlRSG82U05iZTVQdHlvcFo2VWljaDhwbFViWWRwVVN4WGg3U0JZeUEtODVuVkt6dFE5RXdGQzNqZ2FNNTloZmdhbk14cUZySkViSHk0QzF4bGstS3d5a2c?oc=5",
-          "source": "finance.biggo.com",
-          "sourceUrl": "https://finance.biggo.com",
-          "date": "2026-11-16T03:55:00.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/e9f9498238154376.jpg",
-            "query": "japanese yen",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/8718530/photo-image-vintage-public-domain-money",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/a9f732e9-6e74-415a-8f62-c41b34e12266/thumb/"
-          }
+          "title": "EV Startup River Mobility’s FY26 Revenue Jumps 4.2X To ₹432 Cr",
+          "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxPMGJGanFhUjFoRFhMLXNJNkkyei1XTlNjbzZzdWJnX012LVFMeHMwVnB3MVNETDFrZ2VzWEt4elBYVlZ6cGt6c2xyTENpMjFhSWx1QWhXTDJNTnM5bUl4SXlzbUJaRElXXzA3d3NJa21HcVNlSjdhVHlfNTZYak81ZlkycFJ1ODIyVXNvOFA3RHlLNEFGWkdTYw?oc=5",
+          "source": "Inc42",
+          "sourceUrl": "https://inc42.com",
+          "date": "2026-11-21T03:00:53.000Z",
+          "excerpt": ""
         },
         {
-          "title": "Japan’s Economy Unexpectedly Contracts as Rising Energy Costs Weigh on Growth",
-          "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxPZVpMMWhJOUVBckxJU0RQTU1rTnI2d1BVS2VMdkgwRldGZHFFVmVHNGFDXzNIME5CbExkSlVDRm1NRUJKNHI2SmdBU1BDNlVSMTZQTW1DWFZyTlJUTWQzb05PVXdBN1FzbUJUcjVBV3Jna0JpVHRkbXJfREVPM2pqbnlJOF9CaGM5WUllYUgzOEdaT0pGd1dib0toaGZhUnRSdEhqTVlB?oc=5",
-          "source": "SSBCrack",
-          "sourceUrl": "https://news.ssbcrack.com",
-          "date": "2026-11-16T03:53:48.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/d5fd74ef02cbcd97.jpg",
-            "query": "power lines sunset",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/6052654/free-public-domain-cc0-photo",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/00753109-26fd-4457-a103-dc6e30da76d5/thumb/"
-          }
+          "title": "Nasdaq 100 sinks 5.6% in worst week since Covid, S&P 500 corrects to 3.7% as investors sell off AI, tech stocks",
+          "url": "https://news.google.com/rss/articles/CBMikwJBVV95cUxNcFpCRXpoMkpkb2RxN2tRZzI2S204MElNNWUxQnBQOG9iblZPRV9tQV9BbmhpRlJha2gtS0RHZ0JiUnBjLUlvMlk5QWszcXpVcjZCR2dyTTdBc2REY3JRZjNkWjlmVWptdW9uN2VIUlNZRTMwRmJQRGJ1TzZsY2E5RGZCdFhJaGNheWpKWHNHMWlCVm8tWVFqTkFqbTZnMHk4SGZLWUpManQ0MWFPUXNSMjZJdmhzdHYyNUJ1ZUlBTGlTdkVtaEdGb0lwQkpUTTUxVXpFdW1BbFVlYTZzdkZPTklWN1NJcEN2UlI2aTM1WlZOTXZ2UjFLZGhsUkV3d3praG81ZlhoNWc2NmxQVGtqeTYyONIBmAJBVV95cUxOZXBWRUlFckFhYnUwUGtPcG1sUkJHMThRbUUwV01pLW1zNmhTMFFlT1JCNjZLSzVrYVlzc2JDbTR5THJ1VFNoRzlucEQ1Y3VxTG9hN2VUeDU4QlFiUmFhdDdwZ2RrYWRJMUdNU04yYnIzME9RYzNUck9WQ012OWtsa2NIRC1WazBlVW5vQUVSdGtyVVQzVVllV0JLRlBSU2tOeS1ZWHZ6cW1xLV9iOXpBZ0hTRXBQbzhkYmktZnJqLUE5eFFKdkJEM2h6V3RycUhiMHEwV0E4VWoyZ3pVM1JiU2pMWDR6LWI0ejdQTGZJT1RSNEVYUHpPMHlMRVRHY2k5RFBiWVhLQWtmVHVJYXdDZ0o1cENqMVNn?oc=5",
+          "source": "Livemint",
+          "sourceUrl": "https://www.livemint.com",
+          "date": "2026-11-21T01:36:43.000Z",
+          "excerpt": ""
         },
         {
-          "title": "Japan’s Economy Unexpectedly Contracts as Energy Costs Weigh on Growth",
-          "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxPM0Q2Vlowd2RmZWlEYk8weVMyWW5fNWNpekUxM1pNZVVPX29LYTR2WUI1Z2dlSzh1MHpkREFiZG5yWFpFU21obmR1MldsU2c0NWRKREFIMFVvNlF5TVBiMjZqYW9wMExQUkJNalIxRFBHd0ZFdG10VzU5U0VhVGZRVUxlZ3VnQ3k0NjFZZ3RfZDFwWXlSVzU2Zw?oc=5",
-          "source": "Sri Lanka Guardian",
-          "sourceUrl": "https://slguardian.org",
-          "date": "2026-11-16T03:39:39.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/4e4760fd172c414c.jpg",
-            "query": "power lines sunset",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/6048674/free-public-domain-cc0-photo",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/50bae118-3ea3-440c-9a0b-a957c284e252/thumb/"
-          }
+          "title": "Joyify Collective Launches Free Website and Google Visibility Report for Home Service Businesses",
+          "url": "https://news.google.com/rss/articles/CBMi4gFBVV95cUxQWHZYNl9HbW14Uzg4QmpSRDQzb0VzZzhYcVB5bldYX3JRME15ZVFxdDhkamtBakJNVTRxRWJXRkVISzZIbzRlMTZfb2syMExYSGhqb2ZnUEhHenU0aXpuSWZKbm44N2xfZ0lkUkU0b2h0aFRtbE1LaVZJdV9menpMb0x6UzRENmMtbXRRMzBiNXRZMWE0ZjA3V3dnTkV4Rk5yRE9BUmdoWS1sT0QzbDF6N0xLYnh0SFAtY21DTWp1SFBrRVRtYUJtV2lESThWcXd4TkQ3Y3BTNWZWb1h2TUlSVk5n?oc=5",
+          "source": "USA Today",
+          "sourceUrl": "https://www.usatoday.com",
+          "date": "2026-11-21T00:09:02.000Z",
+          "excerpt": ""
         },
         {
-          "title": "CORRECTED: JAPAN Q3 GDP BUSINESS INVESTMENT +1.6% (CORRECTED FROM +2.1%) Q/Q VS. MEDIAN FORECAST +1.5%; +0.3 POINT (CORRECTED FROM +0.4 POINT) CONTRIB",
-          "url": "https://news.google.com/rss/articles/CBMinwJBVV95cUxPWUxhNTNSUFNPTDBvSHJIWEJ6VHJ1UjhlNnBaVW1EdE1YeHZaOE05XzljekFDR3pod2puOGI5OGRMZ1RvU1lLU0NER3hwVm04WjJUV2dlRm1wdDFhdTdSYms4SXV6NUtaT1MwRlJpd3RzQkZzRDlZRFZJai1EZVNGOFh4R0UxSGdxY000XzZxRDF3ZTRGSlBhOFBTR0oyNUVrZTVWT1RDTmNDMDJmVW53cjRGdzJLSDJINmFERjV2akhZekh5WHBrZFFiMkw2THc4NDA0U3phY21QMm9sSXhZc1lJVnhzRTQ2bUttd01MQ3REQmRtVmlLZ2YtcEdFdVNGYktjeHY2XzlVVnkyYmtfcWE0STdSZVdVTV9hMjhmdw?oc=5",
-          "source": "TradingView",
-          "sourceUrl": "https://www.tradingview.com",
-          "date": "2026-11-16T03:25:00.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/e5bff942f0a10901.jpg",
-            "query": "sky clouds",
-            "creator": "Todd Quackenbush",
-            "creatorUrl": "https://stocksnap.io/author/150",
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://stocksnap.io/photo/sky-clouds-28Q8BZ41ZU",
-            "provider": "stocksnap",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/52df6120-ae37-4d1a-82d4-aa37e43f6234/thumb/"
-          }
+          "title": "What 6 Southeast Investors Look for in a Startup",
+          "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxQNGhKUDItSkhDeTI2TXpUeWV1aGQ1NFMtZnNDNEJkZkhxckVnWm1fY2lhZGNGQXZndFI0UkE1R3plT20tenRkcDhhZFhwMGFMMmJySjVpckdyU2NuTVBIZFNsT28wTldvcU96a2NpVzNGUGMyOTZUdWlDc0lzdzJKQk1ubGxkYlNHZ3JXQVY4ZnJEc1YweXFSQm0tV3d3djNCaDhVR0ZuWTVuVGJ4Qnc?oc=5",
+          "source": "Hypepotamus",
+          "sourceUrl": "https://www.hypepotamus.com",
+          "date": "2026-11-20T16:28:33.000Z",
+          "excerpt": ""
         },
         {
-          "title": "Japan’s Economy Contracts Amid Inflation Squeeze",
-          "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxOVnNPaXBmZFY0ZFJKNkNqcTNfdXgwNVV2U19YRzZRQTFtbXVNX3ZJRmR0NnlOaTZsZFJ4aGFwOTRaUU9YUHl3NkJhUE9fOUY2LUtUdU5Xdld2OExGMFhfbXQ1M09FWmt0STVDd2NaN1Btb1Q4dlVra0pCQWRqd1lTbnVuSXZMMlNqek0wdW9ZVVJjemxpT1hz?oc=5",
-          "source": "WSJ",
-          "sourceUrl": "https://www.wsj.com",
-          "date": "2026-11-16T03:22:30.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/72932eef682b1e09.jpg",
-            "query": "tokyo office buildings",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/6075693/photo-image-public-domain-city-building",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/ef877dff-a0e9-4fc7-860f-ee49b6a3b1ed/thumb/"
-          }
-        },
-        {
-          "title": "Yen steady against euro and dollar after soft Japanese GDP data",
-          "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxONnVpUjVBaWNJX2Z1R0Z6a1llX3dPNVZ5ZVc2YlVaY1RUa2R2Wk5GY0pZVEJrWnZVaDN2aWk1bWRkb1c2Nm84LUh3UVhkUUduU0x5TnB6Z0Y4ZjhiWDdZRHFKeWVDb1dnc09ZR1RrM0pkaDFFaUZXRnN1S0RMbVhYbGU3b0xQWTMxdmZwNmlST1F5MmU5dWl4c3V2V2RUVFlaeEZBY2hfbmZmZw?oc=5",
-          "source": "Investify",
-          "sourceUrl": "https://www.investify.pk",
-          "date": "2026-11-16T03:12:07.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/1933598dc2e5b9dc.jpg",
-            "query": "japanese yen",
-            "creator": "JFS at Japanese Wikipedia",
-            "creatorUrl": null,
-            "license": "CC BY 3.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
-            "page": "https://commons.wikimedia.org/wiki/File:5_Yen_gold_coin_1873.jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/92/5_Yen_gold_coin_1873.jpg/960px-5_Yen_gold_coin_1873.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
-        },
-        {
-          "title": "Yen Hovers Near 160 As Japan’s Economy Shrinks",
-          "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9oTVNLWmpnTHVZanhVbVlzVnRyTXhLNUg1eThHTVVmeVlLUHJzRExva3ZGdDlaVlVEVGIxTFViVTdFNDVzZExuWjlMM3M0TWtCVVVKcUFkQ1VsT0tTdzdHbHdOUXFwM19vWDEtdlZnQk90WjhJNnhzbzZTRC00cjA?oc=5",
-          "source": "Finimize",
-          "sourceUrl": "https://finimize.com",
-          "date": "2026-11-16T03:05:24.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/406c18a4ba937591.jpg",
-            "query": "japanese yen",
-            "creator": "Eclipse2009",
-            "creatorUrl": null,
-            "license": "Public domain",
-            "licenseUrl": null,
-            "page": "https://commons.wikimedia.org/wiki/File:Series_D_5K_Yen_bank_of_japan_note_-_back.jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://upload.wikimedia.org/wikipedia/commons/0/01/Series_D_5K_Yen_bank_of_japan_note_-_back.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
-          }
-        },
-        {
-          "title": "Japan economy shrinks 0.1% in Q3, first fall in 4 quarters as inflation hits households",
-          "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQdU9sMjNub1pTd01xZUptNDZRNUc1S1R2ZFZVeENBTmNWUnh5SXB2eVRPOEVqZ1RXZzU2XzRtaEE0RDI4dHc0TTNJVWhOWmFrZGlJaEVRTnpROWI0SnBzcUF4OE1GaHJFYVozMklyUUY1TE5xNUo0cWdnaHRWY21vWDU1TUhUckVjWW83UTZ3N0ZGc1U0czA4QU5ZYUpMNkcxTGRYTjc2Y1ZfOVlZMEJzc3NyWEZPUGxz?oc=5",
-          "source": "investingLive",
-          "sourceUrl": "https://investinglive.com",
-          "date": "2026-11-16T02:46:48.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/c07e01cbe678cbde.jpg",
-            "query": "tokyo office buildings",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/6081416/above-700-windows",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/5283e23f-4b7c-44cc-86a5-fb42b27a7492/thumb/"
-          }
-        },
-        {
-          "title": "Japan's economy unexpectedly shrinks as inflation squeezes households",
-          "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxNZFd0bkFkRXNsLU1DaWo4a0JCZzlYQUR6U3FSTm5BNmp0ZVJhazdoaEZMUnRtT2pmVFBpWFAzbDBxVXBZX1BKUGJLUTlQLTNfbFpnMXN4WjJMRVFKUk1rZ0FYc245b2JJMWNhNVUzT2tIMlhxMnNnVDRxZkVCTTFLYlRjVUl4Z2ZxaGZubVhVYWJ5ZndhQlpSRHd6ZUJWdFRteUZqZWtZaw?oc=5",
-          "source": "CNA",
-          "sourceUrl": "https://www.channelnewsasia.com",
-          "date": "2026-11-16T02:30:09.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/fc7e3a4adb263f54.jpg",
-            "query": "tokyo office buildings",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/6075084/shinagawa-tokyo-12nd-mar",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/eb8ddb28-6f2d-4a8c-9039-2bf535e319bd/thumb/"
-          }
-        },
-        {
-          "title": "153-year-old construction firm Taisei sets up fund for AI and robotics",
-          "url": "https://www.japantimes.co.jp/business/2026/11/16/companies/taisei-fund-investment-ai-robotics/",
-          "source": "The Japan Times",
-          "sourceUrl": "https://japantimes.co.jp",
-          "date": "2026-11-16T02:25:00.000Z",
-          "excerpt": "Silicon Valley-based Pegasus Tech Ventures will be the fund's general partner, representatives of the two companies have said.",
-          "image": {
-            "src": "img/stories/cfa34e1f8c50dba1.png",
-            "query": "industrial robot arm",
-            "creator": "Auledas",
-            "creatorUrl": null,
-            "license": "CC BY-SA 4.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-            "page": "https://commons.wikimedia.org/wiki/File:UR16e_robot_arm.png",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/16/UR16e_robot_arm.png/960px-UR16e_robot_arm.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
-        }
-      ]
-    },
-    {
-      "id": "stocks",
-      "key": "newsCatStocks",
-      "items": [
-        {
-          "title": "Yen caught in tug-of-war between bulls and bears amid clashing market forces! Goldman Sachs bets on rebound, while Morgan Stanley predicts drop to 162.",
-          "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxNeWN3clJ6TG1pcjF1X1RPSkVrSy1xamxEbkFlUU01Q3FRTlpIY3dna2lCRmNDU2FSeHM1T2U4dnFULVNNUjB2UFJUUmpwWTNOMUI0T3l5aDhKTkJIdXdQVG5ZbUZ5d1c5NlNkaXJXOVNkRUdHRHM0a0NOa29WNndva05tRmlGNXpibFlhY2M3QkFYZDJncXc?oc=5",
-          "source": "富途牛牛",
-          "sourceUrl": "https://news.futunn.com",
-          "date": "2026-11-16T03:59:34.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/549909cee5334c8f.jpg",
-            "query": "japanese yen",
-            "creator": "Japanexperterna.se",
-            "creatorUrl": null,
-            "license": "CC BY-SA 3.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-            "page": "https://commons.wikimedia.org/wiki/File:Yen_bills2.jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1d/Yen_bills2.jpg/960px-Yen_bills2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
-        },
-        {
-          "title": "Tokyo stocks drop on weak tech shares as Nvidia's uncertain prospects weigh",
-          "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTE0tazgtcWIxT3BKWks1RHVzNmU5Ulp1M3dRNUNBS212VTZNV0lDY0VoNF9MeFNXaXd6MmtvY1RsbmlCZHZiNzB2WGZKbW51cG01S3R2M0VZRl90M0xGWmxQMFFQbFhlQlJMSEFhZ05LclUzNGc?oc=5",
-          "source": "毎日新聞",
-          "sourceUrl": "https://mainichi.jp",
-          "date": "2026-11-16T03:17:21.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/31bb9a1981c2d4c6.jpg",
-            "query": "stock market board",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/5916979/stock-market-free-public-domain-cc0-image",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/7c0fcff0-745a-4d42-b9ff-8f35555e0060/thumb/"
-          }
-        },
-        {
-          "title": "Asian shares fall before Nvidia earnings, Anthropic IPO test tech rally",
-          "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxPa3g3MVMxZ2lSN1ZpTmpaWkdYR25ZdDZ4M3BELXQ3ZC1PZDhtNTVjYmpQdHlJZUFtLWxiUkFLbXhUVHM0OHNScEUyTWFHUU5MMmZYb0EyVW51dXd1OWJFak1NbVFwazhlVzBIcHB3TENzRG1IZ2FvVFlpS0xubFBadXlPYw?oc=5",
-          "source": "Reuters",
-          "sourceUrl": "https://www.reuters.com",
-          "date": "2026-11-16T01:35:00.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/6b9db5ddb96b75dd.jpg",
-            "query": "stock market board",
-            "creator": "Katrina.Tuliao",
-            "creatorUrl": null,
-            "license": "CC BY 2.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
-            "page": "https://commons.wikimedia.org/wiki/File:Philippine-stock-market-board.jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://upload.wikimedia.org/wikipedia/commons/d/d7/Philippine-stock-market-board.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
-          }
-        },
-        {
-          "title": "Asian stocks slip, Nikkei down nearly 1% amid US inflation",
-          "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxPTzI1N3F2SEZrY1JDemV6R1haM3BGZVRJcEZxRXZBRG9Ldm00Mk5HS1h3Sl9VMEtlbENHcXVQSEpMazhLMERYbUVYb1JMM3Q1dVZBWG1BRDRSWUNIa3NCVUZweUVMYkU4UnZMWmhwbVg1NWI0ckNhZ0gyMGwtMDk0YTBzQ05tOEpsWjZNWG53SEk0aHRyTmxoaTVoLXNDR0I1T3RUdXN3aw?oc=5",
-          "source": "NewsBytes",
-          "sourceUrl": "https://www.newsbytesapp.com",
-          "date": "2026-11-16T01:34:15.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/f9dbe35b7b59f757.jpg",
-            "query": "stock market board",
-            "creator": "Swedish National Heritage Board from Sweden",
-            "creatorUrl": null,
-            "license": "Public domain",
-            "licenseUrl": null,
-            "page": "https://commons.wikimedia.org/wiki/File:Christmas_market_at_Stortorget_in_Stockholm,_Uppland,_Sweden_(8251399571).jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Christmas_market_at_Stortorget_in_Stockholm%2C_Uppland%2C_Sweden_%288251399571%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
-          }
-        },
-        {
-          "title": "Nikkei, Kospi slide: Asian markets fall as Nvidia results, US inflation concerns keep investors cautious",
-          "url": "https://news.google.com/rss/articles/CBMi5gFBVV95cUxNcXBYTTV3WEJCWWljSzZVSFNjS016djhwd2tOSkdJQ19FN1lXVG5WQk8zVnpzc3gzUkU2VDFHQzJhaTFhZVpwZkZQZ2h4UXZ1VlZDc0M4ZDlPbnZCR0EzUVU1Zjc3VC13MzhXdlZhanpieWRCNk9aTVRWaVExcEtXRzQ3V3B5cmxlMC1oZ0hPSExwTjZHWm1GUElLLUlKZmc1YWhyalM1SlMwSVdsRm1UeUNqT1lrOUprTXktRjFURm9vd3JGdTNCMTdTZEQ2czljZjVrQ21TLUNHOXk5eEtGS3VubmdJd9IB6wFBVV95cUxPV1d3ZEhxWXRTZ1BocE9rVlRXMGd6NnhndHFLcnFrN2pOWDVyMDI3NWRlQmlGQzV5SVFkbGxRZUt0VXZha1pkeUhGN0RDY016SmFuY2RuaDlXc0hGdVltMHprMkRqdFRpMmlmbDBPSUdWTVl0RXJDUGdUdHZJc1BBYjBSWklzZkJIZUc1Sjdkb2h2aGwtV003VWNYeGhCSUpybVdRVmNZbVZxbXZsaXNxMjFTaDU2NmlFZ3JwRkdDRXYyY081N0VqbFpOTDEyZE5WY25UZkduY3JUb2VNRFRESkdPYlJoZXhMR1pz?oc=5",
-          "source": "CNBC TV18",
-          "sourceUrl": "https://www.cnbctv18.com",
-          "date": "2026-11-16T01:19:31.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/319c2f6a59a4171b.jpg",
-            "query": "stock market board",
-            "creator": "Kondo Atsushi",
-            "creatorUrl": null,
-            "license": "CC BY-SA 2.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
-            "page": "https://commons.wikimedia.org/wiki/File:Shinko_Securities%27s_electronic_stock_board_nearby_Yaesu_side_of_Tokyo_Station_in_March_2009.jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1e/Shinko_Securities%27s_electronic_stock_board_nearby_Yaesu_side_of_Tokyo_Station_in_March_2009.jpg/960px-Shinko_Securities%27s_electronic_stock_board_nearby_Yaesu_side_of_Tokyo_Station_in_March_2009.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
-        },
-        {
-          "title": "Asia Market Today: Nikkei Slips, Oil Eases Before Jakarta Open",
-          "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxOc3lPWU9pS1JtQ2xOU05sa21GX1Q1TUlMZnEwVEc5VWpqWmlIeUtoc1lwaFQ3TGhpZ01mYms2TDBuRDNpbGNjdkc1N2F3MFAzNDkxc2tsN1JVdGk1MVlLN2ZBSENuQU5UWEVBWkphQmdaMTQ5eXFKZ1lLWlRRZ2FNYVFUdFJNX0dyUFdHbXJrQ29iWE1yWVZIOGd2eUQ?oc=5",
-          "source": "JournalArta",
-          "sourceUrl": "https://journalarta.com",
-          "date": "2026-11-16T01:07:34.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/5fb7faa311a277fd.jpg",
-            "query": "power lines sunset",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/3286547/free-photo-image-electric-energy-electricity-power-grid",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/4145a5ab-531d-4ae0-b329-40e7b8abee2d/thumb/"
-          }
-        },
-        {
-          "title": "Asian Markets Today: Nikkei Leads Losses As Japan Q3 GDP Contracts; Nvidia Earnings In Focus",
-          "url": "https://news.google.com/rss/articles/CBMimAJBVV95cUxQY1l6Nk1jVEh6bmxnVU1BV1lpQ0FaYzc0UkhaM0hTYUljakxFMWhkRjVwcUNRYjlyRGJ0d2FYeV85bGppVlVTOU96bDV6WHFiTUJMdEU0U0J3bjBQSVdJX1BpYnBwNEV5MjNIUFdRS1ZmcTFoZ2FUUmVhUXIwbk9SQVk5VGEtS19Ec3hicmRCR05jODNyODAweDFHRHE3REVFX01ONXdXMUJMbDZEeDIteXdFZm9XRnFjLW9MSlp4RFJlZjFDeEF1NmYwYVpYWnFfbW9hU2tTWlk3a2lwNW5jU2dDdDl0NHVkbk1wdi1JTEYyS2ItVWc4Mld0ZVNndld3SUtaM2FUa2VDcEE3bm5VQjM5MkFOUllv0gGgAkFVX3lxTFAzZ29hT1NFV0R5d3dod2xjaFNva0prVEZkUmtXVmtjOXZmV29aejk4bDZ5bFJoM2Exa3pYY2JXNGhWTEotMGhlYlZGYWZyLVc2emdPS1J3LXB1MEJrX1hsYmpzRHZWQk00Vm5RajJqVWR4aXIyei00Sk5naEF5QkFWc0tucExtM2ZvU21wOTRCd1N2Z04zMnZicDJmUVhxaGk5U3AzeGpMZmFCaG5BLTZuYl9OZTkyZGo2Nmk4R2V1TW9YaWk3VWRNRXl6dU9KUTczekhmX2wxQTdkODN2NE8wSzBvQllHdE4tZEhDcmhvRmowbFNvdW1LY2lQRW1zMXBjOWMyRHJJLTY1ZThwSHFfRFgwajY1VXZXdzJHQW5XVg?oc=5",
-          "source": "NDTV Profit",
-          "sourceUrl": "https://www.ndtvprofit.com",
-          "date": "2026-11-16T01:06:33.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/ca8eb5e72b4363c4.jpg",
-            "query": "stock market board",
-            "creator": "nappa",
-            "creatorUrl": null,
-            "license": "CC BY 2.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
-            "page": "https://commons.wikimedia.org/wiki/File:Electronic_stock_board_in_Yaesu,_Tokyo_2007.jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/91/Electronic_stock_board_in_Yaesu%2C_Tokyo_2007.jpg/960px-Electronic_stock_board_in_Yaesu%2C_Tokyo_2007.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
-        },
-        {
-          "title": "Nikkei Falls 0.1%, Dragged by Electronics, Metals Stocks",
-          "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxQRkVNWUloS1ZkSFAtbDA4WU5NcjlwZjM1Q1NTdVpDTGpRbjcyRV9qYi1TdlU4SFFrbnFURDFzZUdpejUtbFRkN0N3YlNLQWtnazFualVUaldnS19EeFFWcWh4LVowN2YyazE2aC1VeDBkSkdVU0VrUHpabEZyZlRzSHhqdlFnZzc5WnlRSDJTU052a1NySVJ0YmRucm9vQQ?oc=5",
-          "source": "WSJ",
-          "sourceUrl": "https://www.wsj.com",
-          "date": "2026-11-16T01:06:00.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/700e43bd13e6c623.jpg",
-            "query": "stock market board",
-            "creator": "Francisco Gonzalez",
-            "creatorUrl": null,
-            "license": "CC BY 2.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
-            "page": "https://commons.wikimedia.org/wiki/File:Tickers_(8085342806).jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4e/Tickers_%288085342806%29.jpg/960px-Tickers_%288085342806%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
-        },
-        {
-          "title": "Nikkei Falls 0.62%, Kospi Drops 0.2% as Samsung and SK Hynix Edge Up Against Trend; SoftBank Gains 1.5%",
-          "url": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxOV3RjN095RUFiQU85TmNKcEJtMlJrcEdXYXdURDdBSGxBdWI3TFFmRE9yUWp1MkpnZXZhdFRKbVBLT2hfWU44VjJ1aHNVd3RrcENwRVc1UzBTNkFMUGJJanJFUW5TVnBsUy1rWFM3RXVvOEttMndWT1REZ0xkdmtiM1o2U013MExFM3Q2UmM3aFpleVdrdHpvcjhGcmJZMXJOdGtfOUJYNXAyaHZJYXpTampxUGdlc3BpQlRrYjVkMFF5V0tReFFOb0I3Rk91QTlsNUJ5ZUZsWXY?oc=5",
-          "source": "TradingKey",
-          "sourceUrl": "https://www.tradingkey.com",
-          "date": "2026-11-16T00:32:28.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/bd2c7566ddf9dc81.jpg",
-            "query": "stock market board",
-            "creator": "J.L. McLean & Co.",
-            "creatorUrl": null,
-            "license": "No restrictions",
-            "licenseUrl": "https://www.flickr.com/commons/usage/",
-            "page": "https://commons.wikimedia.org/wiki/File:Wall_Street_guide_-_(1902)_(14597834638).jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/Wall_Street_guide_-_%281902%29_%2814597834638%29.jpg/960px-Wall_Street_guide_-_%281902%29_%2814597834638%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
-        },
-        {
-          "title": "Berkshire Hathaway (BRK.A) Turns To Yen Bonds As Japan Holdings Face Higher Rates",
-          "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxOMzFYYzBuRl8weG9COGdDOVpzcncyWDFHZFAwNWRuNWw3U2VwVkRKX2xqSjAwbEI0RGRSWXdYcmRsTGJCenBMWTFqTkVMWndPZDEwVFdLcGwxTDV5NjdxeTllWlF6bm51MEVoYU8wdUd0NE5SMlk5eTBBT1dITk5iTG1XenROVmctUm5tdVZkNlNtdW5aNjN6TTFKWmFaQQ?oc=5",
+          "title": "In HelloNation, Digital Marketing Expert Sean O'Kelly Outlines Realistic Timelines for Local Business SEO in West Virginia",
+          "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNSXlyWFB6eWJWTkpybGhyeUxmMTF1bWUyQllncTVNUTltX0xnVWl2b0VZRHJVZXFSanROa19kLUhRRHZ2U09rNS1OazhHM2FiMGRCVHc4dFNSR1FtanAyRXFSV1k0ZDRJOHpfYmttdDdnQ0ZsZkZNZHY1ckQ5Y3Jjd1Z0d1lxdmdnRkl5QWhNQTF6VlFHRkd1cDJLWGpiRGQwWXNaZXRETDN3QQ?oc=5",
           "source": "Yahoo Finance",
           "sourceUrl": "https://finance.yahoo.com",
-          "date": "2026-11-15T22:06:59.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/da08e2a5fed55672.jpg",
-            "query": "japanese yen",
-            "creator": "National Museum of American History",
-            "creatorUrl": null,
-            "license": "Public domain",
-            "licenseUrl": null,
-            "page": "https://commons.wikimedia.org/wiki/File:JAPAN-10-Constitutional_Monarchy-One_Yen_(1873).jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cc/JAPAN-10-Constitutional_Monarchy-One_Yen_%281873%29.jpg/960px-JAPAN-10-Constitutional_Monarchy-One_Yen_%281873%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
-        }
-      ]
-    },
-    {
-      "id": "weather",
-      "key": "newsCatWeather",
-      "items": [
-        {
-          "title": "Japan to launch network to improve weather disaster warnings in Asia",
-          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1jVjlCU1ZXNE9uNGZfX0R6aXNJUDNKaTc0ZXRNS0hhZGJlWmFLUjVIaDhOYmxHcFBZNEhiRGZTa0hKMWNSSW9FS0ItVk03MG1FRWtOMWZjWDJYZw?oc=5",
-          "source": "Japan Wire by Kyodo News",
-          "sourceUrl": "https://english.kyodonews.net",
-          "date": "2026-11-16T03:42:00.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/0e77fd93844316bc.jpg",
-            "query": "sky clouds",
-            "creator": "Clark Moreland",
-            "creatorUrl": "https://twitter.com/clark_moreland",
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://stocksnap.io/photo/sky-clouds-MORN3JHPKT",
-            "provider": "stocksnap",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/a343f7eb-7c85-4df5-b153-063a68438603/thumb/"
-          }
+          "date": "2026-11-20T14:58:00.000Z",
+          "excerpt": ""
         },
         {
-          "title": "M4.6 earthquake recorded in Afghanistan",
-          "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTFBfTnhqbzZZaDRGU3BIWEVMRG9rVW52ZUVpdVdRVi14MVk3WkFGVVBmcHN6dEYzMWt1RUczekZxN2ZhYmNBSXBGa3g3SHF2M1Z0eUtfMDMxbF9xdkF5YVMzcG16US0yNjZJSkhDanJTZHlLbzIxME1TTjRFYXA1dw?oc=5",
-          "source": "jiji press",
-          "sourceUrl": "https://jen.jiji.com",
-          "date": "2026-11-16T03:00:02.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/4d7d69b27b79fb84.jpg",
-            "query": "seismograph",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC BY-SA 3.0",
-            "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
-            "page": "https://commons.wikimedia.org/wiki/File:Kinemetrics_seismograph.jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0f/Kinemetrics_seismograph.jpg/960px-Kinemetrics_seismograph.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
+          "title": "Small Business Saturday 2026: Is Your Business Ready? Consumers Plan to Shop Small",
+          "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPTVUwYms0Y05Lc2VQek9WV1c0bzRNSjduTVZpY3lNemIzVHJPWUtrTUFiMjF2MVczOWl0aGpHMkhrb1c5RlAyaFRfZk53OUxxd3hPNVhJcGVYYUlUT2xCNVY2WEJEMHZtaVFheDl2WExRYjBsWXB6TUU3TEl0NFpreXNMeVBSREtqQTUzN3A2WExBQVY4bFZ4M0lNR3RvV2JJaXM2SnpSNEtmTVFneGU1bHh0TkRrQjRkVi1tVw?oc=5",
+          "source": "Small Business & Entrepreneurship Council",
+          "sourceUrl": "https://sbecouncil.org",
+          "date": "2026-11-20T14:31:06.000Z",
+          "excerpt": ""
         },
         {
-          "title": "Persimmon-peeling contest held in western Japan | NHK WORLD-JAPAN News",
-          "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE53Rnpua2plMEJNWUJEWEo3QnQ3N05XTWlvbFNXcUR1d2dmMEZ0ZXByWE93RUg0UHZUSklrcXFSUGFlWmxYRU50cFlNTnh1Rjk1WnBDYVZ6TVVGRmlmRDQ4VUhNMA?oc=5",
-          "source": "NHKニュース",
-          "sourceUrl": "https://www3.nhk.or.jp",
-          "date": "2026-11-16T02:32:37.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/f10b63e321677075.jpg",
-            "query": "japan sky clouds",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/6055039/free-public-domain-cc0-photo",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/cc5e4de1-66f9-4ce9-81ba-642b9f80ad94/thumb/"
-          }
+          "title": "Vertex Ventures SE Asia & India Co-Leads Everful’s Latest Funding Round",
+          "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxNMUpvMTROb2hlWHhIa19YUHQzekxvNGcyQjdjQnFvQV81SzBDWm1UVmF4VVBURWlZTmRPVjIycGU4MjVGUm52QmN2cXR3YXhPWUQ2dm5WMFR3WWE5M2x2cUg5dUI4d2FocmJXd2JFYWY4VE9TZzY2NEhSWTR0SUhPdkhfUzZaNnkwekFFdVEwVXQtbkhUdmZzNm9ZM0pYWmVMeW5KRkN3T1dlS0xiOTkw?oc=5",
+          "source": "BW Disrupt",
+          "sourceUrl": "https://www.bwdisrupt.com",
+          "date": "2026-11-20T10:33:20.000Z",
+          "excerpt": ""
         },
         {
-          "title": "Tokayev extends Independence Day greetings to Palestine’s Mahmoud Abbas",
-          "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTE9NU0RFalJiRDl5dFRTam8ybkw0T0M2cVdzc0l2TWFVTTQ4cE9CalMwb1d1UlNJN3FreEU2VjF2cllobHF5a1RsZ3RWa2puU0tya3JjV192T21fcEVRSUs4UjVvOXBVRTJmR3hZR2lpSTJYaFI2RnNQUVB5YVJqUQ?oc=5",
-          "source": "jiji press",
-          "sourceUrl": "https://jen.jiji.com",
-          "date": "2026-11-16T02:25:06.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/dc93e1e020b40843.jpg",
-            "query": "japan sky clouds",
-            "creator": "Tetsuya Yoshida",
-            "creatorUrl": "https://tetsuya.yoshida.name",
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://wordpress.org/photos/photo/4286358d4e/",
-            "provider": "wordpress",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/966cad94-03dc-4001-aab5-e0dbfa09051d/thumb/"
-          }
+          "title": "Indian tech founder Yash Patil, 23, sells AI startup for $4.5 billion",
+          "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxONW1NQllXMVVRM08zUHdNTkdRdEFVZG5GWk1aSmhHQU9Lanhpcnl3aXRReS0xVlp4elRfaXBxTVBZZFY0QWNLYzRWTnlzdXJpUkpEckVrcFhHWmgwQWFTdHlOQ0V3YzN4SzdmLWpMNkFhQlVleG5ZdmUyMmp3S1ZzQlVTOG41aWpjZGNkdFdLVHcyVkVjaU90TmVBT0FLeU1JZ0lsOGl6VWZtN05qRFVj?oc=5",
+          "source": "Billionaires.Africa",
+          "sourceUrl": "https://www.billionaires.africa",
+          "date": "2026-11-20T09:51:30.000Z",
+          "excerpt": ""
         },
         {
-          "title": "Disaster Preparedness / Prepare for Inland Flooding as Heavy Rains Can Strike Suddenly",
-          "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTE9SdUlNNzhTNkZxQWFLWFF6U2RDTUFMT3V6N2RPVkR5Y3RIeFJUNTBvRmFBcFAxUmpkYmhXOEY2bkpSdG8tQ1VTVHRwSDdCMDNTc0dvamhIWm1pQUxSMGR2bFFaaGQ1NXRwREhGZHpSUUFyQ2ZmZTY5cWlR?oc=5",
-          "source": "The Japan News",
-          "sourceUrl": "https://japannews.yomiuri.co.jp",
-          "date": "2026-11-16T01:40:00.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/4e5dd0ee85de3dfe.jpg",
-            "query": "rain umbrella street",
-            "creator": "Gabriel Santiago",
-            "creatorUrl": "https://stocksnap.io/author/246",
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://stocksnap.io/photo/red-umbrella-45JIYYO371",
-            "provider": "stocksnap",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/9eabc16a-4183-4948-b4a6-1d5feec47bc8/thumb/"
-          }
+          "title": "BUSINESS BRIEFS",
+          "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE9XTWpkQnJYbXB5WWNvWGc5bmlSemFtUGxQTjJsVjN3WHQ0eW9OS2RiTWh5elJkaWVMN29ZMkEzdTRYd2ZCc242WHN5NHdRZDAtT1QwWFNVZnR2M3htSEZmUTBidFA?oc=5",
+          "source": "Coeur d'Alene Press",
+          "sourceUrl": "https://cdapress.com",
+          "date": "2026-11-20T09:39:51.000Z",
+          "excerpt": ""
         },
         {
-          "title": "Kyodo News Digest: Nov. 16",
-          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBGRFZzRWpwWk1Zekd5Q2RfZzQ4dThzREQtbVBlWW4yU25hcnJnQ0hsZGJJekI3bHBjM2kxcF9nQW5WSHhXVkFXRzRXZ0NubFoybFpqdnRBV1N3QQ?oc=5",
-          "source": "Japan Wire by Kyodo News",
-          "sourceUrl": "https://english.kyodonews.net",
-          "date": "2026-11-16T01:34:06.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/3b43063db8075796.jpg",
-            "query": "japan sky clouds",
-            "creator": "Tetsuya Yoshida",
-            "creatorUrl": "https://tetsuya.yoshida.name",
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://wordpress.org/photos/photo/249634172a/",
-            "provider": "wordpress",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/9498a8e8-9a24-4e88-bf89-88d6e69076cd/thumb/"
-          }
-        },
-        {
-          "title": "Rain, snow, and strong winds expected in Kazakhstan on November 16",
-          "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTE1lT1A3Y3MydDMxV2pROUtoUGlaNU5WUVQ5aV8xVnFqclFoemduMks2X3ZiTU5seENYT05wekVjRURqMnRrMFlnb2djTFM5QnlBTXhFRjdzUVpQVkhfN1oyZEhxV2VNclRMUTR2TTZtSFpxSjFqU19ZODdpQlBzdw?oc=5",
-          "source": "JIJI PRESS",
-          "sourceUrl": "https://jen.jiji.com",
-          "date": "2026-11-16T01:26:06.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/28d0f94d0e843c19.jpg",
-            "query": "snow japan",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/6041834/photo-image-public-domain-nature-free",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/f83a4a27-e4f7-451b-a8d7-c1f551ceadb8/thumb/"
-          }
-        },
-        {
-          "title": "Japan’s economy contracts for first time in a year as bad weather weighs on spending",
-          "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxPT2FMQ01GcDdwbVRQdzdlZl9vRWdZUVZNYmpnQW4wSVVVS3picE9sQVV0cndsekJNR2EyalBkNWtyN09oSG5WVEhWMkRRLXVKdHpfUzV4YnBQSGFHUElfb1BjaXV0Vy1CSG9pMTVmZXZ2MEhrd183ZElmYTB2OUVWSkVROXgzMXppMHg4Tg?oc=5",
-          "source": "Mezha.net",
-          "sourceUrl": "https://mezha.net",
-          "date": "2026-11-16T01:05:34.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/75199666daee6523.jpg",
-            "query": "sky clouds",
-            "creator": "William Santos",
-            "creatorUrl": "https://stocksnap.io/author/25870",
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://stocksnap.io/photo/sky-clouds-CN7PZ9F1M6",
-            "provider": "stocksnap",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/7315596d-ced6-4579-abd8-7a02def096d4/thumb/"
-          }
-        },
-        {
-          "title": "Japan’s economy shrinks as bad weather weighs on consumption",
-          "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxPQk9uQnczX1NaV1MyMjdZVnhYR0lUckNqTGoyMUc0S2pGRmNiOXhUOXBheWd5NXlOa3d1UGNtaVpJVk9xc2hNUldZREp1Uml3bkxYLWlrTXkyelBMWjFGUUltQnF5a251cENycFdGSGtsdkdJYmQzb1R5TThLYTRvNzJaVnRtQnYybC1KZFQ2SkVMT0E?oc=5",
-          "source": "The Japan Times",
-          "sourceUrl": "https://www.japantimes.co.jp",
-          "date": "2026-11-16T00:58:00.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/785a6e56722907ce.jpg",
-            "query": "sky clouds",
-            "creator": "Free Nature Stock",
-            "creatorUrl": "https://freenaturestock.com",
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://stocksnap.io/photo/sky-clouds-ERWF7IMSRX",
-            "provider": "stocksnap",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/90862552-7539-4766-9e76-c59aee86042c/thumb/"
-          }
-        },
-        {
-          "title": "AI outperforming conventional models for typhoon track forecasts",
-          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5CVlJJenN1eFhGSmlSMi1LRzB5dHFEb0J1enY5SF9SWnlaMlhkSWg3YVJ0eWgtc2ozdzZIbWU1bHlCbDNDRTZITzRCNHZIRXg1R1I4NDVrNmtBZw?oc=5",
-          "source": "Japan Wire by Kyodo News",
-          "sourceUrl": "https://english.kyodonews.net",
-          "date": "2026-11-16T00:48:00.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/9ebecfefeb29af28.jpg",
-            "query": "server room",
-            "creator": "Carl Lender from Sunrise, USA",
-            "creatorUrl": null,
-            "license": "CC BY 2.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
-            "page": "https://commons.wikimedia.org/wiki/File:Server_Room_(22397102849).jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4d/Server_Room_%2822397102849%29.jpg/960px-Server_Room_%2822397102849%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
-        }
-      ]
-    },
-    {
-      "id": "sports",
-      "key": "newsCatSports",
-      "items": [
-        {
-          "title": "Mirra Andreeva beats Elina Svitolina to capture WTA Finals crown",
-          "url": "https://www.japantimes.co.jp/sports/2026/11/16/tennis/mirra-andreeva-wta-finals/",
-          "source": "The Japan Times",
-          "sourceUrl": "https://japantimes.co.jp",
-          "date": "2026-11-16T03:11:00.000Z",
-          "excerpt": "The 19-year-old French Open champion won all five of her matches at the event, which brings together the top eight players of the season.",
-          "image": {
-            "src": "img/stories/4ff564220545c534.jpg",
-            "query": "stadium lights",
-            "creator": "Matt Moloney",
-            "creatorUrl": "https://mjmolo.com",
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://stocksnap.io/photo/stadium-light-EADOIVXJIL",
-            "provider": "stocksnap",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/3f07c9a1-c03e-49d2-90b9-6d0ceb11cf07/thumb/"
-          }
-        },
-        {
-          "title": "Singapore's One Championship aims to revive combat sports in Japan",
-          "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxNejFyNzFCOFZWVTVSVVdnTkhuUzhRaHF5X3dkcGFzS0tjSnRMTEo2am9hZjZlRmpQS3k3MS1BZmRhNGNUeVJtYTZrOXhuaHBSVE93RXdNejd4UzQwNTBIZmpSYzhCdmFGTzVkN3ZabnBBbXJJMkdoajUybU5VUjFPMTlQRzBHYmVyOWZESU5PdkQ0S0Y4X0diVkMwQjYxdGpHWEJkdWc2UWg2ZnZj?oc=5",
-          "source": "Nikkei Asia",
-          "sourceUrl": "https://asia.nikkei.com",
-          "date": "2026-11-16T02:15:00.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/96e580626ad1ec1f.jpg",
-            "query": "stadium lights",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/6034123/big-stadium-light-free-public-domain-cc0-photo",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/83dee328-ec08-4327-b790-58c375e3235e/thumb/"
-          }
-        },
-        {
-          "title": "South Korea's Baseball Team Extends 11-Year Losing Streak to Japan",
-          "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxPckxrV1dsaE5ieXdtWm1kQUlUWXdDR2loeDN6bDM1OGtmM3lxeHNJdzMxLWRpRGlwWFJzSGptRHFDOVZGNnR0TlY4VHA0NzZSblFPZWhseElxRWhwMHV4a0FaUnhVc2Y3VUo1NXBfZGxaeVVpRDBrN2dWUFh2Q1VBclJid3JXdw?oc=5",
-          "source": "조선일보",
-          "sourceUrl": "https://www.chosun.com",
-          "date": "2026-11-16T02:00:15.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/59ae2e0b7a8206d5.jpg",
-            "query": "baseball stadium",
-            "creator": "Rob Bye",
-            "creatorUrl": "https://stocksnap.io/author/4298",
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://stocksnap.io/photo/baseball-stadium-P5L5LP8PN4",
-            "provider": "stocksnap",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/0066e917-734d-4fcb-a4e0-833af1183849/thumb/"
-          }
-        },
-        {
-          "title": "The Best of Japan 2026 on Sky Sports F1 HD: full details and when it's on",
-          "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxQSi00bllHTEQxUnFnNm0wU3d4TThKX0QtUFRaNTdhSFlDRWZlU0V0SDVVSGdfLXBveGphQlFILXR1cHZDdnBYZl9NcC1HbDNEWFQwNlFzYmdiU3RrbDhUWm91VnlxOTVEQmlvSk56NEhkTXR6ZmpUSzhLaFZsVmx6TFVIMi1seHZqWnIybmE3aVUwM193ZzdEeHV3?oc=5",
-          "source": "TVGuide.co.uk",
-          "sourceUrl": "https://www.tvguide.co.uk",
-          "date": "2026-11-16T01:39:38.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/99000237a24b5f4d.jpg",
-            "query": "stadium lights",
-            "creator": "Ezra Jeffrey",
-            "creatorUrl": "https://stocksnap.io/author/23187",
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://stocksnap.io/photo/people-crowd-HDS6BBHIRZ",
-            "provider": "stocksnap",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/e3f5c2ab-9091-4d3e-81ec-cc268c84f53b/thumb/"
-          }
-        },
-        {
-          "title": "The Best of Japan 2026 on Sky Sports F1: full details and when it's on",
-          "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxPWVR5amdpMnUwY1ZsT2VxeWNmZ2NRRllvMVRSVW1pZUk5RzVjSUk2Z3FwcWhMMC01VERnMGM1NU9DWENRZVgwVm9vV0V4ajVZMkRWa2pNbldMWFZMcnhTWFAwX2hlbWFkaEkzcnNYVTg0bjFZalFRaEZwWmY1V3MyU0tEY0FiRTBfVHhwYzBFYWV6UE1DZXpCNExR?oc=5",
-          "source": "TVGuide.co.uk",
-          "sourceUrl": "https://www.tvguide.co.uk",
-          "date": "2026-11-16T01:15:45.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/dd12d7a81b20d734.jpg",
-            "query": "stadium lights",
-            "creator": "Aaron Burden",
-            "creatorUrl": "https://instagram.com/aaronburden",
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://stocksnap.io/photo/school-university-BB76EYQM84",
-            "provider": "stocksnap",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/2741ed1b-2111-4603-ad15-f48706087be2/thumb/"
-          }
-        },
-        {
-          "title": "Ami Nakai captures Skate America title for second win of Grand Prix season",
-          "url": "https://www.japantimes.co.jp/sports/2026/11/16/more-sports/ami-nakai-skate-america/",
-          "source": "The Japan Times",
-          "sourceUrl": "https://japantimes.co.jp",
-          "date": "2026-11-16T00:33:00.000Z",
-          "excerpt": "Olympic bronze medalist Nakai produced a flawless display in the free skate to win the title.",
-          "image": {
-            "src": "img/stories/621949e172976e2d.jpg",
-            "query": "ice rink",
-            "creator": "Christopher Gimmer",
-            "creatorUrl": "https://twitter.com/cgimmer",
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://stocksnap.io/photo/skating-rink-X4GHCFR3IP",
-            "provider": "stocksnap",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/7a3f2a5f-438e-4e48-8318-b6e3806c8c9e/thumb/"
-          }
-        },
-        {
-          "title": "Preview: Japan vs Paraguay - prediction, team news, lineups",
-          "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxPTVI0REZLRnA5dFNSeWplUGtyaFNIZ3dJc2I4NDUxSVl0endNSlQyMlJlSHVmTGc3a3VkTmJVOW9xRm02c1pWX0pPU29INmJCeklwbW93OVVJUW41Q0FpUTdYQTVYY1pJQl9iYkZhbVJ3NlRQelA3RjdyZWFnWmpyb0pBWldlQnV1cU5lS0FHQlVHQmpfdl9ncnJkN3lFMFJ0Wk5GMGpfVjNVd2JnTXlZ?oc=5",
-          "source": "Sports Mole",
-          "sourceUrl": "https://www.sportsmole.co.uk",
-          "date": "2026-11-16T00:29:00.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/6bcc20b7b255e9c6.jpg",
-            "query": "stadium lights",
-            "creator": "Mitch Rosen",
-            "creatorUrl": "https://stocksnap.io/author/34874",
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://stocksnap.io/photo/green-field-POIHJNTKDB",
-            "provider": "stocksnap",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/4dd6f8c5-2486-408a-8747-7ae4fb4167ad/thumb/"
-          }
-        },
-        {
-          "title": "White Sox Reportedly Interested In Two Superstars From Japan",
-          "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxQdGY1emptWTZGcTJYWGdHRGJaSXhPczNydHVOOGppUVNsNmwzcGhPZWFaUmxaQVBPYUFBcGlQY2QzeU1EUjdYNEllalE2LS1rb19faWJlSHRVNktTbnhIbVIyNENPR0xPbEgyOUo0cG5ua003bUY3QmtIQThNZVljcHhGeG9adVVCNjdWOGZyRDZZXzA3azFURTZEWUs4WlAwN2hjeHhKWF9RR2NpMGc?oc=5",
-          "source": "Sports Mockery",
-          "sourceUrl": "https://www.sportsmockery.com",
-          "date": "2026-11-15T23:46:58.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/bc8db3f41bddffc8.jpg",
-            "query": "stadium lights",
-            "creator": "Daniel Ebersole",
-            "creatorUrl": "https://stocksnap.io/author/84",
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://stocksnap.io/photo/music-concert-D14AE6DFF7",
-            "provider": "stocksnap",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/f44ed231-07f8-42db-9727-8fde145128f5/thumb/"
-          }
-        },
-        {
-          "title": "White Sox Interested In Japanese Pitcher Hiromi Itoh: Romero",
-          "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxOTHQyNUVqNVkyVkRvbTM4VHRjVWQ0Vnc2OEpxMHp0MnVqYVAwLUxjZXZZb3hJYlpwenpLQndQVTZzdEtpR2FnOXBTYkRNN3J2MHJ4UHRjaDdla1Z0eTlKOWJBbW5xSFZaQW9meVZpZEpRaGw5VEllZmxJcWozUGJQRUh1SWdheF9kTXZsUkc2WQ?oc=5",
-          "source": "Yahoo Sports",
-          "sourceUrl": "https://sports.yahoo.com",
-          "date": "2026-11-15T23:39:49.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/65a2f9c297b0f0f9.jpg",
-            "query": "stadium lights",
-            "creator": "Marvin Ronsdorf",
-            "creatorUrl": "https://stocksnap.io/author/34737",
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://stocksnap.io/photo/stadium-gymnasium-EI2ICJ8X5C",
-            "provider": "stocksnap",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/80112a56-1f65-4141-96b0-e4bb62c14354/thumb/"
-          }
-        },
-        {
-          "title": "Seiko's new Japan-made limited-edition chronograph hides a baseball glove in its dial",
-          "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxOem9vdU9mdkl6bXJISVZJVkdKNFA5NEpnTU1vXzBKTXVCMm9TLW5iM0RmSEFjaFlyWVZvTmktRmwwLUlpMzF3cXBhYmlXS0FTdE1iQmlrQ2lNZGF6and3VFpaNXB5TGlpSDFua291UlJaZGhqckhWWi1lVEZlTkswYWtMSTlvRVVqNlpmaDRTbmlVQkwyc1ZKOGczSEhMOHNOWVN6aTNDdjVCcUNZTzFwWlI0bjB1OUMxZWVrWGljUERhejlJYWhEWnVn?oc=5",
-          "source": "Notebookcheck",
-          "sourceUrl": "https://www.notebookcheck.net",
-          "date": "2026-11-15T23:24:00.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/46b1f24ae746c502.jpg",
-            "query": "baseball stadium",
-            "creator": "Tim Gouw",
-            "creatorUrl": "https://punttim.carrd.co",
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://stocksnap.io/photo/baseball-stadium-HZ4BHM2FSC",
-            "provider": "stocksnap",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/c310928b-ca7c-4eda-916a-d9ea5fa1b5f3/thumb/"
-          }
-        }
-      ]
-    },
-    {
-      "id": "health",
-      "key": "newsCatHealth",
-      "items": [
-        {
-          "title": "Deficits Reported at Nearly 40 Pct of Care Facilities in Japan",
-          "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE4tSlJzVXFEZDFRcUkxRWtWMENrLTVYQUY2WUxnU0xMalJyQ1lpM0NtMnpLY25sLUlpSTkzRWpUdEwzbEVDOVlMd3A4QkZTWFVJMUxJZnNJTkx0MVNnTzZv?oc=5",
-          "source": "jiji press",
-          "sourceUrl": "https://jen.jiji.com",
-          "date": "2026-11-16T03:09:54.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/728b8e54120ba5b2.jpg",
-            "query": "car assembly line",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/13958687/photo-image-person-public-domain-car",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/b53fcbbc-0024-46e2-b89f-c63ed55c89c1/thumb/"
-          }
-        },
-        {
-          "title": "TXP Medical buys Sakigake Link's AI-native electronic records business",
-          "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxPT2dLYWlHMkRjN2VhUERPU1lnTnlTOEk5dlBmX282Q3NQTGJiX0MxVGNUbnhGd3FXS1hudlJDN0JfMldIZDY1WnFDVWtCZXFLdVp5OTQybUhGOTRWRXNsOGE2U2NINmZkSVVSRTdFblNNSW9vMDlGOFZsTjl3VzlzRWY2Y3NhVWplX082M19GZTZGNWpXYlFCcENIRlV2Z1hrTFlsUUNmcw?oc=5",
-          "source": "Dealroom",
-          "sourceUrl": "https://app.dealroom.co",
-          "date": "2026-11-16T02:23:18.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/bdf7a2509a4f7196.jpg",
-            "query": "server room",
-            "creator": "Mohammad Raiyan Tamzid",
-            "creatorUrl": null,
-            "license": "CC BY-SA 4.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-            "page": "https://commons.wikimedia.org/wiki/File:Rajshahi_College_server_room.jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/74/Rajshahi_College_server_room.jpg/960px-Rajshahi_College_server_room.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
-        },
-        {
-          "title": "Japan's 1982 'shinrin-yoku' technique explained for mental and physical health benefits. What happens to y",
-          "url": "https://news.google.com/rss/articles/CBMiwgJBVV95cUxNUlhTa3VYMWh4bTk0ZVFwLUcxSDU5VFNPYi1rX2p2ZFMxOUdIWlpLUHYwV0RURW1SLWJhYnZkSkdiM0pFZW9ZcnRqZXJUTWxmTk5RYUhDbkhad0EtVF9JbnZNc2dDQ19pb0lWUElDcUc1S25WOG05S3BVVmI3Um5xUElmVnNBNGRjU0tmSGRuLWcyczV1N3lFeWpSNFdQWVc0WVd5Wm5wM0RJcFZqUFVUSkFoWFlvMzR3VTlTVmFjUXp2WFlKUEVEWDR1cVdRdFVBME00cVFYY01BaFp2WklhSG5uZlRHUGQ0TE45RUlBSU5LUk9oUHhvemxmelh0cm1Qa0FSS2s2THNQbEQwTmhKWHlZTm5uaDNjVnFpVVVTOE9rZXl4N1pJV0huRDNONGRPbF81azNqRFY1MEpCQkNVb0Z30gHHAkFVX3lxTE1fZnNibmthZE15Q0ZoQmlneFZkeXNzNGRiYVAtcWtwZVFIelAxLXdQM0Z4R3MxMlJVdlBCQllCSUt0a2tLaTJlTVdhMVFBVk1oajNHMEFoWk5lUGpad1lUUzBMMmVLakctM3Mydjg5VlptRk5mdV9aWFptaWVZZUlBem03YzF5X1d5TmJTUmVvZEF0MEU2c2tteGVFQk4zUDB6T0MwTDBxSERERVRLeGJ1V1VuOE5PMkFoOFdCUF9xQTZkTFg4M201ZUFITzJDN0UtRWQzUHFwVThiOGpNXzVPRzN1eG5ZdHdCYUx1ZFFKLUFXRnl5VWxael9CdTNCMFRlTEk4akdmM2tIbmlrei1BWlFPakhaUTJacDRQTjY2UG8yVWd5cVhsTGpEc1hieC1tUEVDQ2VtVERRRkY0U0FDQWF4V05hRQ?oc=5",
-          "source": "The Economic Times",
-          "sourceUrl": "https://m.economictimes.com",
-          "date": "2026-11-15T15:30:22.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/4a0e8d2bd841f6e9.jpg",
-            "query": "stethoscope",
-            "creator": "Negative Space",
-            "creatorUrl": "https://stocksnap.io/author/4440",
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://stocksnap.io/photo/stethoscope-medical-RAW1RLRTM7",
-            "provider": "stocksnap",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/029d8b5c-0500-49f2-86ba-0052ceddbe5a/thumb/"
-          }
-        },
-        {
-          "title": "Japan Defense Ministry to Release AI Guidelines at End-Nov.",
-          "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE1uUTE1T2JtajVuX1pJUmtXcmlScmllbGhWSTQ2QkxBSlU0eGVNVzlaWjFnRDVkZDZ2Mi15RnZMN3ZJaUV4a2dIRTIxcWxHSWkwanNnTw?oc=5",
-          "source": "Nippon.com",
-          "sourceUrl": "https://www.nippon.com",
-          "date": "2026-11-15T12:26:33.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/14da59db68148eaf.jpg",
-            "query": "server room",
-            "creator": "Mike Beltzner",
-            "creatorUrl": null,
-            "license": "CC BY-SA 2.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
-            "page": "https://commons.wikimedia.org/wiki/File:312_Adelaide_Street_-_6th_floor_server_room_(5278379952).jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ad/312_Adelaide_Street_-_6th_floor_server_room_%285278379952%29.jpg/960px-312_Adelaide_Street_-_6th_floor_server_room_%285278379952%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
-        },
-        {
-          "title": "BREAKING NEWS: 68.6% worried about Japan's fiscal health due to consumption tax cut",
-          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5aYWNNT1FidnV2MGZYczdrS2ZCREwwdFRONUJvT1VadDFtdWluNDd5QWJHV29jeWpuOHUxUUJ5UnlwajUydnVCV25oTm1JaDB4MHN2NkJHN09mQQ?oc=5",
-          "source": "Japan Wire by Kyodo News",
-          "sourceUrl": "https://english.kyodonews.net",
-          "date": "2026-11-15T07:47:00.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/0a985e323b1ea398.jpg",
-            "query": "stethoscope",
-            "creator": "Negative Space",
-            "creatorUrl": "https://stocksnap.io/author/4440",
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://stocksnap.io/photo/stethoscope-medical-9M1HWW2JFV",
-            "provider": "stocksnap",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/e7d58d39-6f6e-454a-a195-e82dfa5a6f79/thumb/"
-          }
-        },
-        {
-          "title": "U.S. loses measles elimination status as cases break records",
-          "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxNN1FKYjdIUkI2cEtyOHpqN1l0X3dobTNrdXg5TUF2UEtNWWdQQzg5T3BoMUVuTEx1Z2pGNzdxUEp6Z1VfMTl4aHdsZ1haZTB2aExoVHlRTU9PY1VYY3BjX2ZJTkRMMkUxMkItNTNCaDdkeWM3Wm13OEdRdjROTDc5RzdEcDB0ZGM0eHRlQ0J6MGN1OVR4elNrQjhyeWFoc0ZBTGUyOA?oc=5",
-          "source": "The Japan Times",
-          "sourceUrl": "https://www.japantimes.co.jp",
-          "date": "2026-11-14T23:54:00.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/dde3c360adcf46a4.jpg",
-            "query": "stethoscope",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/5910406/image-public-domain-greens-food",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/770d0979-587a-4906-a896-6fd76da27972/thumb/"
-          }
-        },
-        {
-          "title": "Japan contributes US$ 1.97 million to strengthen the health response in the Gaza Strip",
-          "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxOOGdWMGVjUVhiYmZhdTdNQXhWb05TSUY1bVQySzlrWGZKQ3ZYU0tRTm1JcVRFZWZhM0pKRU14bHEwZm1NZ1hnMFRyUjc1NHBva1ZJak9PUVJEWkE1d28ybGgxSG5abGwzUWE2OHA1Z25raGJ4cUQwSHpxd3BGNFNPS2tIdXBqWmQ5eG1JQUtNUjBHbW1vaGFDOW9XNEdhNWZVaGx4d2xFal9tM253SEpPd3czTkhvUUdnZDM4bFJ0bjZ2Zw?oc=5",
-          "source": "World Health Organization (WHO)",
-          "sourceUrl": "https://www.emro.who.int",
-          "date": "2026-11-14T21:45:37.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/058fedf11886c078.jpg",
-            "query": "stethoscope",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/5902526/photo-image-public-domain-doctor-free",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/a3d2ef6f-47ab-4369-9f9a-49b084528e00/thumb/"
-          }
-        },
-        {
-          "title": "Japan to Subsidize Domestic Production of Immunoglobulin",
-          "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxNYkNObnhIcnNXU1RMUWlaRWNOcTBjVVc4RTJuZS1wZDROUGhhbzlFM1VQcHhTeS1GQ2NGdmR0QV9yZGxjVmFUZzdGWm5wbTNSeWJXNjZVaVBMVi04QkVfeWJudGtyUE5ydlo3LU03Umt4aDl5dnZuSEJNdS1FRFZrRm16aw?oc=5",
-          "source": "The Japan News",
-          "sourceUrl": "https://japannews.yomiuri.co.jp",
-          "date": "2026-11-14T05:49:00.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/0c316190e1c8e05f.jpg",
-            "query": "stethoscope",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/5967077/iphone-and-blue-stethoscope",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/46695089-5762-4b6d-b5fc-9618bb0241d7/thumb/"
-          }
-        },
-        {
-          "title": "Japan Publishes Generic Drug Ratings for First Time, Withholds 83 Lowest-Rated Makers",
-          "url": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxOR3Q4RVBlU2ZmUk1Bc0xXSnNMSFVYYVpTOUFrdEFBb0FYcjhZb3pKNGhmT284VTNwV1JNaEJqMWdiaUNDbEJ3OTZLRmVCV0ZLWkp5UWtjajEtd3hMNVhSWnpvNTZfbGczMlBvTExTOEh1QUUtYk9rOFdlT1hKblpGZnUxWmxfZll3VFJBZGdqOXR1Yl9MazgzTTBENmx2UmZmWC03UlRwVGlVUndFTFB0LWkwV1dTUnNPcHlmSnF6bHR1UF8zLW5KYVZ0ZUtSVE5n?oc=5",
-          "source": "Tech Times",
-          "sourceUrl": "https://www.techtimes.com",
-          "date": "2026-11-13T17:49:35.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/1312357375a34297.jpg",
-            "query": "medicine pills",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/5969430/medicine-pills",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/7f82abed-c294-40f3-91be-2f574f750956/thumb/"
-          }
-        },
-        {
-          "title": "Healthcare Built on Trust: Opening Japan’s Doors to the World",
-          "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxNVGZTWEktZUJDb2Y1NmNtUk8tVDFfUFJzZmlidnJiYlE0NzI3LTlNaG9lUERmUFk5amRLM2g3T1l5MFpWZi14U1hVLUZmUTJBdkt1ckR4UmxuRU9JWGVwNGx3djFuWDNuck5vS1BCb3FvaFA4aTVLWXRIaTlGZ25kWVVlOEM5TmlNVHJfMGxvMHI1Ql9kNzJmWlFuUEk4T0xYM1JzT0ZvWEsyVm8?oc=5",
-          "source": "Medical Tourism Magazine",
-          "sourceUrl": "https://www.magazine.medicaltourism.com",
-          "date": "2026-11-13T14:14:58.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/33e6a56e812dc905.jpg",
-            "query": "car assembly line",
-            "creator": "U.S. Agency for International Development",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/4051109/image-public-domain-person-woman",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/14667bb6-fb41-4a56-9947-84706205b7d6/thumb/"
-          }
+          "title": "Seed Funding Explained: A Guide for Tech Startups",
+          "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxNTzhqamw0VHJickVuNENRSEVvTGY4VEpSOXQ3UW5CSnZSb09tVGJYekFNMnpNN1hhSU1SVTk2TmVFdFlpSV9yR2l0bjR0d1RvQzRYSktaRVdWVWlZc3BfOE5KSmlrQVpVVDhBcmgzNkNBYmduM3dOOGR4NEFPNzF5Q3U1ckRtdEZrbVJMQ2xYQy1sTlkzeDVSLXVDMGlyTUhXTG9UWQ?oc=5",
+          "source": "Oracle NetSuite",
+          "sourceUrl": "https://www.netsuite.com",
+          "date": "2026-11-20T08:05:11.000Z",
+          "excerpt": ""
         }
       ]
     }
   ],
   "lastRun": {
-    "at": "2026-11-16T04:01:41.644Z",
+    "at": "2026-11-21T05:25:26.903Z",
     "ok": true,
     "newStories": 60,
     "message": "Found 60 new stories."

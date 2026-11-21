@@ -1,4 +1,4 @@
-// Tenshi Scraper (news bot): gathers recent news about Japan from public RSS feeds, ten stories per category, and
+// Tenshi Scraper (news bot): gathers recent web, gaming, AI and technology news from public RSS feeds, ten stories per category, and
 // writes data/news.json. tools/build-pages.mjs turns that file into news.html.
 //
 // Every story keeps its publisher's name and link and the original headline. The short excerpt is the publisher's
@@ -13,31 +13,33 @@ const PER_CATEGORY = 10;
 
 // Feeds per category, best first. A feed that fails is skipped; the Google News searches fill any gaps.
 export const CATEGORIES = [
+  { id: "web", key: "newsCatWeb", feeds: [
+    "https://www.smashingmagazine.com/feed/",
+    "https://css-tricks.com/feed/",
+    gnews("web development OR web design OR CSS OR JavaScript OR browser"),
+  ] },
+  { id: "gaming", key: "newsCatGaming", feeds: [
+    "https://www.gamesindustry.biz/feed",
+    "https://www.polygon.com/rss/index.xml",
+    gnews("video games OR game release OR game studio OR game engine"),
+  ] },
+  { id: "ai", key: "newsCatAI", feeds: [
+    "https://techcrunch.com/category/artificial-intelligence/feed/",
+    gnews("artificial intelligence OR \"AI model\" OR machine learning"),
+  ] },
   { id: "tech", key: "newsCatTech", feeds: [
-    "https://japantoday.com/category/tech/feed",
-    gnews("Japan technology OR semiconductor OR robotics"),
+    "https://www.theverge.com/rss/index.xml",
+    "https://techcrunch.com/feed/",
+    gnews("technology OR software OR gadgets"),
+  ] },
+  { id: "security", key: "newsCatSecurity", feeds: [
+    "https://krebsonsecurity.com/feed/",
+    "https://feeds.feedburner.com/TheHackersNews",
+    gnews("cybersecurity OR data breach OR ransomware OR vulnerability"),
   ] },
   { id: "business", key: "newsCatBusiness", feeds: [
-    "https://japantoday.com/category/business/feed",
-    "https://www.japantimes.co.jp/business/feed/",
-    gnews("Japan business OR economy OR company"),
-  ] },
-  { id: "stocks", key: "newsCatStocks", feeds: [
-    gnews("Nikkei OR TOPIX OR \"Tokyo Stock Exchange\" stocks"),
-    gnews("Japan stocks yen market"),
-  ] },
-  { id: "weather", key: "newsCatWeather", feeds: [
-    gnews("Japan weather OR typhoon OR snow OR \"Japan Meteorological Agency\""),
-    gnews("Japan earthquake OR rain OR temperature forecast"),
-  ] },
-  { id: "sports", key: "newsCatSports", feeds: [
-    "https://japantoday.com/category/sports/feed",
-    "https://www.japantimes.co.jp/sports/feed/",
-    gnews("Japan sports OR sumo OR \"J.League\" OR baseball"),
-  ] },
-  { id: "health", key: "newsCatHealth", feeds: [
-    gnews("Japan health OR medical OR hospital OR drug"),
-    gnews("Japan health ministry"),
+    gnews("tech startup OR funding round OR tech company earnings"),
+    gnews("small business website OR ecommerce OR digital marketing"),
   ] },
 ];
 

@@ -13,7 +13,7 @@ const strip = (html) => decode(decode(html).replace(/<[^>]+>/g, " ")).replace(/\
 const tag = (xml, name) => { const m = xml.match(new RegExp(`<${name}\\b[^>]*>([\\s\\S]*?)</${name}>`, "i")); return m ? unwrap(m[1]) : ""; };
 const attr = (xml, name, a) => { const m = xml.match(new RegExp(`<${name}\\b[^>]*\\s${a}="([^"]*)"`, "i")); return m ? decode(m[1]) : ""; };
 export const hostOf = (u) => { try { return new URL(u).hostname.replace(/^www\./, ""); } catch { return ""; } };
-const NAMES = { "japantoday.com": "Japan Today", "japantimes.co.jp": "The Japan Times" };
+const NAMES = { "smashingmagazine.com": "Smashing Magazine", "css-tricks.com": "CSS-Tricks", "gamesindustry.biz": "GamesIndustry.biz", "polygon.com": "Polygon", "techcrunch.com": "TechCrunch", "theverge.com": "The Verge", "krebsonsecurity.com": "Krebs on Security", "feeds.feedburner.com": "The Hacker News" };
 
 export function parseFeed(xml, feedUrl) {
   const channel = strip(tag(xml, "title")) || hostOf(feedUrl);
