@@ -141,6 +141,7 @@ STATION_DEFENSE = {
         "max": 5,                    # the closest you can zoom in (wheel, + / - keys, the + - buttons, pinch)
     },
     "graphics": {
+        "gpu": True,                 # draw the ships with the graphics card (WebGL: real materials, smooth hulls, bloom, shadow maps). False = the older 2D drawing
         "textures": 1,               # metal panel textures on the ships and buildings (0 = off, 1 = normal, 2 = strong)
         "metal": 1,                  # how shiny and mirror-like the metal is (0 = flat paint, 1 = normal, 1.5 = chrome)
         "dynamicLights": True,       # lasers, shells, explosions, engines and crystals light up nearby ships

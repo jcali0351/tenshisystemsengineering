@@ -53,7 +53,7 @@
   const TRAINS = { core: ["spark", "blade", "lancer"], outpost: ["spark"], yard: ["blade", "lancer"] };   // who builds which ships
   const BUILDS = ["tower", "depot", "outpost", "yard"];                                                    // what miners can build
   const ZOOM = { start: 1.4, max: 5 };
-  const GFX = { textures: 1, metal: 1, dynamicLights: true, movingSun: true, shadows: true };   // graphics: texture strength, metal shine, lights from weapons/engines, drifting sun   // camera: how close it starts (1 = the old view) and the closest you can zoom in
+  const GFX = { gpu: true, textures: 1, metal: 1, dynamicLights: true, movingSun: true, shadows: true };   // gpu: draw the 3D models with WebGL (sandbox/tenshi-gl.js) when it can   // graphics: texture strength, metal shine, lights from weapons/engines, drifting sun   // camera: how close it starts (1 = the old view) and the closest you can zoom in
   const BUILD = { radius: 420, supplyMax: 80 };   // build within this distance of the station or an outpost; most ships depots can allow
   const CRYSTAL = { amount: 1200, carry: 8, mineTime: 1100 };
   // How many aliens: guarding the hive at the start, and in each wave (base + growth x wave number, rounded down).
@@ -98,7 +98,19 @@
       <p class="rts-help">Drag to select · Right-click to command · A attack-move · Q W E train · Miners: 1 2 3 4 build · Wheel / + − zoom · Space whole fleet</p>
     </div>`;
   section.appendChild(root);   // on the section itself (the site moves things inside the viewport for its parallax effect)
-  const canvas = root.querySelector(".rts-canvas"), ctx = canvas.getContext("2d");
+  const canvas = root.querySelector(".rts-canvas"), mainCtx = canvas.getContext("2d");
+  let ctx = mainCtx;   // the 2D layer being drawn on (with the GPU renderer: the background layer, or the top layer)
+  // ---- GPU renderer (sandbox/tenshi-gl.js): models go to a WebGL canvas under this one; space and anything under the
+  // models are painted on bgCanvas, which becomes the WebGL background. Falls back to the 2D renderer. ----
+  const glCanvas = document.createElement("canvas"); glCanvas.className = "rts-gl"; glCanvas.style.display = "none"; root.insertBefore(glCanvas, canvas);
+  const bgCanvas = document.createElement("canvas"), bgx = bgCanvas.getContext("2d");
+  let GL3 = null, glTried = false, glOn = false;
+  function glReady() {
+    if (!GFX.gpu) return null;
+    if (!GL3 && !glTried && window.TenshiGL) { glTried = true; try { GL3 = window.TenshiGL.create(glCanvas); } catch (err) { console.warn("[rts] GPU renderer failed, using 2D", err); GL3 = null; } if (GL3 && W) GL3.resize(W, H); }
+    return GL3;
+  }
+  const layer = top => { ctx = glOn && !top ? bgx : mainCtx; };
   const mini = root.querySelector(".rts-mini"), mctx = mini.getContext("2d");
   const panel = root.querySelector(".rts-panel"), msgEl = root.querySelector(".rts-msg"), intro = root.querySelector(".rts-intro");
   const resEl = root.querySelector(".rts-res"), creditsEl = root.querySelector(".rts-credits"), supplyEl = root.querySelector(".rts-supply"), waveEl = root.querySelector(".rts-wave");
@@ -111,7 +123,9 @@
     const r = root.getBoundingClientRect(), ratio = Math.min(window.devicePixelRatio || 1, 2);
     W = r.width; H = r.height;
     canvas.width = Math.round(W * ratio); canvas.height = Math.round(H * ratio);
-    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    mainCtx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    const bgRatio = Math.min(ratio, 1.5); bgCanvas.width = Math.round(W * bgRatio); bgCanvas.height = Math.round(H * bgRatio); bgx.setTransform(bgRatio, 0, 0, bgRatio, 0, 0);
+    if (GL3) GL3.resize(W, H);
     fitZoom = Math.max(W / MAP.w, H / MAP.h);             // the furthest out: the map still covers the whole window
     baseZoom = Math.max(W < 760 ? 0.75 : clamp(W / 1300, 0.55, 1), fitZoom);   // phones: a little closer, so units are big enough to tap
     applyZoom();
@@ -709,7 +723,7 @@
     p: { hull: [200, 190, 225], trim: [150, 70, 255], dark: [45, 30, 75], glass: [120, 210, 255], glow: [255, 90, 230], rim: [255, 60, 210] },
     e: { organic: true, hull: [210, 110, 40], trim: [255, 170, 60], dark: [70, 25, 10], glass: [255, 200, 120], glow: [180, 255, 90], rim: [255, 140, 40] },
     rock: { stone: true, hull: [95, 80, 120], trim: [120, 100, 150], dark: [40, 30, 55], glass: [0, 0, 0], glow: [0, 0, 0], rim: [140, 80, 220] },
-    crystal: { hull: [0, 0, 0], trim: [0, 0, 0], dark: [0, 0, 0], glass: [255, 110, 235], glow: [255, 160, 250], rim: [255, 120, 255] },
+    crystal: { crystal: true, hull: [0, 0, 0], trim: [0, 0, 0], dark: [0, 0, 0], glass: [255, 110, 235], glow: [255, 160, 250], rim: [255, 120, 255] },
   };
   // ---- Lighting: a white-gold star (drifting slowly across the sky), a faint pink bounce from the planet below and a
   // purple ambient, plus moving point lights: lasers, shells, explosions, engines, crystals, the station and the hive.
@@ -777,8 +791,8 @@
     }
     for (const sh of shots) { const t = sh.t / sh.dur; add(sh.x + (sh.tx - sh.x) * t, sh.y + (sh.ty - sh.y) * t, 14 + (sh.arc ? Math.sin(t * Math.PI) * 50 : 0), sh.team === "p" ? [220, 150, 255] : [180, 255, 90], 90, 1); }
     for (const e of ents) {
-      if (e.type === "core") add(e.x, e.y, 60, [176, 77, 255], 300, 0.7);
-      else if (e.type === "hive") add(e.x, e.y, 50, [180, 255, 90], 300, 0.7);
+      if (e.type === "core") add(e.x, e.y, 90, [176, 77, 255], 260, 0.22);
+      else if (e.type === "hive") add(e.x, e.y, 80, [180, 255, 90], 260, 0.25);
       else if (e.team === "p" && !e.T.building && e.moving) add(e.x - Math.cos(e.face) * e.r * 1.6, e.y - Math.sin(e.face) * e.r * 1.6, 18, rgbOf(ENGINE[e.type] || "255,90,230"), 34, 0.3);
     }
     for (const k of crystals) if (k.left > 0) add(k.x, k.y, 14, [255, 90, 230], 110, 0.3);
@@ -818,6 +832,7 @@
   }
   // Draw one model at map position (x, y), height z, facing `yaw`, banked by `roll`, `size` = unit radius.
   function drawModel(m, x, y, z, yaw, roll, size, paint, flash = 0, alpha = 1) {
+    if (glOn) { GL3.draw(m, paint, x, y, z, yaw, roll, size, flash, alpha); return; }
     const cy = Math.cos(yaw), sy = Math.sin(yaw), cr = Math.cos(roll), sr = Math.sin(roll);
     const P = m.v.map(([mx, my, mz]) => {
       const y1 = my * cr - mz * sr, z1 = my * sr + mz * cr;
@@ -944,7 +959,11 @@
 
   function draw(now) {
     moveSun(now); lights = GFX.dynamicLights ? collectLights() : [];
-    ctx.clearRect(0, 0, W, H);
+    glOn = !!glReady();
+    glCanvas.style.display = glOn ? "" : "none";
+    mainCtx.clearRect(0, 0, W, H);
+    if (glOn) { bgx.clearRect(0, 0, W, H); GL3.begin({ W, H, zoom, camx: cam.x, camy: cam.y, key: LIGHT_KEY, lights: lights.slice().sort((a, b) => b.power - a.power), bg: bgCanvas }); }
+    layer(false);
     drawSpace(now);
     // A faint tactical grid and the map edge.
     ctx.save(); ctx.scale(zoom, zoom); ctx.translate(-cam.x, -cam.y);
@@ -973,6 +992,7 @@
     ctx.shadowBlur = 0;
     // Units, back to front.
     for (const e of [...ents].sort((a, b) => a.y - b.y)) { if (isSeen(e)) drawEnt(e, now); }
+    layer(true);                                                  // everything from here on goes on top of the models
     // Rally point.
     const c = core();
     if (c && c.rally && selected.includes(c)) { ctx.setLineDash([6, 6]); ctx.strokeStyle = "rgba(215,170,255,.6)"; ctx.beginPath(); ctx.moveTo(sx(c.x), sy(c.y)); ctx.lineTo(sx(c.rally.x), sy(c.rally.y)); ctx.stroke(); ctx.setLineDash([]); }
@@ -1002,6 +1022,7 @@
     }
     if (amoveMode) { ctx.fillStyle = "#ff8a2b"; ctx.font = "700 12px Oswald, sans-serif"; ctx.fillText("ATTACK-MOVE: click where to go", 16, H - 200); }
     drawMinimap();
+    if (glOn) GL3.end();
   }
 
   // Height each kind floats at, and how big its model is compared with its hit circle.
@@ -1013,13 +1034,15 @@
     const h = HOVER[e.type] + (T.building ? 0 : Math.sin(now / 420 + e.bob) * 3), size = e.r * SIZE[e.type];
     // Shadow: the model's real outline, cast by the star onto the "floor" of space (moves as the star drifts).
     const own0 = blender(e.type), shadowModel = own0 || (e.type === "core" ? MODELS.ring : MODELS[e.type]);
-    if (shadowModel && GFX.shadows) drawShadow(shadowModel, e.x, e.y, h, T.building ? (e.type === "outpost" ? now / 8000 : YAW[e.type] || 0) : e.face, size * (own0 ? 1.15 : 1) * (e.type === "core" ? 1 : 1));
+    layer(false);
+    if (glOn) {} else if (shadowModel && GFX.shadows) drawShadow(shadowModel, e.x, e.y, h, T.building ? (e.type === "outpost" ? now / 8000 : YAW[e.type] || 0) : e.face, size * (own0 ? 1.15 : 1) * (e.type === "core" ? 1 : 1));
     else { ctx.fillStyle = "rgba(0,0,0,0.35)"; ctx.beginPath(); ctx.ellipse(sx(e.x + h * 0.35), sy(e.y + h * 0.25), size * zoom, size * zoom * TILT.y * 0.8, 0, 0, 6.28); ctx.fill(); }
     const X = sx(e.x), Y = sy(e.y) - h * zoom * TILT.z;
     if (e.type === "core") {
       bloom(X, Y - size * 0.6 * zoom, size * 2.2 * zoom, "176,77,255", 0.35);
       if (blender("core")) drawModel(blender("core"), e.x, e.y, h, now / 9000, 0, size * 1.3, paint, flash);
       else { drawModel(MODELS.ring, e.x, e.y, h, now / 2600, 0.25, size, paint, flash); drawModel(MODELS.core, e.x, e.y, h, 0, 0, size, paint, flash); }
+      layer(true);
       ctx.fillStyle = "#fff"; ctx.font = `900 ${Math.round(22 * zoom)}px 'Noto Sans JP', sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
       ctx.fillText("天", X, Y - size * 0.85 * zoom); ctx.textAlign = "start";
       for (let k = 0; k < 3; k++) { const a = k / 3 * 6.2832 + 0.5; if ((Math.floor(now / 500) + k) % 3 === 0) bloom(X + Math.cos(a) * size * 1.2 * zoom, Y + Math.sin(a) * size * 1.2 * zoom * TILT.y, 8 * zoom, "255,90,230", 1); }
@@ -1035,8 +1058,10 @@
         ctx.stroke();
       }
       drawModel(blender("hive") || MODELS.hive, e.x, e.y, h, now / 6000, 0, size * pulse, paint, flash);
+      layer(true);
     } else if (T.building) {
       drawBuilding(e, now, X, Y, h, size, paint, flash);
+      layer(true);
     } else {
       // Ships bank into turns; aliens wobble.
       const turn = Math.atan2(Math.sin(e.face - (e.lastFace ?? e.face)), Math.cos(e.face - (e.lastFace ?? e.face)));
@@ -1049,6 +1074,7 @@
       const own = blender(e.type);
       drawModel(own || MODELS[e.type], e.x, e.y, h, e.face, roll, size * (own ? 1.15 : 1), paint, flash);
       if (e.type === "lancer" && !own) drawModel(MODELS.turret, e.x, e.y, h + size * 0.35, e.aim ?? e.face, 0, size, paint, flash);
+      layer(true);
       if (builtIn && e.type === "mite") drawWings(e, now, X, Y, size);
       // Engine glow at the back of your ships (brighter when moving).
       if (e.team === "p") {
@@ -1083,6 +1109,7 @@
       const q = e.queue[0], p = 1 - q.left / (UNITS[q.type].time * 1000);
       ctx.strokeStyle = "#7dffb2"; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(GX, GY, size * 1.5 * zoom, size * 1.5 * zoom * TILT.y, 0, -1.57, -1.57 + p * 6.28); ctx.stroke();
     }
+    layer(true);
     if (e.rally && selected.includes(e) && done(e)) { ctx.setLineDash([6, 6]); ctx.strokeStyle = "rgba(215,170,255,.6)"; ctx.beginPath(); ctx.moveTo(GX, GY); ctx.lineTo(sx(e.rally.x), sy(e.rally.y)); ctx.stroke(); ctx.setLineDash([]); }
   }
   // Choosing where to build: the build zones (dashed) and a ghost of the building, green where it fits, red where not.
@@ -1363,5 +1390,5 @@
   if (reduce) intro.querySelector(".rts-help").textContent += " · (Reduced motion: effects are toned down.)";
   requestAnimationFrame(loop);
   window.neonRTS = { state: () => ({ state, credits, clock: Math.round(clock), wave: waveNo, units: ents.filter(e => e.team === "p" && !e.T.building).length, enemies: ents.filter(e => e.team === "e").length, hive: hive() && hive().hp, core: core() && core().hp, selected: selected.length }),
-                     start, give: n => { credits += n; }, army: () => act("army"), seeAll: on => { seeAll = on; if (on) explored.fill(1); }, count: () => ents.reduce((m, e) => (m[e.type] = (m[e.type] || 0) + 1, m), {}), step: ms => { for (let t = 0; t < ms && state === "play"; t += 16) update(16); hud(); }, train, wave: sendWave, select: type => { selected = ents.filter(e => e.type === type); renderPanel(); }, command, killHive: () => { const h = hive(); if (h) damage(h, 1e6, null); }, build: (type, x, y) => { selected = ents.filter(e => e.type === "spark" && !(e.order && e.order.type === "build")).slice(0, 1); placing = { type }; return place(x, y); }, buildings: () => ents.filter(e => e.team === "p" && e.T.building).map(e => ({ type: e.type, built: +e.built.toFixed(2), hp: Math.round(e.hp), queue: e.queue.length })), canPlace, cap: () => supplyCap(), gfx: o => Object.assign(GFX, o || {}), frameMs: () => +frameMs.toFixed(2), drawOnce: () => { const t = performance.now(); draw(performance.now()); return +(performance.now() - t).toFixed(2); }, zoom: f => { if (f) zoomBy(f); return +zoom.toFixed(3); }, camTo: (x, y) => { cam.x = x - W / zoom / 2; cam.y = y - H / zoom / 2; clampCamera(); } };
+                     start, give: n => { credits += n; }, army: () => act("army"), seeAll: on => { seeAll = on; if (on) explored.fill(1); }, count: () => ents.reduce((m, e) => (m[e.type] = (m[e.type] || 0) + 1, m), {}), step: ms => { for (let t = 0; t < ms && state === "play"; t += 16) update(16); hud(); }, train, wave: sendWave, select: type => { selected = ents.filter(e => e.type === type); renderPanel(); }, command, killHive: () => { const h = hive(); if (h) damage(h, 1e6, null); }, build: (type, x, y) => { selected = ents.filter(e => e.type === "spark" && !(e.order && e.order.type === "build")).slice(0, 1); placing = { type }; return place(x, y); }, buildings: () => ents.filter(e => e.team === "p" && e.T.building).map(e => ({ type: e.type, built: +e.built.toFixed(2), hp: Math.round(e.hp), queue: e.queue.length })), canPlace, cap: () => supplyCap(), gfx: o => Object.assign(GFX, o || {}), gpu: () => ({ on: glOn, info: GL3 && GL3.info() }), frameMs: () => +frameMs.toFixed(2), drawOnce: () => { const t = performance.now(); draw(performance.now()); return +(performance.now() - t).toFixed(2); }, zoom: f => { if (f) zoomBy(f); return +zoom.toFixed(3); }, camTo: (x, y) => { cam.x = x - W / zoom / 2; cam.y = y - H / zoom / 2; clampCamera(); } };
 })();

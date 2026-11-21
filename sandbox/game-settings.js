@@ -274,6 +274,7 @@ window.TENSHI_GAMES = {
    "max": 5
   },
   "graphics": {
+   "gpu": true,
    "textures": 1,
    "metal": 1,
    "dynamicLights": true,
