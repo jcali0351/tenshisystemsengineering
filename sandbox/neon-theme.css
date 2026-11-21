@@ -919,15 +919,15 @@ html.neon ::selection { background: #ff2bd6; color: #fff; }
 
 /* Service icons (img/services/icons/*.webp, transparent neon line art): centred, full colour, glowing brighter on hover. */
 html.neon:not(#_):not(#__) #services .service-card > .service-pic.service-icon,
-html.neon:not(#_):not(#__):not(#___) main .service-card .service-pic.service-icon {
-  width: min(31%, 105px) !important; height: auto !important; aspect-ratio: 1 / 1 !important; object-fit: contain !important;
+html.neon:not(#_):not(#__):not(#___):not(#____) main .service-card .service-pic.service-icon {
+  width: 35% !important; max-width: 120px !important; height: auto !important; aspect-ratio: 1 / 1 !important; object-fit: contain !important;
   margin: 4px auto clamp(16px, 1.6vw, 22px) !important; display: block !important;
   background: transparent !important; border-radius: 0 !important; box-shadow: none !important; mix-blend-mode: normal !important;
   filter: drop-shadow(0 0 6px rgba(255, 43, 214, .25)) !important;
   transition: filter .35s ease, transform .35s cubic-bezier(.2, 1.4, .4, 1) !important;
 }
 html.neon:not(#_):not(#__) #services .service-card:is(:hover, :focus-within) > .service-pic.service-icon,
-html.neon:not(#_):not(#__):not(#___) main .service-card:is(:hover, :focus-within) .service-pic.service-icon {
+html.neon:not(#_):not(#__):not(#___):not(#____) main .service-card:is(:hover, :focus-within) .service-pic.service-icon {
   filter: brightness(1.25) saturate(1.2) drop-shadow(0 0 10px rgba(255, 43, 214, .85)) drop-shadow(0 0 26px rgba(0, 240, 255, .55)) drop-shadow(0 0 48px rgba(176, 77, 255, .45)) !important;
   transform: translateY(-4px) scale(1.06) !important;
 }
