@@ -15,7 +15,7 @@
 //   Mouse wheel, + / - keys, the + - buttons or a two-finger pinch = zoom in and out.
 //   Q / W / E = train Spark / Blade / Lancer. With a miner selected, 1 2 3 4 = build a Turret / Supply Depot /
 //   Outpost / Shipyard (then click where). Outposts are forward bases: you can only build near the station or an
-//   outpost, so chain outposts to push into alien space. Arrow keys or the screen edges move the camera; click the minimap to jump.
+//   outpost; outposts themselves go anywhere you have explored, so plant one by new crystals to expand. Arrow keys or the screen edges move the camera; click the minimap to jump.
 // Controls (touch): tap a unit to select it, drag a box to select several, tap the ground / an enemy / a crystal to
 //   command them. Buttons on screen for army, attack-move and training. Tap the minimap to move the camera.
 //
@@ -47,7 +47,7 @@
     // Buildings your miners construct (cost in crystals, time = seconds to build)
     tower:   { name: "DEFENSE TURRET", team: "p", hp: 420,  r: 18, building: true, sight: 300, dmg: 12, range: 240, cd: 650, cost: 100, time: 16, key: "1", color: "#ff5ae0", tip: "Shoots aliens in range. Guards miners and outposts." },
     depot:   { name: "SUPPLY DEPOT",   team: "p", hp: 380,  r: 20, building: true, sight: 200, cost: 75,  time: 14, key: "2", color: "#d7aaff", supply: 8, tip: "Lets you have 8 more ships." },
-    outpost: { name: "OUTPOST",        team: "p", hp: 1000, r: 32, building: true, sight: 380, cost: 250, time: 30, key: "3", color: "#b04dff", tip: "Forward base: miners drop crystals here, it trains miners, and you can build around it." },
+    outpost: { name: "OUTPOST",        team: "p", hp: 1000, r: 32, building: true, sight: 380, cost: 250, time: 30, key: "3", color: "#b04dff", tip: "Forward base: build it anywhere you have explored, next to new crystals. Miners drop crystals here, it trains miners, and you can build around it." },
     yard:    { name: "SHIPYARD",       team: "p", hp: 750,  r: 28, building: true, sight: 280, cost: 200, time: 26, key: "4", color: "#ff2bd6", tip: "Builds Interceptors and Gunships near the front." },
   };
   const TRAINS = { core: ["spark", "blade", "lancer"], outpost: ["spark"], yard: ["blade", "lancer"] };   // who builds which ships
@@ -218,9 +218,10 @@
     const r = UNITS[type].r;
     if (x < r + 10 || y < r + 10 || x > MAP.w - r - 10 || y > MAP.h - r - 10) return "Too close to the edge";
     if (!explored[cellOf(x, y)]) return "Explore there first";
-    if (!hqs().some(h => Math.hypot(h.x - x, h.y - y) < BUILD.radius)) return "Too far: build near the station or an outpost";
+    // Outposts go anywhere you have explored (that is how you claim new crystal fields); everything else near the station or an outpost.
+    if (type !== "outpost" && !hqs().some(h => Math.hypot(h.x - x, h.y - y) < BUILD.radius)) return "Too far: build near the station or an outpost";
     if (ents.some(e => e.T.building && Math.hypot(e.x - x, e.y - y) < e.r + r + 8)) return "Something is in the way";
-    if (crystals.some(k => k.left > 0 && Math.hypot(k.x - x, k.y - y) < k.r + r + 10)) return "Too close to the crystals";
+    if (crystals.some(k => k.left > 0 && Math.hypot(k.x - x, k.y - y) < k.r + r * 0.5 + 6)) return "Too close to the crystals";
     if (ents.some(e => e.team === "e" && isSeen(e) && Math.hypot(e.x - x, e.y - y) < e.r + r + 30)) return "Aliens are in the way";
     return "";
   }
@@ -229,7 +230,7 @@
     if (!selected.some(e => e.type === "spark")) return say("Select a miner to build");
     if (credits < UNITS[type].cost) return say("Not enough crystals ◆");
     placing = { type }; amoveMode = false;
-    say("Click where to build the " + UNITS[type].name + " · right-click or Esc to cancel", 2600);
+    say(type === "outpost" ? "Click anywhere you have explored: right next to new crystals is best · Esc to cancel" : "Click where to build the " + UNITS[type].name + " · right-click or Esc to cancel", 2600);
   }
   function place(x, y) {
     const type = placing.type, why = canPlace(type, x, y);
@@ -359,7 +360,7 @@
     }
     for (const e of ents) {
       // Engine exhaust behind your moving ships.
-      if (e.moving && e.team === "p" && Math.random() < dt / 40) fx.push({ flame: true, x: e.x - Math.cos(e.face) * e.r * 1.1, y: e.y - Math.sin(e.face) * e.r * 1.1, h: 18, life: 1, size: e.r * 0.5, rgb: Math.random() < 0.5 ? "255,90,230" : "180,120,255" });
+      if (e.moving && e.team === "p" && Math.random() < dt / 40) fx.push({ flame: true, x: e.x - Math.cos(e.face) * e.r * 1.1, y: e.y - Math.sin(e.face) * e.r * 1.1, h: 18, life: 1, size: e.r * 0.5, rgb: ENGINE[e.type] || (Math.random() < 0.5 ? "255,90,230" : "180,120,255") });
       e.moving = false;
       e.cd = Math.max(0, e.cd - dt); e.flash = Math.max(0, e.flash - dt / 200);
       // The station defends itself with a point-defence laser.
@@ -490,78 +491,110 @@
 
   const MODELS = {};
   // ---- Your fleet ----
-  { // INTERCEPTOR: a needle-nosed strike fighter. Cranked delta wings with wingtip cannons, twin canted tail fins,
-    // side intakes feeding two engine nacelles, a bubble canopy and a glowing spine stripe.
+  // Mirror a flat outline to the other side (s = 1 right, -1 left).
+  const side = (pts, sd) => pts.map(([x, y]) => [x, y * sd]);
+  { // INTERCEPTOR (from your reference art): a cream arrowhead strike fighter with orange trim. Wide blended body,
+    // long segmented blue canopy, cranked wings with orange leading edges and vents, wingtip cannons, side gun pods,
+    // twin engines and a long rear sensor rod.
     const m = Mesh();
-    lathe(m, [[0.001, 1.55], [0.08, 1.35], [0.17, 1.0], [0.25, 0.55], [0.29, 0.05], [0.28, -0.45], [0.22, -0.8], [0.12, -0.92]], 8,
-      (p) => p === 3 ? "trim" : "hull", { sz: 0.62, rot: Math.PI / 8 });
-    lathe(m, [[0.001, 0.5], [0.09, 0.36], [0.115, 0.1], [0.1, -0.15], [0.001, -0.3]], 8, "glass", { at: [0.42, 0, 0.13], sz: 0.8 });
-    box(m, [-0.15, 0, 0.17], [0.9, 0.05, 0.03], "glow");                                          // spine light
-    for (const s of [-1, 1]) {
-      const wing = [[0.3, s * 0.2], [-0.25, s * 0.78], [-0.5, s * 1.02], [-0.72, s * 1.02], [-0.7, s * 0.24]];
-      slab(m, s > 0 ? wing : wing.slice().reverse(), -0.05, 0.06, "hull", "trim");
-      slab(m, s > 0 ? [[-0.42, s * 0.92], [-0.62, s * 0.98], [-0.7, s * 0.98], [-0.52, s * 0.9]] : [[-0.52, s * 0.9], [-0.7, s * 0.98], [-0.62, s * 0.98], [-0.42, s * 0.92]], -0.01, 0.07, "trim");   // wing stripe
-      lathe(m, [[0.001, 0.25], [0.035, 0.2], [0.045, -0.5], [0.06, -0.62], [0.001, -0.64]], 5, "dark", { at: [-0.25, s * 1.03, -0.05] });   // wingtip cannon
-      lathe(m, sphere(0.03, 3), 4, "glow", { at: [0.02, s * 1.03, -0.05] });
-      box(m, [0.18, s * 0.31, -0.08], [0.45, 0.13, 0.13], "dark");                                 // intake
-      lathe(m, [[0.12, 0.3], [0.15, 0.1], [0.15, -0.3], [0.13, -0.42], [0.1, -0.47]], 7, (p) => p === 1 ? "trim" : "dark", { at: [-0.5, s * 0.3, -0.05] });   // nacelle
-      lathe(m, [[0.1, -0.47], [0.001, -0.48]], 7, "glow", { at: [-0.5, s * 0.3, -0.05] });
-      fin(m, [[-0.45, 0.1], [-0.82, 0.48], [-0.95, 0.48], [-0.88, 0.1]], s * 0.2, 0.05, "hull", "trim");   // tail fin
+    slab(m, [[1.55, 0], [1.2, 0.12], [0.7, 0.28], [0.2, 0.36], [-0.4, 0.36], [-0.85, 0.3], [-0.95, 0.18], [-0.95, -0.18], [-0.85, -0.3], [-0.4, -0.36], [0.2, -0.36], [0.7, -0.28], [1.2, -0.12]], 0, 0.2, "hull", "dark");
+    slab(m, [[1.3, 0], [0.6, 0.2], [0.1, 0.25], [0.1, -0.25], [0.6, -0.2]], -0.13, 0.06, "dark");                       // chin
+    lathe(m, [[0.001, 1.15], [0.1, 0.95], [0.17, 0.6], [0.21, 0.15], [0.22, -0.4], [0.2, -0.8], [0.15, -0.95]], 10, "hull", { at: [0, 0, 0.1], sz: 0.7 });   // spine
+    lathe(m, [[0.001, 0.8], [0.07, 0.7], [0.11, 0.45], [0.125, 0.1], [0.12, -0.3], [0.1, -0.55], [0.001, -0.65]], 10, "glass", { at: [0.15, 0, 0.2], sz: 0.65 });   // canopy
+    for (const x of [0.62, 0.38, 0.14, -0.1, -0.32]) box(m, [x, 0, 0.276], [0.025, 0.2, 0.025], "dark");                // canopy frame
+    box(m, [0.86, 0, 0.17], [0.07, 0.16, 0.05], "trim");                                                                  // orange canopy rim
+    box(m, [-0.7, 0.1, 0.27], [0.5, 0.05, 0.07], "trim");                                                                 // dorsal ridge
+    for (const sd of [-1, 1]) {
+      slab(m, side([[0.45, 0.33], [0.0, 0.8], [-0.25, 1.18], [-0.45, 1.3], [-0.62, 1.22], [-0.58, 0.95], [-0.75, 0.6], [-0.85, 0.33]], sd), -0.03, 0.07, "hull", "dark");   // wing
+      slab(m, side([[0.42, 0.37], [0.0, 0.83], [-0.24, 1.2], [-0.3, 1.16], [-0.04, 0.79], [0.36, 0.38]], sd), 0.012, 0.015, "trim");   // orange leading edge
+      slab(m, side([[-0.35, 0.4], [-0.5, 0.75], [-0.7, 0.72], [-0.78, 0.4]], sd), 0.012, 0.015, "dark");                // vent
+      for (let k = 0; k < 4; k++) box(m, [-0.45 - k * 0.08, sd * (0.5 + k * 0.04), 0.022], [0.025, 0.2, 0.01], "trim");   // vent slits
+      box(m, [-0.1, sd * 0.62, 0.008], [0.5, 0.012, 0.01], "dark"); box(m, [-0.32, sd * 0.85, 0.008], [0.012, 0.3, 0.01], "dark");   // panel lines
+      box(m, [0.1, sd * 0.5, 0.008], [0.012, 0.24, 0.01], "dark");
+      box(m, [-0.38, sd * 1.0, 0.012], [0.14, 0.1, 0.02], "glass"); box(m, [0.35, sd * 0.24, 0.105], [0.1, 0.07, 0.02], "glass");   // blue panels
+      box(m, [0.95, sd * 0.15, 0.07], [0.16, 0.04, 0.03], "trim");                                                       // nose accents
+      box(m, [-0.55, sd * 0.21, 0.13], [0.6, 0.03, 0.06], "trim");                                                       // spine stripes
+      lathe(m, [[0.001, 0.75], [0.02, 0.7], [0.03, 0.2], [0.05, 0.15], [0.05, -0.25], [0.035, -0.3]], 8, (q) => q === 3 ? "trim" : "dark", { at: [-0.35, sd * 1.27, -0.02] });   // wingtip cannon
+      lathe(m, sphere(0.025, 3), 4, "glow", { at: [0.41, sd * 1.27, -0.02] });
+      lathe(m, [[0.001, 0.42], [0.06, 0.36], [0.07, 0.0], [0.07, -0.3], [0.05, -0.36]], 8, (q) => q === 2 ? "trim" : "hull", { at: [0.15, sd * 0.4, 0.04] });   // side gun pod
+      lathe(m, [[0.12, 0.45], [0.14, 0.3], [0.155, 0.0], [0.15, -0.25], [0.13, -0.32], [0.11, -0.36], [0.09, -0.34]], 12, (q) => q === 2 ? "dark" : q === 5 ? "dark" : "hull", { at: [-0.85, sd * 0.2, 0.06] });   // engine
+      lathe(m, [[0.09, -0.34], [0.001, -0.33]], 12, "glow", { at: [-0.85, sd * 0.2, 0.06] });
     }
+    box(m, [-0.5, -0.12, 0.25], [0.2, 0.05, 0.12], "dark");                                                               // sensor rod mount
+    lathe(m, [[0.03, 0.2], [0.03, -1.05], [0.05, -1.1], [0.001, -1.16]], 6, "dark", { at: [-0.4, -0.12, 0.31] });        // long sensor rod
+    lathe(m, sphere(0.025, 3), 4, "glow", { at: [-1.57, -0.12, 0.31] });
     MODELS.blade = m;
   }
-  { // MINER: a rugged mining hauler. Armoured hex hull, cockpit up front, two cargo pods with glowing bands, a forward
-    // mining boom with a laser emitter and grab claws, four engines and a little comms dish.
+  { // MINER (from your reference art): a chunky white hauler with an orange nose cone, teal side panels, a navy belly
+    // with orange stripes, a big cockpit, two large engine pods trailing orange flames, a swept tail fin and, for the
+    // mining, a laser boom with claws under the nose.
     const m = Mesh();
-    lathe(m, [[0.001, 0.8], [0.26, 0.72], [0.4, 0.4], [0.42, -0.4], [0.34, -0.62], [0.001, -0.66]], 6,
-      (p) => p === 2 ? "trim" : "hull", { sz: 0.72, rot: Math.PI / 6 });
-    lathe(m, [[0.001, 0.32], [0.14, 0.24], [0.16, 0.02], [0.001, -0.12]], 6, "glass", { at: [0.48, 0, 0.2], sz: 0.7 });   // cockpit
-    for (const s of [-1, 1]) {
-      box(m, [-0.12, s * 0.58, 0], [0.86, 0.3, 0.4], "trim");                                    // cargo pod
-      box(m, [-0.12, s * 0.58, 0.21], [0.7, 0.24, 0.04], "dark");
-      box(m, [0.12, s * 0.58, 0], [0.05, 0.32, 0.42], "glow");                                   // glowing band
-      box(m, [-0.32, s * 0.58, 0], [0.05, 0.32, 0.42], "glow");
-      box(m, [0.15, s * 0.36, -0.02], [0.3, 0.16, 0.12], "dark");                                // pod strut
-      for (const z of [-0.1, 0.1]) {
-        lathe(m, [[0.08, 0], [0.1, -0.16], [0.08, -0.22]], 6, "dark", { at: [-0.55, s * 0.58, z] });   // engines
-        lathe(m, [[0.08, -0.22], [0.001, -0.23]], 6, "glow", { at: [-0.55, s * 0.58, z] });
-      }
-      box(m, [1.12, s * 0.14, -0.16], [0.2, 0.05, 0.16], "trim");                                // claws
-      box(m, [1.2, s * 0.1, -0.16], [0.08, 0.05, 0.14], "dark");
+    lathe(m, [[0.001, 1.28], [0.08, 1.18], [0.17, 1.02], [0.27, 0.78], [0.37, 0.45], [0.42, 0.1], [0.43, -0.3], [0.4, -0.6], [0.33, -0.8], [0.22, -0.9]], 12,
+      (q) => q <= 2 ? "nose" : q === 3 ? "dark" : "hull", { sz: 0.68 });
+    slab(m, [[0.9, 0], [0.4, 0.3], [-0.6, 0.36], [-0.85, 0.25], [-0.85, -0.25], [-0.6, -0.36], [0.4, -0.3]], -0.2, 0.12, "dark");   // belly
+    lathe(m, [[0.001, 0.55], [0.1, 0.45], [0.15, 0.25], [0.16, 0.0], [0.13, -0.18], [0.001, -0.28]], 10, "glass", { at: [0.35, 0, 0.21], sz: 0.55 });   // cockpit
+    for (const x of [0.5, 0.33, 0.18]) box(m, [x, 0, 0.29], [0.02, 0.24, 0.025], "dark");                               // cockpit frame
+    lathe(m, [[0.001, 0.35], [0.18, 0.25], [0.24, 0.0], [0.24, -0.45], [0.2, -0.6], [0.001, -0.65]], 10, "hull", { at: [-0.3, 0, 0.17], sz: 0.55 });   // roof
+    for (const x of [-0.12, -0.3, -0.48]) box(m, [x, 0, 0.305], [0.07, 0.1, 0.02], "glass");                             // roof windows
+    lathe(m, [[0.25, 0], [0.27, -0.15], [0.22, -0.25], [0.001, -0.26]], 8, (q) => q === 2 ? "glow" : "dark", { at: [-0.82, 0, 0], sz: 0.7 });   // tail engine
+    fin(m, [[-0.4, 0.22], [-0.55, 0.45], [-0.8, 0.85], [-0.95, 0.88], [-0.92, 0.6], [-0.85, 0.22]], 0, 0.07, "pod", "hull");   // tail fin
+    box(m, [-0.86, 0, 0.84], [0.14, 0.075, 0.03], "nose");
+    lathe(m, [[0.012, 0], [0.012, 0.25], [0.001, 0.27]], 5, "dark", { axis: "z", at: [-0.55, 0.12, 0.28] });            // antenna
+    lathe(m, sphere(0.022, 3), 4, "glow", { at: [-0.55, 0.12, 0.55] });
+    box(m, [0.8, 0, -0.27], [0.45, 0.08, 0.08], "dark");                                                                  // mining boom
+    lathe(m, sphere(0.06, 4), 6, "glow", { at: [1.05, 0, -0.27] });
+    for (const sd of [-1, 1]) {
+      slab(m, side([[0.75, 0.3], [0.1, 0.5], [-0.6, 0.52], [-0.8, 0.32], [0.0, 0.3]], sd), -0.05, 0.1, "trim", "dark");   // teal side panel
+      box(m, [0.05, sd * 0.47, 0.01], [0.1, 0.05, 0.02], "glass"); box(m, [-0.2, sd * 0.49, 0.01], [0.1, 0.05, 0.02], "glass");
+      box(m, [-0.1, sd * 0.37, -0.13], [1.0, 0.02, 0.03], "nose");                                                       // orange belly stripe
+      box(m, [0.95, sd * 0.12, -0.27], [0.15, 0.04, 0.12], "pod");                                                       // claws
+      slab(m, side([[-0.1, 0.38], [-0.3, 0.62], [-0.6, 0.62], [-0.55, 0.38]], sd), 0.02, 0.08, "trim", "dark");          // pod strut
+      const at = [-0.35, sd * 0.78, 0.04];
+      lathe(m, [[0.001, 0.62], [0.08, 0.56], [0.16, 0.45], [0.21, 0.25], [0.23, 0.0], [0.23, -0.35], [0.21, -0.48], [0.18, -0.55], [0.15, -0.5]], 12,
+        (q) => q <= 3 ? "hull" : q === 4 ? "trim" : q === 7 ? "dark" : "pod", { at });                                    // engine pod
+      lathe(m, [[0.15, -0.5], [0.001, -0.48]], 12, "glow", { at });
+      lathe(m, [[0.14, -0.56], [0.08, -0.75], [0.001, -0.98]], 8, "glow", { at });                                       // flame
+      lathe(m, [[0.07, -0.57], [0.001, -0.8]], 6, "flame", { at });
     }
-    box(m, [0.8, 0, -0.16], [0.6, 0.12, 0.12], "dark");                                          // mining boom
-    lathe(m, sphere(0.07, 4), 6, "glow", { at: [1.12, 0, -0.16] });                              // laser emitter
-    lathe(m, [[0.015, 0], [0.015, 0.14], [0.17, 0.2], [0.001, 0.15]], 7, (p) => p === 2 ? "trim" : "dark", { axis: "z", at: [-0.25, 0, 0.26] });   // comms dish
     MODELS.spark = m;
   }
-  { // GUNSHIP: a heavy frigate. Long armoured hull with a raised bridge, armoured side sponsons carrying missile racks,
-    // a dorsal fin and a three-engine block. Its twin-cannon turret is a separate model that aims.
+  { // GUNSHIP (inspired by your reference's style, not a copy): a dark, angular armoured gunship. Faceted hull and a big
+    // wrap-around canopy, layered armour plates and chines, red fins and winglets, white-blue lights, an underslung
+    // cannon and a twin-cannon turret on top.
     const m = Mesh();
-    lathe(m, [[0.001, 1.5], [0.16, 1.32], [0.33, 0.95], [0.44, 0.35], [0.47, -0.45], [0.42, -0.92], [0.32, -1.08]], 6,
-      (p) => p === 3 ? "trim" : "hull", { sz: 0.56, rot: Math.PI / 6 });
-    box(m, [0.85, 0, 0.12], [0.45, 0.12, 0.06], "glow");                                         // nose sensor strip
-    box(m, [-0.58, 0, 0.24], [0.5, 0.36, 0.2], "hull");                                          // bridge
-    box(m, [-0.38, 0, 0.32], [0.1, 0.3, 0.07], "glass");
-    fin(m, [[-0.55, 0.3], [-0.95, 0.68], [-1.1, 0.68], [-1.02, 0.3]], 0, 0.06, "trim", "hull");   // dorsal fin
-    for (const s of [-1, 1]) {
-      const sponson = [[0.55, s * 0.36], [-0.3, s * 0.74], [-0.95, s * 0.74], [-1.02, s * 0.4]];
-      slab(m, s > 0 ? sponson : sponson.slice().reverse(), -0.03, 0.16, "hull", "trim");
-      box(m, [-0.28, s * 0.6, 0.11], [0.55, 0.18, 0.12], "dark");                                // missile rack
-      for (const y of [0.54, 0.66]) box(m, [0.0, s * y, 0.11], [0.04, 0.05, 0.05], "glow");      // missile tips
-      box(m, [-0.65, s * 0.72, -0.03], [0.5, 0.04, 0.05], "glow");                               // running light
+    lathe(m, [[0.001, 1.55], [0.15, 1.38], [0.32, 1.05], [0.45, 0.55], [0.52, 0.0], [0.54, -0.6], [0.5, -0.95], [0.42, -1.1]], 4,
+      (q) => q === 4 ? "dark" : "hull", { sy: 1.15, sz: 0.6, rot: Math.PI / 4 });
+    lathe(m, [[0.001, 1.15], [0.12, 1.02], [0.2, 0.75], [0.22, 0.5], [0.001, 0.35]], 4, "glass", { at: [0, 0, 0.2], sy: 1.2, sz: 0.55, rot: Math.PI / 4 });   // canopy
+    box(m, [0.72, 0, 0.3], [0.03, 0.3, 0.03], "dark");
+    slab(m, [[0.45, 0], [0.25, 0.3], [-0.8, 0.38], [-1.0, 0.25], [-1.0, -0.25], [-0.8, -0.38], [0.25, -0.3]], 0.26, 0.07, "hull", "dark");   // armour deck
+    slab(m, [[0.1, 0.18], [-0.6, 0.26], [-0.75, 0.15], [-0.75, -0.15], [-0.6, -0.26], [0.1, -0.18]], 0.31, 0.03, "dark");
+    for (let k = 0; k < 4; k++) box(m, [-0.25 - k * 0.11, 0, 0.33], [0.05, 0.3, 0.015], "trim");                         // red vents
+    for (const sd of [-1, 1]) {
+      slab(m, side([[1.2, 0.15], [0.6, 0.48], [-0.3, 0.62], [-1.0, 0.6], [-1.1, 0.4], [0.0, 0.42], [0.8, 0.2]], sd), -0.08, 0.12, "hull", "dark");   // chine
+      slab(m, side([[0.9, 0.12], [0.3, 0.5], [-0.6, 0.56], [-0.9, 0.45], [0.2, 0.35]], sd), -0.2, 0.08, "dark", "hull");   // lower plate
+      fin(m, [[-0.55, 0.3], [-0.75, 0.68], [-0.95, 0.72], [-1.0, 0.3]], sd * 0.32, 0.05, "trim", "dark");               // red fin
+      slab(m, side([[-0.75, 0.6], [-1.05, 0.9], [-1.15, 0.9], [-1.1, 0.58]], sd), -0.1, 0.05, "trim", "dark");           // red winglet
+      box(m, [0.5, sd * 0.47, -0.02], [0.14, 0.03, 0.03], "glow"); box(m, [-0.25, sd * 0.6, -0.02], [0.14, 0.03, 0.03], "glow");   // lights
+      box(m, [0.55, sd * 0.2, 0.3], [0.06, 0.03, 0.03], "glow");
+      box(m, [0.15, sd * 0.5, 0.0], [0.3, 0.05, 0.06], "dark"); box(m, [-0.55, sd * 0.55, 0.0], [0.25, 0.05, 0.06], "dark");   // panel greebles
+      box(m, [-0.45, sd * 0.3, 0.3], [0.3, 0.05, 0.04], "dark");
+      box(m, [-1.1, sd * 0.28, 0.02], [0.28, 0.3, 0.32], "hull");                                                        // engine housing
+      box(m, [-1.25, sd * 0.28, 0.02], [0.02, 0.24, 0.24], "glow");
+      box(m, [-0.9, sd * 0.28, 0.2], [0.14, 0.2, 0.02], "trim");
     }
-    box(m, [-1.05, 0, 0], [0.3, 0.98, 0.42], "dark");                                            // engine block
-    for (const y of [-0.32, 0, 0.32]) {
-      lathe(m, [[0.14, -1.15], [0.16, -1.27], [0.13, -1.32]], 7, "trim", { at: [0, y, 0] });
-      lathe(m, [[0.13, -1.32], [0.001, -1.33]], 7, "glow", { at: [0, y, 0] });
-    }
+    box(m, [-1.08, 0, 0.02], [0.22, 0.95, 0.45], "dark");                                                                 // engine block
+    box(m, [-0.15, 0, -0.28], [0.2, 0.08, 0.12], "dark");                                                                 // cannon mount
+    lathe(m, [[0.001, 0.9], [0.04, 0.86], [0.045, 0.3], [0.08, 0.25], [0.09, -0.2], [0.07, -0.3]], 8, (q) => q === 3 ? "trim" : "dark", { at: [-0.1, 0, -0.36] });   // underslung cannon
+    lathe(m, sphere(0.03, 3), 4, "glow", { at: [0.8, 0, -0.36] });
     MODELS.lancer = m;
-    const t = Mesh();   // turret: an armoured dome, a gun shield and twin long cannons with glowing muzzles
-    lathe(t, [[0.36, 0], [0.38, 0.08], [0.3, 0.2], [0.14, 0.28], [0.001, 0.3]], 8, (p) => p === 1 ? "trim" : "hull", { axis: "z" });
-    box(t, [0.24, 0, 0.12], [0.22, 0.42, 0.18], "trim");
-    for (const y of [-0.1, 0.1]) {
-      lathe(t, [[0.05, 0.3], [0.05, 1.05], [0.065, 1.08], [0.065, 1.2]], 6, "dark", { at: [0, y, 0.12] });
-      lathe(t, [[0.065, 1.2], [0.001, 1.21]], 6, "glow", { at: [0, y, 0.12] });
+    const t = Mesh();   // turret: a faceted base, an armoured gun housing with a red stripe and twin long cannons
+    lathe(t, [[0.3, 0], [0.3, 0.08], [0.22, 0.18], [0.001, 0.2]], 6, (q) => q === 1 ? "dark" : "hull", { axis: "z" });
+    box(t, [0.12, 0, 0.15], [0.36, 0.3, 0.14], "hull");
+    box(t, [0.12, 0, 0.225], [0.3, 0.06, 0.02], "trim");
+    box(t, [-0.1, 0, 0.17], [0.12, 0.34, 0.1], "dark");
+    for (const y of [-0.08, 0.08]) {
+      lathe(t, [[0.04, 0.25], [0.04, 1.0], [0.055, 1.02], [0.055, 1.12]], 6, "dark", { at: [0, y, 0.15] });
+      lathe(t, [[0.055, 1.12], [0.001, 1.13]], 6, "glow", { at: [0, y, 0.15] });
     }
     MODELS.turret = t;
   }
@@ -665,6 +698,9 @@
 
   // Colours for each side (r, g, b).
   const PAINT = {
+    blade:  { hull: [232, 226, 212], trim: [255, 118, 48], dark: [42, 46, 72], glass: [60, 150, 210], glow: [120, 215, 255], rim: [255, 160, 90] },
+    spark:  { hull: [226, 228, 236], trim: [64, 158, 196], dark: [34, 36, 70], glass: [70, 120, 180], glow: [255, 140, 50], nose: [255, 128, 46], pod: [150, 154, 168], flame: [255, 214, 80], rim: [255, 170, 100] },
+    lancer: { hull: [96, 102, 118], trim: [228, 52, 62], dark: [34, 36, 46], glass: [120, 180, 230], glow: [170, 220, 255], rim: [255, 90, 100] },
     p: { hull: [200, 190, 225], trim: [150, 70, 255], dark: [45, 30, 75], glass: [120, 210, 255], glow: [255, 90, 230], rim: [255, 60, 210] },
     e: { hull: [210, 110, 40], trim: [255, 170, 60], dark: [70, 25, 10], glass: [255, 200, 120], glow: [180, 255, 90], rim: [255, 140, 40] },
     rock: { hull: [95, 80, 120], trim: [120, 100, 150], dark: [40, 30, 55], glass: [0, 0, 0], glow: [0, 0, 0], rim: [140, 80, 220] },
@@ -709,11 +745,14 @@
       if (!f.wind && (mid[0] - pc[0]) * n[0] + (mid[1] - pc[1]) * n[1] + (mid[2] - pc[2]) * n[2] < 0) n = n.map(v => -v);   // Blender faces ("wind") already point the right way
       const facing = n[0] * VIEW[0] + n[1] * VIEW[1] + n[2] * VIEW[2];
       if (facing <= 0.02) continue;                                            // back faces are hidden
-      faces.push({ f, n, facing, depth: mid[1] * TILT.y + mid[2] * TILT.z });
+      // Size on screen: faces too small to see are skipped (keeps detailed ships fast when zoomed out).
+      let area = 0; for (let k = 0, L = f.i.length; k < L; k++) { const p1 = P[f.i[k]], p2 = P[f.i[(k + 1) % L]]; area += p1[3] * p2[4] - p2[3] * p1[4]; }
+      area = Math.abs(area) / 2; if (area < 0.5) continue;
+      faces.push({ f, n, facing, area, depth: mid[1] * TILT.y + mid[2] * TILT.z });
     }
     faces.sort((p, q) => p.depth - q.depth);
     ctx.globalAlpha = alpha;
-    for (const { f, n, facing } of faces) {
+    for (const { f, n, facing, area } of faces) {
       const base = f.rgb || paint[f.mat] || paint.hull;      // Blender faces carry their own material colour
       let col;
       if (f.mat === "glow") col = base;
@@ -731,7 +770,7 @@
       f.i.forEach((i, k) => k ? ctx.lineTo(P[i][3], P[i][4]) : ctx.moveTo(P[i][3], P[i][4]));
       ctx.closePath();
       ctx.fillStyle = css; ctx.fill();
-      ctx.strokeStyle = css; ctx.lineWidth = 0.6; ctx.stroke();               // seals hairline gaps between faces
+      if (area > 40) { ctx.strokeStyle = css; ctx.lineWidth = 0.6; ctx.stroke(); }   // seals hairline gaps between faces (only visible on big ones)
     }
     ctx.globalAlpha = 1;
   }
@@ -840,10 +879,11 @@
   }
 
   // Height each kind floats at, and how big its model is compared with its hit circle.
+  const ENGINE = { spark: "255,150,60", blade: "120,210,255", lancer: "160,215,255" };   // engine glow colour per ship
   const HOVER = { spark: 16, blade: 22, lancer: 18, core: 10, mite: 10, brute: 6, spitter: 26, hive: 4, tower: 2, depot: 2, outpost: 6, yard: 4 };
   const SIZE = { spark: 1.35, blade: 1.45, lancer: 1.3, core: 0.95, mite: 1.0, brute: 0.95, spitter: 1.0, hive: 0.95, tower: 1.3, depot: 1.15, outpost: 1.0, yard: 1.0 };
   function drawEnt(e, now) {
-    const T = e.T, paint = PAINT[e.team], flash = Math.min(1, e.flash);
+    const T = e.T, paint = PAINT[e.type] || PAINT[e.team], flash = Math.min(1, e.flash);
     const h = HOVER[e.type] + (T.building ? 0 : Math.sin(now / 420 + e.bob) * 3), size = e.r * SIZE[e.type];
     // Shadow on the "floor" of space (a faint dark patch, offset away from the star).
     ctx.fillStyle = "rgba(0,0,0,0.35)"; ctx.beginPath(); ctx.ellipse(sx(e.x + h * 0.35), sy(e.y + h * 0.25), size * zoom, size * zoom * TILT.y * 0.8, 0, 0, 6.28); ctx.fill();
@@ -886,7 +926,7 @@
       if (e.team === "p") {
         const back = -size * (e.type === "lancer" ? 1.15 : 0.95), moving = e.moving ? 1 : 0.45;
         const bx = X + Math.cos(e.face) * back * zoom, by = Y + Math.sin(e.face) * back * zoom * TILT.y;
-        bloom(bx, by, size * (0.7 + 0.5 * moving) * zoom, "255,90,230", 0.55 * moving + 0.2);
+        bloom(bx, by, size * (0.7 + 0.5 * moving) * zoom, ENGINE[e.type] || "255,90,230", 0.55 * moving + 0.2);
       }
       if (e.type === "spark" && e.carry) bloom(X, Y - size * 0.4 * zoom, 10 * zoom, "255,90,230", 1);
     }
@@ -1180,12 +1220,14 @@
   }, true);
 
   new IntersectionObserver(es => { onScreen = es[0].isIntersecting; }, { threshold: 0.35 }).observe(section);
-  let last = performance.now();
+  let last = performance.now(), frameMs = 0;
   function loop(now) {
     const dt = Math.min(50, now - last); last = now;
     if (onScreen && W) {
+      const t0 = performance.now();
       if (state === "play") { scrollCamera(dt); update(dt); hud(); }
       draw(now);
+      frameMs = frameMs * 0.9 + (performance.now() - t0) * 0.1;   // how long a frame's work takes (test hook)
     }
     requestAnimationFrame(loop);
   }
@@ -1193,5 +1235,5 @@
   if (reduce) intro.querySelector(".rts-help").textContent += " · (Reduced motion: effects are toned down.)";
   requestAnimationFrame(loop);
   window.neonRTS = { state: () => ({ state, credits, clock: Math.round(clock), wave: waveNo, units: ents.filter(e => e.team === "p" && !e.T.building).length, enemies: ents.filter(e => e.team === "e").length, hive: hive() && hive().hp, core: core() && core().hp, selected: selected.length }),
-                     start, give: n => { credits += n; }, army: () => act("army"), seeAll: on => { seeAll = on; if (on) explored.fill(1); }, count: () => ents.reduce((m, e) => (m[e.type] = (m[e.type] || 0) + 1, m), {}), step: ms => { for (let t = 0; t < ms && state === "play"; t += 16) update(16); hud(); }, train, wave: sendWave, select: type => { selected = ents.filter(e => e.type === type); renderPanel(); }, command, killHive: () => { const h = hive(); if (h) damage(h, 1e6, null); }, build: (type, x, y) => { selected = ents.filter(e => e.type === "spark" && !(e.order && e.order.type === "build")).slice(0, 1); placing = { type }; return place(x, y); }, buildings: () => ents.filter(e => e.team === "p" && e.T.building).map(e => ({ type: e.type, built: +e.built.toFixed(2), hp: Math.round(e.hp), queue: e.queue.length })), canPlace, cap: () => supplyCap(), zoom: f => { if (f) zoomBy(f); return +zoom.toFixed(3); }, camTo: (x, y) => { cam.x = x - W / zoom / 2; cam.y = y - H / zoom / 2; clampCamera(); } };
+                     start, give: n => { credits += n; }, army: () => act("army"), seeAll: on => { seeAll = on; if (on) explored.fill(1); }, count: () => ents.reduce((m, e) => (m[e.type] = (m[e.type] || 0) + 1, m), {}), step: ms => { for (let t = 0; t < ms && state === "play"; t += 16) update(16); hud(); }, train, wave: sendWave, select: type => { selected = ents.filter(e => e.type === type); renderPanel(); }, command, killHive: () => { const h = hive(); if (h) damage(h, 1e6, null); }, build: (type, x, y) => { selected = ents.filter(e => e.type === "spark" && !(e.order && e.order.type === "build")).slice(0, 1); placing = { type }; return place(x, y); }, buildings: () => ents.filter(e => e.team === "p" && e.T.building).map(e => ({ type: e.type, built: +e.built.toFixed(2), hp: Math.round(e.hp), queue: e.queue.length })), canPlace, cap: () => supplyCap(), frameMs: () => +frameMs.toFixed(2), drawOnce: () => { const t = performance.now(); draw(performance.now()); return +(performance.now() - t).toFixed(2); }, zoom: f => { if (f) zoomBy(f); return +zoom.toFixed(3); }, camTo: (x, y) => { cam.x = x - W / zoom / 2; cam.y = y - H / zoom / 2; clampCamera(); } };
 })();

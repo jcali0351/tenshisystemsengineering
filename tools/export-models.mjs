@@ -128,9 +128,9 @@ const out = [];
 const P = RTS.PAINT;
 const rts = {
   "rts.station": rtsObject("rts.station", [{ m: RTS.MODELS.core }, { m: RTS.MODELS.ring }], P.p),
-  "rts.miner": rtsObject("rts.miner", [{ m: RTS.MODELS.spark }], P.p),
-  "rts.interceptor": rtsObject("rts.interceptor", [{ m: RTS.MODELS.blade }], P.p),
-  "rts.gunship": rtsObject("rts.gunship", [{ m: RTS.MODELS.lancer }, { m: RTS.MODELS.turret, offset: [0, 0, 0.35] }], P.p),
+  "rts.miner": rtsObject("rts.miner", [{ m: RTS.MODELS.spark }], P.spark),
+  "rts.interceptor": rtsObject("rts.interceptor", [{ m: RTS.MODELS.blade }], P.blade),
+  "rts.gunship": rtsObject("rts.gunship", [{ m: RTS.MODELS.lancer }, { m: RTS.MODELS.turret, offset: [0, 0, 0.35] }], P.lancer),
   "rts.swarmling": rtsObject("rts.swarmling", [{ m: RTS.MODELS.mite }], P.e),
   "rts.behemoth": rtsObject("rts.behemoth", [{ m: RTS.MODELS.brute }], P.e),
   "rts.spitter": rtsObject("rts.spitter", [{ m: RTS.MODELS.spitter }], P.e),
