@@ -59,7 +59,8 @@ Each game reads its settings from `window.TENSHI_GAMES` (sandbox/game-settings.j
    = the owner's animated "Corrupted Astral Sorcerer", 8 directions × 8 frames, plays a leap-back when hit
    (`sandbox/art/hollow-sorcerer.webp`, `MONSTER_SPRITES`); the Golem (from floor 1, `golemFromFloor`) = the owner's animated "Low Poly Green
    Elemental", raises its guard when hit (`sandbox/art/golem-elemental.webp`); the Skitter = the owner's textured lava
-   spider (uploaded in Game Studio, then pre-rendered from 16 directions into `sandbox/art/skitter-spider.webp`). The Evil Wizard (common, every floor) uses all 13 of its Mixamo
+   spider (uploaded in Game Studio; it had no animations, so `tools/spider-walk.py` gives it an 8-leg walk in Blender,
+   rendered from 8 directions into `sandbox/art/spider/walk.webp`, entry in `MONSTER_ANIMS`). The Evil Wizard (common, every floor) uses all 13 of its Mixamo
    animations (`MONSTER_ANIMS`, sheets in `sandbox/art/wizard/`, loaded when needed): walk/run/heavy-walk chasing, Charged Slash
    attacks, Call Gesture on spotting you, crouch moves when slowed or between swings, dances/burpees/catching breath as idles. The Evil Green Elf (common, every floor) has only a walk
    (`sandbox/art/elf/walk.webp`; converted from FBX with `tools/fbx-to-glb.py`): stands on frame 0, lunges to attack.

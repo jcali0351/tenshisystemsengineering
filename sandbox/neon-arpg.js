@@ -813,8 +813,6 @@
     hollow: { file: "art/hollow-sorcerer.webp", setting: "hollowSprite", dirs: 8, frames: 8, cell: 160, anchorX: 0.5, anchorY: 0.8637, heightPx: 99.15, height: 1.75, dirOffset: 4, hitMs: 750 },
     // "Low Poly Green Elemental" (Meshy, Mixamo "Block"): the Golem, the tough one (from floor 1). Raises its guard when hit.
     golem: { file: "art/golem-elemental.webp", setting: "golemSprite", dirs: 8, frames: 8, cell: 160, anchorX: 0.5, anchorY: 0.8637, heightPx: 119.84, height: 1.7, dirOffset: 4, hitMs: 900 },
-    // The owner's lava spider (uploaded in Game Studio, rendered in Blender from 16 directions, one still frame each).
-    skitter: { file: "art/skitter-spider.webp", setting: "skitterSprite", dirs: 16, frames: 1, cell: 160, anchorX: 0.5, anchorY: 0.7499, heightPx: 83.29, height: 1.15, dirOffset: 0, hitMs: 1 },
   };
   for (const t in MONSTER_SPRITES) { const S = MONSTER_SPRITES[t]; S.img = new Image(); S.img.src = (document.querySelector('script[src*="neon-arpg.js"]')?.src || "").replace(/neon-arpg\.js.*$/, S.file); }
   function drawMonsterSprite(m, now) {
@@ -846,6 +844,10 @@
     // stands on the first frame when still and lunges forward to stab.
     elf: { setting: "elfSprite", dir: "art/elf/", dirs: 8, cell: 176, anchorX: 0.5, anchorY: 0.8637, heightPx: 136.09, height: 1.3, spotMs: 0,
       anims: { walk: ["walk", 8, 1.03, true] }, idles: [] },
+    // The owner's lava spider (Game Studio upload, no animations of its own): an 8-leg walk made in Blender
+    // (tools/spider-walk.py), 8 directions. Stands still on frame 0, lunges to bite.
+    skitter: { setting: "skitterSprite", dir: "art/spider/", dirs: 8, cell: 176, anchorX: 0.5, anchorY: 0.8637, heightPx: 79.79, height: 1.15, spotMs: 0,
+      anims: { walk: ["walk", 8, 0.33, true] }, idles: [] },
   };
   function animSheet(S, key) {
     const a = S.anims[key];
