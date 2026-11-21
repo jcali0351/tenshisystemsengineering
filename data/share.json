@@ -1,6 +1,6 @@
 {
   "enabled": true,
-  "siteUrl": "https://jcali0351.github.io/tenshisystemsengineering",
+  "siteUrl": "https://tenshisystems.com",
   "heading": true,
   "networks": [
     "twitter",
@@ -15,5 +15,6 @@
     "copy-url",
     "web-share"
   ],
-  "disabledPosts": []
+  "disabledPosts": [],
+  "fbAppId": ""
 }
