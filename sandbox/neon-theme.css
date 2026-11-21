@@ -1117,3 +1117,51 @@ html.neon:not(#_):not(#__):not(#___) main .ab-focus-head {
 }
 html.neon:not(#_):not(#__):not(#___) main .ab-focus-head > :is(.ab-icon, svg) { margin: 0 auto !important; }
 html.neon:not(#_):not(#__):not(#___) main .ab-focus-head h3 { margin: 0 !important; text-align: center !important; width: 100%; }
+
+/* ===== "Let's build what's next": the animated neon city (img/art/neon-city.jpg, drawn by tools/make-neon-city.py) ===== */
+html.neon .parallax:has(#parallax-px3-title) .parallax-layer img {
+  animation: city-hue 16s ease-in-out infinite alternate, city-drift 34s ease-in-out infinite alternate !important;
+  transform-origin: 50% 66%; will-change: filter, transform;
+}
+@keyframes city-hue {
+  0%   { filter: hue-rotate(-18deg) saturate(1.15) brightness(1); }
+  35%  { filter: hue-rotate(10deg) saturate(1.4) brightness(1.1); }
+  70%  { filter: hue-rotate(38deg) saturate(1.3) brightness(1.04); }
+  100% { filter: hue-rotate(-4deg) saturate(1.5) brightness(1.12); }
+}
+@keyframes city-drift { 0% { transform: scale(1.04) translateX(-1%); } 100% { transform: scale(1.12) translateX(1%); } }
+/* a band of light sweeping across the skyline, scanlines and a breathing neon glow at the horizon */
+html.neon .parallax:has(#parallax-px3-title) .parallax-viewport { position: relative; overflow: hidden; }
+html.neon .parallax:has(#parallax-px3-title) .parallax-viewport::before {
+  content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; mix-blend-mode: screen;
+  background:
+    linear-gradient(100deg, transparent 0 38%, rgba(255, 110, 199, .22) 45%, rgba(0, 240, 255, .18) 50%, transparent 57% 100%) -60% 0 / 220% 100% no-repeat,
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, .035) 0 1px, transparent 1px 4px);
+  animation: city-sweep 9s cubic-bezier(.45, 0, .2, 1) infinite;
+}
+@keyframes city-sweep { 0% { background-position: -80% 0, 0 0; } 60%, 100% { background-position: 180% 0, 0 0; } }
+html.neon .parallax:has(#parallax-px3-title) .parallax-viewport::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 55%; z-index: 2; pointer-events: none; mix-blend-mode: screen;
+  background: radial-gradient(ellipse 55% 40% at 50% 30%, rgba(255, 43, 214, .35), transparent 70%),
+              radial-gradient(ellipse 30% 25% at 18% 40%, rgba(0, 240, 255, .22), transparent 70%),
+              radial-gradient(ellipse 30% 25% at 82% 40%, rgba(176, 77, 255, .25), transparent 70%);
+  animation: city-glow 4.2s ease-in-out infinite, city-flicker 7s steps(1) infinite;
+}
+@keyframes city-glow { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+@keyframes city-flicker { 0%, 100% { filter: none; } 41% { filter: brightness(1.6); } 42% { filter: brightness(.6); } 43% { filter: brightness(1.4); } 44% { filter: none; } 88% { filter: hue-rotate(60deg); } 90% { filter: none; } }
+html.neon .parallax:has(#parallax-px3-title) .parallax-copy { position: relative; z-index: 3; }
+html.neon .parallax:has(#parallax-px3-title) .parallax-title { text-shadow: 0 0 24px rgba(255, 43, 214, .8), 0 0 60px rgba(0, 240, 255, .35) !important; }
+@media (prefers-reduced-motion: reduce) {
+  html.neon .parallax:has(#parallax-px3-title) .parallax-layer img,
+  html.neon .parallax:has(#parallax-px3-title) .parallax-viewport::before,
+  html.neon .parallax:has(#parallax-px3-title) .parallax-viewport::after { animation: none !important; }
+}
+
+/* Contact: "Other ways to reach us", the chat card and the FAQ in the neon panels too */
+html.neon:not(#_):not(#__):not(#___) main :is(.info-list > li, .chat-card, .faq details) {
+  background: var(--gx-panel) !important; border: 1px solid var(--gx-edge) !important; box-shadow: var(--gx-glow) !important; border-radius: 18px !important;
+}
+html.neon:not(#_):not(#__):not(#___) main :is(.info-list > li, .chat-card, .faq details) :is(h3, strong, b, summary, span, dt) { color: #fff !important; -webkit-text-fill-color: #fff !important; }
+html.neon:not(#_):not(#__):not(#___) main :is(.info-list > li, .chat-card, .faq details) :is(p, dd, li, small) { color: #e6d9ff !important; -webkit-text-fill-color: #e6d9ff !important; }
+html.neon:not(#_):not(#__):not(#___) main :is(.info-list > li, .chat-card) a { color: #ff6ec7 !important; -webkit-text-fill-color: #ff6ec7 !important; }
+html.neon:not(#_):not(#__):not(#___) main .info-icon { color: #ff6ec7 !important; filter: drop-shadow(0 0 6px rgba(255, 43, 214, .6)); }
