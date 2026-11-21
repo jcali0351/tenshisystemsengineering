@@ -56,9 +56,10 @@ Each game reads its settings from `window.TENSHI_GAMES` (sandbox/game-settings.j
 4. **Undercity** (`sandbox/neon-arpg.js`): isometric dungeon crawler (2:1 projection, TW 64 / TH 32). Hero = the owner's
    Meshy "Eclipse Wraith", **pre-rendered** from 16 directions (`sandbox/art/hero-wraith.webp`); the first enemy (Hollow)
    = the owner's animated "Corrupted Astral Sorcerer", 8 directions × 8 frames, plays a leap-back when hit
-   (`sandbox/art/hollow-sorcerer.webp`, `MONSTER_SPRITES`); the Golem (floor 2+) = the owner's animated "Low Poly Green
+   (`sandbox/art/hollow-sorcerer.webp`, `MONSTER_SPRITES`); the Golem (from floor 1, `golemFromFloor`) = the owner's animated "Low Poly Green
    Elemental", raises its guard when hit (`sandbox/art/golem-elemental.webp`). Other monsters are 3D meshes from `models/source/arpg.*.glb`
-   drawn with simple 2D lighting. Cover art `sandbox/art/undercity.webp`, same 5 s fade.
+   drawn with simple 2D lighting. Walls and floor use procedural stone canvas textures (`STONE` in neon-arpg.js,
+   mapped onto the isometric faces with `pattern.setTransform`). Cover art `sandbox/art/undercity.webp`, same 5 s fade.
 5. **Quest** (`sandbox/neon-quest.js`): XP for exploring the site, on every page.
 Hero headline effects: `sandbox/neon-fx.js` (flashing messages, particles). Shared 3D model loader:
 `sandbox/tenshi-models.js` (reads models.json, parses .glb incl. textures, simplifies above 2,400 triangles).
@@ -69,7 +70,7 @@ Hero headline effects: `sandbox/neon-fx.js` (flashing messages, particles). Shar
 - Tabs: Pages (click text to edit), All text, Images, Slogan, Parallax, Design, Buttons, Share, Image effects,
   Custom CSS, Content bots (news scraper, blog writer as GitHub Actions), **Game Studio** (`admin/games.js`):
   - 3D models: every slot (26) with a model-viewer preview, Upload .glb (checked: glTF binary, no Draco/meshopt,
-    ≤ 25 MB) and Revert. Uploading the Undercity hero or Hollow switches its sprite off (`heroSprite`, `hollowSprite`).
+    ≤ 25 MB) and Revert. Uploading the Undercity hero, Hollow or Golem switches its sprite off (`heroSprite`, `hollowSprite`, `golemSprite`).
   - Game settings: form generated from data/games-schema.json; saves data/games.json + sandbox/game-settings.js and
     bumps the `game-settings.js?v=` tag on the homepage.
 - After editor commits, the GitHub Action **`.github/workflows/cms-rebuild.yml`** ("tenshi-editor-bot") runs
