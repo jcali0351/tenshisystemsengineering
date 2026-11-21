@@ -309,6 +309,15 @@
     "perChampion": 14,
     "perBoss": 30
    },
+   "gospel": {
+    "perDamageTaken": 0.6,
+    "perKill": 3,
+    "perFloor": 20,
+    "seconds": 10,
+    "strikeEvery": 550,
+    "radius": 7.5,
+    "bossDamage": 0.2
+   },
    "monsters": {
     "hollow": {
      "hp": 30,
@@ -522,6 +531,7 @@
     "hero": "walking speed, sword reach (tiles), time between swings",
     "skills.nova": "Frost Nova",
     "holy": "Holy Power gained per hit landed / per kill (percent)",
+    "gospel": "gain per damage point / kill / new floor (percent); how long Gabriel stays (s), time between strikes (ms), strike range (tiles), share of a boss's life per strike",
     "monsters.wizard": "the Evil Wizard",
     "monsters.elf": "the Evil Green Elf",
     "monsters.golem": "the Green Elemental",

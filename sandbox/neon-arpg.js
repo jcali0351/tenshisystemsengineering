@@ -1,7 +1,7 @@
 // neon-arpg.js: "UNDERCITY", an isometric action-RPG dungeon crawler in the "Built, then made better" photo strip.
 //
 // Descend through neon crypts under Osaka: click to walk and to attack, right-click to throw a Fireball, 2 for Frost
-// Nova, Q / W for health and mana potions, C for your character sheet, E for the Power of God (when Holy Power is full), mouse wheel / + - keys / + - buttons / pinch to zoom. Monsters drop gold, potions and gear in four
+// Nova, Q / W for health and mana potions, C for your character sheet, E for the Power of God (when Holy Power is full), R for the Archangel (when Holy Gospel is full), mouse wheel / + - keys / + - buttons / pinch to zoom. Monsters drop gold, potions and gear in four
 // rarities (common, magic, rare, legendary) with random bonuses; better gear is equipped automatically, the rest is
 // sold for gold. Find the stairs to go deeper; every third floor a Warden guards them. Your hero is saved in this browser.
 //
@@ -51,6 +51,10 @@
   // instantly slays every enemy you can see.
   const HOLY = { perHit: 0.8, perKill: 6, perChampion: 14, perBoss: 30 };
   TUNE(HOLY, CFG.holy);
+  // Holy Gospel: fills when you take damage, kill, and go deeper. At 100% the ARCHANGEL button pops up (or press R):
+  // Gabriel appears for a while, shields the hero from all damage and strikes down the nearest enemies with light.
+  const GOSPEL = { perDamageTaken: 0.6, perKill: 3, perFloor: 20, seconds: 10, strikeEvery: 550, radius: 7.5, bossDamage: 0.2 };
+  TUNE(GOSPEL, CFG.gospel);
   for (const r of RARITY) TUNE(r, (CFG.rarity || {})[r.id]);
   // How many monsters: per room (more every 2 floors, up to a limit), and how often a Warden boss floor comes.
   const ENEMIES = { perRoomMin: 2, perRoomMax: 3, extraEveryTwoFloors: 1, extraMax: 4, bossEvery: 3, golemFromFloor: 1 };
@@ -110,7 +114,11 @@
       <div class="arpg-gauge arpg-mp"><b></b><span></span></div>
       <div class="arpg-xp"><b></b></div>
       <div class="arpg-holy" title="Holy Power: fills as you fight. At 100% the Power of God is ready."><b></b><span>HOLY POWER 0%</span></div>
-      <button type="button" class="arpg-godbtn" hidden title="Power of God (E): slays every enemy you can see">✝ POWER OF GOD <i>E</i></button>
+      <div class="arpg-gospel" title="Holy Gospel: fills when you take damage, kill and go deeper. At 100% the Archangel is ready."><b></b><span>HOLY GOSPEL 0%</span></div>
+      <div class="arpg-pops">
+        <button type="button" class="arpg-godbtn" hidden title="Power of God (E): slays every enemy you can see">✝ POWER OF GOD <i>E</i></button>
+        <button type="button" class="arpg-angelbtn" hidden title="Archangel (R): Gabriel shields you and strikes down your enemies">✦ ARCHANGEL <i>R</i></button>
+      </div>
     </div>
     <div class="arpg-sheet" hidden></div>
     <div class="arpg-tip" hidden></div>
@@ -120,7 +128,7 @@
       <h3>Descend. Loot. Survive.</h3>
       <p>Fight your way down through the neon crypts beneath Osaka. Grab gold and gear, level up, find the stairs.</p>
       <div class="arpg-buttons"></div>
-      <p class="arpg-help">Click to move &amp; attack · Right-click Fireball · 2 Frost Nova · Q/W potions · C hero · E Power of God (full Holy Power) · Wheel or +/− to zoom</p>
+      <p class="arpg-help">Click to move &amp; attack · Right-click Fireball · 2 Frost Nova · Q/W potions · C hero · E Power of God · R Archangel · Wheel or +/− to zoom</p>
     </div>`;
   section.appendChild(root);
   const canvas = root.querySelector(".arpg-canvas"), ctx = canvas.getContext("2d");
@@ -183,7 +191,7 @@
 
   // ---- The hero ----
   function newHero() {
-    return { x: 0, y: 0, lvl: 1, xp: 0, gold: 0, hp: 80, mp: 40, gear: {}, potions: { hp: 3, mp: 2 }, holy: 0, path: [], target: null, atkCd: 0, cds: { fireball: 0, nova: 0 }, face: 0, walk: 0, swing: 0, flash: 0, best: 1 };
+    return { x: 0, y: 0, lvl: 1, xp: 0, gold: 0, hp: 80, mp: 40, gear: {}, potions: { hp: 3, mp: 2 }, holy: 0, gospel: 0, path: [], target: null, atkCd: 0, cds: { fireball: 0, nova: 0 }, face: 0, walk: 0, swing: 0, flash: 0, best: 1 };
   }
   function stats() {
     const g = Object.values(hero.gear), sum = k => g.reduce((t, it) => t + (it.stats[k] || 0), 0);
@@ -194,7 +202,7 @@
     };
   }
   const xpNeed = lvl => Math.round(60 * Math.pow(lvl, 1.55));
-  function save() { store.set({ lvl: hero.lvl, xp: hero.xp, gold: hero.gold, gear: hero.gear, potions: hero.potions, holy: Math.floor(hero.holy || 0), floor: floorNo, best: Math.max(hero.best || 1, floorNo) }); }
+  function save() { store.set({ lvl: hero.lvl, xp: hero.xp, gold: hero.gold, gear: hero.gear, potions: hero.potions, holy: Math.floor(hero.holy || 0), gospel: Math.floor(hero.gospel || 0), floor: floorNo, best: Math.max(hero.best || 1, floorNo) }); }
 
   // ================================================ MAP ================================================
   function genFloor(n) {
@@ -307,6 +315,7 @@
   function killMonster(m) {
     monsters = monsters.filter(x => x !== m);
     gainHoly(m.T.boss ? HOLY.perBoss : m.champion ? HOLY.perChampion : HOLY.perKill);
+    if (!angelOn()) gainGospel(GOSPEL.perKill);
     burst(m.x, m.y, m.T.color, m.T.boss ? 60 : 22, m.T.boss ? 6 : 3.5);
     sfx(m.T.boss ? "bigboom" : "hit");
     gainXp(Math.round(m.T.xp * (1 + (floorNo - 1) * 0.25) * (m.champion ? 2.5 : 1)));
@@ -347,6 +356,76 @@
     godBusy = false;
     save(); renderHud();
   }
+  // ---- Holy Gospel and the Archangel (Gabriel) ----
+  let angel = { until: 0, next: 0, shieldHit: -1e9, strikes: [] };
+  const angelOn = () => performance.now() < angel.until;
+  function gainGospel(n) {
+    if (!hero || !n) return;
+    const was = hero.gospel || 0; hero.gospel = Math.min(100, was + n);
+    if (was < 100 && hero.gospel >= 100) { say("HOLY GOSPEL FULL · ARCHANGEL READY (R)", 3200, "#bfe6ff"); sfx("achievement"); renderHud(); }
+  }
+  function archangel() {
+    if (state !== "play") return;
+    if (angelOn()) return;
+    if ((hero.gospel || 0) < 100) return say("Holy Gospel " + Math.floor(hero.gospel || 0) + "% · it grows when you're hurt, kill and go deeper", 1600, "#bfe6ff");
+    hero.gospel = 0; const now = performance.now();
+    angel = { until: now + GOSPEL.seconds * 1000, start: now, next: now + 500, shieldHit: -1e9, strikes: [] };
+    say("✦ ARCHANGEL GABRIEL DESCENDS ✦", 3000, "#dff3ff"); sfx("achievement");
+    for (let k = 0; k < 3; k++) fx.push({ ring: true, x: hero.x, y: hero.y, r: 0.3 + k * 0.4, grow: 5, life: 1, color: k % 2 ? "#bfe6ff" : "#ffffff" });
+    save(); renderHud();
+  }
+  function updateAngel(now) {
+    if (!angel.until) return;
+    if (now >= angel.until) { angel.until = 0; say("Gabriel returns to the heavens", 2000, "#bfe6ff"); renderHud(); return; }
+    if (now < angel.next) return;
+    angel.next = now + GOSPEL.strikeEvery;
+    // Strike the nearest enemy in sight within reach of the hero.
+    let best = null, bd = GOSPEL.radius;
+    for (const m of seenMonsters()) { const d = dist(m, hero); if (d < bd) { bd = d; best = m; } }
+    if (!best) return;
+    angel.strikes.push({ x: best.x, y: best.y, t0: now });
+    beams.push({ x: best.x, y: best.y, t0: now });
+    sfx("hit");
+    if (best.T.boss) hurtMonster(best, Math.round(best.max * GOSPEL.bossDamage), "#bfe6ff", true);
+    else { best.hp = 0; num(best.x, best.y, "✦", "#dff3ff", true); killMonster(best); }
+  }
+  // Gabriel: the angel's own picture, three times taller, glowing, hovering behind the hero; a shield around the hero;
+  // a lance of light from Gabriel to each enemy struck.
+  function drawAngel(now) {
+    if (!angel.until && !angel.strikes.length) return;
+    angel.strikes = angel.strikes.filter(s => now - s.t0 < 450);
+    const on = angelOn(), t = on ? (now - angel.start) / 1000 : 0, fade = on ? Math.min(1, t / 0.6, (angel.until - now) / 600) : 0;
+    const gx = hero.x - 0.9, gy = hero.y - 0.9, gz = 1.6 + Math.sin(now / 600) * 0.12;      // behind the hero, floating
+    const S = HERO_SPRITE, img = HERO_ANIMS.walk.img;
+    ctx.save(); ctx.globalCompositeOperation = "lighter";
+    if (fade > 0) {
+      glowAt(gx, gy, gz + 1.6, 220, "255,236,170", 0.35 * fade);
+      glowAt(gx, gy, gz + 1.6, 90, "255,255,255", 0.35 * fade);
+      if (img.complete && img.naturalWidth) {
+        const scale = 6 * TH * 1.15 * zoom / S.heightPx, size = S.cell * scale, px = sx(gx, gy), py = sy(gx, gy, gz);
+        ctx.globalAlpha = 0.85 * fade;
+        ctx.drawImage(img, 0, 1 * S.cell, S.cell, S.cell, px - S.anchorX * size, py - S.anchorY * size, size, size);   // row 1 = facing the camera
+        ctx.globalAlpha = 1;
+      }
+      // Halo above Gabriel.
+      const hx = sx(gx, gy), hy = sy(gx, gy, gz + 5.6);
+      ctx.strokeStyle = `rgba(255,240,180,${0.9 * fade})`; ctx.lineWidth = 4 * zoom; ctx.beginPath(); ctx.ellipse(hx, hy, 34 * zoom, 10 * zoom, 0, 0, 6.28); ctx.stroke();
+      // The shield around the hero (flares when it blocks a hit).
+      const hit = Math.max(0, 1 - (now - angel.shieldHit) / 300), pulse = 0.5 + 0.5 * Math.sin(now / 160);
+      const sx0 = sx(hero.x, hero.y), sy0 = sy(hero.x, hero.y, 0.9), rx = (46 + pulse * 4) * zoom, ry = (60 + pulse * 4) * zoom;
+      const g = ctx.createRadialGradient(sx0, sy0, rx * 0.5, sx0, sy0, rx * 1.1);
+      g.addColorStop(0, "rgba(190,230,255,0)"); g.addColorStop(0.8, `rgba(190,230,255,${(0.18 + hit * 0.4) * fade})`); g.addColorStop(1, "rgba(190,230,255,0)");
+      ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(sx0, sy0, rx * 1.1, ry * 1.1, 0, 0, 6.28); ctx.fill();
+      ctx.strokeStyle = `rgba(220,245,255,${(0.55 + hit * 0.45) * fade})`; ctx.lineWidth = 2 * zoom; ctx.beginPath(); ctx.ellipse(sx0, sy0, rx, ry, 0, 0, 6.28); ctx.stroke();
+    }
+    // Lances of light from Gabriel's raised hand to the enemies struck.
+    for (const s of angel.strikes) {
+      const a = 1 - (now - s.t0) / 450, x0 = sx(gx, gy), y0 = sy(gx, gy, gz + 4.2), x1 = sx(s.x, s.y), y1 = sy(s.x, s.y, 0.6);
+      ctx.strokeStyle = `rgba(255,250,220,${a})`; ctx.lineWidth = 7 * zoom * a; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+      ctx.strokeStyle = `rgba(255,255,255,${a})`; ctx.lineWidth = 2.5 * zoom; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+    }
+    ctx.restore();
+  }
   function drawGod(now) {
     beams = beams.filter(b => now - b.t0 < 1300);
     if (!beams.length && now - godAt > 900) return;
@@ -376,8 +455,14 @@
   }
   function hurtHero(amount, from) {
     if (state !== "play") return;
+    if (angelOn()) {                                                    // Gabriel's shield takes the hit
+      angel.shieldHit = performance.now();
+      if (Math.random() < 0.35) num(hero.x, hero.y, "BLOCKED", "#bfe6ff");
+      return;
+    }
     const s = stats(), taken = Math.max(1, Math.round(amount * (1 - s.armor / (s.armor + 60))));
     hero.hp -= taken; hero.flash = 1;
+    gainGospel(taken * GOSPEL.perDamageTaken);
     num(hero.x, hero.y, "-" + taken, "#ff6e8a");
     if (hero.hp <= 0) die();
   }
@@ -457,6 +542,7 @@
   let holdMove = null, mouseWorld = { x: 0, y: 0 };
   function update(dt) {
     const s = stats();
+    updateAngel(performance.now());
     hero.mp = Math.min(s.maxMp, hero.mp + dt / 1000 * (1.6 + hero.lvl * 0.15));
     hero.hp = Math.min(s.maxHp, hero.hp + dt / 1000 * 0.5);
     hero.atkCd = Math.max(0, hero.atkCd - dt);
@@ -487,7 +573,7 @@
     // Stairs
     if (Math.hypot(hero.x - (stairs.x + 0.5), hero.y - (stairs.y + 0.5)) < 0.6) {
       if (bossAlive) { if (!update.warned) { say("THE WARDEN STILL GUARDS THESE STAIRS", 1600, "#ff8af0"); update.warned = true; setTimeout(() => { update.warned = false; }, 3000); } }
-      else { sfx("power"); enterFloor(floorNo + 1); }
+      else { sfx("power"); gainGospel(GOSPEL.perFloor); enterFloor(floorNo + 1); }
     }
     // Monsters
     for (const m of monsters) {
@@ -1031,6 +1117,7 @@
     glowAt(hero.x, hero.y, 0.5, 200, "176,77,255", 0.08);
     ctx.restore();
     drawGod(now);                                                     // Power of God: light beams and the white flash
+    drawAngel(now);                                                   // Archangel: Gabriel, the shield, lances of light
     // 6. Floating numbers (not darkened).
     for (const n of nums) {
       ctx.globalAlpha = Math.min(1, n.life * 1.5);
@@ -1081,6 +1168,10 @@
     const holy = Math.floor(hero.holy || 0), full = holy >= 100;
     $(".arpg-holy b").style.width = holy + "%"; $(".arpg-holy span").textContent = full ? "✝ HOLY POWER 100%" : "HOLY POWER " + holy + "%";
     $(".arpg-holy").classList.toggle("full", full); $(".arpg-godbtn").hidden = !full;
+    const gos = Math.floor(hero.gospel || 0), gfull = gos >= 100, aon = angelOn();
+    $(".arpg-gospel b").style.width = (aon ? Math.max(0, (angel.until - performance.now()) / (GOSPEL.seconds * 10)) : gos) + "%";
+    $(".arpg-gospel span").textContent = aon ? "✦ GABRIEL IS WITH YOU" : gfull ? "✦ HOLY GOSPEL 100%" : "HOLY GOSPEL " + gos + "%";
+    $(".arpg-gospel").classList.toggle("full", gfull || aon); $(".arpg-angelbtn").hidden = !gfull || aon;
     for (const k of ["fireball", "nova"]) { const b = root.querySelector(`[data-act="${k}"]`); b.style.setProperty("--cd", hero.cds[k] / SKILLS[k].cd); b.classList.toggle("low", hero.mp < SKILLS[k].mana); }
   }
   function renderSheet() {
@@ -1095,6 +1186,7 @@
   function toggleSheet(on) { sheetOpen = on === undefined ? !sheetOpen : on; sheet.hidden = !sheetOpen; if (sheetOpen) renderSheet(); }
   sheet.addEventListener("click", e => { if (e.target.closest(".arpg-close")) toggleSheet(false); });
   root.querySelector(".arpg-godbtn").addEventListener("click", e => { e.stopPropagation(); powerOfGod(); });
+  root.querySelector(".arpg-angelbtn").addEventListener("click", e => { e.stopPropagation(); archangel(); });
   root.querySelector(".arpg-bar").addEventListener("click", e => {
     const b = e.target.closest("button"); if (!b || state !== "play") return;
     const a = b.dataset.act;
@@ -1138,12 +1230,13 @@
   for (const ev of ["pointerup", "pointercancel"]) canvas.addEventListener(ev, e => { touches.delete(e.pointerId); if (touches.size < 2) pinch = 0; });
   window.addEventListener("keydown", e => {
     if (state !== "play" || !takeover || (e.target.closest && e.target.closest("input, textarea, select"))) return;
-    const k = e.key.toLowerCase(), handled = { "1": 1, "2": 1, e: 1, q: 1, w: 1, c: 1, escape: 1, "+": 1, "=": 1, "-": 1, "_": 1 };
+    const k = e.key.toLowerCase(), handled = { "1": 1, "2": 1, e: 1, r: 1, q: 1, w: 1, c: 1, escape: 1, "+": 1, "=": 1, "-": 1, "_": 1 };
     if (!handled[k]) return;
     e.preventDefault(); e.stopImmediatePropagation();
     if (k === "1") castFireball(mouseWorld.x, mouseWorld.y);
     if (k === "2") castNova();
     if (k === "e") powerOfGod();
+    if (k === "r") archangel();
     if (k === "q") drink("hp");
     if (k === "w") drink("mp");
     if (k === "c") toggleSheet();
@@ -1231,5 +1324,5 @@
   requestAnimationFrame(loop);
   // Test hook.
   window.neonARPG = { render: () => draw(performance.now()), state: () => ({ state, floor: floorNo, lvl: hero && hero.lvl, hp: hero && Math.round(hero.hp), gold: hero && hero.gold, monsters: monsters.length, loot: loot.length, gear: hero && Object.values(hero.gear).map(i => i.name) }),
-    start, step: ms => { for (let t = 0; t < ms && state === "play"; t += 16) update(16); renderHud(); }, give: n => { hero.gold += n; }, holy: n => { hero.holy = n; renderHud(); }, item: () => { const it = makeItem(5, 0.5); loot.push({ kind: "item", item: it, x: hero.x + 0.3, y: hero.y, bob: 0 }); return it.name; }, stairs: () => { bossAlive = false; hero.x = stairs.x + 0.5; hero.y = stairs.y + 0.5; }, nearest: () => { const m = nearestVisible(); return m && { type: m.type, x: m.x, y: m.y }; }, attack: () => { const m = monsters.reduce((b, m) => !b || dist(m, hero) < dist(b, hero) ? m : b, null); if (m) { hero.target = m; } return m && m.type; } };
+    start, step: ms => { for (let t = 0; t < ms && state === "play"; t += 16) update(16); renderHud(); }, give: n => { hero.gold += n; }, holy: n => { hero.holy = n; renderHud(); }, gospel: n => { hero.gospel = n; renderHud(); }, item: () => { const it = makeItem(5, 0.5); loot.push({ kind: "item", item: it, x: hero.x + 0.3, y: hero.y, bob: 0 }); return it.name; }, stairs: () => { bossAlive = false; hero.x = stairs.x + 0.5; hero.y = stairs.y + 0.5; }, nearest: () => { const m = nearestVisible(); return m && { type: m.type, x: m.x, y: m.y }; }, attack: () => { const m = monsters.reduce((b, m) => !b || dist(m, hero) < dist(b, hero) ? m : b, null); if (m) { hero.target = m; } return m && m.type; } };
 })();

@@ -170,6 +170,9 @@ UNDERCITY = {
     "custom": [],
     # Holy Power fills as you fight; at 100% the Power of God button pops up (or press E): it slays every enemy you can see.
     "holy": {"perHit": 0.8, "perKill": 6, "perChampion": 14, "perBoss": 30},   # Holy Power gained per hit landed / per kill (percent)
+    # Holy Gospel fills when the hero is hurt, kills and goes deeper; at 100% the Archangel button pops up (or press R):
+    # Gabriel shields the hero from all damage and strikes down the nearest enemies for a while.
+    "gospel": {"perDamageTaken": 0.6, "perKill": 3, "perFloor": 20, "seconds": 10, "strikeEvery": 550, "radius": 7.5, "bossDamage": 0.2},   # gain per damage point / kill / new floor (percent); how long Gabriel stays (s), time between strikes (ms), strike range (tiles), share of a boss's life per strike
     "monsters": {
         # hp, dmg = damage per hit, speed, reach (tiles), every = time between attacks, xp, weight = how common
         "hollow":  {"hp": 30,  "dmg": 4,  "speed": 1.9, "reach": 1.1, "every": 1000, "xp": 12,  "weight": 5},

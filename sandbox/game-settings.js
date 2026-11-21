@@ -308,6 +308,15 @@ window.TENSHI_GAMES = {
    "perChampion": 14,
    "perBoss": 30
   },
+  "gospel": {
+   "perDamageTaken": 0.6,
+   "perKill": 3,
+   "perFloor": 20,
+   "seconds": 10,
+   "strikeEvery": 550,
+   "radius": 7.5,
+   "bossDamage": 0.2
+  },
   "monsters": {
    "hollow": {
     "hp": 30,
