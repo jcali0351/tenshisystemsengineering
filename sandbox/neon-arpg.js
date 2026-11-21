@@ -1,7 +1,7 @@
 // neon-arpg.js: "UNDERCITY", an isometric action-RPG dungeon crawler in the "Built, then made better" photo strip.
 //
 // Descend through neon crypts under Osaka: click to walk and to attack, right-click to throw a Fireball, 2 for Frost
-// Nova, Q / W for health and mana potions, C for your character sheet. Monsters drop gold, potions and gear in four
+// Nova, Q / W for health and mana potions, C for your character sheet, mouse wheel / + - keys / + - buttons / pinch to zoom. Monsters drop gold, potions and gear in four
 // rarities (common, magic, rare, legendary) with random bonuses; better gear is equipped automatically, the rest is
 // sold for gold. Find the stairs to go deeper; every third floor a Warden guards them. Your hero is saved in this browser.
 //
@@ -83,6 +83,7 @@
       <div class="arpg-info" hidden><span class="arpg-floor"></span><span class="arpg-gold"></span><span class="arpg-lvl"></span></div>
     </div>
     <canvas class="arpg-mini" width="150" height="150" hidden></canvas>
+    <div class="arpg-zoom" hidden><button type="button" data-zoom="in" aria-label="Zoom in" title="Zoom in (+ or mouse wheel)">+</button><button type="button" data-zoom="out" aria-label="Zoom out" title="Zoom out (-)">−</button></div>
     <div class="arpg-hud" hidden>
       <div class="arpg-gauge arpg-hp"><b></b><span></span></div>
       <div class="arpg-bar">
@@ -103,7 +104,7 @@
       <h3>Descend. Loot. Survive.</h3>
       <p>Fight your way down through the neon crypts beneath Osaka. Grab gold and gear, level up, find the stairs.</p>
       <div class="arpg-buttons"></div>
-      <p class="arpg-help">Click to move &amp; attack · Right-click Fireball · 2 Frost Nova · Q/W potions · C hero</p>
+      <p class="arpg-help">Click to move &amp; attack · Right-click Fireball · 2 Frost Nova · Q/W potions · C hero · Wheel or +/− to zoom</p>
     </div>`;
   section.appendChild(root);
   const canvas = root.querySelector(".arpg-canvas"), ctx = canvas.getContext("2d");
@@ -113,14 +114,22 @@
   const exitBtn = $(".arpg-exit"), fullBtn = $(".arpg-full"), infoEl = $(".arpg-info");
   const light = document.createElement("canvas"), lctx = light.getContext("2d");
 
-  let W = 0, H = 0, zoom = 1, ratio = 1;
+  let W = 0, H = 0, zoom = 1, ratio = 1, baseZoom = 1;
+  // Zoom: the screen-size zoom times your own zoom (wheel, + / - keys, the buttons, pinch), remembered in this browser.
+  const ZOOM_MIN = 0.55, ZOOM_MAX = 2.2;
+  let userZoom = 1;
+  try { userZoom = clamp(parseFloat(localStorage.getItem("tenshi-arpg-zoom")) || 1, ZOOM_MIN, ZOOM_MAX); } catch (e) { /* storage blocked */ }
+  function zoomBy(f) {
+    userZoom = clamp(userZoom * f, ZOOM_MIN, ZOOM_MAX); zoom = baseZoom * userZoom;
+    try { localStorage.setItem("tenshi-arpg-zoom", String(userZoom)); } catch (e) { /* storage blocked */ }
+  }
   function resize() {
     const r = root.getBoundingClientRect();
     ratio = Math.min(window.devicePixelRatio || 1, 2);
     W = r.width; H = r.height;
     canvas.width = Math.round(W * ratio); canvas.height = Math.round(H * ratio);
     light.width = Math.round(W / 2); light.height = Math.round(H / 2);      // half-size light map: soft and cheap
-    zoom = W < 760 ? 0.8 : clamp(W / 1400, 0.85, 1.3);
+    baseZoom = W < 760 ? 0.8 : clamp(W / 1400, 0.85, 1.3); zoom = baseZoom * userZoom;
   }
   window.addEventListener("resize", resize);
 
@@ -679,7 +688,7 @@
   // at this game's camera angle, with all its animations: Walking (short moves), Running (longer moves) and Attack (melee
   // swings and spells). Sheets: rows = directions (row 0 faces map angle 0, then every 45 degrees), columns = frames.
   // Standing still shows the first Walking frame. Falls back to the 3D model in the arpg.hero slot. ----
-  const HERO_SPRITE = { dirs: 8, cell: 192, anchorX: 0.5, anchorY: 0.8637, heightPx: 111.27, height: 2.0 };
+  const HERO_SPRITE = { dirs: 8, cell: 256, anchorX: 0.5, anchorY: 0.8637, heightPx: 148.36, height: 2.0 };
   const HERO_ANIMS = {
     walk: { file: "art/hero-angel-walk.webp", frames: 8, ms: 1033 },
     run: { file: "art/hero-angel-run.webp", frames: 8, ms: 633 },
@@ -704,6 +713,7 @@
     const scale = S.height * TH * 1.15 * zoom / S.heightPx, size = S.cell * scale;
     const px = sx(hero.x, hero.y), py = sy(hero.x, hero.y, bob), cx = frame * S.cell, cy = row * S.cell;
     const dx = px - S.anchorX * size, dy = py - S.anchorY * size;
+    ctx.save(); ctx.globalCompositeOperation = "lighter"; glowAt(hero.x, hero.y, 1.0 + bob, 46, "255,120,230", 0.16); glowAt(hero.x, hero.y, 0.05, 30, "190,140,255", 0.22); ctx.restore();   // soft neon aura
     ctx.drawImage(A.img, cx, cy, S.cell, S.cell, dx, dy, size, size);
     if (hero.flash > 0.05) { ctx.save(); ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = Math.min(1, hero.flash) * 0.7; ctx.drawImage(A.img, cx, cy, S.cell, S.cell, dx, dy, size, size); ctx.restore(); }
     return true;
@@ -970,9 +980,22 @@
     else { setMove(mouseWorld.x, mouseWorld.y); holdMove = { next: performance.now() + 220 }; }
   });
   canvas.addEventListener("pointerup", () => { holdMove = null; });
+  // Zoom: mouse wheel, the + / - buttons, and a two-finger pinch on touch screens.
+  canvas.addEventListener("wheel", e => { if (state !== "play") return; e.preventDefault(); zoomBy(Math.exp(-clamp(e.deltaY, -120, 120) * 0.0018)); }, { passive: false });
+  const zoomBar = root.querySelector(".arpg-zoom");
+  zoomBar.addEventListener("click", e => { const b = e.target.closest("button"); if (b) zoomBy(b.dataset.zoom === "in" ? 1.2 : 1 / 1.2); });
+  const touches = new Map(); let pinch = 0;
+  const pinchGap = () => { const [a, b] = [...touches.values()]; return Math.hypot(a.x - b.x, a.y - b.y); };
+  canvas.addEventListener("pointerdown", e => { if (e.pointerType === "mouse") return; touches.set(e.pointerId, local(e)); if (touches.size === 2) { holdMove = null; pinch = pinchGap(); } });
+  canvas.addEventListener("pointermove", e => {
+    if (!touches.has(e.pointerId)) return;
+    touches.set(e.pointerId, local(e));
+    if (touches.size === 2 && pinch) { const g = pinchGap(); zoomBy(g / pinch); pinch = g; holdMove = null; }
+  });
+  for (const ev of ["pointerup", "pointercancel"]) canvas.addEventListener(ev, e => { touches.delete(e.pointerId); if (touches.size < 2) pinch = 0; });
   window.addEventListener("keydown", e => {
     if (state !== "play" || !takeover || (e.target.closest && e.target.closest("input, textarea, select"))) return;
-    const k = e.key.toLowerCase(), handled = { "1": 1, "2": 1, q: 1, w: 1, c: 1, escape: 1 };
+    const k = e.key.toLowerCase(), handled = { "1": 1, "2": 1, q: 1, w: 1, c: 1, escape: 1, "+": 1, "=": 1, "-": 1, "_": 1 };
     if (!handled[k]) return;
     e.preventDefault(); e.stopImmediatePropagation();
     if (k === "1") castFireball(mouseWorld.x, mouseWorld.y);
@@ -981,6 +1004,8 @@
     if (k === "w") drink("mp");
     if (k === "c") toggleSheet();
     if (k === "escape") toggleSheet(false);
+    if (k === "+" || k === "=") zoomBy(1.2);
+    if (k === "-" || k === "_") zoomBy(1 / 1.2);
   }, true);
 
   // ================================================ THE GAME WINDOW ================================================
@@ -1006,7 +1031,7 @@
     else { const r = (section.requestFullscreen || section.webkitRequestFullscreen).call(section); if (r && r.catch) r.catch(() => {}); }
   });
   for (const ev of ["fullscreenchange", "webkitfullscreenchange"]) document.addEventListener(ev, () => { fullBtn.textContent = document.fullscreenElement || document.webkitFullscreenElement ? "⤢ EXIT FULLSCREEN" : "⛶ FULLSCREEN"; setTimeout(resize, 80); });
-  function showUI(on) { for (const el of [hud, infoEl, mini]) el.hidden = !on; exitBtn.hidden = !(on || takeover); section.classList.toggle("arpg-on", on); if (!on) { toggleSheet(false); tipEl.hidden = true; } }
+  function showUI(on) { for (const el of [hud, infoEl, mini, zoomBar]) el.hidden = !on; exitBtn.hidden = !(on || takeover); section.classList.toggle("arpg-on", on); if (!on) { toggleSheet(false); tipEl.hidden = true; } }
   function showIntro(html) { if (html) intro.innerHTML = html; intro.hidden = false; showUI(false); }
   function introButtons() {
     const saved = store.get();

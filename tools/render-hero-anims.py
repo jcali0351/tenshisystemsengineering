@@ -16,6 +16,7 @@ if "--extra" in args:
     i = args.index("--extra"); extra = args[i + 1]; args = args[:i] + args[i + 2:]
 src, out, px, samples = args[0], args[1], int(args[2]), int(args[3])
 wanted = [(a.split(":")[0], int(a.split(":")[1])) for a in args[4:]]
+GLOW = 0.2                                                 # how much the texture glows by itself (Meshy exports 1.0)
 front_offset = 90.0                                        # Meshy fronts face -Y; turn them to face +X (map angle 0)
 os.makedirs(out, exist_ok=True)
 
@@ -41,6 +42,17 @@ def use_action(key, from_extra):
         if getattr(arm.animation_data, "action_slot", None) is None and len(act.slots): arm.animation_data.action_slot = act.slots[0]
     except Exception: pass
     return act
+
+# Materials: Meshy often exports the colour texture as full-strength emission with doubled specular, which renders flat
+# and washed-out white. Tone that down so the lights shape the character: a hint of glow, normal shine, soft satin.
+for m in mesh.data.materials:
+    if not m or not m.use_nodes: continue
+    for n in m.node_tree.nodes:
+        if n.type != "BSDF_PRINCIPLED": continue
+        def setin(name, v):
+            if name in n.inputs: n.inputs[name].default_value = v
+        setin("Emission Strength", GLOW); setin("Specular IOR Level", 0.5); setin("Roughness", 0.5)
+        setin("Coat Weight", 0.08); setin("Sheen Weight", 0.15)
 
 pivot = bpy.data.objects.new("pivot", None); scene.collection.objects.link(pivot)
 arm.parent = pivot
@@ -79,14 +91,21 @@ el = math.radians(30); D = 30
 def light(energy, color, frm, angle):
     d = bpy.data.lights.new("sun" + str(energy), "SUN"); d.energy = energy; d.color = color; d.angle = angle
     o = bpy.data.objects.new(d.name, d); o.rotation_euler = (-Vector(frm)).to_track_quat("-Z", "Y").to_euler(); scene.collection.objects.link(o)
-light(4.0, (0.95, 0.92, 1.0), (0.35, 1.0, 1.15), 0.35)      # key from the camera side
-light(1.3, (0.6, 0.55, 1.0), (1.0, 0.15, 0.5), 0.8)          # fill from the right
-light(4.0, (0.78, 0.42, 1.0), (-1.0, -1.0, 0.7), 0.25)       # violet rim from behind
+light(4.2, (1.0, 0.93, 0.86), (0.25, 1.0, 1.3), 0.2)        # warm key from the camera side, above
+light(0.9, (0.55, 0.6, 1.0), (1.0, 0.1, 0.35), 0.9)          # cool fill from the right
+light(5.0, (1.0, 0.35, 0.85), (-1.0, -0.6, 0.55), 0.15)      # neon pink rim from behind-left
+light(4.0, (0.55, 0.45, 1.0), (-0.5, -1.0, 0.6), 0.15)       # violet rim from behind-right
 world = bpy.data.worlds.new("w"); scene.world = world; world.use_nodes = True
 world.node_tree.nodes["Background"].inputs[0].default_value = (0.03, 0.02, 0.06, 1); world.node_tree.nodes["Background"].inputs[1].default_value = 0.6
 scene.render.engine = "CYCLES"; scene.cycles.device = "CPU"; scene.cycles.samples = samples; scene.cycles.use_denoising = True
 scene.render.film_transparent = True; scene.render.resolution_x = px; scene.render.resolution_y = px
 scene.render.image_settings.file_format = "PNG"; scene.render.image_settings.color_mode = "RGBA"
+try:                                                       # a punchier tone curve than the default
+    scene.view_settings.view_transform = "AgX"
+    for look in ("AgX - Medium High Contrast", "AgX - Punchy", "Medium High Contrast"):
+        try: scene.view_settings.look = look; break
+        except Exception: pass
+except Exception: pass
 
 dirs = 8; meta = {"dirs": dirs, "cell": px, "modelHeight": H, "anims": {}}
 for pl in plans:
