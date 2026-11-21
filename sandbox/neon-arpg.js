@@ -273,7 +273,7 @@
 
   function hurtMonster(m, amount, color = "#ffffff", crit = false) {
     if (m.hp <= 0) return;
-    m.hp -= amount; m.flash = 1; m.aggro = true;
+    m.hp -= amount; m.flash = 1; m.aggro = true; m.hitAt = performance.now();
     num(m.x, m.y, Math.round(amount) + (crit ? "!" : ""), crit ? "#ffd84a" : color, crit);
     burst(m.x, m.y, m.T.color, crit ? 14 : 7, 2.5);
     if (m.hp <= 0) killMonster(m);
@@ -649,12 +649,32 @@
     ctx.restore();
     if (hero.swing > 0.3) { ctx.save(); ctx.globalCompositeOperation = "lighter"; ctx.strokeStyle = `rgba(255,255,255,${hero.swing * 0.6})`; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(px, py, 30 * zoom, hero.face - 1.6, hero.face + 0.4); ctx.stroke(); ctx.restore(); }
   }
+  // ---- Monster sprites: animated characters pre-rendered in Blender (8 directions x 8 frames; rows = directions,
+  // columns = frames). Frame 0 is the standing pose; when hit, the monster plays its animation (a leap back). ----
+  const MONSTER_SPRITES = {
+    // "Corrupted Astral Sorcerer" (Meshy, Mixamo "Back Jump"), the first enemy you meet. Its model faces the other way,
+    // so its rows are turned half a circle (dirOffset 4).
+    hollow: { file: "art/hollow-sorcerer.webp", setting: "hollowSprite", dirs: 8, frames: 8, cell: 160, anchorX: 0.5, anchorY: 0.8637, heightPx: 99.15, height: 1.75, dirOffset: 4, hitMs: 750 },
+  };
+  for (const t in MONSTER_SPRITES) { const S = MONSTER_SPRITES[t]; S.img = new Image(); S.img.src = (document.querySelector('script[src*="neon-arpg.js"]')?.src || "").replace(/neon-arpg\.js.*$/, S.file); }
+  function drawMonsterSprite(m, now) {
+    const S = MONSTER_SPRITES[m.type];
+    if (!S || CFG[S.setting] === false || !S.img.complete || !S.img.naturalWidth) return false;
+    const step = Math.PI * 2 / S.dirs, row = (((Math.round(m.face / step) + S.dirOffset) % S.dirs) + S.dirs) % S.dirs;
+    const t = m.hitAt ? (now - m.hitAt) / S.hitMs : 1, col = t >= 0 && t < 1 ? 1 + Math.min(S.frames - 2, Math.floor(t * (S.frames - 1))) : 0;
+    const bob = col ? 0 : Math.abs(Math.sin(m.walk)) * 0.04, scale = S.height * (m.T.h > 1.4 ? 1.25 : 1) * TH * 1.15 * zoom / S.heightPx, size = S.cell * scale;
+    const px = sx(m.x, m.y), py = sy(m.x, m.y, bob), dx = px - S.anchorX * size, dy = py - S.anchorY * size;
+    ctx.drawImage(S.img, col * S.cell, row * S.cell, S.cell, S.cell, dx, dy, size, size);
+    if (m.flash > 0.05) { ctx.save(); ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = Math.min(1, m.flash) * 0.7; ctx.drawImage(S.img, col * S.cell, row * S.cell, S.cell, S.cell, dx, dy, size, size); ctx.restore(); }
+    return true;
+  }
   function drawMonster(m, now) {
     const T = m.T, model = modelFor("arpg." + m.type);
     shadow(m.x, m.y, T.r);
     if (m.champion) { ctx.save(); ctx.globalCompositeOperation = "lighter"; glowAt(m.x, m.y, 0.2, 40 * T.r * 3, "255,216,74", 0.35); ctx.restore(); }
     if (m.slow) { ctx.save(); ctx.globalCompositeOperation = "lighter"; glowAt(m.x, m.y, 0.3, 30, "143,216,255", 0.35); ctx.restore(); }
-    if (model) drawMesh(model, m.x, m.y, m.face, T.h * 1.1, m.flash);
+    if (drawMonsterSprite(m, now)) { /* pre-rendered animated character */ }
+    else if (model) drawMesh(model, m.x, m.y, m.face, T.h * 1.1, m.flash);
     else if (m.type === "hollow") figure(m.x, m.y, { h: 1.15, r: 0.3, body: "#5f7a68", head: "#9fd6a8", eye: "#ff6e3a", flash: m.flash, bob: Math.abs(Math.sin(m.walk)) * 0.05, face: m.face });
     else if (m.type === "skitter") {
       const px = sx(m.x, m.y), py = sy(m.x, m.y, 0.25);

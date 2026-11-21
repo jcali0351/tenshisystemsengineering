@@ -281,6 +281,7 @@ window.TENSHI_GAMES = {
  "arpg": {
   "light": 6.5,
   "heroSprite": true,
+  "hollowSprite": true,
   "hero": {
    "speed": 4.2,
    "reach": 1.25,

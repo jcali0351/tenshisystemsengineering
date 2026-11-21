@@ -282,6 +282,7 @@
   "arpg": {
    "light": 6.5,
    "heroSprite": true,
+   "hollowSprite": true,
    "hero": {
     "speed": 4.2,
     "reach": 1.25,
@@ -483,6 +484,7 @@
    "help": {
     "light": "how far the hero's light reaches (tiles)",
     "heroSprite": "show the pre-rendered Eclipse Wraith (False = use the 3D model in the arpg.hero slot)",
+    "hollowSprite": "show the animated Corrupted Astral Sorcerer as the Hollow (False = use the arpg.hollow 3D model)",
     "hero": "walking speed, sword reach (tiles), time between swings",
     "skills.nova": "Frost Nova",
     "monsters.warden": "the boss (every 3rd floor)",
