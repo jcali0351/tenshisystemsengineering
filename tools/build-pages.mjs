@@ -121,7 +121,7 @@ const ART = {
 /* ---------- homepage: cards in three sets, the form's topic list, the current menu item ---------- */
 const card = (s, pad, prefix) => `${pad}<article class="service-card">
 ${pad}  <h3 data-i18n="${k(s, "title")}">${tx(k(s, "title"))}</h3>
-${pad}  <img class="service-pic service-icon" src="${prefix}img/services/icons/${s.icon}" alt="${esc(((SEO[k(s, "title")] || {}).service || tx(k(s, "title"))) + " for small business")}" width="512" height="512" loading="lazy" data-still-color>
+${pad}  <img class="service-pic service-icon" src="${prefix}img/services/icons/${s.icon}?v=20261121b" alt="${esc(((SEO[k(s, "title")] || {}).service || tx(k(s, "title"))) + " for small business")}" width="512" height="512" loading="lazy" data-still-color>
 ${pad}  <p data-i18n="${k(s, "short")}">${tx(k(s, "short"))}</p>
 ${pad}  <a class="btn-more" href="${prefix}services/${s.slug}.html"><span data-i18n="more">${tx("more")}</span><span class="sr-only">: <span data-i18n="${k(s, "title")}">${tx(k(s, "title"))}</span></span></a>
 ${pad}</article>`;
