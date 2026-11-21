@@ -1,0 +1,8 @@
+{
+ "arpg": {
+  "enemies": {
+   "perRoomMin": 4,
+   "perRoomMax": 5
+  }
+ }
+}

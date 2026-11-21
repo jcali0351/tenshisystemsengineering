@@ -41,7 +41,7 @@ window.TENSHI_GAMES = {
     "points": 15,
     "size": 18,
     "speed": [
-     1.0,
+     1,
      1.8
     ],
     "weight": 3
@@ -312,7 +312,7 @@ window.TENSHI_GAMES = {
     "hp": 16,
     "dmg": 3,
     "speed": 3.4,
-    "reach": 1.0,
+    "reach": 1,
     "every": 650,
     "xp": 8,
     "weight": 4
@@ -345,8 +345,8 @@ window.TENSHI_GAMES = {
    }
   },
   "enemies": {
-   "perRoomMin": 2,
-   "perRoomMax": 3,
+   "perRoomMin": 4,
+   "perRoomMax": 5,
    "extraEveryTwoFloors": 1,
    "extraMax": 4,
    "bossEvery": 3,
