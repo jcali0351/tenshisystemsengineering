@@ -318,7 +318,11 @@ window.TENSHI_GAMES = {
    "barColor": "#ff4f7a",
    "championColor": "#ffd84a",
    "nameColor": "#f2e4ff",
-   "championNameColor": "#ffd84a"
+   "championNameColor": "#ffd84a",
+   "heroLabel": true,
+   "heroName": "Tenshi",
+   "heroNameColor": "#ffe9a0",
+   "heroLevelColor": "#9fd8ff"
   },
   "gospel": {
    "perDamageTaken": 0.6,

@@ -57,7 +57,8 @@
   TUNE(GOSPEL, CFG.gospel);
   // Names and health bars over the enemies (Game Studio > Undercity > Enemy labels).
   const LABELS = { healthBars: true, onlyWhenHurt: false, names: true, nameSize: 12, barWidth: 40, barHeight: 5,
-    barColor: "#ff4f7a", championColor: "#ffd84a", nameColor: "#f2e4ff", championNameColor: "#ffd84a" };
+    barColor: "#ff4f7a", championColor: "#ffd84a", nameColor: "#f2e4ff", championNameColor: "#ffd84a",
+    heroLabel: true, heroName: "Tenshi", heroNameColor: "#ffe9a0", heroLevelColor: "#9fd8ff" };
   TUNE(LABELS, CFG.labels);
   for (const r of RARITY) TUNE(r, (CFG.rarity || {})[r.id]);
   // How many monsters: per room (more every 2 floors, up to a limit), and how often a Warden boss floor comes.
@@ -894,6 +895,7 @@
     if (!model && !sprite) { ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(ex, ey); ctx.stroke(); }
     ctx.restore();
     if (hero.swing > 0.3) { ctx.save(); ctx.globalCompositeOperation = "lighter"; ctx.strokeStyle = `rgba(255,255,255,${hero.swing * 0.6})`; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(px, py, 30 * zoom, hero.face - 1.6, hero.face + 0.4); ctx.stroke(); ctx.restore(); }
+    drawHeroLabel(bob);
   }
   // ---- Monster sprites: animated characters pre-rendered in Blender (8 directions x 8 frames; rows = directions,
   // columns = frames). Frame 0 is the standing pose; when hit, the monster plays its animation (a leap back). ----
@@ -1026,6 +1028,20 @@
     const A = MONSTER_ANIMS[m.type], S = MONSTER_SPRITES[m.type];
     const h = A && CFG[A.setting] !== false ? A.height * (m.champion ? 1.12 : 1) : S && CFG[S.setting] !== false ? S.height * (m.T.h > 1.4 ? 1.25 : 1) : m.T.h * 1.1;
     return h + 0.25;
+  }
+  // The hero's name and level over her head (Game Studio > Undercity > labels: heroLabel, heroName, colours).
+  function drawHeroLabel(bob) {
+    if (!LABELS.heroLabel) return;
+    const name = String(LABELS.heroName || "Hero").slice(0, 40), lvl = "LV " + hero.lvl, fs = Math.round((LABELS.nameSize + 2) * zoom);
+    const px = sx(hero.x, hero.y), py = sy(hero.x, hero.y, HERO_SPRITE.height + 0.35 + bob);
+    ctx.font = `800 ${fs}px Oswald, sans-serif`; ctx.textBaseline = "bottom";
+    const gap = 6 * zoom, wn = ctx.measureText(name).width, wl = ctx.measureText(lvl).width, x0 = px - (wn + gap + wl) / 2;
+    ctx.lineWidth = 3; ctx.strokeStyle = "rgba(5,2,12,.9)"; ctx.textAlign = "left";
+    ctx.strokeText(name, x0, py); ctx.strokeText(lvl, x0 + wn + gap, py);
+    ctx.save(); ctx.shadowColor = LABELS.heroNameColor; ctx.shadowBlur = 8;
+    ctx.fillStyle = LABELS.heroNameColor; ctx.fillText(name, x0, py);
+    ctx.fillStyle = LABELS.heroLevelColor; ctx.shadowColor = LABELS.heroLevelColor; ctx.fillText(lvl, x0 + wn + gap, py);
+    ctx.restore(); ctx.textAlign = "start"; ctx.textBaseline = "alphabetic";
   }
   function drawLabel(m) {
     if (m.T.boss) return;                                             // the boss has its big bar in the HUD

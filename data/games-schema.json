@@ -319,7 +319,11 @@
     "barColor": "#ff4f7a",
     "championColor": "#ffd84a",
     "nameColor": "#f2e4ff",
-    "championNameColor": "#ffd84a"
+    "championNameColor": "#ffd84a",
+    "heroLabel": true,
+    "heroName": "Tenshi",
+    "heroNameColor": "#ffe9a0",
+    "heroLevelColor": "#9fd8ff"
    },
    "gospel": {
     "perDamageTaken": 0.6,
@@ -560,6 +564,9 @@
     "labels.championColor": "health bar colour for champions (the gold-glow elites)",
     "labels.nameColor": "name colour",
     "labels.championNameColor": "name colour for champions",
+    "labels.heroLabel": "show the hero's name and level over her head",
+    "labels.heroName": "the hero's name (any short text)",
+    "labels.heroNameColor": "colour of the hero's name",
     "gospel": "gain per damage point / kill / new floor (percent); how long Gabriel stays (s), time between strikes (ms), strike range (tiles), share of a boss's life per strike",
     "monsters.wizard": "the Evil Wizard",
     "monsters.elf": "the Evil Green Elf",

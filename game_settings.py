@@ -184,6 +184,10 @@ UNDERCITY = {
         "championColor": "#ffd84a",  # health bar colour for champions (the gold-glow elites)
         "nameColor": "#f2e4ff",      # name colour
         "championNameColor": "#ffd84a",   # name colour for champions
+        "heroLabel": True,           # show the hero's name and level over her head
+        "heroName": "Tenshi",        # the hero's name (any short text)
+        "heroNameColor": "#ffe9a0",  # colour of the hero's name
+        "heroLevelColor": "#9fd8ff", # colour of the hero's level
     },
     "gospel": {"perDamageTaken": 0.6, "perKill": 3, "perFloor": 20, "seconds": 10, "strikeEvery": 550, "radius": 7.5, "bossDamage": 0.2},   # gain per damage point / kill / new floor (percent); how long Gabriel stays (s), time between strikes (ms), strike range (tiles), share of a boss's life per strike
     "monsters": {
@@ -244,7 +248,7 @@ def check(value, path):
         if value != value:
             sys.exit(f"Problem in {path}: not a number")
     elif isinstance(value, str):
-        if path.endswith(".name"):                                   # names (shown in the games): short plain text
+        if path.lower().endswith("name"):                            # names (shown in the games): short plain text
             if not value.strip() or len(value) > 40:
                 sys.exit(f"Problem in {path}: a name should be 1 to 40 characters")
         elif not (value.startswith("#") and len(value) in (4, 7)):
