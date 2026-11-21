@@ -80,6 +80,9 @@ Hero headline effects: `sandbox/neon-fx.js` (flashing messages, particles). Shar
     ≤ 25 MB) and Revert. Uploading the Undercity hero, Hollow, Golem or Skitter switches its sprite off (`heroSprite`, `hollowSprite`,
     `golemSprite`, `skitterSprite`). Uploaded meshes are drawn flat-shaded with one colour per face (textures get averaged)
     and at the monster's game size, so a detailed textured model can look "unchanged"; for those, pre-render a sprite.
+  - New enemies (Undercity): add enemy types with their own .glb (slot `arpg.custom.<id>` in models.json) and stats
+    (`arpg.custom` list in data/games.json: name, hp, dmg, speed, reach, every, xp, weight, fromFloor, size, ranged, color,
+    enabled). neon-arpg.js turns each into MONSTERS["custom.<id>"], drawn with its mesh (or a coloured figure).
   - Game settings: form generated from data/games-schema.json; saves data/games.json + sandbox/game-settings.js and
     bumps the `game-settings.js?v=` tag on the homepage.
 - After editor commits, the GitHub Action **`.github/workflows/cms-rebuild.yml`** ("tenshi-editor-bot") runs

@@ -39,6 +39,14 @@
     { id: "legendary", name: "Legendary", color: "#ff8a2b", chance: 0.025, mult: 2.6, affixes: 3 },
   ];
   TUNE(HERO, CFG.hero); TUNE(SKILLS, CFG.skills); TUNE(MONSTERS, CFG.monsters);
+  // Your own enemy types from Game Studio > New enemies: each uses the 3D model in its slot "arpg.custom.<id>".
+  for (const c of Array.isArray(CFG.custom) ? CFG.custom : []) {
+    if (!c || !c.id || c.enabled === false) continue;
+    const num0 = (v, d) => (typeof v === "number" && isFinite(v) ? v : d), size = Math.max(0.4, num0(c.size, 1.2));
+    MONSTERS["custom." + c.id] = { name: String(c.name || "Monster").slice(0, 40), hp: num0(c.hp, 30), dmg: num0(c.dmg, 5), speed: num0(c.speed, 2),
+      reach: num0(c.reach, c.ranged ? 5 : 1.1), every: num0(c.every, 1100), xp: num0(c.xp, 14), color: c.color || "#ff6ec7",
+      r: Math.min(0.7, 0.18 + size * 0.12), h: size, weight: num0(c.weight, 3), fromFloor: num0(c.fromFloor, 1), ranged: !!c.ranged, custom: true };
+  }
   // Holy Power: fills as you fight (per hit landed, per kill). At 100% a POWER OF GOD button pops up (or press E): it
   // instantly slays every enemy you can see.
   const HOLY = { perHit: 0.8, perKill: 6, perChampion: 14, perBoss: 30 };
@@ -231,7 +239,7 @@
     if (bossFloor(n)) { spawnMonster("warden", last.cx + 0.5, last.cy - 1.5, n); bossAlive = true; }
   }
   function pickMonster(n) {
-    const list = Object.entries(MONSTERS).filter(([k, m]) => m.weight && (k !== "golem" || n >= (ENEMIES.golemFromFloor ?? 1)) && (k !== "wisp" || n >= 1));
+    const list = Object.entries(MONSTERS).filter(([k, m]) => m.weight && !m.boss && (k !== "golem" || n >= (ENEMIES.golemFromFloor ?? 1)) && (!m.fromFloor || n >= m.fromFloor));
     const total = list.reduce((t, [, m]) => t + m.weight, 0);
     let r = Math.random() * total;
     for (const [k, m] of list) { r -= m.weight; if (r <= 0) return k; }
@@ -895,6 +903,7 @@
     if (m.slow) { ctx.save(); ctx.globalCompositeOperation = "lighter"; glowAt(m.x, m.y, 0.3, 30, "143,216,255", 0.35); ctx.restore(); }
     if (drawAnimMonster(m, now) || drawMonsterSprite(m, now)) { /* pre-rendered animated character */ }
     else if (model) drawMesh(model, m.x, m.y, m.face, T.h * 1.1, m.flash);
+    else if (m.T.custom) figure(m.x, m.y, { h: m.T.h, r: m.T.r, body: m.T.color, head: "#e8e6f0", eye: "#ff2bd6", flash: m.flash, bob: Math.abs(Math.sin(m.walk)) * 0.05, face: m.face });
     else if (m.type === "elf") figure(m.x, m.y, { h: 0.95, r: 0.26, body: "#2f4a2a", head: "#7dff7a", eye: "#ff2bd6", flash: m.flash, bob: Math.abs(Math.sin(m.walk)) * 0.05, face: m.face });
     else if (m.type === "wizard") figure(m.x, m.y, { h: 1.2, r: 0.3, body: "#4a2a7a", head: "#c9a6ff", eye: "#ff2bd6", flash: m.flash, bob: Math.abs(Math.sin(m.walk)) * 0.05, face: m.face });
     else if (m.type === "hollow") figure(m.x, m.y, { h: 1.15, r: 0.3, body: "#5f7a68", head: "#9fd6a8", eye: "#ff6e3a", flash: m.flash, bob: Math.abs(Math.sin(m.walk)) * 0.05, face: m.face });

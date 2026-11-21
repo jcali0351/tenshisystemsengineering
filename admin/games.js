@@ -68,7 +68,7 @@
       schema = r[0]; edits = r[1] || {}; models = r[2] || {}; modelsOrig = clone(models);
       if (!schema) throw new Error("data/games-schema.json is missing: run python game_settings.py once and push.");
       values = merge(schema.defaults, edits);
-      loaded = true; renderModels(); renderSettings(); updateBar();
+      loaded = true; renderModels(); renderSettings(); renderEnemies(); updateBar();
     }).catch(function (e) {
       $("#gs-models").innerHTML = '<p class="ed-msg is-error">Could not load Game Studio: ' + esc(e.message) + "</p>";
       loading = null;
@@ -78,7 +78,7 @@
   $$(".gs-switch button").forEach(function (b) {
     b.addEventListener("click", function () {
       $$(".gs-switch button").forEach(function (x) { x.setAttribute("aria-selected", String(x === b)); });
-      $("#gs-models").hidden = b.dataset.gs !== "models"; $("#gs-settings").hidden = b.dataset.gs !== "settings";
+      $("#gs-models").hidden = b.dataset.gs !== "models"; $("#gs-settings").hidden = b.dataset.gs !== "settings"; $("#gs-enemies").hidden = b.dataset.gs !== "enemies";
     });
   });
 
@@ -92,7 +92,7 @@
   }
   function renderModels() {
     var groups = {};
-    Object.keys(models).filter(function (k) { return k.charAt(0) !== "_"; }).forEach(function (slot) {
+    Object.keys(models).filter(function (k) { return k.charAt(0) !== "_" && k.indexOf("arpg.custom.") !== 0; }).forEach(function (slot) {
       var g = slot.split(".")[0]; (groups[g] = groups[g] || []).push(slot);
     });
     var html = '<p class="ed-tip">Upload a <b>.glb</b> (from Meshy, Tripo, Blender…) to replace a character. Face the model forward (Blender: toward −Y), feet on the ground, no Draco/meshopt compression, under ' + MAX_MB +
@@ -195,6 +195,7 @@
     var html = "";
     Object.keys(def).forEach(function (k) {
       var p = path + "." + k, rel = p.slice(sec.id.length + 1), d = def[k], help = sec.help[rel] || "";
+      if (p === "arpg.custom") return;                                       // edited in the New enemies tab
       if (d && typeof d === "object" && !Array.isArray(d)) {
         html += '<fieldset class="gs-group gs-depth-' + depth + '"><legend>' + esc(pretty(k)) + (help ? " <small>" + esc(help) + "</small>" : "") + "</legend>" + fields(sec, d, p, depth + 1) + "</fieldset>";
       } else html += field(p, k, d, help);
@@ -241,10 +242,99 @@
     updateBar();
   }
 
+  /* ------------------------------------------------------------------ new enemies (Undercity) */
+  // Each enemy = an entry in arpg.custom (stats) + a model slot "arpg.custom.<id>" in models.json (its .glb).
+  var ENEMY_FIELDS = [
+    ["hp", "Health", 30, 1, 2000, 1], ["dmg", "Damage per hit", 5, 0, 200, 1], ["speed", "Speed (tiles/s)", 2, 0.2, 6, 0.1],
+    ["reach", "Reach (tiles)", 1.1, 0.5, 8, 0.1], ["every", "Time between attacks (ms)", 1100, 200, 5000, 50], ["xp", "XP when killed", 14, 0, 1000, 1],
+    ["weight", "How common (0 = never, 5 = very)", 3, 0, 10, 0.5], ["fromFloor", "Appears from floor", 1, 1, 30, 1], ["size", "Height (tiles; hero = 2)", 1.2, 0.4, 4, 0.1]
+  ];
+  function customList() { var l = get(values, "arpg.custom"); return Array.isArray(l) ? l : []; }
+  function setCustom(list) { setValue("arpg.custom", list); }
+  function enemySlot(c) { return "arpg.custom." + c.id; }
+  function enemyPreview(c) { var up = uploads[enemySlot(c)]; return up ? up.url : models[enemySlot(c)] ? ED.site + "models/" + models[enemySlot(c)] : ""; }
+  function renderEnemies() {
+    var list = customList();
+    var html = '<p class="ed-tip">Add your own Undercity enemy types: give each a name, upload its <b>.glb</b> model (Meshy, Blender…; same rules as 3D models: facing forward, feet on the ground, no compression, under ' + MAX_MB +
+      ' MB, best 10k–50k triangles) and set how tough and how common it is. They spawn with the other monsters on every floor from the one you pick. Models are drawn with simple shading; for a fully animated character, send the Meshy download to Claude.</p>' +
+      '<div class="ed-actions ed-actions--left"><button type="button" class="ed-btn" id="gs-enemy-add">+ Add enemy</button></div>';
+    html += list.length ? '<div class="gs-grid gs-enemy-grid">' + list.map(enemyCard).join("") + "</div>" : '<p class="ed-tip">No enemies of your own yet.</p>';
+    $("#gs-enemies").innerHTML = html;
+    $("#gs-enemy-add").addEventListener("click", function () {
+      var id = "e" + Date.now().toString(36), c = { id: id, name: "New enemy", enabled: true, ranged: false, color: "#ff6ec7" };
+      ENEMY_FIELDS.forEach(function (f) { c[f[0]] = f[2]; });
+      setCustom(customList().concat([c])); renderEnemies();
+    });
+    $$("#gs-enemies .gs-enemy").forEach(wireEnemy);
+  }
+  function enemyCard(c) {
+    var slot = enemySlot(c), up = uploads[slot], src = enemyPreview(c);
+    var file = up ? up.name + " (new, not saved) · " + up.tris.toLocaleString() + " triangles" : models[slot] ? models[slot] : "no model yet: shows a simple figure";
+    return '<article class="gs-card gs-enemy' + (dirty.models.has(slot) ? " is-dirty" : "") + '" data-id="' + esc(c.id) + '">' +
+      (src ? '<model-viewer src="' + esc(src) + '" alt="' + esc(c.name) + '" camera-controls auto-rotate rotation-per-second="20deg" shadow-intensity="1" exposure="1.1" interaction-prompt="none" loading="lazy"></model-viewer>'
+           : '<div class="gs-enemy-empty">No model yet</div>') +
+      '<div class="gs-card-body">' +
+      '<label class="gs-efield gs-efield--name"><span>Name</span><input type="text" data-k="name" maxlength="40" value="' + esc(c.name || "") + '"></label>' +
+      '<p class="gs-file">' + esc(file) + "</p><p class=\"gs-msg\" aria-live=\"polite\"></p>" +
+      '<div class="gs-card-actions"><label class="ed-btn ed-btn--small">Upload .glb<input type="file" accept=".glb,model/gltf-binary" hidden></label></div>' +
+      '<div class="gs-efields">' + ENEMY_FIELDS.map(function (f) {
+        var v = c[f[0]] != null ? c[f[0]] : f[2];
+        return '<label class="gs-efield"><span>' + esc(f[1]) + '</span><input type="number" data-k="' + f[0] + '" min="' + f[3] + '" max="' + f[4] + '" step="' + f[5] + '" value="' + esc(v) + '"></label>';
+      }).join("") +
+      '<label class="gs-efield"><span>Colour (fallback figure, effects)</span><input type="color" data-k="color" value="' + esc(c.color || "#ff6ec7") + '"></label>' +
+      '<label class="gs-efield gs-efield--check"><input type="checkbox" data-k="ranged"' + (c.ranged ? " checked" : "") + '><span>Ranged (shoots bolts from its reach)</span></label>' +
+      '<label class="gs-efield gs-efield--check"><input type="checkbox" data-k="enabled"' + (c.enabled !== false ? " checked" : "") + '><span>In the game (untick to pause it)</span></label></div>' +
+      '<div class="gs-card-actions"><button type="button" class="ed-btn ed-btn--ghost ed-btn--small" data-act="delete">Delete enemy</button></div></div></article>';
+  }
+  function wireEnemy(el) {
+    var id = el.dataset.id, msg = $(".gs-msg", el);
+    function update(fn) { var list = clone(customList()); list.forEach(function (c) { if (c.id === id) fn(c); }); setCustom(list); }
+    $$("[data-k]", el).forEach(function (inp) {
+      inp.addEventListener(inp.type === "checkbox" || inp.type === "color" ? "change" : "input", function () {
+        var k = inp.dataset.k;
+        update(function (c) {
+          if (inp.type === "checkbox") {
+            c[k] = inp.checked;
+            // Ranged enemies shoot from a distance: give them a matching reach (and melee ones a short one).
+            if (k === "ranged") { c.reach = inp.checked ? Math.max(c.reach || 0, 5) : Math.min(c.reach || 1.1, 1.3); var r = $('[data-k="reach"]', el); if (r) r.value = c.reach; }
+          }
+          else if (inp.type === "number") { var n = parseFloat(inp.value); if (!isNaN(n)) c[k] = n; }
+          else c[k] = inp.value;
+        });
+      });
+    });
+    $("input[type=file]", el).addEventListener("change", function (e) {
+      var f = e.target.files && e.target.files[0]; if (!f) return;
+      var c = customList().filter(function (x) { return x.id === id; })[0]; if (!c) return;
+      var slot = enemySlot(c);
+      msg.textContent = "Checking…"; msg.className = "gs-msg";
+      checkGlb(f).then(function (info) {
+        return toBase64(f).then(function (b64) {
+          if (uploads[slot]) URL.revokeObjectURL(uploads[slot].url);
+          uploads[slot] = { file: f, base64: b64, url: URL.createObjectURL(f), tris: info.tris, name: f.name };
+          dirty.models.add(slot);
+          el.outerHTML = enemyCard(c);
+          var fresh = $('#gs-enemies .gs-enemy[data-id="' + id + '"]'); wireEnemy(fresh);
+          if (info.warn) { var m = $(".gs-msg", fresh); m.textContent = info.warn; m.className = "gs-msg is-warn"; }
+          updateBar();
+        });
+      }).catch(function (err) { msg.textContent = err.message; msg.className = "gs-msg is-error"; e.target.value = ""; });
+    });
+    $('[data-act="delete"]', el).addEventListener("click", function () {
+      var c = customList().filter(function (x) { return x.id === id; })[0]; if (!c) return;
+      if (!confirm('Delete the enemy "' + (c.name || "") + '"? It leaves the game when you Save & publish.')) return;
+      var slot = enemySlot(c);
+      if (uploads[slot]) { URL.revokeObjectURL(uploads[slot].url); delete uploads[slot]; }
+      delete models[slot];
+      if (modelsOrig[slot]) dirty.models.add(slot); else dirty.models.delete(slot);
+      setCustom(customList().filter(function (x) { return x.id !== id; })); renderEnemies();
+    });
+  }
+
   /* ------------------------------------------------------------------ save */
   function changes() {
     var newEdits = diff(values, schema.defaults), settingsChanged = JSON.stringify(newEdits) !== JSON.stringify(edits);
-    var modelSlots = Array.from(dirty.models).filter(function (s) { return uploads[s] || JSON.stringify(models[s]) !== JSON.stringify(modelsOrig[s]); });
+    var modelSlots = Array.from(dirty.models).filter(function (s) { return uploads[s] || JSON.stringify(models[s]) !== JSON.stringify(modelsOrig[s]); });   // (a deleted enemy: undefined vs its file)
     return { newEdits: newEdits, settingsChanged: settingsChanged, modelSlots: modelSlots };
   }
   function updateBar() {
@@ -292,7 +382,7 @@
       edits = c.newEdits; modelsOrig = clone(models);
       Object.keys(uploads).forEach(function (s) { URL.revokeObjectURL(uploads[s].url); }); uploads = {};
       dirty.settings.clear(); dirty.models.clear();
-      renderModels(); renderSettings(); updateBar();
+      renderModels(); renderSettings(); renderEnemies(); updateBar();
       ED.toast("Published. The games update on the live site within about 5 minutes.");
     }).catch(function (e) {
       // Put the slots back so nothing looks saved that wasn't.

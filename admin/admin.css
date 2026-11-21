@@ -366,3 +366,13 @@ details.ph-card:not([open]) { padding-bottom: 16px; }
 .gs-reset { appearance: none; background: none; border: 1px solid var(--line-2); color: var(--muted); border-radius: 6px; padding: 3px 8px; font-size: .78rem; cursor: pointer; }
 .gs-reset:hover { color: var(--text); border-color: var(--red-hi); }
 @media (max-width: 760px) { .gs-field { grid-template-columns: 1fr; } }
+
+/* Game Studio > New enemies */
+.gs-enemy-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+.gs-enemy-empty { height: 190px; display: grid; place-items: center; color: var(--muted); background: radial-gradient(circle at 50% 40%, #2a1450, #0b0418 75%); font-weight: 700; }
+.gs-efields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 10px; margin: 6px 0; }
+.gs-efield { display: flex; flex-direction: column; gap: 3px; font-size: .78rem; color: var(--muted); }
+.gs-efield input[type=number], .gs-efield input[type=text] { width: 100%; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--bg, #0b0418); color: var(--text); font: inherit; font-size: .9rem; }
+.gs-efield input[type=color] { width: 100%; height: 32px; border: 1px solid var(--line-2); border-radius: 8px; background: none; padding: 2px; }
+.gs-efield--name input { font-weight: 800; font-size: 1rem; }
+.gs-efield--check { flex-direction: row; align-items: center; gap: 8px; grid-column: 1 / -1; color: var(--text); }

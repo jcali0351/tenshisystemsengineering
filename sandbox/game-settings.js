@@ -301,6 +301,7 @@ window.TENSHI_GAMES = {
     "cd": 1600
    }
   },
+  "custom": [],
   "holy": {
    "perHit": 0.8,
    "perKill": 6,

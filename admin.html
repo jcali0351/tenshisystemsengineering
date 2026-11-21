@@ -15,7 +15,7 @@
   <title>Tenshi Editor</title>
   <link rel="icon" href="brand/favicon-32.png?v=20261119" type="image/png" sizes="32x32">
   <link rel="icon" href="brand/favicon-192.png?v=20261119" type="image/png" sizes="192x192">
-  <link rel="stylesheet" href="admin/admin.css?v=f5dbc622">
+  <link rel="stylesheet" href="admin/admin.css?v=0055a73e">
   <link rel="stylesheet" href="fonts/catalog.css">
   <link rel="stylesheet" href="fx.css?v=1f2472f8">
 </head>
@@ -372,9 +372,11 @@
       <div class="gs-switch" role="tablist" aria-label="Game Studio sections">
         <button type="button" role="tab" data-gs="models" aria-selected="true">3D models</button>
         <button type="button" role="tab" data-gs="settings" aria-selected="false">Game settings</button>
+        <button type="button" role="tab" data-gs="enemies" aria-selected="false">New enemies</button>
       </div>
       <div class="gs-body" id="gs-models"><p class="ed-tip">Loading…</p></div>
       <div class="gs-body" id="gs-settings" hidden></div>
+      <div class="gs-body" id="gs-enemies" hidden></div>
     </section>
 
     <section class="ed-panel" data-panel="bots" hidden>
@@ -443,7 +445,7 @@
   <script src="admin/theme.js?v=5adf2a95"></script>
   <script src="fx.js?v=5a67a4ab"></script>
   <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
-  <script src="admin/games.js?v=1"></script>
+  <script src="admin/games.js?v=2"></script>
   <script src="admin/admin.js?v=ae5e661a"></script>
 </body>
 </html>
