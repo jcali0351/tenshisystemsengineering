@@ -887,6 +887,12 @@ html.neon:not(#_):not(#__) .arpg-godbtn:hover { filter: brightness(1.08); }
 html.neon .arpg-xp b { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #b04dff, #ffd84a); }
 html.neon .arpg-msg { position: absolute; top: 112px; left: 50%; transform: translateX(-50%); font: 700 18px Oswald, sans-serif; letter-spacing: .12em; text-shadow: 0 0 14px #ff2bd6, 0 2px 6px #000; opacity: 0; transition: opacity .25s; pointer-events: none; white-space: nowrap; }
 html.neon .arpg-msg.on { opacity: 1; }
+html.neon .arpg-verse { position: absolute; top: 146px; left: 50%; transform: translateX(-50%); width: min(720px, calc(100% - 32px)); text-align: center;
+  font: italic 500 15px/1.4 Georgia, "Times New Roman", serif; color: #ffe9c8; text-shadow: 0 0 12px rgba(255, 120, 40, .7), 0 2px 6px #000; opacity: 0; transition: opacity .6s; pointer-events: none; }
+html.neon .arpg-verse.on { opacity: 1; }
+html.neon .arpg-quote { font: italic 500 15px/1.45 Georgia, "Times New Roman", serif; color: #ffe9c8; }
+html.neon .arpg-intro.arpg-intro-ascend { background: radial-gradient(circle at 50% 40%, rgba(255, 248, 220, .96), rgba(255, 214, 120, .9) 45%, rgba(120, 60, 10, .92)); color: #3a2200; }
+html.neon .arpg-intro.arpg-intro-ascend h3, html.neon .arpg-intro.arpg-intro-ascend .arpg-kicker, html.neon .arpg-intro.arpg-intro-ascend .arpg-quote { color: #3a2200; text-shadow: 0 0 18px #fff; }
 html.neon .arpg-tip { position: absolute; right: 16px; bottom: 120px; width: 260px; padding: 12px 14px; border-radius: 12px; background: rgba(10, 4, 22, .92); border: 1px solid rgba(215, 170, 255, .35); font-size: 13px; }
 html.neon .arpg-tip b { display: block; font: 700 15px Oswald, sans-serif; letter-spacing: .04em; }
 html.neon .arpg-tip small { text-transform: uppercase; letter-spacing: .15em; font-size: 10px; color: rgba(255, 255, 255, .6); }

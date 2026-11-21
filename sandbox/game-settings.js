@@ -308,6 +308,12 @@ window.TENSHI_GAMES = {
    "perChampion": 14,
    "perBoss": 30
   },
+  "hell": {
+   "finalFloor": 9,
+   "embers": true,
+   "lavaPools": 0.05,
+   "verses": true
+  },
   "labels": {
    "healthBars": true,
    "onlyWhenHurt": false,
@@ -393,6 +399,15 @@ window.TENSHI_GAMES = {
     "every": 1500,
     "xp": 40,
     "weight": 3
+   },
+   "satan": {
+    "name": "Satan",
+    "hp": 2600,
+    "dmg": 40,
+    "speed": 2.0,
+    "reach": 1.9,
+    "every": 1200,
+    "xp": 1500
    },
    "warden": {
     "name": "The Warden",

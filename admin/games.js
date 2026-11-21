@@ -23,7 +23,7 @@
     "rts.station": "Tenshi Station", "rts.miner": "Miner", "rts.interceptor": "Interceptor", "rts.gunship": "Gunship", "rts.turret": "Defense Turret", "rts.depot": "Supply Depot",
     "rts.outpost": "Outpost", "rts.shipyard": "Shipyard", "rts.swarmling": "Swarmling", "rts.behemoth": "Behemoth", "rts.spitter": "Spitter", "rts.hive": "Alien Hive",
     "rts.asteroid": "Asteroid", "rts.crystal": "Crystal",
-    "arpg.hero": "Hero", "arpg.hollow": "Hollow", "arpg.skitter": "Skitter", "arpg.wisp": "Wisp", "arpg.golem": "Golem", "arpg.wizard": "Evil Wizard", "arpg.elf": "Green Elf", "arpg.warden": "The Warden (boss)"
+    "arpg.hero": "Hero", "arpg.hollow": "Hollow", "arpg.skitter": "Skitter", "arpg.wisp": "Wisp", "arpg.golem": "Golem", "arpg.wizard": "Evil Wizard", "arpg.elf": "Green Elf", "arpg.warden": "The Warden (boss)", "arpg.satan": "Satan (final boss)"
   };
   // Slots that show a pre-rendered sprite in the game; uploading a model switches that sprite off (and Revert back on).
   var SPRITE_SETTING = { "arpg.hero": "arpg.heroSprite", "arpg.hollow": "arpg.hollowSprite", "arpg.golem": "arpg.golemSprite", "arpg.skitter": "arpg.skitterSprite", "arpg.wizard": "arpg.wizardSprite", "arpg.elf": "arpg.elfSprite" };
@@ -83,7 +83,7 @@
   });
 
   /* ------------------------------------------------------------------ 3D models */
-  function builtIn(slot) { return slot.indexOf("arpg.") === 0 && slot !== "arpg.wizard" && slot !== "arpg.elf" ? "source/" + slot + ".glb" : ""; }   // the Wizard has no built-in mesh (its look is the animated sprite)
+  function builtIn(slot) { return slot.indexOf("arpg.") === 0 && slot !== "arpg.wizard" && slot !== "arpg.elf" && slot !== "arpg.satan" ? "source/" + slot + ".glb" : ""; }   // the Wizard has no built-in mesh (its look is the animated sprite)
   function isBuiltIn(slot) { var f = models[slot] || ""; return !f || f === builtIn(slot) || f.indexOf("source/") === 0; }
   function previewSrc(slot) {
     if (uploads[slot]) return uploads[slot].url;

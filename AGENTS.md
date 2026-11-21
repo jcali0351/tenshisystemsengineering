@@ -70,7 +70,11 @@ Each game reads its settings from `window.TENSHI_GAMES` (sandbox/game-settings.j
    the nearest enemy in sight with a lance of light (`archangel`, `updateAngel`, `drawAngel`).
    The hero shows her name and level (`drawHeroLabel`, labels.heroName, default "Tenshi"). Every enemy shows its name and a health bar (`drawLabel`, `LABELS` = Game Studio > Undercity > labels); built-in enemy names
    are editable too (`monsters.<type>.name`; game_settings.py accepts any short text for keys called `name`). Other monsters are 3D meshes from `models/source/arpg.*.glb`
-   drawn with simple 2D lighting. Walls and floor use procedural stone canvas textures (`STONE` in neon-arpg.js,
+   drawn with simple 2D lighting. Theme: an angel (Tenshi) in Hell, after Dante's Inferno, KJV verses: floors are the circles
+   (`CIRCLES`, `circleOf`), Wardens guard every 3rd, Satan waits on `hell.finalFloor` (9 = Cocytus, ice textures); beating him
+   opens the gate of light → `transcend()` (ascend again with the same hero, Hell 50% tougher each time). Gear = Christian
+   artifacts (`BASES`, `AFFIXES`, `LEGENDARY`); potions are holy water and manna. Embers, lava pools and verses: `HELL`.
+   Walls and floor use procedural stone canvas textures (`STONE` in neon-arpg.js,
    mapped onto the isometric faces with `pattern.setTransform`). Cover art `sandbox/art/undercity.webp`, same 5 s fade.
 5. **Quest** (`sandbox/neon-quest.js`): XP for exploring the site, on every page.
 Hero headline effects: `sandbox/neon-fx.js` (flashing messages, particles). Shared 3D model loader:

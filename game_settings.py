@@ -172,6 +172,13 @@ UNDERCITY = {
     "holy": {"perHit": 0.8, "perKill": 6, "perChampion": 14, "perBoss": 30},   # Holy Power gained per hit landed / per kill (percent)
     # Holy Gospel fills when the hero is hurt, kills and goes deeper; at 100% the Archangel button pops up (or press R):
     # Gabriel shields the hero from all damage and strikes down the nearest enemies for a while.
+    # ---- HELL ----
+    "hell": {
+        "finalFloor": 9,             # the circle where Satan waits (Dante's ninth circle, the frozen lake); beat him to transcend
+        "embers": True,              # embers drifting up through Hell (snow on the frozen last floor)
+        "lavaPools": 0.05,           # share of floor tiles that are lava pools (0 = none; just for looks)
+        "verses": True,              # show a Bible verse or Dante line when you enter a circle and use holy powers
+    },
     # ---- ENEMY LABELS ----
     "labels": {
         "healthBars": True,          # show a health bar over every enemy
@@ -198,6 +205,7 @@ UNDERCITY = {
         "wizard":  {"name": "Evil Wizard", "hp": 34,  "dmg": 5,  "speed": 2.0, "reach": 1.2, "every": 1100, "xp": 15,  "weight": 5},   # the Evil Wizard
         "elf":     {"name": "Green Elf", "hp": 22,  "dmg": 4,  "speed": 2.9, "reach": 1.0, "every": 800,  "xp": 10,  "weight": 5},   # the Evil Green Elf
         "golem":   {"name": "Golem", "hp": 110, "dmg": 12, "speed": 1.4, "reach": 1.3, "every": 1500, "xp": 40,  "weight": 3},   # the Green Elemental
+        "satan":   {"name": "Satan", "hp": 2600, "dmg": 40, "speed": 2.0, "reach": 1.9, "every": 1200, "xp": 1500},   # the final boss (last circle)
         "warden":  {"name": "The Warden", "hp": 700, "dmg": 24, "speed": 1.9, "reach": 1.6, "every": 1300, "xp": 300},   # the boss (every 3rd floor)
     },
     # ---- ENEMY NUMBERS ----

@@ -1,4 +1,6 @@
 // neon-arpg.js: "UNDERCITY", an isometric action-RPG dungeon crawler in the "Built, then made better" photo strip.
+// The story: you are Tenshi, an angel sent down through the nine circles of Hell (after Dante's Inferno). Call on God,
+// cast down Satan on the last floor (Cocytus, the frozen lake) and transcend. Bible verses are from the King James Version.
 //
 // Descend through neon crypts under Osaka: click to walk and to attack, right-click to throw a Fireball, 2 for Frost
 // Nova, Q / W for health and mana potions, C for your character sheet, E for the Power of God (when Holy Power is full), R for the Archangel (when Holy Gospel is full), mouse wheel / + - keys / + - buttons / pinch to zoom. Monsters drop gold, potions and gear in four
@@ -30,6 +32,7 @@
     wizard:  { name: "Evil Wizard", hp: 34, dmg: 5, speed: 2.0, reach: 1.2, every: 1100, xp: 15, color: "#b06bff", r: 0.32, h: 1.1, weight: 5 },
     elf:     { name: "Green Elf", hp: 22, dmg: 4, speed: 2.9, reach: 1.0, every: 800, xp: 10, color: "#7dff7a", r: 0.28, h: 0.9, weight: 5 },
     golem:   { name: "Golem",   hp: 110, dmg: 12, speed: 1.4, reach: 1.3, every: 1500, xp: 40, color: "#c9a6ff", r: 0.5, h: 1.5, weight: 3 },
+    satan:   { name: "Satan", hp: 2600, dmg: 40, speed: 2.0, reach: 1.9, every: 1200, xp: 1500, color: "#ff3b1f", r: 0.9, h: 3.0, weight: 0, boss: true },
     warden:  { name: "The Warden", hp: 700, dmg: 24, speed: 1.9, reach: 1.6, every: 1300, xp: 300, color: "#ff2bd6", r: 0.7, h: 2.2, weight: 0, boss: true },
   };
   const RARITY = [
@@ -64,22 +67,46 @@
   // How many monsters: per room (more every 2 floors, up to a limit), and how often a Warden boss floor comes.
   const ENEMIES = { perRoomMin: 2, perRoomMax: 3, extraEveryTwoFloors: 1, extraMax: 4, bossEvery: 3, golemFromFloor: 1 };
   TUNE(ENEMIES, CFG.enemies);
-  const bossFloor = n => ENEMIES.bossEvery > 0 && n % ENEMIES.bossEvery === 0;
+  // Hell: the nine circles (Dante), Satan on the last floor, embers and lava pools (Game Studio > Undercity > hell).
+  const HELL = { finalFloor: 9, embers: true, lavaPools: 0.05, verses: true };
+  TUNE(HELL, CFG.hell);
+  const CIRCLES = [
+    ["LIMBO", "Abandon all hope, ye who enter here. · Dante, Inferno III"],
+    ["LUST", "Create in me a clean heart, O God. · Psalm 51:10"],
+    ["GLUTTONY", "Man shall not live by bread alone. · Matthew 4:4"],
+    ["GREED", "The love of money is the root of all evil. · 1 Timothy 6:10"],
+    ["WRATH", "Be ye angry, and sin not. · Ephesians 4:26"],
+    ["HERESY", "Thy word is a lamp unto my feet, and a light unto my path. · Psalm 119:105"],
+    ["VIOLENCE", "Blessed are the peacemakers. · Matthew 5:9"],
+    ["FRAUD", "Ye shall know the truth, and the truth shall make you free. · John 8:32"],
+  ];
+  const isFinal = n => n >= Math.max(1, HELL.finalFloor);
+  const circleOf = n => isFinal(n) ? ["TREACHERY · COCYTUS", "How art thou fallen from heaven, O Lucifer, son of the morning! · Isaiah 14:12"] : CIRCLES[(n - 1) % CIRCLES.length];
+  const ROMAN = n => ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"][n - 1] || String(n);
+  const bossFloor = n => isFinal(n) || (ENEMIES.bossEvery > 0 && n % ENEMIES.bossEvery === 0);
+  // Gear = holy relics and Christian artifacts (Ephesians 6: the armour of God).
   const BASES = {
-    weapon: ["Katana", "Neon Blade", "Rune Staff", "War Axe", "Glaive"],
-    armor: ["Coat", "Lamellar", "Robe", "Plate", "Jacket"],
-    ring: ["Ring", "Band", "Loop"],
-    amulet: ["Amulet", "Talisman", "Charm"],
+    weapon: ["Flaming Sword", "Two-Edged Sword", "Holy Lance", "Shepherd's Staff", "Sling"],
+    armor: ["Breastplate", "Holy Vestment", "Sackcloth Robe", "Mantle", "Chain Cassock"],
+    ring: ["Signet", "Covenant Band", "Fisherman's Ring"],
+    amulet: ["Crucifix", "Rosary", "Reliquary", "Ichthys Pendant", "Phylactery"],
   };
   const AFFIXES = [
-    { id: "dmg", label: "+{n} damage", pre: "Cruel", suf: "of Edges" },
-    { id: "life", label: "+{n} life", pre: "Sturdy", suf: "of the Ox" },
-    { id: "mana", label: "+{n} mana", pre: "Lucid", suf: "of Stars" },
-    { id: "armor", label: "+{n} armour", pre: "Warded", suf: "of Stone" },
-    { id: "crit", label: "+{n}% critical hits", pre: "Keen", suf: "of the Fox" },
-    { id: "fire", label: "+{n} fire damage", pre: "Burning", suf: "of Embers" },
-    { id: "speed", label: "+{n}% move speed", pre: "Swift", suf: "of Wind" },
+    { id: "dmg", label: "+{n} damage", pre: "Righteous", suf: "of Judgment" },
+    { id: "life", label: "+{n} life", pre: "Blessed", suf: "of Lazarus" },
+    { id: "mana", label: "+{n} mana", pre: "Prayerful", suf: "of the Psalms" },
+    { id: "armor", label: "+{n} armour", pre: "Steadfast", suf: "of Faith" },
+    { id: "crit", label: "+{n}% critical hits", pre: "Smiting", suf: "of David" },
+    { id: "fire", label: "+{n} holy fire damage", pre: "Pentecostal", suf: "of the Burning Bush" },
+    { id: "speed", label: "+{n}% move speed", pre: "Swift", suf: "of Elijah" },
   ];
+  // Legendary relics have names of their own.
+  const LEGENDARY = {
+    weapon: ["Michael's Flaming Sword", "The Spear of Destiny", "Rod of Moses", "Jawbone of Samson", "Sword of the Spirit"],
+    armor: ["The Armour of God", "Mantle of Elijah", "Breastplate of Righteousness", "Coat of Many Colours"],
+    ring: ["Seal of Solomon", "Ring of the Prodigal Son", "Signet of the Fisherman"],
+    amulet: ["Crown of Thorns", "The Holy Grail", "Shard of the Ark", "Shield of Faith"],
+  };
   // ==========================================================================================================
 
   const sfx = n => window.neonAudio && window.neonAudio.sfx(n);
@@ -112,8 +139,8 @@
       <div class="arpg-bar">
         <button type="button" data-act="fireball" title="Fireball (right-click or 1)"><i>1</i>🔥<small>Fireball</small></button>
         <button type="button" data-act="nova" title="Frost Nova (2)"><i>2</i>❄<small>Nova</small></button>
-        <button type="button" data-act="hpot" title="Health potion (Q)"><i>Q</i>❤<small class="arpg-hpn">0</small></button>
-        <button type="button" data-act="mpot" title="Mana potion (W)"><i>W</i>✦<small class="arpg-mpn">0</small></button>
+        <button type="button" data-act="hpot" title="Holy water (Q)"><i>Q</i>❤<small class="arpg-hpn">0</small></button>
+        <button type="button" data-act="mpot" title="Manna (W)"><i>W</i>✦<small class="arpg-mpn">0</small></button>
         <button type="button" data-act="sheet" title="Character (C)"><i>C</i>☰<small>Hero</small></button>
       </div>
       <div class="arpg-gauge arpg-mp"><b></b><span></span></div>
@@ -128,10 +155,11 @@
     <div class="arpg-sheet" hidden></div>
     <div class="arpg-tip" hidden></div>
     <div class="arpg-msg" aria-live="polite"></div>
+    <div class="arpg-verse" aria-live="polite"></div>
     <div class="arpg-intro arpg-intro-cover">
-      <p class="arpg-kicker">UNDERCITY · A NEON DUNGEON CRAWLER</p>
-      <h3>Descend. Loot. Survive.</h3>
-      <p>Fight your way down through the neon crypts beneath Osaka. Grab gold and gear, level up, find the stairs.</p>
+      <p class="arpg-kicker">UNDERCITY · AN ANGEL IN HELL</p>
+      <h3>Call on God. Cast down Satan. Transcend.</h3>
+      <p>You are Tenshi, an angel sent through the nine circles of Hell. Fight down through fire and ice, gather holy relics, call on the Power of God and the Archangel Gabriel, and rise above it all.</p>
       <div class="arpg-buttons"></div>
       <p class="arpg-help">Click to move &amp; attack · Right-click Fireball · 2 Frost Nova · Q/W potions · C hero · E Power of God · R Archangel · Wheel or +/− to zoom</p>
     </div>`;
@@ -189,7 +217,7 @@
     let name = base;
     if (extra[0]) name = extra[0].pre + " " + name;
     if (extra[1]) name = name + " " + extra[1].suf;
-    if (rar.id === "legendary") name = pick(["Tenshi's", "Ryujin's", "The Ronin's", "Kitsune's", "Raijin's"]) + " " + base;
+    if (rar.id === "legendary") name = pick(LEGENDARY[slot]);
     return { slot, base, name, rarity: rar.id, color: rar.color, stats, level, power: Object.entries(stats).reduce((t, [k, v]) => t + v * (k === "dmg" || k === "fire" ? 2 : k === "crit" || k === "speed" ? 1.5 : 1), 0) };
   }
   const describe = it => Object.entries(it.stats).map(([k, v]) => AFFIXES.find(a => a.id === k).label.replace("{n}", v)).join(" · ");
@@ -207,7 +235,7 @@
     };
   }
   const xpNeed = lvl => Math.round(60 * Math.pow(lvl, 1.55));
-  function save() { store.set({ lvl: hero.lvl, xp: hero.xp, gold: hero.gold, gear: hero.gear, potions: hero.potions, holy: Math.floor(hero.holy || 0), gospel: Math.floor(hero.gospel || 0), floor: floorNo, best: Math.max(hero.best || 1, floorNo) }); }
+  function save() { store.set({ lvl: hero.lvl, xp: hero.xp, gold: hero.gold, gear: hero.gear, potions: hero.potions, ascensions: hero.ascensions || 0, holy: Math.floor(hero.holy || 0), gospel: Math.floor(hero.gospel || 0), floor: floorNo, best: Math.max(hero.best || 1, floorNo) }); }
 
   // ================================================ MAP ================================================
   function genFloor(n) {
@@ -249,7 +277,7 @@
       for (let k = 0; k < count; k++) spawnMonster(pickMonster(n), r.x + rand(0.6, r.w - 0.6), r.y + rand(0.6, r.h - 0.6), n);
     }
     bossAlive = false;
-    if (bossFloor(n)) { spawnMonster("warden", last.cx + 0.5, last.cy - 1.5, n); bossAlive = true; }
+    if (bossFloor(n)) { spawnMonster(isFinal(n) ? "satan" : "warden", last.cx + 0.5, last.cy - 1.5, n); bossAlive = true; }
   }
   function pickMonster(n) {
     const list = Object.entries(MONSTERS).filter(([k, m]) => m.weight && !m.boss && (k !== "golem" || n >= (ENEMIES.golemFromFloor ?? 1)) && (!m.fromFloor || n >= m.fromFloor));
@@ -259,7 +287,7 @@
     return "hollow";
   }
   function spawnMonster(type, x, y, n) {
-    const T = MONSTERS[type], scale = 1 + (n - 1) * 0.32;
+    const T = MONSTERS[type], scale = (1 + (n - 1) * 0.32) * (1 + 0.5 * ((hero && hero.ascensions) || 0));
     const champion = !T.boss && Math.random() < 0.08 + n * 0.01;
     monsters.push({ type, T, x, y, hp: Math.round(T.hp * scale * (champion ? 2.2 : 1)), max: Math.round(T.hp * scale * (champion ? 2.2 : 1)), dmg: Math.round(T.dmg * (1 + (n - 1) * 0.2) * (champion ? 1.4 : 1)), champion, cd: rand(0, 800), face: 0, walk: rand(0, 6), flash: 0, slow: 0, aggro: false, path: [], repath: 0, home: { x, y } });
   }
@@ -305,6 +333,11 @@
   }
 
   // ================================================ GAME LOGIC ================================================
+  // A Bible verse or Dante line under the big message (Game Studio > Undercity > hell > verses).
+  function verse(text, ms = 5000) {
+    const el = root.querySelector(".arpg-verse"); if (!el || !HELL.verses) return;
+    el.textContent = text; el.classList.add("on"); clearTimeout(verse.t); verse.t = setTimeout(() => el.classList.remove("on"), ms);
+  }
   function say(text, ms = 1800, color) { msgEl.textContent = text; msgEl.style.color = color || ""; msgEl.classList.add("on"); clearTimeout(say.t); say.t = setTimeout(() => msgEl.classList.remove("on"), ms); }
   function num(x, y, text, color, big) { nums.push({ x, y, text: String(text), color, life: 1, big }); }
   function burst(x, y, color, n = 14, speed = 3, z = 0.6) { for (let k = 0; k < n; k++) { const a = rand(0, 6.28), v = rand(0.5, 1) * speed; fx.push({ x, y, z, vx: Math.cos(a) * v, vy: Math.sin(a) * v, vz: rand(1, 4), life: 1, color, size: rand(2, 4) }); } }
@@ -330,7 +363,11 @@
     const itemChance = m.T.boss ? 3 : m.champion ? 1 : 0.17;
     for (let k = 0; k < Math.floor(itemChance) + (Math.random() < itemChance % 1 ? 1 : 0); k++)
       loot.push({ kind: "item", item: makeItem(floorNo + hero.lvl / 2, m.T.boss ? 0.6 : m.champion ? 0.3 : 0), x: m.x + rand(-0.6, 0.6), y: m.y + rand(-0.6, 0.6), bob: rand(0, 6) });
-    if (m.T.boss) { bossAlive = false; say("THE WARDEN FALLS · THE STAIRS ARE OPEN", 3200, "#ff8af0"); }
+    if (m.T.boss) {
+      bossAlive = false;
+      if (m.type === "satan") { say("SATAN IS CAST DOWN · THE GATE OF LIGHT IS OPEN", 4200, "#fff3c4"); verse("And the great dragon was cast out, that old serpent, called the Devil, and Satan. · Revelation 12:9", 7000); godAt = performance.now(); }
+      else say(m.T.name.toUpperCase() + " FALLS · THE WAY DOWN IS OPEN", 3200, "#ff9a5a");
+    }
   }
   // ---- Holy Power and the Power of God ----
   let godBusy = false, godAt = -1e9, beams = [];
@@ -353,7 +390,7 @@
     const targets = seenMonsters();
     if (!targets.length) return say("No enemies in sight · save it for the fight", 1400, "#ffe9a0");
     hero.holy = 0; const now = performance.now(); godAt = now;
-    say("✝ POWER OF GOD ✝", 2800, "#fff3c4"); sfx("bigboom");
+    say("✝ POWER OF GOD ✝", 2800, "#fff3c4"); sfx("bigboom"); verse("Be still, and know that I am God. · Psalm 46:10", 4500);
     for (let k = 0; k < 4; k++) fx.push({ ring: true, x: hero.x, y: hero.y, r: 0.3 + k * 0.5, grow: 9, life: 1, color: k % 2 ? "#ffe9a0" : "#ffffff" });
     targets.forEach((m, i) => beams.push({ x: m.x, y: m.y, t0: now + Math.min(i, 12) * 45 }));
     godBusy = true;
@@ -375,7 +412,7 @@
     if ((hero.gospel || 0) < 100) return say("Holy Gospel " + Math.floor(hero.gospel || 0) + "% · it grows when you're hurt, kill and go deeper", 1600, "#bfe6ff");
     hero.gospel = 0; const now = performance.now();
     angel = { until: now + GOSPEL.seconds * 1000, start: now, next: now + 500, shieldHit: -1e9, strikes: [] };
-    say("✦ ARCHANGEL GABRIEL DESCENDS ✦", 3000, "#dff3ff"); sfx("achievement");
+    say("✦ ARCHANGEL GABRIEL DESCENDS ✦", 3000, "#dff3ff"); sfx("achievement"); verse("I am Gabriel, that stand in the presence of God. · Luke 1:19", 5000);
     for (let k = 0; k < 3; k++) fx.push({ ring: true, x: hero.x, y: hero.y, r: 0.3 + k * 0.4, grow: 5, life: 1, color: k % 2 ? "#bfe6ff" : "#ffffff" });
     save(); renderHud();
   }
@@ -476,15 +513,30 @@
     const lost = Math.round(hero.gold * 0.2); hero.gold -= lost;
     sfx("bigboom");
     setTimeout(() => {
-      showIntro(`<p class="arpg-kicker">YOU HAVE FALLEN · FLOOR ${floorNo}</p><h3>The crypt claims you.</h3><p>You dropped ${lost} gold. Your level and gear are kept.</p><div class="arpg-buttons"><button type="button" class="arpg-play" data-go="retry">↺ TRY THIS FLOOR AGAIN</button><button type="button" class="arpg-play arpg-alt" data-go="new">✦ NEW HERO</button></div>`);
+      showIntro(`<p class="arpg-kicker">YOU HAVE FALLEN · CIRCLE ${ROMAN(floorNo)}</p><h3>Hell claims you, for now.</h3><p class="arpg-quote">"Yea, though I walk through the valley of the shadow of death, I will fear no evil." · Psalm 23:4</p><p>You dropped ${lost} gold. Your level and gear are kept.</p><div class="arpg-buttons"><button type="button" class="arpg-play" data-go="retry">↺ TRY THIS FLOOR AGAIN</button><button type="button" class="arpg-play arpg-alt" data-go="new">✦ NEW HERO</button></div>`);
     }, 900);
     save();
+  }
+  // Satan is cast down and the hero steps through the gate of light: the ending. "Ascend again" starts over at the
+  // first circle with the same hero (each ascension makes Hell tougher).
+  function transcend() {
+    state = "won"; sfx("achievement");
+    hero.ascensions = (hero.ascensions || 0) + 1; floorNo = 1; save();
+    setTimeout(() => {
+      showIntro(`<p class="arpg-kicker">TRANSCENDED · ASCENSION ${hero.ascensions}</p><h3>You have risen above Hell.</h3>` +
+        `<p class="arpg-quote">"And God shall wipe away all tears from their eyes; and there shall be no more death." · Revelation 21:4</p>` +
+        `<p>Tenshi, level ${hero.lvl}, cast down Satan and carried ${hero.gold} gold into the light.</p>` +
+        `<div class="arpg-buttons"><button type="button" class="arpg-play" data-go="ascend">✦ DESCEND AGAIN · HELL GROWS STRONGER</button><button type="button" class="arpg-play arpg-alt" data-go="new">✦ NEW HERO</button></div>`);
+      intro.classList.add("arpg-intro-ascend");
+    }, 1200);
   }
   function enterFloor(n) {
     floorNo = n; genFloor(n);
     hero.x = startPos.x; hero.y = startPos.y; hero.path = []; hero.target = null;
     reveal(); save();
-    say(bossFloor(n) ? `FLOOR ${n} · A WARDEN GUARDS THE STAIRS` : `FLOOR ${n}`, 2400, bossFloor(n) ? "#ff8af0" : undefined);
+    const c = circleOf(n);
+    say(`CIRCLE ${ROMAN(n)} · ${c[0]}` + (isFinal(n) ? " · SATAN AWAITS" : bossFloor(n) ? " · A WARDEN GUARDS THE WAY" : ""), 3000, isFinal(n) ? "#bfe6ff" : "#ff9a5a");
+    verse(c[1], 6500);
   }
   function reveal() {
     const r = Math.ceil(LIGHT);
@@ -519,8 +571,8 @@
   function pickUp(l) {
     loot = loot.filter(x => x !== l);
     if (l.kind === "gold") { hero.gold += l.amount; num(l.x, l.y, "+" + l.amount + "g", "#ffd84a"); sfx("combo"); }
-    else if (l.kind === "hpot") { hero.potions.hp++; num(l.x, l.y, "+ health potion", "#ff6e8a"); sfx("combo"); }
-    else if (l.kind === "mpot") { hero.potions.mp++; num(l.x, l.y, "+ mana potion", "#6ea8ff"); sfx("combo"); }
+    else if (l.kind === "hpot") { hero.potions.hp++; num(l.x, l.y, "+ holy water", "#ff6e8a"); sfx("combo"); }
+    else if (l.kind === "mpot") { hero.potions.mp++; num(l.x, l.y, "+ manna", "#6ea8ff"); sfx("combo"); }
     else if (l.kind === "item") {
       const it = l.item, cur = hero.gear[it.slot];
       if (!cur || it.power > cur.power) {
@@ -577,14 +629,15 @@
     for (const l of [...loot]) if (dist(l, hero) < 0.6) pickUp(l);
     // Stairs
     if (Math.hypot(hero.x - (stairs.x + 0.5), hero.y - (stairs.y + 0.5)) < 0.6) {
-      if (bossAlive) { if (!update.warned) { say("THE WARDEN STILL GUARDS THESE STAIRS", 1600, "#ff8af0"); update.warned = true; setTimeout(() => { update.warned = false; }, 3000); } }
+      if (bossAlive) { if (!update.warned) { say((isFinal(floorNo) ? "SATAN" : "THE WARDEN") + " STILL GUARDS THE WAY", 1600, "#ff8af0"); update.warned = true; setTimeout(() => { update.warned = false; }, 3000); } }
+      else if (isFinal(floorNo)) transcend();
       else { sfx("power"); gainGospel(GOSPEL.perFloor); enterFloor(floorNo + 1); }
     }
     // Monsters
     for (const m of monsters) {
       m.cd = Math.max(0, m.cd - dt); m.flash = Math.max(0, m.flash - dt / 200); m.slow = Math.max(0, m.slow - dt);
       const d = dist(m, hero), speed = m.T.speed * (m.slow ? 0.45 : 1) * (m.champion ? 1.15 : 1);
-      if (!m.aggro && d < 7.5 && lineOfSight(m, hero)) { m.aggro = true; m.spotAt = performance.now(); if (m.T.boss) { say("THE WARDEN AWAKENS", 2200, "#ff2bd6"); sfx("bomb"); } }
+      if (!m.aggro && d < 7.5 && lineOfSight(m, hero)) { m.aggro = true; m.spotAt = performance.now(); if (m.T.boss) { say(m.T.name.toUpperCase() + " AWAKENS", 2400, m.type === "satan" ? "#ff3b1f" : "#ff2bd6"); sfx("bomb"); if (m.type === "satan") verse("Be sober, be vigilant; because your adversary the devil, as a roaring lion, walketh about. · 1 Peter 5:8", 6000); } }
       if (!m.aggro) { if (Math.random() < dt / 3000) m.wander = { x: m.home.x + rand(-1.5, 1.5), y: m.home.y + rand(-1.5, 1.5) }; if (m.wander && isFloor(m.wander.x, m.wander.y)) moveToward(m, m.wander.x, m.wander.y, speed * 0.4, dt); continue; }
       if (MONSTER_ANIMS[m.type] && performance.now() - (m.spotAt || 0) < MONSTER_ANIMS[m.type].spotMs) { m.face = Math.atan2(hero.y - m.y, hero.x - m.x); continue; }   // "come here!"
       if (m.T.ranged) {
@@ -665,21 +718,45 @@
     ctx.beginPath();
     ctx.moveTo(sx(x, y), sy(x, y, z)); ctx.lineTo(sx(x + 1, y), sy(x + 1, y, z)); ctx.lineTo(sx(x + 1, y + 1), sy(x + 1, y + 1, z)); ctx.lineTo(sx(x, y + 1), sy(x, y + 1, z)); ctx.closePath();
   }
+  // Lava pools: a few floor tiles per floor (not the stairs or where you start), the same each time you see them.
+  function isLava(x, y) {
+    if (!HELL.lavaPools || (x === stairs.x && y === stairs.y) || Math.hypot(x + 0.5 - startPos.x, y + 0.5 - startPos.y) < 2.5) return false;
+    const h = Math.imul(x * 73856093 ^ y * 19349663 ^ floorNo * 83492791, 2654435761) >>> 0;
+    return (h % 1000) < HELL.lavaPools * 1000;
+  }
   function drawFloorTile(x, y, now) {
     const v = ((x * 7 + y * 13) % 5) / 40;
     diamond(x, y);
     const isStairs = x === stairs.x && y === stairs.y;
-    if (isStairs) { ctx.fillStyle = bossAlive ? "#3a1030" : "#2a1450"; ctx.fill(); }
+    const gate = isStairs && isFinal(floorNo) && !bossAlive;
+    if (isStairs) { ctx.fillStyle = gate ? "#fff3c4" : bossAlive ? "#3a0a08" : "#4a1408"; ctx.fill(); }
     else {
       const ox = sx(x, y), oy = sy(x, y, 0);
-      stone(STONE.floor, ox, oy, sx(x + 1, y) - ox, sy(x + 1, y, 0) - oy, sx(x, y + 1) - ox, sy(x, y + 1, 0) - oy);
+      stone(isFinal(floorNo) ? STONE.iceFloor : STONE.floor, ox, oy, sx(x + 1, y) - ox, sy(x + 1, y, 0) - oy, sx(x, y + 1) - ox, sy(x, y + 1, 0) - oy);
       if (v > 0.03) { ctx.fillStyle = `rgba(0,0,0,${(v * 0.45).toFixed(3)})`; ctx.fill(); }   // a barely-there per-tile tone (no checkerboard)
+      if (isLava(x, y)) {                                              // a pool of lava (or black water under ice): just for looks
+        const px = sx(x + 0.5, y + 0.5), py = sy(x + 0.5, y + 0.5, 0), pulse = 0.75 + 0.25 * Math.sin(now / 420 + x * 1.7 + y);
+        const ice = isFinal(floorNo), g = ctx.createRadialGradient(px, py, 0, px, py, TW * 0.5 * zoom);
+        if (ice) { g.addColorStop(0, "rgba(10,20,40,0.95)"); g.addColorStop(0.7, "rgba(40,80,120,0.85)"); g.addColorStop(1, "rgba(120,170,220,0.5)"); }
+        else { g.addColorStop(0, `rgba(255,${Math.round(190 * pulse)},60,1)`); g.addColorStop(0.55, `rgba(240,${Math.round(70 * pulse)},10,0.95)`); g.addColorStop(1, "rgba(90,10,0,0.9)"); }
+        ctx.fillStyle = g; ctx.fill();
+        if (!ice) {                                                    // bubbles rising and bursting, and a heat glow
+          ctx.save(); ctx.globalCompositeOperation = "lighter";
+          for (let b = 0; b < 3; b++) {
+            const ph = ((now / 1400 + b * 0.37 + (x * 0.13 + y * 0.29)) % 1), bx = px + Math.sin(b * 2.1 + x) * TW * 0.16 * zoom, by = py + Math.cos(b * 1.7 + y) * TH * 0.16 * zoom;
+            ctx.fillStyle = `rgba(255,230,140,${0.55 * (1 - ph)})`; ctx.beginPath(); ctx.ellipse(bx, by, (1.5 + ph * 4) * zoom, (1 + ph * 2.5) * zoom, 0, 0, 6.28); ctx.fill();
+          }
+          glowAt(x + 0.5, y + 0.5, 0.1, 44, "255,90,20", 0.35 * pulse);
+          ctx.restore();
+        }
+      }
     }
-    ctx.strokeStyle = "rgba(176,77,255,0.12)"; ctx.lineWidth = 1; ctx.stroke();
+    ctx.strokeStyle = isFinal(floorNo) ? "rgba(170,220,255,0.10)" : "rgba(255,80,30,0.08)"; ctx.lineWidth = 1; ctx.stroke();
     if (isStairs) {
-      for (let k = 0; k < 4; k++) { diamond(x + 0.12 + k * 0.08, y + 0.12 + k * 0.08, -k * 0.12); ctx.fillStyle = `rgba(${bossAlive ? "120,20,60" : "60,30,120"},${0.5 + k * 0.12})`; ctx.fill(); }
+      for (let k = 0; k < 4; k++) { diamond(x + 0.12 + k * 0.08, y + 0.12 + k * 0.08, gate ? k * 0.12 : -k * 0.12); ctx.fillStyle = `rgba(${gate ? "255,240,200" : bossAlive ? "120,15,10" : "180,50,10"},${0.5 + k * 0.12})`; ctx.fill(); }
       ctx.globalCompositeOperation = "lighter";
-      glowAt(x + 0.5, y + 0.5, 0, 46, bossAlive ? "255,43,214" : "176,120,255", 0.5 + 0.2 * Math.sin(now / 300));
+      glowAt(x + 0.5, y + 0.5, 0, gate ? 120 : 46, gate ? "255,240,190" : bossAlive ? "255,40,20" : "255,120,40", (gate ? 0.8 : 0.5) + 0.2 * Math.sin(now / 300));
+      if (gate) glowAt(x + 0.5, y + 0.5, 2.5, 160, "255,255,255", 0.25 + 0.1 * Math.sin(now / 500));
       ctx.globalCompositeOperation = "source-over";
     }
   }
@@ -713,7 +790,19 @@
     }
     g.strokeStyle = "rgba(0,0,0,0.5)"; g.lineWidth = 1;                                          // cracks
     for (let i = 0; i < 7; i++) { let x = 4 + rnd() * (N - 8), y = 4 + rnd() * (N - 30); g.beginPath(); g.moveTo(x, y); for (let k = 0; k < 5; k++) { x += (rnd() - 0.5) * 12; y += 2 + rnd() * 6; g.lineTo(x, y); } g.stroke(); }
-    const tint = rgb => { const c = document.createElement("canvas"); c.width = c.height = N; const t = c.getContext("2d"); t.drawImage(base, 0, 0); t.globalCompositeOperation = "multiply"; t.fillStyle = `rgb(${rgb.join(",")})`; t.fillRect(0, 0, N, N); return ctx.createPattern(c, "repeat"); };
+    // Tint the stone; `glow` lights the mortar from within (hellfire seeping through the cracks between the blocks).
+    const tint = (rgb, glow) => {
+      const c = document.createElement("canvas"); c.width = c.height = N; const t = c.getContext("2d"); t.drawImage(base, 0, 0);
+      t.globalCompositeOperation = "multiply"; t.fillStyle = `rgb(${rgb.join(",")})`; t.fillRect(0, 0, N, N);
+      if (glow) {
+        t.globalCompositeOperation = "lighter"; t.fillStyle = glow;
+        for (let row = 0; row < N / rowH; row++) {
+          const off = row % 2 ? bw / 2 : 0; t.fillRect(0, row * rowH, N, 2);
+          for (let bI = -1; bI <= N / bw; bI++) t.fillRect((((bI * bw + off) % N) + N) % N, row * rowH, 2, rowH);
+        }
+      }
+      return ctx.createPattern(c, "repeat");
+    };
     // Floor: big worn paving slabs, 2 x 2 per tile, with grout, chipped corners, grit and a few cracks.
     const fb = document.createElement("canvas"); fb.width = fb.height = N; const fg = fb.getContext("2d");
     const fv = new Float32Array(N * N);
@@ -738,9 +827,20 @@
     }
     fg.strokeStyle = "rgba(0,0,0,0.45)"; fg.lineWidth = 1;
     for (let i = 0; i < 6; i++) { let x = 6 + rnd() * (N - 12), y = 6 + rnd() * (N - 12); fg.beginPath(); fg.moveTo(x, y); for (let k = 0; k < 4; k++) { x += (rnd() - 0.5) * 14; y += (rnd() - 0.5) * 14; fg.lineTo(x, y); } fg.stroke(); }
-    const fc = document.createElement("canvas"); fc.width = fc.height = N; const ft = fc.getContext("2d");
-    ft.drawImage(fb, 0, 0); ft.globalCompositeOperation = "multiply"; ft.fillStyle = "rgb(92,78,124)"; ft.fillRect(0, 0, N, N);
-    return { N, top: tint([128, 112, 158]), left: tint([98, 84, 130]), right: tint([74, 62, 104]), floor: ctx.createPattern(fc, "repeat") };
+    // Floors: scorched basalt with glowing lava veins (Hell), or frosted dark ice with pale cracks (Cocytus).
+    const floorPat = (rgb, vein, veinGlow) => {
+      const fc = document.createElement("canvas"); fc.width = fc.height = N; const ft = fc.getContext("2d");
+      ft.drawImage(fb, 0, 0); ft.globalCompositeOperation = "multiply"; ft.fillStyle = `rgb(${rgb.join(",")})`; ft.fillRect(0, 0, N, N);
+      ft.globalCompositeOperation = "lighter"; ft.strokeStyle = vein; ft.lineWidth = 1.6; ft.shadowColor = veinGlow; ft.shadowBlur = 7; ft.lineCap = "round";
+      let vs = 31; const vr = () => (vs = (vs * 16807) % 2147483647) / 2147483647;
+      for (let i = 0; i < 5; i++) { let x = 10 + vr() * (N - 20), y = 10 + vr() * (N - 20); ft.beginPath(); ft.moveTo(x, y); for (let k = 0; k < 6; k++) { x = Math.max(4, Math.min(N - 4, x + (vr() - 0.5) * 22)); y = Math.max(4, Math.min(N - 4, y + (vr() - 0.5) * 22)); ft.lineTo(x, y); } ft.stroke(); }
+      return ctx.createPattern(fc, "repeat");
+    };
+    const ember = "rgba(255,80,20,0.24)", frost = "rgba(150,210,255,0.16)";
+    return { N, top: tint([118, 62, 52], ember), left: tint([84, 40, 36], ember), right: tint([60, 28, 28], ember),
+      floor: floorPat([86, 50, 44], "rgba(255,110,30,0.62)", "#ff5a14"),
+      iceTop: tint([150, 180, 210], frost), iceLeft: tint([96, 120, 150], frost), iceRight: tint([70, 90, 118], frost),
+      iceFloor: floorPat([96, 122, 150], "rgba(190,230,255,0.45)", "#9fd8ff") };
   })();
   // Fill the current path with stone: (ox, oy) = the face's top-left corner, u = along its width, v = down its height.
   function stone(pat, ox, oy, ux, uy, vx, vy) {
@@ -754,14 +854,15 @@
     ctx.globalAlpha = fade;
     // Right face (towards +x: the face you see on the lower right)
     ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.lineTo(bx, by - Wz); ctx.lineTo(ax, ay - Wz); ctx.closePath();
-    stone(STONE.right, ax, ay - Wz, bx - ax, by - ay, 0, Wz);
+    const ice = isFinal(floorNo);
+    stone(ice ? STONE.iceRight : STONE.right, ax, ay - Wz, bx - ax, by - ay, 0, Wz);
     // Left face (lower left)
     ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(bx, by); ctx.lineTo(bx, by - Wz); ctx.lineTo(cx, cy - Wz); ctx.closePath();
-    stone(STONE.left, cx, cy - Wz, bx - cx, by - cy, 0, Wz);
+    stone(ice ? STONE.iceLeft : STONE.left, cx, cy - Wz, bx - cx, by - cy, 0, Wz);
     // Top
     ctx.beginPath(); ctx.moveTo(dx, dy - Wz); ctx.lineTo(ax, ay - Wz); ctx.lineTo(bx, by - Wz); ctx.lineTo(cx, cy - Wz); ctx.closePath();
-    stone(STONE.top, dx, dy - Wz, ax - dx, ay - dy, cx - dx, cy - dy);
-    ctx.strokeStyle = "rgba(255,43,214,0.22)"; ctx.lineWidth = 1; ctx.stroke();
+    stone(ice ? STONE.iceTop : STONE.top, dx, dy - Wz, ax - dx, ay - dy, cx - dx, cy - dy);
+    ctx.strokeStyle = ice ? "rgba(190,230,255,0.25)" : "rgba(255,90,30,0.28)"; ctx.lineWidth = 1; ctx.stroke();
     ctx.globalAlpha = 1;
   }
   function glowAt(x, y, z, r, rgb, a) {
@@ -1014,6 +1115,18 @@
       for (let k = 0; k < 4; k++) glowAt(m.x - Math.cos(m.face) * k * 0.12, m.y - Math.sin(m.face) * k * 0.12, 0.85 - k * 0.12, 10 - k * 2, "110,168,255", 0.4);
       ctx.restore();
     } else if (m.type === "golem") figure(m.x, m.y, { h: 1.55, r: 0.48, body: "#6a5a94", kind: "golem", flash: m.flash, bob: Math.abs(Math.sin(m.walk)) * 0.03 });
+    else if (m.type === "satan") {
+      const pulse = 0.35 + 0.12 * Math.sin(now / 220);
+      ctx.save(); ctx.globalCompositeOperation = "lighter"; glowAt(m.x, m.y, 1.4, 150, "255,50,10", pulse); glowAt(m.x, m.y, 0.2, 90, "255,140,40", 0.3); ctx.restore();
+      const px = sx(m.x, m.y), py = sy(m.x, m.y, 2.4), wing = Math.sin(now / 300) * 6 * zoom;
+      ctx.fillStyle = "rgba(20,4,6,0.92)";                               // great black wings
+      for (const sd of [-1, 1]) { ctx.beginPath(); ctx.moveTo(px, py); ctx.quadraticCurveTo(px + sd * 70 * zoom, py - 60 * zoom - wing, px + sd * 92 * zoom, py - 10 * zoom); ctx.lineTo(px + sd * 60 * zoom, py + 10 * zoom); ctx.lineTo(px + sd * 72 * zoom, py + 34 * zoom); ctx.lineTo(px + sd * 30 * zoom, py + 30 * zoom); ctx.closePath(); ctx.fill(); }
+      figure(m.x, m.y, { h: 3.0, r: 0.8, body: "#6a0c08", head: "#2a0504", eye: "#ffcc33", flash: m.flash, bob: Math.sin(now / 400) * 0.03, face: m.face });
+      const hy = sy(m.x, m.y, 2.95);
+      ctx.strokeStyle = "#d8b07a"; ctx.lineWidth = 5 * zoom; ctx.lineCap = "round";
+      for (const sd of [-1, 1]) { ctx.beginPath(); ctx.moveTo(px + sd * 10 * zoom, hy); ctx.quadraticCurveTo(px + sd * 40 * zoom, hy - 12 * zoom, px + sd * 30 * zoom, hy - 46 * zoom); ctx.stroke(); }
+      ctx.lineCap = "butt";
+    }
     else if (m.type === "warden") {
       ctx.save(); ctx.globalCompositeOperation = "lighter"; glowAt(m.x, m.y, 1, 90, "255,43,214", 0.3 + 0.1 * Math.sin(now / 250)); ctx.restore();
       figure(m.x, m.y, { h: 2.2, r: 0.55, body: "#5a1e6e", head: "#2a0c3a", eye: "#ff2bd6", flash: m.flash, bob: Math.sin(now / 400) * 0.03, face: m.face });
@@ -1092,15 +1205,35 @@
   }
   function drawTorch(t, now) {
     const px = sx(t.x, t.y), py = sy(t.x, t.y, 0) - WALL * zoom * 0.6, fl = Math.sin(now / 90 + t.phase) * 0.5 + Math.sin(now / 37 + t.phase) * 0.3;
-    ctx.fillStyle = "#3a2a20"; ctx.fillRect(px - 2, py, 4, 10 * zoom);
+    const ice = isFinal(floorNo);
+    ctx.fillStyle = "#1a0c08"; ctx.fillRect(px - 2, py, 4, 10 * zoom);
     ctx.save(); ctx.globalCompositeOperation = "lighter";
-    const g = ctx.createRadialGradient(px, py - 4, 0, px, py - 4, (16 + fl * 3) * zoom); g.addColorStop(0, "rgba(255,230,160,1)"); g.addColorStop(0.4, "rgba(255,140,50,0.7)"); g.addColorStop(1, "rgba(255,80,20,0)");
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(px, py - 4, (16 + fl * 3) * zoom, 0, 6.28); ctx.fill(); ctx.restore();
+    const r = (19 + fl * 4) * zoom, g = ctx.createRadialGradient(px, py - 6, 0, px, py - 6, r);
+    if (ice) { g.addColorStop(0, "rgba(230,250,255,1)"); g.addColorStop(0.4, "rgba(120,190,255,0.75)"); g.addColorStop(1, "rgba(60,120,255,0)"); }
+    else { g.addColorStop(0, "rgba(255,240,170,1)"); g.addColorStop(0.35, "rgba(255,110,30,0.8)"); g.addColorStop(1, "rgba(200,20,0,0)"); }
+    ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(px, py - 8 * zoom, r * 0.7, r * 1.15, 0, 0, 6.28); ctx.fill(); ctx.restore();
   }
 
+  // Embers drifting up around the hero (frost motes on the frozen last floor). Cheap: about 60 small dots.
+  let embers = [], emberT = 0;
+  function drawEmbers(now) {
+    if (!HELL.embers) return;
+    const dt = Math.min(0.1, (now - (emberT || now)) / 1000); emberT = now;
+    const ice = isFinal(floorNo);
+    while (embers.length < 60) embers.push({ x: hero.x + rand(-10, 10), y: hero.y + rand(-10, 10), z: rand(0, 3), vz: ice ? -rand(0.2, 0.5) : rand(0.4, 1.2), vx: rand(-0.3, 0.3), life: rand(2, 5), age: 0, s: rand(1.2, 2.6) });
+    ctx.save(); ctx.globalCompositeOperation = "lighter";
+    for (const e of embers) {
+      e.age += dt; e.z += e.vz * dt; e.x += e.vx * dt + Math.sin(now / 700 + e.life * 9) * 0.004;
+      const a = Math.max(0, Math.min(1, e.age / 0.5, (e.life - e.age) / 1));
+      ctx.fillStyle = ice ? `rgba(210,235,255,${0.7 * a})` : `rgba(255,${120 + Math.round(e.life * 20)},40,${0.8 * a})`;
+      ctx.fillRect(sx(e.x, e.y), sy(e.x, e.y, e.z), e.s * zoom, e.s * zoom);
+    }
+    ctx.restore();
+    embers = embers.filter(e => e.age < e.life && e.z > -0.5 && Math.abs(e.x - hero.x) < 12 && Math.abs(e.y - hero.y) < 12);
+  }
   function draw(now) {
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-    ctx.fillStyle = "#05020c"; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = isFinal(floorNo) ? "#02050c" : "#0c0203"; ctx.fillRect(0, 0, W, H);
     if (!grid) return;
     cam.x += (isoX(hero.x, hero.y) - cam.x) * 0.2; cam.y += (isoY(hero.x, hero.y) - cam.y) * 0.2;
     // Which tiles are on screen (a generous box around the hero).
@@ -1142,7 +1275,7 @@
     ctx.restore(); ctx.globalAlpha = 1;
     // 4. Darkness: a light map with holes cut out for the hero's light, the torches and fire.
     lctx.setTransform(1, 0, 0, 1, 0, 0);
-    lctx.globalCompositeOperation = "source-over"; lctx.fillStyle = state === "play" || state === "dead" || state === "paused" ? "rgba(4,1,12,0.93)" : "rgba(4,1,12,0.6)"; lctx.fillRect(0, 0, light.width, light.height);
+    lctx.globalCompositeOperation = "source-over"; lctx.fillStyle = (isFinal(floorNo) ? "rgba(2,4,14," : "rgba(16,2,2,") + (state === "play" || state === "dead" || state === "paused" ? "0.93)" : "0.6)"); lctx.fillRect(0, 0, light.width, light.height);
     lctx.globalCompositeOperation = "destination-out";
     const hole = (x, y, r, a = 1) => { const px = sx(x, y) / 2, py = sy(x, y, 0.4) / 2, rr = r * TW * 0.8 * zoom / 2; const g = lctx.createRadialGradient(px, py, 0, px, py, rr); g.addColorStop(0, `rgba(0,0,0,${a})`); g.addColorStop(0.6, `rgba(0,0,0,${a * 0.7})`); g.addColorStop(1, "rgba(0,0,0,0)"); lctx.fillStyle = g; lctx.beginPath(); lctx.arc(px, py, rr, 0, 6.28); lctx.fill(); };
     hole(hero.x, hero.y, LIGHT * 1.15);
@@ -1150,13 +1283,16 @@
     for (const s of shots) hole(s.x, s.y, s.kind === "fire" ? 2.2 : 1.4, 0.9);
     for (const f of fx) if (f.ring) hole(f.x, f.y, f.r * 2, f.life * 0.8);
     for (const l of loot) if (l.kind === "item" && l.item.rarity !== "common") hole(l.x, l.y, 1.2, 0.6);
-    hole(stairs.x + 0.5, stairs.y + 0.5, 2, 0.6);
+    hole(stairs.x + 0.5, stairs.y + 0.5, isFinal(floorNo) && !bossAlive ? 4 : 2, 0.6);
+    for (let y = (hero.y | 0) - 10; y <= (hero.y | 0) + 10; y++) for (let x = (hero.x | 0) - 10; x <= (hero.x | 0) + 10; x++)   // lava glows in the dark
+      if (x >= 0 && y >= 0 && x < MAPW && y < MAPH && grid[idx(x, y)] === 1 && explored[idx(x, y)] && isLava(x, y)) hole(x + 0.5, y + 0.5, 1.6, isFinal(floorNo) ? 0.25 : 0.55);
     ctx.drawImage(light, 0, 0, W, H);
     // 5. Warm torch light and the hero's faint glow on top.
     ctx.save(); ctx.globalCompositeOperation = "lighter";
-    for (const t of torches) if (Math.hypot(t.x - hero.x, t.y - hero.y) < 14) glowAt(t.x + 0.6, t.y + 0.6, 0, 130 + Math.sin(now / 90 + t.phase) * 8, "255,120,40", 0.12);
-    glowAt(hero.x, hero.y, 0.5, 200, "176,77,255", 0.08);
+    for (const t of torches) if (Math.hypot(t.x - hero.x, t.y - hero.y) < 14) glowAt(t.x + 0.6, t.y + 0.6, 0, 140 + Math.sin(now / 90 + t.phase) * 8, isFinal(floorNo) ? "90,160,255" : "255,70,20", 0.15);
+    glowAt(hero.x, hero.y, 0.5, 200, "255,228,170", 0.09);              // the angel's holy light
     ctx.restore();
+    drawEmbers(now);                                                  // embers rising through Hell (snow in Cocytus)
     drawGod(now);                                                     // Power of God: light beams and the white flash
     drawAngel(now);                                                   // Archangel: Gabriel, the shield, lances of light
     // 6. Floating numbers (not darkened).
@@ -1204,7 +1340,7 @@
     const g = (el, v, max) => { el.querySelector("b").style.height = clamp(v / max, 0, 1) * 100 + "%"; el.querySelector("span").textContent = Math.ceil(v) + "/" + max; };
     g($(".arpg-hp"), Math.max(0, hero.hp), s.maxHp); g($(".arpg-mp"), hero.mp, s.maxMp);
     $(".arpg-xp b").style.width = (hero.xp / xpNeed(hero.lvl)) * 100 + "%";
-    $(".arpg-floor").textContent = "FLOOR " + floorNo; $(".arpg-gold").textContent = "◆ " + hero.gold; $(".arpg-lvl").textContent = "LV " + hero.lvl;
+    $(".arpg-floor").textContent = "CIRCLE " + ROMAN(floorNo) + " · " + circleOf(floorNo)[0].split(" · ")[0]; $(".arpg-gold").textContent = "◆ " + hero.gold; $(".arpg-lvl").textContent = "LV " + hero.lvl;
     $(".arpg-hpn").textContent = hero.potions.hp; $(".arpg-mpn").textContent = hero.potions.mp;
     const holy = Math.floor(hero.holy || 0), full = holy >= 100;
     $(".arpg-holy b").style.width = holy + "%"; $(".arpg-holy span").textContent = full ? "✝ HOLY POWER 100%" : "HOLY POWER " + holy + "%";
@@ -1314,16 +1450,17 @@
   function introButtons() {
     const saved = store.get();
     intro.querySelector(".arpg-buttons").innerHTML = saved
-      ? `<button type="button" class="arpg-play" data-go="continue">▶ CONTINUE · LV ${saved.lvl} · FLOOR ${saved.floor}</button><button type="button" class="arpg-play arpg-alt" data-go="new">✦ NEW HERO</button>`
+      ? `<button type="button" class="arpg-play" data-go="continue">▶ CONTINUE · LV ${saved.lvl} · CIRCLE ${ROMAN(saved.floor || 1)}</button><button type="button" class="arpg-play arpg-alt" data-go="new">✦ NEW HERO</button>`
       : `<button type="button" class="arpg-play" data-go="new">▶ PLAY UNDERCITY</button>`;
   }
   function start(mode) {
     if (!artGone) { clearTimeout(artTimer); fadeArt(); }
-    intro.classList.remove("arpg-intro-cover");
+    intro.classList.remove("arpg-intro-cover", "arpg-intro-ascend");
     enterWindow(); resize();
     const saved = store.get();
     if (mode === "continue" && saved) { hero = Object.assign(newHero(), saved, { potions: saved.potions || { hp: 3, mp: 2 } }); floorNo = saved.floor || 1; }
     else if (mode === "retry" && hero) { /* keep the hero, same floor */ }
+    else if (mode === "ascend" && hero) { floorNo = 1; }
     else { hero = newHero(); floorNo = 1; }
     const s = stats(); hero.hp = s.maxHp; hero.mp = s.maxMp; hero.cds = { fireball: 0, nova: 0 };
     enterFloor(floorNo);
@@ -1334,7 +1471,7 @@
   exitBtn.addEventListener("click", () => {
     if (state === "play") { state = "paused"; save(); }
     leaveWindow();
-    showIntro(`<p class="arpg-kicker">PAUSED · FLOOR ${floorNo}</p><h3>Undercity</h3><p>Your hero is saved.</p><div class="arpg-buttons"><button type="button" class="arpg-play" data-go="resume">▶ RESUME</button></div>`);
+    showIntro(`<p class="arpg-kicker">PAUSED · CIRCLE ${ROMAN(floorNo)}</p><h3>Undercity</h3><p>Your hero is saved.</p><div class="arpg-buttons"><button type="button" class="arpg-play" data-go="resume">▶ RESUME</button></div>`);
   });
   intro.addEventListener("click", e => { if (e.target.closest('[data-go="resume"]')) { e.stopPropagation(); enterWindow(); state = "play"; intro.hidden = true; showUI(true); } }, true);
 
@@ -1365,5 +1502,5 @@
   requestAnimationFrame(loop);
   // Test hook.
   window.neonARPG = { render: () => draw(performance.now()), state: () => ({ state, floor: floorNo, lvl: hero && hero.lvl, hp: hero && Math.round(hero.hp), gold: hero && hero.gold, monsters: monsters.length, loot: loot.length, gear: hero && Object.values(hero.gear).map(i => i.name) }),
-    start, step: ms => { for (let t = 0; t < ms && state === "play"; t += 16) update(16); renderHud(); }, give: n => { hero.gold += n; }, holy: n => { hero.holy = n; renderHud(); }, gospel: n => { hero.gospel = n; renderHud(); }, item: () => { const it = makeItem(5, 0.5); loot.push({ kind: "item", item: it, x: hero.x + 0.3, y: hero.y, bob: 0 }); return it.name; }, stairs: () => { bossAlive = false; hero.x = stairs.x + 0.5; hero.y = stairs.y + 0.5; }, nearest: () => { const m = nearestVisible(); return m && { type: m.type, x: m.x, y: m.y }; }, attack: () => { const m = monsters.reduce((b, m) => !b || dist(m, hero) < dist(b, hero) ? m : b, null); if (m) { hero.target = m; } return m && m.type; } };
+    start, step: ms => { for (let t = 0; t < ms && state === "play"; t += 16) update(16); renderHud(); }, give: n => { hero.gold += n; }, holy: n => { hero.holy = n; renderHud(); }, gospel: n => { hero.gospel = n; renderHud(); }, floor: n => { enterFloor(n); renderHud(); }, boss: () => { const b = monsters.find(m => m.T.boss); return b && { name: b.T.name, x: b.x, y: b.y, hp: b.hp }; }, slay: () => { const b = monsters.find(m => m.T.boss); if (b) { b.hp = 0; killMonster(b); } }, item: () => { const it = makeItem(5, 0.5); loot.push({ kind: "item", item: it, x: hero.x + 0.3, y: hero.y, bob: 0 }); return it.name; }, stairs: () => { bossAlive = false; hero.x = stairs.x + 0.5; hero.y = stairs.y + 0.5; }, nearest: () => { const m = nearestVisible(); return m && { type: m.type, x: m.x, y: m.y }; }, attack: () => { const m = monsters.reduce((b, m) => !b || dist(m, hero) < dist(b, hero) ? m : b, null); if (m) { hero.target = m; } return m && m.type; } };
 })();
