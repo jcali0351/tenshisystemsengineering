@@ -333,7 +333,7 @@ window.TENSHI_GAMES = {
     "reach": 1.3,
     "every": 1500,
     "xp": 40,
-    "weight": 1
+    "weight": 3
    },
    "warden": {
     "hp": 700,
@@ -349,7 +349,8 @@ window.TENSHI_GAMES = {
    "perRoomMax": 3,
    "extraEveryTwoFloors": 1,
    "extraMax": 4,
-   "bossEvery": 3
+   "bossEvery": 3,
+   "golemFromFloor": 1
   },
   "rarity": {
    "common": {

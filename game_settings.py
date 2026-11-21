@@ -168,7 +168,7 @@ UNDERCITY = {
         "hollow":  {"hp": 30,  "dmg": 4,  "speed": 1.9, "reach": 1.1, "every": 1000, "xp": 12,  "weight": 5},
         "skitter": {"hp": 16,  "dmg": 3,  "speed": 3.4, "reach": 1.0, "every": 650,  "xp": 8,   "weight": 4},
         "wisp":    {"hp": 22,  "dmg": 5,  "speed": 2.4, "reach": 5.5, "every": 1500, "xp": 14,  "weight": 3},
-        "golem":   {"hp": 110, "dmg": 12, "speed": 1.4, "reach": 1.3, "every": 1500, "xp": 40,  "weight": 1},
+        "golem":   {"hp": 110, "dmg": 12, "speed": 1.4, "reach": 1.3, "every": 1500, "xp": 40,  "weight": 3},   # the Green Elemental
         "warden":  {"hp": 700, "dmg": 24, "speed": 1.9, "reach": 1.6, "every": 1300, "xp": 300},   # the boss (every 3rd floor)
     },
     # ---- ENEMY NUMBERS ----
@@ -178,6 +178,7 @@ UNDERCITY = {
         "extraEveryTwoFloors": 1,    # ...plus this many more every 2 floors...
         "extraMax": 4,               # ...but never more than this many extra
         "bossEvery": 3,              # a Warden boss guards the stairs every this many floors (0 = never)
+        "golemFromFloor": 1,         # the Golem (Green Elemental) shows up from this floor on (1 = from the start)
     },
     "rarity": {                      # loot: chance of each rarity, and how much stronger it is
         "common":    {"chance": 0.58,  "mult": 1},

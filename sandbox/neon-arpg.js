@@ -27,7 +27,7 @@
     hollow:  { name: "Hollow",  hp: 30, dmg: 4,  speed: 1.9, reach: 1.1, every: 1000, xp: 12, color: "#9fd6a8", r: 0.34, h: 1.0, weight: 5 },
     skitter: { name: "Skitter", hp: 16, dmg: 3,  speed: 3.4, reach: 1.0, every: 650,  xp: 8,  color: "#ff6ec7", r: 0.28, h: 0.5, weight: 4 },
     wisp:    { name: "Wisp",    hp: 22, dmg: 5,  speed: 2.4, reach: 5.5, every: 1500, xp: 14, color: "#8fd8ff", r: 0.26, h: 1.1, weight: 3, ranged: true },
-    golem:   { name: "Golem",   hp: 110, dmg: 12, speed: 1.4, reach: 1.3, every: 1500, xp: 40, color: "#c9a6ff", r: 0.5, h: 1.5, weight: 1 },
+    golem:   { name: "Golem",   hp: 110, dmg: 12, speed: 1.4, reach: 1.3, every: 1500, xp: 40, color: "#c9a6ff", r: 0.5, h: 1.5, weight: 3 },
     warden:  { name: "The Warden", hp: 700, dmg: 24, speed: 1.9, reach: 1.6, every: 1300, xp: 300, color: "#ff2bd6", r: 0.7, h: 2.2, weight: 0, boss: true },
   };
   const RARITY = [
@@ -39,7 +39,7 @@
   TUNE(HERO, CFG.hero); TUNE(SKILLS, CFG.skills); TUNE(MONSTERS, CFG.monsters);
   for (const r of RARITY) TUNE(r, (CFG.rarity || {})[r.id]);
   // How many monsters: per room (more every 2 floors, up to a limit), and how often a Warden boss floor comes.
-  const ENEMIES = { perRoomMin: 2, perRoomMax: 3, extraEveryTwoFloors: 1, extraMax: 4, bossEvery: 3 };
+  const ENEMIES = { perRoomMin: 2, perRoomMax: 3, extraEveryTwoFloors: 1, extraMax: 4, bossEvery: 3, golemFromFloor: 1 };
   TUNE(ENEMIES, CFG.enemies);
   const bossFloor = n => ENEMIES.bossEvery > 0 && n % ENEMIES.bossEvery === 0;
   const BASES = {
@@ -214,7 +214,7 @@
     if (bossFloor(n)) { spawnMonster("warden", last.cx + 0.5, last.cy - 1.5, n); bossAlive = true; }
   }
   function pickMonster(n) {
-    const list = Object.entries(MONSTERS).filter(([k, m]) => m.weight && (k !== "golem" || n >= 2) && (k !== "wisp" || n >= 1));
+    const list = Object.entries(MONSTERS).filter(([k, m]) => m.weight && (k !== "golem" || n >= (ENEMIES.golemFromFloor ?? 1)) && (k !== "wisp" || n >= 1));
     const total = list.reduce((t, [, m]) => t + m.weight, 0);
     let r = Math.random() * total;
     for (const [k, m] of list) { r -= m.weight; if (r <= 0) return k; }

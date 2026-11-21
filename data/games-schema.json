@@ -334,7 +334,7 @@
      "reach": 1.3,
      "every": 1500,
      "xp": 40,
-     "weight": 1
+     "weight": 3
     },
     "warden": {
      "hp": 700,
@@ -350,7 +350,8 @@
     "perRoomMax": 3,
     "extraEveryTwoFloors": 1,
     "extraMax": 4,
-    "bossEvery": 3
+    "bossEvery": 3,
+    "golemFromFloor": 1
    },
    "rarity": {
     "common": {
@@ -489,12 +490,14 @@
     "golemSprite": "show the animated Green Elemental as the Golem (False = use the arpg.golem 3D model)",
     "hero": "walking speed, sword reach (tiles), time between swings",
     "skills.nova": "Frost Nova",
+    "monsters.golem": "the Green Elemental",
     "monsters.warden": "the boss (every 3rd floor)",
     "enemies.perRoomMin": "fewest monsters in a room",
     "enemies.perRoomMax": "most monsters in a room on floor 1...",
     "enemies.extraEveryTwoFloors": "...plus this many more every 2 floors...",
     "enemies.extraMax": "...but never more than this many extra",
     "enemies.bossEvery": "a Warden boss guards the stairs every this many floors (0 = never)",
+    "enemies.golemFromFloor": "the Golem (Green Elemental) shows up from this floor on (1 = from the start)",
     "rarity": "loot: chance of each rarity, and how much stronger it is"
    }
   },
