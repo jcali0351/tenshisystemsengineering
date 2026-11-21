@@ -283,6 +283,7 @@ window.TENSHI_GAMES = {
   "heroSprite": true,
   "hollowSprite": true,
   "golemSprite": true,
+  "elfSprite": true,
   "wizardSprite": true,
   "skitterSprite": true,
   "hero": {
@@ -335,6 +336,15 @@ window.TENSHI_GAMES = {
     "reach": 1.2,
     "every": 1100,
     "xp": 15,
+    "weight": 5
+   },
+   "elf": {
+    "hp": 22,
+    "dmg": 4,
+    "speed": 2.9,
+    "reach": 1.0,
+    "every": 800,
+    "xp": 10,
     "weight": 5
    },
    "golem": {

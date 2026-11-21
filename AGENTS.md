@@ -61,7 +61,8 @@ Each game reads its settings from `window.TENSHI_GAMES` (sandbox/game-settings.j
    Elemental", raises its guard when hit (`sandbox/art/golem-elemental.webp`); the Skitter = the owner's textured lava
    spider (uploaded in Game Studio, then pre-rendered from 16 directions into `sandbox/art/skitter-spider.webp`). The Evil Wizard (common, every floor) uses all 13 of its Mixamo
    animations (`MONSTER_ANIMS`, sheets in `sandbox/art/wizard/`, loaded when needed): walk/run/heavy-walk chasing, Charged Slash
-   attacks, Call Gesture on spotting you, crouch moves when slowed or between swings, dances/burpees/catching breath as idles. Other monsters are 3D meshes from `models/source/arpg.*.glb`
+   attacks, Call Gesture on spotting you, crouch moves when slowed or between swings, dances/burpees/catching breath as idles. The Evil Green Elf (common, every floor) has only a walk
+   (`sandbox/art/elf/walk.webp`; converted from FBX with `tools/fbx-to-glb.py`): stands on frame 0, lunges to attack. Other monsters are 3D meshes from `models/source/arpg.*.glb`
    drawn with simple 2D lighting. Walls and floor use procedural stone canvas textures (`STONE` in neon-arpg.js,
    mapped onto the isometric faces with `pattern.setTransform`). Cover art `sandbox/art/undercity.webp`, same 5 s fade.
 5. **Quest** (`sandbox/neon-quest.js`): XP for exploring the site, on every page.

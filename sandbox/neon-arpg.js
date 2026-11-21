@@ -28,6 +28,7 @@
     skitter: { name: "Skitter", hp: 16, dmg: 3,  speed: 3.4, reach: 1.0, every: 650,  xp: 8,  color: "#ff6ec7", r: 0.28, h: 1.1, weight: 4 },
     wisp:    { name: "Wisp",    hp: 22, dmg: 5,  speed: 2.4, reach: 5.5, every: 1500, xp: 14, color: "#8fd8ff", r: 0.26, h: 1.1, weight: 3, ranged: true },
     wizard:  { name: "Evil Wizard", hp: 34, dmg: 5, speed: 2.0, reach: 1.2, every: 1100, xp: 15, color: "#b06bff", r: 0.32, h: 1.1, weight: 5 },
+    elf:     { name: "Green Elf", hp: 22, dmg: 4, speed: 2.9, reach: 1.0, every: 800, xp: 10, color: "#7dff7a", r: 0.28, h: 0.9, weight: 5 },
     golem:   { name: "Golem",   hp: 110, dmg: 12, speed: 1.4, reach: 1.3, every: 1500, xp: 40, color: "#c9a6ff", r: 0.5, h: 1.5, weight: 3 },
     warden:  { name: "The Warden", hp: 700, dmg: 24, speed: 1.9, reach: 1.6, every: 1300, xp: 300, color: "#ff2bd6", r: 0.7, h: 2.2, weight: 0, boss: true },
   };
@@ -779,6 +780,10 @@
         attack: ["charged-slash", 10, 2.2, false],
       },
       idles: ["breath", "breath", "bubble", "cardio", "breakdance", "burpee"] },
+    // The owner's Meshy "Evil Green Elf" (Mixamo Walking): a quick, common enemy on every floor. Only a walk, so it
+    // stands on the first frame when still and lunges forward to stab.
+    elf: { setting: "elfSprite", dir: "art/elf/", dirs: 8, cell: 176, anchorX: 0.5, anchorY: 0.8637, heightPx: 136.09, height: 1.3, spotMs: 0,
+      anims: { walk: ["walk", 8, 1.03, true] }, idles: [] },
   };
   function animSheet(S, key) {
     const a = S.anims[key];
@@ -801,23 +806,30 @@
     else if (m.aggro) key = "strafe";                                 // squaring up between swings
     else if (moving) key = "wander";
     else {                                                            // waiting around: a random idle every few seconds
-      if (!m.idle || now > m.idleUntil) { m.idle = S.idles[Math.floor(Math.random() * S.idles.length)]; m.idleUntil = now + rand(3500, 7000); }
+      if (!m.idle || now > m.idleUntil) { m.idle = S.idles[Math.floor(Math.random() * S.idles.length)] || "stand"; m.idleUntil = now + rand(3500, 7000); }
       key = m.idle;
+    }
+    let lunge = 0, still = false;
+    if (!S.anims[key]) {                         // a move this character doesn't have: walk when moving, else stand (lunge to attack)
+      if (key === "attack") lunge = Math.sin(t * Math.PI) * 0.35;
+      still = !(moving && key !== "attack"); key = "walk";
     }
     const a = S.anims[key], img = animSheet(S, key);
     if (!img.complete || !img.naturalWidth) {                         // still loading: the first walk frame if it's there
       const w = animSheet(S, "walk"); if (!w.complete || !w.naturalWidth) return false;
-      return blitMonster(m, S, w, 0);
+      return blitMonster(m, S, w, 0, lunge);
     }
     let frame;
-    if (!a[3]) frame = Math.min(a[1] - 1, Math.floor(t * a[1]));
+    if (still) frame = 0;
+    else if (!a[3]) frame = Math.min(a[1] - 1, Math.floor(t * a[1]));
     else { const per = Math.min(a[2] * 1000 / a[1], 240); frame = Math.floor((now + m.home.x * 997) / per) % a[1]; }
-    return blitMonster(m, S, img, frame);
+    return blitMonster(m, S, img, frame, lunge);
   }
-  function blitMonster(m, S, img, frame) {
+  function blitMonster(m, S, img, frame, lunge = 0) {
     const step = Math.PI * 2 / S.dirs, row = ((Math.round(m.face / step) % S.dirs) + S.dirs) % S.dirs;
     const scale = S.height * (m.champion ? 1.12 : 1) * TH * 1.15 * zoom / S.heightPx, size = S.cell * scale;
-    const px = sx(m.x, m.y), py = sy(m.x, m.y, 0), dx = px - S.anchorX * size, dy = py - S.anchorY * size;
+    const lx = m.x + Math.cos(m.face) * lunge, ly = m.y + Math.sin(m.face) * lunge;
+    const px = sx(lx, ly), py = sy(lx, ly, 0), dx = px - S.anchorX * size, dy = py - S.anchorY * size;
     ctx.drawImage(img, frame * S.cell, row * S.cell, S.cell, S.cell, dx, dy, size, size);
     if (m.flash > 0.05) { ctx.save(); ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = Math.min(1, m.flash) * 0.7; ctx.drawImage(img, frame * S.cell, row * S.cell, S.cell, S.cell, dx, dy, size, size); ctx.restore(); }
     return true;
@@ -829,6 +841,7 @@
     if (m.slow) { ctx.save(); ctx.globalCompositeOperation = "lighter"; glowAt(m.x, m.y, 0.3, 30, "143,216,255", 0.35); ctx.restore(); }
     if (drawAnimMonster(m, now) || drawMonsterSprite(m, now)) { /* pre-rendered animated character */ }
     else if (model) drawMesh(model, m.x, m.y, m.face, T.h * 1.1, m.flash);
+    else if (m.type === "elf") figure(m.x, m.y, { h: 0.95, r: 0.26, body: "#2f4a2a", head: "#7dff7a", eye: "#ff2bd6", flash: m.flash, bob: Math.abs(Math.sin(m.walk)) * 0.05, face: m.face });
     else if (m.type === "wizard") figure(m.x, m.y, { h: 1.2, r: 0.3, body: "#4a2a7a", head: "#c9a6ff", eye: "#ff2bd6", flash: m.flash, bob: Math.abs(Math.sin(m.walk)) * 0.05, face: m.face });
     else if (m.type === "hollow") figure(m.x, m.y, { h: 1.15, r: 0.3, body: "#5f7a68", head: "#9fd6a8", eye: "#ff6e3a", flash: m.flash, bob: Math.abs(Math.sin(m.walk)) * 0.05, face: m.face });
     else if (m.type === "skitter") {

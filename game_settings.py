@@ -158,6 +158,7 @@ UNDERCITY = {
     "heroSprite": True,              # show the pre-rendered Female Angel Hero with its animations (False = use the 3D model in the arpg.hero slot)
     "hollowSprite": True,            # show the animated Corrupted Astral Sorcerer as the Hollow (False = use the arpg.hollow 3D model)
     "golemSprite": True,             # show the animated Green Elemental as the Golem (False = use the arpg.golem 3D model)
+    "elfSprite": True,               # show the animated Evil Green Elf (False = use the arpg.elf 3D model)
     "wizardSprite": True,            # show the fully animated Evil Wizard (False = use the arpg.wizard 3D model)
     "skitterSprite": True,           # show the detailed lava spider as the Skitter (False = use the arpg.skitter 3D model)
     "hero": {"speed": 4.2, "reach": 1.25, "attackEvery": 520},   # walking speed, sword reach (tiles), time between swings
@@ -171,6 +172,7 @@ UNDERCITY = {
         "skitter": {"hp": 16,  "dmg": 3,  "speed": 3.4, "reach": 1.0, "every": 650,  "xp": 8,   "weight": 4},
         "wisp":    {"hp": 22,  "dmg": 5,  "speed": 2.4, "reach": 5.5, "every": 1500, "xp": 14,  "weight": 3},
         "wizard":  {"hp": 34,  "dmg": 5,  "speed": 2.0, "reach": 1.2, "every": 1100, "xp": 15,  "weight": 5},   # the Evil Wizard
+        "elf":     {"hp": 22,  "dmg": 4,  "speed": 2.9, "reach": 1.0, "every": 800,  "xp": 10,  "weight": 5},   # the Evil Green Elf
         "golem":   {"hp": 110, "dmg": 12, "speed": 1.4, "reach": 1.3, "every": 1500, "xp": 40,  "weight": 3},   # the Green Elemental
         "warden":  {"hp": 700, "dmg": 24, "speed": 1.9, "reach": 1.6, "every": 1300, "xp": 300},   # the boss (every 3rd floor)
     },
