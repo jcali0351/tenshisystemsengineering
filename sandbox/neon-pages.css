@@ -112,3 +112,8 @@ html.neon.gx-page:not(#_):not(#__) main :is(a.btn, button.btn, .btn-primary, .bt
 /* Plain site background: one flat purple behind everything (no grid lines, no glow). */
 html.neon.gx-page:not(#_):not(#__) body { background: rgb(12, 4, 30) !important; background-image: none !important; }
 html.neon.gx-page:not(#_):not(#__) .site-footer { background: rgb(12, 4, 30) !important; background-image: none !important; }
+
+/* Service card pictures: 30% smaller (70% of the card's width), centred. */
+html.neon.gx-page:not(#_):not(#__):not(#___) main .service-card .service-pic {
+  width: 70% !important; align-self: center !important; margin-left: auto !important; margin-right: auto !important; display: block;
+}
