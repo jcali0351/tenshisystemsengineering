@@ -475,49 +475,94 @@
     face(m, pts.map((_, i) => base + n + (n - 1 - i)), mat, c);
     for (let i = 0; i < n; i++) { const j = (i + 1) % n; face(m, [base + i, base + n + i, base + n + j, base + j], edgeMat || mat, c); }
   }
+  // The same, standing upright (tail fins): pts are [x, z], centred on side position y.
+  function fin(m, pts, y, thick, mat, edgeMat) {
+    const base = m.v.length, n = pts.length;
+    for (const [x, z] of pts) m.v.push([x, y + thick / 2, z]);
+    for (const [x, z] of pts) m.v.push([x, y - thick / 2, z]);
+    const c = [pts.reduce((t, q) => t + q[0], 0) / n, y, pts.reduce((t, q) => t + q[1], 0) / n];
+    face(m, pts.map((_, i) => base + i), mat, c);
+    face(m, pts.map((_, i) => base + n + (n - 1 - i)), mat, c);
+    for (let i = 0; i < n; i++) { const j = (i + 1) % n; face(m, [base + i, base + n + i, base + n + j, base + j], edgeMat || mat, c); }
+  }
   const mirrorY = pts => pts.map(([x, y]) => [x, -y]).reverse();
   const sphere = (r, n = 8) => Array.from({ length: n + 1 }, (_, i) => { const a = -Math.PI / 2 + i / n * Math.PI; return [Math.cos(a) * r + 0.0001, Math.sin(a) * r]; });
 
   const MODELS = {};
   // ---- Your fleet ----
-  { // INTERCEPTOR: an arrowhead fighter with swept wings and twin glowing engines.
+  { // INTERCEPTOR: a needle-nosed strike fighter. Cranked delta wings with wingtip cannons, twin canted tail fins,
+    // side intakes feeding two engine nacelles, a bubble canopy and a glowing spine stripe.
     const m = Mesh();
-    lathe(m, [[0.001, 1.35], [0.16, 1.0], [0.27, 0.35], [0.3, -0.35], [0.24, -0.8], [0.001, -0.85]], 6, "hull", { sz: 0.7 });
-    lathe(m, [[0.001, 0.75], [0.11, 0.55], [0.12, 0.2], [0.001, 0.05]], 6, "glass", { at: [0, 0, 0.16], sz: 0.8 });
-    slab(m, [[0.35, 0.22], [-0.55, 1.15], [-0.85, 1.12], [-0.6, 0.2]], -0.02, 0.07, "hull", "trim");
-    slab(m, mirrorY([[0.35, 0.22], [-0.55, 1.15], [-0.85, 1.12], [-0.6, 0.2]]), -0.02, 0.07, "hull", "trim");
-    slab(m, [[-0.2, 0.0], [-0.8, 0.0], [-0.85, 0.02], [-0.45, 0.02]].map(([x, y]) => [x, y]), 0.0, 0.0, "trim");
+    lathe(m, [[0.001, 1.55], [0.08, 1.35], [0.17, 1.0], [0.25, 0.55], [0.29, 0.05], [0.28, -0.45], [0.22, -0.8], [0.12, -0.92]], 8,
+      (p) => p === 3 ? "trim" : "hull", { sz: 0.62, rot: Math.PI / 8 });
+    lathe(m, [[0.001, 0.5], [0.09, 0.36], [0.115, 0.1], [0.1, -0.15], [0.001, -0.3]], 8, "glass", { at: [0.42, 0, 0.13], sz: 0.8 });
+    box(m, [-0.15, 0, 0.17], [0.9, 0.05, 0.03], "glow");                                          // spine light
     for (const s of [-1, 1]) {
-      lathe(m, [[0.001, -0.2], [0.13, -0.35], [0.14, -0.85], [0.1, -0.95]], 6, "dark", { at: [0, s * 0.42, -0.04] });
-      lathe(m, [[0.1, -0.95], [0.001, -0.96]], 6, "glow", { at: [0, s * 0.42, -0.04] });
-      slab(m, [[-0.35, s * 1.12], [-0.85, s * 1.14], [-0.95, s * 1.18], [-0.45, s * 1.17]], 0.05, 0.12, "trim");
+      const wing = [[0.3, s * 0.2], [-0.25, s * 0.78], [-0.5, s * 1.02], [-0.72, s * 1.02], [-0.7, s * 0.24]];
+      slab(m, s > 0 ? wing : wing.slice().reverse(), -0.05, 0.06, "hull", "trim");
+      slab(m, s > 0 ? [[-0.42, s * 0.92], [-0.62, s * 0.98], [-0.7, s * 0.98], [-0.52, s * 0.9]] : [[-0.52, s * 0.9], [-0.7, s * 0.98], [-0.62, s * 0.98], [-0.42, s * 0.92]], -0.01, 0.07, "trim");   // wing stripe
+      lathe(m, [[0.001, 0.25], [0.035, 0.2], [0.045, -0.5], [0.06, -0.62], [0.001, -0.64]], 5, "dark", { at: [-0.25, s * 1.03, -0.05] });   // wingtip cannon
+      lathe(m, sphere(0.03, 3), 4, "glow", { at: [0.02, s * 1.03, -0.05] });
+      box(m, [0.18, s * 0.31, -0.08], [0.45, 0.13, 0.13], "dark");                                 // intake
+      lathe(m, [[0.12, 0.3], [0.15, 0.1], [0.15, -0.3], [0.13, -0.42], [0.1, -0.47]], 7, (p) => p === 1 ? "trim" : "dark", { at: [-0.5, s * 0.3, -0.05] });   // nacelle
+      lathe(m, [[0.1, -0.47], [0.001, -0.48]], 7, "glow", { at: [-0.5, s * 0.3, -0.05] });
+      fin(m, [[-0.45, 0.1], [-0.82, 0.48], [-0.95, 0.48], [-0.88, 0.1]], s * 0.2, 0.05, "hull", "trim");   // tail fin
     }
-    slab(m, [[-0.3, 0], [-0.8, 0], [-0.9, 0]], 0.3, 0.05, "trim");
     MODELS.blade = m;
   }
-  { // MINER: a stubby work-boat with a glass bridge, two side pods and a mining claw.
+  { // MINER: a rugged mining hauler. Armoured hex hull, cockpit up front, two cargo pods with glowing bands, a forward
+    // mining boom with a laser emitter and grab claws, four engines and a little comms dish.
     const m = Mesh();
-    box(m, [0, 0, 0], [1.3, 0.85, 0.55], "hull");
-    box(m, [0.55, 0, 0.18], [0.45, 0.55, 0.3], "glass");
+    lathe(m, [[0.001, 0.8], [0.26, 0.72], [0.4, 0.4], [0.42, -0.4], [0.34, -0.62], [0.001, -0.66]], 6,
+      (p) => p === 2 ? "trim" : "hull", { sz: 0.72, rot: Math.PI / 6 });
+    lathe(m, [[0.001, 0.32], [0.14, 0.24], [0.16, 0.02], [0.001, -0.12]], 6, "glass", { at: [0.48, 0, 0.2], sz: 0.7 });   // cockpit
     for (const s of [-1, 1]) {
-      lathe(m, [[0.001, 0.55], [0.2, 0.4], [0.22, -0.45], [0.16, -0.65]], 6, "trim", { at: [0, s * 0.62, -0.05] });
-      lathe(m, [[0.16, -0.65], [0.001, -0.66]], 6, "glow", { at: [0, s * 0.62, -0.05] });
+      box(m, [-0.12, s * 0.58, 0], [0.86, 0.3, 0.4], "trim");                                    // cargo pod
+      box(m, [-0.12, s * 0.58, 0.21], [0.7, 0.24, 0.04], "dark");
+      box(m, [0.12, s * 0.58, 0], [0.05, 0.32, 0.42], "glow");                                   // glowing band
+      box(m, [-0.32, s * 0.58, 0], [0.05, 0.32, 0.42], "glow");
+      box(m, [0.15, s * 0.36, -0.02], [0.3, 0.16, 0.12], "dark");                                // pod strut
+      for (const z of [-0.1, 0.1]) {
+        lathe(m, [[0.08, 0], [0.1, -0.16], [0.08, -0.22]], 6, "dark", { at: [-0.55, s * 0.58, z] });   // engines
+        lathe(m, [[0.08, -0.22], [0.001, -0.23]], 6, "glow", { at: [-0.55, s * 0.58, z] });
+      }
+      box(m, [1.12, s * 0.14, -0.16], [0.2, 0.05, 0.16], "trim");                                // claws
+      box(m, [1.2, s * 0.1, -0.16], [0.08, 0.05, 0.14], "dark");
     }
-    box(m, [0.85, 0, -0.18], [0.5, 0.12, 0.12], "dark");
-    box(m, [1.1, 0.12, -0.18], [0.14, 0.08, 0.2], "trim"); box(m, [1.1, -0.12, -0.18], [0.14, 0.08, 0.2], "trim");
+    box(m, [0.8, 0, -0.16], [0.6, 0.12, 0.12], "dark");                                          // mining boom
+    lathe(m, sphere(0.07, 4), 6, "glow", { at: [1.12, 0, -0.16] });                              // laser emitter
+    lathe(m, [[0.015, 0], [0.015, 0.14], [0.17, 0.2], [0.001, 0.15]], 7, (p) => p === 2 ? "trim" : "dark", { axis: "z", at: [-0.25, 0, 0.26] });   // comms dish
     MODELS.spark = m;
   }
-  { // LANCER gunship: a long armoured hull with an engine block. Its turret is a separate model that aims.
+  { // GUNSHIP: a heavy frigate. Long armoured hull with a raised bridge, armoured side sponsons carrying missile racks,
+    // a dorsal fin and a three-engine block. Its twin-cannon turret is a separate model that aims.
     const m = Mesh();
-    lathe(m, [[0.001, 1.4], [0.25, 1.1], [0.42, 0.4], [0.45, -0.7], [0.38, -1.0]], 6, "hull", { sz: 0.6, rot: Math.PI / 6 });
-    box(m, [-0.95, 0, 0], [0.4, 1.1, 0.4], "dark");
-    for (const s of [-0.32, 0, 0.32]) lathe(m, [[0.13, -1.15], [0.001, -1.16]], 6, "glow", { at: [0, s, 0] });
-    for (const s of [-1, 1]) slab(m, [[0.2, s * 0.4], [-0.6, s * 0.95], [-0.9, s * 0.95], [-0.7, s * 0.4]], -0.05, 0.08, "trim");
+    lathe(m, [[0.001, 1.5], [0.16, 1.32], [0.33, 0.95], [0.44, 0.35], [0.47, -0.45], [0.42, -0.92], [0.32, -1.08]], 6,
+      (p) => p === 3 ? "trim" : "hull", { sz: 0.56, rot: Math.PI / 6 });
+    box(m, [0.85, 0, 0.12], [0.45, 0.12, 0.06], "glow");                                         // nose sensor strip
+    box(m, [-0.58, 0, 0.24], [0.5, 0.36, 0.2], "hull");                                          // bridge
+    box(m, [-0.38, 0, 0.32], [0.1, 0.3, 0.07], "glass");
+    fin(m, [[-0.55, 0.3], [-0.95, 0.68], [-1.1, 0.68], [-1.02, 0.3]], 0, 0.06, "trim", "hull");   // dorsal fin
+    for (const s of [-1, 1]) {
+      const sponson = [[0.55, s * 0.36], [-0.3, s * 0.74], [-0.95, s * 0.74], [-1.02, s * 0.4]];
+      slab(m, s > 0 ? sponson : sponson.slice().reverse(), -0.03, 0.16, "hull", "trim");
+      box(m, [-0.28, s * 0.6, 0.11], [0.55, 0.18, 0.12], "dark");                                // missile rack
+      for (const y of [0.54, 0.66]) box(m, [0.0, s * y, 0.11], [0.04, 0.05, 0.05], "glow");      // missile tips
+      box(m, [-0.65, s * 0.72, -0.03], [0.5, 0.04, 0.05], "glow");                               // running light
+    }
+    box(m, [-1.05, 0, 0], [0.3, 0.98, 0.42], "dark");                                            // engine block
+    for (const y of [-0.32, 0, 0.32]) {
+      lathe(m, [[0.14, -1.15], [0.16, -1.27], [0.13, -1.32]], 7, "trim", { at: [0, y, 0] });
+      lathe(m, [[0.13, -1.32], [0.001, -1.33]], 7, "glow", { at: [0, y, 0] });
+    }
     MODELS.lancer = m;
-    const t = Mesh();
-    lathe(t, sphere(0.32, 4).slice(4), 8, "trim", { axis: "z" });
-    box(t, [0.55, 0.09, 0.08], [0.8, 0.08, 0.08], "dark"); box(t, [0.55, -0.09, 0.08], [0.8, 0.08, 0.08], "dark");
-    box(t, [0.98, 0.09, 0.08], [0.06, 0.1, 0.1], "glow"); box(t, [0.98, -0.09, 0.08], [0.06, 0.1, 0.1], "glow");
+    const t = Mesh();   // turret: an armoured dome, a gun shield and twin long cannons with glowing muzzles
+    lathe(t, [[0.36, 0], [0.38, 0.08], [0.3, 0.2], [0.14, 0.28], [0.001, 0.3]], 8, (p) => p === 1 ? "trim" : "hull", { axis: "z" });
+    box(t, [0.24, 0, 0.12], [0.22, 0.42, 0.18], "trim");
+    for (const y of [-0.1, 0.1]) {
+      lathe(t, [[0.05, 0.3], [0.05, 1.05], [0.065, 1.08], [0.065, 1.2]], 6, "dark", { at: [0, y, 0.12] });
+      lathe(t, [[0.065, 1.2], [0.001, 1.21]], 6, "glow", { at: [0, y, 0.12] });
+    }
     MODELS.turret = t;
   }
   { // TENSHI STATION: a hexagonal hub with a glowing core, docking arms and a separately turning ring.
@@ -796,7 +841,7 @@
 
   // Height each kind floats at, and how big its model is compared with its hit circle.
   const HOVER = { spark: 16, blade: 22, lancer: 18, core: 10, mite: 10, brute: 6, spitter: 26, hive: 4, tower: 2, depot: 2, outpost: 6, yard: 4 };
-  const SIZE = { spark: 1.15, blade: 1.25, lancer: 1.1, core: 0.95, mite: 1.0, brute: 0.95, spitter: 1.0, hive: 0.95, tower: 1.3, depot: 1.15, outpost: 1.0, yard: 1.0 };
+  const SIZE = { spark: 1.35, blade: 1.45, lancer: 1.3, core: 0.95, mite: 1.0, brute: 0.95, spitter: 1.0, hive: 0.95, tower: 1.3, depot: 1.15, outpost: 1.0, yard: 1.0 };
   function drawEnt(e, now) {
     const T = e.T, paint = PAINT[e.team], flash = Math.min(1, e.flash);
     const h = HOVER[e.type] + (T.building ? 0 : Math.sin(now / 420 + e.bob) * 3), size = e.r * SIZE[e.type];
