@@ -58,17 +58,18 @@ def star(d, x, y, r, w):
     d.line([(x - r, y), (x + r, y)], fill=255, width=w)
 
 def gem(d):
-    top, mid, bot = 300, 430, 830
-    l, r = 230, 794
-    tl, tr = 380, 644
-    outline = [(tl, top), (tr, top), (r, mid), (512, bot), (l, mid), (tl, top)]
-    d.line(outline, fill=255, width=W, joint="curve")
-    d.line([(l, mid), (r, mid)], fill=255, width=W - 6)                       # girdle
-    d.line([(tl, top), (430, mid), (512, top), (594, mid), (tr, top)], fill=255, width=W - 10, joint="curve")  # crown facets
-    d.line([(430, mid), (512, bot), (594, mid)], fill=255, width=W - 10, joint="curve")                       # pavilion facets
-    star(d, 812, 230, 58, W - 8)
-    star(d, 200, 690, 40, W - 10)
-    star(d, 838, 640, 30, W - 12)
+    # Branding: a bold hexagon badge (a brand mark) with a star at its heart. Simple shapes so it reads at card size.
+    w = 58
+    cx, cy, R = 512, 512, 380
+    hexa = [(cx + R * math.cos(math.radians(a)), cy + R * math.sin(math.radians(a))) for a in range(-90, 271, 60)]
+    d.line(hexa + [hexa[1]], fill=255, width=w, joint="curve")
+    pts = []
+    for i in range(10):
+        rr = 190 if i % 2 == 0 else 82
+        a = math.radians(-90 + i * 36)
+        pts.append((cx + rr * math.cos(a), cy + 12 + rr * math.sin(a)))
+    d.line(pts + [pts[0], pts[1]], fill=255, width=w - 14, joint="curve")
 
 render(bulb, sys.argv[1] + "/consulting.webp", blur1=7, blur2=20, coremin=21, coremix=0.55)
+render(gem, sys.argv[1] + "/branding.webp", blur1=7, blur2=20, coremin=21, coremix=0.55)
 print("ok")

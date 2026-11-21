@@ -53,7 +53,6 @@ const BRAND = {"adobeaftereffects":"#9999FF","adobeillustrator":"#FF9A00","adobe
 // translations.js (staff1Name, staff1Role, staff1Bio …).
 const TEAM = [
   { n: 1, img: "illustrated-1.svg", skills: ["software", "webdev", "cms"] },
-  { n: 2, img: "illustrated-2.png", skills: ["consulting", "ai", "hosting"] },
   { n: 3, img: "illustrated-3.svg", skills: ["webdesign", "media", "branding"] },
   { n: 4, img: "illustrated-4.svg", skills: ["ai", "hosting", "software"] },
 ];
@@ -121,7 +120,7 @@ const ART = {
 /* ---------- homepage: cards in three sets, the form's topic list, the current menu item ---------- */
 const card = (s, pad, prefix) => `${pad}<article class="service-card">
 ${pad}  <h3 data-i18n="${k(s, "title")}">${tx(k(s, "title"))}</h3>
-${pad}  <img class="service-pic service-icon" src="${prefix}img/services/icons/${s.icon}?v=20261121b" alt="${esc(((SEO[k(s, "title")] || {}).service || tx(k(s, "title"))) + " for small business")}" width="512" height="512" loading="lazy" data-still-color>
+${pad}  <img class="service-pic service-icon" src="${prefix}img/services/icons/${s.icon}?v=20261121c" alt="${esc(((SEO[k(s, "title")] || {}).service || tx(k(s, "title"))) + " for small business")}" width="512" height="512" loading="lazy" data-still-color>
 ${pad}  <p data-i18n="${k(s, "short")}">${tx(k(s, "short"))}</p>
 ${pad}  <a class="btn-more" href="${prefix}services/${s.slug}.html"><span data-i18n="more">${tx("more")}</span><span class="sr-only">: <span data-i18n="${k(s, "title")}">${tx(k(s, "title"))}</span></span></a>
 ${pad}</article>`;
@@ -212,7 +211,8 @@ const svcLink = (slug, prefix) => {
 };
 const postsFor = (slug) => (BLOGDATA.posts || []).filter((b) => b.slug && (TOPIC_SVC[coverFor(b)] || []).includes(slug)).slice(0, 3);
 const postImg = (b) => (b.image && !b.image.generated && b.image.src) ? b.image : { src: `img/covers/${coverFor(b)}.svg`, generated: true };
-const wSrc = (img, cat) => (img && img.src && !/^https?:/.test(img.src) ? img.src : `img/covers/${cat}.svg`);
+const CV = (src) => (/^img/covers//.test(src) ? src + "?v=20261121" : src);   // covers are redrawn now and then: bust old copies
+const wSrc = (img, cat) => CV(img && img.src && !/^https?:/.test(img.src) ? img.src : `img/covers/${cat}.svg`);
 const wCredit = (img) => (img && !img.generated && img.src ? ` · <span data-i18n="photoLabel">${tx("photoLabel")}</span>: ${esc(img.creator || "Unknown")}${img.license ? ` (<a href="${wUrl(img.licenseUrl || img.page)}" target="_blank" rel="noopener">${esc(img.license)}</a>)` : ""}` : "");
 function footerWidgets() {
   const photo = (s) => s && s.image && !s.image.generated && s.image.src;
@@ -1672,7 +1672,7 @@ const COVER = (cat) => `img/covers/${cat}.svg`;
 
 /* A feature image with its credit line ("Photo: creator · license · provider"). Generated covers need no credit. */
 function featureImage(img, cat, cls, prefix = "") {
-  const src = prefix + (img && img.src && !/^https?:/.test(img.src) ? img.src : COVER(cat));
+  const src = prefix + CV(img && img.src && !/^https?:/.test(img.src) ? img.src : COVER(cat));
   const credit = img && !img.generated && img.src ? `
               <figcaption class="img-credit"><span data-i18n="photoLabel">${tx("photoLabel")}</span>: ${img.creatorUrl ? ext(img.creatorUrl, esc(img.creator)) : esc(img.creator || "Unknown")}${img.license ? " · " + (img.licenseUrl ? ext(img.licenseUrl, esc(img.license)) : esc(img.license)) : ""}${img.page ? " · " + ext(img.page, esc(img.provider || "Source")) : ""}</figcaption>` : "";
   return `<figure class="${cls}">
