@@ -1,4 +1,4 @@
-/* tse-theme {"headingFont":"oswald","bodyFont":"lato","headingWeight":400,"bodyWeight":400,"rootSize":18.4,"heroSize":92,"pageTitleSize":68,"sectionSize":55,"featureSize":39,"cardSize":25.5,"h1Spacing":-0.065,"h2Spacing":-0.05,"h3Spacing":-0.085,"h4Spacing":-0.07,"headingSpacingUnit":"em","headingLine":1.04,"headingCase":"uppercase","bodySpacing":-0.01,"bodyLine":1.75,"sectionSpace":168,"flowSpace":1.25,"headingSpace":0.7,"cardPad":46,"gridGap":34,"gutter":56,"headingColor":"#3d4249","headingOpacity":38,"textColor":"#6b7280","mutedColor":"#7d838c","accentColor":"#c8102e","motion":true,"motionChars":true,"motionText":true,"motionImages":true,"motionCards":true,"motionColor":true,"colorDuration":1.8,"intro":true,"introHold":3,"introFade":4.2,"introStyle":"bloom","heroEffect":true,"heroStep":130,"heroDuration":4,"motionSpeed":1,"motionDistance":102,"motionDistanceMobile":26,"charDelay":33,"headingStyles":{"h1":{"font":"oswald","smallCaps":true,"color":"#171717","stroke":0,"strokeColor":"#000000","shadow":"none"},"h2":{"fontStyle":"normal"},"h3":{"font":"oswald","fontStyle":"normal","align":"center","color":"#5e5e5e","decoration":"none"},"h4":{"fontStyle":"normal"}}} */
+/* tse-theme {"headingFont":"oswald","bodyFont":"lato","headingWeight":400,"bodyWeight":400,"rootSize":16.6,"heroSize":78,"pageTitleSize":68,"sectionSize":51,"featureSize":39,"cardSize":21.5,"h1Spacing":-0.065,"h2Spacing":-0.015,"h3Spacing":-0.085,"h4Spacing":-0.07,"headingSpacingUnit":"em","headingLine":1.04,"headingCase":"uppercase","bodySpacing":-0.01,"bodyLine":1.75,"sectionSpace":168,"flowSpace":1.25,"headingSpace":0.7,"cardPad":46,"gridGap":34,"gutter":56,"headingColor":"#3d4249","headingOpacity":38,"textColor":"#6b7280","mutedColor":"#7d838c","accentColor":"#c8102e","motion":true,"motionChars":true,"motionText":true,"motionImages":true,"motionCards":true,"motionColor":true,"colorDuration":1.8,"intro":true,"introHold":3,"introFade":4.2,"introStyle":"bloom","heroEffect":true,"heroStep":130,"heroDuration":4,"motionSpeed":1,"motionDistance":102,"motionDistanceMobile":26,"charDelay":33,"headingStyles":{"h1":{"font":"oswald","smallCaps":true,"color":"#171717","stroke":0,"strokeColor":"#000000","shadow":"none"},"h2":{"fontStyle":"normal"},"h3":{"font":"oswald","fontStyle":"normal","align":"center","color":"#5e5e5e","decoration":"none"},"h4":{"fontStyle":"normal"}}} */
 /* Site theme, set in the Tenshi Editor (admin.html › Design), which rewrites this file. Loaded after every other stylesheet.
    Fonts live in fonts/<name>/ (see fonts/fonts.json); free to use: SIL Open Font License, Apache 2.0 or the Ubuntu Font Licence (each folder has its LICENSE). */
 @font-face{font-family:"Oswald";font-style:normal;font-weight:300;font-display:swap;src:url("fonts/oswald/oswald-300-normal.woff2") format("woff2")}
@@ -15,7 +15,7 @@
 :root{--font:"Lato", "Segoe UI", Helvetica, Arial, sans-serif;--font-ja:"Lato", "Segoe UI", Helvetica, Arial, sans-serif, "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif;--font-heading:"Oswald", "Segoe UI", Helvetica, Arial, sans-serif;--ink:#3d4249;--heading:#3d424961;--text:#6b7280;--muted:#7d838c;--red:#c8102e;--shu:#c8102e;--red-deep:color-mix(in srgb,#c8102e 82%,#000);--red-dark:color-mix(in srgb,#c8102e 65%,#000);--a-dur:0.90s;--a-dur-img:1.20s;--ch-dur:0.70s;--dx:102px;--dy:56px;--cs-base:33ms;--anim:1;--anim-chars:1;--anim-text:1;--anim-images:1;--anim-cards:1;--anim-color:1;--gs-dur:1.8s}
 :root{--intro-hold:3s;--intro-fade:4.2s;--anim-hero:1;--hero-step:130ms;--hero-dur:4s}
 @media (max-width:760px){:root{--dx:26px;--dy:20px}}
-html{font-size:18.4px}
+html{font-size:16.6px}
 body:not(#_){font-family:var(--font);font-weight:400;letter-spacing:-0.01em;line-height:1.75;color:var(--text)}
 :is(p,li,dd,blockquote,td):not(#_){letter-spacing:-0.01em}
 :is(.hero-lead,.feature-lead,.page-lead,.pitch-lead,.svc-intro,.svc-for p,.svc-other span,.contact-form label,.field label):not(#_){color:var(--text)!important}
@@ -23,7 +23,7 @@ body:not(#_){font-family:var(--font);font-weight:400;letter-spacing:-0.01em;line
 :is(h1,h2,h3,h4,h5,h6):not(#_):not(:is(.portal-card--admin,.blog-card.is-feature,.svc-cta.is-dark) *){color:var(--heading)!important}
 :is(h1,h2):not(#_){line-height:1.04!important}
 h1:not(#_){letter-spacing:-0.065em!important}
-h2:not(#_){letter-spacing:-0.05em!important}
+h2:not(#_){letter-spacing:-0.015em!important}
 h3:not(#_){letter-spacing:-0.085em!important}
 :is(h4,h5,h6):not(#_){letter-spacing:-0.07em!important}
 /* Heading styles (Design › Heading styles) */
@@ -50,9 +50,9 @@ main .blog-card.is-feature .blog-body:not(#_){padding:clamp(33.35px, 4.36vw, 57.
 main :is(.services-grid,.offer-grid,.benefit-grid,.blog-grid,.news-list,.portal-grid,.prj-grid,.prj-ed-grid,.svc-grid,.svc-tech-grid,.team-grid,.tech-grid,.value-grid,.pat-grid,.ab-find-grid,.ab-focus-grid,.ab-mv-grid,.ab-std-grid,.svc-steps,.svc-other-list,.svc-detail-list):not(#_){gap:clamp(19.72px, 2.58vw, 34px)!important}
 main :is(.feature-inner,.svc-body-inner,.contact-inner,.contact-layout):not(#_){gap:clamp(39.44px, 5.15vw, 68px)!important;column-gap:clamp(43.38px, 5.67vw, 74.8px)!important}
 main :is(.news-tabs):not(#_){margin-bottom:clamp(23.66px, 3.09vw, 40.8px)!important}
-.hero-card h1:not(#_){font-size:clamp(53.36px, 6.97vw, 92px)!important}
+.hero-card h1:not(#_){font-size:clamp(45.24px, 5.91vw, 78px)!important}
 .svc-hero h1:not(#_){font-size:clamp(39.44px, 5.15vw, 68px)!important}
-:is(.section-title,.contact-intro h2,.prj-group-title):not(#_){font-size:clamp(31.9px, 4.17vw, 55px)!important}
+:is(.section-title,.contact-intro h2,.prj-group-title):not(#_){font-size:clamp(29.58px, 3.86vw, 51px)!important}
 .feature h2:not(#_){font-size:clamp(22.62px, 2.95vw, 39px)!important}
-:is(.service-card,.offer-card,.benefit-card,.news-item,.blog-card,.value-card,.team-card,.prj-card,.svc-step,.ab-step) h3:not(#_){font-size:clamp(16px, 1.93vw, 25.5px)!important}
+:is(.service-card,.offer-card,.benefit-card,.news-item,.blog-card,.value-card,.team-card,.prj-card,.svc-step,.ab-step) h3:not(#_){font-size:clamp(19.35px, 1.63vw, 21.5px)!important}
 :is(html:lang(ja),html:lang(zh),html:lang(ko),html[dir=rtl]) :is(h1,h2,h3,h4,h5,h6):not(#_){letter-spacing:0!important}
