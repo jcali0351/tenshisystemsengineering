@@ -333,7 +333,7 @@
     const S = SKILLS.fireball;
     if (hero.cds.fireball > 0) return;
     if (hero.mp < S.mana) return say("Not enough mana", 900, "#8fd8ff");
-    hero.mp -= S.mana; hero.cds.fireball = S.cd;
+    hero.mp -= S.mana; hero.cds.fireball = S.cd; hero.atkAt = performance.now();
     const a = Math.atan2(ty - hero.y, tx - hero.x); hero.face = a;
     shots.push({ kind: "fire", x: hero.x + Math.cos(a) * 0.4, y: hero.y + Math.sin(a) * 0.4, vx: Math.cos(a) * 9, vy: Math.sin(a) * 9, life: 1400, from: "hero" });
     sfx("rocket");
@@ -342,7 +342,7 @@
     const S = SKILLS.nova;
     if (hero.cds.nova > 0) return;
     if (hero.mp < S.mana) return say("Not enough mana", 900, "#8fd8ff");
-    hero.mp -= S.mana; hero.cds.nova = S.cd;
+    hero.mp -= S.mana; hero.cds.nova = S.cd; hero.atkAt = performance.now();
     fx.push({ ring: true, x: hero.x, y: hero.y, r: 0.3, grow: 3.4, life: 1, color: "#8fd8ff", nova: true });
     const s = stats();
     for (const m of [...monsters]) if (dist(m, hero) < 3.4) { m.slow = 2500; hurtMonster(m, Math.round((s.dmg * 0.8 + s.fire * 0.5) * rand(0.9, 1.1)), "#8fd8ff"); }
@@ -399,7 +399,7 @@
       if (d <= reach) {
         hero.path = []; hero.face = Math.atan2(hero.target.y - hero.y, hero.target.x - hero.x);
         if (!hero.atkCd) {
-          hero.atkCd = HERO.attackEvery; hero.swing = 1;
+          hero.atkCd = HERO.attackEvery; hero.swing = 1; hero.atkAt = performance.now();
           if (hero.target.T) {
             const crit = Math.random() * 100 < s.crit;
             hurtMonster(hero.target, (s.dmg * rand(0.85, 1.15) + s.fire) * (crit ? 2 : 1), s.fire ? "#ffb36b" : "#ffffff", crit);
@@ -675,27 +675,44 @@
   }
   const shadeHex = (h, k) => shade(hex(h), k);
 
-  // ---- The hero: your Meshy "Eclipse Wraith", pre-rendered in Blender from 16 directions at this game's camera angle
-  // (real sculpt, textures and lighting), shown in the direction the hero faces. Falls back to the 3D model. ----
-  const HERO_SPRITE = { file: "art/hero-wraith.webp", frames: 16, cols: 4, cell: 224, anchorX: 0.5, anchorY: 0.7682, heightPx: 125.15, height: 2.0 };
-  const heroSprite = new Image();
-  heroSprite.src = (document.querySelector('script[src*="neon-arpg.js"]')?.src || "").replace(/neon-arpg\.js.*$/, HERO_SPRITE.file);
-  function drawHeroSprite(bob) {
+  // ---- The hero: your Meshy "Female Angel Hero", pre-rendered in Blender (tools/render-hero-anims.py) from 8 directions
+  // at this game's camera angle, with all its animations: Walking (short moves), Running (longer moves) and Attack (melee
+  // swings and spells). Sheets: rows = directions (row 0 faces map angle 0, then every 45 degrees), columns = frames.
+  // Standing still shows the first Walking frame. Falls back to the 3D model in the arpg.hero slot. ----
+  const HERO_SPRITE = { dirs: 8, cell: 192, anchorX: 0.5, anchorY: 0.8637, heightPx: 111.27, height: 2.0 };
+  const HERO_ANIMS = {
+    walk: { file: "art/hero-angel-walk.webp", frames: 8, ms: 1033 },
+    run: { file: "art/hero-angel-run.webp", frames: 8, ms: 633 },
+    attack: { file: "art/hero-angel-attack.webp", frames: 10, ms: 2800 },
+  };
+  const artBase = (document.querySelector('script[src*="neon-arpg.js"]')?.src || "").replace(/neon-arpg\.js.*$/, "");
+  for (const k in HERO_ANIMS) { HERO_ANIMS[k].img = new Image(); HERO_ANIMS[k].img.src = artBase + HERO_ANIMS[k].file; }
+  function heroPathLeft() {
+    let d = 0, x = hero.x, y = hero.y;
+    for (const [px, py] of hero.path) { d += Math.hypot(px - x, py - y); x = px; y = py; if (d > 3) break; }
+    return d;
+  }
+  function drawHeroSprite(bob, now) {
     if (CFG.heroSprite === false) return false;                     // Game Studio: "use the 3D model" for the hero
-    if (!heroSprite.complete || !heroSprite.naturalWidth) return false;
-    const S = HERO_SPRITE, step = Math.PI * 2 / S.frames, k = ((Math.round(hero.face / step) % S.frames) + S.frames) % S.frames;
+    const S = HERO_SPRITE, attackFor = Math.max(450, HERO.attackEvery), sinceAtk = hero.atkAt ? now - hero.atkAt : 1e9;
+    let A, frame = 0;
+    if (sinceAtk < attackFor) { A = HERO_ANIMS.attack; frame = Math.min(A.frames - 1, Math.floor(sinceAtk / attackFor * A.frames)); }
+    else if (hero.path.length) { A = heroPathLeft() > 2.2 ? HERO_ANIMS.run : HERO_ANIMS.walk; frame = Math.floor(now / (A.ms / A.frames)) % A.frames; bob = 0; }
+    else A = HERO_ANIMS.walk;
+    if (!A.img.complete || !A.img.naturalWidth) return false;
+    const step = Math.PI * 2 / S.dirs, row = ((Math.round(hero.face / step) % S.dirs) + S.dirs) % S.dirs;
     const scale = S.height * TH * 1.15 * zoom / S.heightPx, size = S.cell * scale;
-    const px = sx(hero.x, hero.y), py = sy(hero.x, hero.y, bob), cx = (k % S.cols) * S.cell, cy = Math.floor(k / S.cols) * S.cell;
+    const px = sx(hero.x, hero.y), py = sy(hero.x, hero.y, bob), cx = frame * S.cell, cy = row * S.cell;
     const dx = px - S.anchorX * size, dy = py - S.anchorY * size;
-    ctx.drawImage(heroSprite, cx, cy, S.cell, S.cell, dx, dy, size, size);
-    if (hero.flash > 0.05) { ctx.save(); ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = Math.min(1, hero.flash) * 0.7; ctx.drawImage(heroSprite, cx, cy, S.cell, S.cell, dx, dy, size, size); ctx.restore(); }
+    ctx.drawImage(A.img, cx, cy, S.cell, S.cell, dx, dy, size, size);
+    if (hero.flash > 0.05) { ctx.save(); ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = Math.min(1, hero.flash) * 0.7; ctx.drawImage(A.img, cx, cy, S.cell, S.cell, dx, dy, size, size); ctx.restore(); }
     return true;
   }
   function drawHero(now) {
     const s = stats(), bob = hero.path.length ? Math.abs(Math.sin(hero.walk)) * 0.06 : Math.sin(now / 500) * 0.02;
     shadow(hero.x, hero.y, 0.35);
-    const sprite = drawHeroSprite(bob), model = sprite ? null : modelFor("arpg.hero");
-    if (sprite) { /* the pre-rendered wraith */ }
+    const sprite = drawHeroSprite(bob, now), model = sprite ? null : modelFor("arpg.hero");
+    if (sprite) { /* the pre-rendered angel */ }
     else if (model) drawMesh(model, hero.x, hero.y, hero.face, 2.4, hero.flash);   // (the wraith's wide wings make the model fit a bigger ball, so draw it larger)
     else {
       const armor = hero.gear.armor ? hero.gear.armor.color : "#7a6aa8";

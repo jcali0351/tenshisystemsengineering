@@ -54,7 +54,8 @@ Each game reads its settings from `window.TENSHI_GAMES` (sandbox/game-settings.j
    (wheel/keys/buttons/pinch). Ships are hand-built 3D meshes drawn on a 2D canvas (flat shading, soft shadow patches).
    Cover art `sandbox/art/station-defense.webp` shows for 5 s, then fades to the live game behind a centred Play button.
 4. **Undercity** (`sandbox/neon-arpg.js`): isometric dungeon crawler (2:1 projection, TW 64 / TH 32). Hero = the owner's
-   Meshy "Eclipse Wraith", **pre-rendered** from 16 directions (`sandbox/art/hero-wraith.webp`); the first enemy (Hollow)
+   Meshy "Female Angel Hero", **pre-rendered** with its Walking / Running / Attack animations from 8 directions
+   (`sandbox/art/hero-angel-*.webp`, `HERO_ANIMS`, made with `tools/render-hero-anims.py`); the first enemy (Hollow)
    = the owner's animated "Corrupted Astral Sorcerer", 8 directions × 8 frames, plays a leap-back when hit
    (`sandbox/art/hollow-sorcerer.webp`, `MONSTER_SPRITES`); the Golem (from floor 1, `golemFromFloor`) = the owner's animated "Low Poly Green
    Elemental", raises its guard when hit (`sandbox/art/golem-elemental.webp`); the Skitter = the owner's textured lava

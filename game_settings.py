@@ -155,7 +155,7 @@ STATION_DEFENSE = {
 # =====================================================================================================================
 UNDERCITY = {
     "light": 6.5,                    # how far the hero's light reaches (tiles)
-    "heroSprite": True,              # show the pre-rendered Eclipse Wraith (False = use the 3D model in the arpg.hero slot)
+    "heroSprite": True,              # show the pre-rendered Female Angel Hero with its animations (False = use the 3D model in the arpg.hero slot)
     "hollowSprite": True,            # show the animated Corrupted Astral Sorcerer as the Hollow (False = use the arpg.hollow 3D model)
     "golemSprite": True,             # show the animated Green Elemental as the Golem (False = use the arpg.golem 3D model)
     "skitterSprite": True,           # show the detailed lava spider as the Skitter (False = use the arpg.skitter 3D model)

@@ -108,7 +108,7 @@
   }
   function card(slot) {
     var up = uploads[slot], custom = !isBuiltIn(slot), file = up ? up.name + " (new, not saved)" : custom ? models[slot] : "built-in";
-    var hero = slot === "arpg.hero" ? '<p class="gs-note">Undercity shows the pre-rendered Eclipse Wraith. Uploading a model here switches the hero to your model (Game settings › Undercity › Hero sprite).</p>'
+    var hero = slot === "arpg.hero" ? '<p class="gs-note">Undercity shows the pre-rendered, animated Female Angel Hero. Uploading a model here switches the hero to your model (Game settings › Undercity › Hero sprite).</p>'
       : slot === "arpg.hollow" ? '<p class="gs-note">Undercity shows the animated Corrupted Astral Sorcerer here. Uploading a model switches to your model (Game settings › Undercity › Hollow sprite).</p>'
       : slot === "arpg.golem" ? '<p class="gs-note">Undercity shows the animated Green Elemental here. Uploading a model switches to your model (Game settings › Undercity › Golem sprite).</p>' : "";
     return '<article class="gs-card' + (dirty.models.has(slot) ? " is-dirty" : "") + '" data-slot="' + esc(slot) + '">' +

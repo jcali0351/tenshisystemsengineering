@@ -486,7 +486,7 @@
    "title": "UNDERCITY: the dungeon crawler",
    "help": {
     "light": "how far the hero's light reaches (tiles)",
-    "heroSprite": "show the pre-rendered Eclipse Wraith (False = use the 3D model in the arpg.hero slot)",
+    "heroSprite": "show the pre-rendered Female Angel Hero with its animations (False = use the 3D model in the arpg.hero slot)",
     "hollowSprite": "show the animated Corrupted Astral Sorcerer as the Hollow (False = use the arpg.hollow 3D model)",
     "golemSprite": "show the animated Green Elemental as the Golem (False = use the arpg.golem 3D model)",
     "skitterSprite": "show the detailed lava spider as the Skitter (False = use the arpg.skitter 3D model)",
