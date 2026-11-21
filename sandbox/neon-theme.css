@@ -1075,3 +1075,15 @@ html.neon:not(#_):not(#__):not(#___) main .team-grid {
   display: grid !important; grid-template-columns: repeat(auto-fit, minmax(220px, 270px)) !important; justify-content: center !important;
   margin-left: auto !important; margin-right: auto !important;
 }
+
+/* Menu: no pointer triangle, and the dropdown sits flush against the bottom of the header bar. */
+html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav .has-sub::after { display: none !important; content: none !important; }
+html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav ul.sub { top: calc(100% + 23px) !important; border-top-left-radius: 0 !important; border-top-right-radius: 0 !important; }
+html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav ul.sub::before { top: -25px !important; height: 25px !important; }
+
+/* Slogan band: the animated line sits dead centre, both ways. */
+html.neon:not(#_):not(#__) .band { display: flex !important; align-items: center !important; justify-content: center !important; text-align: center !important; }
+html.neon:not(#_):not(#__) .band .band-stage {
+  position: absolute !important; inset: 0 !important; margin: 0 !important; padding: 0 24px !important; width: auto !important; max-width: none !important;
+  display: flex !important; align-items: center !important; justify-content: center !important; text-align: center !important; transform: none !important;
+}

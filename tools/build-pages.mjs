@@ -261,7 +261,7 @@ function sloganBand() {
   const lines = (SLOGAN.lines || []).filter((k) => EN[k] !== undefined);
   if (SLOGAN.enabled === false || !lines.length) return "";
   return `    <section class="band" aria-label="${tx("mottoLabel")}" data-i18n-attr="aria-label:mottoLabel"
-      data-lines="${lines.join(",")}" data-hold="${+SLOGAN.hold || 7}" data-ja-first="${SLOGAN.japaneseFirst === false ? 0 : 1}" data-ja-hold="${+SLOGAN.japaneseHold || 1.9}" data-pace="${+SLOGAN.wordPace || 90}">
+      data-lines="${lines.join(",")}" data-hold="${+SLOGAN.hold || 7}" data-ja-first="0" data-ja-hold="${+SLOGAN.japaneseHold || 1.9}" data-pace="${+SLOGAN.wordPace || 90}">
       <div class="band-sheen" aria-hidden="true"></div>
       <!-- The animated slogan: app.js writes each line in, word by word -->
       <p class="band-stage band-text" aria-hidden="true"></p>
