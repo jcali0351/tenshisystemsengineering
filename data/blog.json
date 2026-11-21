@@ -2,6 +2,185 @@
   "generatedAt": "2026-11-17T05:02:08.000Z",
   "posts": [
     {
+      "id": "20261121-ai-for-small-business-wisconsin",
+      "date": "2026-11-21",
+      "cat": "AI",
+      "slug": "ai-for-small-business-in-wisconsin-practical-uses-that-save-time",
+      "title": "AI for Small Business in Wisconsin: Practical Uses That Save Time",
+      "intro": "You do not need a data science team to get real value from AI. Here are practical, low-risk ways Wisconsin small businesses are using it today, and how to start without wasting money.",
+      "min": 6,
+      "body": [
+        "Artificial intelligence gets talked about as if it were only for tech giants. In practice, the most useful AI tools for a small business are modest: they answer routine questions, draft first versions of documents, and take repetitive steps off your plate. For a restaurant in Madison, a contractor in Green Bay or a clinic in Eau Claire, that can mean hours back every week.",
+        "This guide walks through the uses that tend to pay off first, what to watch out for, and a simple way to get started.",
+        {
+          "h2": "1. Answering Common Customer Questions"
+        },
+        "Most businesses answer the same handful of questions again and again: opening hours, prices, whether you serve a certain area, how to book. A well-configured chat assistant on your website can handle these at any hour, using only information you have approved, and hand anything unusual to a person.",
+        "The key is to keep it honest and narrow. A good assistant says when it does not know, never invents prices or promises, and makes it easy to reach a human. We cover the details in [AI chatbots for small business: what they can and cannot do](blog/ai-chatbots-for-small-business-what-they-can-and-cannot-do.html).",
+        {
+          "h2": "2. Drafting Emails, Quotes and Descriptions"
+        },
+        "AI writing tools are good at first drafts: a follow-up email after a site visit, a product description, a social media post, a polite reply to a review. You stay the editor. Read every draft, correct the facts, and make it sound like you. Used this way, AI removes the blank page without removing your judgment.",
+        {
+          "h2": "3. Automating Repetitive Office Work"
+        },
+        "Many small tasks follow the same pattern every time: copy a web form into a spreadsheet, send a confirmation, add a reminder to a calendar, file an invoice. Simple automation, sometimes with an AI step to read or summarize text, can link these together so they happen on their own.",
+        {
+          "ul": [
+            "**Booking and scheduling:** confirmations and reminders sent automatically, fewer no-shows.",
+            "**Lead follow-up:** every inquiry from your website gets a prompt, personal reply and lands in one list.",
+            "**Paperwork:** receipts and documents sorted and summarized so nothing gets lost."
+          ]
+        },
+        {
+          "h2": "4. Making Sense of Your Own Data"
+        },
+        "If you have sales records, website analytics or customer feedback, AI tools can help you spot patterns: which services people ask about most, which pages lead to inquiries, which months are busiest. Treat the answers as a starting point for questions, not as final truth, and check anything important against the source.",
+        {
+          "h2": "What to Watch Out For"
+        },
+        {
+          "ul": [
+            "**Privacy:** do not paste customer personal information into tools that are not set up for it. Check what each service does with your data.",
+            "**Accuracy:** AI can sound confident and still be wrong. Keep a person responsible for anything sent to customers.",
+            "**Cost creep:** many tools charge per user or per use. Start small and measure whether it actually saves time."
+          ]
+        },
+        {
+          "h2": "A Simple Way to Start"
+        },
+        "Pick one task that is frequent, predictable and a little tedious. Try an AI-assisted version for a few weeks, measure the time it saves, and only then expand. Small, measured steps beat a big, expensive rollout.",
+        "**Want help choosing where AI fits in your business?** Tenshi Systems Engineering provides [AI services for small business](services/ai-services.html) across Wisconsin, from website assistants to workflow automation, explained in plain English. [See our Wisconsin services](wisconsin.html) or [get in touch](contact.html)."
+      ],
+      "sources": [
+        {
+          "url": "https://www.sba.gov/business-guide/manage-your-business/ai-small-business",
+          "title": "AI for small business",
+          "source": "U.S. Small Business Administration"
+        }
+      ]
+    },
+    {
+      "id": "20261121-ai-chatbots-small-business",
+      "date": "2026-11-21",
+      "cat": "AI",
+      "slug": "ai-chatbots-for-small-business-what-they-can-and-cannot-do",
+      "title": "AI Chatbots for Small Business: What They Can and Cannot Do",
+      "intro": "A website chatbot can answer customers around the clock, or it can frustrate them and give wrong answers. Here is how to tell the difference before you add one to your site.",
+      "min": 5,
+      "body": [
+        "Modern AI chatbots can hold a natural conversation, which makes them tempting for any business that gets a steady stream of questions. Done well, a chatbot answers instantly, captures leads after hours and frees your staff for work that needs a person. Done badly, it gives confident wrong answers and drives customers away.",
+        {
+          "h2": "What a Good Small Business Chatbot Does Well"
+        },
+        {
+          "ul": [
+            "**Answers routine questions** about hours, services, service areas, parking, booking and policies, using information you have written and approved.",
+            "**Captures inquiries after hours** by collecting a name, contact details and a short description, then passing them to you.",
+            "**Points people to the right page,** such as your booking form, menu, price list or contact page.",
+            "**Speaks several languages,** which helps if your customers do not all prefer English."
+          ]
+        },
+        {
+          "h2": "What It Should Not Do"
+        },
+        {
+          "ul": [
+            "**Invent prices, availability or promises.** If the answer is not in the information you gave it, it should say so and offer to connect the visitor with a person.",
+            "**Give medical, legal or financial advice.** Clinics, law offices and accountants need especially careful limits.",
+            "**Hide the human option.** Every chat should make it easy to call, email or request a callback.",
+            "**Collect more personal data than it needs.** Ask only for what you will actually use, and say how it will be handled."
+          ]
+        },
+        {
+          "h2": "Questions to Ask Before You Add One"
+        },
+        {
+          "ul": [
+            "Where does the chatbot get its answers, and can we control and update that information ourselves?",
+            "What happens when it does not know something?",
+            "Where are conversations stored, who can read them, and for how long?",
+            "How much does it cost as traffic grows?",
+            "Can we review conversations to see what customers are really asking?"
+          ]
+        },
+        {
+          "h2": "Measure Whether It Helps"
+        },
+        "After launch, read a sample of conversations every week at first. Look for wrong answers, questions it cannot handle and points where visitors give up. Those are your to-do list: update the information it uses, adjust its limits, or add a page to your website that answers the question properly for everyone.",
+        "**Thinking about a chatbot for your website?** Tenshi Systems Engineering builds careful, honest AI assistants as part of our [AI services for small business](services/ai-services.html), connected to your existing [website](services/web-design.html) and [hosting](services/hosting.html). Based in Madison, working with businesses across [Wisconsin](wisconsin.html)."
+      ],
+      "sources": [
+        {
+          "url": "https://www.ftc.gov/business-guidance/blog/2023/02/keep-your-ai-claims-check",
+          "title": "Keep your AI claims in check",
+          "source": "U.S. Federal Trade Commission"
+        }
+      ]
+    },
+    {
+      "id": "20261121-local-seo-wisconsin",
+      "date": "2026-11-21",
+      "cat": "SEO",
+      "slug": "local-seo-for-wisconsin-small-businesses-a-plain-english-guide",
+      "title": "Local SEO for Wisconsin Small Businesses: A Plain-English Guide",
+      "intro": "When someone nearby searches for what you sell, you want to be one of the first names they see. Here is how local search works and the steps that matter most for a Wisconsin small business.",
+      "min": 7,
+      "body": [
+        "Local SEO is the work of showing up when people search for a business near them: \"plumber in Madison\", \"bakery near me\", \"web design Milwaukee\". These searches often come from people ready to call, visit or buy, which makes them some of the most valuable visitors a small business can get.",
+        "The good news is that most of the work is straightforward and within reach of any business owner. Here is where to focus.",
+        {
+          "h2": "1. Claim and Complete Your Google Business Profile"
+        },
+        "Your Google Business Profile is the listing that appears in Google Maps and in the box of local results. Claim it, verify it, and fill in everything: your exact business name, category, service area or address, hours, phone number, website, services and photos. Keep it updated when hours change, especially around holidays.",
+        {
+          "h2": "2. Keep Your Name, Address and Phone Consistent"
+        },
+        "Search engines compare your details across the web: your website, your profile, directories and social media. Use the same business name, address and phone number everywhere, written the same way. Inconsistent details make it harder for search engines to trust which information is correct.",
+        {
+          "h2": "3. Make Your Website Clearly Local"
+        },
+        {
+          "ul": [
+            "**Say where you work.** Mention your city and the areas you serve in plain words on your homepage and service pages.",
+            "**Give each main service its own page,** with a clear title and description that says what it is and where you offer it.",
+            "**Add your contact details** to every page, usually in the footer.",
+            "**Use structured data** (schema markup) so search engines can read your business name, location and services reliably.",
+            "**Make it fast and mobile-friendly.** Most local searches happen on phones."
+          ]
+        },
+        {
+          "h2": "4. Earn Reviews, and Reply to Them"
+        },
+        "Reviews influence both rankings and customers. Ask happy customers for a review shortly after a job, make it easy with a direct link, and reply to every review, good or bad, politely and briefly. Never buy reviews or offer rewards in exchange for positive ones; it breaks the platforms' rules and can get your listing penalized.",
+        {
+          "h2": "5. Get Listed Where Wisconsin Customers Look"
+        },
+        "Beyond Google, list your business on Bing Places, Apple Business Connect, Yelp and the directories that matter in your industry. Local organizations count too: your chamber of commerce, business associations and community groups often link to members, which helps both visibility and trust.",
+        {
+          "h2": "6. Publish Helpful, Local Content"
+        },
+        "Articles that answer your customers' real questions, written with your area in mind, give search engines more reasons to show your site and give visitors more reasons to trust you. A short guide to seasonal maintenance in a Wisconsin winter, for example, is far more useful than a generic post.",
+        {
+          "h2": "Be Patient and Measure"
+        },
+        "Local SEO builds over weeks and months, not days. Use Google Search Console and your Business Profile insights to see which searches bring people in, and keep improving the pages and listings that matter most.",
+        "**Want your business to show up when Wisconsin customers search?** Tenshi Systems Engineering builds fast, search-friendly [small business websites](services/web-design.html) with local SEO, structured data and reliable [web hosting](services/hosting.html). See how we help [businesses across Wisconsin](wisconsin.html)."
+      ],
+      "sources": [
+        {
+          "url": "https://support.google.com/business/answer/7091",
+          "title": "Tips to improve your local ranking on Google",
+          "source": "Google"
+        },
+        {
+          "url": "https://developers.google.com/search/docs/fundamentals/seo-starter-guide",
+          "title": "SEO Starter Guide",
+          "source": "Google Search Central"
+        }
+      ]
+    },
+    {
       "id": "20261117-domain-names-business-email",
       "date": "2026-11-17",
       "cat": "Technology",

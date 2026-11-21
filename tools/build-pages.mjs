@@ -555,7 +555,7 @@ function chrome(html, prefix, current) {
     .replace('href="#top"', `href="${prefix}index.html"`)
     .replace(/src="((?:brand|img)\/[\w.\/-]+)"/g, `src="${prefix}$1"`)
     .replace(/href="((?:news|blog)\.html#[^"]*)"/g, `href="${prefix}$1"`)
-    .replace(/href="((?:index|about|services|contact|team|technology|projects|portfolio|launch|news|blog|portal)\.html|projects\/[a-z-]+\.html|blog\/[a-z-]+\.html)"/g, `href="${prefix}$1"`);
+    .replace(/href="((?:index|about|services|contact|team|technology|projects|portfolio|launch|news|blog|portal|wisconsin)\.html|projects\/[a-z-]+\.html|blog\/[a-z-]+\.html)"/g, `href="${prefix}$1"`);
 }
 
 function frame({ prefix, current, titleKey, descKey, title, description, bodyClass, main, photoCredits = "", extraHead = "", extraScripts = "" }) {
@@ -883,6 +883,7 @@ const depthSection = (s) => `    <section class="svc-depth" aria-labelledby="dep
 const servicesPage = frame({
   prefix: "", current: "services", titleKey: "navServices", descKey: "servicesLead", bodyClass: "page services-page",
   main: `${banner("", [{ key: "navServices" }], "servicesTitle", "servicesLead", ART.services)}
+    <p class="page-inner wi-note"><a href="wisconsin.html">Web design, hosting and AI services for Wisconsin small businesses →</a></p>
 
     <section class="page-section red-section" aria-labelledby="all-title">
       <div class="page-inner">
@@ -1060,6 +1061,81 @@ ${[1, 2, 3, 4].map((n) => `          <details>
     </section>`,
 });
 writePage("contact.html", contactPage);
+
+/* ---------- Wisconsin landing page (wisconsin.html): small business web design, hosting and AI across the state ---------- */
+{
+  const WI_SVC = ["ai", "webdesign", "hosting", "webdev", "branding", "cms"];
+  const WI_CITIES = ["Madison", "Milwaukee", "Green Bay", "Kenosha", "Racine", "Appleton", "Waukesha", "Eau Claire", "Oshkosh", "Janesville",
+    "La Crosse", "Sheboygan", "Wausau", "Fond du Lac", "Middleton", "Sun Prairie", "Fitchburg", "Verona", "Brookfield", "West Allis"];
+  const WI_FAQ = [
+    ["Do you work with small businesses outside Madison?", "Yes. We are based in Madison and work with small businesses all over Wisconsin, from Milwaukee and Green Bay to La Crosse and Eau Claire. Most projects run by video call and email, and we can meet in person in the Madison area."],
+    ["What AI services do you offer small businesses?", "Practical ones: website chat assistants that answer common customer questions, automation for repetitive tasks like quotes, scheduling and follow-up emails, and help choosing and setting up AI tools safely. We start with the problem, not the technology."],
+    ["Can you host the website you build for us?", "Yes. We offer managed web hosting with SSL, tested backups, uptime monitoring and updates, so your site stays fast and online and you have a real person to call when something needs attention."],
+    ["Will I be locked in?", "No. You own your domain, your content and your website. If you ever decide to move, we hand everything over in a clean, documented way."],
+    ["How do we get started?", "Send us a message with a few lines about your business and what you need. We reply with questions, then a written proposal in plain language. The first conversation is free."],
+  ];
+  const faqLd = { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: WI_FAQ.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) };
+  const wi = frame({
+    prefix: "", current: "services", titleKey: "wiTitle", descKey: "wiLead", bodyClass: "page wi-page",
+    extraHead: `  <script type="application/ld+json">${JSON.stringify(faqLd)}</script>\n`,
+    main: `${banner("", [{ key: "navServices", href: "services.html" }, { key: "wiCrumb" }], "wiTitle", "wiLead", ART.about || "")}
+
+    <section class="page-section" aria-labelledby="wi-intro-title">
+      <div class="page-inner split">
+        <div>
+          <h2 id="wi-intro-title" class="section-title">A Wisconsin team for your website, hosting and AI</h2>
+          <p class="page-lead">Tenshi Systems Engineering helps Wisconsin small businesses look professional online, stay secure and save time with practical AI.</p>
+          <p>Restaurants, shops, clinics, contractors, salons, nonprofits and professional firms all need the same things from technology: a website that brings in customers, hosting that never lets them down, and tools that take routine work off their plate. We plan, build and look after all three, and we explain every choice in plain English.</p>
+          <p>We are a Service-Disabled Veteran-Owned Small Business based in Madison, working on Central Time with clients across the state.</p>
+        </div>
+        <aside class="name-card">
+          <h3>Why Wisconsin businesses choose us</h3>
+          <ul class="wi-why">
+            <li>A real person to call, on your time zone</li>
+            <li>No lock-in: you own your site, domain and content</li>
+            <li>Websites, hosting and AI from one team</li>
+            <li>Plain-language proposals and progress updates</li>
+            <li>Service-Disabled Veteran-Owned Small Business</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="page-section tinted" aria-labelledby="wi-svc-title">
+      <div class="page-inner">
+        <h2 id="wi-svc-title" class="section-title center">Services for Wisconsin small businesses</h2>
+        <ul class="wi-svc-grid">
+${WI_SVC.map((id) => { const sv = SERVICES.find((x) => x.id === id); const seo = SEO[`svc_${id}_title`] || {}; return `          <li class="wi-svc">
+            <img src="img/services/icons/${sv.icon}?v=20261121c" alt="${esc((seo.service || "") + " for Wisconsin small businesses")}" width="512" height="512" loading="lazy" data-still-color>
+            <h3><a href="services/${sv.slug}.html">${esc((seo.service || tx(k(sv, "title"))) + " in Wisconsin")}</a></h3>
+            <p>${esc(seo.desc || tx(k(sv, "short")))}</p>
+          </li>`; }).join("\n")}
+        </ul>
+      </div>
+    </section>
+
+    <section class="page-section" aria-labelledby="wi-area-title">
+      <div class="page-inner">
+        <h2 id="wi-area-title" class="section-title center">Serving small businesses across Wisconsin</h2>
+        <p class="page-lead center">From our base in Madison we work with businesses statewide, online or in person around Dane County.</p>
+        <ul class="wi-cities">${WI_CITIES.map((c) => `<li>${c}</li>`).join("")}</ul>
+      </div>
+    </section>
+
+    <section class="page-section tinted" aria-labelledby="wi-faq-title">
+      <div class="page-inner">
+        <h2 id="wi-faq-title" class="section-title center">Questions from Wisconsin business owners</h2>
+        <div class="wi-faq">
+${WI_FAQ.map(([q, a]) => `          <details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join("\n")}
+        </div>
+        <p class="center wi-reading">Further reading: <a href="blog/ai-for-small-business-in-wisconsin-practical-uses-that-save-time.html">AI for small business in Wisconsin</a> · <a href="blog/local-seo-for-wisconsin-small-businesses-a-plain-english-guide.html">Local SEO for Wisconsin small businesses</a> · <a href="blog/choosing-web-hosting-for-your-business-a-plain-english-guide.html">Choosing web hosting</a></p>
+      </div>
+    </section>
+
+${cta("contact.html")}`,
+  });
+  writePage("wisconsin.html", wi);
+}
 
 /* ---------- one page per service ---------- */
 const SERVICE_TECH = {
@@ -1733,7 +1809,7 @@ const POSTS = BLOGDATA.posts || [];
 const postHref = (url, prefix) => {
   if (/^https?:\/\//.test(url || "")) return url;
   if (/^#/.test(url || "")) return url;
-  if (/^(?:index|about|services|contact|team|technology|projects|portfolio|launch|news|blog|portal)\.html(?:#[\w.-]+)?$/.test(url || "")) return prefix + url;
+  if (/^(?:index|about|services|contact|team|technology|projects|portfolio|launch|news|blog|portal|wisconsin|services\/[a-z-]+|blog\/[a-z0-9-]+)\.html(?:#[\w.-]+)?$/.test(url || "")) return prefix + url;
   return "#";
 };
 const inlineFmt = (s, prefix) => esc(s)

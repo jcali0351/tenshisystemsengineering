@@ -1008,3 +1008,29 @@ html.neon .svc-reading-list span { display: block; margin-top: 6px; font-size: .
 
 /* Footer thumbnails with a neon cover: zoom in on the icon so it fills the small frame. */
 html.neon .fw-thumb[src*="covers/"] { object-fit: cover; object-view-box: inset(14% 24% 14% 24%); }
+
+/* Wisconsin landing page */
+html.neon .wi-why { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 10px; text-align: left; }
+html.neon .wi-why li::before { content: "\25C6  "; color: #ff6ec7; font-size: .75em; }
+html.neon .wi-svc-grid { list-style: none; padding: 0; margin: 28px 0 0; display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+html.neon .wi-svc { padding: 26px; border-radius: 20px; background: var(--gx-panel); border: 1px solid var(--gx-edge); box-shadow: var(--gx-glow); text-align: center; transition: transform .25s, box-shadow .25s; }
+html.neon .wi-svc:hover { transform: translateY(-4px); box-shadow: var(--gx-glow-hot); }
+html.neon .wi-svc img { width: 96px; height: 96px; margin: 0 auto 10px; display: block; filter: drop-shadow(0 0 8px rgba(255, 43, 214, .4)); }
+html.neon .wi-svc h3 a { color: #fff !important; -webkit-text-fill-color: #fff !important; text-decoration: none; }
+html.neon .wi-svc p { color: #e6d9ff; font-size: .95rem; }
+html.neon .wi-cities { list-style: none; padding: 0; margin: 24px auto 0; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 900px; }
+html.neon .wi-cities li { padding: 8px 16px; border-radius: 999px; border: 1px solid rgba(255, 43, 214, .45); background: rgba(139, 44, 245, .15); color: #fff; font-weight: 700; font-size: .9rem; }
+html.neon .wi-faq { max-width: 820px; margin: 24px auto 0; display: grid; gap: 12px; }
+html.neon .wi-faq details { border-radius: 16px; background: var(--gx-panel); border: 1px solid var(--gx-edge); padding: 16px 20px; }
+html.neon .wi-faq summary { cursor: pointer; font-weight: 800; color: #fff; }
+html.neon .wi-faq p { margin: 10px 0 0; color: #e6d9ff; }
+html.neon .wi-reading, html.neon .wi-note { margin-top: 22px; }
+html.neon .wi-reading a, html.neon .wi-note a { color: #ff6ec7 !important; -webkit-text-fill-color: #ff6ec7 !important; font-weight: 700; }
+
+/* Neon covers on blog and news cards and post pages: a short 16:9 frame showing the whole cover, never a tall crop. */
+html.neon:not(#_):not(#__):not(#___) :is(.blog-fig, .news-fig, .blog-post-fig) { height: auto !important; min-height: 0 !important; max-height: none !important; aspect-ratio: auto !important; overflow: hidden; }
+html.neon:not(#_):not(#__):not(#___) :is(.blog-fig, .news-fig, .blog-post-fig) img[src*="covers/"] {
+  width: 100% !important; height: auto !important; aspect-ratio: 16 / 9 !important; object-fit: contain !important;
+  max-height: 170px !important; display: block; margin: 0 auto; background: #07020f;
+}
+html.neon:not(#_):not(#__):not(#___) .blog-post-fig img[src*="covers/"] { max-height: 260px !important; max-width: 520px; border-radius: 16px; }

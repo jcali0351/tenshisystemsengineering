@@ -52,6 +52,10 @@ export const SEO = {
     title: "Client Portal | Tenshi Systems Engineering",
     desc: "Sign in to manage your Tenshi website, hosting and projects.",
   },
+  wiTitle: {
+    title: "Wisconsin Small Business Web Design, Hosting & AI Services | Tenshi",
+    desc: "Web design, managed web hosting and AI services for Wisconsin small businesses in Madison, Milwaukee, Green Bay and statewide. Veteran-owned. Free consultation.",
+  },
   svc_ai_title: {
     title: "AI Services for Small Business in Wisconsin | Chatbots & Automation",
     desc: "Practical AI services for Wisconsin small businesses: AI chatbots, customer service assistants, workflow automation and AI integration that save time.",
