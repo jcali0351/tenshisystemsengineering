@@ -1087,3 +1087,9 @@ html.neon:not(#_):not(#__) .band .band-stage {
   position: absolute !important; inset: 0 !important; margin: 0 !important; padding: 0 24px !important; width: auto !important; max-width: none !important;
   display: flex !important; align-items: center !important; justify-content: center !important; text-align: center !important; transform: none !important;
 }
+
+/* Contact "Why clients choose us": roomy boxes, check icon inset from the border. */
+html.neon:not(#_):not(#__):not(#___) main .pitch-why { gap: 14px !important; }
+html.neon:not(#_):not(#__):not(#___) main .pitch-why li { padding: 18px 22px 18px 58px !important; line-height: 1.65 !important; }
+html.neon:not(#_):not(#__):not(#___) main .pitch-why li::before { inset-inline-start: 20px !important; top: 21px !important; }
+html.neon:not(#_):not(#__):not(#___) main .pitch-why li::after { inset-inline-start: 27px !important; top: 25px !important; }
