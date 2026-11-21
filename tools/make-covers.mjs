@@ -76,5 +76,18 @@ const svg = (body) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 
 `;
 
 mkdirSync("img/covers", { recursive: true });
-for (const [name, body] of Object.entries(ICONS)) writeFileSync(`img/covers/${name}.svg`, svg(body));
+// Icon only, transparent, cropped to the drawing: i-<topic>.svg for small places like the footer lists.
+const icon = (body) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="205 75 390 300" width="390" height="300">
+<defs>
+<linearGradient id="ink" gradientUnits="userSpaceOnUse" x1="240" y1="110" x2="560" y2="350"><stop offset="0" stop-color="#00f0ff"/><stop offset=".55" stop-color="#b04dff"/><stop offset="1" stop-color="#ff2bd6"/></linearGradient>
+<filter id="glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<g fill="none" stroke="url(#ink)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)">${body}</g>
+<g fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">${body}</g>
+</svg>
+`;
+for (const [name, body] of Object.entries(ICONS)) {
+  writeFileSync(`img/covers/${name}.svg`, svg(body));
+  writeFileSync(`img/covers/i-${name}.svg`, icon(body));
+}
 console.log("covers written:", Object.keys(ICONS).join(", "));

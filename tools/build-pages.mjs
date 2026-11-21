@@ -215,6 +215,7 @@ const postImg = (b) => (b.image && !b.image.generated && b.image.src) ? b.image 
 const NEWS_ICONS = { web: ["web", "code", "cursor", "seo"], gaming: ["gaming", "joystick", "alien"], ai: ["ai", "robot", "spark"],
   tech: ["tech", "phone", "rocket", "hosting"], security: ["security", "lock", "key"], business: ["business", "briefcase", "rocket"] };
 const newsIcon = (n, cat) => { const list = NEWS_ICONS[cat] || [cat]; let h = 0; for (const ch of String((n && (n.url || n.title)) || "")) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return `img/covers/${list[h % list.length]}.svg`; };
+const ICONONLY = (src) => src.replace("img/covers/", "img/covers/i-");   // transparent icon versions for the footer lists
 const CV = (src) => (src.startsWith("img/covers/") ? src + "?v=20261121" : src);   // covers are redrawn now and then: bust old copies
 const wSrc = (img, cat) => CV(img && img.src && !/^https?:/.test(img.src) ? img.src : `img/covers/${cat}.svg`);
 const wCredit = (img) => (img && !img.generated && img.src ? ` · <span data-i18n="photoLabel">${tx("photoLabel")}</span>: ${esc(img.creator || "Unknown")}${img.license ? ` (<a href="${wUrl(img.licenseUrl || img.page)}" target="_blank" rel="noopener">${esc(img.license)}</a>)` : ""}` : "");
@@ -233,7 +234,7 @@ ${items.join("\n")}
         <a class="fw-more" href="${href}"><span data-i18n="${moreKey}">${tx(moreKey)}</span></a>
       </section>`;
   const newsItems = news.map(({ c, s }) => `          <li class="fw-item">
-            <img class="fw-thumb" src="${esc(CV(newsIcon(s, c.id)))}" alt="" width="96" height="72" loading="lazy" decoding="async">
+            <img class="fw-thumb" src="${esc(CV(ICONONLY(newsIcon(s, c.id))))}" alt="" width="52" height="40" loading="lazy" decoding="async">
             <div class="fw-text">
               <p class="fw-meta"><span data-i18n="${c.key}">${tx(c.key)}</span> · <time datetime="${wIso(s.date)}">${wDate(s.date)}</time></p>
               <a class="fw-link" href="${wUrl(s.url)}" target="_blank" rel="noopener">${esc(s.title)}<span class="sr-only"> <span data-i18n="techNewTab">${tx("techNewTab")}</span></span></a>
@@ -241,7 +242,7 @@ ${items.join("\n")}
             </div>
           </li>`);
   const blogItems = posts.map((b) => `          <li class="fw-item">
-            <img class="fw-thumb" src="${esc(wSrc(postImg(b), "blog"))}" alt="" width="96" height="72" loading="lazy" decoding="async">
+            <img class="fw-thumb" src="${esc(postImg(b).generated ? CV(ICONONLY(postImg(b).src)) : wSrc(postImg(b), "blog"))}" alt="" width="52" height="40" loading="lazy" decoding="async">
             <div class="fw-text">
               <p class="fw-meta">${esc(b.cat)} · <time datetime="${wIso(b.date)}">${wDate(b.date)}</time></p>
               <a class="fw-link" href="${postPermalink(b)}">${esc(b.title)}</a>

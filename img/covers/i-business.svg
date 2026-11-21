@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="205 75 390 300" width="390" height="300">
+<defs>
+<linearGradient id="ink" gradientUnits="userSpaceOnUse" x1="240" y1="110" x2="560" y2="350"><stop offset="0" stop-color="#00f0ff"/><stop offset=".55" stop-color="#b04dff"/><stop offset="1" stop-color="#ff2bd6"/></linearGradient>
+<filter id="glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<g fill="none" stroke="url(#ink)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"><path d="M260 330h290"/><rect x="285" y="260" width="45" height="70" rx="6"/><rect x="355" y="220" width="45" height="110" rx="6"/><rect x="425" y="180" width="45" height="150" rx="6"/><path d="M280 220l90-60 60 30 95-75"/><path d="M490 115h35v35"/></g>
+<g fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M260 330h290"/><rect x="285" y="260" width="45" height="70" rx="6"/><rect x="355" y="220" width="45" height="110" rx="6"/><rect x="425" y="180" width="45" height="150" rx="6"/><path d="M280 220l90-60 60 30 95-75"/><path d="M490 115h35v35"/></g>
+</svg>

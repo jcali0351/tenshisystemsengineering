@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="205 75 390 300" width="390" height="300">
+<defs>
+<linearGradient id="ink" gradientUnits="userSpaceOnUse" x1="240" y1="110" x2="560" y2="350"><stop offset="0" stop-color="#00f0ff"/><stop offset=".55" stop-color="#b04dff"/><stop offset="1" stop-color="#ff2bd6"/></linearGradient>
+<filter id="glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<g fill="none" stroke="url(#ink)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"><path d="M260 150c45-15 95-15 140 15v175c-45-30-95-30-140-15z"/><path d="M540 150c-45-15-95-15-140 15v175c45-30 95-30 140-15z"/><path d="M290 195c30-6 60-4 85 6M290 235c30-6 60-4 85 6M425 201c25-10 55-12 85-6M425 241c25-10 55-12 85-6"/></g>
+<g fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M260 150c45-15 95-15 140 15v175c-45-30-95-30-140-15z"/><path d="M540 150c-45-15-95-15-140 15v175c45-30 95-30 140-15z"/><path d="M290 195c30-6 60-4 85 6M290 235c30-6 60-4 85 6M425 201c25-10 55-12 85-6M425 241c25-10 55-12 85-6"/></g>
+</svg>

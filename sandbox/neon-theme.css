@@ -1034,3 +1034,26 @@ html.neon:not(#_):not(#__):not(#___) :is(.blog-fig, .news-fig, .blog-post-fig) i
   max-height: 170px !important; display: block; margin: 0 auto; background: #07020f;
 }
 html.neon:not(#_):not(#__):not(#___) .blog-post-fig img[src*="covers/"] { max-height: 260px !important; max-width: 520px; border-radius: 16px; }
+
+/* ===== No white leftovers from the light theme (found by a sweep of every page) ===== */
+html.neon:not(#_):not(#__):not(#___) main :is(.contact-pitch, .news-item, .svc-step, .svc-for, .svc-tech, .svc-other, .prj-ed, .svc-detail-list > li) {
+  background: var(--gx-panel) !important; border: 1px solid var(--gx-edge) !important; box-shadow: var(--gx-glow) !important; border-radius: 18px !important;
+}
+html.neon:not(#_):not(#__):not(#___) main :is(.contact-pitch li, .contact-pitch details, .pitch-omote) {
+  background: rgba(139, 44, 245, .14) !important; border: 1px solid rgba(255, 43, 214, .3) !important; border-radius: 14px !important;
+}
+html.neon:not(#_):not(#__):not(#___) main :is(.contact-pitch, .news-item, .svc-step, .svc-for, .svc-tech, .svc-other, .prj-ed, .svc-detail-list > li) :is(h2, h3, h4, strong, b, summary, span, a:not(.btn):not(.btn-more)) {
+  color: #fff !important; -webkit-text-fill-color: #fff !important;
+}
+html.neon:not(#_):not(#__):not(#___) main :is(.contact-pitch, .news-item, .svc-step, .svc-for, .svc-tech, .svc-other, .prj-ed, .svc-detail-list > li) :is(p, li, dd, small, time, .news-src, .img-credit) {
+  color: #e6d9ff !important; -webkit-text-fill-color: #e6d9ff !important;
+}
+html.neon:not(#_):not(#__):not(#___) main .contact-pitch :is(h2, h3) { text-shadow: 0 0 18px rgba(255, 43, 214, .5) !important; }
+html.neon:not(#_):not(#__):not(#___) main :is(.svc-tech, .svc-other, .news-item):hover { box-shadow: var(--gx-glow-hot) !important; transform: translateY(-2px); }
+
+/* Footer lists: a soft violet hover instead of a white box */
+html.neon:not(#_):not(#__) .fw-item:hover { background: rgba(139, 44, 245, .16) !important; }
+
+/* Footer thumbnails: small transparent neon icons, no tile behind them */
+html.neon:not(#_):not(#__) .fw-thumb { background: transparent !important; box-shadow: none !important; border: 0 !important; }
+html.neon:not(#_):not(#__) .fw-thumb[src*="covers/i-"] { width: 52px !important; height: 52px !important; object-fit: contain !important; object-view-box: none; border-radius: 0 !important; flex: none; margin: 4px 10px 0 4px; }
