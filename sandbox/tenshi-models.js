@@ -1,7 +1,8 @@
 // tenshi-models.js: swap any game character for your own 3D model made in Blender.
 //
 // How to use it (full guide: models/README.md):
-//   1. In Blender, model the character (low-poly looks best: up to ~1,500 triangles), give it coloured materials.
+//   1. In Blender (or Tripo, Meshy...), make the character. Coloured materials, textures or vertex colours all work;
+//      heavy models are simplified automatically to about 1,500 triangles.
 //   2. File > Export > glTF 2.0, format "glTF Binary (.glb)". Save it into the models/ folder.
 //   3. Open models/models.json and put the file name next to the character it replaces, e.g.
 //        "rts.interceptor": "my-fighter.glb"
@@ -65,39 +66,128 @@
   }
   const apply = (m, p) => [m[0] * p[0] + m[4] * p[1] + m[8] * p[2] + m[12], m[1] * p[0] + m[5] * p[1] + m[9] * p[2] + m[13], m[2] * p[0] + m[6] * p[1] + m[10] * p[2] + m[14]];
 
-  // Turn a whole .glb scene into one flat, coloured triangle mesh.
-  function toMesh(buffer) {
+  // ---- Textures: decode the images packed inside the .glb so faces can take their colour from them ----
+  async function decodeImages(g, bin) {
+    const out = [];
+    for (const img of g.images || []) {
+      try {
+        if (img.bufferView == null) { out.push(null); continue; }              // external image files aren't supported (export as .glb)
+        const view = g.bufferViews[img.bufferView];
+        const bytes = new Uint8Array(bin, view.byteOffset || 0, view.byteLength);
+        const bmp = await createImageBitmap(new Blob([bytes], { type: img.mimeType || "image/png" }));
+        // Shrink big textures: one colour per face doesn't need more than 256 px.
+        const w = Math.min(256, bmp.width), h = Math.min(256, bmp.height);
+        const c = document.createElement("canvas"); c.width = w; c.height = h;
+        const cx = c.getContext("2d", { willReadFrequently: true }); cx.drawImage(bmp, 0, 0, w, h);
+        out.push({ w, h, data: cx.getImageData(0, 0, w, h).data });
+      } catch (e) { out.push(null); }
+    }
+    return out;
+  }
+  function sample(tex, u, v) {                                    // the texture's colour at (u, v), wrapping round
+    u -= Math.floor(u); v -= Math.floor(v);
+    const x = Math.min(tex.w - 1, Math.floor(u * tex.w)), y = Math.min(tex.h - 1, Math.floor(v * tex.h)), k = (y * tex.w + x) * 4;
+    return [tex.data[k], tex.data[k + 1], tex.data[k + 2]];
+  }
+
+  // Turn a whole .glb scene into one flat, coloured triangle mesh. Colours come from (in order): the material's texture,
+  // the model's vertex colours, the material's base colour. Heavy models are simplified to about MAX_TRIS triangles.
+  const MAX_TRIS = 1500;
+  async function toMesh(buffer) {
     const { json: g, bin } = parseGLB(buffer);
+    const needs = g.extensionsRequired || [];
+    if (needs.includes("KHR_draco_mesh_compression") || needs.includes("EXT_meshopt_compression"))
+      throw new Error("the model is compressed (Draco / meshopt). Export it again with compression turned off");
+    const images = await decodeImages(g, bin);
+    const lin = x => x <= 0.0031308 ? x * 12.92 : 1.055 * Math.pow(x, 1 / 2.4) - 0.055;   // glTF factors are linear
     const v = [], f = [];
-    const colourOf = prim => {
+    function materialOf(prim) {
       const m = prim.material != null && g.materials ? g.materials[prim.material] : null;
-      const c = (m && m.pbrMetallicRoughness && m.pbrMetallicRoughness.baseColorFactor) || [0.75, 0.72, 0.85, 1];
-      const lin = x => x <= 0.0031308 ? x * 12.92 : 1.055 * Math.pow(x, 1 / 2.4) - 0.055;   // glTF colours are linear
-      return { rgb: [0, 1, 2].map(k => Math.round(lin(c[k]) * 255)), glow: !!(m && m.emissiveFactor && Math.max(...m.emissiveFactor) > 0.5) };
-    };
+      const pbr = (m && m.pbrMetallicRoughness) || {};
+      const factor = pbr.baseColorFactor || [0.75, 0.72, 0.85, 1];
+      let tex = null, texCoord = 0;
+      if (pbr.baseColorTexture && g.textures) {
+        const t = g.textures[pbr.baseColorTexture.index];
+        if (t && t.source != null) tex = images[t.source] || null;
+        texCoord = pbr.baseColorTexture.texCoord || 0;
+      }
+      const emissive = m && m.emissiveFactor && Math.max(...m.emissiveFactor) > 0.5;
+      return { rgb: [0, 1, 2].map(k => Math.round(lin(factor[k]) * 255)), mult: factor.slice(0, 3).map(lin), tex, texCoord, glow: !!emissive };
+    }
     function visit(nodeIndex, parent) {
       const node = g.nodes[nodeIndex], m = mul(parent, trs(node));
       if (node.mesh != null) for (const prim of g.meshes[node.mesh].primitives) {
         if (prim.mode != null && prim.mode !== 4) continue;            // triangles only
         const pos = accessor(g, bin, prim.attributes.POSITION).map(p => apply(m, p));
         const idx = prim.indices != null ? accessor(g, bin, prim.indices) : pos.map((_, k) => k);
-        const base = v.length, col = colourOf(prim);
+        const mat = materialOf(prim), base = v.length;
+        const uvKey = "TEXCOORD_" + mat.texCoord;
+        const uv = mat.tex && prim.attributes[uvKey] != null ? accessor(g, bin, prim.attributes[uvKey]) : null;
+        const vc = prim.attributes.COLOR_0 != null ? accessor(g, bin, prim.attributes.COLOR_0) : null;
         v.push(...pos);
-        for (let k = 0; k + 2 < idx.length; k += 3) f.push({ i: [base + idx[k], base + idx[k + 1], base + idx[k + 2]], rgb: col.rgb, glow: col.glow });
+        for (let k = 0; k + 2 < idx.length; k += 3) {
+          const a = idx[k], b = idx[k + 1], c = idx[k + 2];
+          let rgb = mat.rgb;
+          if (uv) {
+            // Average a few points on the face (its middle and towards each corner), tinted by the base colour.
+            const pts = [[1 / 3, 1 / 3, 1 / 3], [0.6, 0.2, 0.2], [0.2, 0.6, 0.2], [0.2, 0.2, 0.6]];
+            const sum = [0, 0, 0];
+            for (const [wa, wb, wc] of pts) {
+              const s = sample(mat.tex, uv[a][0] * wa + uv[b][0] * wb + uv[c][0] * wc, uv[a][1] * wa + uv[b][1] * wb + uv[c][1] * wc);
+              for (let j = 0; j < 3; j++) sum[j] += s[j];
+            }
+            rgb = sum.map((s, j) => Math.round(s / pts.length * mat.mult[j]));
+          } else if (vc) {
+            rgb = [0, 1, 2].map(j => Math.round(lin((vc[a][j] + vc[b][j] + vc[c][j]) / 3) * 255));
+          }
+          f.push({ i: [base + a, base + b, base + c], rgb, glow: mat.glow });
+        }
       }
       for (const child of node.children || []) visit(child, m);
     }
     const scene = g.scenes ? g.scenes[g.scene || 0] : { nodes: g.nodes.map((_, k) => k) };
     for (const n of scene.nodes) visit(n, ident());
     if (!f.length) throw new Error("no triangles found");
-    // Centre it and scale it to fit inside a ball of radius 1; every face remembers its centre (for outward normals).
+    // Centre it and scale it to fit inside a ball of radius 1.
     let min = [1e9, 1e9, 1e9], max = [-1e9, -1e9, -1e9];
     for (const p of v) for (let k = 0; k < 3; k++) { min[k] = Math.min(min[k], p[k]); max[k] = Math.max(max[k], p[k]); }
     const mid = [0, 1, 2].map(k => (min[k] + max[k]) / 2);
     let r = 1e-9; for (const p of v) r = Math.max(r, Math.hypot(p[0] - mid[0], p[1] - mid[1], p[2] - mid[2]));
-    const vv = v.map(p => [(p[0] - mid[0]) / r, (p[1] - mid[1]) / r, (p[2] - mid[2]) / r]);
-    for (const face of f) face.c = [0, 0, 0];    // the model's centre: normals point away from it (fine for solid models)
-    return { v: vv, f, tris: f.length, height: (max[1] - min[1]) / r };
+    let mesh = { v: v.map(p => [(p[0] - mid[0]) / r, (p[1] - mid[1]) / r, (p[2] - mid[2]) / r]), f, original: f.length };
+    if (f.length > MAX_TRIS) mesh = simplify(mesh, MAX_TRIS);
+    for (const face of mesh.f) face.c = [0, 0, 0];
+    return { v: mesh.v, f: mesh.f, tris: mesh.f.length, original: f.length, height: (max[1] - min[1]) / r };
+  }
+
+  // Simplify a heavy mesh (vertex clustering): snap the corners to a grid, merge corners in the same cell, drop the
+  // triangles that collapse, and give the merged faces the average colour of the faces they replace. The grid gets coarser
+  // until the model is under the limit. Good enough for game characters seen at a distance.
+  function simplify(mesh, limit) {
+    for (let res = 64; res >= 6; res = Math.floor(res * 0.8)) {
+      const cellOf = p => p.map(c => Math.floor((c + 1) / 2 * res)).join(",");
+      const cells = new Map(), vv = [], remap = mesh.v.map(p => {
+        const key = cellOf(p);
+        let cell = cells.get(key);
+        if (!cell) { cell = { i: vv.length, sum: [0, 0, 0], n: 0 }; cells.set(key, cell); vv.push(null); }
+        cell.sum[0] += p[0]; cell.sum[1] += p[1]; cell.sum[2] += p[2]; cell.n++;
+        return cell.i;
+      });
+      for (const cell of cells.values()) vv[cell.i] = cell.sum.map(s => s / cell.n);
+      const merged = new Map();
+      for (const face of mesh.f) {
+        const i = face.i.map(k => remap[k]);
+        if (i[0] === i[1] || i[1] === i[2] || i[0] === i[2]) continue;
+        const key = [...i].sort((a, b) => a - b).join(",") + (face.glow ? "g" : "");
+        const m = merged.get(key);
+        if (m) { m.sum[0] += face.rgb[0]; m.sum[1] += face.rgb[1]; m.sum[2] += face.rgb[2]; m.n++; }
+        else merged.set(key, { i, sum: face.rgb.slice(), n: 1, glow: face.glow });
+      }
+      if (merged.size <= limit || res <= 6) {
+        const ff = [...merged.values()].map(m => ({ i: m.i, rgb: m.sum.map(s => Math.round(s / m.n)), glow: m.glow }));
+        return { v: vv, f: ff };
+      }
+    }
+    return mesh;
   }
 
   // ---------------------------------------------------------------- loading what models.json asks for
@@ -110,8 +200,8 @@
       try {
         const res = await fetch(DIR + file.trim(), { cache: "no-cache" });
         if (!res.ok) throw new Error("file not found: models/" + file);
-        meshes[slot] = toMesh(await res.arrayBuffer());
-        if (meshes[slot].tris > 1500) console.warn(`[models] ${slot}: ${meshes[slot].tris} triangles. Fewer than 1,500 keeps the games smooth (Blender: Decimate modifier).`);
+        meshes[slot] = await toMesh(await res.arrayBuffer());
+        if (meshes[slot].original > meshes[slot].tris) console.info(`[models] ${slot}: simplified from ${meshes[slot].original} to ${meshes[slot].tris} triangles to keep the game smooth.`);
       } catch (e) { console.warn(`[models] ${slot} (${file}) couldn't be loaded: ${e.message}. Using the built-in look.`); }
     });
     await Promise.all(jobs);
