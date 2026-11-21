@@ -37,6 +37,8 @@ const OFFERS = 5;
 
 // The Technology page: groups (pictures from img/services) and the tools in each, with their logos (img/tech, from
 // Simple Icons, CC0) and official sites. Descriptions are in translations.js (tech_<slug>, techG<n>Title/Text).
+// Each technology group shows its service's transparent neon icon (img/services/icons/), above the group's heading.
+const techIcon = (gr) => { const sv = SERVICES.find((x) => x.img === gr.img); return sv && sv.icon ? `icons/${sv.icon}` : gr.img; };
 const TECH_GROUPS = [
   { n: 1, img: "design.jpg", items: [["figma", "Figma", "https://www.figma.com"], ["adobephotoshop", "Adobe Photoshop", "https://www.adobe.com/products/photoshop.html"], ["adobeillustrator", "Adobe Illustrator", "https://www.adobe.com/products/illustrator.html"], ["adobeaftereffects", "Adobe After Effects", "https://www.adobe.com/products/aftereffects.html"], ["adobepremierepro", "Adobe Premiere Pro", "https://www.adobe.com/products/premiere.html"], ["blender", "Blender", "https://www.blender.org"]] },
   { n: 2, img: "webdev.jpg", items: [["html5", "HTML5", "https://developer.mozilla.org/docs/Web/HTML"], ["css3", "CSS", "https://developer.mozilla.org/docs/Web/CSS"], ["javascript", "JavaScript", "https://developer.mozilla.org/docs/Web/JavaScript"], ["typescript", "TypeScript", "https://www.typescriptlang.org"], ["react", "React", "https://react.dev"], ["vuedotjs", "Vue.js", "https://vuejs.org"], ["nextdotjs", "Next.js", "https://nextjs.org"], ["tailwindcss", "Tailwind CSS", "https://tailwindcss.com"], ["sass", "Sass", "https://sass-lang.com"]] },
@@ -979,7 +981,7 @@ ${TECH_GROUPS.map((gr) => `          <button type="button" data-filter="${gr.n}"
         </div>
 ${TECH_GROUPS.map((gr) => `        <section class="tech-group" data-group="${gr.n}" aria-labelledby="tech-g${gr.n}">
           <div class="tech-group-head">
-            <img class="tech-group-pic" src="img/services/${gr.img}" alt="${esc(tx(`techG${gr.n}Title`))} tools for small business websites and software" width="960" height="640" loading="lazy">
+            <img class="tech-group-pic" src="img/services/${techIcon(gr)}" alt="${esc(tx(`techG${gr.n}Title`))} tools for small business websites and software" width="512" height="512" loading="lazy">
             <div>
               <h3 id="tech-g${gr.n}" class="tech-group-title" data-i18n="techG${gr.n}Title">${tx(`techG${gr.n}Title`)}</h3>
               <p class="tech-group-text" data-i18n="techG${gr.n}Text">${tx(`techG${gr.n}Text`)}</p>

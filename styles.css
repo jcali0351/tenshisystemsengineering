@@ -2611,3 +2611,7 @@ main section#services + section.feature:not(#_):not(#__) { padding-top: clamp(72
   .site-footer .footer-brand > .footer-logo:not(#_):not(#__) { margin-block: 19px; }   /* centred on the 72px badge row */
   .site-footer .footer-brand > .tse-finder:not(#_):not(#__) { width: 100%; }
 }
+
+/* Technology page: the group's transparent icon above its heading, no frame behind it (also see sandbox/neon-pages.css) */
+.tech-group-head { flex-direction: column; text-align: center; }
+.tech-group-pic { width: 96px; height: 96px; object-fit: contain; border: 0; box-shadow: none; background: none; }
