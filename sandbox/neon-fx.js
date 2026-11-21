@@ -409,7 +409,8 @@
     const look = getComputedStyle(h1);
     reel.style.fontFamily = look.fontFamily;
     reel.style.fontWeight = look.fontWeight;
-    reel.style.letterSpacing = look.letterSpacing;
+    // A little more letter spacing than the headline, so the flashing messages read more openly.
+    reel.style.letterSpacing = `calc(${look.letterSpacing === "normal" ? "0px" : look.letterSpacing} + 0.04em)`;
     reel.style.fontSize = look.fontSize;
   }
 
