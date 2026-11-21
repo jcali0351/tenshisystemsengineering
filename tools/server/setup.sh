@@ -77,7 +77,7 @@ else:
     print("an admin account already exists; left it alone")
 PY
   )
-  umask 077; printf 'Tenshi CMS: https://cms.%s\nEmail: admin@tenshisystems.com\nPassword: %s\n(Change it after your first sign-in.)\n' "$DOMAIN" "$PW" > /root/tenshi-cms-admin.txt
+  ( umask 077; printf 'Tenshi CMS: https://cms.%s\nEmail: admin@tenshisystems.com\nPassword: %s\n(Change it after your first sign-in.)\n' "$DOMAIN" "$PW" > /root/tenshi-cms-admin.txt )   # strict permissions for this file only
   chmod 600 /root/tenshi-cms-admin.txt
 fi
 
@@ -203,7 +203,8 @@ if ! git diff --quiet "\$OLD" "\$NEW" -- platform/; then systemctl restart tensh
 logger -t tenshi-deploy "deployed \$NEW"
 EOF
 chmod 755 /usr/local/bin/tenshi-deploy
-git config --system --add safe.directory "$APP"
+git config --system --get-all safe.directory | grep -qx "$APP" || git config --system --add safe.directory "$APP"
+chmod 644 /etc/gitconfig
 echo "*/5 * * * * root /usr/local/bin/tenshi-deploy" > /etc/cron.d/tenshi-deploy
 
 echo "== 12. Start everything"
