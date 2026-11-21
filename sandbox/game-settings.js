@@ -41,7 +41,7 @@ window.TENSHI_GAMES = {
     "points": 15,
     "size": 18,
     "speed": [
-     1,
+     1.0,
      1.8
     ],
     "weight": 3
@@ -283,6 +283,7 @@ window.TENSHI_GAMES = {
   "heroSprite": true,
   "hollowSprite": true,
   "golemSprite": true,
+  "skitterSprite": true,
   "hero": {
    "speed": 4.2,
    "reach": 1.25,
@@ -312,7 +313,7 @@ window.TENSHI_GAMES = {
     "hp": 16,
     "dmg": 3,
     "speed": 3.4,
-    "reach": 1,
+    "reach": 1.0,
     "every": 650,
     "xp": 8,
     "weight": 4

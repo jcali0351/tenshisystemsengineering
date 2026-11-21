@@ -158,6 +158,7 @@ UNDERCITY = {
     "heroSprite": True,              # show the pre-rendered Eclipse Wraith (False = use the 3D model in the arpg.hero slot)
     "hollowSprite": True,            # show the animated Corrupted Astral Sorcerer as the Hollow (False = use the arpg.hollow 3D model)
     "golemSprite": True,             # show the animated Green Elemental as the Golem (False = use the arpg.golem 3D model)
+    "skitterSprite": True,           # show the detailed lava spider as the Skitter (False = use the arpg.skitter 3D model)
     "hero": {"speed": 4.2, "reach": 1.25, "attackEvery": 520},   # walking speed, sword reach (tiles), time between swings
     "skills": {
         "fireball": {"mana": 8,  "cd": 350},

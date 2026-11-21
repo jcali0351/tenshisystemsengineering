@@ -25,7 +25,7 @@
   };
   const MONSTERS = {
     hollow:  { name: "Hollow",  hp: 30, dmg: 4,  speed: 1.9, reach: 1.1, every: 1000, xp: 12, color: "#9fd6a8", r: 0.34, h: 1.0, weight: 5 },
-    skitter: { name: "Skitter", hp: 16, dmg: 3,  speed: 3.4, reach: 1.0, every: 650,  xp: 8,  color: "#ff6ec7", r: 0.28, h: 0.5, weight: 4 },
+    skitter: { name: "Skitter", hp: 16, dmg: 3,  speed: 3.4, reach: 1.0, every: 650,  xp: 8,  color: "#ff6ec7", r: 0.28, h: 1.1, weight: 4 },
     wisp:    { name: "Wisp",    hp: 22, dmg: 5,  speed: 2.4, reach: 5.5, every: 1500, xp: 14, color: "#8fd8ff", r: 0.26, h: 1.1, weight: 3, ranged: true },
     golem:   { name: "Golem",   hp: 110, dmg: 12, speed: 1.4, reach: 1.3, every: 1500, xp: 40, color: "#c9a6ff", r: 0.5, h: 1.5, weight: 3 },
     warden:  { name: "The Warden", hp: 700, dmg: 24, speed: 1.9, reach: 1.6, every: 1300, xp: 300, color: "#ff2bd6", r: 0.7, h: 2.2, weight: 0, boss: true },
@@ -719,8 +719,10 @@
     // "Corrupted Astral Sorcerer" (Meshy, Mixamo "Back Jump"), the first enemy you meet. Its model faces the other way,
     // so its rows are turned half a circle (dirOffset 4).
     hollow: { file: "art/hollow-sorcerer.webp", setting: "hollowSprite", dirs: 8, frames: 8, cell: 160, anchorX: 0.5, anchorY: 0.8637, heightPx: 99.15, height: 1.75, dirOffset: 4, hitMs: 750 },
-    // "Low Poly Green Elemental" (Meshy, Mixamo "Block"): the Golem, the tough one from floor 2. Raises its guard when hit.
+    // "Low Poly Green Elemental" (Meshy, Mixamo "Block"): the Golem, the tough one (from floor 1). Raises its guard when hit.
     golem: { file: "art/golem-elemental.webp", setting: "golemSprite", dirs: 8, frames: 8, cell: 160, anchorX: 0.5, anchorY: 0.8637, heightPx: 119.84, height: 1.7, dirOffset: 4, hitMs: 900 },
+    // The owner's lava spider (uploaded in Game Studio, rendered in Blender from 16 directions, one still frame each).
+    skitter: { file: "art/skitter-spider.webp", setting: "skitterSprite", dirs: 16, frames: 1, cell: 160, anchorX: 0.5, anchorY: 0.7499, heightPx: 83.29, height: 1.15, dirOffset: 0, hitMs: 1 },
   };
   for (const t in MONSTER_SPRITES) { const S = MONSTER_SPRITES[t]; S.img = new Image(); S.img.src = (document.querySelector('script[src*="neon-arpg.js"]')?.src || "").replace(/neon-arpg\.js.*$/, S.file); }
   function drawMonsterSprite(m, now) {

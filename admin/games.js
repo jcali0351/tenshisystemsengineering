@@ -26,7 +26,7 @@
     "arpg.hero": "Hero", "arpg.hollow": "Hollow", "arpg.skitter": "Skitter", "arpg.wisp": "Wisp", "arpg.golem": "Golem", "arpg.warden": "The Warden (boss)"
   };
   // Slots that show a pre-rendered sprite in the game; uploading a model switches that sprite off (and Revert back on).
-  var SPRITE_SETTING = { "arpg.hero": "arpg.heroSprite", "arpg.hollow": "arpg.hollowSprite", "arpg.golem": "arpg.golemSprite" };
+  var SPRITE_SETTING = { "arpg.hero": "arpg.heroSprite", "arpg.hollow": "arpg.hollowSprite", "arpg.golem": "arpg.golemSprite", "arpg.skitter": "arpg.skitterSprite" };
   var ED, loaded = false, loading = null;
   var schema = null, edits = {}, values = {}, models = {}, modelsOrig = {};
   var uploads = {};             // slot -> { file, base64, url, tris, name }

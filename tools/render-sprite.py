@@ -4,13 +4,14 @@
 # then pack the 16 frames (f00-f15.png) into a 4 x 4 sheet of 224 px cells and update HERO_SPRITE in sandbox/neon-arpg.js
 # with anchorY / heightPx from out_dir/meta.json (heightPx scaled by 224 / 320).
 # Blender (headless): pre-render a high-detail character from 16 directions at the dungeon crawler's camera angle.
-#   blender --background --factory-startup --python render_wraith.py -- <in.glb> <out_dir> <frame_px> <samples> [front_offset_deg]
+#   blender --background --factory-startup --python render_wraith.py -- <in.glb> <out_dir> <frame_px> <samples> [front_offset_deg] [decimate]
 import bpy, sys, math, os, json
 from mathutils import Vector
 from bpy_extras.object_utils import world_to_camera_view
 args = sys.argv[sys.argv.index("--") + 1:]
 src, out, px, samples = args[0], args[1], int(args[2]), int(args[3])
 front_offset = float(args[4]) if len(args) > 4 else 90.0      # turn the model so its front faces +X (Meshy fronts face -Y)
+decimate = float(args[5]) if len(args) > 5 else 0.08          # keep this share of the triangles (1 = keep all, for light models)
 os.makedirs(out, exist_ok=True)
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -18,10 +19,17 @@ bpy.ops.import_scene.gltf(filepath=src)
 obj = [o for o in bpy.context.scene.objects if o.type == "MESH"][0]
 bpy.context.view_layer.objects.active = obj
 for o in bpy.context.scene.objects: o.select_set(o == obj)
+# Rigged models: bake the rest pose into the mesh and drop the skeleton, so moving the mesh can't distort it.
+for m in list(obj.modifiers):
+    if m.type == "ARMATURE": bpy.ops.object.modifier_apply(modifier=m.name)
+if obj.parent: bpy.ops.object.parent_clear(type="CLEAR_KEEP_TRANSFORM")
+for o in list(bpy.context.scene.objects):
+    if o.type == "ARMATURE": bpy.data.objects.remove(o)
 # Weld, then reduce to a still-detailed mesh (plenty for a 300 px render, much faster to render).
 bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT"); bpy.ops.mesh.remove_doubles(threshold=0.0004); bpy.ops.object.mode_set(mode="OBJECT")
-mod = obj.modifiers.new("Decimate", "DECIMATE"); mod.decimate_type = "COLLAPSE"; mod.ratio = 0.08
-bpy.ops.object.modifier_apply(modifier=mod.name)
+if decimate < 1:
+    mod = obj.modifiers.new("Decimate", "DECIMATE"); mod.decimate_type = "COLLAPSE"; mod.ratio = decimate
+    bpy.ops.object.modifier_apply(modifier=mod.name)
 bpy.ops.object.shade_smooth()
 print("[render] triangles:", sum(len(p.vertices) - 2 for p in obj.data.polygons))
 # Feet on the ground at the origin.
@@ -36,7 +44,8 @@ obj.parent = pivot
 
 scene = bpy.context.scene
 # The game's camera: 2:1 isometric (dimetric), looking from map direction (+x, +y), 30 degrees above the floor.
-cam_d = bpy.data.cameras.new("cam"); cam_d.type = "ORTHO"; cam_d.ortho_scale = H * 1.55
+cam_d = bpy.data.cameras.new("cam"); cam_d.type = "ORTHO"; R = max(math.hypot(v.co.x, v.co.y) for v in obj.data.vertices)   # how far it reaches sideways (wide creatures)
+cam_d.ortho_scale = max(H * 1.55, R * 2.3)
 cam = bpy.data.objects.new("cam", cam_d); scene.collection.objects.link(cam); scene.camera = cam
 el = math.radians(30); D = 20
 cam.location = (math.cos(el) / math.sqrt(2) * D, math.cos(el) / math.sqrt(2) * D, H * 0.48 + math.sin(el) * D)
