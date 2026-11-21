@@ -77,6 +77,7 @@
   root.className = "rts";
   root.innerHTML = `
     <canvas class="rts-canvas" aria-label="Station Defense space strategy game"></canvas>
+    <div class="rts-art" aria-hidden="true"><div class="rts-art-img"></div></div>
     <div class="rts-top">
       <button type="button" class="rts-exit" hidden>✕ EXIT</button>
       <button type="button" class="rts-full" hidden>⛶ FULLSCREEN</button>
@@ -90,7 +91,7 @@
       <button type="button" data-act="amove">ATTACK</button>
     </div>
     <div class="rts-msg" aria-live="polite"></div>
-    <div class="rts-intro">
+    <div class="rts-intro rts-intro-cover">
       <p class="rts-kicker">STATION DEFENSE · A SPACE STRATEGY GAME</p>
       <h3>Mine. Build. Defend the Station.</h3>
       <p>An alien hive is sending swarms at your space station. Mine crystals, build a fleet and wipe out the hive.</p>
@@ -1347,6 +1348,7 @@
     setTimeout(resize, 80);
   });
   function start() {
+    intro.classList.remove("rts-intro-cover");
     enterWindow();
     resize(); newGame(); state = "play";
     intro.hidden = true; showUI(true); renderPanel();
@@ -1375,13 +1377,14 @@
   }, true);
 
   new IntersectionObserver(es => { onScreen = es[0].isIntersecting; }, { threshold: 0.35 }).observe(section);
-  let last = performance.now(), frameMs = 0;
+  let last = performance.now(), frameMs = 0, artReady = false;
+  { const probe = new Image(); probe.onload = () => { artReady = true; }; probe.src = (document.querySelector('script[src*="neon-rts.js"]')?.src || "").replace(/neon-rts\.js.*$/, "art/station-defense-small.webp"); }
   function loop(now) {
     const dt = Math.min(50, now - last); last = now;
     if (onScreen && W) {
       const t0 = performance.now();
       if (state === "play") { scrollCamera(dt); update(dt); hud(); }
-      draw(now);
+      if (state === "play" || !artReady) draw(now);
       frameMs = frameMs * 0.9 + (performance.now() - t0) * 0.1;   // how long a frame's work takes (test hook)
     }
     requestAnimationFrame(loop);

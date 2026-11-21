@@ -1227,3 +1227,27 @@ html.neon .cf-sending button[type="submit"]::before {
 
 /* Station Defense: the WebGL layer for the 3D models (under the 2D canvas with the effects and interface) */
 html.neon .rts-gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+
+/* Station Defense: the cover art, full width behind the Play screen (and the pause / game-over panels).
+   Sharp art on top (gently drifting), a blurred copy filling any space around it, a dark fade at the bottom for the
+   Play button. It fades away while you play. */
+html.neon .rts-art { position: absolute; inset: 0; overflow: hidden; background: #0b0418; transition: opacity .7s ease, visibility .7s; }
+html.neon .rts-art::before { content: ""; position: absolute; inset: -40px; background: url("art/station-defense-small.webp") center / cover no-repeat; filter: blur(22px) brightness(.45) saturate(1.2); }
+html.neon .rts-art-img { position: absolute; inset: 64px 0 0 0; background: url("art/station-defense.webp") center top / cover no-repeat; transform-origin: 50% 0; animation: rts-art-drift 38s ease-in-out infinite alternate; }
+html.neon .rts-art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(8, 2, 20, .9) 0%, rgba(8, 2, 20, .35) 22%, transparent 42%); }
+@keyframes rts-art-drift { from { transform: scale(1.02); } to { transform: scale(1.08) translateY(-1%); } }
+html.neon:not(#_):not(#__) .rts-zone.rts-on .rts-art { opacity: 0 !important; visibility: hidden !important; }
+html.neon.rts-takeover .rts-art-img { inset: 0; }   /* no site header over the game window */
+@media (max-aspect-ratio: 1/1) { html.neon .rts-art-img { background-size: 100% auto; background-position: center 34%; } }
+@media (max-width: 760px) { html.neon .rts-art-img { background-image: url("art/station-defense-small.webp"); } }
+@media (prefers-reduced-motion: reduce) { html.neon .rts-art-img { animation: none; } }
+/* First screen: just the Play button and controls over the art (its title says the rest; screen readers still get the text). */
+html.neon .rts-intro.rts-intro-cover { top: auto; bottom: clamp(28px, 9vh, 96px); transform: translateX(-50%); background: none; border: 0; box-shadow: none;
+  backdrop-filter: none; -webkit-backdrop-filter: none; padding: 0; width: min(720px, calc(100% - 32px)); }
+html.neon .rts-intro.rts-intro-cover > :is(.rts-kicker, h3, p:not(.rts-help)) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+html.neon .rts-intro.rts-intro-cover .rts-play { font-size: 20px; padding: 16px 44px; border-radius: 999px; background: linear-gradient(135deg, #ff2bd6, #b04dff);
+  color: #fff; box-shadow: 0 0 28px rgba(255, 43, 214, .65), 0 0 60px rgba(176, 77, 255, .45); animation: rts-play-pulse 2.4s ease-in-out infinite; }
+html.neon:not(#_):not(#__) .rts-intro.rts-intro-cover .rts-play { color: #fff !important; -webkit-text-fill-color: #fff !important; }
+html.neon .rts-intro.rts-intro-cover .rts-play:hover { transform: scale(1.05); }
+html.neon .rts-intro.rts-intro-cover .rts-help { color: rgba(255, 255, 255, .78) !important; -webkit-text-fill-color: rgba(255, 255, 255, .78) !important; text-shadow: 0 1px 6px #000; }
+@keyframes rts-play-pulse { 50% { box-shadow: 0 0 40px rgba(255, 43, 214, .9), 0 0 90px rgba(176, 77, 255, .6); } }
