@@ -142,3 +142,10 @@ html.neon:not(#_):not(#__) .tech-group-head { padding: 34px 0 14px; margin-botto
 html.neon:not(#_):not(#__) .tech-group-pic { width: 77px; height: 77px; }
 html.neon:not(#_):not(#__) .tech-group-title { font-size: clamp(1.04rem, 2.08vw, 1.36rem); }
 @media (max-width: 760px) { html.neon:not(#_):not(#__) .tech-group-head { padding: 24px 0 10px; } html.neon:not(#_):not(#__) .tech-group-pic { width: 61px; height: 61px; } }
+/* Technology tool cards: icon, name, description and link centred in the card, both ways; and the cards kept clear of
+   the group panel's border on the sides and bottom. */
+html.neon:not(#_):not(#__) .tech-card { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 26px 20px; }
+html.neon:not(#_):not(#__) .tech-card .tech-logo { margin: 0 auto 14px; }
+html.neon:not(#_):not(#__) .tech-card :is(.tech-name, .tech-desc) { text-align: center; margin-left: auto; margin-right: auto; }
+html.neon:not(#_):not(#__) .tech-card .tech-link { margin-top: 14px; align-self: center; }
+html.neon:not(#_):not(#__) .tech-group > .tech-grid { padding: 0 clamp(16px, 2.6vw, 32px) clamp(16px, 2.6vw, 32px); gap: clamp(14px, 1.8vw, 22px); }
