@@ -1,6 +1,5 @@
 {
   "_how": "Put a Blender .glb file in this folder and write its name next to the character it should replace, e.g. \"rts.interceptor\": \"my-fighter.glb\". Leave \"\" to keep the built-in look. Full guide: models/README.md",
-
   "_arcade": "The hero arcade game (top of the homepage)",
   "arcade.drone": "",
   "arcade.saucer": "",
@@ -8,7 +7,6 @@
   "arcade.star": "",
   "arcade.robot": "",
   "arcade.kaiju": "",
-
   "_rts": "Station Defense (the space strategy game)",
   "rts.station": "",
   "rts.miner": "",
@@ -24,11 +22,10 @@
   "rts.depot": "",
   "rts.outpost": "",
   "rts.shipyard": "",
-
   "_arpg": "Undercity (the dungeon crawler)",
   "arpg.hero": "source/arpg.hero.glb",
   "arpg.hollow": "source/arpg.hollow.glb",
-  "arpg.skitter": "source/arpg.skitter.glb",
+  "arpg.skitter": "uploads/arpg.skitter-202611212103.glb",
   "arpg.wisp": "source/arpg.wisp.glb",
   "arpg.golem": "source/arpg.golem.glb",
   "arpg.warden": "source/arpg.warden.glb"
