@@ -1295,10 +1295,9 @@ html.neon .hero, html.neon .hero * { -webkit-user-select: none !important; user-
 html.neon .hero ::selection, html.neon .hero::selection { background: transparent !important; color: inherit !important; }
 html.neon .hero img { pointer-events: none; }
 
-/* Menu: Portfolio is "coming soon": shown dimmed with a small tag, not clickable (no link, no dropdown). */
-html.neon .nav-soon { cursor: default !important; opacity: .55; pointer-events: none; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
-html.neon .nav-soon-tag { font: 700 9px/1 Oswald, sans-serif; letter-spacing: .12em; text-transform: uppercase; padding: 3px 6px; border-radius: 999px;
-  border: 1px solid rgba(255, 138, 240, .6); color: #ffb3f5; -webkit-text-fill-color: #ffb3f5; background: rgba(255, 43, 214, .12); }
+/* Menu: Portfolio is not clickable for now (looks like the other items, no link, no dropdown). */
+html.neon .nav-soon { cursor: default !important; pointer-events: none; }
+
 /* Menu: only one pink line at a time. While the hover highlight (with its own line along the header's bottom) is showing,
    the current page's underline steps aside; it comes back when the pointer leaves the menu. */
 html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav > ul:is(:hover, :focus-within) > li > a[aria-current="page"] { box-shadow: none !important; }
