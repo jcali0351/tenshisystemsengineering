@@ -935,3 +935,35 @@ html.neon:not(#_):not(#__):not(#___):not(#____) main .service-card:is(:hover, :f
   html.neon:not(#_):not(#__) #services .service-card:is(:hover, :focus-within) > .service-pic.service-icon,
   html.neon:not(#_):not(#__):not(#___) main .service-card:is(:hover, :focus-within) .service-pic.service-icon { transform: none !important; }
 }
+
+/* About page (and anywhere the same parts appear): no white leftovers from the light theme.
+   Process steps become purple panels; icon chips become dark glass with a pink edge and glowing line icons. */
+html.neon:not(#_):not(#__):not(#___) main .ab-step {
+  background: var(--gx-panel) !important; border: 1px solid var(--gx-edge) !important; border-radius: 20px !important;
+  box-shadow: var(--gx-glow) !important; transition: transform .25s ease, box-shadow .25s ease;
+}
+html.neon:not(#_):not(#__):not(#___) main .ab-step:hover { transform: translateY(-4px); box-shadow: var(--gx-glow-hot) !important; }
+html.neon:not(#_):not(#__):not(#___) main .ab-step :is(h3, p) { color: #fff !important; -webkit-text-fill-color: #fff !important; }
+html.neon:not(#_):not(#__):not(#___) main .ab-step p { color: #e6d9ff !important; -webkit-text-fill-color: #e6d9ff !important; }
+html.neon:not(#_):not(#__):not(#___) main .ab-step .ab-step-num {
+  color: #ff6ec7 !important; -webkit-text-fill-color: #ff6ec7 !important; opacity: 1 !important; text-shadow: 0 0 18px rgba(255, 43, 214, .6) !important;
+}
+html.neon:not(#_):not(#__):not(#___) main :is(.ab-icon, .value-icon, .ab-check) {
+  background: linear-gradient(160deg, rgba(139, 44, 245, .28), rgba(10, 2, 18, .9)) !important;
+  border: 1px solid rgba(255, 43, 214, .55) !important;
+  box-shadow: 0 0 14px rgba(255, 43, 214, .3), inset 0 1px 0 rgba(255, 255, 255, .08) !important;
+  color: #ff6ec7 !important; transition: box-shadow .3s ease, transform .3s ease;
+}
+html.neon:not(#_):not(#__):not(#___) main :is(.ab-icon, .value-icon, .ab-check) :is(svg, svg *) {
+  color: #ff6ec7 !important; stroke: currentColor !important;
+}
+html.neon:not(#_):not(#__):not(#___) main :is(.ab-icon, .value-icon) svg { filter: drop-shadow(0 0 4px rgba(255, 43, 214, .8)) drop-shadow(0 0 10px rgba(0, 240, 255, .35)); }
+html.neon:not(#_):not(#__):not(#___) main .ab-check { color: #7ff6ff !important; border-color: rgba(0, 240, 255, .5) !important; box-shadow: 0 0 10px rgba(0, 240, 255, .3) !important; }
+html.neon:not(#_):not(#__):not(#___) main .ab-check :is(svg, svg *) { color: #7ff6ff !important; }
+html.neon:not(#_):not(#__):not(#___) main :is(.ab-focus, .value-card, .ab-mv-card, .ab-std-card, .ab-step):hover :is(.ab-icon, .value-icon) {
+  box-shadow: 0 0 22px rgba(255, 43, 214, .7), 0 0 40px rgba(0, 240, 255, .3) !important; transform: scale(1.06);
+}
+@media (prefers-reduced-motion: reduce) {
+  html.neon:not(#_):not(#__):not(#___) main :is(.ab-focus, .value-card, .ab-mv-card, .ab-std-card, .ab-step):hover :is(.ab-icon, .value-icon),
+  html.neon:not(#_):not(#__):not(#___) main .ab-step:hover { transform: none; }
+}
