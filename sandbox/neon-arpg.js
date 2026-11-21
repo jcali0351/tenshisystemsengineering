@@ -611,11 +611,27 @@
   }
   const shadeHex = (h, k) => shade(hex(h), k);
 
+  // ---- The hero: your Meshy "Eclipse Wraith", pre-rendered in Blender from 16 directions at this game's camera angle
+  // (real sculpt, textures and lighting), shown in the direction the hero faces. Falls back to the 3D model. ----
+  const HERO_SPRITE = { file: "art/hero-wraith.webp", frames: 16, cols: 4, cell: 224, anchorX: 0.5, anchorY: 0.7682, heightPx: 125.15, height: 2.0 };
+  const heroSprite = new Image();
+  heroSprite.src = (document.querySelector('script[src*="neon-arpg.js"]')?.src || "").replace(/neon-arpg\.js.*$/, HERO_SPRITE.file);
+  function drawHeroSprite(bob) {
+    if (!heroSprite.complete || !heroSprite.naturalWidth) return false;
+    const S = HERO_SPRITE, step = Math.PI * 2 / S.frames, k = ((Math.round(hero.face / step) % S.frames) + S.frames) % S.frames;
+    const scale = S.height * TH * 1.15 * zoom / S.heightPx, size = S.cell * scale;
+    const px = sx(hero.x, hero.y), py = sy(hero.x, hero.y, bob), cx = (k % S.cols) * S.cell, cy = Math.floor(k / S.cols) * S.cell;
+    const dx = px - S.anchorX * size, dy = py - S.anchorY * size;
+    ctx.drawImage(heroSprite, cx, cy, S.cell, S.cell, dx, dy, size, size);
+    if (hero.flash > 0.05) { ctx.save(); ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = Math.min(1, hero.flash) * 0.7; ctx.drawImage(heroSprite, cx, cy, S.cell, S.cell, dx, dy, size, size); ctx.restore(); }
+    return true;
+  }
   function drawHero(now) {
     const s = stats(), bob = hero.path.length ? Math.abs(Math.sin(hero.walk)) * 0.06 : Math.sin(now / 500) * 0.02;
     shadow(hero.x, hero.y, 0.35);
-    const model = modelFor("arpg.hero");
-    if (model) drawMesh(model, hero.x, hero.y, hero.face, 2.4, hero.flash);   // (the wraith's wide wings make the model fit a bigger ball, so draw it larger)
+    const sprite = drawHeroSprite(bob), model = sprite ? null : modelFor("arpg.hero");
+    if (sprite) { /* the pre-rendered wraith */ }
+    else if (model) drawMesh(model, hero.x, hero.y, hero.face, 2.4, hero.flash);   // (the wraith's wide wings make the model fit a bigger ball, so draw it larger)
     else {
       const armor = hero.gear.armor ? hero.gear.armor.color : "#7a6aa8";
       // Cape behind
@@ -628,7 +644,7 @@
     const px = sx(hero.x, hero.y), py = sy(hero.x, hero.y, 0.85 + bob), a = hero.face + (hero.swing ? (hero.swing - 0.5) * 2.4 : 0.6);
     const ex = px + Math.cos(a - Math.PI / 4) * 30 * zoom, ey = py + Math.sin(a - Math.PI / 4) * 16 * zoom;
     ctx.save(); ctx.globalCompositeOperation = "lighter"; ctx.strokeStyle = wcol; ctx.lineWidth = 3 * zoom; ctx.shadowColor = wcol; ctx.shadowBlur = 14;
-    if (!model) { ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(ex, ey); ctx.stroke(); }
+    if (!model && !sprite) { ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(ex, ey); ctx.stroke(); }
     ctx.restore();
     if (hero.swing > 0.3) { ctx.save(); ctx.globalCompositeOperation = "lighter"; ctx.strokeStyle = `rgba(255,255,255,${hero.swing * 0.6})`; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(px, py, 30 * zoom, hero.face - 1.6, hero.face + 0.4); ctx.stroke(); ctx.restore(); }
   }
