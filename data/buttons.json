@@ -1,9 +1,12 @@
 {
   "types": {
     "primary": {
-      "bg": "#ffffff",
+      "bg": "#e420fe",
       "color": "#000000",
       "borderColor": "#808080"
+    },
+    "light": {
+      "bg": "#d70bda"
     }
   }
 }
