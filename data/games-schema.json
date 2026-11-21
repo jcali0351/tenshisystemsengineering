@@ -302,6 +302,12 @@
      "cd": 1600
     }
    },
+   "holy": {
+    "perHit": 0.8,
+    "perKill": 6,
+    "perChampion": 14,
+    "perBoss": 30
+   },
    "monsters": {
     "hollow": {
      "hp": 30,
@@ -514,6 +520,7 @@
     "skitterSprite": "show the detailed lava spider as the Skitter (False = use the arpg.skitter 3D model)",
     "hero": "walking speed, sword reach (tiles), time between swings",
     "skills.nova": "Frost Nova",
+    "holy": "Holy Power gained per hit landed / per kill (percent)",
     "monsters.wizard": "the Evil Wizard",
     "monsters.elf": "the Evil Green Elf",
     "monsters.golem": "the Green Elemental",

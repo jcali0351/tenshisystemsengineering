@@ -1,7 +1,7 @@
 // neon-arpg.js: "UNDERCITY", an isometric action-RPG dungeon crawler in the "Built, then made better" photo strip.
 //
 // Descend through neon crypts under Osaka: click to walk and to attack, right-click to throw a Fireball, 2 for Frost
-// Nova, Q / W for health and mana potions, C for your character sheet, mouse wheel / + - keys / + - buttons / pinch to zoom. Monsters drop gold, potions and gear in four
+// Nova, Q / W for health and mana potions, C for your character sheet, E for the Power of God (when Holy Power is full), mouse wheel / + - keys / + - buttons / pinch to zoom. Monsters drop gold, potions and gear in four
 // rarities (common, magic, rare, legendary) with random bonuses; better gear is equipped automatically, the rest is
 // sold for gold. Find the stairs to go deeper; every third floor a Warden guards them. Your hero is saved in this browser.
 //
@@ -39,6 +39,10 @@
     { id: "legendary", name: "Legendary", color: "#ff8a2b", chance: 0.025, mult: 2.6, affixes: 3 },
   ];
   TUNE(HERO, CFG.hero); TUNE(SKILLS, CFG.skills); TUNE(MONSTERS, CFG.monsters);
+  // Holy Power: fills as you fight (per hit landed, per kill). At 100% a POWER OF GOD button pops up (or press E): it
+  // instantly slays every enemy you can see.
+  const HOLY = { perHit: 0.8, perKill: 6, perChampion: 14, perBoss: 30 };
+  TUNE(HOLY, CFG.holy);
   for (const r of RARITY) TUNE(r, (CFG.rarity || {})[r.id]);
   // How many monsters: per room (more every 2 floors, up to a limit), and how often a Warden boss floor comes.
   const ENEMIES = { perRoomMin: 2, perRoomMax: 3, extraEveryTwoFloors: 1, extraMax: 4, bossEvery: 3, golemFromFloor: 1 };
@@ -97,6 +101,8 @@
       </div>
       <div class="arpg-gauge arpg-mp"><b></b><span></span></div>
       <div class="arpg-xp"><b></b></div>
+      <div class="arpg-holy" title="Holy Power: fills as you fight. At 100% the Power of God is ready."><b></b><span>HOLY POWER 0%</span></div>
+      <button type="button" class="arpg-godbtn" hidden title="Power of God (E): slays every enemy you can see">✝ POWER OF GOD <i>E</i></button>
     </div>
     <div class="arpg-sheet" hidden></div>
     <div class="arpg-tip" hidden></div>
@@ -106,7 +112,7 @@
       <h3>Descend. Loot. Survive.</h3>
       <p>Fight your way down through the neon crypts beneath Osaka. Grab gold and gear, level up, find the stairs.</p>
       <div class="arpg-buttons"></div>
-      <p class="arpg-help">Click to move &amp; attack · Right-click Fireball · 2 Frost Nova · Q/W potions · C hero · Wheel or +/− to zoom</p>
+      <p class="arpg-help">Click to move &amp; attack · Right-click Fireball · 2 Frost Nova · Q/W potions · C hero · E Power of God (full Holy Power) · Wheel or +/− to zoom</p>
     </div>`;
   section.appendChild(root);
   const canvas = root.querySelector(".arpg-canvas"), ctx = canvas.getContext("2d");
@@ -169,7 +175,7 @@
 
   // ---- The hero ----
   function newHero() {
-    return { x: 0, y: 0, lvl: 1, xp: 0, gold: 0, hp: 80, mp: 40, gear: {}, potions: { hp: 3, mp: 2 }, path: [], target: null, atkCd: 0, cds: { fireball: 0, nova: 0 }, face: 0, walk: 0, swing: 0, flash: 0, best: 1 };
+    return { x: 0, y: 0, lvl: 1, xp: 0, gold: 0, hp: 80, mp: 40, gear: {}, potions: { hp: 3, mp: 2 }, holy: 0, path: [], target: null, atkCd: 0, cds: { fireball: 0, nova: 0 }, face: 0, walk: 0, swing: 0, flash: 0, best: 1 };
   }
   function stats() {
     const g = Object.values(hero.gear), sum = k => g.reduce((t, it) => t + (it.stats[k] || 0), 0);
@@ -180,7 +186,7 @@
     };
   }
   const xpNeed = lvl => Math.round(60 * Math.pow(lvl, 1.55));
-  function save() { store.set({ lvl: hero.lvl, xp: hero.xp, gold: hero.gold, gear: hero.gear, potions: hero.potions, floor: floorNo, best: Math.max(hero.best || 1, floorNo) }); }
+  function save() { store.set({ lvl: hero.lvl, xp: hero.xp, gold: hero.gold, gear: hero.gear, potions: hero.potions, holy: Math.floor(hero.holy || 0), floor: floorNo, best: Math.max(hero.best || 1, floorNo) }); }
 
   // ================================================ MAP ================================================
   function genFloor(n) {
@@ -285,12 +291,14 @@
   function hurtMonster(m, amount, color = "#ffffff", crit = false) {
     if (m.hp <= 0) return;
     m.hp -= amount; m.flash = 1; m.aggro = true; m.hitAt = performance.now();
+    gainHoly(HOLY.perHit);
     num(m.x, m.y, Math.round(amount) + (crit ? "!" : ""), crit ? "#ffd84a" : color, crit);
     burst(m.x, m.y, m.T.color, crit ? 14 : 7, 2.5);
     if (m.hp <= 0) killMonster(m);
   }
   function killMonster(m) {
     monsters = monsters.filter(x => x !== m);
+    gainHoly(m.T.boss ? HOLY.perBoss : m.champion ? HOLY.perChampion : HOLY.perKill);
     burst(m.x, m.y, m.T.color, m.T.boss ? 60 : 22, m.T.boss ? 6 : 3.5);
     sfx(m.T.boss ? "bigboom" : "hit");
     gainXp(Math.round(m.T.xp * (1 + (floorNo - 1) * 0.25) * (m.champion ? 2.5 : 1)));
@@ -301,6 +309,52 @@
     for (let k = 0; k < Math.floor(itemChance) + (Math.random() < itemChance % 1 ? 1 : 0); k++)
       loot.push({ kind: "item", item: makeItem(floorNo + hero.lvl / 2, m.T.boss ? 0.6 : m.champion ? 0.3 : 0), x: m.x + rand(-0.6, 0.6), y: m.y + rand(-0.6, 0.6), bob: rand(0, 6) });
     if (m.T.boss) { bossAlive = false; say("THE WARDEN FALLS · THE STAIRS ARE OPEN", 3200, "#ff8af0"); }
+  }
+  // ---- Holy Power and the Power of God ----
+  let godBusy = false, godAt = -1e9, beams = [];
+  function gainHoly(n) {
+    if (godBusy || !hero) return;
+    const was = hero.holy || 0; hero.holy = Math.min(100, was + n);
+    if (was < 100 && hero.holy >= 100) { say("HOLY POWER FULL · POWER OF GOD READY (E)", 3200, "#ffe9a0"); sfx("achievement"); renderHud(); }
+  }
+  // Enemies you can see: on screen, in your light (or a torch's) and in explored ground.
+  function seenMonsters() {
+    return monsters.filter(m => {
+      const px = sx(m.x, m.y), py = sy(m.x, m.y, 0.5);
+      const lit = Math.hypot(m.x - hero.x, m.y - hero.y) < LIGHT + 0.5 || torches.some(t => Math.hypot(t.x - m.x, t.y - m.y) < 3);
+      return px > -40 && px < W + 40 && py > -60 && py < H + 60 && lit && explored[idx(m.x | 0, m.y | 0)];
+    });
+  }
+  function powerOfGod() {
+    if (state !== "play") return;
+    if ((hero.holy || 0) < 100) return say("Holy Power " + Math.floor(hero.holy || 0) + "% · keep fighting to fill it", 1200, "#ffe9a0");
+    const targets = seenMonsters();
+    if (!targets.length) return say("No enemies in sight · save it for the fight", 1400, "#ffe9a0");
+    hero.holy = 0; const now = performance.now(); godAt = now;
+    say("✝ POWER OF GOD ✝", 2800, "#fff3c4"); sfx("bigboom");
+    for (let k = 0; k < 4; k++) fx.push({ ring: true, x: hero.x, y: hero.y, r: 0.3 + k * 0.5, grow: 9, life: 1, color: k % 2 ? "#ffe9a0" : "#ffffff" });
+    targets.forEach((m, i) => beams.push({ x: m.x, y: m.y, t0: now + Math.min(i, 12) * 45 }));
+    godBusy = true;
+    for (const m of targets) { m.hp = 0; num(m.x, m.y, "✝", "#fff3c4", true); killMonster(m); }
+    godBusy = false;
+    save(); renderHud();
+  }
+  function drawGod(now) {
+    beams = beams.filter(b => now - b.t0 < 1300);
+    if (!beams.length && now - godAt > 900) return;
+    ctx.save(); ctx.globalCompositeOperation = "lighter";
+    for (const b of beams) {
+      const t = (now - b.t0) / 1300; if (t < 0) continue;
+      const a = t < 0.15 ? t / 0.15 : 1 - (t - 0.15) / 0.85, px = sx(b.x, b.y), py = sy(b.x, b.y, 0), w = (34 - t * 18) * zoom, top = py - 700 * zoom;
+      const g = ctx.createLinearGradient(0, top, 0, py);
+      g.addColorStop(0, "rgba(255,240,190,0)"); g.addColorStop(0.6, `rgba(255,236,170,${0.55 * a})`); g.addColorStop(1, `rgba(255,255,255,${0.95 * a})`);
+      ctx.fillStyle = g; ctx.fillRect(px - w / 2, top, w, py - top);
+      ctx.fillStyle = `rgba(255,255,255,${0.9 * a})`; ctx.fillRect(px - w / 6, top, w / 3, py - top);
+      glowAt(b.x, b.y, 0.1, 70 * (0.6 + t), "255,226,140", 0.7 * a);
+    }
+    const f = (now - godAt) / 900;
+    if (f >= 0 && f < 1) { ctx.globalCompositeOperation = "source-over"; ctx.fillStyle = `rgba(255,248,225,${(1 - f) * (1 - f) * 0.85})`; ctx.fillRect(0, 0, W, H); }
+    ctx.restore();
   }
   function gainXp(n) {
     hero.xp += n;
@@ -965,6 +1019,7 @@
     for (const t of torches) if (Math.hypot(t.x - hero.x, t.y - hero.y) < 14) glowAt(t.x + 0.6, t.y + 0.6, 0, 130 + Math.sin(now / 90 + t.phase) * 8, "255,120,40", 0.12);
     glowAt(hero.x, hero.y, 0.5, 200, "176,77,255", 0.08);
     ctx.restore();
+    drawGod(now);                                                     // Power of God: light beams and the white flash
     // 6. Floating numbers (not darkened).
     for (const n of nums) {
       ctx.globalAlpha = Math.min(1, n.life * 1.5);
@@ -1012,6 +1067,9 @@
     $(".arpg-xp b").style.width = (hero.xp / xpNeed(hero.lvl)) * 100 + "%";
     $(".arpg-floor").textContent = "FLOOR " + floorNo; $(".arpg-gold").textContent = "◆ " + hero.gold; $(".arpg-lvl").textContent = "LV " + hero.lvl;
     $(".arpg-hpn").textContent = hero.potions.hp; $(".arpg-mpn").textContent = hero.potions.mp;
+    const holy = Math.floor(hero.holy || 0), full = holy >= 100;
+    $(".arpg-holy b").style.width = holy + "%"; $(".arpg-holy span").textContent = full ? "✝ HOLY POWER 100%" : "HOLY POWER " + holy + "%";
+    $(".arpg-holy").classList.toggle("full", full); $(".arpg-godbtn").hidden = !full;
     for (const k of ["fireball", "nova"]) { const b = root.querySelector(`[data-act="${k}"]`); b.style.setProperty("--cd", hero.cds[k] / SKILLS[k].cd); b.classList.toggle("low", hero.mp < SKILLS[k].mana); }
   }
   function renderSheet() {
@@ -1025,6 +1083,7 @@
   }
   function toggleSheet(on) { sheetOpen = on === undefined ? !sheetOpen : on; sheet.hidden = !sheetOpen; if (sheetOpen) renderSheet(); }
   sheet.addEventListener("click", e => { if (e.target.closest(".arpg-close")) toggleSheet(false); });
+  root.querySelector(".arpg-godbtn").addEventListener("click", e => { e.stopPropagation(); powerOfGod(); });
   root.querySelector(".arpg-bar").addEventListener("click", e => {
     const b = e.target.closest("button"); if (!b || state !== "play") return;
     const a = b.dataset.act;
@@ -1068,11 +1127,12 @@
   for (const ev of ["pointerup", "pointercancel"]) canvas.addEventListener(ev, e => { touches.delete(e.pointerId); if (touches.size < 2) pinch = 0; });
   window.addEventListener("keydown", e => {
     if (state !== "play" || !takeover || (e.target.closest && e.target.closest("input, textarea, select"))) return;
-    const k = e.key.toLowerCase(), handled = { "1": 1, "2": 1, q: 1, w: 1, c: 1, escape: 1, "+": 1, "=": 1, "-": 1, "_": 1 };
+    const k = e.key.toLowerCase(), handled = { "1": 1, "2": 1, e: 1, q: 1, w: 1, c: 1, escape: 1, "+": 1, "=": 1, "-": 1, "_": 1 };
     if (!handled[k]) return;
     e.preventDefault(); e.stopImmediatePropagation();
     if (k === "1") castFireball(mouseWorld.x, mouseWorld.y);
     if (k === "2") castNova();
+    if (k === "e") powerOfGod();
     if (k === "q") drink("hp");
     if (k === "w") drink("mp");
     if (k === "c") toggleSheet();
@@ -1160,5 +1220,5 @@
   requestAnimationFrame(loop);
   // Test hook.
   window.neonARPG = { render: () => draw(performance.now()), state: () => ({ state, floor: floorNo, lvl: hero && hero.lvl, hp: hero && Math.round(hero.hp), gold: hero && hero.gold, monsters: monsters.length, loot: loot.length, gear: hero && Object.values(hero.gear).map(i => i.name) }),
-    start, step: ms => { for (let t = 0; t < ms && state === "play"; t += 16) update(16); renderHud(); }, give: n => { hero.gold += n; }, item: () => { const it = makeItem(5, 0.5); loot.push({ kind: "item", item: it, x: hero.x + 0.3, y: hero.y, bob: 0 }); return it.name; }, stairs: () => { bossAlive = false; hero.x = stairs.x + 0.5; hero.y = stairs.y + 0.5; }, nearest: () => { const m = nearestVisible(); return m && { type: m.type, x: m.x, y: m.y }; }, attack: () => { const m = monsters.reduce((b, m) => !b || dist(m, hero) < dist(b, hero) ? m : b, null); if (m) { hero.target = m; } return m && m.type; } };
+    start, step: ms => { for (let t = 0; t < ms && state === "play"; t += 16) update(16); renderHud(); }, give: n => { hero.gold += n; }, holy: n => { hero.holy = n; renderHud(); }, item: () => { const it = makeItem(5, 0.5); loot.push({ kind: "item", item: it, x: hero.x + 0.3, y: hero.y, bob: 0 }); return it.name; }, stairs: () => { bossAlive = false; hero.x = stairs.x + 0.5; hero.y = stairs.y + 0.5; }, nearest: () => { const m = nearestVisible(); return m && { type: m.type, x: m.x, y: m.y }; }, attack: () => { const m = monsters.reduce((b, m) => !b || dist(m, hero) < dist(b, hero) ? m : b, null); if (m) { hero.target = m; } return m && m.type; } };
 })();

@@ -166,6 +166,8 @@ UNDERCITY = {
         "fireball": {"mana": 8,  "cd": 350},
         "nova":     {"mana": 16, "cd": 1600},   # Frost Nova
     },
+    # Holy Power fills as you fight; at 100% the Power of God button pops up (or press E): it slays every enemy you can see.
+    "holy": {"perHit": 0.8, "perKill": 6, "perChampion": 14, "perBoss": 30},   # Holy Power gained per hit landed / per kill (percent)
     "monsters": {
         # hp, dmg = damage per hit, speed, reach (tiles), every = time between attacks, xp, weight = how common
         "hollow":  {"hp": 30,  "dmg": 4,  "speed": 1.9, "reach": 1.1, "every": 1000, "xp": 12,  "weight": 5},

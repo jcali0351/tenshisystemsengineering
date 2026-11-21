@@ -301,6 +301,12 @@ window.TENSHI_GAMES = {
     "cd": 1600
    }
   },
+  "holy": {
+   "perHit": 0.8,
+   "perKill": 6,
+   "perChampion": 14,
+   "perBoss": 30
+  },
   "monsters": {
    "hollow": {
     "hp": 30,
