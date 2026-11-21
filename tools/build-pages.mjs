@@ -19,6 +19,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from "node:fs";
 import vm from "node:vm";
 import { createRequire } from "node:module";
+import { SEO, seoHead } from "./seo.mjs";
 
 // The order here is the order everywhere: on the homepage three sets of three.
 const SERVICES = [
@@ -120,7 +121,7 @@ const ART = {
 /* ---------- homepage: cards in three sets, the form's topic list, the current menu item ---------- */
 const card = (s, pad, prefix) => `${pad}<article class="service-card">
 ${pad}  <h3 data-i18n="${k(s, "title")}">${tx(k(s, "title"))}</h3>
-${pad}  <img class="service-pic service-icon" src="${prefix}img/services/icons/${s.icon}" alt="" width="512" height="512" loading="lazy" data-still-color>
+${pad}  <img class="service-pic service-icon" src="${prefix}img/services/icons/${s.icon}" alt="${esc(((SEO[k(s, "title")] || {}).service || tx(k(s, "title"))) + " for small business")}" width="512" height="512" loading="lazy" data-still-color>
 ${pad}  <p data-i18n="${k(s, "short")}">${tx(k(s, "short"))}</p>
 ${pad}  <a class="btn-more" href="${prefix}services/${s.slug}.html"><span data-i18n="more">${tx("more")}</span><span class="sr-only">: <span data-i18n="${k(s, "title")}">${tx(k(s, "title"))}</span></span></a>
 ${pad}</article>`;
@@ -148,6 +149,18 @@ index = between(index, "services", carousel);
 index = between(index, "topics", topics);
 index = markCurrent(index, "home");
 index = bakeEnglish(index);
+{
+  const h = seoHead({ key: "home", url: "", title: SEO.home.title, desc: SEO.home.desc });
+  const block = "  <!-- seo (tools/seo.mjs) -->\n" + h.tags + "  <!-- /seo -->\n";
+  index = /  <!-- seo \(tools\/seo\.mjs\) -->[\s\S]*?<!-- \/seo -->\n/.test(index)
+    ? index.replace(/  <!-- seo \(tools\/seo\.mjs\) -->[\s\S]*?<!-- \/seo -->\n/, () => block)
+    : index.replace("  <meta property=\"og:type\" content=\"website\">\n", (m) => m + block);
+  index = index.replace(/<title>[^<]*<\/title>/, () => "<title>" + esc(SEO.home.title) + "</title>")
+    .replace(/<meta name="description" content="[^"]*">/, () => '<meta name="description" content="' + esc(SEO.home.desc) + '">')
+    .replace(/<meta property="og:title" content="[^"]*">/, () => '<meta property="og:title" content="' + esc(SEO.home.title) + '">')
+    .replace(/<meta property="og:description" content="[^"]*">/, () => '<meta property="og:description" content="' + esc(SEO.home.desc) + '">');
+  if (!/<body[^>]*\sdata-seo/.test(index)) index = index.replace(/<body([^>]*)>/, "<body$1 data-seo>");
+}
 writeFileSync("index.html", index);
 
 /* Put the current English text into the homepage's own HTML (what search engines and the first paint see), for every
@@ -491,7 +504,7 @@ ${ov.none ? "" : `            <div class="parallax-overlay" aria-hidden="true"><
     m.replace(/ data-px-title| data-still/g, "").replace(/>$/, letters ? " data-px-title data-still>" : ">"));
 }
 
-const writePage = (file, html) => writeFileSync(file, heroPx(html, file.replace(/\.html$/, "")));
+const writePage = (file, html) => writeFileSync(file, heroPx(html.replaceAll("__SEO_URL__", file.replace(/\\/g, "/")), file.replace(/\.html$/, "")));
 
 index = between(index, "band", sloganBand());
 // The slogan's look (Tenshi Editor › Slogan › Look): data/slogan.json "style" → slogan.css, loaded by the homepage after site-theme.css
@@ -524,25 +537,30 @@ function chrome(html, prefix, current) {
 function frame({ prefix, current, titleKey, descKey, title, description, bodyClass, main, photoCredits = "", extraHead = "", extraScripts = "" }) {
   const pageTitle = title != null ? esc(title) : tx(titleKey);
   const pageDesc = description != null ? esc(description) : tx(descKey);
-  const bodyAttrs = title != null ? " data-fixed-title" : ` data-title-key="${titleKey}" data-desc-key="${descKey}"`;
+  const seo = seoHead({ key: title != null ? null : titleKey, url: "__SEO_URL__", title: `${title != null ? title : tx(titleKey)} | ${tx("brandName").trim()}`, desc: title != null ? description : tx(descKey) });
+  const seoTitle = (title == null && SEO[titleKey]) ? esc(seo.title) : `${pageTitle} | ${tx("brandName")}`;
+  const seoDesc = (title == null && SEO[titleKey]) ? esc(seo.desc) : pageDesc;
+  const bodyAttrs = (title != null ? " data-fixed-title" : ` data-title-key="${titleKey}" data-desc-key="${descKey}"`) + (title == null && SEO[titleKey] ? " data-seo" : "");
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Google Analytics -->
+  <!-- Google Analytics (Google tag G-E671CJ03R4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-E671CJ03R4"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
+    gtag('config', 'G-E671CJ03R4');
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${pageTitle} | ${tx("brandName")}</title>
-  <meta name="description" content="${pageDesc}">
-  <meta name="theme-color" content="#c8102e">
-  <meta property="og:title" content="${pageTitle} | ${tx("brandName")}">
-  <meta property="og:description" content="${pageDesc}">
+  <title>${seoTitle}</title>
+  <meta name="description" content="${seoDesc}">
+  <meta name="theme-color" content="#6c10c8">
+  <meta property="og:title" content="${seoTitle}">
+  <meta property="og:description" content="${seoDesc}">
   <meta property="og:type" content="website">
-  <link rel="icon" href="${prefix}brand/favicon-32.png?v=20261119" type="image/png" sizes="32x32">
+${seo.tags}  <link rel="icon" href="${prefix}brand/favicon-32.png?v=20261119" type="image/png" sizes="32x32">
   <link rel="icon" href="${prefix}brand/favicon-192.png?v=20261119" type="image/png" sizes="192x192">
   <link rel="apple-touch-icon" href="${prefix}brand/tenshi-apple-touch-icon.png?v=20261119">
   <link rel="stylesheet" href="${prefix}tailwind.css">
@@ -727,6 +745,7 @@ ${aboutJourney()}    <section class="page-section" aria-labelledby="what-title">
     </section>
 
 ${aboutFind()}
+    <p class="page-inner about-credits">Skyline photos used on this site, from Wikimedia Commons: <a href="https://commons.wikimedia.org/wiki/File:Osaka,_Japan_-_Umeda_district_-_city_view_of_Osaka,_Japan.jpg">Marek Ślusarczyk (Tupungato)</a>, <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Minato_City,_Tokyo,_Japan.jpg">David Kernan</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:View_of_Kyoto_skyline_from_Kiyomizu-dera.jpg">Henrysz</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Minato_Mirai_21_From_Osambashi_202403.jpg">Sunwater</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Kobe_skyline_and_Harbor_Highway.jpg">Dudva</a>, <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a></p>
     <section class="page-section team-teaser" aria-labelledby="meet-title">
       <div class="page-inner teaser-inner">
         <ul class="teaser-faces" aria-hidden="true">
@@ -934,7 +953,7 @@ ${TECH_GROUPS.map((gr) => `          <button type="button" data-filter="${gr.n}"
         </div>
 ${TECH_GROUPS.map((gr) => `        <section class="tech-group" data-group="${gr.n}" aria-labelledby="tech-g${gr.n}">
           <div class="tech-group-head">
-            <img class="tech-group-pic" src="img/services/${gr.img}" alt="" width="960" height="640" loading="lazy">
+            <img class="tech-group-pic" src="img/services/${gr.img}" alt="${esc(tx(`techG${gr.n}Title`))} tools for small business websites and software" width="960" height="640" loading="lazy">
             <div>
               <h3 id="tech-g${gr.n}" class="tech-group-title" data-i18n="techG${gr.n}Title">${tx(`techG${gr.n}Title`)}</h3>
               <p class="tech-group-text" data-i18n="techG${gr.n}Text">${tx(`techG${gr.n}Text`)}</p>
@@ -1112,7 +1131,7 @@ ${cta(ask)}
         <h2 id="others-title" data-i18n="othersTitle">${tx("othersTitle")}</h2>
         <ul class="svc-other-list">
 ${others.map((o) => `          <li><a class="svc-other" href="${o.slug}.html">
-            <img src="../img/services/${o.img}" alt="" width="${o.w}" height="${o.h}" loading="lazy">
+            <img src="../img/services/${o.img}" alt="${esc((SEO[k(o, "title")] || {}).service || tx(k(o, "title")))} for small business" width="${o.w}" height="${o.h}" loading="lazy">
             <span data-i18n="${k(o, "title")}">${tx(k(o, "title"))}</span>
           </a></li>`).join("\n")}
         </ul>
@@ -1303,11 +1322,13 @@ writePage("portfolio.html", portfolioPage);
 writeFileSync("projects.html", `<!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Google Analytics -->
+  <!-- Google Analytics (Google tag G-E671CJ03R4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-E671CJ03R4"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
+    gtag('config', 'G-E671CJ03R4');
   </script>
   <meta charset="UTF-8">
   <!-- Written by tools/build-pages.mjs. The Projects page moved into the Portfolio page. -->
@@ -1972,4 +1993,26 @@ await import("./neon-pages.mjs");
     if (!existsSync(file) || readFileSync(file, "utf8") !== out) writeFileSync(file, out);
   }
   console.log(`search index written: data/search/<lang>.json for ${LANGS.length} languages, ${src.length} pages each`);
+}
+
+/* ---------- sitemap.xml and robots.txt (search engines) ---------- */
+{
+  const SKIP = new Set(["admin.html", "portal.html", "client-portal.html", "classic.html", "404.html"]);
+  const pages = [];
+  for (const dir of ["", "services/", "projects/", "blog/"]) {
+    if (dir && !existsSync(dir)) continue;
+    for (const n of readdirSync(dir || ".")) {
+      if (!n.endsWith(".html") || SKIP.has(dir + n)) continue;
+      const html = readFileSync(dir + n, "utf8");
+      if (/<meta name="robots" content="noindex/i.test(html) || /http-equiv="refresh"/i.test(html)) continue;
+      pages.push(dir + n);
+    }
+  }
+  const pri = (p) => p === "index.html" ? "1.0" : p.startsWith("services/") || p === "services.html" ? "0.9" : p.startsWith("blog/") || p.startsWith("projects/") ? "0.6" : "0.8";
+  const today = new Date().toISOString().slice(0, 10);
+  const urls = pages.sort((a, b) => (a === "index.html" ? -1 : b === "index.html" ? 1 : a.localeCompare(b))).map((p) =>
+    `  <url><loc>https://tenshisystems.com/${p === "index.html" ? "" : p}</loc><lastmod>${today}</lastmod><priority>${pri(p)}</priority></url>`);
+  writeFileSync("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`);
+  writeFileSync("robots.txt", `User-agent: *\nAllow: /\nDisallow: /admin.html\nDisallow: /admin/\nDisallow: /portal.html\nDisallow: /client-portal.html\nDisallow: /platform/\n\nSitemap: https://tenshisystems.com/sitemap.xml\n`);
+  console.log(`sitemap.xml written: ${pages.length} pages`);
 }

@@ -973,3 +973,5 @@ html.neon details.photo-credits { margin-top: 12px; font-size: .72rem; opacity: 
 html.neon details.photo-credits summary { cursor: pointer; list-style: none; color: #b8a3dc; }
 html.neon details.photo-credits summary::-webkit-details-marker { display: none; }
 html.neon details.photo-credits[open] { opacity: .85; }
+html.neon .about-credits { font-size: .72rem; opacity: .55; margin-top: 8px; margin-bottom: 24px; }
+html.neon .about-credits a { color: inherit; }

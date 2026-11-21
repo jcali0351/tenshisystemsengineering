@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /admin/
+Disallow: /portal.html
+Disallow: /client-portal.html
+Disallow: /platform/
+
+Sitemap: https://tenshisystems.com/sitemap.xml

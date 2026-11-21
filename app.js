@@ -27,11 +27,16 @@ const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
     // Blog post pages set data-fixed-title so a language change does not replace the English title or description.
     const titleKey = document.body.dataset.titleKey;
     const fixedTitle = document.body.hasAttribute("data-fixed-title");
-    if (titleKey) document.title = `${t(titleKey)} | ${t("brandName")}`;
+    // Pages with data-seo keep their search-engine title and description (tools/seo.mjs) in English.
+    const seoHold = lang === "en" && document.body.hasAttribute("data-seo");
+    if (!window.__seoTitle) window.__seoTitle = { title: document.title, desc: ($('meta[name="description"]') || {}).content };
+    if (seoHold) { document.title = window.__seoTitle.title; const m0 = $('meta[name="description"]'); if (m0) m0.setAttribute("content", window.__seoTitle.desc); }
+    else if (titleKey) document.title = `${t(titleKey)} | ${t("brandName")}`;
     else if (!fixedTitle) document.title = t("pageTitle");
     const meta = $('meta[name="description"]');
     const descKey = document.body.dataset.descKey;
-    if (meta && descKey) meta.setAttribute("content", t(descKey));
+    if (seoHold) { /* kept above */ }
+    else if (meta && descKey) meta.setAttribute("content", t(descKey));
     else if (meta && !fixedTitle) meta.setAttribute("content", t("metaDescription"));
 
     $$("[data-i18n]").forEach((el) => { el.textContent = t(el.dataset.i18n); });
