@@ -137,3 +137,8 @@ html.neon:not(#_):not(#__) .tech-group-text { margin: 0; text-align: center; }
 html.neon:not(#_):not(#__) .tech-logo { background: none !important; border: 0 !important; box-shadow: none !important; width: 48px; height: 48px; }
 html.neon:not(#_):not(#__) .tech-logo img { width: 44px; height: 44px; filter: drop-shadow(0 0 8px rgba(255, 255, 255, .18)); }
 html.neon:not(#_):not(#__) .tech-card:hover .tech-logo { box-shadow: none !important; }
+/* Technology group headers: more breathing room above and below, and 20% smaller (icon 96 -> 77px, heading scaled to match). */
+html.neon:not(#_):not(#__) .tech-group-head { padding: 34px 0 14px; margin-bottom: 26px; gap: 12px; }
+html.neon:not(#_):not(#__) .tech-group-pic { width: 77px; height: 77px; }
+html.neon:not(#_):not(#__) .tech-group-title { font-size: clamp(1.04rem, 2.08vw, 1.36rem); }
+@media (max-width: 760px) { html.neon:not(#_):not(#__) .tech-group-head { padding: 24px 0 10px; } html.neon:not(#_):not(#__) .tech-group-pic { width: 61px; height: 61px; } }
