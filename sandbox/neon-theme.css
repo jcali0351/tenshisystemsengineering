@@ -1129,7 +1129,7 @@ html.neon .parallax:has(#parallax-px3-title) .parallax-layer img {
   70%  { filter: hue-rotate(38deg) saturate(1.3) brightness(1.04); }
   100% { filter: hue-rotate(-4deg) saturate(1.5) brightness(1.12); }
 }
-@keyframes city-drift { 0% { transform: scale(1.04) translateX(-1%); } 100% { transform: scale(1.12) translateX(1%); } }
+@keyframes city-drift { 0% { scale: 1.04; translate: -1% 0; } 100% { scale: 1.12; translate: 1% 0; } }
 /* a band of light sweeping across the skyline, scanlines and a breathing neon glow at the horizon */
 html.neon .parallax:has(#parallax-px3-title) .parallax-viewport { position: relative; overflow: hidden; }
 html.neon .parallax:has(#parallax-px3-title) .parallax-viewport::before {
