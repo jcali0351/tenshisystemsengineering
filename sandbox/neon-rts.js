@@ -558,34 +558,39 @@
     }
     MODELS.spark = m;
   }
-  { // GUNSHIP (inspired by your reference's style, not a copy): a dark, angular armoured gunship. Faceted hull and a big
-    // wrap-around canopy, layered armour plates and chines, red fins and winglets, white-blue lights, an underslung
-    // cannon and a twin-cannon turret on top.
+  { // GUNSHIP: an armoured patrol shuttle (our own design, loosely inspired by boxy sci-fi runabouts). A chamfered
+    // box hull with a wide wrap-around windscreen, a flat top deck with a sensor spine, two long engine pods slung low on
+    // swept pylons with blue drive strips and red intake caps, side hatches, running lights and a twin-cannon turret.
     const m = Mesh();
-    lathe(m, [[0.001, 1.55], [0.15, 1.38], [0.32, 1.05], [0.45, 0.55], [0.52, 0.0], [0.54, -0.6], [0.5, -0.95], [0.42, -1.1]], 4,
-      (q) => q === 4 ? "dark" : "hull", { sy: 1.15, sz: 0.6, rot: Math.PI / 4 });
-    lathe(m, [[0.001, 1.15], [0.12, 1.02], [0.2, 0.75], [0.22, 0.5], [0.001, 0.35]], 4, "glass", { at: [0, 0, 0.2], sy: 1.2, sz: 0.55, rot: Math.PI / 4 });   // canopy
-    box(m, [0.72, 0, 0.3], [0.03, 0.3, 0.03], "dark");
-    slab(m, [[0.45, 0], [0.25, 0.3], [-0.8, 0.38], [-1.0, 0.25], [-1.0, -0.25], [-0.8, -0.38], [0.25, -0.3]], 0.26, 0.07, "hull", "dark");   // armour deck
-    slab(m, [[0.1, 0.18], [-0.6, 0.26], [-0.75, 0.15], [-0.75, -0.15], [-0.6, -0.26], [0.1, -0.18]], 0.31, 0.03, "dark");
-    for (let k = 0; k < 4; k++) box(m, [-0.25 - k * 0.11, 0, 0.33], [0.05, 0.3, 0.015], "trim");                         // red vents
+    lathe(m, [[0.001, 1.32], [0.2, 1.24], [0.4, 1.04], [0.5, 0.74], [0.53, 0.25], [0.53, -0.7], [0.49, -1.0], [0.38, -1.1]], 8,
+      (q) => q === 1 ? "dark" : q === 5 ? "dark" : "hull", { sz: 0.6, rot: Math.PI / 8 });                               // chamfered hull
+    slab(m, [[0.72, 0], [0.5, 0.36], [-0.98, 0.4], [-1.04, 0], [-0.98, -0.4], [0.5, -0.36]], 0.3, 0.05, "hull", "dark");   // top deck
+    for (const x of [0.25, -0.15, -0.55, -0.9]) box(m, [x, 0, 0.33], [0.015, 0.7, 0.01], "dark");                        // deck panel lines
+    box(m, [-0.25, 0, 0.36], [0.95, 0.15, 0.06], "dark");                                                                 // sensor spine
+    box(m, [-0.25, 0, 0.395], [0.8, 0.04, 0.015], "glow");
+    box(m, [0.92, 0, 0.2], [0.16, 0.66, 0.1], "glass");                                                                   // windscreen
+    box(m, [1.04, 0, 0.12], [0.1, 0.4, 0.07], "glass");
+    for (const y of [-0.17, 0.17]) box(m, [0.94, y, 0.255], [0.18, 0.025, 0.02], "dark");                                // windscreen frame
+    slab(m, [[0.9, 0], [0.3, 0.36], [-0.95, 0.38], [-0.95, -0.38], [0.3, -0.36]], -0.33, 0.06, "dark");                  // belly plate
+    box(m, [-1.1, 0, 0.02], [0.1, 0.82, 0.42], "dark");                                                                   // rear drive housing
     for (const sd of [-1, 1]) {
-      slab(m, side([[1.2, 0.15], [0.6, 0.48], [-0.3, 0.62], [-1.0, 0.6], [-1.1, 0.4], [0.0, 0.42], [0.8, 0.2]], sd), -0.08, 0.12, "hull", "dark");   // chine
-      slab(m, side([[0.9, 0.12], [0.3, 0.5], [-0.6, 0.56], [-0.9, 0.45], [0.2, 0.35]], sd), -0.2, 0.08, "dark", "hull");   // lower plate
-      fin(m, [[-0.55, 0.3], [-0.75, 0.68], [-0.95, 0.72], [-1.0, 0.3]], sd * 0.32, 0.05, "trim", "dark");               // red fin
-      slab(m, side([[-0.75, 0.6], [-1.05, 0.9], [-1.15, 0.9], [-1.1, 0.58]], sd), -0.1, 0.05, "trim", "dark");           // red winglet
-      box(m, [0.5, sd * 0.47, -0.02], [0.14, 0.03, 0.03], "glow"); box(m, [-0.25, sd * 0.6, -0.02], [0.14, 0.03, 0.03], "glow");   // lights
-      box(m, [0.55, sd * 0.2, 0.3], [0.06, 0.03, 0.03], "glow");
-      box(m, [0.15, sd * 0.5, 0.0], [0.3, 0.05, 0.06], "dark"); box(m, [-0.55, sd * 0.55, 0.0], [0.25, 0.05, 0.06], "dark");   // panel greebles
-      box(m, [-0.45, sd * 0.3, 0.3], [0.3, 0.05, 0.04], "dark");
-      box(m, [-1.1, sd * 0.28, 0.02], [0.28, 0.3, 0.32], "hull");                                                        // engine housing
-      box(m, [-1.25, sd * 0.28, 0.02], [0.02, 0.24, 0.24], "glow");
-      box(m, [-0.9, sd * 0.28, 0.2], [0.14, 0.2, 0.02], "trim");
+      box(m, [0.72, sd * 0.47, 0.12], [0.26, 0.04, 0.08], "glass");                                                      // side window
+      box(m, [-0.1, sd * 0.53, 0.02], [0.42, 0.02, 0.26], "dark");                                                       // side hatch
+      box(m, [-0.1, sd * 0.545, 0.17], [0.3, 0.01, 0.02], "nose");
+      box(m, [-0.65, sd * 0.53, 0.05], [0.25, 0.02, 0.12], "dark");                                                      // vents
+      for (let k = 0; k < 3; k++) box(m, [-0.6 - k * 0.07, sd * 0.545, 0.05], [0.02, 0.01, 0.1], "trim");
+      box(m, [0.5, sd * 0.535, -0.12], [0.08, 0.02, 0.03], "glow"); box(m, [-0.95, sd * 0.5, 0.25], [0.06, 0.03, 0.03], "nose");   // running lights
+      box(m, [-1.16, sd * 0.22, 0.04], [0.02, 0.3, 0.14], "glow");                                                       // rear drives
+      // Engine pod on a swept pylon, slung low beside the hull.
+      slab(m, side([[0.3, 0.4], [0.1, 0.62], [-0.55, 0.62], [-0.65, 0.4]], sd), -0.17, 0.06, "hull", "dark");
+      const at = [-0.15, sd * 0.66, -0.24];
+      lathe(m, [[0.001, 0.98], [0.07, 0.92], [0.115, 0.8], [0.13, 0.62], [0.13, -0.55], [0.12, -0.72], [0.09, -0.8], [0.06, -0.78]], 10,
+        (q) => q <= 1 ? "nose" : q === 3 ? "trim" : q >= 5 ? "dark" : "hull", { at });
+      lathe(m, [[0.06, -0.78], [0.001, -0.76]], 10, "glow", { at });
+      box(m, [-0.15, sd * 0.79, -0.24], [0.95, 0.015, 0.05], "glow");                                                    // drive strip (outer side)
+      box(m, [-0.15, sd * 0.66, -0.11], [0.9, 0.04, 0.012], "glow");                                                     // drive strip (top)
+      box(m, [0.35, sd * 0.66, -0.11], [0.12, 0.08, 0.02], "dark");
     }
-    box(m, [-1.08, 0, 0.02], [0.22, 0.95, 0.45], "dark");                                                                 // engine block
-    box(m, [-0.15, 0, -0.28], [0.2, 0.08, 0.12], "dark");                                                                 // cannon mount
-    lathe(m, [[0.001, 0.9], [0.04, 0.86], [0.045, 0.3], [0.08, 0.25], [0.09, -0.2], [0.07, -0.3]], 8, (q) => q === 3 ? "trim" : "dark", { at: [-0.1, 0, -0.36] });   // underslung cannon
-    lathe(m, sphere(0.03, 3), 4, "glow", { at: [0.8, 0, -0.36] });
     MODELS.lancer = m;
     const t = Mesh();   // turret: a faceted base, an armoured gun housing with a red stripe and twin long cannons
     lathe(t, [[0.3, 0], [0.3, 0.08], [0.22, 0.18], [0.001, 0.2]], 6, (q) => q === 1 ? "dark" : "hull", { axis: "z" });
@@ -700,7 +705,7 @@
   const PAINT = {
     blade:  { hull: [232, 226, 212], trim: [255, 118, 48], dark: [42, 46, 72], glass: [60, 150, 210], glow: [120, 215, 255], rim: [255, 160, 90] },
     spark:  { hull: [226, 228, 236], trim: [64, 158, 196], dark: [34, 36, 70], glass: [70, 120, 180], glow: [255, 140, 50], nose: [255, 128, 46], pod: [150, 154, 168], flame: [255, 214, 80], rim: [255, 170, 100] },
-    lancer: { hull: [96, 102, 118], trim: [228, 52, 62], dark: [34, 36, 46], glass: [120, 180, 230], glow: [170, 220, 255], rim: [255, 90, 100] },
+    lancer: { hull: [196, 200, 212], trim: [70, 130, 210], dark: [48, 52, 66], glass: [40, 70, 115], glow: [110, 200, 255], nose: [226, 82, 58], rim: [140, 190, 255] },
     p: { hull: [200, 190, 225], trim: [150, 70, 255], dark: [45, 30, 75], glass: [120, 210, 255], glow: [255, 90, 230], rim: [255, 60, 210] },
     e: { hull: [210, 110, 40], trim: [255, 170, 60], dark: [70, 25, 10], glass: [255, 200, 120], glow: [180, 255, 90], rim: [255, 140, 40] },
     rock: { hull: [95, 80, 120], trim: [120, 100, 150], dark: [40, 30, 55], glass: [0, 0, 0], glow: [0, 0, 0], rim: [140, 80, 220] },
@@ -879,7 +884,7 @@
   }
 
   // Height each kind floats at, and how big its model is compared with its hit circle.
-  const ENGINE = { spark: "255,150,60", blade: "120,210,255", lancer: "160,215,255" };   // engine glow colour per ship
+  const ENGINE = { spark: "255,150,60", blade: "120,210,255", lancer: "110,200,255" };   // engine glow colour per ship
   const HOVER = { spark: 16, blade: 22, lancer: 18, core: 10, mite: 10, brute: 6, spitter: 26, hive: 4, tower: 2, depot: 2, outpost: 6, yard: 4 };
   const SIZE = { spark: 1.35, blade: 1.45, lancer: 1.3, core: 0.95, mite: 1.0, brute: 0.95, spitter: 1.0, hive: 0.95, tower: 1.3, depot: 1.15, outpost: 1.0, yard: 1.0 };
   function drawEnt(e, now) {
