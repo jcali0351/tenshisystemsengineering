@@ -271,7 +271,13 @@ window.TENSHI_GAMES = {
   },
   "zoom": {
    "start": 1.4,
-   "max": 3
+   "max": 5
+  },
+  "graphics": {
+   "textures": 1,
+   "metal": 1,
+   "dynamicLights": true,
+   "movingSun": true
   },
   "build": {
    "radius": 420,
