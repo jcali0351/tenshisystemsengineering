@@ -73,7 +73,9 @@ Each game reads its settings from `window.TENSHI_GAMES` (sandbox/game-settings.j
    drawn with simple 2D lighting. Theme: an angel (Tenshi) in Hell, after Dante's Inferno, KJV verses: floors are the circles
    (`CIRCLES`, `circleOf`), Wardens guard every 3rd, Satan waits on `hell.finalFloor` (9 = Cocytus, ice textures); beating him
    opens the gate of light → `transcend()` (ascend again with the same hero, Hell 50% tougher each time). Gear = Christian
-   artifacts (`BASES`, `AFFIXES`, `LEGENDARY`); potions are holy water and manna. Embers, lava pools and verses: `HELL`.
+   artifacts (`BASES`, `AFFIXES`, `LEGENDARY`); Houses (keys 3/4/5, `HOUSES`, level unlock + cooldown): Abraham = Covenant of
+   Stars (starlight on all in sight, extra gold), Isaac = Jehovah-Jireh (full heal, a ram takes a deadly blow), Jacob = Jacob's
+   Ladder (12 tribe spirits fight 15 s, double damage); potions are holy water and manna. Embers, lava pools and verses: `HELL`.
    Walls and floor use procedural stone canvas textures (`STONE` in neon-arpg.js,
    mapped onto the isometric faces with `pattern.setTransform`). Cover art `sandbox/art/undercity.webp`, same 5 s fade.
 5. **Quest** (`sandbox/neon-quest.js`): XP for exploring the site, on every page.

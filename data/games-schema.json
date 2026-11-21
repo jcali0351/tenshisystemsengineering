@@ -309,6 +309,26 @@
     "perChampion": 14,
     "perBoss": 30
    },
+   "houses": {
+    "abraham": {
+     "level": 3,
+     "cooldown": 20,
+     "damage": 3,
+     "goldBonus": 2
+    },
+    "isaac": {
+     "level": 6,
+     "cooldown": 45,
+     "ramSeconds": 30
+    },
+    "jacob": {
+     "level": 9,
+     "cooldown": 60,
+     "seconds": 15,
+     "spirits": 12,
+     "damageBoost": 2
+    }
+   },
    "hell": {
     "finalFloor": 9,
     "embers": true,
@@ -569,6 +589,9 @@
     "hero": "walking speed, sword reach (tiles), time between swings",
     "skills.nova": "Frost Nova",
     "holy": "Holy Power gained per hit landed / per kill (percent)",
+    "houses.abraham": "Covenant of Stars: unlock level, cooldown (s), damage (x hero damage) to every enemy in sight, extra gold drops",
+    "houses.isaac": "Jehovah-Jireh: full heal and mana; a ram takes the next deadly blow within this many seconds",
+    "houses.jacob": "Jacob's Ladder: tribe spirits fight for this long; hero damage multiplied meanwhile",
     "hell.finalFloor": "the circle where Satan waits (Dante's ninth circle, the frozen lake); beat him to transcend",
     "hell.embers": "embers drifting up through Hell (snow on the frozen last floor)",
     "hell.lavaPools": "share of floor tiles that are lava pools (0 = none; just for looks)",

@@ -849,6 +849,8 @@ html.neon .arpg-bar button i { position: absolute; top: 3px; left: 5px; font: 70
 html.neon .arpg-bar button small { position: absolute; bottom: 3px; left: 0; right: 0; text-align: center; font: 700 9px Oswald, sans-serif; letter-spacing: .06em; color: rgba(255, 255, 255, .8); }
 html.neon .arpg-bar button::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: calc(var(--cd, 0) * 100%); background: rgba(0, 0, 0, .6); }
 html.neon .arpg-bar button.low { opacity: .55; }
+html.neon .arpg-bar button.arpg-house { color: #fff3c4; text-shadow: 0 0 8px rgba(255, 220, 120, .8); }
+html.neon .arpg-bar button.arpg-house.locked { opacity: .45; filter: grayscale(.7); }
 html.neon .arpg-xp { position: absolute; left: 14px; right: 14px; bottom: 6px; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, .1); overflow: hidden; }
 html.neon .arpg-holy { position: absolute; left: 14px; right: 14px; top: -30px; height: 20px; border-radius: 10px; overflow: hidden;
   background: rgba(14, 6, 26, .85); border: 1px solid rgba(255, 216, 120, .55); box-shadow: 0 0 12px rgba(255, 210, 110, .25); }

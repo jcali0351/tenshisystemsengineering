@@ -308,6 +308,26 @@ window.TENSHI_GAMES = {
    "perChampion": 14,
    "perBoss": 30
   },
+  "houses": {
+   "abraham": {
+    "level": 3,
+    "cooldown": 20,
+    "damage": 3,
+    "goldBonus": 2
+   },
+   "isaac": {
+    "level": 6,
+    "cooldown": 45,
+    "ramSeconds": 30
+   },
+   "jacob": {
+    "level": 9,
+    "cooldown": 60,
+    "seconds": 15,
+    "spirits": 12,
+    "damageBoost": 2
+   }
+  },
   "hell": {
    "finalFloor": 9,
    "embers": true,

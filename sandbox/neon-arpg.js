@@ -3,7 +3,7 @@
 // cast down Satan on the last floor (Cocytus, the frozen lake) and transcend. Bible verses are from the King James Version.
 //
 // Descend through neon crypts under Osaka: click to walk and to attack, right-click to throw a Fireball, 2 for Frost
-// Nova, Q / W for health and mana potions, C for your character sheet, E for the Power of God (when Holy Power is full), R for the Archangel (when Holy Gospel is full), mouse wheel / + - keys / + - buttons / pinch to zoom. Monsters drop gold, potions and gear in four
+// Nova, Q / W for health and mana potions, C for your character sheet, E for the Power of God (when Holy Power is full), R for the Archangel (when Holy Gospel is full), 3 / 4 / 5 for the Houses of Abraham, Isaac and Jacob, mouse wheel / + - keys / + - buttons / pinch to zoom. Monsters drop gold, potions and gear in four
 // rarities (common, magic, rare, legendary) with random bonuses; better gear is equipped automatically, the rest is
 // sold for gold. Find the stairs to go deeper; every third floor a Warden guards them. Your hero is saved in this browser.
 //
@@ -58,6 +58,13 @@
   // Gabriel appears for a while, shields the hero from all damage and strikes down the nearest enemies with light.
   const GOSPEL = { perDamageTaken: 0.6, perKill: 3, perFloor: 20, seconds: 10, strikeEvery: 550, radius: 7.5, bossDamage: 0.2 };
   TUNE(GOSPEL, CFG.gospel);
+  // The Houses of the patriarchs (keys 3, 4, 5): unlock at a hero level, then recharge on a cooldown (seconds).
+  const HOUSES = {
+    abraham: { level: 3, cooldown: 20, damage: 3, goldBonus: 2 },          // Covenant of Stars: starlight on every enemy in sight
+    isaac: { level: 6, cooldown: 45, ramSeconds: 30 },                      // Jehovah-Jireh: full heal + mana, a ram takes a deadly blow
+    jacob: { level: 9, cooldown: 60, seconds: 15, spirits: 12, damageBoost: 2 },   // Jacob's Ladder: 12 tribe spirits, double damage
+  };
+  TUNE(HOUSES, CFG.houses);
   // Names and health bars over the enemies (Game Studio > Undercity > Enemy labels).
   const LABELS = { healthBars: true, onlyWhenHurt: false, names: true, nameSize: 12, barWidth: 40, barHeight: 5,
     barColor: "#ff4f7a", championColor: "#ffd84a", nameColor: "#f2e4ff", championNameColor: "#ffd84a",
@@ -139,6 +146,9 @@
       <div class="arpg-bar">
         <button type="button" data-act="fireball" title="Fireball (right-click or 1)"><i>1</i>🔥<small>Fireball</small></button>
         <button type="button" data-act="nova" title="Frost Nova (2)"><i>2</i>❄<small>Nova</small></button>
+        <button type="button" data-act="abraham" class="arpg-house" title="House of Abraham: Covenant of Stars (3)"><i>3</i>★<small>Abraham</small></button>
+        <button type="button" data-act="isaac" class="arpg-house" title="House of Isaac: Jehovah-Jireh (4)"><i>4</i>♈<small>Isaac</small></button>
+        <button type="button" data-act="jacob" class="arpg-house" title="House of Jacob: Jacob's Ladder (5)"><i>5</i>⇡<small>Jacob</small></button>
         <button type="button" data-act="hpot" title="Holy water (Q)"><i>Q</i>❤<small class="arpg-hpn">0</small></button>
         <button type="button" data-act="mpot" title="Manna (W)"><i>W</i>✦<small class="arpg-mpn">0</small></button>
         <button type="button" data-act="sheet" title="Character (C)"><i>C</i>☰<small>Hero</small></button>
@@ -161,7 +171,7 @@
       <h3>Call on God. Cast down Satan. Transcend.</h3>
       <p>You are Tenshi, an angel sent through the nine circles of Hell. Fight down through fire and ice, gather holy relics, call on the Power of God and the Archangel Gabriel, and rise above it all.</p>
       <div class="arpg-buttons"></div>
-      <p class="arpg-help">Click to move &amp; attack · Right-click Fireball · 2 Frost Nova · Q/W potions · C hero · E Power of God · R Archangel · Wheel or +/− to zoom</p>
+      <p class="arpg-help">Click to move &amp; attack · Right-click Fireball · 2 Frost Nova · Q/W potions · C hero · E Power of God · R Archangel · 3/4/5 Houses of Abraham, Isaac, Jacob · Wheel or +/− to zoom</p>
     </div>`;
   section.appendChild(root);
   const canvas = root.querySelector(".arpg-canvas"), ctx = canvas.getContext("2d");
@@ -224,13 +234,13 @@
 
   // ---- The hero ----
   function newHero() {
-    return { x: 0, y: 0, lvl: 1, xp: 0, gold: 0, hp: 80, mp: 40, gear: {}, potions: { hp: 3, mp: 2 }, holy: 0, gospel: 0, path: [], target: null, atkCd: 0, cds: { fireball: 0, nova: 0 }, face: 0, walk: 0, swing: 0, flash: 0, best: 1 };
+    return { x: 0, y: 0, lvl: 1, xp: 0, gold: 0, hp: 80, mp: 40, gear: {}, potions: { hp: 3, mp: 2 }, holy: 0, gospel: 0, path: [], target: null, atkCd: 0, cds: { fireball: 0, nova: 0, abraham: 0, isaac: 0, jacob: 0 }, face: 0, walk: 0, swing: 0, flash: 0, best: 1 };
   }
   function stats() {
     const g = Object.values(hero.gear), sum = k => g.reduce((t, it) => t + (it.stats[k] || 0), 0);
     return {
       maxHp: 70 + hero.lvl * 12 + sum("life"), maxMp: 34 + hero.lvl * 6 + sum("mana"),
-      dmg: 6 + hero.lvl * 2 + sum("dmg"), fire: sum("fire"), armor: sum("armor"), crit: 5 + sum("crit"),
+      dmg: Math.round((6 + hero.lvl * 2 + sum("dmg")) * (house.jacobUntil > performance.now() ? HOUSES.jacob.damageBoost : 1)), fire: sum("fire"), armor: sum("armor"), crit: 5 + sum("crit"),
       speed: HERO.speed * (1 + sum("speed") / 100),
     };
   }
@@ -358,6 +368,7 @@
     sfx(m.T.boss ? "bigboom" : "hit");
     gainXp(Math.round(m.T.xp * (1 + (floorNo - 1) * 0.25) * (m.champion ? 2.5 : 1)));
     // Drops
+    if (m.covenant) for (let k = 0; k < HOUSES.abraham.goldBonus; k++) loot.push({ kind: "gold", x: m.x + rand(-0.5, 0.5), y: m.y + rand(-0.5, 0.5), amount: Math.round(rand(4, 14) * floorNo), bob: rand(0, 6) });   // the covenant blessing
     if (Math.random() < 0.6 || m.T.boss) loot.push({ kind: "gold", x: m.x + rand(-0.3, 0.3), y: m.y + rand(-0.3, 0.3), amount: Math.round(rand(3, 12) * floorNo * (m.T.boss ? 12 : m.champion ? 3 : 1)), bob: rand(0, 6) });
     if (Math.random() < 0.13) loot.push({ kind: Math.random() < 0.6 ? "hpot" : "mpot", x: m.x + rand(-0.4, 0.4), y: m.y + rand(-0.4, 0.4), bob: rand(0, 6) });
     const itemChance = m.T.boss ? 3 : m.champion ? 1 : 0.17;
@@ -397,6 +408,101 @@
     for (const m of targets) { m.hp = 0; num(m.x, m.y, "✝", "#fff3c4", true); killMonster(m); }
     godBusy = false;
     save(); renderHud();
+  }
+  // ---- The Houses of Abraham, Isaac and Jacob ----
+  let house = { ramUntil: 0, jacobUntil: 0, ladderAt: -1e9, spirits: [] };
+  function houseReady(k) {
+    const H = HOUSES[k], names = { abraham: "House of Abraham", isaac: "House of Isaac", jacob: "House of Jacob" };
+    if (state !== "play") return false;
+    if (hero.lvl < H.level) { say(names[k] + " unlocks at level " + H.level, 1500, "#ffe9a0"); return false; }
+    if (hero.cds[k] > 0) { say(names[k] + " returns in " + Math.ceil(hero.cds[k] / 1000) + " s", 1000, "#ffe9a0"); return false; }
+    hero.cds[k] = H.cooldown * 1000; hero.atkAt = performance.now(); return true;
+  }
+  function houseAbraham() {
+    if (!houseReady("abraham")) return;
+    const targets = seenMonsters(), now = performance.now(), dmg = stats().dmg * HOUSES.abraham.damage;
+    say("★ HOUSE OF ABRAHAM · COVENANT OF STARS ★", 2600, "#fff3c4"); sfx("bigboom");
+    verse("I will multiply thy seed as the stars of the heaven. · Genesis 22:17", 5000);
+    targets.forEach((m, i) => { beams.push({ x: m.x, y: m.y, t0: now + i * 70 }); m.covenant = true; });
+    for (const m of targets) { num(m.x, m.y, "★", "#fff3c4", true); hurtMonster(m, Math.round(dmg * rand(0.9, 1.1)), "#fff3c4", true); }
+    for (let k = 0; k < 40; k++) fx.push({ x: hero.x + rand(-6, 6), y: hero.y + rand(-6, 6), z: rand(2, 6), vx: 0, vy: 0, vz: -rand(2, 5), life: rand(0.6, 1.2), color: Math.random() < 0.5 ? "#fff3c4" : "#ffd84a", size: rand(2, 4) });
+    renderHud();
+  }
+  function houseIsaac() {
+    if (!houseReady("isaac")) return;
+    const s = stats(); hero.hp = s.maxHp; hero.mp = s.maxMp;
+    house.ramUntil = performance.now() + HOUSES.isaac.ramSeconds * 1000;
+    say("♈ HOUSE OF ISAAC · JEHOVAH-JIREH ♈", 2600, "#fff3c4"); sfx("power");
+    verse("God will provide himself a lamb. · Genesis 22:8", 5000);
+    burst(hero.x, hero.y, "#fff3c4", 24, 2); fx.push({ ring: true, x: hero.x, y: hero.y, r: 0.3, grow: 3, life: 1, color: "#fff3c4" });
+    renderHud();
+  }
+  function houseJacob() {
+    if (!houseReady("jacob")) return;
+    const now = performance.now(), H = HOUSES.jacob;
+    house.jacobUntil = now + H.seconds * 1000; house.ladderAt = now;
+    house.spirits = [];
+    for (let k = 0; k < H.spirits; k++) { const a = k / H.spirits * 6.283; house.spirits.push({ x: hero.x + Math.cos(a) * 1.2, y: hero.y + Math.sin(a) * 1.2, face: a, walk: 0, cd: rand(0, 600), born: now + k * 90 }); }
+    say("⇡ HOUSE OF JACOB · JACOB'S LADDER ⇡", 2800, "#fff3c4"); sfx("achievement");
+    verse("A ladder set up on the earth, and the top of it reached to heaven. · Genesis 28:12", 5200);
+    setTimeout(() => { if (house.jacobUntil > performance.now()) verse("I will not let thee go, except thou bless me. · Genesis 32:26", 4500); }, 5600);
+    renderHud();
+  }
+  // The twelve tribe spirits: each runs to the nearest enemy in sight and strikes it; otherwise it circles the hero.
+  function updateSpirits(dt, now) {
+    if (!house.spirits.length) return;
+    if (now > house.jacobUntil) { for (const s of house.spirits) burst(s.x, s.y, "#fff3c4", 6, 1.5); house.spirits = []; return; }
+    const seen = seenMonsters(), dmg = stats().dmg * 0.6;
+    house.spirits.forEach((s, i) => {
+      if (now < s.born) return;
+      s.cd = Math.max(0, s.cd - dt);
+      let t = null, bd = 8; for (const m of seen) { const d = Math.hypot(m.x - s.x, m.y - s.y); if (d < bd) { bd = d; t = m; } }
+      if (t) {
+        if (bd > 0.9) moveToward(s, t.x, t.y, 4.6, dt);
+        else { s.face = Math.atan2(t.y - s.y, t.x - s.x); if (!s.cd) { s.cd = 700; s.hit = now; hurtMonster(t, Math.round(dmg * rand(0.85, 1.15)), "#fff3c4"); } }
+      } else {
+        const a = now / 1400 + i / house.spirits.length * 6.283; moveToward(s, hero.x + Math.cos(a) * 1.6, hero.y + Math.sin(a) * 1.6, 4.6, dt);
+      }
+    });
+  }
+  function drawHouses(now) {
+    const S = HERO_SPRITE, img = HERO_ANIMS.walk.img, ok = img.complete && img.naturalWidth;
+    ctx.save(); ctx.globalCompositeOperation = "lighter";
+    // Jacob's ladder: a shaft of light with rungs, from heaven down to the hero (first 2 seconds).
+    const lt = (now - house.ladderAt) / 2000;
+    if (lt >= 0 && lt < 1) {
+      const a = lt < 0.2 ? lt / 0.2 : 1 - (lt - 0.2) / 0.8, px = sx(hero.x, hero.y), py = sy(hero.x, hero.y, 0), top = py - 900 * zoom, w = 34 * zoom;
+      const g = ctx.createLinearGradient(0, top, 0, py); g.addColorStop(0, "rgba(255,245,210,0)"); g.addColorStop(1, `rgba(255,245,210,${0.5 * a})`);
+      ctx.fillStyle = g; ctx.fillRect(px - w, top, w * 2, py - top);
+      ctx.strokeStyle = `rgba(255,240,190,${0.8 * a})`; ctx.lineWidth = 3 * zoom;
+      ctx.beginPath(); ctx.moveTo(px - w * 0.7, top); ctx.lineTo(px - w * 0.7, py); ctx.moveTo(px + w * 0.7, top); ctx.lineTo(px + w * 0.7, py);
+      for (let y = py - 18 * zoom; y > top; y -= 26 * zoom) { ctx.moveTo(px - w * 0.7, y); ctx.lineTo(px + w * 0.7, y); }
+      ctx.stroke();
+    }
+    // The tribe spirits: small glowing golden angels (the hero's own picture, faded).
+    for (const s of house.spirits) {
+      if (now < s.born) continue;
+      const fade = Math.min(1, (now - s.born) / 400, (house.jacobUntil - now) / 600);
+      glowAt(s.x, s.y, 0.7, 42, "255,230,150", 0.55 * fade);
+      if (ok) {
+        const step = Math.PI * 2 / S.dirs, row = ((Math.round(s.face / step) % S.dirs) + S.dirs) % S.dirs, frame = Math.floor(now / 90 + s.born) % 8;
+        const scale = 1.6 * TH * 1.15 * zoom / S.heightPx, size = S.cell * scale, px = sx(s.x, s.y), py = sy(s.x, s.y, 0);
+        ctx.globalAlpha = 0.85 * fade; ctx.drawImage(img, frame * S.cell, row * S.cell, S.cell, S.cell, px - S.anchorX * size, py - S.anchorY * size, size, size); ctx.globalAlpha = 1;
+      }
+      if (s.hit && now - s.hit < 160) glowAt(s.x + Math.cos(s.face) * 0.5, s.y + Math.sin(s.face) * 0.5, 0.7, 24, "255,255,230", 0.8);
+    }
+    // Isaac's ram, glowing at the hero's side while it waits to take a blow.
+    if (house.ramUntil > now) {
+      const rx = hero.x + 0.7, ry = hero.y + 0.25, px = sx(rx, ry), py = sy(rx, ry, 0.35 + Math.sin(now / 300) * 0.04), z = zoom;
+      glowAt(rx, ry, 0.4, 34, "255,240,200", 0.35);
+      ctx.globalCompositeOperation = "source-over"; ctx.globalAlpha = 0.9;
+      ctx.fillStyle = "#f6efe0"; ctx.beginPath(); ctx.ellipse(px, py, 13 * z, 8 * z, 0, 0, 6.28); ctx.fill();          // woolly body
+      ctx.beginPath(); ctx.ellipse(px + 12 * z, py - 5 * z, 5 * z, 4 * z, 0, 0, 6.28); ctx.fill();                      // head
+      ctx.strokeStyle = "#c9a26a"; ctx.lineWidth = 2.5 * z; ctx.beginPath(); ctx.arc(px + 11 * z, py - 8 * z, 4 * z, 3.4, 6.2); ctx.stroke();   // horn
+      ctx.fillStyle = "#3a2a20"; ctx.fillRect(px - 8 * z, py + 6 * z, 2 * z, 6 * z); ctx.fillRect(px + 6 * z, py + 6 * z, 2 * z, 6 * z);   // legs
+      ctx.globalAlpha = 1;
+    }
+    ctx.restore();
   }
   // ---- Holy Gospel and the Archangel (Gabriel) ----
   let angel = { until: 0, next: 0, shieldHit: -1e9, strikes: [] };
@@ -503,6 +609,10 @@
       return;
     }
     const s = stats(), taken = Math.max(1, Math.round(amount * (1 - s.armor / (s.armor + 60))));
+    if (hero.hp - taken <= 0 && house.ramUntil > performance.now()) {    // the ram is caught in the thicket in your place
+      house.ramUntil = 0; burst(hero.x + 0.6, hero.y + 0.3, "#fff3c4", 26, 3); say("THE LORD HAS PROVIDED", 2600, "#fff3c4");
+      verse("And Abraham called the name of that place Jehovah-jireh. · Genesis 22:14", 5000); sfx("power"); return;
+    }
     hero.hp -= taken; hero.flash = 1;
     gainGospel(taken * GOSPEL.perDamageTaken);
     num(hero.x, hero.y, "-" + taken, "#ff6e8a");
@@ -599,7 +709,7 @@
   let holdMove = null, mouseWorld = { x: 0, y: 0 };
   function update(dt) {
     const s = stats();
-    updateAngel(performance.now());
+    updateAngel(performance.now()); updateSpirits(dt, performance.now());
     hero.mp = Math.min(s.maxMp, hero.mp + dt / 1000 * (1.6 + hero.lvl * 0.15));
     hero.hp = Math.min(s.maxHp, hero.hp + dt / 1000 * 0.5);
     hero.atkCd = Math.max(0, hero.atkCd - dt);
@@ -1295,6 +1405,7 @@
     drawEmbers(now);                                                  // embers rising through Hell (snow in Cocytus)
     drawGod(now);                                                     // Power of God: light beams and the white flash
     drawAngel(now);                                                   // Archangel: Gabriel, the shield, lances of light
+    drawHouses(now);                                                  // the Houses: Jacob's ladder and spirits, Isaac's ram
     // 6. Floating numbers (not darkened).
     for (const n of nums) {
       ctx.globalAlpha = Math.min(1, n.life * 1.5);
@@ -1349,6 +1460,11 @@
     $(".arpg-gospel b").style.width = (aon ? Math.max(0, (angel.until - performance.now()) / (GOSPEL.seconds * 10)) : gos) + "%";
     $(".arpg-gospel span").textContent = aon ? "✦ GABRIEL IS WITH YOU" : gfull ? "✦ HOLY GOSPEL 100%" : "HOLY GOSPEL " + gos + "%";
     $(".arpg-gospel").classList.toggle("full", gfull || aon); $(".arpg-angelbtn").hidden = !gfull || aon;
+    for (const k of ["abraham", "isaac", "jacob"]) {
+      const b = root.querySelector(`[data-act="${k}"]`), locked = hero.lvl < HOUSES[k].level;
+      b.style.setProperty("--cd", locked ? 1 : hero.cds[k] / (HOUSES[k].cooldown * 1000)); b.classList.toggle("locked", locked);
+      b.querySelector("small").textContent = locked ? "LV " + HOUSES[k].level : { abraham: "Abraham", isaac: "Isaac", jacob: "Jacob" }[k];
+    }
     for (const k of ["fireball", "nova"]) { const b = root.querySelector(`[data-act="${k}"]`); b.style.setProperty("--cd", hero.cds[k] / SKILLS[k].cd); b.classList.toggle("low", hero.mp < SKILLS[k].mana); }
   }
   function renderSheet() {
@@ -1369,6 +1485,9 @@
     const a = b.dataset.act;
     if (a === "fireball") { const t = nearestVisible(); if (t) castFireball(t.x, t.y); else castFireball(hero.x + Math.cos(hero.face) * 3, hero.y + Math.sin(hero.face) * 3); }
     if (a === "nova") castNova();
+    if (a === "abraham") houseAbraham();
+    if (a === "isaac") houseIsaac();
+    if (a === "jacob") houseJacob();
     if (a === "hpot") drink("hp");
     if (a === "mpot") drink("mp");
     if (a === "sheet") toggleSheet();
@@ -1407,12 +1526,15 @@
   for (const ev of ["pointerup", "pointercancel"]) canvas.addEventListener(ev, e => { touches.delete(e.pointerId); if (touches.size < 2) pinch = 0; });
   window.addEventListener("keydown", e => {
     if (state !== "play" || !takeover || (e.target.closest && e.target.closest("input, textarea, select"))) return;
-    const k = e.key.toLowerCase(), handled = { "1": 1, "2": 1, e: 1, r: 1, q: 1, w: 1, c: 1, escape: 1, "+": 1, "=": 1, "-": 1, "_": 1 };
+    const k = e.key.toLowerCase(), handled = { "1": 1, "2": 1, "3": 1, "4": 1, "5": 1, e: 1, r: 1, q: 1, w: 1, c: 1, escape: 1, "+": 1, "=": 1, "-": 1, "_": 1 };
     if (!handled[k]) return;
     e.preventDefault(); e.stopImmediatePropagation();
     if (k === "1") castFireball(mouseWorld.x, mouseWorld.y);
     if (k === "2") castNova();
     if (k === "e") powerOfGod();
+    if (k === "3") houseAbraham();
+    if (k === "4") houseIsaac();
+    if (k === "5") houseJacob();
     if (k === "r") archangel();
     if (k === "q") drink("hp");
     if (k === "w") drink("mp");
@@ -1462,7 +1584,7 @@
     else if (mode === "retry" && hero) { /* keep the hero, same floor */ }
     else if (mode === "ascend" && hero) { floorNo = 1; }
     else { hero = newHero(); floorNo = 1; }
-    const s = stats(); hero.hp = s.maxHp; hero.mp = s.maxMp; hero.cds = { fireball: 0, nova: 0 };
+    const s = stats(); hero.hp = s.maxHp; hero.mp = s.maxMp; hero.cds = { fireball: 0, nova: 0, abraham: 0, isaac: 0, jacob: 0 };
     enterFloor(floorNo);
     cam.x = isoX(hero.x, hero.y); cam.y = isoY(hero.x, hero.y);
     state = "play"; intro.hidden = true; showUI(true); renderHud();
@@ -1502,5 +1624,5 @@
   requestAnimationFrame(loop);
   // Test hook.
   window.neonARPG = { render: () => draw(performance.now()), state: () => ({ state, floor: floorNo, lvl: hero && hero.lvl, hp: hero && Math.round(hero.hp), gold: hero && hero.gold, monsters: monsters.length, loot: loot.length, gear: hero && Object.values(hero.gear).map(i => i.name) }),
-    start, step: ms => { for (let t = 0; t < ms && state === "play"; t += 16) update(16); renderHud(); }, give: n => { hero.gold += n; }, holy: n => { hero.holy = n; renderHud(); }, gospel: n => { hero.gospel = n; renderHud(); }, floor: n => { enterFloor(n); renderHud(); }, boss: () => { const b = monsters.find(m => m.T.boss); return b && { name: b.T.name, x: b.x, y: b.y, hp: b.hp }; }, slay: () => { const b = monsters.find(m => m.T.boss); if (b) { b.hp = 0; killMonster(b); } }, item: () => { const it = makeItem(5, 0.5); loot.push({ kind: "item", item: it, x: hero.x + 0.3, y: hero.y, bob: 0 }); return it.name; }, stairs: () => { bossAlive = false; hero.x = stairs.x + 0.5; hero.y = stairs.y + 0.5; }, nearest: () => { const m = nearestVisible(); return m && { type: m.type, x: m.x, y: m.y }; }, attack: () => { const m = monsters.reduce((b, m) => !b || dist(m, hero) < dist(b, hero) ? m : b, null); if (m) { hero.target = m; } return m && m.type; } };
+    start, step: ms => { for (let t = 0; t < ms && state === "play"; t += 16) update(16); renderHud(); }, give: n => { hero.gold += n; }, holy: n => { hero.holy = n; renderHud(); }, gospel: n => { hero.gospel = n; renderHud(); }, level: n => { hero.lvl = n; renderHud(); }, floor: n => { enterFloor(n); renderHud(); }, boss: () => { const b = monsters.find(m => m.T.boss); return b && { name: b.T.name, x: b.x, y: b.y, hp: b.hp }; }, slay: () => { const b = monsters.find(m => m.T.boss); if (b) { b.hp = 0; killMonster(b); } }, item: () => { const it = makeItem(5, 0.5); loot.push({ kind: "item", item: it, x: hero.x + 0.3, y: hero.y, bob: 0 }); return it.name; }, stairs: () => { bossAlive = false; hero.x = stairs.x + 0.5; hero.y = stairs.y + 0.5; }, nearest: () => { const m = nearestVisible(); return m && { type: m.type, x: m.x, y: m.y }; }, attack: () => { const m = monsters.reduce((b, m) => !b || dist(m, hero) < dist(b, hero) ? m : b, null); if (m) { hero.target = m; } return m && m.type; } };
 })();

@@ -172,6 +172,12 @@ UNDERCITY = {
     "holy": {"perHit": 0.8, "perKill": 6, "perChampion": 14, "perBoss": 30},   # Holy Power gained per hit landed / per kill (percent)
     # Holy Gospel fills when the hero is hurt, kills and goes deeper; at 100% the Archangel button pops up (or press R):
     # Gabriel shields the hero from all damage and strikes down the nearest enemies for a while.
+    # ---- THE HOUSES OF THE PATRIARCHS (keys 3, 4, 5) ----
+    "houses": {
+        "abraham": {"level": 3, "cooldown": 20, "damage": 3, "goldBonus": 2},   # Covenant of Stars: unlock level, cooldown (s), damage (x hero damage) to every enemy in sight, extra gold drops
+        "isaac": {"level": 6, "cooldown": 45, "ramSeconds": 30},                # Jehovah-Jireh: full heal and mana; a ram takes the next deadly blow within this many seconds
+        "jacob": {"level": 9, "cooldown": 60, "seconds": 15, "spirits": 12, "damageBoost": 2},   # Jacob's Ladder: tribe spirits fight for this long; hero damage multiplied meanwhile
+    },
     # ---- HELL ----
     "hell": {
         "finalFloor": 9,             # the circle where Satan waits (Dante's ninth circle, the frozen lake); beat him to transcend
