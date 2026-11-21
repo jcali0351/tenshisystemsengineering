@@ -9,15 +9,9 @@
   const section = canvas.parentElement;
   const still = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-  // Katakana, a few hiragana and kanji (many from the company name and its work), and digits.
-  const GLYPHS = Array.from(
-    "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン" +
-    "ガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポ" +
-    "あいうえおかきくけこさしすせそ" +
-    "天使技術設計開発未来信頼協力大阪日本網情報電算光速力" +
-    "0123456789"
-  );
-  const BG = "200, 16, 46";          // the section's red (#c8102e), used for the fading trail
+  // Neon code characters: binary, capitals and symbols.
+  const GLYPHS = Array.from("0101010110ABCDEFGHIJKLMNOPQRSTUVWXYZ<>/{}[]()=+*#$%&@;:0123456789");
+  const BG = "5, 0, 12";             // the section's near-black (neon theme), used for the fading trail
   const FPS = 22;
   let size = 18, cols = 0, drops = [], speeds = [], w = 0, h = 0, dpr = 1;
   let running = false, visible = false, raf = 0, last = 0;

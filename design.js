@@ -1,4 +1,4 @@
-/* 墨と朱 · Ink and vermilion: the motion and ornaments of the Tenshi design layer.
+/* Ink and neon: the motion and ornaments of the Tenshi design layer.
    Kanji section numbers, a scroll-progress line, a header that settles as you scroll,
    quiet reveals and a hanko seal on page banners. Purely decorative: everything it adds is hidden from screen readers. */
 (function () {
@@ -8,9 +8,9 @@
   if (window.frameElement && !/[?&]motion=1/.test(location.search)) doc.classList.add("no-intro");
   var still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* Kanji numbers on each visible section title: 一 二 三 … */
-  var KAN = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];
-  var kan = function (n) { return n <= 10 ? KAN[n - 1] : "十" + KAN[n - 11]; };
+  /* Two-digit numbers on each visible section title: 01 02 03 … */
+  var KAN = null;
+  var kan = function (n) { return (n < 10 ? "0" : "") + n; };
   Array.prototype.forEach.call(document.querySelectorAll("main h2.section-title:not(.sr-only)"), function (h, i) {
     h.setAttribute("data-kan", kan(i + 1));
   });
@@ -39,7 +39,7 @@
   if (bannerTitle && !bannerTitle.parentNode.querySelector(".page-seal")) {
     var seal = document.createElement("span");
     seal.className = "page-seal"; seal.setAttribute("aria-hidden", "true"); seal.lang = "ja";
-    seal.innerHTML = "天<br>使";
+    seal.innerHTML = "T<br>S";
     bannerTitle.insertAdjacentElement("afterend", seal);   // beside the title, not inside it: the language switcher rewrites the title text
   }
 

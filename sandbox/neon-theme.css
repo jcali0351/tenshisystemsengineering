@@ -1057,3 +1057,9 @@ html.neon:not(#_):not(#__) .fw-item:hover { background: rgba(139, 44, 245, .16) 
 /* Footer thumbnails: small transparent neon icons, no tile behind them */
 html.neon:not(#_):not(#__) .fw-thumb { background: transparent !important; box-shadow: none !important; border: 0 !important; }
 html.neon:not(#_):not(#__) .fw-thumb[src*="covers/i-"] { width: 52px !important; height: 52px !important; object-fit: contain !important; object-view-box: none; border-radius: 0 !important; flex: none; margin: 4px 10px 0 4px; }
+
+/* Menu: dropdowns open just below the header bar, and the chevron always points down (no flip). */
+html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav ul.sub { top: calc(100% + 41px) !important; }
+html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav ul.sub::before { top: -43px !important; height: 43px !important; }
+html.neon .site-header:not(#_):not(#__) .site-nav .has-sub.open > .sub-toggle::after,
+html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav > ul > li.has-sub:hover > .sub-toggle::after { transform: rotate(45deg) !important; margin-top: -3px !important; }

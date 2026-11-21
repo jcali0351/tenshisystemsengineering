@@ -757,7 +757,7 @@ const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
     const density = num(ds.rainDensity, 18), speed = num(ds.rainSpeed, 1), angle = num(ds.rainAngle, 10) * Math.PI / 180;
     const color = /^#[0-9a-f]{3,6}$/i.test(ds.rainColor || "") ? ds.rainColor : "#d6dde8";
     canvas.style.opacity = String(num(ds.rainOpacity, 0.45));
-    const GLYPHS = Array.from("アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン天使技術設計開発未来信頼大阪日本0123456789");
+    const GLYPHS = Array.from("0101010110ABCDEFGHIJKLMNOPQRSTUVWXYZ<>/{}[]()=+*#$%&@;:");
     let w = 0, h = 0, dpr = 1, drops = [], cols = [], size = 18;
     let running = false, visible = false, raf = 0, last = 0;
     const tan = Math.tan(angle);
