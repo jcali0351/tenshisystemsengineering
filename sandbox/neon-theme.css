@@ -1218,3 +1218,9 @@ html.neon .cf-spark {
   html.neon .cf-check :is(circle, path) { stroke-dashoffset: 0 !important; }
   html.neon .cf-spark { display: none; }
 }
+
+/* spinner drawn by CSS (the button's text is rewritten when the language changes) */
+html.neon .cf-sending button[type="submit"]::before {
+  content: ""; display: inline-block; width: 15px; height: 15px; margin-right: 9px; vertical-align: -2px; border-radius: 50%;
+  border: 2.5px solid rgba(60, 10, 90, .3); border-top-color: currentColor; animation: cf-spin .8s linear infinite;
+}
