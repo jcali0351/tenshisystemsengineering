@@ -172,16 +172,29 @@ UNDERCITY = {
     "holy": {"perHit": 0.8, "perKill": 6, "perChampion": 14, "perBoss": 30},   # Holy Power gained per hit landed / per kill (percent)
     # Holy Gospel fills when the hero is hurt, kills and goes deeper; at 100% the Archangel button pops up (or press R):
     # Gabriel shields the hero from all damage and strikes down the nearest enemies for a while.
+    # ---- ENEMY LABELS ----
+    "labels": {
+        "healthBars": True,          # show a health bar over every enemy
+        "onlyWhenHurt": False,       # True = only after it has been hit (the old way)
+        "names": True,               # show each enemy's name over it (champions say "Champion ...")
+        "nameSize": 12,              # name text size (pixels at normal zoom)
+        "barWidth": 40,              # health bar width (pixels at normal zoom)
+        "barHeight": 5,              # health bar thickness (pixels at normal zoom)
+        "barColor": "#ff4f7a",       # health bar colour
+        "championColor": "#ffd84a",  # health bar colour for champions (the gold-glow elites)
+        "nameColor": "#f2e4ff",      # name colour
+        "championNameColor": "#ffd84a",   # name colour for champions
+    },
     "gospel": {"perDamageTaken": 0.6, "perKill": 3, "perFloor": 20, "seconds": 10, "strikeEvery": 550, "radius": 7.5, "bossDamage": 0.2},   # gain per damage point / kill / new floor (percent); how long Gabriel stays (s), time between strikes (ms), strike range (tiles), share of a boss's life per strike
     "monsters": {
-        # hp, dmg = damage per hit, speed, reach (tiles), every = time between attacks, xp, weight = how common
-        "hollow":  {"hp": 30,  "dmg": 4,  "speed": 1.9, "reach": 1.1, "every": 1000, "xp": 12,  "weight": 5},
-        "skitter": {"hp": 16,  "dmg": 3,  "speed": 3.4, "reach": 1.0, "every": 650,  "xp": 8,   "weight": 4},
-        "wisp":    {"hp": 22,  "dmg": 5,  "speed": 2.4, "reach": 5.5, "every": 1500, "xp": 14,  "weight": 3},
-        "wizard":  {"hp": 34,  "dmg": 5,  "speed": 2.0, "reach": 1.2, "every": 1100, "xp": 15,  "weight": 5},   # the Evil Wizard
-        "elf":     {"hp": 22,  "dmg": 4,  "speed": 2.9, "reach": 1.0, "every": 800,  "xp": 10,  "weight": 5},   # the Evil Green Elf
-        "golem":   {"hp": 110, "dmg": 12, "speed": 1.4, "reach": 1.3, "every": 1500, "xp": 40,  "weight": 3},   # the Green Elemental
-        "warden":  {"hp": 700, "dmg": 24, "speed": 1.9, "reach": 1.6, "every": 1300, "xp": 300},   # the boss (every 3rd floor)
+        # name (shown over it), hp, dmg = damage per hit, speed, reach (tiles), every = time between attacks, xp, weight = how common
+        "hollow":  {"name": "Hollow", "hp": 30,  "dmg": 4,  "speed": 1.9, "reach": 1.1, "every": 1000, "xp": 12,  "weight": 5},
+        "skitter": {"name": "Lava Spider", "hp": 16,  "dmg": 3,  "speed": 3.4, "reach": 1.0, "every": 650,  "xp": 8,   "weight": 4},
+        "wisp":    {"name": "Wisp", "hp": 22,  "dmg": 5,  "speed": 2.4, "reach": 5.5, "every": 1500, "xp": 14,  "weight": 3},
+        "wizard":  {"name": "Evil Wizard", "hp": 34,  "dmg": 5,  "speed": 2.0, "reach": 1.2, "every": 1100, "xp": 15,  "weight": 5},   # the Evil Wizard
+        "elf":     {"name": "Green Elf", "hp": 22,  "dmg": 4,  "speed": 2.9, "reach": 1.0, "every": 800,  "xp": 10,  "weight": 5},   # the Evil Green Elf
+        "golem":   {"name": "Golem", "hp": 110, "dmg": 12, "speed": 1.4, "reach": 1.3, "every": 1500, "xp": 40,  "weight": 3},   # the Green Elemental
+        "warden":  {"name": "The Warden", "hp": 700, "dmg": 24, "speed": 1.9, "reach": 1.6, "every": 1300, "xp": 300},   # the boss (every 3rd floor)
     },
     # ---- ENEMY NUMBERS ----
     "enemies": {
@@ -231,8 +244,11 @@ def check(value, path):
         if value != value:
             sys.exit(f"Problem in {path}: not a number")
     elif isinstance(value, str):
-        if not (value.startswith("#") and len(value) in (4, 7)):
-            sys.exit(f'Problem in {path}: text values should be colours like "#ff2bd6"')
+        if path.endswith(".name"):                                   # names (shown in the games): short plain text
+            if not value.strip() or len(value) > 40:
+                sys.exit(f"Problem in {path}: a name should be 1 to 40 characters")
+        elif not (value.startswith("#") and len(value) in (4, 7)):
+            sys.exit(f'Problem in {path}: text values should be colours like "#ff2bd6" (or a "name")')
     else:
         sys.exit(f"Problem in {path}: {value!r} isn't a number, list or colour")
 
@@ -266,7 +282,10 @@ def describe(source):
         stack, depth, i = [], 0, start
         while True:
             line = lines[i]
-            code, _, comment = line.partition("  #") if '"#' not in line else (line, "", "")
+            # The comment starts at the first "  #" outside a quoted string (colour values like "#ff4f7a" contain a #).
+            masked = __import__("re").sub(r'"[^"]*"', lambda q: '"' + "x" * (len(q.group()) - 2) + '"', line)
+            cut = masked.find("  #")
+            code, comment = (line[:cut], line[cut + 3:]) if cut >= 0 else (line, "")
             if line.strip().startswith("#"):
                 code, comment = "", ""
             first = None

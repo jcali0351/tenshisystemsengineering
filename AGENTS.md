@@ -67,7 +67,9 @@ Each game reads its settings from `window.TENSHI_GAMES` (sandbox/game-settings.j
    Hero has **Holy Power** (gold bar above the HUD, `HOLY` settings, saved): fills per hit/kill; at 100% a POWER OF GOD button pops
    up (or E) that slays every enemy in sight (`powerOfGod`, `seenMonsters`, beams + flash in `drawGod`). **Holy Gospel** (blue bar,
    `GOSPEL`): fills when hurt, per kill, per new floor; at 100% ARCHANGEL (R) summons Gabriel for 10 s: blocks all damage, strikes
-   the nearest enemy in sight with a lance of light (`archangel`, `updateAngel`, `drawAngel`). Other monsters are 3D meshes from `models/source/arpg.*.glb`
+   the nearest enemy in sight with a lance of light (`archangel`, `updateAngel`, `drawAngel`).
+   Every enemy shows its name and a health bar (`drawLabel`, `LABELS` = Game Studio > Undercity > labels); built-in enemy names
+   are editable too (`monsters.<type>.name`; game_settings.py accepts any short text for keys called `name`). Other monsters are 3D meshes from `models/source/arpg.*.glb`
    drawn with simple 2D lighting. Walls and floor use procedural stone canvas textures (`STONE` in neon-arpg.js,
    mapped onto the isometric faces with `pattern.setTransform`). Cover art `sandbox/art/undercity.webp`, same 5 s fade.
 5. **Quest** (`sandbox/neon-quest.js`): XP for exploring the site, on every page.

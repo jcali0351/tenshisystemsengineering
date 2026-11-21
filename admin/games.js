@@ -206,7 +206,8 @@
     var v = get(values, p), changed = JSON.stringify(v) !== JSON.stringify(d), input;
     if (typeof d === "boolean") input = '<label class="gs-switch-input"><input type="checkbox" data-kind="bool"' + (v ? " checked" : "") + "><span>" + (v ? "On" : "Off") + "</span></label>";
     else if (Array.isArray(d)) input = '<span class="gs-range"><input type="number" step="any" data-kind="arr0" value="' + v[0] + '"> to <input type="number" step="any" data-kind="arr1" value="' + v[1] + '"></span>';
-    else if (typeof d === "string") input = '<input type="color" data-kind="color" value="' + esc(v) + '">';
+    else if (typeof d === "string" && /^#[0-9a-f]{6}$/i.test(d)) input = '<input type="color" data-kind="color" value="' + esc(v) + '">';
+    else if (typeof d === "string") input = '<input type="text" data-kind="text" maxlength="40" value="' + esc(v) + '">';
     else {
       var max = d === 0 ? 10 : d < 0 ? Math.abs(d) * 4 : d <= 1 ? 1 : Math.ceil(d * 4), min = d < 0 ? -Math.abs(d) * 4 : 0, step = Number.isInteger(d) && Math.abs(d) >= 2 ? 1 : (max - min) / 200;
       input = '<input type="range" data-kind="slider" min="' + min + '" max="' + max + '" step="' + step + '" value="' + v + '"><input type="number" step="any" data-kind="num" value="' + v + '">';
@@ -229,7 +230,7 @@
         var k = inp.dataset.kind;
         if (k === "slider" || k === "num") { var n = parseFloat(inp.value); if (!isNaN(n)) commitValue(n); }
         else if (k === "bool") commitValue(inp.checked);
-        else if (k === "color") commitValue(inp.value);
+        else if (k === "color" || k === "text") commitValue(inp.value);
         else if (k === "arr0" || k === "arr1") { var a = (get(values, p) || d).slice(), n2 = parseFloat(inp.value); if (!isNaN(n2)) { a[k === "arr0" ? 0 : 1] = n2; commitValue(a); } }
       });
     });

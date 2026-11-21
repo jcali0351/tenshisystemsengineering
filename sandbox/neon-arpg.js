@@ -25,7 +25,7 @@
   };
   const MONSTERS = {
     hollow:  { name: "Hollow",  hp: 30, dmg: 4,  speed: 1.9, reach: 1.1, every: 1000, xp: 12, color: "#9fd6a8", r: 0.34, h: 1.0, weight: 5 },
-    skitter: { name: "Skitter", hp: 16, dmg: 3,  speed: 3.4, reach: 1.0, every: 650,  xp: 8,  color: "#ff6ec7", r: 0.28, h: 1.1, weight: 4 },
+    skitter: { name: "Lava Spider", hp: 16, dmg: 3,  speed: 3.4, reach: 1.0, every: 650,  xp: 8,  color: "#ff6ec7", r: 0.28, h: 1.1, weight: 4 },
     wisp:    { name: "Wisp",    hp: 22, dmg: 5,  speed: 2.4, reach: 5.5, every: 1500, xp: 14, color: "#8fd8ff", r: 0.26, h: 1.1, weight: 3, ranged: true },
     wizard:  { name: "Evil Wizard", hp: 34, dmg: 5, speed: 2.0, reach: 1.2, every: 1100, xp: 15, color: "#b06bff", r: 0.32, h: 1.1, weight: 5 },
     elf:     { name: "Green Elf", hp: 22, dmg: 4, speed: 2.9, reach: 1.0, every: 800, xp: 10, color: "#7dff7a", r: 0.28, h: 0.9, weight: 5 },
@@ -55,6 +55,10 @@
   // Gabriel appears for a while, shields the hero from all damage and strikes down the nearest enemies with light.
   const GOSPEL = { perDamageTaken: 0.6, perKill: 3, perFloor: 20, seconds: 10, strikeEvery: 550, radius: 7.5, bossDamage: 0.2 };
   TUNE(GOSPEL, CFG.gospel);
+  // Names and health bars over the enemies (Game Studio > Undercity > Enemy labels).
+  const LABELS = { healthBars: true, onlyWhenHurt: false, names: true, nameSize: 12, barWidth: 40, barHeight: 5,
+    barColor: "#ff4f7a", championColor: "#ffd84a", nameColor: "#f2e4ff", championNameColor: "#ffd84a" };
+  TUNE(LABELS, CFG.labels);
   for (const r of RARITY) TUNE(r, (CFG.rarity || {})[r.id]);
   // How many monsters: per room (more every 2 floors, up to a limit), and how often a Warden boss floor comes.
   const ENEMIES = { perRoomMin: 2, perRoomMax: 3, extraEveryTwoFloors: 1, extraMax: 4, bossEvery: 3, golemFromFloor: 1 };
@@ -1015,11 +1019,32 @@
       ctx.strokeStyle = "#ffb36b"; ctx.lineWidth = 3 * zoom;
       for (const sd of [-1, 1]) { ctx.beginPath(); ctx.moveTo(px + sd * 8 * zoom, py); ctx.quadraticCurveTo(px + sd * 26 * zoom, py - 10 * zoom, px + sd * 22 * zoom, py - 30 * zoom); ctx.stroke(); }
     }
-    // Health bar once hurt; boss bar is in the HUD.
-    if (m.hp < m.max && !T.boss) {
-      const px = sx(m.x, m.y), py = sy(m.x, m.y, T.h + 0.35), w = 34 * zoom;
-      ctx.fillStyle = "rgba(0,0,0,.6)"; ctx.fillRect(px - w / 2, py, w, 4);
-      ctx.fillStyle = m.champion ? "#ffd84a" : "#ff4f7a"; ctx.fillRect(px - w / 2, py, w * Math.max(0, m.hp / m.max), 4);
+    drawLabel(m);
+  }
+  // Name and health bar over an enemy, at the top of what's drawn (sprites are taller than their hit size).
+  function monsterTop(m) {
+    const A = MONSTER_ANIMS[m.type], S = MONSTER_SPRITES[m.type];
+    const h = A && CFG[A.setting] !== false ? A.height * (m.champion ? 1.12 : 1) : S && CFG[S.setting] !== false ? S.height * (m.T.h > 1.4 ? 1.25 : 1) : m.T.h * 1.1;
+    return h + 0.25;
+  }
+  function drawLabel(m) {
+    if (m.T.boss) return;                                             // the boss has its big bar in the HUD
+    const showBar = LABELS.healthBars && (!LABELS.onlyWhenHurt || m.hp < m.max), showName = LABELS.names;
+    if (!showBar && !showName) return;
+    const px = sx(m.x, m.y), py = sy(m.x, m.y, monsterTop(m)), w = LABELS.barWidth * zoom, bh = Math.max(2, LABELS.barHeight * zoom);
+    if (showBar) {
+      const f = Math.max(0, m.hp / m.max);
+      ctx.fillStyle = "rgba(0,0,0,.7)"; ctx.fillRect(px - w / 2 - 1, py - 1, w + 2, bh + 2);
+      ctx.fillStyle = m.champion ? LABELS.championColor : LABELS.barColor; ctx.fillRect(px - w / 2, py, w * f, bh);
+      ctx.fillStyle = "rgba(255,255,255,.25)"; ctx.fillRect(px - w / 2, py, w * f, Math.max(1, bh * 0.35));   // a little shine
+    }
+    if (showName) {
+      const name = (m.champion ? "Champion " : "") + m.T.name, fs = Math.round(LABELS.nameSize * zoom);
+      ctx.font = `700 ${fs}px Oswald, sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "bottom";
+      const ny = py - (showBar ? 4 : 0);
+      ctx.lineWidth = 3; ctx.strokeStyle = "rgba(5,2,12,.9)"; ctx.strokeText(name, px, ny);
+      ctx.fillStyle = m.champion ? LABELS.championNameColor : LABELS.nameColor; ctx.fillText(name, px, ny);
+      ctx.textAlign = "start"; ctx.textBaseline = "alphabetic";
     }
   }
   function drawLoot(l, now) {

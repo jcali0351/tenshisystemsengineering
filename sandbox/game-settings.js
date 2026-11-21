@@ -308,6 +308,18 @@ window.TENSHI_GAMES = {
    "perChampion": 14,
    "perBoss": 30
   },
+  "labels": {
+   "healthBars": true,
+   "onlyWhenHurt": false,
+   "names": true,
+   "nameSize": 12,
+   "barWidth": 40,
+   "barHeight": 5,
+   "barColor": "#ff4f7a",
+   "championColor": "#ffd84a",
+   "nameColor": "#f2e4ff",
+   "championNameColor": "#ffd84a"
+  },
   "gospel": {
    "perDamageTaken": 0.6,
    "perKill": 3,
@@ -319,6 +331,7 @@ window.TENSHI_GAMES = {
   },
   "monsters": {
    "hollow": {
+    "name": "Hollow",
     "hp": 30,
     "dmg": 4,
     "speed": 1.9,
@@ -328,6 +341,7 @@ window.TENSHI_GAMES = {
     "weight": 5
    },
    "skitter": {
+    "name": "Lava Spider",
     "hp": 16,
     "dmg": 3,
     "speed": 3.4,
@@ -337,6 +351,7 @@ window.TENSHI_GAMES = {
     "weight": 4
    },
    "wisp": {
+    "name": "Wisp",
     "hp": 22,
     "dmg": 5,
     "speed": 2.4,
@@ -346,6 +361,7 @@ window.TENSHI_GAMES = {
     "weight": 3
    },
    "wizard": {
+    "name": "Evil Wizard",
     "hp": 34,
     "dmg": 5,
     "speed": 2.0,
@@ -355,6 +371,7 @@ window.TENSHI_GAMES = {
     "weight": 5
    },
    "elf": {
+    "name": "Green Elf",
     "hp": 22,
     "dmg": 4,
     "speed": 2.9,
@@ -364,6 +381,7 @@ window.TENSHI_GAMES = {
     "weight": 5
    },
    "golem": {
+    "name": "Golem",
     "hp": 110,
     "dmg": 12,
     "speed": 1.4,
@@ -373,6 +391,7 @@ window.TENSHI_GAMES = {
     "weight": 3
    },
    "warden": {
+    "name": "The Warden",
     "hp": 700,
     "dmg": 24,
     "speed": 1.9,

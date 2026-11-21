@@ -376,3 +376,4 @@ details.ph-card:not([open]) { padding-bottom: 16px; }
 .gs-efield input[type=color] { width: 100%; height: 32px; border: 1px solid var(--line-2); border-radius: 8px; background: none; padding: 2px; }
 .gs-efield--name input { font-weight: 800; font-size: 1rem; }
 .gs-efield--check { flex-direction: row; align-items: center; gap: 8px; grid-column: 1 / -1; color: var(--text); }
+.gs-input input[type=text] { width: 100%; max-width: 260px; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--bg, #0b0418); color: var(--text); font: inherit; }
