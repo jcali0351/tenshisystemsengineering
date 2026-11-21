@@ -150,6 +150,8 @@ $DOMAIN {
 		Referrer-Policy "strict-origin-when-cross-origin"
 		-Server
 	}
+	@pages path / *.html
+	header @pages Cache-Control "no-cache"
 	file_server
 }
 
