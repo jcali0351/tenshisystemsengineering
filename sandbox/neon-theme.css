@@ -1069,3 +1069,9 @@ html.neon .parallax:has(#parallax-px1-title) .parallax-layer,
 html.neon .parallax:has(#parallax-px2-title) .parallax-layer { visibility: hidden !important; }
 html.neon .parallax:has(#parallax-px1-title),
 html.neon .parallax:has(#parallax-px2-title) { background: #05000a !important; }
+
+/* Team: the cards stay centred whatever the number of people. */
+html.neon:not(#_):not(#__):not(#___) main .team-grid {
+  display: grid !important; grid-template-columns: repeat(auto-fit, minmax(220px, 270px)) !important; justify-content: center !important;
+  margin-left: auto !important; margin-right: auto !important;
+}
