@@ -460,33 +460,83 @@ const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
     const select = $("#f-topic");
     if (topic && select && [...select.options].some((o) => o.value === topic)) select.value = topic;
 
-    form.addEventListener("submit", (e) => {
+    // Sent to our own server (/api/contact, tools/server/contact_service.py), which emails the team.
+    // A hidden field people never see catches bots, and the time spent on the form is sent along.
+    const startedAt = Date.now();
+    const trap = document.createElement("div");
+    trap.className = "cf-trap"; trap.setAttribute("aria-hidden", "true");
+    trap.innerHTML = '<label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>';
+    form.appendChild(trap);
+    const button = $('button[type="submit"]', form) || $("button", form);
+    if (button && !button.querySelector(".cf-label")) button.innerHTML = `<span class="cf-label">${button.innerHTML}</span><span class="cf-spin" aria-hidden="true"></span>`;
+
+    const shake = () => { form.classList.remove("cf-shake"); void form.offsetWidth; form.classList.add("cf-shake"); };
+    const succeed = (name) => {
+      const card = document.createElement("div");
+      card.className = "cf-success"; card.setAttribute("role", "status"); card.tabIndex = -1;
+      card.innerHTML = `<svg class="cf-check" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24"/><path d="M15 27l7 7 15-16"/></svg>
+        <h3>Message sent</h3><p>Thank you${name ? ", " + name.replace(/[<>&"]/g, "") : ""}. We've received your message and will reply by email, usually within one business day.</p>
+        <button type="button" class="btn-more cf-again">Send another message</button>`;
+      for (let i = 0; i < 18; i++) {
+        const s = document.createElement("i");
+        s.className = "cf-spark"; s.style.setProperty("--a", (i * 20) + "deg"); s.style.setProperty("--d", (60 + Math.random() * 70) + "px");
+        s.style.setProperty("--c", ["#ff2bd6", "#00f0ff", "#b04dff", "#ffd36e"][i % 4]);
+        card.appendChild(s);
+      }
+      form.classList.add("cf-done");
+      form.insertAdjacentElement("afterend", card);
+      card.focus({ preventScroll: true });
+      $(".cf-again", card).addEventListener("click", () => {
+        card.remove(); form.reset(); form.classList.remove("cf-done");
+        status.textContent = ""; status.className = "form-status field-wide";
+        const first = $("input, textarea", form); if (first) first.focus();
+      });
+    };
+
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
+      if (form.classList.contains("cf-sending")) return;
       const inputs = $$("input[required], textarea[required]", form);
       const results = inputs.map(validateField);
       if (results.includes(false)) {
         status.textContent = t("errSummary");
         status.className = "form-status field-wide is-error";
+        shake();
         inputs[results.indexOf(false)].focus();
         return;
       }
       const data = Object.fromEntries(new FormData(form));
-      const topicName = t(data.topic);
-      const lines = [
-        `${t("mailName")}: ${data.name}`,
-        data.company ? `${t("mailCompany")}: ${data.company}` : "",
-        `${t("mailEmail")}: ${data.email}`,
-        data.phone ? `${t("mailPhone")}: ${data.phone}` : "",
-        `${t("mailTopic")}: ${topicName}`,
-        "",
-        data.message
-      ].filter((l, i) => l !== "" || i === 5);
-      const url = "mailto:" + CONTACT_EMAIL +
-        "?subject=" + encodeURIComponent(t("mailSubject").replace("{topic}", topicName)) +
-        "&body=" + encodeURIComponent(lines.join("\n"));
-      status.textContent = t("sent").replace("{email}", CONTACT_EMAIL);
-      status.className = "form-status field-wide is-ok";
-      window.location.href = url;
+      const payload = {
+        name: data.name, email: data.email, company: data.company || "", phone: data.phone || "",
+        topic: data.topic ? T.en[data.topic] || data.topic : "", message: data.message,
+        website: data.website || "", elapsed: Date.now() - startedAt, page: location.pathname
+      };
+      form.classList.add("cf-sending");
+      if (button) button.disabled = true;
+      status.textContent = "Sending your message…";
+      status.className = "form-status field-wide is-busy";
+      try {
+        const res = await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+        const out = await res.json().catch(() => ({}));
+        if (res.ok && out.ok) {
+          status.textContent = "";
+          succeed((data.name || "").trim().split(/\s+/)[0]);
+        } else if (out.error === "rate") {
+          throw new Error("You've sent several messages in a short time. Please wait a little and try again, or email us at " + CONTACT_EMAIL + ".");
+        } else if (out.error === "fields") {
+          throw new Error("Please check your name, email address and message, then try again.");
+        } else {
+          throw new Error("We couldn't send your message just now. Please try again in a moment, or email us at " + CONTACT_EMAIL + ".");
+        }
+      } catch (err) {
+        status.textContent = err && err.message && !/fetch|network/i.test(err.message) ? err.message
+          : "We couldn't reach our server. Please check your connection and try again, or email us at " + CONTACT_EMAIL + ".";
+        status.className = "form-status field-wide is-error";
+        shake();
+      } finally {
+        form.classList.remove("cf-sending");
+        if (button) button.disabled = false;
+      }
     });
 
     // The consultation button: move focus to the form section for keyboard and screen reader users.

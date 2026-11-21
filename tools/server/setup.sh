@@ -131,6 +131,35 @@ DynamicUser=true
 WantedBy=multi-user.target
 EOF
 
+echo "== 8b. Contact form service: /api/contact on the website, emails the team (tools/server/contact_service.py)"
+mkdir -p /srv/tenshi/data/contact && chown tenshi:tenshi /srv/tenshi/data/contact && chmod 700 /srv/tenshi/data/contact
+if [ ! -f /etc/tenshi-contact.env ]; then
+  cat > /etc/tenshi-contact.env <<'EOF'
+# Contact form settings (read by the tenshi-contact service). Fill in the SMTP lines, then: systemctl restart tenshi-contact
+CONTACT_TO=
+CONTACT_FROM=
+SMTP_HOST=smtp.hostinger.com
+SMTP_PORT=465
+SMTP_USER=
+SMTP_PASS=
+EOF
+fi
+chmod 600 /etc/tenshi-contact.env
+cat > /etc/systemd/system/tenshi-contact.service <<EOF
+[Unit]
+Description=Tenshi website contact form
+After=network.target
+[Service]
+User=tenshi
+EnvironmentFile=-/etc/tenshi-contact.env
+Environment=CONTACT_DIR=/srv/tenshi/data/contact
+ExecStart=/usr/bin/python3 $APP/tools/server/contact_service.py
+Restart=always
+NoNewPrivileges=true
+[Install]
+WantedBy=multi-user.target
+EOF
+
 echo "== 9. Web server (Caddy): the website, the CMS and client sites, all on HTTPS"
 cat > /etc/caddy/Caddyfile <<EOF
 {
@@ -152,6 +181,12 @@ $DOMAIN {
 	}
 	@pages path / *.html
 	header @pages Cache-Control "no-cache"
+	handle /api/contact* {
+		request_body {
+			max_size 64KB
+		}
+		reverse_proxy 127.0.0.1:9124
+	}
 	file_server
 }
 
@@ -202,6 +237,7 @@ NEW=\$(git rev-parse origin/$BRANCH)
 sudo -u tenshi git reset --quiet --hard origin/$BRANCH
 if ! git diff --quiet "\$OLD" "\$NEW" -- platform/requirements.txt; then sudo -u tenshi $APP/platform/.venv/bin/pip install -q -r platform/requirements.txt; fi
 if ! git diff --quiet "\$OLD" "\$NEW" -- platform/; then systemctl restart tenshi-cms; fi
+if ! git diff --quiet "\$OLD" "\$NEW" -- tools/server/contact_service.py; then systemctl restart tenshi-contact; fi
 logger -t tenshi-deploy "deployed \$NEW"
 EOF
 chmod 755 /usr/local/bin/tenshi-deploy
@@ -211,10 +247,10 @@ echo "*/5 * * * * root /usr/local/bin/tenshi-deploy" > /etc/cron.d/tenshi-deploy
 
 echo "== 12. Start everything"
 systemctl daemon-reload
-systemctl enable --now tenshi-tls-ask tenshi-cms >/dev/null
+systemctl enable --now tenshi-tls-ask tenshi-cms tenshi-contact >/dev/null
 systemctl restart tenshi-cms
 systemctl reload caddy || systemctl restart caddy
 sleep 3
-systemctl is-active tenshi-cms tenshi-tls-ask caddy
+systemctl is-active tenshi-cms tenshi-tls-ask tenshi-contact caddy
 curl -s -o /dev/null -w "CMS on 127.0.0.1:8000 -> HTTP %{http_code}\n" http://127.0.0.1:8000/login
 echo "== done"
