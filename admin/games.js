@@ -26,7 +26,7 @@
     "arpg.hero": "Hero", "arpg.hollow": "Hollow", "arpg.skitter": "Skitter", "arpg.wisp": "Wisp", "arpg.golem": "Golem", "arpg.warden": "The Warden (boss)"
   };
   // Slots that show a pre-rendered sprite in the game; uploading a model switches that sprite off (and Revert back on).
-  var SPRITE_SETTING = { "arpg.hero": "arpg.heroSprite", "arpg.hollow": "arpg.hollowSprite" };
+  var SPRITE_SETTING = { "arpg.hero": "arpg.heroSprite", "arpg.hollow": "arpg.hollowSprite", "arpg.golem": "arpg.golemSprite" };
   var ED, loaded = false, loading = null;
   var schema = null, edits = {}, values = {}, models = {}, modelsOrig = {};
   var uploads = {};             // slot -> { file, base64, url, tris, name }
@@ -109,7 +109,8 @@
   function card(slot) {
     var up = uploads[slot], custom = !isBuiltIn(slot), file = up ? up.name + " (new, not saved)" : custom ? models[slot] : "built-in";
     var hero = slot === "arpg.hero" ? '<p class="gs-note">Undercity shows the pre-rendered Eclipse Wraith. Uploading a model here switches the hero to your model (Game settings › Undercity › Hero sprite).</p>'
-      : slot === "arpg.hollow" ? '<p class="gs-note">Undercity shows the animated Corrupted Astral Sorcerer here. Uploading a model switches to your model (Game settings › Undercity › Hollow sprite).</p>' : "";
+      : slot === "arpg.hollow" ? '<p class="gs-note">Undercity shows the animated Corrupted Astral Sorcerer here. Uploading a model switches to your model (Game settings › Undercity › Hollow sprite).</p>'
+      : slot === "arpg.golem" ? '<p class="gs-note">Undercity shows the animated Green Elemental here. Uploading a model switches to your model (Game settings › Undercity › Golem sprite).</p>' : "";
     return '<article class="gs-card' + (dirty.models.has(slot) ? " is-dirty" : "") + '" data-slot="' + esc(slot) + '">' +
       '<model-viewer src="' + esc(previewSrc(slot)) + '" alt="' + esc(SLOT_NAMES[slot] || slot) + '" camera-controls auto-rotate rotation-per-second="20deg" shadow-intensity="1" exposure="1.1" interaction-prompt="none" loading="lazy"></model-viewer>' +
       '<div class="gs-card-body"><h4>' + esc(SLOT_NAMES[slot] || slot) + ' <code>' + esc(slot) + "</code></h4>" +

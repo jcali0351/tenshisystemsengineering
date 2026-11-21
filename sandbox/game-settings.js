@@ -282,6 +282,7 @@ window.TENSHI_GAMES = {
   "light": 6.5,
   "heroSprite": true,
   "hollowSprite": true,
+  "golemSprite": true,
   "hero": {
    "speed": 4.2,
    "reach": 1.25,

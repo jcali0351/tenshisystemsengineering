@@ -655,6 +655,8 @@
     // "Corrupted Astral Sorcerer" (Meshy, Mixamo "Back Jump"), the first enemy you meet. Its model faces the other way,
     // so its rows are turned half a circle (dirOffset 4).
     hollow: { file: "art/hollow-sorcerer.webp", setting: "hollowSprite", dirs: 8, frames: 8, cell: 160, anchorX: 0.5, anchorY: 0.8637, heightPx: 99.15, height: 1.75, dirOffset: 4, hitMs: 750 },
+    // "Low Poly Green Elemental" (Meshy, Mixamo "Block"): the Golem, the tough one from floor 2. Raises its guard when hit.
+    golem: { file: "art/golem-elemental.webp", setting: "golemSprite", dirs: 8, frames: 8, cell: 160, anchorX: 0.5, anchorY: 0.8637, heightPx: 119.84, height: 1.7, dirOffset: 4, hitMs: 900 },
   };
   for (const t in MONSTER_SPRITES) { const S = MONSTER_SPRITES[t]; S.img = new Image(); S.img.src = (document.querySelector('script[src*="neon-arpg.js"]')?.src || "").replace(/neon-arpg\.js.*$/, S.file); }
   function drawMonsterSprite(m, now) {
