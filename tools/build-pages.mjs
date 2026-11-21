@@ -1037,7 +1037,7 @@ ${[1, 2, 3].map((n) => `              <li data-i18n="pitchNext${n}">${tx("pitchN
           <ul class="info-list">
             <li>${icon("mail", "info-icon")}<div><b data-i18n="infoEmail">${tx("infoEmail")}</b><a class="contact-email" href="#contact"></a></div></li>
             <li>${icon("pin", "info-icon")}<div><b data-i18n="infoLocation">${tx("infoLocation")}</b><span data-i18n="location">${tx("location")}</span></div></li>
-            <li>${icon("globe", "info-icon")}<div><b data-i18n="infoLanguages">${tx("infoLanguages")}</b><span>English · <span lang="ja">日本語</span> · <span lang="ko">한국어</span> · <span lang="de">Deutsch</span></span></div></li>
+            <li>${icon("globe", "info-icon")}<div><b data-i18n="infoLanguages">${tx("infoLanguages")}</b><span>English · <span lang="es">Español</span> · <span lang="de">Deutsch</span> · <span lang="ko">한국어</span> · 6 more</span></div></li>
           </ul>
           <div class="chat-card">
             ${icon("chat", "info-icon")}
