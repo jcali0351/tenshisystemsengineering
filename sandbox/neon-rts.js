@@ -12,6 +12,7 @@
 //
 // Controls (mouse):  click a unit to select it (Shift adds), drag a box to select several, right-click to move /
 //   attack / mine. A then click = attack-move (fight anything on the way). S = stop. Space = select your whole army.
+//   Mouse wheel, + / - keys, the + - buttons or a two-finger pinch = zoom in and out.
 //   Q / W / E = train Spark / Blade / Lancer. With a miner selected, 1 2 3 4 = build a Turret / Supply Depot /
 //   Outpost / Shipyard (then click where). Outposts are forward bases: you can only build near the station or an
 //   outpost, so chain outposts to push into alien space. Arrow keys or the screen edges move the camera; click the minimap to jump.
@@ -51,6 +52,7 @@
   };
   const TRAINS = { core: ["spark", "blade", "lancer"], outpost: ["spark"], yard: ["blade", "lancer"] };   // who builds which ships
   const BUILDS = ["tower", "depot", "outpost", "yard"];                                                    // what miners can build
+  const ZOOM = { start: 1.4, max: 3 };   // camera: how close it starts (1 = the old view) and the closest you can zoom in
   const BUILD = { radius: 420, supplyMax: 80 };   // build within this distance of the station or an outpost; most ships depots can allow
   const CRYSTAL = { amount: 1200, carry: 8, mineTime: 1100 };
   // How many aliens: guarding the hive at the start, and in each wave (base + growth x wave number, rounded down).
@@ -60,7 +62,7 @@
     waveGrowth: { mite: 2, brute: 0.5, spitter: 0.5 },
     maxAlive: 150,              // a wave stops adding aliens once this many are alive
   };
-  TUNE(MAP, CFG.map); TUNE(START, CFG.start); TUNE(WAVES, CFG.waves); TUNE(UNITS, CFG.units); TUNE(CRYSTAL, CFG.crystal); TUNE(ENEMIES, CFG.enemies); TUNE(BUILD, CFG.build);
+  TUNE(MAP, CFG.map); TUNE(START, CFG.start); TUNE(WAVES, CFG.waves); TUNE(UNITS, CFG.units); TUNE(CRYSTAL, CFG.crystal); TUNE(ENEMIES, CFG.enemies); TUNE(BUILD, CFG.build); TUNE(ZOOM, CFG.zoom);
   // ==========================================================================================================
 
   const sfx = n => window.neonAudio && window.neonAudio.sfx(n);
@@ -79,6 +81,7 @@
       <button type="button" class="rts-full" hidden>⛶ FULLSCREEN</button>
       <div class="rts-res" hidden><span class="rts-credits">◆ 0</span><span class="rts-supply">0 / ${SUPPLY_CAP}</span><span class="rts-wave"></span></div>
     </div>
+    <div class="rts-zoom" hidden><button type="button" data-zoom="in" aria-label="Zoom in">+</button><button type="button" data-zoom="out" aria-label="Zoom out">−</button></div>
     <canvas class="rts-mini" width="208" height="120" hidden></canvas>
     <div class="rts-panel" hidden></div>
     <div class="rts-touch" hidden>
@@ -91,24 +94,37 @@
       <h3>Mine. Build. Defend the Station.</h3>
       <p>An alien hive is sending swarms at your space station. Mine crystals, build a fleet and wipe out the hive.</p>
       <button type="button" class="rts-play">▶ PLAY</button>
-      <p class="rts-help">Drag to select · Right-click to command · A attack-move · Q W E train · Miners: 1 2 3 4 build · Space whole fleet</p>
+      <p class="rts-help">Drag to select · Right-click to command · A attack-move · Q W E train · Miners: 1 2 3 4 build · Wheel / + − zoom · Space whole fleet</p>
     </div>`;
   section.appendChild(root);   // on the section itself (the site moves things inside the viewport for its parallax effect)
   const canvas = root.querySelector(".rts-canvas"), ctx = canvas.getContext("2d");
   const mini = root.querySelector(".rts-mini"), mctx = mini.getContext("2d");
   const panel = root.querySelector(".rts-panel"), msgEl = root.querySelector(".rts-msg"), intro = root.querySelector(".rts-intro");
   const resEl = root.querySelector(".rts-res"), creditsEl = root.querySelector(".rts-credits"), supplyEl = root.querySelector(".rts-supply"), waveEl = root.querySelector(".rts-wave");
+  const zoomBar = root.querySelector(".rts-zoom");
+  zoomBar.addEventListener("click", e => { const b = e.target.closest("button"); if (b) zoomBy(b.dataset.zoom === "in" ? 1.25 : 0.8); });
   const exitBtn = root.querySelector(".rts-exit"), fullBtn = root.querySelector(".rts-full"), touchBar = root.querySelector(".rts-touch");
 
-  let W = 0, H = 0, zoom = 1;
+  let W = 0, H = 0, zoom = 1, baseZoom = 1, fitZoom = 0.1, userZoom = ZOOM.start;
   function resize() {
     const r = root.getBoundingClientRect(), ratio = Math.min(window.devicePixelRatio || 1, 2);
     W = r.width; H = r.height;
     canvas.width = Math.round(W * ratio); canvas.height = Math.round(H * ratio);
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-    zoom = W < 760 ? 0.75 : clamp(W / 1300, 0.55, 1);   // phones: a little closer, so units are big enough to tap
-    zoom = Math.max(zoom, W / MAP.w, H / MAP.h);          // the map always covers the whole window, edge to edge
+    fitZoom = Math.max(W / MAP.w, H / MAP.h);             // the furthest out: the map still covers the whole window
+    baseZoom = Math.max(W < 760 ? 0.75 : clamp(W / 1300, 0.55, 1), fitZoom);   // phones: a little closer, so units are big enough to tap
+    applyZoom();
     clampCamera();
+  }
+  function applyZoom() {
+    userZoom = clamp(userZoom, fitZoom / baseZoom, ZOOM.max);
+    zoom = clamp(baseZoom * userZoom, fitZoom, baseZoom * ZOOM.max);
+  }
+  // Zoom by a factor, keeping the point under (px, py) (screen pixels; default the middle) in the same place.
+  function zoomBy(f, px = W / 2, py = H / 2) {
+    const wx = px / zoom + cam.x, wy = py / zoom + cam.y;
+    userZoom *= f; applyZoom();
+    cam.x = wx - px / zoom; cam.y = wy - py / zoom; clampCamera();
   }
   window.addEventListener("resize", resize);
 
@@ -979,8 +995,18 @@
   const toWorld = (x, y) => ({ x: x / zoom + cam.x, y: y / zoom + cam.y });
   function local(e) { const r = canvas.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
   canvas.addEventListener("contextmenu", e => e.preventDefault());
+  canvas.addEventListener("wheel", e => { if (state !== "play") return; e.preventDefault(); const p = local(e); zoomBy(Math.exp(-clamp(e.deltaY, -120, 120) * 0.0018), p.x, p.y); }, { passive: false });
+  // Two fingers: pinch to zoom (and the selection drag is cancelled).
+  const touches = new Map(); let pinch = 0;
+  const pinchGap = () => { const [a, b] = [...touches.values()]; return Math.hypot(a.x - b.x, a.y - b.y); };
+  canvas.addEventListener("pointerdown", e => { if (e.pointerType === "mouse") return; touches.set(e.pointerId, local(e)); if (touches.size === 2) { drag = null; pinch = pinchGap(); } });
+  canvas.addEventListener("pointermove", e => {
+    if (!touches.has(e.pointerId)) return; touches.set(e.pointerId, local(e));
+    if (touches.size === 2 && pinch) { const g = pinchGap(), [a, b] = [...touches.values()]; zoomBy(g / pinch, (a.x + b.x) / 2, (a.y + b.y) / 2); pinch = g; }
+  });
+  for (const ev of ["pointerup", "pointercancel"]) canvas.addEventListener(ev, e => { touches.delete(e.pointerId); if (touches.size < 2) pinch = 0; });
   canvas.addEventListener("pointerdown", e => {
-    if (state !== "play") return;
+    if (state !== "play" || pinch) return;
     const p = local(e);
     if (e.button === 2) { if (placing) { placing = null; say("Cancelled"); return; } const w = toWorld(p.x, p.y); command(w.x, w.y, false); return; }
     if (e.button !== 0) return;
@@ -989,7 +1015,7 @@
   });
   canvas.addEventListener("pointermove", e => {
     const p = local(e); mouse = { x: p.x, y: p.y, in: true };
-    if (drag) { drag.x1 = p.x; drag.y1 = p.y; if (Math.hypot(drag.x1 - drag.x0, drag.y1 - drag.y0) > 8) drag.box = true; }
+    if (drag && !pinch) { drag.x1 = p.x; drag.y1 = p.y; if (Math.hypot(drag.x1 - drag.x0, drag.y1 - drag.y0) > 8) drag.box = true; }
   });
   canvas.addEventListener("pointerleave", () => { mouse.in = false; });
   canvas.addEventListener("pointerup", e => {
@@ -1021,7 +1047,7 @@
   window.addEventListener("keydown", e => {
     if (state !== "play" || !onScreen || (e.target.closest && e.target.closest("input, textarea, select"))) return;
     const k = e.key.toLowerCase();
-    const handled = { arrowleft: 1, arrowright: 1, arrowup: 1, arrowdown: 1, " ": 1, a: 1, s: 1, q: 1, w: 1, e: 1, escape: 1, 1: 1, 2: 1, 3: 1, 4: 1 };
+    const handled = { arrowleft: 1, arrowright: 1, arrowup: 1, arrowdown: 1, " ": 1, a: 1, s: 1, q: 1, w: 1, e: 1, escape: 1, 1: 1, 2: 1, 3: 1, 4: 1, "+": 1, "=": 1, "-": 1, "_": 1 };
     if (!handled[k]) return;
     e.preventDefault(); keys[k] = true;
     if (k === "a") act("amove");
@@ -1031,6 +1057,8 @@
     if (k === "w") train("blade");
     if (k === "e") train("lancer");
     if ("1234".includes(k)) startPlacing(BUILDS[+k - 1]);
+    if (k === "+" || k === "=") zoomBy(1.25);
+    if (k === "-" || k === "_") zoomBy(0.8);
     if (k === "escape") { if (placing) { placing = null; say("Cancelled"); return; } amoveMode = false; selected = []; renderPanel(); }
   });
   window.addEventListener("keyup", e => { keys[e.key.toLowerCase()] = false; });
@@ -1047,7 +1075,7 @@
 
   // ================================================ START, END, LOOP ================================================
   function showUI(on) {
-    for (const el of [resEl, mini, panel]) el.hidden = !on;
+    for (const el of [resEl, mini, panel, zoomBar]) el.hidden = !on;
     exitBtn.hidden = !(on || takeover);                     // while the game fills the window you can always get out
     touchBar.hidden = !on || !matchMedia("(pointer: coarse)").matches; section.classList.toggle("rts-on", on);
   }
@@ -1120,5 +1148,5 @@
   if (reduce) intro.querySelector(".rts-help").textContent += " · (Reduced motion: effects are toned down.)";
   requestAnimationFrame(loop);
   window.neonRTS = { state: () => ({ state, credits, clock: Math.round(clock), wave: waveNo, units: ents.filter(e => e.team === "p" && !e.T.building).length, enemies: ents.filter(e => e.team === "e").length, hive: hive() && hive().hp, core: core() && core().hp, selected: selected.length }),
-                     start, give: n => { credits += n; }, army: () => act("army"), seeAll: on => { seeAll = on; if (on) explored.fill(1); }, count: () => ents.reduce((m, e) => (m[e.type] = (m[e.type] || 0) + 1, m), {}), step: ms => { for (let t = 0; t < ms && state === "play"; t += 16) update(16); hud(); }, train, wave: sendWave, select: type => { selected = ents.filter(e => e.type === type); renderPanel(); }, command, killHive: () => { const h = hive(); if (h) damage(h, 1e6, null); }, build: (type, x, y) => { selected = ents.filter(e => e.type === "spark" && !(e.order && e.order.type === "build")).slice(0, 1); placing = { type }; return place(x, y); }, buildings: () => ents.filter(e => e.team === "p" && e.T.building).map(e => ({ type: e.type, built: +e.built.toFixed(2), hp: Math.round(e.hp), queue: e.queue.length })), canPlace, cap: () => supplyCap(), camTo: (x, y) => { cam.x = x - W / zoom / 2; cam.y = y - H / zoom / 2; clampCamera(); } };
+                     start, give: n => { credits += n; }, army: () => act("army"), seeAll: on => { seeAll = on; if (on) explored.fill(1); }, count: () => ents.reduce((m, e) => (m[e.type] = (m[e.type] || 0) + 1, m), {}), step: ms => { for (let t = 0; t < ms && state === "play"; t += 16) update(16); hud(); }, train, wave: sendWave, select: type => { selected = ents.filter(e => e.type === type); renderPanel(); }, command, killHive: () => { const h = hive(); if (h) damage(h, 1e6, null); }, build: (type, x, y) => { selected = ents.filter(e => e.type === "spark" && !(e.order && e.order.type === "build")).slice(0, 1); placing = { type }; return place(x, y); }, buildings: () => ents.filter(e => e.team === "p" && e.T.building).map(e => ({ type: e.type, built: +e.built.toFixed(2), hp: Math.round(e.hp), queue: e.queue.length })), canPlace, cap: () => supplyCap(), zoom: f => { if (f) zoomBy(f); return +zoom.toFixed(3); }, camTo: (x, y) => { cam.x = x - W / zoom / 2; cam.y = y - H / zoom / 2; clampCamera(); } };
 })();

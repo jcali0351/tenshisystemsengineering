@@ -136,6 +136,10 @@ STATION_DEFENSE = {
         "outpost": {"hp": 1000, "sight": 380, "cost": 250, "time": 30},                                       # Outpost (forward base)
         "yard":    {"hp": 750,  "sight": 280, "cost": 200, "time": 26},                                       # Shipyard
     },
+    "zoom": {
+        "start": 1.4,                # how close the camera starts (1 = the old, far view; bigger = bigger ships)
+        "max": 3,                    # the closest you can zoom in (wheel, + / - keys, the + - buttons, pinch)
+    },
     "build": {
         "radius": 420,               # you can build this far from the station or an outpost (chain outposts to expand)
         "supplyMax": 80,             # the most ships Supply Depots can raise your fleet to

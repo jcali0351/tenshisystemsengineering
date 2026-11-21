@@ -269,6 +269,10 @@ window.TENSHI_GAMES = {
     "time": 26
    }
   },
+  "zoom": {
+   "start": 1.4,
+   "max": 3
+  },
   "build": {
    "radius": 420,
    "supplyMax": 80
