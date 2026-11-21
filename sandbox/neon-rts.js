@@ -500,6 +500,20 @@
   const HALF = norm(LIGHT_KEY.map((c, i) => c + VIEW[i]));
   const TILT = { y: 0.62, z: 0.8 };   // how the camera looks down: depth squashes y, height lifts things up the screen
 
+  // ---- Blender models (models/models.json): a slot's model in this game's axes, or null for the built-in one ----
+  const SLOT = { core: "rts.station", spark: "rts.miner", blade: "rts.interceptor", lancer: "rts.gunship", mite: "rts.swarmling", brute: "rts.behemoth", spitter: "rts.spitter", hive: "rts.hive", crystal: "rts.crystal", rock: "rts.asteroid" };
+  const BLENDER = {};
+  function blender(kind) {
+    const slot = SLOT[kind];
+    if (!(slot in BLENDER)) {
+      const m = window.TenshiModels && window.TenshiModels.get(slot);
+      // glTF: x = left, y = up, z = forward. Here: x = forward, y = right, z = up.
+      BLENDER[slot] = m ? window.TenshiModels.axes(m, ([x, y, z]) => [z, -x, y]) : null;
+    }
+    return BLENDER[slot];
+  }
+  if (window.TenshiModels) window.TenshiModels.whenReady(() => { for (const k in BLENDER) delete BLENDER[k]; });
+
   // Draw one model at map position (x, y), height z, facing `yaw`, banked by `roll`, `size` = unit radius.
   function drawModel(m, x, y, z, yaw, roll, size, paint, flash = 0, alpha = 1) {
     const cy = Math.cos(yaw), sy = Math.sin(yaw), cr = Math.cos(roll), sr = Math.sin(roll);
@@ -516,7 +530,7 @@
       const nl = Math.hypot(...n); if (nl < 1e-9) continue; n = n.map(v => v / nl);
       // Point the normal away from the part's centre, so it always faces outwards.
       const pc = rot(f.c), mid = [0, 1, 2].map(k => f.i.reduce((t, i) => t + P[i][k], 0) / f.i.length);
-      if ((mid[0] - pc[0]) * n[0] + (mid[1] - pc[1]) * n[1] + (mid[2] - pc[2]) * n[2] < 0) n = n.map(v => -v);
+      if (!f.wind && (mid[0] - pc[0]) * n[0] + (mid[1] - pc[1]) * n[1] + (mid[2] - pc[2]) * n[2] < 0) n = n.map(v => -v);   // Blender faces ("wind") already point the right way
       const facing = n[0] * VIEW[0] + n[1] * VIEW[1] + n[2] * VIEW[2];
       if (facing <= 0.02) continue;                                            // back faces are hidden
       faces.push({ f, n, facing, depth: mid[1] * TILT.y + mid[2] * TILT.z });
@@ -524,7 +538,7 @@
     faces.sort((p, q) => p.depth - q.depth);
     ctx.globalAlpha = alpha;
     for (const { f, n, facing } of faces) {
-      const base = paint[f.mat] || paint.hull;
+      const base = f.rgb || paint[f.mat] || paint.hull;      // Blender faces carry their own material colour
       let col;
       if (f.mat === "glow") col = base;
       else {
@@ -601,14 +615,14 @@
     // Asteroids, slowly tumbling.
     for (const k of rocks) {
       if (sx(k.x) < -80 || sx(k.x) > W + 80 || sy(k.y) < -80 || sy(k.y) > H + 80) continue;
-      drawModel(ROCKS[k.k % 4], k.x, k.y, -10, k.a + now * k.spin, Math.sin(now * k.spin * 0.7 + k.a) * 0.6, k.r, PAINT.rock);
+      drawModel(blender("rock") || ROCKS[k.k % 4], k.x, k.y, -10, k.a + now * k.spin, Math.sin(now * k.spin * 0.7 + k.a) * 0.6, k.r, PAINT.rock);
     }
     // Crystals: floating, turning, glowing.
     for (const k of crystals) {
       if (k.left <= 0) continue;
       const left = Math.max(0.35, k.left / (CRYSTAL.amount * 1.5)), bob = Math.sin(now / 700 + k.x) * 3;
       bloom(sx(k.x), sy(k.y) - (6 + bob) * zoom, 34 * zoom, "255,90,230", 0.25 + 0.1 * Math.sin(now / 400 + k.y));
-      drawModel(MODELS.crystal, k.x, k.y, 6 + bob, now / 1800 + k.x, 0, 15 * left + 6, PAINT.crystal);
+      drawModel(blender("crystal") || MODELS.crystal, k.x, k.y, 6 + bob, now / 1800 + k.x, 0, 15 * left + 6, PAINT.crystal);
     }
     // Selection rings, under the units.
     for (const e of selected) {
@@ -659,8 +673,8 @@
     const X = sx(e.x), Y = sy(e.y) - h * zoom * TILT.z;
     if (e.type === "core") {
       bloom(X, Y - size * 0.6 * zoom, size * 2.2 * zoom, "176,77,255", 0.35);
-      drawModel(MODELS.ring, e.x, e.y, h, now / 2600, 0.25, size, paint, flash);
-      drawModel(MODELS.core, e.x, e.y, h, 0, 0, size, paint, flash);
+      if (blender("core")) drawModel(blender("core"), e.x, e.y, h, now / 9000, 0, size * 1.3, paint, flash);
+      else { drawModel(MODELS.ring, e.x, e.y, h, now / 2600, 0.25, size, paint, flash); drawModel(MODELS.core, e.x, e.y, h, 0, 0, size, paint, flash); }
       ctx.fillStyle = "#fff"; ctx.font = `900 ${Math.round(22 * zoom)}px 'Noto Sans JP', sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
       ctx.fillText("天", X, Y - size * 0.85 * zoom); ctx.textAlign = "start";
       for (let k = 0; k < 3; k++) { const a = k / 3 * 6.2832 + 0.5; if ((Math.floor(now / 500) + k) % 3 === 0) bloom(X + Math.cos(a) * size * 1.2 * zoom, Y + Math.sin(a) * size * 1.2 * zoom * TILT.y, 8 * zoom, "255,90,230", 1); }
@@ -675,18 +689,20 @@
         for (let s = 1; s <= 6; s++) { const r = size * (0.5 + s * 0.22), w = Math.sin(now / 500 + s * 0.8 + k) * 0.25; ctx.lineTo(X + Math.cos(a + w) * r * zoom, Y + Math.sin(a + w) * r * zoom * TILT.y + s * 2 * zoom); }
         ctx.stroke();
       }
-      drawModel(MODELS.hive, e.x, e.y, h, now / 6000, 0, size * pulse, paint, flash);
+      drawModel(blender("hive") || MODELS.hive, e.x, e.y, h, now / 6000, 0, size * pulse, paint, flash);
     } else {
       // Ships bank into turns; aliens wobble.
       const turn = Math.atan2(Math.sin(e.face - (e.lastFace ?? e.face)), Math.cos(e.face - (e.lastFace ?? e.face)));
       e.lastFace = e.face; e.bank = (e.bank || 0) * 0.9 + clamp(turn * 6, -0.8, 0.8) * 0.1;
       const roll = e.team === "p" ? e.bank : Math.sin(now / 160 + e.bob) * 0.12;
-      if (e.type === "mite") drawLegs(e, now, X, Y, size, 3, 0.9);
-      if (e.type === "brute") drawLegs(e, now, X, Y, size, 3, 1.1);
-      if (e.type === "spitter") drawTentacles(e, now, X, Y, size);
-      drawModel(MODELS[e.type], e.x, e.y, h, e.face, roll, size, paint, flash);
-      if (e.type === "lancer") drawModel(MODELS.turret, e.x, e.y, h + size * 0.35, e.aim ?? e.face, 0, size, paint, flash);
-      if (e.type === "mite") drawWings(e, now, X, Y, size);
+      const builtIn = !blender(e.type);
+      if (builtIn && e.type === "mite") drawLegs(e, now, X, Y, size, 3, 0.9);
+      if (builtIn && e.type === "brute") drawLegs(e, now, X, Y, size, 3, 1.1);
+      if (builtIn && e.type === "spitter") drawTentacles(e, now, X, Y, size);
+      const own = blender(e.type);
+      drawModel(own || MODELS[e.type], e.x, e.y, h, e.face, roll, size * (own ? 1.15 : 1), paint, flash);
+      if (e.type === "lancer" && !own) drawModel(MODELS.turret, e.x, e.y, h + size * 0.35, e.aim ?? e.face, 0, size, paint, flash);
+      if (builtIn && e.type === "mite") drawWings(e, now, X, Y, size);
       // Engine glow at the back of your ships (brighter when moving).
       if (e.team === "p") {
         const back = -size * (e.type === "lancer" ? 1.15 : 0.95), moving = e.moving ? 1 : 0.45;

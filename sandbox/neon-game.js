@@ -698,6 +698,23 @@
   }
 
   // Turn, light and draw one model. Returns the corners on screen (for extras like the saucer's lights).
+  // ---- Blender models (models/models.json) for the targets and the two giants ----
+  const BLENDER = {};
+  function blender(slot, conv) {
+    if (!(slot in BLENDER)) {
+      const m = window.TenshiModels && window.TenshiModels.get(slot);
+      if (!m) BLENDER[slot] = null;
+      else {
+        const mm = window.TenshiModels.axes(m, conv(m));
+        // The targets use plain index lists plus one colour per face.
+        BLENDER[slot] = { v: mm.v, f: mm.f.map(f => f.i), rgb: mm.f.map(f => f.rgb), glow: mm.f.map(f => f.glow), wind: true, faces: mm.f };
+      }
+    }
+    return BLENDER[slot];
+  }
+  if (window.TenshiModels) window.TenshiModels.whenReady(() => { for (const k in BLENDER) delete BLENDER[k]; });
+  const targetAxes = () => ([x, y, z]) => [z, -y, x];          // glTF (x left, y up, z forward) -> the targets' axes (y down)
+
   function drawModel(o, model, s, alpha, now) {
     if (o.rx === undefined) { o.rx = rand(0, 6.28); o.ry = rand(0, 6.28); o.rz = rand(0, 6.28); o.vrx = rand(0.008, 0.025); o.vry = rand(0.015, 0.04); o.vrz = rand(-0.01, 0.01); }
     o.rx += o.vrx; o.ry += o.vry; o.rz += o.vrz;
@@ -712,19 +729,19 @@
     });
     const base = rgbOf(o.color), lights = sceneLights(now);
     // Faces: back to front. Each face's normal is made to point outwards, then lit by the scene.
-    const faces = model.f.map(idx => {
+    const faces = model.f.map((idx, k) => {
       const a = P[idx[0]], b = P[idx[1]], c = P[idx[2]];
       const ux = b.x - a.x, uy = b.y - a.y, uz = b.z - a.z, vx = c.x - a.x, vy = c.y - a.y, vz = c.z - a.z;
       let nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx;
       const nl = Math.hypot(nx, ny, nz) || 1; nx /= nl; ny /= nl; nz /= nl;
       const mx = idx.reduce((t, i) => t + P[i].x, 0) / idx.length, my = idx.reduce((t, i) => t + P[i].y, 0) / idx.length, mz = idx.reduce((t, i) => t + P[i].z, 0) / idx.length;
-      if (nx * mx + ny * my + nz * mz < 0) { nx = -nx; ny = -ny; nz = -nz; }   // point away from the middle
-      return { idx, depth: mz, facing: -nz, n: [nx, ny, nz] };
+      if (!model.wind && nx * mx + ny * my + nz * mz < 0) { nx = -nx; ny = -ny; nz = -nz; }   // point away from the middle (Blender faces already do)
+      return { idx, depth: mz, facing: -nz, n: [nx, ny, nz], rgb: model.rgb && model.rgb[k] };
     }).sort((p, q) => q.depth - p.depth);
     ctx.shadowBlur = 0;
     for (const f of faces) {
       const front = f.facing > 0;
-      const lit = shadeFace(base, f.n, o.x, o.y, lights);
+      const lit = shadeFace(f.rgb || base, f.n, o.x, o.y, lights);
       ctx.globalAlpha = alpha * (front ? 0.25 + 0.55 * lit.bright : 0.07);
       ctx.fillStyle = lit.color;
       ctx.beginPath(); f.idx.forEach((i, k) => k ? ctx.lineTo(P[i].sx, P[i].sy) : ctx.moveTo(P[i].sx, P[i].sy)); ctx.closePath(); ctx.fill();
@@ -750,11 +767,11 @@
     ctx.globalAlpha = A; ctx.strokeStyle = o.color; ctx.fillStyle = o.color; ctx.lineWidth = 2; glow(o.color, 14);
     const s = o.size * (1 + 0.18 * near);
     if (o.kind === "drone") {
-      drawModel(o, MODELS.drone, s, A, now);
+      drawModel(o, blender("arcade.drone", targetAxes) || MODELS.drone, s * (blender("arcade.drone", targetAxes) ? 1.3 : 1), A, now);
       ctx.globalAlpha = A * (0.5 + 0.5 * Math.sin(now / 120 + o.phase)); glow(o.color, 16); ctx.fillStyle = "#ffffff";
       ctx.beginPath(); ctx.arc(0, 0, s * 0.18, 0, 6.28); ctx.fill();                                  // pulsing core
     } else if (o.kind === "saucer") {
-      drawModel(o, MODELS.saucer, s, A, now);
+      drawModel(o, blender("arcade.saucer", targetAxes) || MODELS.saucer, s * (blender("arcade.saucer", targetAxes) ? 1.4 : 1), A, now);
       // Lights round the rim: bright on the near side, dim behind.
       const t = now / 500 + o.phase, tiltY = Math.sin(o.rx * 0.35);
       for (let i = 0; i < 8; i++) {
@@ -764,9 +781,9 @@
         ctx.beginPath(); ctx.arc(Math.cos(a) * 1.4 * s * f, z * tiltY * 1.4 * s * f, 2.2, 0, 6.28); ctx.fill();
       }
     } else if (o.kind === "cube") {
-      drawModel(o, MODELS.cube, s, A, now);
+      drawModel(o, blender("arcade.cube", targetAxes) || MODELS.cube, s, A, now);
     } else if (o.kind === "star") {
-      drawModel(o, MODELS.star, s, Math.min(1, A * 1.3), now);
+      drawModel(o, blender("arcade.star", targetAxes) || MODELS.star, s * (blender("arcade.star", targetAxes) ? 1.2 : 1), Math.min(1, A * 1.3), now);
     } else if (o.kind === "power") {                       // power-up: a pulsing double ring with its letter (drawn fully solid)
       ctx.globalAlpha = 1;
       const pulse = 1 + 0.15 * Math.sin(now / 150);
@@ -1042,7 +1059,16 @@
   }
   function drawMonster(mo, now) {
     const s = monsterScale(), ground = window.neonCity ? window.neonCity.ground() : H * 0.4, lights = sceneLights(now);
-    const parts = poseMonster(mo, now), faces = [], circles = [];
+    const own = blender("arcade." + mo.type, m => ([x, y, z]) => [z * 4.2, (y + m.height / 2) * 4.2, x * 4.2]);
+    let parts;
+    if (own) {
+      const t = mo.t / 1000, walking = mo.state === "walk", attack = mo.state === "attack" ? Math.max(0, 1 - (now - (mo.attackAt || 0)) / 900) : 0;
+      const yaw = (mo.dir > 0 ? -0.55 : Math.PI + 0.55) + Math.sin(t * 0.7) * 0.12;
+      const R = mMul(mMul(rY(yaw), rZ(-mo.fall * 1.45 - attack * 0.35)), rX(walking ? Math.sin(mo.walk) * 0.06 : 0));
+      parts = [{ mesh: { v: own.v, f: own.faces }, R, at: [0, walking ? Math.abs(Math.cos(mo.walk)) * 0.15 : 0, 0], mat: mo.type }];
+      mo.mouth = { at: mApp(R, [3.2, 7, 0]) };
+    } else parts = poseMonster(mo, now);
+    const faces = [], circles = [];
     const toScreen = w => [mo.x + w[0] * s, ground - w[1] * s];
     for (const p of parts) {
       const W3 = p.mesh.v.map(v => mApp(p.R, v).map((c, i) => c + p.at[i]));
@@ -1056,9 +1082,9 @@
         let n = [(b[1] - a[1]) * (c[2] - a[2]) - (b[2] - a[2]) * (c[1] - a[1]), (b[2] - a[2]) * (c[0] - a[0]) - (b[0] - a[0]) * (c[2] - a[2]), (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])];
         const nl = Math.hypot(...n); if (nl < 1e-9) continue; n = n.map(v => v / nl);
         const pc = mApp(p.R, f.c).map((v, i) => v + p.at[i]), mid = [0, 1, 2].map(k => f.i.reduce((tt, i) => tt + W3[i][k], 0) / f.i.length);
-        if ((mid[0] - pc[0]) * n[0] + (mid[1] - pc[1]) * n[1] + (mid[2] - pc[2]) * n[2] < 0) n = n.map(v => -v);
+        if (!f.wind && (mid[0] - pc[0]) * n[0] + (mid[1] - pc[1]) * n[1] + (mid[2] - pc[2]) * n[2] < 0) n = n.map(v => -v);
         if (n[2] <= 0.03) continue;                                             // facing away from you
-        faces.push({ pts: f.i.map(i => S[i]), z: mid[2], n, mat: f.mat, paint: KPAINT[p.mat] });
+        faces.push({ pts: f.i.map(i => S[i]), z: mid[2], n, mat: f.mat, paint: KPAINT[p.mat], rgb: f.rgb });
       }
     }
     mo.circles = circles;
@@ -1067,7 +1093,7 @@
     ctx.globalCompositeOperation = "source-over";
     ctx.globalAlpha = MONSTER.opacity * (mo.state === "dying" ? Math.max(0, 1 - Math.max(0, mo.fall - 0.7) * 3) : 1);
     for (const f of faces) {
-      const base = f.paint[f.mat] || f.paint.skin || f.paint.hull;
+      const base = f.rgb || f.paint[f.mat] || f.paint.skin || f.paint.hull;
       let col;
       if (GLOWY.has(f.mat)) col = `rgb(${base.join(",")})`;
       else col = shadeFace(base, [f.n[0], -f.n[1], -f.n[2]], f.pts[0][0], f.pts[0][1], lights).color;

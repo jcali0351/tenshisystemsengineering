@@ -816,3 +816,80 @@ html.neon:not(#_):not(#__):not(#___) .feature .feature-inner::before, html.neon:
 @media (max-width: 860px) {
   html.neon:not(#_):not(#__):not(#___) .feature .feature-inner > :is(.feature-body, .feature-figure) { grid-column: 1 !important; grid-row: auto !important; }
 }
+
+/* ======================================================================================================
+   UNDERCITY (neon-arpg.js): the dungeon crawler in the "Built, then made better" strip. Same game-window
+   behaviour as Station Defense: full height in the page, the whole browser window while playing.
+   ====================================================================================================== */
+html.neon .parallax.arpg-zone { height: 100vh !important; min-height: 560px !important; }
+html.neon .arpg-zone .parallax-copy { visibility: hidden !important; }
+html.neon .arpg { position: absolute; inset: 0; z-index: 3; font-family: Lato, system-ui, sans-serif; color: #fff; user-select: none; -webkit-user-select: none; }
+html.neon .arpg-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+html.neon .arpg-on .arpg-canvas { touch-action: none; cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M3 2l7 18 2.5-7.5L20 10z' fill='%23ffd84a' stroke='%23000' stroke-width='1.2'/%3E%3C/svg%3E") 3 2, crosshair; }
+html.neon .arpg [hidden] { display: none !important; }
+html.neon .arpg button { font: 700 12px/1 Oswald, sans-serif; letter-spacing: .08em; color: #fff; cursor: pointer;
+  background: rgba(30, 14, 52, .82); border: 1px solid rgba(215, 170, 255, .35); border-radius: 8px; padding: 9px 12px; }
+html.neon .arpg button:hover { border-color: #ff2bd6; box-shadow: 0 0 14px rgba(255, 43, 214, .45); }
+html.neon .arpg-top { position: absolute; top: 76px; left: 16px; right: 16px; display: flex; gap: 8px; align-items: flex-start; pointer-events: none; }
+html.neon .arpg-top > * { pointer-events: auto; }
+html.neon .arpg-info { margin-left: auto; display: flex; gap: 14px; font: 700 13px/1 Oswald, sans-serif; letter-spacing: .1em; background: rgba(14, 6, 26, .8); border: 1px solid rgba(215, 170, 255, .3); border-radius: 10px; padding: 10px 14px; margin-right: 166px; }
+html.neon .arpg-gold { color: #ffd84a; } html.neon .arpg-lvl { color: #8fd8ff; }
+html.neon .arpg-mini { position: absolute; top: 76px; right: 16px; width: 150px; height: 150px; border: 1px solid rgba(215, 170, 255, .35); border-radius: 10px; }
+/* Bottom HUD: life and mana gauges either side of the skill bar, XP along the bottom. */
+html.neon .arpg-hud { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); display: flex; align-items: flex-end; gap: 12px; padding: 10px 14px 16px;
+  background: rgba(10, 4, 22, .82); border: 1px solid rgba(215, 170, 255, .3); border-radius: 16px; box-shadow: 0 0 30px rgba(176, 77, 255, .3); }
+html.neon .arpg-gauge { position: relative; width: 64px; height: 64px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255, 255, 255, .25); background: #0c0418; }
+html.neon .arpg-gauge b { position: absolute; left: 0; right: 0; bottom: 0; transition: height .15s; }
+html.neon .arpg-hp b { background: linear-gradient(180deg, #ff6e8a, #a0123c); box-shadow: 0 0 18px #ff2b6a inset; }
+html.neon .arpg-mp b { background: linear-gradient(180deg, #8fd8ff, #2a3cc0); box-shadow: 0 0 18px #4a7bff inset; }
+html.neon .arpg-gauge span { position: absolute; inset: 0; display: grid; place-items: center; font: 700 11px Oswald, sans-serif; text-shadow: 0 1px 3px #000; }
+html.neon .arpg-bar { display: flex; gap: 6px; }
+html.neon .arpg-bar button { position: relative; width: 56px; height: 56px; padding: 4px; display: grid; place-items: center; font-size: 20px; overflow: hidden; }
+html.neon .arpg-bar button i { position: absolute; top: 3px; left: 5px; font: 700 10px Oswald, sans-serif; font-style: normal; color: #ffd84a; }
+html.neon .arpg-bar button small { position: absolute; bottom: 3px; left: 0; right: 0; text-align: center; font: 700 9px Oswald, sans-serif; letter-spacing: .06em; color: rgba(255, 255, 255, .8); }
+html.neon .arpg-bar button::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: calc(var(--cd, 0) * 100%); background: rgba(0, 0, 0, .6); }
+html.neon .arpg-bar button.low { opacity: .55; }
+html.neon .arpg-xp { position: absolute; left: 14px; right: 14px; bottom: 6px; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, .1); overflow: hidden; }
+html.neon .arpg-xp b { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #b04dff, #ffd84a); }
+html.neon .arpg-msg { position: absolute; top: 112px; left: 50%; transform: translateX(-50%); font: 700 18px Oswald, sans-serif; letter-spacing: .12em; text-shadow: 0 0 14px #ff2bd6, 0 2px 6px #000; opacity: 0; transition: opacity .25s; pointer-events: none; white-space: nowrap; }
+html.neon .arpg-msg.on { opacity: 1; }
+html.neon .arpg-tip { position: absolute; right: 16px; bottom: 120px; width: 260px; padding: 12px 14px; border-radius: 12px; background: rgba(10, 4, 22, .92); border: 1px solid rgba(215, 170, 255, .35); font-size: 13px; }
+html.neon .arpg-tip b { display: block; font: 700 15px Oswald, sans-serif; letter-spacing: .04em; }
+html.neon .arpg-tip small { text-transform: uppercase; letter-spacing: .15em; font-size: 10px; color: rgba(255, 255, 255, .6); }
+html.neon .arpg-tip p { margin: 6px 0 0; color: #d7c4ff; } html.neon .arpg-tip em { display: block; margin-top: 6px; font-size: 11px; color: rgba(255, 255, 255, .5); }
+html.neon .arpg-sheet { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(460px, calc(100% - 32px)); max-height: 80%; overflow: auto; padding: 20px 22px;
+  background: linear-gradient(160deg, #2e0b57, #14052b); border: 1px solid rgba(255, 43, 214, .45); border-radius: 18px; box-shadow: 0 0 40px rgba(176, 77, 255, .4); }
+html.neon .arpg-sheet h4 { margin: 0 0 12px; font: 700 20px Oswald, sans-serif; letter-spacing: .1em; text-shadow: 0 0 16px #ff2bd6; }
+html.neon .arpg-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; margin-bottom: 12px; font-size: 13px; }
+html.neon .arpg-stats b { color: #ffd84a; float: right; }
+html.neon .arpg-slot { padding: 8px 0; border-top: 1px solid rgba(255, 255, 255, .08); font-size: 13px; }
+html.neon .arpg-slot small { display: block; text-transform: uppercase; letter-spacing: .2em; font-size: 10px; color: #ffb36b; }
+html.neon .arpg-slot b { display: block; font: 700 15px Oswald, sans-serif; } html.neon .arpg-slot span { color: #d7c4ff; }
+html.neon .arpg-note { font-size: 12px; color: rgba(255, 255, 255, .6); }
+html.neon .arpg-intro { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(580px, calc(100% - 32px)); text-align: center;
+  background: rgba(14, 6, 26, .82); border: 1px solid rgba(215, 170, 255, .35); border-radius: 16px; padding: 26px 24px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 0 40px rgba(176, 77, 255, .35); }
+html.neon:not(#_):not(#__) .arpg-intro h3 { font: 700 clamp(26px, 4vw, 40px)/1.05 Oswald, sans-serif; text-transform: uppercase; margin: 6px 0 10px; color: #fff !important; -webkit-text-fill-color: #fff !important; text-shadow: 0 0 18px rgba(255, 138, 43, .6) !important; }
+html.neon .arpg-intro p { color: rgba(255, 255, 255, .85); margin: 0 0 14px; font-size: 15px; }
+html.neon .arpg-kicker { font: 700 12px Oswald, sans-serif !important; letter-spacing: .18em; color: #ffb36b !important; -webkit-text-fill-color: #ffb36b !important; }
+html.neon .arpg-buttons { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+html.neon .arpg-intro .arpg-play { font-size: 15px; padding: 13px 24px; background: #fff; color: #2e0b57; border: 0; display: inline-flex; align-items: center; justify-content: center; }
+html.neon .arpg-intro .arpg-play.arpg-alt { background: rgba(30, 14, 52, .85); color: #fff; border: 1px solid rgba(215, 170, 255, .4); }
+html.neon .arpg-intro .arpg-help { font-size: 12px; color: rgba(255, 255, 255, .55) !important; margin: 14px 0 0; }
+/* While playing, the game fills the whole window. */
+html.neon.arpg-takeover, html.neon.arpg-takeover body { overflow: hidden !important; }
+html.neon.arpg-takeover .parallax.arpg-zone { position: fixed !important; inset: 0 !important; width: 100vw !important; max-width: none !important; height: 100vh !important; height: 100dvh !important; min-height: 0 !important; margin: 0 !important; z-index: 5000 !important; }
+html.neon.arpg-takeover :is(.site-header, .gx-hud, .gx-toast, .tk-root, .neon-weapons, .neon-hud, .neon-banner, .neon-bubble, .neon-tip, .neon-bossbar, #neon-beasts, #neon-game, #neon-geo, #neon-particles) { visibility: hidden !important; }
+html.neon.arpg-takeover main { z-index: 5000 !important; }
+html.neon.arpg-takeover .neon-sound { z-index: 5001 !important; }
+html.neon.arpg-takeover .arpg-top, html.neon .arpg-zone:fullscreen .arpg-top { top: 14px; }
+html.neon.arpg-takeover .arpg-mini, html.neon .arpg-zone:fullscreen .arpg-mini { top: 14px; }
+@media (max-width: 760px) {
+  html.neon .arpg-top { top: 64px; left: 10px; right: 10px; }
+  html.neon .arpg-info { margin-right: 0; gap: 8px; font-size: 11px; padding: 8px 10px; }
+  html.neon .arpg-mini { display: none; }
+  html.neon .arpg-hud { bottom: 64px; gap: 6px; padding: 8px 8px 14px; max-width: calc(100% - 16px); }
+  html.neon .arpg-gauge { width: 46px; height: 46px; }
+  html.neon .arpg-bar button { width: 44px; height: 46px; font-size: 16px; }
+  html.neon .arpg-tip { right: 10px; left: 10px; width: auto; bottom: 150px; }
+  html.neon .arpg-msg { font-size: 14px; top: 104px; }
+}
