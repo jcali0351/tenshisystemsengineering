@@ -12,7 +12,7 @@ import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
 import { createHash } from "node:crypto";
 
 const SKIP = ["index.html", "classic.html", "admin.html", "client-portal.html", "404.html", "projects.html"];
-const FILES = ["sandbox/neon-recolor.css", "sandbox/neon-theme.css", "sandbox/neon-pages.css", "sandbox/neon-recolor-live.js", "sandbox/neon-quest.js"];
+const FILES = ["sandbox/neon-recolor.css", "sandbox/neon-theme.css", "sandbox/neon-pages.css", "sandbox/neon-recolor-live.js", "sandbox/neon-quest.js", "sandbox/game-settings.js"];
 const v = createHash("sha256").update(FILES.map((f) => readFileSync(f)).join("\n")).digest("hex").slice(0, 8);
 const pages = [
   ...readdirSync(".").filter((f) => f.endsWith(".html") && !SKIP.includes(f)),
@@ -35,7 +35,7 @@ for (const p of pages) {
   // 2. Take out any earlier copies of the links and scripts.
   html = html
     .replace(/\n?[ \t]*<link rel="stylesheet" href="(?:\.\.\/)?sandbox\/neon-(?:recolor|theme|pages)\.css[^"]*">/g, "")
-    .replace(/\n?[ \t]*<script src="(?:\.\.\/)?sandbox\/neon-(?:recolor-live|quest)\.js[^"]*"><\/script>/g, "");
+    .replace(/\n?[ \t]*<script src="(?:\.\.\/)?sandbox\/(?:neon-recolor-live|neon-quest|game-settings)\.js[^"]*"><\/script>/g, "");
   // 3. The stylesheets right after custom.css (so they win), and the recolouring script.
   html = html.replace(/(<link rel="stylesheet" href="(?:\.\.\/)?custom\.css[^"]*">)/, (m) => m +
     `\n  <link rel="stylesheet" href="${pre}sandbox/neon-recolor.css?v=${v}">` +
@@ -43,7 +43,7 @@ for (const p of pages) {
     `\n  <link rel="stylesheet" href="${pre}sandbox/neon-pages.css?v=${v}">` +
     `\n  <script src="${pre}sandbox/neon-recolor-live.js?v=${v}"></script>`);
   // 4. The quest script at the end of the page.
-  html = html.replace(/<\/body>/, `  <script src="${pre}sandbox/neon-quest.js?v=${v}"></script>\n</body>`);
+  html = html.replace(/<\/body>/, `  <script src="${pre}sandbox/game-settings.js?v=${v}"></script>\n  <script src="${pre}sandbox/neon-quest.js?v=${v}"></script>\n</body>`);
   if (html !== before) writeFileSync(p, html);
   done++;
 }

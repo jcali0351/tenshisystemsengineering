@@ -16,7 +16,8 @@
   // ================================================ SETTINGS ================================================
   const TW = 64, TH = 32, WALL = 44;                 // tile width / height on screen, wall height (pixels)
   const MAPW = 56, MAPH = 56;
-  const LIGHT = 6.5;                                  // how far the hero's light reaches (tiles)
+  const CFG = (window.TENSHI_GAMES || {}).arpg || {}; const TUNE = window.TENSHI_TUNE || (t => t);   // your values from game_settings.py
+  const LIGHT = CFG.light ?? 6.5;                                 // how far the hero's light reaches (tiles)
   const HERO = { speed: 4.2, reach: 1.25, attackEvery: 520 };
   const SKILLS = {
     fireball: { name: "Fireball", key: "1", mana: 8, cd: 350, color: "#ff8a2b" },
@@ -35,6 +36,8 @@
     { id: "rare", name: "Rare", color: "#ffd84a", chance: 0.115, mult: 1.8, affixes: 2 },
     { id: "legendary", name: "Legendary", color: "#ff8a2b", chance: 0.025, mult: 2.6, affixes: 3 },
   ];
+  TUNE(HERO, CFG.hero); TUNE(SKILLS, CFG.skills); TUNE(MONSTERS, CFG.monsters);
+  for (const r of RARITY) TUNE(r, (CFG.rarity || {})[r.id]);
   const BASES = {
     weapon: ["Katana", "Neon Blade", "Rune Staff", "War Axe", "Glaive"],
     armor: ["Coat", "Lamellar", "Robe", "Plate", "Jacket"],
@@ -611,7 +614,8 @@
     const px = sx(hero.x, hero.y), py = sy(hero.x, hero.y, 0.85 + bob), a = hero.face + (hero.swing ? (hero.swing - 0.5) * 2.4 : 0.6);
     const ex = px + Math.cos(a - Math.PI / 4) * 30 * zoom, ey = py + Math.sin(a - Math.PI / 4) * 16 * zoom;
     ctx.save(); ctx.globalCompositeOperation = "lighter"; ctx.strokeStyle = wcol; ctx.lineWidth = 3 * zoom; ctx.shadowColor = wcol; ctx.shadowBlur = 14;
-    ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(ex, ey); ctx.stroke(); ctx.restore();
+    if (!model) { ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(ex, ey); ctx.stroke(); }
+    ctx.restore();
     if (hero.swing > 0.3) { ctx.save(); ctx.globalCompositeOperation = "lighter"; ctx.strokeStyle = `rgba(255,255,255,${hero.swing * 0.6})`; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(px, py, 30 * zoom, hero.face - 1.6, hero.face + 0.4); ctx.stroke(); ctx.restore(); }
   }
   function drawMonster(m, now) {

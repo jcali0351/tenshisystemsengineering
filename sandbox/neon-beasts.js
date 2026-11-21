@@ -34,6 +34,7 @@
     phoenixHealth: 10,       // the same for the phoenix
     respawnSeconds: 25,      // how long until an exploded creature re-forms
   };
+  if (window.TENSHI_TUNE) window.TENSHI_TUNE(BEASTS, (window.TENSHI_GAMES || {}).sky);   // your values from game_settings.py
   // ==========================================================================================================
 
   const canvas = document.createElement("canvas");

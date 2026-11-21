@@ -15,6 +15,7 @@ const SETTINGS = {
   hueMiddle: 320,       // pink
   hueFar: 385,          // orange (385 = 25 on the colour wheel; going past 360 blends through red, not blue)
 };
+if (window.TENSHI_TUNE) window.TENSHI_TUNE(SETTINGS, (window.TENSHI_GAMES || {}).grid);   // your values from game_settings.py
 // ==========================================================================================
 
 const canvas = document.getElementById("neon-bg");

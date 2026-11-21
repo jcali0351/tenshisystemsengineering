@@ -1,0 +1,320 @@
+// Written by game_settings.py. Don't edit this file: edit game_settings.py and run it again.
+window.TENSHI_GAMES = {
+ "arcade": {
+  "game": {
+   "hitRadius": 1.4,
+   "comboWindow": 1600,
+   "baseSpawnEvery": 1200,
+   "pointsPerLevel": 300,
+   "targetOpacity": 0.6,
+   "shields": 5,
+   "bossEvery": 800,
+   "powerEvery": [
+    14000,
+    24000
+   ],
+   "powerSeconds": 7
+  },
+  "targets": {
+   "drone": {
+    "points": 10,
+    "size": 16,
+    "speed": [
+     1.2,
+     2.2
+    ],
+    "weight": 5
+   },
+   "saucer": {
+    "points": 25,
+    "size": 22,
+    "speed": [
+     2.2,
+     3.4
+    ],
+    "weight": 3
+   },
+   "cube": {
+    "points": 15,
+    "size": 18,
+    "speed": [
+     1.0,
+     1.8
+    ],
+    "weight": 3
+   },
+   "star": {
+    "points": 100,
+    "size": 14,
+    "speed": [
+     3.6,
+     4.8
+    ],
+    "weight": 0.5
+   }
+  },
+  "weapons": {
+   "laser": {
+    "cooldown": 0,
+    "boss": 1
+   },
+   "mg": {
+    "cooldown": 70,
+    "boss": 0.4
+   },
+   "rocket": {
+    "cooldown": 650,
+    "boss": 6
+   },
+   "shotgun": {
+    "cooldown": 420,
+    "boss": 0.7
+   },
+   "rail": {
+    "cooldown": 900,
+    "boss": 5
+   },
+   "chain": {
+    "cooldown": 480,
+    "boss": 3
+   }
+  },
+  "monsters": {
+   "firstAfter": 25000,
+   "attractAfter": 6000,
+   "attractSmashes": 10,
+   "every": 45000,
+   "health": {
+    "robot": 38,
+    "kaiju": 44
+   },
+   "points": 500,
+   "height": 0.35,
+   "opacity": 0.94,
+   "smashEvery": 1500,
+   "buildingsPerShield": 2
+  },
+  "letters": {
+   "points": 10,
+   "wordBonus": 50,
+   "sloganBonus": 250,
+   "backAfter": [
+    7000,
+    11000
+   ]
+  },
+  "beast_points": 100
+ },
+ "sky": {
+  "dragonSegments": 84,
+  "dragonSpacing": 12,
+  "dragonThickness": 26,
+  "dragonSpeed": 0.00016,
+  "phoenixSize": 1.8,
+  "sparksPerFrame": 22,
+  "opacity": 1,
+  "followMouse": 0.25,
+  "dragonHealth": 14,
+  "phoenixHealth": 10,
+  "respawnSeconds": 25
+ },
+ "grid": {
+  "columns": 16,
+  "rows": 46,
+  "glideSpeed": -0.35,
+  "pulseSpeed": 1.6,
+  "smallest": 0.15,
+  "largest": 0.95,
+  "horizon": 0.4,
+  "hueNear": 270,
+  "hueMiddle": 320,
+  "hueFar": 385
+ },
+ "rts": {
+  "map": {
+   "w": 2600,
+   "h": 1500
+  },
+  "start": {
+   "credits": 150,
+   "sparks": 4,
+   "blades": 2
+  },
+  "supply_cap": 30,
+  "waves": {
+   "first": 75,
+   "every": 45
+  },
+  "crystal": {
+   "amount": 1200,
+   "carry": 8,
+   "mineTime": 1100
+  },
+  "units": {
+   "spark": {
+    "hp": 40,
+    "speed": 1.9,
+    "dmg": 3,
+    "range": 18,
+    "cd": 900,
+    "sight": 230,
+    "cost": 50,
+    "time": 5
+   },
+   "blade": {
+    "hp": 85,
+    "speed": 2.6,
+    "dmg": 9,
+    "range": 24,
+    "cd": 550,
+    "sight": 260,
+    "cost": 100,
+    "time": 7
+   },
+   "lancer": {
+    "hp": 150,
+    "speed": 1.35,
+    "dmg": 24,
+    "range": 210,
+    "cd": 1500,
+    "sight": 300,
+    "cost": 175,
+    "time": 10,
+    "splash": 46
+   },
+   "core": {
+    "hp": 1600,
+    "sight": 380
+   },
+   "mite": {
+    "hp": 32,
+    "speed": 2.7,
+    "dmg": 5,
+    "range": 14,
+    "cd": 600,
+    "sight": 240
+   },
+   "brute": {
+    "hp": 230,
+    "speed": 1.25,
+    "dmg": 26,
+    "range": 20,
+    "cd": 1200,
+    "sight": 240
+   },
+   "spitter": {
+    "hp": 70,
+    "speed": 1.8,
+    "dmg": 11,
+    "range": 170,
+    "cd": 1300,
+    "sight": 260
+   },
+   "hive": {
+    "hp": 2400,
+    "sight": 300
+   }
+  }
+ },
+ "arpg": {
+  "light": 6.5,
+  "hero": {
+   "speed": 4.2,
+   "reach": 1.25,
+   "attackEvery": 520
+  },
+  "skills": {
+   "fireball": {
+    "mana": 8,
+    "cd": 350
+   },
+   "nova": {
+    "mana": 16,
+    "cd": 1600
+   }
+  },
+  "monsters": {
+   "hollow": {
+    "hp": 30,
+    "dmg": 4,
+    "speed": 1.9,
+    "reach": 1.1,
+    "every": 1000,
+    "xp": 12,
+    "weight": 5
+   },
+   "skitter": {
+    "hp": 16,
+    "dmg": 3,
+    "speed": 3.4,
+    "reach": 1.0,
+    "every": 650,
+    "xp": 8,
+    "weight": 4
+   },
+   "wisp": {
+    "hp": 22,
+    "dmg": 5,
+    "speed": 2.4,
+    "reach": 5.5,
+    "every": 1500,
+    "xp": 14,
+    "weight": 3
+   },
+   "golem": {
+    "hp": 110,
+    "dmg": 12,
+    "speed": 1.4,
+    "reach": 1.3,
+    "every": 1500,
+    "xp": 40,
+    "weight": 1
+   },
+   "warden": {
+    "hp": 700,
+    "dmg": 24,
+    "speed": 1.9,
+    "reach": 1.6,
+    "every": 1300,
+    "xp": 300
+   }
+  },
+  "rarity": {
+   "common": {
+    "chance": 0.58,
+    "mult": 1
+   },
+   "magic": {
+    "chance": 0.28,
+    "mult": 1.35
+   },
+   "rare": {
+    "chance": 0.115,
+    "mult": 1.8
+   },
+   "legendary": {
+    "chance": 0.025,
+    "mult": 2.6
+   }
+  }
+ },
+ "quest": {
+  "stage": 100,
+  "area": 50,
+  "areaComplete": 150,
+  "explorer": 300,
+  "explorerAreas": 6,
+  "quest": 500,
+  "perLevel": 400
+ }
+};
+// Copies a game's settings over its built-in ones (only the values that are given).
+window.TENSHI_TUNE = function tune(target, src) {
+  if (!target || !src) return target;
+  for (const k in src) {
+    const v = src[k];
+    if (v && typeof v === 'object' && !Array.isArray(v) && target[k] && typeof target[k] === 'object' && !Array.isArray(target[k])) tune(target[k], v);
+    else target[k] = v;
+  }
+  return target;
+};

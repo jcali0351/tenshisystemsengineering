@@ -22,10 +22,10 @@
   "rts.crystal": "",
 
   "_arpg": "Undercity (the dungeon crawler)",
-  "arpg.hero": "",
-  "arpg.hollow": "",
-  "arpg.skitter": "",
-  "arpg.wisp": "",
-  "arpg.golem": "",
-  "arpg.warden": ""
+  "arpg.hero": "source/arpg.hero.glb",
+  "arpg.hollow": "source/arpg.hollow.glb",
+  "arpg.skitter": "source/arpg.skitter.glb",
+  "arpg.wisp": "source/arpg.wisp.glb",
+  "arpg.golem": "source/arpg.golem.glb",
+  "arpg.warden": "source/arpg.warden.glb"
 }

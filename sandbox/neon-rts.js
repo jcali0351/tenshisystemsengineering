@@ -25,9 +25,10 @@
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // ================================================ SETTINGS ================================================
+  const CFG = (window.TENSHI_GAMES || {}).rts || {}; const TUNE = window.TENSHI_TUNE || (t => t);   // your values from game_settings.py
   const MAP = { w: 2600, h: 1500 };
   const START = { credits: 150, sparks: 4, blades: 2 };
-  const SUPPLY_CAP = 30;
+  const SUPPLY_CAP = CFG.supply_cap ?? 30;
   const WAVES = { first: 75, every: 45 };          // seconds until the first wave, then between waves
   const UNITS = {
     // Yours
@@ -42,6 +43,7 @@
     hive:    { name: "ALIEN HIVE", team: "e", hp: 2400, r: 56, building: true, sight: 300, color: "#ff8a2b" },
   };
   const CRYSTAL = { amount: 1200, carry: 8, mineTime: 1100 };
+  TUNE(MAP, CFG.map); TUNE(START, CFG.start); TUNE(WAVES, CFG.waves); TUNE(UNITS, CFG.units); TUNE(CRYSTAL, CFG.crystal);
   // ==========================================================================================================
 
   const sfx = n => window.neonAudio && window.neonAudio.sfx(n);

@@ -20,6 +20,8 @@
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
   // ================================================ SETTINGS ================================================
+  // Your settings from game_settings.py (sandbox/game-settings.js) replace the values below.
+  const CFG = (window.TENSHI_GAMES || {}).arcade || {}; const TUNE = window.TENSHI_TUNE || (t => t);
   const GAME = {
     hitRadius: 1.4,        // how forgiving aiming is (1 = must hit the body exactly)
     comboWindow: 1600,     // ms you have to land the next hit to keep a combo going
@@ -37,6 +39,7 @@
     cube:   { points: 15,  size: 18, speed: [1.0, 1.8], color: ["#ff8a2b", "#b04dff"], weight: 3 },
     star:   { points: 100, size: 14, speed: [3.6, 4.8], color: ["#ffb347"], weight: 0.5 },
   };
+  TUNE(GAME, CFG.game); TUNE(TYPES, CFG.targets);
   // What each hit teaches (shown now and then in a little tip at the bottom).
   const SERVICES = [
     ["WEB DESIGN", "Clean, fast websites that look great on every screen."],
@@ -60,7 +63,8 @@
     dragon: "DRAGON SLAYER", phoenix: "PHOENIX DOWN", kaiju: "KAIJU HUNTER", robot: "SCRAP METAL", slogan: "SLOGAN SMASHER (the whole headline)",
   };
   const LETTER = { points: 10, wordBonus: 50, sloganBonus: 250, backAfter: [7000, 11000] };   // shooting the headline's letters
-  const BEAST_POINTS = 100;      // for blowing up the dragon or the phoenix
+  TUNE(LETTER, CFG.letters);
+  const BEAST_POINTS = CFG.beast_points ?? 100;      // for blowing up the dragon or the phoenix
   // ==========================================================================================================
 
   const store = {
@@ -219,6 +223,7 @@
     { id: "rail",    key: "5", name: "RAILGUN",     icon: "═", color: "#c48bff", cooldown: 900, auto: false, boss: 5,   tip: "Pierces everything in a line across the screen." },
     { id: "chain",   key: "6", name: "LIGHTNING",   icon: "ϟ", color: "#efe0ff", cooldown: 480, auto: false, boss: 3,   tip: "Zaps a target, then jumps to four more nearby." },
   ];
+  for (const w of WEAPONS) TUNE(w, (CFG.weapons || {})[w.id]);
   let weapon = WEAPONS[store.get("weapon", 0)] || WEAPONS[0], lastShot = 0;
   const projectiles = [], rails = [], bolts = [];
 
@@ -834,6 +839,7 @@
     smashEvery: 1500,           // ms between blows on a building
     buildingsPerShield: 2,      // every this many flattened buildings costs a shield
   };
+  TUNE(MONSTER, CFG.monsters);
   // ---- A little kit for building jointed models (x right, y up, z towards you) ----
   const kMesh = () => ({ v: [], f: [] });
   function kFace(m, i, mat, c) { m.f.push({ i, mat, c }); }
