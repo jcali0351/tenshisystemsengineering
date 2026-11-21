@@ -43,7 +43,14 @@
     hive:    { name: "ALIEN HIVE", team: "e", hp: 2400, r: 56, building: true, sight: 300, color: "#ff8a2b" },
   };
   const CRYSTAL = { amount: 1200, carry: 8, mineTime: 1100 };
-  TUNE(MAP, CFG.map); TUNE(START, CFG.start); TUNE(WAVES, CFG.waves); TUNE(UNITS, CFG.units); TUNE(CRYSTAL, CFG.crystal);
+  // How many aliens: guarding the hive at the start, and in each wave (base + growth x wave number, rounded down).
+  const ENEMIES = {
+    start: { mite: 6, brute: 2, spitter: 2 },
+    waveBase: { mite: 3, brute: 0, spitter: 0.5 },
+    waveGrowth: { mite: 2, brute: 0.5, spitter: 0.5 },
+    maxAlive: 150,              // a wave stops adding aliens once this many are alive
+  };
+  TUNE(MAP, CFG.map); TUNE(START, CFG.start); TUNE(WAVES, CFG.waves); TUNE(UNITS, CFG.units); TUNE(CRYSTAL, CFG.crystal); TUNE(ENEMIES, CFG.enemies);
   // ==========================================================================================================
 
   const sfx = n => window.neonAudio && window.neonAudio.sfx(n);
@@ -126,9 +133,9 @@
     for (let i = 0; i < START.blades; i++) spawn("blade", core.x + 110 + i * 26, core.y - 10);
     // The Hive and its guards.
     const hive = spawn("hive", MAP.w - 300, 330);
-    for (let i = 0; i < 6; i++) spawn("mite", hive.x - 120 + rand(-60, 60), hive.y + 120 + rand(-60, 60));
-    for (let i = 0; i < 2; i++) spawn("brute", hive.x - 170, hive.y + 40 + i * 60);
-    for (let i = 0; i < 2; i++) spawn("spitter", hive.x - 60, hive.y + 160 + i * 40);
+    for (let i = 0; i < (ENEMIES.start.mite || 0); i++) spawn("mite", hive.x - 120 + rand(-60, 60), hive.y + 120 + rand(-60, 60));
+    for (let i = 0; i < (ENEMIES.start.brute || 0); i++) spawn("brute", hive.x - 170 + (i >> 1) * -40, hive.y + 40 + (i % 2) * 60);
+    for (let i = 0; i < (ENEMIES.start.spitter || 0); i++) spawn("spitter", hive.x - 60 + (i >> 1) * -40, hive.y + 160 + (i % 2) * 40);
     cam.x = core.x - W / zoom * 0.3; cam.y = core.y - H / zoom * (W < 760 ? 0.32 : 0.55); clampCamera();
     updateFog();
   }
@@ -235,8 +242,10 @@
   function sendWave() {
     const h = hive(); if (!h) return;
     waveNo++;
-    const n = { mite: 3 + waveNo * 2, brute: Math.floor(waveNo / 2), spitter: Math.floor((waveNo + 1) / 2) };
-    for (const [type, count] of Object.entries(n)) for (let i = 0; i < count; i++) {
+    const n = {};
+    for (const type of ["mite", "brute", "spitter"]) n[type] = Math.max(0, Math.floor((ENEMIES.waveBase[type] || 0) + (ENEMIES.waveGrowth[type] || 0) * waveNo + 1e-9));
+    let alive = ents.filter(e => e.team === "e" && !e.T.building).length;
+    for (const [type, count] of Object.entries(n)) for (let i = 0; i < count && alive < ENEMIES.maxAlive; i++, alive++) {
       const u = spawn(type, h.x - 80 + rand(-70, 70), h.y + 90 + rand(-70, 70));
       const c = core(); if (c) u.order = { type: "amove", x: c.x, y: c.y };
     }

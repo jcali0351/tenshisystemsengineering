@@ -13,7 +13,10 @@ window.TENSHI_GAMES = {
     14000,
     24000
    ],
-   "powerSeconds": 7
+   "powerSeconds": 7,
+   "maxTargets": 6,
+   "moreTargetsPerLevel": 2,
+   "targetsDuringBoss": 4
   },
   "targets": {
    "drone": {
@@ -92,7 +95,10 @@ window.TENSHI_GAMES = {
    "height": 0.35,
    "opacity": 0.94,
    "smashEvery": 1500,
-   "buildingsPerShield": 2
+   "buildingsPerShield": 2,
+   "atOnce": 1,
+   "atOnceLater": 2,
+   "laterFromLevel": 3
   },
   "letters": {
    "points": 10,
@@ -116,7 +122,9 @@ window.TENSHI_GAMES = {
   "followMouse": 0.25,
   "dragonHealth": 14,
   "phoenixHealth": 10,
-  "respawnSeconds": 25
+  "respawnSeconds": 25,
+  "dragon": true,
+  "phoenix": true
  },
  "grid": {
   "columns": 16,
@@ -149,6 +157,24 @@ window.TENSHI_GAMES = {
    "amount": 1200,
    "carry": 8,
    "mineTime": 1100
+  },
+  "enemies": {
+   "start": {
+    "mite": 6,
+    "brute": 2,
+    "spitter": 2
+   },
+   "waveBase": {
+    "mite": 3,
+    "brute": 0,
+    "spitter": 0.5
+   },
+   "waveGrowth": {
+    "mite": 2,
+    "brute": 0.5,
+    "spitter": 0.5
+   },
+   "maxAlive": 150
   },
   "units": {
    "spark": {
@@ -278,6 +304,13 @@ window.TENSHI_GAMES = {
     "every": 1300,
     "xp": 300
    }
+  },
+  "enemies": {
+   "perRoomMin": 2,
+   "perRoomMax": 3,
+   "extraEveryTwoFloors": 1,
+   "extraMax": 4,
+   "bossEvery": 3
   },
   "rarity": {
    "common": {

@@ -38,6 +38,10 @@
   ];
   TUNE(HERO, CFG.hero); TUNE(SKILLS, CFG.skills); TUNE(MONSTERS, CFG.monsters);
   for (const r of RARITY) TUNE(r, (CFG.rarity || {})[r.id]);
+  // How many monsters: per room (more every 2 floors, up to a limit), and how often a Warden boss floor comes.
+  const ENEMIES = { perRoomMin: 2, perRoomMax: 3, extraEveryTwoFloors: 1, extraMax: 4, bossEvery: 3 };
+  TUNE(ENEMIES, CFG.enemies);
+  const bossFloor = n => ENEMIES.bossEvery > 0 && n % ENEMIES.bossEvery === 0;
   const BASES = {
     weapon: ["Katana", "Neon Blade", "Rune Staff", "War Axe", "Glaive"],
     armor: ["Coat", "Lamellar", "Robe", "Plate", "Jacket"],
@@ -201,12 +205,12 @@
     for (const r of rooms) {
       if (r === first) continue;
       for (let k = 0; k < irand(0, 2); k++) urns.push({ x: r.x + rand(0.7, r.w - 0.7), y: r.y + rand(0.7, r.h - 0.7), hp: 1 });
-      if (r === last && n % 3 === 0) continue;
-      const count = irand(2, 3 + Math.min(4, Math.floor(n / 2)));
+      if (r === last && bossFloor(n)) continue;
+      const count = irand(ENEMIES.perRoomMin, Math.max(ENEMIES.perRoomMin, ENEMIES.perRoomMax + Math.min(ENEMIES.extraMax, Math.floor(n / 2) * ENEMIES.extraEveryTwoFloors)));
       for (let k = 0; k < count; k++) spawnMonster(pickMonster(n), r.x + rand(0.6, r.w - 0.6), r.y + rand(0.6, r.h - 0.6), n);
     }
     bossAlive = false;
-    if (n % 3 === 0) { spawnMonster("warden", last.cx + 0.5, last.cy - 1.5, n); bossAlive = true; }
+    if (bossFloor(n)) { spawnMonster("warden", last.cx + 0.5, last.cy - 1.5, n); bossAlive = true; }
   }
   function pickMonster(n) {
     const list = Object.entries(MONSTERS).filter(([k, m]) => m.weight && (k !== "golem" || n >= 2) && (k !== "wisp" || n >= 1));
@@ -316,7 +320,7 @@
     floorNo = n; genFloor(n);
     hero.x = startPos.x; hero.y = startPos.y; hero.path = []; hero.target = null;
     reveal(); save();
-    say(n % 3 === 0 ? `FLOOR ${n} · A WARDEN GUARDS THE STAIRS` : `FLOOR ${n}`, 2400, n % 3 === 0 ? "#ff8af0" : undefined);
+    say(bossFloor(n) ? `FLOOR ${n} · A WARDEN GUARDS THE STAIRS` : `FLOOR ${n}`, 2400, bossFloor(n) ? "#ff8af0" : undefined);
   }
   function reveal() {
     const r = Math.ceil(LIGHT);

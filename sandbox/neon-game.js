@@ -32,6 +32,9 @@
     bossEvery: 800,        // a boss appears every this many points
     powerEvery: [14000, 24000],   // ms between power-ups (random within this range)
     powerSeconds: 7,       // how long rapid / spread / slow last
+    maxTargets: 6,         // most flying targets on screen at level 1...
+    moreTargetsPerLevel: 2,   // ...plus this many more for each level
+    targetsDuringBoss: 4,  // most targets while a boss is out
   };
   const TYPES = {
     drone:  { points: 10,  size: 16, speed: [1.2, 2.2], color: ["#ff2bd6"], weight: 5 },
@@ -838,6 +841,8 @@
     opacity: 0.94,
     smashEvery: 1500,           // ms between blows on a building
     buildingsPerShield: 2,      // every this many flattened buildings costs a shield
+    atOnce: 1,                  // most giants in the city at the same time...
+    atOnceLater: 2, laterFromLevel: 3,   // ...and from this level on
   };
   TUNE(MONSTER, CFG.monsters);
   // ---- A little kit for building jointed models (x right, y up, z towards you) ----
@@ -960,7 +965,7 @@
     if (over_) return;
     if (!nextMonsterAt) nextMonsterAt = now + (started ? MONSTER.firstAfter : MONSTER.attractAfter);
     const alive = monsters.filter(m => m.state !== "dying").length;
-    if (now > nextMonsterAt && (alive === 0 || (alive < 2 && level >= 3))) {
+    if (now > nextMonsterAt && (alive < (level >= MONSTER.laterFromLevel ? MONSTER.atOnceLater : MONSTER.atOnce))) {
       spawnMonster(nextMonsterType); nextMonsterType = nextMonsterType === "kaiju" ? "robot" : "kaiju"; nextMonsterAt = now + MONSTER.every;
     }
     const s = monsterScale(), city = window.neonCity;
@@ -1179,8 +1184,8 @@
 
     if (visible && !paused && !over_) {
       const busy = insane ? 2 : 1;
-      if (now > nextSpawn && objects.length < (6 + level * 2) * busy && !boss) { spawnTarget(now); nextSpawn = now + GAME.baseSpawnEvery / (1 + (level - 1) * 0.25) / busy * rand(0.6, 1.3); }
-      if (boss && now > nextSpawn && objects.length < 4) { spawnTarget(now); nextSpawn = now + 2500; }
+      if (now > nextSpawn && objects.length < (GAME.maxTargets + level * GAME.moreTargetsPerLevel) * busy && !boss) { spawnTarget(now); nextSpawn = now + GAME.baseSpawnEvery / (1 + (level - 1) * 0.25) / busy * rand(0.6, 1.3); }
+      if (boss && now > nextSpawn && objects.length < GAME.targetsDuringBoss) { spawnTarget(now); nextSpawn = now + 2500; }
       if (now > nextPower) { spawnPower(); nextPower = now + rand(...GAME.powerEvery); }
       if (Math.random() < 0.004 * busy && cars.length < 2) spawnCar();
     }

@@ -33,6 +33,8 @@
     dragonHealth: 14,        // how much damage the dragon takes before it explodes (a laser hit does 1, a rocket 6)
     phoenixHealth: 10,       // the same for the phoenix
     respawnSeconds: 25,      // how long until an exploded creature re-forms
+    dragon: true,            // false = no dragon
+    phoenix: true,           // false = no phoenix
   };
   if (window.TENSHI_TUNE) window.TENSHI_TUNE(BEASTS, (window.TENSHI_GAMES || {}).sky);   // your values from game_settings.py
   // ==========================================================================================================
@@ -180,6 +182,7 @@
     phoenix: { name: "PHOENIX", color: "#ffc45a", max: BEASTS.phoenixHealth, hp: BEASTS.phoenixHealth, dead: false, respawnAt: 0, alpha: 1, flash: 0,
                lists: [birdSpecks, wingSpecks, tailSpecks], at: phoenix },
   };
+  for (const k of ["dragon", "phoenix"]) if (BEASTS[k] === false) { LIFE[k].dead = true; LIFE[k].respawnAt = Infinity; }
   let cur = LIFE.dragon;          // the creature being drawn right now
 
   // Specks knocked off fly away, tumble a little and fade.

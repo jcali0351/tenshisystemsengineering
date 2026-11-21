@@ -6,6 +6,7 @@ game_settings.py: every game on tenshisystems.com, tuned from one Python file.
        (it checks your changes and writes sandbox/game-settings.js, which the games read)
     3. Commit and push (or ask Claude to deploy). The live site updates within 5 minutes.
 
+Enemy counts: search for "ENEMY NUMBERS" (one block in each game).
 Leave something out and the game simply uses its built-in value. Times are in milliseconds (1000 = 1 second)
 unless a comment says otherwise. Ranges like [14000, 24000] mean "a random value between these".
 """
@@ -27,6 +28,10 @@ ARCADE = {
         "bossEvery": 800,            # a mothership boss appears every this many points
         "powerEvery": [14000, 24000],  # time between power-ups
         "powerSeconds": 7,           # how long Rapid Fire / Spread Shot / Slow-mo last (seconds)
+        # ---- ENEMY NUMBERS ----
+        "maxTargets": 6,             # most flying targets on screen at level 1...
+        "moreTargetsPerLevel": 2,    # ...plus this many more for each level (level 3 = 6 + 3x2 = 12)
+        "targetsDuringBoss": 4,      # most flying targets while a mothership boss is out
     },
     "targets": {                     # the flying targets
         "drone":  {"points": 10,  "size": 16, "speed": [1.2, 2.2], "weight": 5},     # weight = how common it is
@@ -53,6 +58,10 @@ ARCADE = {
         "opacity": 0.94,
         "smashEvery": 1500,          # time between blows on a building
         "buildingsPerShield": 2,     # every this many flattened buildings costs a shield
+        # ---- ENEMY NUMBERS ----
+        "atOnce": 1,                 # most giants in the city at the same time...
+        "atOnceLater": 2,            # ...and once you reach level laterFromLevel
+        "laterFromLevel": 3,
     },
     "letters": {                     # shooting the headline's letters
         "points": 10, "wordBonus": 50, "sloganBonus": 250,
@@ -76,6 +85,9 @@ SKY_BEASTS = {
     "dragonHealth": 14,              # damage before it explodes (a laser hit does 1, a rocket 6)
     "phoenixHealth": 10,
     "respawnSeconds": 25,            # time until an exploded beast re-forms (seconds)
+    # ---- ENEMY NUMBERS ----
+    "dragon": True,                  # False = no dragon
+    "phoenix": True,                 # False = no phoenix
 }
 
 # =====================================================================================================================
@@ -100,6 +112,14 @@ STATION_DEFENSE = {
     "supply_cap": 30,                # the most ships you can have
     "waves": {"first": 75, "every": 45},   # seconds until the first alien wave, then between waves
     "crystal": {"amount": 1200, "carry": 8, "mineTime": 1100},   # crystals per field, per trip, time to mine
+    # ---- ENEMY NUMBERS ---- (mite = Swarmling, brute = Behemoth, spitter = Spitter)
+    "enemies": {
+        "start":      {"mite": 6, "brute": 2,   "spitter": 2},     # aliens guarding the hive when the game starts
+        # each wave sends  base + growth x wave number  of each (rounded down). Wave 4: 3 + 2x4 = 11 Swarmlings
+        "waveBase":   {"mite": 3, "brute": 0,   "spitter": 0.5},
+        "waveGrowth": {"mite": 2, "brute": 0.5, "spitter": 0.5},
+        "maxAlive": 150,             # waves stop adding aliens once this many are alive (keeps it smooth)
+    },
     "units": {
         # hp = health, speed, dmg = damage per shot, range, cd = time between shots, sight, cost, time = build seconds
         "spark":   {"hp": 40,   "speed": 1.9,  "dmg": 3,  "range": 18,  "cd": 900,  "sight": 230, "cost": 50,  "time": 5},    # Miner
@@ -130,6 +150,14 @@ UNDERCITY = {
         "wisp":    {"hp": 22,  "dmg": 5,  "speed": 2.4, "reach": 5.5, "every": 1500, "xp": 14,  "weight": 3},
         "golem":   {"hp": 110, "dmg": 12, "speed": 1.4, "reach": 1.3, "every": 1500, "xp": 40,  "weight": 1},
         "warden":  {"hp": 700, "dmg": 24, "speed": 1.9, "reach": 1.6, "every": 1300, "xp": 300},   # the boss (every 3rd floor)
+    },
+    # ---- ENEMY NUMBERS ----
+    "enemies": {
+        "perRoomMin": 2,             # fewest monsters in a room
+        "perRoomMax": 3,             # most monsters in a room on floor 1...
+        "extraEveryTwoFloors": 1,    # ...plus this many more every 2 floors...
+        "extraMax": 4,               # ...but never more than this many extra
+        "bossEvery": 3,              # a Warden boss guards the stairs every this many floors (0 = never)
     },
     "rarity": {                      # loot: chance of each rarity, and how much stronger it is
         "common":    {"chance": 0.58,  "mult": 1},
