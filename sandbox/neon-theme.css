@@ -778,3 +778,8 @@ html.neon:not(#_):not(#__) .contact .contact-form .btn.btn-primary.btn-primary {
 
 /* Plain site background: one flat purple behind everything (no grid lines, no glow bands). */
 html.neon:not(#_):not(#__) :is(.band, .services, .feature, .contact, .site-footer) { background: rgb(12, 4, 30) !important; background-image: none !important; }
+
+/* Service card pictures: 30% smaller (70% of the card's width), centred. Extra :not(#)s beat the site's own #services rule. */
+html.neon:not(#_):not(#__):not(#___) #services .service-card > .service-pic {
+  width: 70% !important; align-self: center !important; margin-left: auto !important; margin-right: auto !important;
+}
