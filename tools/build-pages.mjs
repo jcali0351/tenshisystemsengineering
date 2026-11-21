@@ -528,6 +528,12 @@ function frame({ prefix, current, titleKey, descKey, title, description, bodyCla
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google Analytics -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${pageTitle} | ${tx("brandName")}</title>
@@ -1333,6 +1339,12 @@ writePage("portfolio.html", portfolioPage);
 writeFileSync("projects.html", `<!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google Analytics -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  </script>
   <meta charset="UTF-8">
   <!-- Written by tools/build-pages.mjs. The Projects page moved into the Portfolio page. -->
   <title>Portfolio | ${tx("brandName")}</title>
