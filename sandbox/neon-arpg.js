@@ -504,9 +504,13 @@
     const v = ((x * 7 + y * 13) % 5) / 40;
     diamond(x, y);
     const isStairs = x === stairs.x && y === stairs.y;
-    ctx.fillStyle = isStairs ? (bossAlive ? "#3a1030" : "#2a1450") : `rgb(${Math.round(42 + v * 120)},${Math.round(30 + v * 80)},${Math.round(62 + v * 140)})`;
-    ctx.fill();
-    ctx.strokeStyle = "rgba(176,77,255,0.18)"; ctx.lineWidth = 1; ctx.stroke();
+    if (isStairs) { ctx.fillStyle = bossAlive ? "#3a1030" : "#2a1450"; ctx.fill(); }
+    else {
+      const ox = sx(x, y), oy = sy(x, y, 0);
+      stone(STONE.floor, ox, oy, sx(x + 1, y) - ox, sy(x + 1, y, 0) - oy, sx(x, y + 1) - ox, sy(x, y + 1, 0) - oy);
+      if (v > 0.03) { ctx.fillStyle = `rgba(0,0,0,${(v * 0.45).toFixed(3)})`; ctx.fill(); }   // a barely-there per-tile tone (no checkerboard)
+    }
+    ctx.strokeStyle = "rgba(176,77,255,0.12)"; ctx.lineWidth = 1; ctx.stroke();
     if (isStairs) {
       for (let k = 0; k < 4; k++) { diamond(x + 0.12 + k * 0.08, y + 0.12 + k * 0.08, -k * 0.12); ctx.fillStyle = `rgba(${bossAlive ? "120,20,60" : "60,30,120"},${0.5 + k * 0.12})`; ctx.fill(); }
       ctx.globalCompositeOperation = "lighter";
@@ -545,7 +549,33 @@
     g.strokeStyle = "rgba(0,0,0,0.5)"; g.lineWidth = 1;                                          // cracks
     for (let i = 0; i < 7; i++) { let x = 4 + rnd() * (N - 8), y = 4 + rnd() * (N - 30); g.beginPath(); g.moveTo(x, y); for (let k = 0; k < 5; k++) { x += (rnd() - 0.5) * 12; y += 2 + rnd() * 6; g.lineTo(x, y); } g.stroke(); }
     const tint = rgb => { const c = document.createElement("canvas"); c.width = c.height = N; const t = c.getContext("2d"); t.drawImage(base, 0, 0); t.globalCompositeOperation = "multiply"; t.fillStyle = `rgb(${rgb.join(",")})`; t.fillRect(0, 0, N, N); return ctx.createPattern(c, "repeat"); };
-    return { N, top: tint([128, 112, 158]), left: tint([98, 84, 130]), right: tint([74, 62, 104]) };
+    // Floor: big worn paving slabs, 2 x 2 per tile, with grout, chipped corners, grit and a few cracks.
+    const fb = document.createElement("canvas"); fb.width = fb.height = N; const fg = fb.getContext("2d");
+    const fv = new Float32Array(N * N);
+    for (let i = 0; i < N * N; i++) fv[i] = 0.6 + (rnd() - 0.5) * 0.16;
+    const slab = 64;
+    for (let sy = 0; sy < N; sy += slab) for (let sx = 0; sx < N; sx += slab) {
+      const tone = 0.8 + rnd() * 0.34, wear = rnd();
+      for (let y = sy; y < sy + slab; y++) for (let x = sx; x < sx + slab; x++) {
+        const lx = x - sx, ly = y - sy, i = y * N + x, edge = Math.min(lx, ly, slab - 1 - lx, slab - 1 - ly);
+        const chip = (lx < 6 && ly < 6 && lx + ly < 5 + wear * 4) || (lx > slab - 7 && ly > slab - 7 && (slab - lx) + (slab - ly) < 6 + wear * 4);
+        if (edge < 2 || chip) fv[i] = 0.24 + rnd() * 0.05;                       // grout and chipped corners
+        else if (edge === 2) fv[i] *= tone * 1.18;                               // worn, lighter rim
+        else fv[i] *= tone * (1 - 0.08 * Math.hypot(lx - slab / 2, ly - slab / 2) / slab);   // a little dished in the middle
+      }
+    }
+    const fimg = fg.createImageData(N, N);
+    for (let i = 0; i < N * N; i++) { const v = Math.max(0, Math.min(1, fv[i])) * 255; fimg.data[i * 4] = fimg.data[i * 4 + 1] = fimg.data[i * 4 + 2] = v; fimg.data[i * 4 + 3] = 255; }
+    fg.putImageData(fimg, 0, 0);
+    for (let i = 0; i < 18; i++) {
+      const x = rnd() * N, y = rnd() * N, r = 5 + rnd() * 16, a = 0.08 + rnd() * 0.14;
+      for (const ox of [-N, 0, N]) for (const oy of [-N, 0, N]) { const gr = fg.createRadialGradient(x + ox, y + oy, 0, x + ox, y + oy, r); gr.addColorStop(0, `rgba(0,0,0,${a})`); gr.addColorStop(1, "rgba(0,0,0,0)"); fg.fillStyle = gr; fg.fillRect(x + ox - r, y + oy - r, r * 2, r * 2); }
+    }
+    fg.strokeStyle = "rgba(0,0,0,0.45)"; fg.lineWidth = 1;
+    for (let i = 0; i < 6; i++) { let x = 6 + rnd() * (N - 12), y = 6 + rnd() * (N - 12); fg.beginPath(); fg.moveTo(x, y); for (let k = 0; k < 4; k++) { x += (rnd() - 0.5) * 14; y += (rnd() - 0.5) * 14; fg.lineTo(x, y); } fg.stroke(); }
+    const fc = document.createElement("canvas"); fc.width = fc.height = N; const ft = fc.getContext("2d");
+    ft.drawImage(fb, 0, 0); ft.globalCompositeOperation = "multiply"; ft.fillStyle = "rgb(92,78,124)"; ft.fillRect(0, 0, N, N);
+    return { N, top: tint([128, 112, 158]), left: tint([98, 84, 130]), right: tint([74, 62, 104]), floor: ctx.createPattern(fc, "repeat") };
   })();
   // Fill the current path with stone: (ox, oy) = the face's top-left corner, u = along its width, v = down its height.
   function stone(pat, ox, oy, ux, uy, vx, vy) {
