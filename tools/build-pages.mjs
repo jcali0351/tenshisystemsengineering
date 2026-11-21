@@ -192,6 +192,11 @@ const postPermalink = (b) => (b.slug && SLUG_RE.test(b.slug) ? `blog/${b.slug}.h
 const wDate = (d) => (d ? new Date(d.length === 10 ? d + "T12:00:00Z" : d).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "Asia/Tokyo" }) : "");
 const wIso = (d) => (d ? new Date(d.length === 10 ? d + "T12:00:00Z" : d).toISOString().slice(0, 10) : "");
 const wUrl = (u) => (/^https?:\/\//.test(u || "") ? esc(u) : "#");
+// Posts without their own photo get the neon cover for their category (tools/make-covers.mjs).
+const POST_COVER = { "web design": "web", "web development": "code", "software": "code", "engineering": "tech", "technology": "tech",
+  "accessibility": "access", "security": "security", "branding": "brand", "seo": "seo", "services": "business", "business": "business",
+  "ai": "ai", "gaming": "gaming", "hosting": "hosting", "content": "blog" };
+const postImg = (b) => (b.image && !b.image.generated && b.image.src) ? b.image : { src: `img/covers/${POST_COVER[String(b.cat || "").toLowerCase()] || "blog"}.svg`, generated: true };
 const wSrc = (img, cat) => (img && img.src && !/^https?:/.test(img.src) ? img.src : `img/covers/${cat}.svg`);
 const wCredit = (img) => (img && !img.generated && img.src ? ` · <span data-i18n="photoLabel">${tx("photoLabel")}</span>: ${esc(img.creator || "Unknown")}${img.license ? ` (<a href="${wUrl(img.licenseUrl || img.page)}" target="_blank" rel="noopener">${esc(img.license)}</a>)` : ""}` : "");
 function footerWidgets() {
@@ -209,7 +214,7 @@ ${items.join("\n")}
         <a class="fw-more" href="${href}"><span data-i18n="${moreKey}">${tx(moreKey)}</span></a>
       </section>`;
   const newsItems = news.map(({ c, s }) => `          <li class="fw-item">
-            <img class="fw-thumb" src="${esc(wSrc(s.image, c.id))}" alt="" width="96" height="72" loading="lazy" decoding="async">
+            <img class="fw-thumb" src="${esc(wSrc(s.image && !s.image.generated ? s.image : null, c.id))}" alt="" width="96" height="72" loading="lazy" decoding="async">
             <div class="fw-text">
               <p class="fw-meta"><span data-i18n="${c.key}">${tx(c.key)}</span> · <time datetime="${wIso(s.date)}">${wDate(s.date)}</time></p>
               <a class="fw-link" href="${wUrl(s.url)}" target="_blank" rel="noopener">${esc(s.title)}<span class="sr-only"> <span data-i18n="techNewTab">${tx("techNewTab")}</span></span></a>
@@ -217,7 +222,7 @@ ${items.join("\n")}
             </div>
           </li>`);
   const blogItems = posts.map((b) => `          <li class="fw-item">
-            <img class="fw-thumb" src="${esc(wSrc(b.image, "blog"))}" alt="" width="96" height="72" loading="lazy" decoding="async">
+            <img class="fw-thumb" src="${esc(wSrc(postImg(b), "blog"))}" alt="" width="96" height="72" loading="lazy" decoding="async">
             <div class="fw-text">
               <p class="fw-meta">${esc(b.cat)} · <time datetime="${wIso(b.date)}">${wDate(b.date)}</time></p>
               <a class="fw-link" href="${postPermalink(b)}">${esc(b.title)}</a>
@@ -1652,7 +1657,7 @@ function featureImage(img, cat, cls, prefix = "") {
 }
 
 const newsItem = (n, cat) => `          <li class="news-item">
-            ${featureImage(n.image, cat, "news-fig")}
+            ${featureImage(n.image && !n.image.generated ? n.image : null, cat, "news-fig")}
             <div class="news-body">
               <p class="news-meta"><time datetime="${isoDay(n.date)}">${fmtDate(n.date)}</time></p>
               <h3>${ext(n.url, esc(n.title))}</h3>
@@ -1764,7 +1769,7 @@ function blogCard(b, i) {
   const permalink = b.slug && SLUG_RE.test(b.slug) ? postPermalink(b) : "";
   const title = permalink ? `<a href="${esc(permalink)}">${esc(b.title)}</a>` : esc(b.title);
   return `          <article class="blog-card${i === 0 ? " is-feature" : ""}" id="post-${esc(b.id)}" aria-labelledby="post-${esc(b.id)}-title">
-            ${featureImage(b.image, "blog", "blog-fig")}
+            ${featureImage(postImg(b), "blog", "blog-fig")}
             <div class="blog-body">
               <p class="blog-meta"><span class="blog-cat">${esc(b.cat)}</span> <time datetime="${isoDay(b.date)}">${fmtDate(b.date)}</time> · ${b.min} <span data-i18n="blogMin">${tx("blogMin")}</span></p>
               <h3 id="post-${esc(b.id)}-title">${title}</h3>
@@ -1833,7 +1838,7 @@ function postPage(post) {
 
     <section class="page-section blog-post-section" aria-labelledby="post-title">
       <article class="page-inner narrow blog-article">
-${featureImage(post.image, "blog", "blog-post-fig", prefix)}
+${featureImage(postImg(post), "blog", "blog-post-fig", prefix)}
 ${renderPostBody(post.body, prefix)}
 ${share}        <p class="blog-back"><a href="../blog.html"><span data-i18n="homeBlogAll">${tx("homeBlogAll")}</span></a></p>
       </article>

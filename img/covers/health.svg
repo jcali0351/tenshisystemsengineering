@@ -1,7 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
-<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7e0a1b"/><stop offset=".6" stop-color="#c8102e"/><stop offset="1" stop-color="#e2324d"/></linearGradient>
-<pattern id="p" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M0 40L40 0" stroke="#fff" stroke-opacity=".06" stroke-width="2"/></pattern></defs>
-<rect width="800" height="450" fill="url(#g)"/><rect width="800" height="450" fill="url(#p)"/>
-<circle cx="400" cy="225" r="190" fill="none" stroke="#fff" stroke-opacity=".12" stroke-width="2"/><circle cx="400" cy="225" r="150" fill="none" stroke="#fff" stroke-opacity=".08" stroke-width="2" stroke-dasharray="6 10"/>
-<g fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".92"><rect x="320" y="145" width="160" height="160" rx="24"/><path d="M400 180v90M355 225h90" stroke-width="16"/></g>
+<defs>
+<radialGradient id="bg" cx="50%" cy="40%" r="75%"><stop offset="0" stop-color="#2a0850"/><stop offset=".6" stop-color="#12041f"/><stop offset="1" stop-color="#05000a"/></radialGradient>
+<linearGradient id="ink" gradientUnits="userSpaceOnUse" x1="240" y1="110" x2="560" y2="350"><stop offset="0" stop-color="#00f0ff"/><stop offset=".55" stop-color="#b04dff"/><stop offset="1" stop-color="#ff2bd6"/></linearGradient>
+<pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#b04dff" stroke-opacity=".09" stroke-width="1"/></pattern>
+<filter id="glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="800" height="450" fill="url(#bg)"/><rect width="800" height="450" fill="url(#grid)"/>
+<ellipse cx="400" cy="230" rx="230" ry="170" fill="#ff2bd6" fill-opacity=".06"/>
+<g fill="none" stroke="url(#ink)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"><path d="M400 340c-90-60-140-105-140-160 0-40 30-65 65-65 30 0 55 20 75 45 20-25 45-45 75-45 35 0 65 25 65 65 0 55-50 100-140 160z"/><path d="M290 225h55l20-35 30 70 25-45h90"/></g>
+<g fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M400 340c-90-60-140-105-140-160 0-40 30-65 65-65 30 0 55 20 75 45 20-25 45-45 75-45 35 0 65 25 65 65 0 55-50 100-140 160z"/><path d="M290 225h55l20-35 30 70 25-45h90"/></g>
 </svg>
