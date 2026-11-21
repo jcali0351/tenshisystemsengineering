@@ -1,5 +1,8 @@
 # Your own 3D characters (Blender → the games)
 
+> **Easiest:** open the website editor (`admin.html`) › **Game Studio** › **3D models**. Every slot is there with a 3D
+> preview: click **Upload .glb**, then **Save & publish**. The steps below are the manual way.
+
 Every character in the site's games can be replaced by a model you make in Blender. No coding: export, drop the file
 here, write its name in `models.json`, push.
 

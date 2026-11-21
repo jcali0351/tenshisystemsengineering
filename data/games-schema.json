@@ -1,0 +1,510 @@
+{
+ "note": "Written by game_settings.py for the editor's Game Studio. Don't edit by hand.",
+ "defaults": {
+  "arcade": {
+   "game": {
+    "hitRadius": 1.4,
+    "comboWindow": 1600,
+    "baseSpawnEvery": 1200,
+    "pointsPerLevel": 300,
+    "targetOpacity": 0.6,
+    "shields": 5,
+    "bossEvery": 800,
+    "powerEvery": [
+     14000,
+     24000
+    ],
+    "powerSeconds": 7,
+    "maxTargets": 6,
+    "moreTargetsPerLevel": 2,
+    "targetsDuringBoss": 4
+   },
+   "targets": {
+    "drone": {
+     "points": 10,
+     "size": 16,
+     "speed": [
+      1.2,
+      2.2
+     ],
+     "weight": 5
+    },
+    "saucer": {
+     "points": 25,
+     "size": 22,
+     "speed": [
+      2.2,
+      3.4
+     ],
+     "weight": 3
+    },
+    "cube": {
+     "points": 15,
+     "size": 18,
+     "speed": [
+      1.0,
+      1.8
+     ],
+     "weight": 3
+    },
+    "star": {
+     "points": 100,
+     "size": 14,
+     "speed": [
+      3.6,
+      4.8
+     ],
+     "weight": 0.5
+    }
+   },
+   "weapons": {
+    "laser": {
+     "cooldown": 0,
+     "boss": 1
+    },
+    "mg": {
+     "cooldown": 70,
+     "boss": 0.4
+    },
+    "rocket": {
+     "cooldown": 650,
+     "boss": 6
+    },
+    "shotgun": {
+     "cooldown": 420,
+     "boss": 0.7
+    },
+    "rail": {
+     "cooldown": 900,
+     "boss": 5
+    },
+    "chain": {
+     "cooldown": 480,
+     "boss": 3
+    }
+   },
+   "monsters": {
+    "firstAfter": 25000,
+    "attractAfter": 6000,
+    "attractSmashes": 10,
+    "every": 45000,
+    "health": {
+     "robot": 38,
+     "kaiju": 44
+    },
+    "points": 500,
+    "height": 0.35,
+    "opacity": 0.94,
+    "smashEvery": 1500,
+    "buildingsPerShield": 2,
+    "atOnce": 1,
+    "atOnceLater": 2,
+    "laterFromLevel": 3
+   },
+   "letters": {
+    "points": 10,
+    "wordBonus": 50,
+    "sloganBonus": 250,
+    "backAfter": [
+     7000,
+     11000
+    ]
+   },
+   "beast_points": 100
+  },
+  "sky": {
+   "dragonSegments": 84,
+   "dragonSpacing": 12,
+   "dragonThickness": 26,
+   "dragonSpeed": 0.00016,
+   "phoenixSize": 1.8,
+   "sparksPerFrame": 22,
+   "opacity": 1,
+   "followMouse": 0.25,
+   "dragonHealth": 14,
+   "phoenixHealth": 10,
+   "respawnSeconds": 25,
+   "dragon": true,
+   "phoenix": true
+  },
+  "grid": {
+   "columns": 16,
+   "rows": 46,
+   "glideSpeed": -0.35,
+   "pulseSpeed": 1.6,
+   "smallest": 0.15,
+   "largest": 0.95,
+   "horizon": 0.4,
+   "hueNear": 270,
+   "hueMiddle": 320,
+   "hueFar": 385
+  },
+  "rts": {
+   "map": {
+    "w": 2600,
+    "h": 1500
+   },
+   "start": {
+    "credits": 150,
+    "sparks": 4,
+    "blades": 2
+   },
+   "supply_cap": 30,
+   "waves": {
+    "first": 75,
+    "every": 45
+   },
+   "crystal": {
+    "amount": 1200,
+    "carry": 8,
+    "mineTime": 1100
+   },
+   "enemies": {
+    "start": {
+     "mite": 6,
+     "brute": 2,
+     "spitter": 2
+    },
+    "waveBase": {
+     "mite": 3,
+     "brute": 0,
+     "spitter": 0.5
+    },
+    "waveGrowth": {
+     "mite": 2,
+     "brute": 0.5,
+     "spitter": 0.5
+    },
+    "maxAlive": 150
+   },
+   "units": {
+    "spark": {
+     "hp": 40,
+     "speed": 1.9,
+     "dmg": 3,
+     "range": 18,
+     "cd": 900,
+     "sight": 230,
+     "cost": 50,
+     "time": 5
+    },
+    "blade": {
+     "hp": 85,
+     "speed": 2.6,
+     "dmg": 9,
+     "range": 24,
+     "cd": 550,
+     "sight": 260,
+     "cost": 100,
+     "time": 7
+    },
+    "lancer": {
+     "hp": 150,
+     "speed": 1.35,
+     "dmg": 24,
+     "range": 210,
+     "cd": 1500,
+     "sight": 300,
+     "cost": 175,
+     "time": 10,
+     "splash": 46
+    },
+    "core": {
+     "hp": 1600,
+     "sight": 380
+    },
+    "mite": {
+     "hp": 32,
+     "speed": 2.7,
+     "dmg": 5,
+     "range": 14,
+     "cd": 600,
+     "sight": 240
+    },
+    "brute": {
+     "hp": 230,
+     "speed": 1.25,
+     "dmg": 26,
+     "range": 20,
+     "cd": 1200,
+     "sight": 240
+    },
+    "spitter": {
+     "hp": 70,
+     "speed": 1.8,
+     "dmg": 11,
+     "range": 170,
+     "cd": 1300,
+     "sight": 260
+    },
+    "hive": {
+     "hp": 2400,
+     "sight": 300
+    },
+    "tower": {
+     "hp": 420,
+     "sight": 300,
+     "dmg": 12,
+     "range": 240,
+     "cd": 650,
+     "cost": 100,
+     "time": 16
+    },
+    "depot": {
+     "hp": 380,
+     "sight": 200,
+     "cost": 75,
+     "time": 14,
+     "supply": 8
+    },
+    "outpost": {
+     "hp": 1000,
+     "sight": 380,
+     "cost": 250,
+     "time": 30
+    },
+    "yard": {
+     "hp": 750,
+     "sight": 280,
+     "cost": 200,
+     "time": 26
+    }
+   },
+   "zoom": {
+    "start": 1.4,
+    "max": 5
+   },
+   "build": {
+    "radius": 420,
+    "supplyMax": 80
+   }
+  },
+  "arpg": {
+   "light": 6.5,
+   "heroSprite": true,
+   "hero": {
+    "speed": 4.2,
+    "reach": 1.25,
+    "attackEvery": 520
+   },
+   "skills": {
+    "fireball": {
+     "mana": 8,
+     "cd": 350
+    },
+    "nova": {
+     "mana": 16,
+     "cd": 1600
+    }
+   },
+   "monsters": {
+    "hollow": {
+     "hp": 30,
+     "dmg": 4,
+     "speed": 1.9,
+     "reach": 1.1,
+     "every": 1000,
+     "xp": 12,
+     "weight": 5
+    },
+    "skitter": {
+     "hp": 16,
+     "dmg": 3,
+     "speed": 3.4,
+     "reach": 1.0,
+     "every": 650,
+     "xp": 8,
+     "weight": 4
+    },
+    "wisp": {
+     "hp": 22,
+     "dmg": 5,
+     "speed": 2.4,
+     "reach": 5.5,
+     "every": 1500,
+     "xp": 14,
+     "weight": 3
+    },
+    "golem": {
+     "hp": 110,
+     "dmg": 12,
+     "speed": 1.4,
+     "reach": 1.3,
+     "every": 1500,
+     "xp": 40,
+     "weight": 1
+    },
+    "warden": {
+     "hp": 700,
+     "dmg": 24,
+     "speed": 1.9,
+     "reach": 1.6,
+     "every": 1300,
+     "xp": 300
+    }
+   },
+   "enemies": {
+    "perRoomMin": 2,
+    "perRoomMax": 3,
+    "extraEveryTwoFloors": 1,
+    "extraMax": 4,
+    "bossEvery": 3
+   },
+   "rarity": {
+    "common": {
+     "chance": 0.58,
+     "mult": 1
+    },
+    "magic": {
+     "chance": 0.28,
+     "mult": 1.35
+    },
+    "rare": {
+     "chance": 0.115,
+     "mult": 1.8
+    },
+    "legendary": {
+     "chance": 0.025,
+     "mult": 2.6
+    }
+   }
+  },
+  "quest": {
+   "stage": 100,
+   "area": 50,
+   "areaComplete": 150,
+   "explorer": 300,
+   "explorerAreas": 6,
+   "quest": 500,
+   "perLevel": 400
+  }
+ },
+ "sections": [
+  {
+   "id": "arcade",
+   "title": "HERO ARCADE: the click-to-shoot game in the neon homepage header",
+   "help": {
+    "game.hitRadius": "how forgiving aiming is (1 = you must hit the target exactly)",
+    "game.comboWindow": "time you have to land the next hit to keep a combo going",
+    "game.baseSpawnEvery": "time between new targets at level 1 (gets shorter each level)",
+    "game.pointsPerLevel": "score needed to go up a level",
+    "game.targetOpacity": "how see-through the flying targets are (1 = solid)",
+    "game.shields": "city shield hearts (they recharge when they run out: the game never ends by itself)",
+    "game.bossEvery": "a mothership boss appears every this many points",
+    "game.powerEvery": "time between power-ups",
+    "game.powerSeconds": "how long Rapid Fire / Spread Shot / Slow-mo last (seconds)",
+    "game.maxTargets": "most flying targets on screen at level 1...",
+    "game.moreTargetsPerLevel": "...plus this many more for each level (level 3 = 6 + 3x2 = 12)",
+    "game.targetsDuringBoss": "most flying targets while a mothership boss is out",
+    "targets": "the flying targets",
+    "targets.drone": "weight = how common it is",
+    "weapons": "cooldown = time between shots, boss = damage to bosses and giants per hit",
+    "weapons.mg": "machine gun",
+    "weapons.rail": "railgun",
+    "weapons.chain": "lightning",
+    "monsters": "the giant robot and kaiju that wreck the city",
+    "monsters.firstAfter": "after the first shot, the first giant arrives this much later",
+    "monsters.attractAfter": "before anyone plays, one stomps in after this long (just a show)",
+    "monsters.attractSmashes": "...and walks off after this many blows",
+    "monsters.every": "time between giants (after one is beaten)",
+    "monsters.points": "score for bringing one down",
+    "monsters.height": "how tall, as a share of the screen height",
+    "monsters.smashEvery": "time between blows on a building",
+    "monsters.buildingsPerShield": "every this many flattened buildings costs a shield",
+    "monsters.atOnce": "most giants in the city at the same time...",
+    "monsters.atOnceLater": "...and once you reach level laterFromLevel",
+    "letters": "shooting the headline's letters",
+    "letters.backAfter": "how long until a shot letter spins back in",
+    "beast_points": "score for blowing up the dragon or the phoenix"
+   }
+  },
+  {
+   "id": "sky",
+   "title": "SKY BEASTS: the particle dragon and phoenix over the header",
+   "help": {
+    "dragonSegments": "how long the dragon is (body pieces)",
+    "dragonSpacing": "pixels between body pieces",
+    "dragonThickness": "body radius at its thickest, in pixels",
+    "dragonSpeed": "how fast they fly their loop",
+    "phoenixSize": "1 = normal, 1.5 = half as big again",
+    "sparksPerFrame": "loose sparks they shed",
+    "followMouse": "how strongly they drift towards the mouse (0 = not at all)",
+    "dragonHealth": "damage before it explodes (a laser hit does 1, a rocket 6)",
+    "respawnSeconds": "time until an exploded beast re-forms (seconds)",
+    "dragon": "False = no dragon",
+    "phoenix": "False = no phoenix"
+   }
+  },
+  {
+   "id": "grid",
+   "title": "NEON GRID: the animated floor behind the header",
+   "help": {
+    "columns": "tiles to each side of the middle",
+    "rows": "how far into the distance the floor goes",
+    "glideSpeed": "tiles per second (negative = slides away into the horizon)",
+    "pulseSpeed": "how fast tiles grow and shrink",
+    "smallest": "tile size range (1 = touching)",
+    "horizon": "where the horizon sits (0.40 = 40% down the screen)",
+    "hueNear": "colours by distance (hue 0-360; 270 purple, 320 pink, 385 orange)"
+   }
+  },
+  {
+   "id": "rts",
+   "title": "STATION DEFENSE: the space strategy game",
+   "help": {
+    "map": "size of the battlefield",
+    "start": "starting crystals, miners and interceptors",
+    "supply_cap": "ships you can have before building Supply Depots",
+    "waves": "seconds until the first alien wave, then between waves",
+    "crystal": "crystals per field, per trip, time to mine",
+    "enemies.start": "aliens guarding the hive when the game starts",
+    "enemies.maxAlive": "waves stop adding aliens once this many are alive (keeps it smooth)",
+    "units.spark": "Miner",
+    "units.blade": "Interceptor",
+    "units.lancer": "Gunship",
+    "units.core": "Tenshi Station",
+    "units.mite": "Swarmling",
+    "units.brute": "Behemoth",
+    "units.spitter": "Spitter",
+    "units.hive": "Alien Hive",
+    "units.tower": "Defense Turret",
+    "units.depot": "Supply Depot (+8 ships)",
+    "units.outpost": "Outpost (forward base)",
+    "units.yard": "Shipyard",
+    "zoom.start": "how close the camera starts (1 = the old, far view; bigger = bigger ships)",
+    "zoom.max": "the closest you can zoom in (wheel, + / - keys, the + - buttons, pinch)",
+    "build.radius": "you can build this far from the station or an outpost (chain outposts to expand)",
+    "build.supplyMax": "the most ships Supply Depots can raise your fleet to"
+   }
+  },
+  {
+   "id": "arpg",
+   "title": "UNDERCITY: the dungeon crawler",
+   "help": {
+    "light": "how far the hero's light reaches (tiles)",
+    "heroSprite": "show the pre-rendered Eclipse Wraith (False = use the 3D model in the arpg.hero slot)",
+    "hero": "walking speed, sword reach (tiles), time between swings",
+    "skills.nova": "Frost Nova",
+    "monsters.warden": "the boss (every 3rd floor)",
+    "enemies.perRoomMin": "fewest monsters in a room",
+    "enemies.perRoomMax": "most monsters in a room on floor 1...",
+    "enemies.extraEveryTwoFloors": "...plus this many more every 2 floors...",
+    "enemies.extraMax": "...but never more than this many extra",
+    "enemies.bossEvery": "a Warden boss guards the stairs every this many floors (0 = never)",
+    "rarity": "loot: chance of each rarity, and how much stronger it is"
+   }
+  },
+  {
+   "id": "quest",
+   "title": "QUEST: the XP you get for exploring the site (every page)",
+   "help": {
+    "stage": "XP for each section you reach",
+    "area": "XP for each page you discover",
+    "areaComplete": "bonus for clearing every section on a page",
+    "explorer": "bonus for discovering explorerAreas pages",
+    "quest": "XP for sending the contact form",
+    "perLevel": "XP per level"
+   }
+  }
+ ]
+}

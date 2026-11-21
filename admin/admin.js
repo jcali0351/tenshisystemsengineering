@@ -244,6 +244,7 @@
     if (name === "share") loadShare();
     if (name === "fx") loadFx();
     if (name === "css") loadCustom();
+    if (name === "games" && window.TenshiGames) window.TenshiGames.open();
   }
 
   /* ================================================================== PAGES (click to edit) */
@@ -679,6 +680,14 @@
       return gh(R + "/git/blobs/" + f.sha).then(function (b) { return JSON.parse(b64ToText(b.content.replace(/\s/g, ""))); });
     }).catch(function (e) { if (e.status === 404) return null; throw e; });
   }
+  function readLiveText(path) {
+    return gh(R + "/contents/" + path + "?ref=" + BRANCH).then(function (f) {
+      if (f.content) return b64ToText(f.content.replace(/\s/g, ""));
+      return gh(R + "/git/blobs/" + f.sha).then(function (b) { return b64ToText(b.content.replace(/\s/g, "")); });
+    }).catch(function (e) { if (e.status === 404) return null; throw e; });
+  }
+  /* For the other editor scripts (admin/games.js, the Game Studio): save, read the live files, messages. */
+  window.TenshiEditor = { commit: commit, readJSON: readLive, readText: readLiveText, toast: toast, busy: busy, esc: esc, site: SITE, signedIn: function () { return !!token; } };
   function when(iso) {
     if (!iso) return "never";
     var d = new Date(iso);

@@ -6,6 +6,10 @@ game_settings.py: every game on tenshisystems.com, tuned from one Python file.
        (it checks your changes and writes sandbox/game-settings.js, which the games read)
     3. Commit and push (or ask Claude to deploy). The live site updates within 5 minutes.
 
+You can also change all of these in the website editor (admin.html › Game Studio). Changes made there are kept in
+data/games.json and win over the values below; this script applies them too, so the two never fight. To go back to
+the values below, use "Reset" in Game Studio (or delete data/games.json).
+
 Enemy counts: search for "ENEMY NUMBERS" (one block in each game).
 Leave something out and the game simply uses its built-in value. Times are in milliseconds (1000 = 1 second)
 unless a comment says otherwise. Ranges like [14000, 24000] mean "a random value between these".
@@ -151,6 +155,7 @@ STATION_DEFENSE = {
 # =====================================================================================================================
 UNDERCITY = {
     "light": 6.5,                    # how far the hero's light reaches (tiles)
+    "heroSprite": True,              # show the pre-rendered Eclipse Wraith (False = use the 3D model in the arpg.hero slot)
     "hero": {"speed": 4.2, "reach": 1.25, "attackEvery": 520},   # walking speed, sword reach (tiles), time between swings
     "skills": {
         "fireball": {"mana": 8,  "cd": 350},
@@ -217,16 +222,75 @@ def check(value, path):
         sys.exit(f"Problem in {path}: {value!r} isn't a number, list or colour")
 
 
+SECTIONS = [  # (id the games use, the variable above)
+    ("arcade", "ARCADE"), ("sky", "SKY_BEASTS"), ("grid", "NEON_GRID"), ("rts", "STATION_DEFENSE"), ("arpg", "UNDERCITY"), ("quest", "QUEST"),
+]
+
+
+def merge(base, extra):
+    """Copy the values from `extra` over `base` (only keys that exist in base, so old or mistyped keys are ignored)."""
+    out = json.loads(json.dumps(base))
+    for k, v in (extra or {}).items():
+        if k not in out:
+            continue
+        if isinstance(out[k], dict) and isinstance(v, dict):
+            out[k] = merge(out[k], v)
+        else:
+            out[k] = v
+    return out
+
+
+def describe(source):
+    """For the website editor: each section's title and the comment written next to every value in this file."""
+    lines = source.splitlines()
+    sections = []
+    for sid, var in SECTIONS:
+        start = next(i for i, l in enumerate(lines) if l.startswith(var + " = {"))
+        title = lines[start - 2].strip(" #") if lines[start - 1].startswith("# ===") else var
+        help_ = {}
+        stack, depth, i = [], 0, start
+        while True:
+            line = lines[i]
+            code, _, comment = line.partition("  #") if '"#' not in line else (line, "", "")
+            if line.strip().startswith("#"):
+                code, comment = "", ""
+            first = None
+            for tok in __import__("re").finditer(r'"(\w+)"\s*:\s*(\{)?|(\{)|(\})', code):
+                key, opens, brace, close = tok.groups()
+                if key:
+                    path = ".".join([k for k in stack if k] + [key])
+                    if first is None:
+                        first = path
+                    if opens:
+                        stack.append(key)
+                elif brace:
+                    stack.append(None); depth += 1
+                elif close:
+                    if stack:
+                        stack.pop()
+            if first and comment.strip():
+                help_[first] = comment.strip()
+            if i > start and line.startswith("}"):
+                break
+            i += 1
+        sections.append({"id": sid, "title": title, "help": help_})
+    return sections
+
+
 def main():
-    settings = {
-        "arcade": ARCADE, "sky": SKY_BEASTS, "grid": NEON_GRID,
-        "rts": STATION_DEFENSE, "arpg": UNDERCITY, "quest": QUEST,
-    }
-    check(settings, "settings")
     here = os.path.dirname(os.path.abspath(__file__))
+    defaults = {sid: globals()[var] for sid, var in SECTIONS}
+    # Changes made in the website editor (Game Studio) win over the values in this file.
+    edits_path = os.path.join(here, "data", "games.json")
+    edits = {}
+    if os.path.exists(edits_path):
+        with open(edits_path, encoding="utf-8") as f:
+            edits = json.load(f)
+    settings = merge(defaults, edits)
+    check(settings, "settings")
     out = os.path.join(here, "sandbox", "game-settings.js")
     js = (
-        "// Written by game_settings.py. Don't edit this file: edit game_settings.py and run it again.\n"
+        "// Written by game_settings.py (and by the editor's Game Studio). Don't edit this file: use Game Studio, or edit game_settings.py and run it.\n"
         "window.TENSHI_GAMES = " + json.dumps(settings, indent=1) + ";\n"
         "// Copies a game's settings over its built-in ones (only the values that are given).\n"
         "window.TENSHI_TUNE = function tune(target, src) {\n"
@@ -241,7 +305,13 @@ def main():
     )
     with open(out, "w", encoding="utf-8", newline="\n") as f:
         f.write(js)
-    print(f"OK: wrote {os.path.relpath(out, here)} ({len(js):,} bytes). Commit and push to put it live.")
+    # What the editor's Game Studio needs to build its form: the default values, section titles and every comment.
+    with open(os.path.abspath(__file__), encoding="utf-8") as f:
+        source = f.read()
+    schema = {"note": "Written by game_settings.py for the editor's Game Studio. Don't edit by hand.", "defaults": defaults, "sections": describe(source)}
+    with open(os.path.join(here, "data", "games-schema.json"), "w", encoding="utf-8", newline="\n") as f:
+        json.dump(schema, f, indent=1, ensure_ascii=False)
+    print(f"OK: wrote {os.path.relpath(out, here)} ({len(js):,} bytes)" + (f", with {len(edits)} section(s) of Game Studio edits" if edits else "") + ", and data/games-schema.json. Commit and push to put it live.")
 
 
 if __name__ == "__main__":

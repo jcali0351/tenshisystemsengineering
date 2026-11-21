@@ -617,6 +617,7 @@
   const heroSprite = new Image();
   heroSprite.src = (document.querySelector('script[src*="neon-arpg.js"]')?.src || "").replace(/neon-arpg\.js.*$/, HERO_SPRITE.file);
   function drawHeroSprite(bob) {
+    if (CFG.heroSprite === false) return false;                     // Game Studio: "use the 3D model" for the hero
     if (!heroSprite.complete || !heroSprite.naturalWidth) return false;
     const S = HERO_SPRITE, step = Math.PI * 2 / S.frames, k = ((Math.round(hero.face / step) % S.frames) + S.frames) % S.frames;
     const scale = S.height * TH * 1.15 * zoom / S.heightPx, size = S.cell * scale;

@@ -71,6 +71,7 @@
       <button type="button" role="tab" data-tab="fx" aria-selected="false">Image effects</button>
       <button type="button" role="tab" data-tab="css" aria-selected="false">Custom CSS</button>
       <button type="button" role="tab" data-tab="bots" aria-selected="false">Content bots</button>
+      <button type="button" role="tab" data-tab="games" aria-selected="false">Game Studio</button>
     </nav>
 
     <!-- Pages: the real page, click to edit -->
@@ -360,6 +361,22 @@
       </div>
     </section>
     <!-- Content bots -->
+    <section class="ed-panel ed-games" data-panel="games" hidden>
+      <div class="gs-head">
+        <div>
+          <h2>Game Studio</h2>
+          <p class="ed-tip">Swap the 3D characters in all three games for your own AI-made or Blender models, and tune every game setting. Nothing goes live until you press <b>Save &amp; publish</b>; the site updates within about 5 minutes.</p>
+        </div>
+        <div class="gs-save"><span class="gs-pending" id="gs-pending">No changes</span><button type="button" class="ed-btn" id="gs-save" disabled>Save &amp; publish</button></div>
+      </div>
+      <div class="gs-switch" role="tablist" aria-label="Game Studio sections">
+        <button type="button" role="tab" data-gs="models" aria-selected="true">3D models</button>
+        <button type="button" role="tab" data-gs="settings" aria-selected="false">Game settings</button>
+      </div>
+      <div class="gs-body" id="gs-models"><p class="ed-tip">Loading…</p></div>
+      <div class="gs-body" id="gs-settings" hidden></div>
+    </section>
+
     <section class="ed-panel" data-panel="bots" hidden>
       <div class="ed-bots">
         <article class="ed-bot" aria-labelledby="bot-news-title">
@@ -425,6 +442,8 @@
   <script src="admin/share-networks.js?v=57332b3e"></script>
   <script src="admin/theme.js?v=5adf2a95"></script>
   <script src="fx.js?v=5a67a4ab"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+  <script src="admin/games.js?v=1"></script>
   <script src="admin/admin.js?v=c35d4796"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-// Written by game_settings.py. Don't edit this file: edit game_settings.py and run it again.
+// Written by game_settings.py (and by the editor's Game Studio). Don't edit this file: use Game Studio, or edit game_settings.py and run it.
 window.TENSHI_GAMES = {
  "arcade": {
   "game": {
@@ -280,6 +280,7 @@ window.TENSHI_GAMES = {
  },
  "arpg": {
   "light": 6.5,
+  "heroSprite": true,
   "hero": {
    "speed": 4.2,
    "reach": 1.25,
