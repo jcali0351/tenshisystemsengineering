@@ -514,24 +514,58 @@
       ctx.globalCompositeOperation = "source-over";
     }
   }
+  // ---- Stone walls: a tileable stone-block texture (made once), tinted per face and mapped onto each wall face in its
+  // isometric perspective (the texture follows the face, so it lies flat on the wall). 128 px of texture = one tile. ----
+  const STONE = (() => {
+    const N = 128, base = document.createElement("canvas"); base.width = base.height = N;
+    const g = base.getContext("2d"); let seed = 9; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    const val = new Float32Array(N * N);
+    for (let i = 0; i < N * N; i++) val[i] = 0.64 + (rnd() - 0.5) * 0.2;                      // speckled stone grain
+    const rowH = 32, bw = 64;                                                                   // 4 courses of blocks, staggered
+    for (let row = 0; row < N / rowH; row++) {
+      const off = row % 2 ? bw / 2 : 0;
+      for (let bI = -1; bI <= N / bw; bI++) {
+        const tone = 0.82 + rnd() * 0.32, x0 = bI * bw + off;
+        for (let y = row * rowH; y < (row + 1) * rowH; y++) for (let x = x0; x < x0 + bw; x++) {
+          const i = y * N + ((x % N) + N) % N, ly = y - row * rowH, lx = x - x0;
+          if (ly < 2 || lx < 2) val[i] = 0.26 + rnd() * 0.06;                                  // mortar
+          else if (ly === 2 || lx === 2) val[i] *= tone * 1.28;                                // lit top / left edge
+          else if (ly >= rowH - 2 || lx >= bw - 2) val[i] *= tone * 0.78;                      // shaded bottom / right edge
+          else val[i] *= tone;
+        }
+      }
+    }
+    const img = g.createImageData(N, N);
+    for (let i = 0; i < N * N; i++) { const v = Math.max(0, Math.min(1, val[i])) * 255; img.data[i * 4] = img.data[i * 4 + 1] = img.data[i * 4 + 2] = v; img.data[i * 4 + 3] = 255; }
+    g.putImageData(img, 0, 0);
+    for (let i = 0; i < 16; i++) {                                                              // grime (wrapped so it tiles)
+      const x = rnd() * N, y = rnd() * N, r = 6 + rnd() * 18, a = 0.1 + rnd() * 0.14;
+      for (const ox of [-N, 0, N]) for (const oy of [-N, 0, N]) { const gr = g.createRadialGradient(x + ox, y + oy, 0, x + ox, y + oy, r); gr.addColorStop(0, `rgba(0,0,0,${a})`); gr.addColorStop(1, "rgba(0,0,0,0)"); g.fillStyle = gr; g.fillRect(x + ox - r, y + oy - r, r * 2, r * 2); }
+    }
+    g.strokeStyle = "rgba(0,0,0,0.5)"; g.lineWidth = 1;                                          // cracks
+    for (let i = 0; i < 7; i++) { let x = 4 + rnd() * (N - 8), y = 4 + rnd() * (N - 30); g.beginPath(); g.moveTo(x, y); for (let k = 0; k < 5; k++) { x += (rnd() - 0.5) * 12; y += 2 + rnd() * 6; g.lineTo(x, y); } g.stroke(); }
+    const tint = rgb => { const c = document.createElement("canvas"); c.width = c.height = N; const t = c.getContext("2d"); t.drawImage(base, 0, 0); t.globalCompositeOperation = "multiply"; t.fillStyle = `rgb(${rgb.join(",")})`; t.fillRect(0, 0, N, N); return ctx.createPattern(c, "repeat"); };
+    return { N, top: tint([128, 112, 158]), left: tint([98, 84, 130]), right: tint([74, 62, 104]) };
+  })();
+  // Fill the current path with stone: (ox, oy) = the face's top-left corner, u = along its width, v = down its height.
+  function stone(pat, ox, oy, ux, uy, vx, vy) {
+    const k = 1 / STONE.N;
+    pat.setTransform(new DOMMatrix([ux * k, uy * k, vx * k, vy * k, ox, oy]));
+    ctx.fillStyle = pat; ctx.fill();
+  }
   function drawWall(x, y, fade) {
-    const top = [42, 26, 70], left = [30, 18, 52], right = [22, 12, 40];
+    const Wz = WALL * zoom;
+    const ax = sx(x + 1, y), ay = sy(x + 1, y, 0), bx = sx(x + 1, y + 1), by = sy(x + 1, y + 1, 0), cx = sx(x, y + 1), cy = sy(x, y + 1, 0), dx = sx(x, y), dy = sy(x, y, 0);
     ctx.globalAlpha = fade;
-    // Right face (towards +x... the face you see on the lower right)
-    ctx.beginPath();
-    ctx.moveTo(sx(x + 1, y), sy(x + 1, y, 0)); ctx.lineTo(sx(x + 1, y + 1), sy(x + 1, y + 1, 0));
-    ctx.lineTo(sx(x + 1, y + 1), sy(x + 1, y + 1, 0) - WALL * zoom); ctx.lineTo(sx(x + 1, y), sy(x + 1, y, 0) - WALL * zoom); ctx.closePath();
-    ctx.fillStyle = shade(right, 1); ctx.fill();
+    // Right face (towards +x: the face you see on the lower right)
+    ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.lineTo(bx, by - Wz); ctx.lineTo(ax, ay - Wz); ctx.closePath();
+    stone(STONE.right, ax, ay - Wz, bx - ax, by - ay, 0, Wz);
     // Left face (lower left)
-    ctx.beginPath();
-    ctx.moveTo(sx(x, y + 1), sy(x, y + 1, 0)); ctx.lineTo(sx(x + 1, y + 1), sy(x + 1, y + 1, 0));
-    ctx.lineTo(sx(x + 1, y + 1), sy(x + 1, y + 1, 0) - WALL * zoom); ctx.lineTo(sx(x, y + 1), sy(x, y + 1, 0) - WALL * zoom); ctx.closePath();
-    ctx.fillStyle = shade(left, 1); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(bx, by); ctx.lineTo(bx, by - Wz); ctx.lineTo(cx, cy - Wz); ctx.closePath();
+    stone(STONE.left, cx, cy - Wz, bx - cx, by - cy, 0, Wz);
     // Top
-    ctx.beginPath();
-    ctx.moveTo(sx(x, y), sy(x, y, 0) - WALL * zoom); ctx.lineTo(sx(x + 1, y), sy(x + 1, y, 0) - WALL * zoom);
-    ctx.lineTo(sx(x + 1, y + 1), sy(x + 1, y + 1, 0) - WALL * zoom); ctx.lineTo(sx(x, y + 1), sy(x, y + 1, 0) - WALL * zoom); ctx.closePath();
-    ctx.fillStyle = shade(top, 1); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(dx, dy - Wz); ctx.lineTo(ax, ay - Wz); ctx.lineTo(bx, by - Wz); ctx.lineTo(cx, cy - Wz); ctx.closePath();
+    stone(STONE.top, dx, dy - Wz, ax - dx, ay - dy, cx - dx, cy - dy);
     ctx.strokeStyle = "rgba(255,43,214,0.22)"; ctx.lineWidth = 1; ctx.stroke();
     ctx.globalAlpha = 1;
   }
