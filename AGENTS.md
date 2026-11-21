@@ -56,7 +56,8 @@ Each game reads its settings from `window.TENSHI_GAMES` (sandbox/game-settings.j
 4. **Undercity** (`sandbox/neon-arpg.js`): isometric dungeon crawler (2:1 projection, TW 64 / TH 32). Hero = the owner's
    Meshy "Eclipse Wraith", **pre-rendered** from 16 directions (`sandbox/art/hero-wraith.webp`); the first enemy (Hollow)
    = the owner's animated "Corrupted Astral Sorcerer", 8 directions × 8 frames, plays a leap-back when hit
-   (`sandbox/art/hollow-sorcerer.webp`, `MONSTER_SPRITES`). Other monsters are 3D meshes from `models/source/arpg.*.glb`
+   (`sandbox/art/hollow-sorcerer.webp`, `MONSTER_SPRITES`); the Golem (floor 2+) = the owner's animated "Low Poly Green
+   Elemental", raises its guard when hit (`sandbox/art/golem-elemental.webp`). Other monsters are 3D meshes from `models/source/arpg.*.glb`
    drawn with simple 2D lighting. Cover art `sandbox/art/undercity.webp`, same 5 s fade.
 5. **Quest** (`sandbox/neon-quest.js`): XP for exploring the site, on every page.
 Hero headline effects: `sandbox/neon-fx.js` (flashing messages, particles). Shared 3D model loader:
