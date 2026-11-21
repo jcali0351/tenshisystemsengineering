@@ -284,6 +284,7 @@
    "heroSprite": true,
    "hollowSprite": true,
    "golemSprite": true,
+   "wizardSprite": true,
    "skitterSprite": true,
    "hero": {
     "speed": 4.2,
@@ -327,6 +328,15 @@
      "every": 1500,
      "xp": 14,
      "weight": 3
+    },
+    "wizard": {
+     "hp": 34,
+     "dmg": 5,
+     "speed": 2.0,
+     "reach": 1.2,
+     "every": 1100,
+     "xp": 15,
+     "weight": 5
     },
     "golem": {
      "hp": 110,
@@ -489,9 +499,11 @@
     "heroSprite": "show the pre-rendered Female Angel Hero with its animations (False = use the 3D model in the arpg.hero slot)",
     "hollowSprite": "show the animated Corrupted Astral Sorcerer as the Hollow (False = use the arpg.hollow 3D model)",
     "golemSprite": "show the animated Green Elemental as the Golem (False = use the arpg.golem 3D model)",
+    "wizardSprite": "show the fully animated Evil Wizard (False = use the arpg.wizard 3D model)",
     "skitterSprite": "show the detailed lava spider as the Skitter (False = use the arpg.skitter 3D model)",
     "hero": "walking speed, sword reach (tiles), time between swings",
     "skills.nova": "Frost Nova",
+    "monsters.wizard": "the Evil Wizard",
     "monsters.golem": "the Green Elemental",
     "monsters.warden": "the boss (every 3rd floor)",
     "enemies.perRoomMin": "fewest monsters in a room",

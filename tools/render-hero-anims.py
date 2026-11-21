@@ -2,7 +2,7 @@
 # sprite frames: 8 directions x N frames per animation, at the game's 2:1 isometric camera, kept in place, all at the
 # same scale. Run with Blender:
 #   blender --background --factory-startup --python tools/render-hero-anims.py -- <model.glb> <out_dir> <px> <samples>
-#       Walking:8 Running:8 Attack:12 x-Attack:12 [--extra other.glb]   (part of the animation's name : frames to sample)
+#       Walking:8 Running:8 Attack:12! x-Attack:12! [--extra other.glb]   (animation name : frames; ! = plays once, not a loop)
 # --extra loads the animations from another .glb of the same rig (e.g. a separate attack download); an x- prefix
 # picks the animation from that file.
 # Output: out_dir/<name>/d<dir>_f<frame>.png and out_dir/meta.json (anchor, height in px). Pack each animation into a
@@ -14,8 +14,11 @@ args = sys.argv[sys.argv.index("--") + 1:]
 extra = None
 if "--extra" in args:
     i = args.index("--extra"); extra = args[i + 1]; args = args[:i] + args[i + 2:]
+span_opt = None
+if "--span" in args:                                       # --span: camera size, to match an earlier render's scale
+    i = args.index("--span"); span_opt = float(args[i + 1]); args = args[:i] + args[i + 2:]
 src, out, px, samples = args[0], args[1], int(args[2]), int(args[3])
-wanted = [(a.split(":")[0], int(a.split(":")[1])) for a in args[4:]]
+wanted = [(a.split(":")[0], a.split(":")[1]) for a in args[4:]]   # "Name:8" loops, "Name:10!" plays once
 GLOW = 0.2                                                 # how much the texture glows by itself (Meshy exports 1.0)
 front_offset = 90.0                                        # Meshy fronts face -Y; turn them to face +X (map angle 0)
 os.makedirs(out, exist_ok=True)
@@ -51,7 +54,8 @@ for m in mesh.data.materials:
         if n.type != "BSDF_PRINCIPLED": continue
         def setin(name, v):
             if name in n.inputs: n.inputs[name].default_value = v
-        setin("Emission Strength", GLOW); setin("Specular IOR Level", 0.5); setin("Roughness", 0.5)
+        if "Emission Color" in n.inputs and n.inputs["Emission Color"].is_linked: setin("Emission Strength", GLOW)
+        setin("Specular IOR Level", 0.5); setin("Roughness", 0.5)
         setin("Coat Weight", 0.08); setin("Sheen Weight", 0.15)
 
 pivot = bpy.data.objects.new("pivot", None); scene.collection.objects.link(pivot)
@@ -67,13 +71,14 @@ def world_pts(frame):
 pivot.rotation_euler = (0, 0, math.radians(front_offset))
 plans = []
 for key, n in wanted:
+    once = n.endswith("!"); n = int(n.rstrip("!"))
     from_extra = False
     name = key
     if key.lower().startswith("x-"): from_extra, key = True, key[2:]
     act = use_action(key, from_extra)
     f0, f1 = act.frame_range
     # Looping moves (walk/run): skip the last frame, it repeats the first.
-    loop = "walk" in key.lower() or "run" in key.lower()
+    loop = not once
     frames = [f0 + (f1 - f0) * i / (n if loop else max(1, n - 1)) for i in range(n)]
     data = {f: world_pts(f) for f in frames}
     centres = {f: (sum(p.x for p in data[f]) / len(data[f]), sum(p.y for p in data[f]) / len(data[f])) for f in frames}
@@ -82,7 +87,13 @@ ground = min(p.z for p in plans[0]["data"][plans[0]["frames"][0]])
 H = max(p.z for p in plans[0]["data"][plans[0]["frames"][0]]) - ground
 top = max(p.z for pl in plans for f in pl["frames"] for p in pl["data"][f]) - ground
 reach = max(math.hypot(p.x - pl["centres"][f][0], p.y - pl["centres"][f][1]) for pl in plans for f in pl["frames"] for p in pl["data"][f])
-span = max(top * 1.12, reach * 2.25)
+# Animations that sink below the floor (e.g. Mixamo floor moves) get lifted so their lowest point is on the ground.
+for pl in plans:
+    low = min(p.z for f in pl["frames"] for p in pl["data"][f])
+    pl["lift"] = max(0.0, ground - low) if ground - low > 0.02 else 0.0
+    if pl["lift"]: print("[hero] lifting", pl["name"], "by", round(pl["lift"], 3))
+top = max(top, max(p.z + pl["lift"] for pl in plans for f in pl["frames"] for p in pl["data"][f]) - ground)
+span = span_opt or max(top * 1.12, reach * 2.25)
 print("[hero] height", round(H, 3), "top", round(top, 3), "reach", round(reach, 3), "span", round(span, 3))
 
 cam_d = bpy.data.cameras.new("cam"); cam_d.type = "ORTHO"; cam_d.ortho_scale = span
@@ -109,7 +120,7 @@ except Exception: pass
 
 dirs = 8; meta = {"dirs": dirs, "cell": px, "modelHeight": H, "anims": {}}
 for pl in plans:
-    use_action(pl["key"], pl["extra"])
+    use_action(pl["key"], pl["extra"]); pivot.location.z = pl["lift"]
     od = os.path.join(out, pl["name"].replace(":", "_")); os.makedirs(od, exist_ok=True)
     for d in range(dirs):
         ang = math.radians(front_offset + d * 360 / dirs); pivot.rotation_euler = (0, 0, ang)

@@ -27,6 +27,7 @@
     hollow:  { name: "Hollow",  hp: 30, dmg: 4,  speed: 1.9, reach: 1.1, every: 1000, xp: 12, color: "#9fd6a8", r: 0.34, h: 1.0, weight: 5 },
     skitter: { name: "Skitter", hp: 16, dmg: 3,  speed: 3.4, reach: 1.0, every: 650,  xp: 8,  color: "#ff6ec7", r: 0.28, h: 1.1, weight: 4 },
     wisp:    { name: "Wisp",    hp: 22, dmg: 5,  speed: 2.4, reach: 5.5, every: 1500, xp: 14, color: "#8fd8ff", r: 0.26, h: 1.1, weight: 3, ranged: true },
+    wizard:  { name: "Evil Wizard", hp: 34, dmg: 5, speed: 2.0, reach: 1.2, every: 1100, xp: 15, color: "#b06bff", r: 0.32, h: 1.1, weight: 5 },
     golem:   { name: "Golem",   hp: 110, dmg: 12, speed: 1.4, reach: 1.3, every: 1500, xp: 40, color: "#c9a6ff", r: 0.5, h: 1.5, weight: 3 },
     warden:  { name: "The Warden", hp: 700, dmg: 24, speed: 1.9, reach: 1.6, every: 1300, xp: 300, color: "#ff2bd6", r: 0.7, h: 2.2, weight: 0, boss: true },
   };
@@ -429,8 +430,9 @@
     for (const m of monsters) {
       m.cd = Math.max(0, m.cd - dt); m.flash = Math.max(0, m.flash - dt / 200); m.slow = Math.max(0, m.slow - dt);
       const d = dist(m, hero), speed = m.T.speed * (m.slow ? 0.45 : 1) * (m.champion ? 1.15 : 1);
-      if (!m.aggro && d < 7.5 && lineOfSight(m, hero)) { m.aggro = true; if (m.T.boss) { say("THE WARDEN AWAKENS", 2200, "#ff2bd6"); sfx("bomb"); } }
+      if (!m.aggro && d < 7.5 && lineOfSight(m, hero)) { m.aggro = true; m.spotAt = performance.now(); if (m.T.boss) { say("THE WARDEN AWAKENS", 2200, "#ff2bd6"); sfx("bomb"); } }
       if (!m.aggro) { if (Math.random() < dt / 3000) m.wander = { x: m.home.x + rand(-1.5, 1.5), y: m.home.y + rand(-1.5, 1.5) }; if (m.wander && isFloor(m.wander.x, m.wander.y)) moveToward(m, m.wander.x, m.wander.y, speed * 0.4, dt); continue; }
+      if (MONSTER_ANIMS[m.type] && performance.now() - (m.spotAt || 0) < MONSTER_ANIMS[m.type].spotMs) { m.face = Math.atan2(hero.y - m.y, hero.x - m.x); continue; }   // "come here!"
       if (m.T.ranged) {
         const see = lineOfSight(m, hero);
         if (see && d < m.T.reach && !m.cd) { m.cd = m.T.every; const a = Math.atan2(hero.y - m.y, hero.x - m.x); shots.push({ kind: "bolt", x: m.x, y: m.y, vx: Math.cos(a) * 6, vy: Math.sin(a) * 6, life: 1600, dmg: m.dmg, from: "monster" }); m.face = a; }
@@ -441,7 +443,7 @@
       if (d <= m.T.reach + m.T.r * 0.5) {
         m.face = Math.atan2(hero.y - m.y, hero.x - m.x);
         if (!m.cd) {
-          m.cd = m.T.every * (m.slow ? 1.5 : 1); m.swing = 1;
+          m.cd = m.T.every * (m.slow ? 1.5 : 1); m.swing = 1; m.atkAt = performance.now();
           if (m.T.boss && Math.random() < 0.35) {                               // the Warden's ground slam
             fx.push({ ring: true, x: m.x, y: m.y, r: 0.3, grow: 2.8, life: 1, color: "#ff2bd6" });
             if (d < 2.8) hurtHero(m.dmg * 1.3);
@@ -763,13 +765,71 @@
     if (m.flash > 0.05) { ctx.save(); ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = Math.min(1, m.flash) * 0.7; ctx.drawImage(S.img, col * S.cell, row * S.cell, S.cell, S.cell, dx, dy, size, size); ctx.restore(); }
     return true;
   }
+  // ---- Fully animated monsters: every animation of a Meshy/Mixamo character, pre-rendered in Blender
+  // (tools/render-hero-anims.py) from 8 directions, one sheet per animation (rows = directions, columns = frames).
+  // Sheets load only when the monster first appears. Each entry: [file, frames, seconds, loops].
+  const MONSTER_ANIMS = {
+    // The owner's Meshy "Evil Wizard" (Mixamo animations): a common enemy on every floor.
+    wizard: { setting: "wizardSprite", dir: "art/wizard/", dirs: 8, cell: 176, anchorX: 0.5, anchorY: 0.8637, heightPx: 107.74, height: 1.8, spotMs: 1100,
+      anims: {
+        walk: ["walk", 8, 1.03, true], run: ["run", 8, 0.63, true], wander: ["casual-walk", 12, 4.17, true],
+        breath: ["catching-breath", 12, 7, true], bubble: ["bubble-dance", 12, 8.03, true], cardio: ["cardio-dance", 12, 4.3, true],
+        breakdance: ["breakdance", 6, 0.5, true], burpee: ["burpee", 12, 3.17, true], call: ["call-gesture", 12, 7.5, false],
+        cannon: ["heavy-walk", 8, 0.93, true], crouch: ["crouch-forward", 8, 1.13, true], strafe: ["crouch-right", 8, 1.27, true],
+        attack: ["charged-slash", 10, 2.2, false],
+      },
+      idles: ["breath", "breath", "bubble", "cardio", "breakdance", "burpee"] },
+  };
+  function animSheet(S, key) {
+    const a = S.anims[key];
+    if (!a.img) { a.img = new Image(); a.img.src = artBase + S.dir + a[0] + ".webp"; }
+    return a.img;
+  }
+  for (const t in MONSTER_ANIMS) animSheet(MONSTER_ANIMS[t], "walk");   // the walk sheet up front: no placeholder when one first appears
+  function drawAnimMonster(m, now) {
+    const S = MONSTER_ANIMS[m.type];
+    if (!S || CFG[S.setting] === false) return false;
+    // Moving? (monsters' walk counter grows as they step)
+    if (m.lastWalk !== undefined && m.walk !== m.lastWalk) m.movedAt = now;
+    m.lastWalk = m.walk;
+    const moving = now - (m.movedAt || 0) < 160, d = Math.hypot(hero.x - m.x, hero.y - m.y);
+    let key, t = 0;                                                   // t = 0..1 through a one-shot animation
+    const atkMs = Math.min(900, m.T.every * 0.85), sinceAtk = now - (m.atkAt || -1e9), sinceSpot = now - (m.spotAt || -1e9);
+    if (sinceAtk < atkMs) { key = "attack"; t = sinceAtk / atkMs; }
+    else if (m.aggro && sinceSpot < S.spotMs) { key = "call"; t = sinceSpot / S.spotMs; }
+    else if (m.aggro && moving) key = m.slow ? "crouch" : m.champion ? "cannon" : d > 4 ? "run" : "walk";
+    else if (m.aggro) key = "strafe";                                 // squaring up between swings
+    else if (moving) key = "wander";
+    else {                                                            // waiting around: a random idle every few seconds
+      if (!m.idle || now > m.idleUntil) { m.idle = S.idles[Math.floor(Math.random() * S.idles.length)]; m.idleUntil = now + rand(3500, 7000); }
+      key = m.idle;
+    }
+    const a = S.anims[key], img = animSheet(S, key);
+    if (!img.complete || !img.naturalWidth) {                         // still loading: the first walk frame if it's there
+      const w = animSheet(S, "walk"); if (!w.complete || !w.naturalWidth) return false;
+      return blitMonster(m, S, w, 0);
+    }
+    let frame;
+    if (!a[3]) frame = Math.min(a[1] - 1, Math.floor(t * a[1]));
+    else { const per = Math.min(a[2] * 1000 / a[1], 240); frame = Math.floor((now + m.home.x * 997) / per) % a[1]; }
+    return blitMonster(m, S, img, frame);
+  }
+  function blitMonster(m, S, img, frame) {
+    const step = Math.PI * 2 / S.dirs, row = ((Math.round(m.face / step) % S.dirs) + S.dirs) % S.dirs;
+    const scale = S.height * (m.champion ? 1.12 : 1) * TH * 1.15 * zoom / S.heightPx, size = S.cell * scale;
+    const px = sx(m.x, m.y), py = sy(m.x, m.y, 0), dx = px - S.anchorX * size, dy = py - S.anchorY * size;
+    ctx.drawImage(img, frame * S.cell, row * S.cell, S.cell, S.cell, dx, dy, size, size);
+    if (m.flash > 0.05) { ctx.save(); ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = Math.min(1, m.flash) * 0.7; ctx.drawImage(img, frame * S.cell, row * S.cell, S.cell, S.cell, dx, dy, size, size); ctx.restore(); }
+    return true;
+  }
   function drawMonster(m, now) {
     const T = m.T, model = modelFor("arpg." + m.type);
     shadow(m.x, m.y, T.r);
     if (m.champion) { ctx.save(); ctx.globalCompositeOperation = "lighter"; glowAt(m.x, m.y, 0.2, 40 * T.r * 3, "255,216,74", 0.35); ctx.restore(); }
     if (m.slow) { ctx.save(); ctx.globalCompositeOperation = "lighter"; glowAt(m.x, m.y, 0.3, 30, "143,216,255", 0.35); ctx.restore(); }
-    if (drawMonsterSprite(m, now)) { /* pre-rendered animated character */ }
+    if (drawAnimMonster(m, now) || drawMonsterSprite(m, now)) { /* pre-rendered animated character */ }
     else if (model) drawMesh(model, m.x, m.y, m.face, T.h * 1.1, m.flash);
+    else if (m.type === "wizard") figure(m.x, m.y, { h: 1.2, r: 0.3, body: "#4a2a7a", head: "#c9a6ff", eye: "#ff2bd6", flash: m.flash, bob: Math.abs(Math.sin(m.walk)) * 0.05, face: m.face });
     else if (m.type === "hollow") figure(m.x, m.y, { h: 1.15, r: 0.3, body: "#5f7a68", head: "#9fd6a8", eye: "#ff6e3a", flash: m.flash, bob: Math.abs(Math.sin(m.walk)) * 0.05, face: m.face });
     else if (m.type === "skitter") {
       const px = sx(m.x, m.y), py = sy(m.x, m.y, 0.25);

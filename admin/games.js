@@ -23,10 +23,10 @@
     "rts.station": "Tenshi Station", "rts.miner": "Miner", "rts.interceptor": "Interceptor", "rts.gunship": "Gunship", "rts.turret": "Defense Turret", "rts.depot": "Supply Depot",
     "rts.outpost": "Outpost", "rts.shipyard": "Shipyard", "rts.swarmling": "Swarmling", "rts.behemoth": "Behemoth", "rts.spitter": "Spitter", "rts.hive": "Alien Hive",
     "rts.asteroid": "Asteroid", "rts.crystal": "Crystal",
-    "arpg.hero": "Hero", "arpg.hollow": "Hollow", "arpg.skitter": "Skitter", "arpg.wisp": "Wisp", "arpg.golem": "Golem", "arpg.warden": "The Warden (boss)"
+    "arpg.hero": "Hero", "arpg.hollow": "Hollow", "arpg.skitter": "Skitter", "arpg.wisp": "Wisp", "arpg.golem": "Golem", "arpg.wizard": "Evil Wizard", "arpg.warden": "The Warden (boss)"
   };
   // Slots that show a pre-rendered sprite in the game; uploading a model switches that sprite off (and Revert back on).
-  var SPRITE_SETTING = { "arpg.hero": "arpg.heroSprite", "arpg.hollow": "arpg.hollowSprite", "arpg.golem": "arpg.golemSprite", "arpg.skitter": "arpg.skitterSprite" };
+  var SPRITE_SETTING = { "arpg.hero": "arpg.heroSprite", "arpg.hollow": "arpg.hollowSprite", "arpg.golem": "arpg.golemSprite", "arpg.skitter": "arpg.skitterSprite", "arpg.wizard": "arpg.wizardSprite" };
   var ED, loaded = false, loading = null;
   var schema = null, edits = {}, values = {}, models = {}, modelsOrig = {};
   var uploads = {};             // slot -> { file, base64, url, tris, name }
@@ -83,7 +83,7 @@
   });
 
   /* ------------------------------------------------------------------ 3D models */
-  function builtIn(slot) { return slot.indexOf("arpg.") === 0 ? "source/" + slot + ".glb" : ""; }
+  function builtIn(slot) { return slot.indexOf("arpg.") === 0 && slot !== "arpg.wizard" ? "source/" + slot + ".glb" : ""; }   // the Wizard has no built-in mesh (its look is the animated sprite)
   function isBuiltIn(slot) { var f = models[slot] || ""; return !f || f === builtIn(slot) || f.indexOf("source/") === 0; }
   function previewSrc(slot) {
     if (uploads[slot]) return uploads[slot].url;
@@ -109,6 +109,7 @@
   function card(slot) {
     var up = uploads[slot], custom = !isBuiltIn(slot), file = up ? up.name + " (new, not saved)" : custom ? models[slot] : "built-in";
     var hero = slot === "arpg.hero" ? '<p class="gs-note">Undercity shows the pre-rendered, animated Female Angel Hero. Uploading a model here switches the hero to your model (Game settings › Undercity › Hero sprite).</p>'
+      : slot === "arpg.wizard" ? '<p class="gs-note">Undercity shows the fully animated Evil Wizard (13 animations). Uploading a model switches to your model (Game settings › Undercity › Wizard sprite).</p>'
       : slot === "arpg.hollow" ? '<p class="gs-note">Undercity shows the animated Corrupted Astral Sorcerer here. Uploading a model switches to your model (Game settings › Undercity › Hollow sprite).</p>'
       : slot === "arpg.golem" ? '<p class="gs-note">Undercity shows the animated Green Elemental here. Uploading a model switches to your model (Game settings › Undercity › Golem sprite).</p>' : "";
     return '<article class="gs-card' + (dirty.models.has(slot) ? " is-dirty" : "") + '" data-slot="' + esc(slot) + '">' +
