@@ -76,6 +76,7 @@
   root.className = "arpg";
   root.innerHTML = `
     <canvas class="arpg-canvas" aria-label="Undercity dungeon crawler game"></canvas>
+    <div class="arpg-art" aria-hidden="true"><div class="arpg-art-img"></div></div>
     <div class="arpg-top">
       <button type="button" class="arpg-exit" hidden>✕ EXIT</button>
       <button type="button" class="arpg-full" hidden>⛶ FULLSCREEN</button>
@@ -97,7 +98,7 @@
     <div class="arpg-sheet" hidden></div>
     <div class="arpg-tip" hidden></div>
     <div class="arpg-msg" aria-live="polite"></div>
-    <div class="arpg-intro">
+    <div class="arpg-intro arpg-intro-cover">
       <p class="arpg-kicker">UNDERCITY · A NEON DUNGEON CRAWLER</p>
       <h3>Descend. Loot. Survive.</h3>
       <p>Fight your way down through the neon crypts beneath Osaka. Grab gold and gear, level up, find the stairs.</p>
@@ -883,6 +884,7 @@
       : `<button type="button" class="arpg-play" data-go="new">▶ PLAY</button>`;
   }
   function start(mode) {
+    intro.classList.remove("arpg-intro-cover");
     enterWindow(); resize();
     const saved = store.get();
     if (mode === "continue" && saved) { hero = Object.assign(newHero(), saved, { potions: saved.potions || { hp: 3, mp: 2 } }); floorNo = saved.floor || 1; }
@@ -902,11 +904,13 @@
   intro.addEventListener("click", e => { if (e.target.closest('[data-go="resume"]')) { e.stopPropagation(); enterWindow(); state = "play"; intro.hidden = true; showUI(true); } }, true);
 
   new IntersectionObserver(es => { onScreen = es[0].isIntersecting; }, { threshold: 0.3 }).observe(section);
-  let last = performance.now(), hudAt = 0, attract = null;
+  let last = performance.now(), hudAt = 0, attract = null, artReady = false;
+  { const probe = new Image(); probe.onload = () => { artReady = true; }; probe.src = (document.querySelector('script[src*="neon-arpg.js"]')?.src || "").replace(/neon-arpg\.js.*$/, "art/undercity-small.webp"); }
   function loop(now) {
     const dt = Math.min(50, now - last); last = now;
     if (onScreen && W) {
       if (state === "play" && hero) { update(dt); if (now > hudAt) { renderHud(); hudAt = now + 100; } draw(now); }
+      else if (artReady) { /* the cover art is showing */ }
       else if (hero && grid) draw(now);
       else drawAttract(now);
     }

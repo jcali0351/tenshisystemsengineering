@@ -1251,3 +1251,25 @@ html.neon:not(#_):not(#__) .rts-intro.rts-intro-cover .rts-play { color: #fff !i
 html.neon .rts-intro.rts-intro-cover .rts-play:hover { transform: scale(1.05); }
 html.neon .rts-intro.rts-intro-cover .rts-help { color: rgba(255, 255, 255, .78) !important; -webkit-text-fill-color: rgba(255, 255, 255, .78) !important; text-shadow: 0 1px 6px #000; }
 @keyframes rts-play-pulse { 50% { box-shadow: 0 0 40px rgba(255, 43, 214, .9), 0 0 90px rgba(176, 77, 255, .6); } }
+
+/* Undercity: the cover art, full width behind the Play screen (and the pause / fallen panels). Its title is at the
+   bottom of the picture, so the art is anchored to the bottom and the Play button sits above the title. */
+html.neon .arpg-art { position: absolute; inset: 0; overflow: hidden; background: #0b0418; transition: opacity .7s ease, visibility .7s; }
+html.neon .arpg-art::before { content: ""; position: absolute; inset: -40px; background: url("art/undercity-small.webp") center / cover no-repeat; filter: blur(22px) brightness(.45) saturate(1.2); }
+html.neon .arpg-art-img { position: absolute; inset: 64px 0 0 0; background: url("art/undercity.webp") center bottom / cover no-repeat; transform-origin: 50% 100%; animation: rts-art-drift 40s ease-in-out infinite alternate; }
+html.neon .arpg-art::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 46% 28% at 50% 62%, rgba(8, 2, 20, .55), transparent 70%); }
+html.neon:not(#_):not(#__) .arpg-zone.arpg-on .arpg-art, html.neon:not(#_):not(#__) .arpg-on .arpg-art { opacity: 0 !important; visibility: hidden !important; }
+html.neon.arpg-takeover .arpg-art-img { inset: 0; }
+@media (max-aspect-ratio: 1/1) { html.neon .arpg-art-img { background-size: 100% auto; background-position: center 34%; } }
+@media (max-width: 760px) { html.neon .arpg-art-img { background-image: url("art/undercity-small.webp"); } }
+@media (prefers-reduced-motion: reduce) { html.neon .arpg-art-img { animation: none; } }
+html.neon .arpg-intro.arpg-intro-cover { top: auto; bottom: 27%; transform: translateX(-50%); background: none; border: 0; box-shadow: none;
+  backdrop-filter: none; -webkit-backdrop-filter: none; padding: 0; width: min(720px, calc(100% - 32px)); }
+html.neon .arpg-intro.arpg-intro-cover > :is(.arpg-kicker, h3, p:not(.arpg-help)) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+html.neon .arpg-intro.arpg-intro-cover .arpg-play { font-size: 19px; padding: 15px 38px; border-radius: 999px; background: linear-gradient(135deg, #ff2bd6, #b04dff); color: #fff; border: 0;
+  box-shadow: 0 0 28px rgba(255, 43, 214, .65), 0 0 60px rgba(176, 77, 255, .45); animation: rts-play-pulse 2.4s ease-in-out infinite; }
+html.neon .arpg-intro.arpg-intro-cover .arpg-play.arpg-alt { background: rgba(20, 8, 40, .8); border: 1px solid rgba(215, 170, 255, .55); box-shadow: 0 0 18px rgba(176, 77, 255, .4); animation: none; }
+html.neon:not(#_):not(#__) .arpg-intro.arpg-intro-cover .arpg-play { color: #fff !important; -webkit-text-fill-color: #fff !important; }
+html.neon .arpg-intro.arpg-intro-cover .arpg-play:hover { transform: scale(1.05); }
+html.neon .arpg-intro.arpg-intro-cover .arpg-help { color: rgba(255, 255, 255, .8) !important; -webkit-text-fill-color: rgba(255, 255, 255, .8) !important; text-shadow: 0 1px 6px #000; }
+@media (max-aspect-ratio: 1/1) { html.neon .arpg-intro.arpg-intro-cover { bottom: 16%; } }
