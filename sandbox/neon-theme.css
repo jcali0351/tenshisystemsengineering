@@ -993,3 +993,15 @@ html.neon:not(#_):not(#__):not(#___) .blog-cat {
   background: linear-gradient(135deg, #ff2bd6, #8b2cf5) !important; color: #fff !important; -webkit-text-fill-color: #fff !important;
   border: 0 !important; box-shadow: 0 0 12px rgba(255, 43, 214, .45) !important;
 }
+
+/* Internal links: "How Tenshi can help" on blog posts and "Guides from our blog" on service pages. */
+html.neon .post-related { margin: 40px 0 24px; padding: 22px 26px; border-radius: 18px; background: var(--gx-panel); border: 1px solid var(--gx-edge); box-shadow: var(--gx-glow); }
+html.neon .post-related h2 { font-size: 1.3rem !important; margin: 0 0 12px !important; color: #fff !important; -webkit-text-fill-color: #fff !important; }
+html.neon .post-related ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+html.neon .post-related a, html.neon .svc-reading-list a { color: #ff6ec7 !important; -webkit-text-fill-color: #ff6ec7 !important; font-weight: 700; text-decoration: none; }
+html.neon .post-related a::before { content: "◆ "; font-size: .7em; vertical-align: .1em; }
+html.neon .post-related a:hover, html.neon .svc-reading-list a:hover { text-shadow: 0 0 12px rgba(255, 43, 214, .7); }
+html.neon .svc-reading { padding: clamp(40px, 6vw, 72px) 0 0; }
+html.neon .svc-reading-list { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+html.neon .svc-reading-list li { padding: 18px 20px; border-radius: 16px; background: var(--gx-panel); border: 1px solid var(--gx-edge); }
+html.neon .svc-reading-list span { display: block; margin-top: 6px; font-size: .9rem; color: #e6d9ff; }

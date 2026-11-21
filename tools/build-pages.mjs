@@ -189,7 +189,7 @@ const Share = createRequire(import.meta.url)("../admin/share-networks.js");
 const SHARE = Share.clean(readJson("data/share.json", {}));
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const postPermalink = (b) => (b.slug && SLUG_RE.test(b.slug) ? `blog/${b.slug}.html` : `blog.html#post-${b.id}`);
-const wDate = (d) => (d ? new Date(d.length === 10 ? d + "T12:00:00Z" : d).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "Asia/Tokyo" }) : "");
+const wDate = (d) => (d ? new Date(d.length === 10 ? d + "T12:00:00Z" : d).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "America/Chicago" }) : "");
 const wIso = (d) => (d ? new Date(d.length === 10 ? d + "T12:00:00Z" : d).toISOString().slice(0, 10) : "");
 const wUrl = (u) => (/^https?:\/\//.test(u || "") ? esc(u) : "#");
 // Posts without their own photo get the neon cover for their category (tools/make-covers.mjs).
@@ -201,6 +201,16 @@ const POST_TOPIC = [[/hosting|server/, "hosting"], [/security|password|ssl/, "se
   [/analytics|metrics|forms-that-convert/, "business"], [/domain|email/, "web"], [/typograph|color|brand|logo/, "brand"], [/ai|-ai-|-ai$/, "ai"],
   [/cms|static-site|content/, "code"], [/redesign|mobile-first|web-vitals/, "web"], [/gam(e|ing)/, "gaming"]];
 const coverFor = (b) => { const slug = String(b.slug || ""); const hit = POST_TOPIC.find(([re]) => re.test(slug)); return hit ? hit[1] : (POST_COVER[String(b.cat || "").toLowerCase()] || "blog"); };
+const TOPIC_SVC = { hosting: ["hosting", "web-development"], security: ["hosting", "web-development"], access: ["web-design", "web-development"],
+  seo: ["web-design", "web-development"], business: ["technology-consulting", "web-design"], web: ["web-design", "web-development"],
+  brand: ["branding", "media-design"], ai: ["ai-services", "technology-consulting"], code: ["content-management", "web-development"],
+  tech: ["software-development", "technology-consulting"], gaming: ["software-development", "media-design"], blog: ["web-design", "ai-services"] };
+const svcLink = (slug, prefix) => {
+  const sv = SERVICES.find((x) => x.slug === slug); if (!sv) return "";
+  const seo = SEO[`svc_${sv.id}_title`] || {};
+  return `<a href="${prefix}services/${slug}.html">${esc((seo.service || tx(`svc_${sv.id}_title`)) + " for small business")}</a>`;
+};
+const postsFor = (slug) => (BLOGDATA.posts || []).filter((b) => b.slug && (TOPIC_SVC[coverFor(b)] || []).includes(slug)).slice(0, 3);
 const postImg = (b) => (b.image && !b.image.generated && b.image.src) ? b.image : { src: `img/covers/${coverFor(b)}.svg`, generated: true };
 const wSrc = (img, cat) => (img && img.src && !/^https?:/.test(img.src) ? img.src : `img/covers/${cat}.svg`);
 const wCredit = (img) => (img && !img.generated && img.src ? ` · <span data-i18n="photoLabel">${tx("photoLabel")}</span>: ${esc(img.creator || "Unknown")}${img.license ? ` (<a href="${wUrl(img.licenseUrl || img.page)}" target="_blank" rel="noopener">${esc(img.license)}</a>)` : ""}` : "");
@@ -1136,7 +1146,16 @@ ${process()}
 
 ${cta(ask)}
 
-    <section class="svc-others" aria-labelledby="others-title">
+${postsFor(s.slug).length ? `    <section class="svc-reading" aria-labelledby="reading-title">
+      <div class="svc-others-inner">
+        <h2 id="reading-title">Guides from our blog</h2>
+        <ul class="svc-reading-list">
+${postsFor(s.slug).map((b) => `          <li><a href="../blog/${b.slug}.html">${esc(b.title)}</a><span>${esc(b.intro).slice(0, 140)}…</span></li>`).join("\n")}
+        </ul>
+      </div>
+    </section>
+
+` : ""}    <section class="svc-others" aria-labelledby="others-title">
       <div class="svc-others-inner">
         <h2 id="others-title" data-i18n="othersTitle">${tx("othersTitle")}</h2>
         <ul class="svc-other-list">
@@ -1645,7 +1664,7 @@ ${cta("../contact.html")}`,
 /* ---------- News and Blog: content from data/news.json (Tenshi Scraper) and data/blog.json (Tenshi Blog Writer) ----------
    Both bots run on GitHub from buttons in the Tenshi Editor. Every story and post credits its sources, and every
    feature photo credits its creator and license. */
-const fmtDate = (d) => d ? new Date(d.length === 10 ? d + "T12:00:00Z" : d).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric", timeZone: "Asia/Tokyo" }) : "";
+const fmtDate = (d) => d ? new Date(d.length === 10 ? d + "T12:00:00Z" : d).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric", timeZone: "America/Chicago" }) : "";
 const isoDay = (d) => (d ? new Date(d.length === 10 ? d + "T12:00:00Z" : d).toISOString().slice(0, 10) : "");
 const safeUrl = (u) => (/^https?:\/\//.test(u || "") ? esc(u) : "#");
 const ext = (u, text) => `<a href="${safeUrl(u)}" target="_blank" rel="noopener">${text}<span class="sr-only"> <span data-i18n="techNewTab">${tx("techNewTab")}</span></span></a>`;
@@ -1845,6 +1864,10 @@ function postPage(post) {
       <article class="page-inner narrow blog-article">
 ${featureImage(postImg(post), "blog", "blog-post-fig", prefix)}
 ${renderPostBody(post.body, prefix)}
+        <aside class="post-related" aria-labelledby="post-related-title">
+          <h2 id="post-related-title">How Tenshi can help</h2>
+          <ul>${(TOPIC_SVC[coverFor(post)] || ["web-design"]).map((sl) => `<li>${svcLink(sl, prefix)}</li>`).join("")}<li><a href="${prefix}contact.html">Free consultation for Wisconsin small businesses</a></li></ul>
+        </aside>
 ${share}        <p class="blog-back"><a href="../blog.html"><span data-i18n="homeBlogAll">${tx("homeBlogAll")}</span></a></p>
       </article>
     </section>
