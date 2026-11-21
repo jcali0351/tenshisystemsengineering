@@ -1,5 +1,5 @@
 /* Tenshi Editor (admin.html): a small CMS for the Tenshi Systems Engineering site.
-   The site is static on GitHub Pages, so saving means committing changed files to the repository through the GitHub
+   The site is served from the tenshi-cms branch (tenshisystems.com pulls it every 5 minutes), so saving means committing changed files to that branch through the GitHub
    API, with the editor's own fine-grained key (Contents: read and write). The key stays in this browser.
 
    - Text: every word on the site lives in translations.js in ten languages. The editor changes single entries there
@@ -11,7 +11,7 @@
 (function () {
   "use strict";
 
-  var REPO = "jcali0351/tenshisystemsengineering", BRANCH = "main", API = "https://api.github.com";
+  var REPO = "jcali0351/tenshisystemsengineering", BRANCH = "tenshi-cms", API = "https://api.github.com";
   var SITE = new URL(".", location.href).href;
   var KEY = "tse-editor-token";
   var TR = window.TenshiTR, LANGS = TR.LANGS;

@@ -14,7 +14,7 @@
    ===================================================================================================================== */
 
 html.neon { --neon-glass: rgba(255, 255, 255, .12); --neon-blur: blur(14px) saturate(170%); --neon-line: rgba(255, 255, 255, .22); --neon-pink: rgba(255, 70, 190, .55); }
-html.neon body { background: #07051a; }
+html.neon body { background: #000; }
 
 /* The animation canvas: fixed behind everything. The page content sits above it. */
 #neon-bg { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; }
@@ -186,7 +186,7 @@ html.neon .hero-card h1.kx .kx-word.kx-glitch { animation: kx-glitch .45s steps(
   0%   { transform: translate(0); clip-path: none; }
   15%  { transform: translate(-6px, 2px) skewX(12deg); clip-path: inset(10% 0 55% 0); text-shadow: -8px 0 #b04dff, 8px 0 #ff2bd6; }
   30%  { transform: translate(5px, -3px); clip-path: inset(50% 0 12% 0); }
-  45%  { transform: translate(-3px, 0) skewX(-10deg); clip-path: inset(25% 0 35% 0); text-shadow: 6px 0 #ff8a2b, -6px 0 #b04dff; }
+  45%  { transform: translate(-3px, 0) skewX(-10deg); clip-path: inset(25% 0 35% 0); text-shadow: 6px 0 #ff2bd6, -6px 0 #b04dff; }
   60%  { transform: translate(4px, 1px); clip-path: none; }
   100% { transform: none; clip-path: none; }
 }
@@ -248,14 +248,14 @@ html.neon .tk-orb { box-shadow: 0 0 0 2px var(--neon-purple); }
 /* The "online" light: a pink-to-orange dot that pulses, with a ring rippling out from it. */
 html.neon .tk-dot,
 html.neon .tk-ava::after {
-  background: radial-gradient(circle at 35% 35%, #ffd0a0, #ff8a2b 45%, #ff2bd6 100%) !important;
+  background: radial-gradient(circle at 35% 35%, #ffd0a0, #ff2bd6 45%, #ff2bd6 100%) !important;
   border-color: #fff !important;
   animation: neon-online 1.6s ease-in-out infinite;
 }
 @keyframes neon-online {
-  0%   { box-shadow: 0 0 0 0 rgba(255, 90, 160, .75), 0 0 8px rgba(255, 138, 43, .9); transform: scale(1); }
+  0%   { box-shadow: 0 0 0 0 rgba(255, 90, 160, .75), 0 0 8px rgba(255, 43, 214, .9); transform: scale(1); }
   50%  { box-shadow: 0 0 0 7px rgba(255, 90, 160, 0), 0 0 14px rgba(255, 43, 214, 1); transform: scale(1.15); }
-  100% { box-shadow: 0 0 0 0 rgba(255, 90, 160, 0), 0 0 8px rgba(255, 138, 43, .9); transform: scale(1); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 90, 160, 0), 0 0 8px rgba(255, 43, 214, .9); transform: scale(1); }
 }
 
 /* Inside the chat panel: purple everywhere the red accent used to be. */
@@ -329,7 +329,7 @@ html.neon .hero a, html.neon .hero button { cursor: pointer; }
 .neon-hud-row { display: flex; justify-content: space-between; gap: 14px; }
 .neon-hud-row span { opacity: .7; }
 .neon-hud-row b { color: #fff; text-shadow: 0 0 10px #ff2bd6; font-weight: 800; }
-.neon-hud-row.best b { color: #ffb36b; text-shadow: 0 0 10px #ff8a2b; }
+.neon-hud-row.best b { color: #ff6ec7; text-shadow: 0 0 10px #ff2bd6; }
 .neon-hud.bump { animation: hud-bump .35s ease-out; }
 @keyframes hud-bump { 40% { transform: scale(1.08); box-shadow: 0 0 34px rgba(255, 43, 214, .7); } }
 .neon-hud button {
@@ -337,7 +337,7 @@ html.neon .hero a, html.neon .hero button { cursor: pointer; }
   background: rgba(255, 255, 255, .12); color: #fff; font: inherit; letter-spacing: .2em;
 }
 .neon-hud button:hover { background: rgba(255, 43, 214, .35); }
-.neon-hud.is-paused { box-shadow: 0 0 0 2px #ff8a2b; }
+.neon-hud.is-paused { box-shadow: 0 0 0 2px #ff2bd6; }
 .neon-hud-tip { margin: 6px 0 0; font-size: .65rem; opacity: .65; text-align: center; letter-spacing: .1em; }
 @media (max-width: 700px) { .neon-hud { top: auto; bottom: 86px; right: 10px; min-width: 120px; font-size: .7rem; } }
 
@@ -383,7 +383,7 @@ html.neon .hero-logo { filter: drop-shadow(0 0 12px var(--neon-pink)) drop-shado
    ARCADE PIECES (neon-game.js, neon-audio.js)
    ===================================================================================================================== */
 .neon-hud-row.shields b { color: #ff6ec7; letter-spacing: .1em; }
-.neon-hud-row.power b, .neon-hud-row.power span { color: #ffb36b; opacity: 1; }
+.neon-hud-row.power b, .neon-hud-row.power span { color: #ff6ec7; opacity: 1; }
 
 /* Boss health bar, top centre. */
 .neon-bossbar { position: fixed; left: 50%; top: 84px; z-index: 60; width: min(420px, 70vw); transform: translateX(-50%); text-align: center;
@@ -401,15 +401,15 @@ html.neon .hero-logo { filter: drop-shadow(0 0 12px var(--neon-pink)) drop-shado
 /* Service tip, bottom centre: what the thing you just shot means for a business. */
 .neon-tip { position: fixed; left: 50%; bottom: 22px; z-index: 61; max-width: min(560px, 86vw); transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
             padding: 10px 16px; border-radius: 12px; background: rgba(18, 10, 42, .82); border: 1px solid rgba(255, 179, 71, .5); color: #fff;
-            font: 600 .95rem/1.35 Lato, system-ui, sans-serif; text-align: center; box-shadow: 0 0 24px rgba(255, 138, 43, .3); transition: opacity .3s, transform .3s; }
+            font: 600 .95rem/1.35 Lato, system-ui, sans-serif; text-align: center; box-shadow: 0 0 24px rgba(255, 43, 214, .3); transition: opacity .3s, transform .3s; }
 .neon-tip.on { opacity: 1; transform: translate(-50%, 0); }
-.neon-tip b { font-family: Oswald, sans-serif; letter-spacing: .12em; color: #ffb36b; margin-right: 6px; }
+.neon-tip b { font-family: Oswald, sans-serif; letter-spacing: .12em; color: #ff6ec7; margin-right: 6px; }
 
 /* Achievement toast, top centre. */
 .neon-toast { position: fixed; left: 50%; top: 130px; z-index: 62; transform: translate(-50%, -20px); opacity: 0; pointer-events: none;
               padding: 10px 18px; border-radius: 14px; background: linear-gradient(135deg, #2e0b57, #4c1d95); border: 1px solid #ffb347; color: #fff;
               font: 800 1rem Oswald, sans-serif; letter-spacing: .06em; box-shadow: 0 0 30px rgba(255, 179, 71, .45); transition: opacity .3s, transform .4s cubic-bezier(.2, 1.6, .4, 1); text-align: center; }
-.neon-toast small { display: block; font-size: .62rem; letter-spacing: .3em; color: #ffb36b; }
+.neon-toast small { display: block; font-size: .62rem; letter-spacing: .3em; color: #ff6ec7; }
 .neon-toast.on { opacity: 1; transform: translate(-50%, 0); }
 
 /* Tanaka's speech bubble, just above his chat button. */
@@ -424,7 +424,7 @@ html.neon .hero-logo { filter: drop-shadow(0 0 12px var(--neon-pink)) drop-shado
 .neon-over-box { width: min(380px, 90vw); padding: 26px 24px; border-radius: 20px; text-align: center; color: #fff; background: linear-gradient(160deg, #2e0b57, #14052b);
                  border: 1px solid rgba(255, 43, 214, .5); box-shadow: 0 0 50px rgba(255, 43, 214, .4); font-family: Oswald, sans-serif; letter-spacing: .08em; }
 .neon-over-box h2 { margin: 0; font-size: 2.6rem; color: #fff; text-shadow: 0 0 20px #ff2bd6; }
-.neon-over-score b { color: #ffb36b; font-size: 1.4rem; }
+.neon-over-score b { color: #ff6ec7; font-size: 1.4rem; }
 .neon-over-box form { display: flex; gap: 8px; justify-content: center; align-items: end; margin: 12px 0; }
 .neon-over-box label { display: grid; gap: 4px; font-size: .7rem; letter-spacing: .25em; }
 .neon-over-box input { width: 90px; padding: 8px; text-align: center; text-transform: uppercase; font: 800 1.2rem Oswald, sans-serif; letter-spacing: .3em; border-radius: 8px; border: 1px solid #b04dff; background: #14052b; color: #fff; }
@@ -631,7 +631,7 @@ html.neon:not(#_):not(#__) body { background-color: rgb(12, 4, 30) !important; }
    white pill buttons and glowing inputs. neon-quest.js adds the STAGE tags, the quest HUD and XP toasts.
    ====================================================================================================== */
 html.neon {
-  --gx-panel: linear-gradient(160deg, #2e0b57, #14052b);
+  --gx-panel: linear-gradient(160deg, #2a0850, #0a0212 75%);
   --gx-edge: rgba(255, 43, 214, 0.45);
   --gx-glow: 0 0 0 1px rgba(255, 43, 214, 0.18), 0 0 38px rgba(176, 77, 255, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.08);
   --gx-glow-hot: 0 0 0 1px rgba(255, 43, 214, 0.5), 0 0 54px rgba(255, 43, 214, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12);
@@ -642,7 +642,7 @@ html.neon:not(#_):not(#__) :is(.services, .feature, .contact, .site-footer) {
     radial-gradient(ellipse 70% 50% at 50% 0%, rgba(176, 77, 255, 0.16), transparent 70%),
     linear-gradient(rgba(176, 77, 255, 0.05) 1px, transparent 1px) 0 0 / 44px 44px,
     linear-gradient(90deg, rgba(176, 77, 255, 0.05) 1px, transparent 1px) 0 0 / 44px 44px,
-    rgb(12, 4, 30) !important;
+    #030006 !important;
   position: relative;
 }
 /* Panels: the GAME OVER box. */
@@ -671,7 +671,7 @@ html.neon:not(#_):not(#__) :is(.services, .feature, .contact, .site-footer) .eye
 html.neon:not(#_):not(#__) .contact-form label, html.neon:not(#_):not(#__) .contact-form label * {
   font: 700 0.72rem/1.4 Oswald, sans-serif !important; letter-spacing: 0.25em !important; text-transform: uppercase;
 }
-html.neon:not(#_):not(#__) :is(.services, .feature, .contact, .site-footer) .eyebrow { color: #ffb36b !important; -webkit-text-fill-color: #ffb36b !important; }
+html.neon:not(#_):not(#__) :is(.services, .feature, .contact, .site-footer) .eyebrow { color: #ff6ec7 !important; -webkit-text-fill-color: #ff6ec7 !important; }
 /* Lists read like the leaderboard: one row each, pink marker, faint divider. */
 html.neon:not(#_):not(#__) .feature-list { list-style: none !important; padding: 0 !important; }
 html.neon:not(#_):not(#__) .feature-list li { display: flex; gap: 12px; align-items: baseline; padding: 9px 0 !important; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
@@ -696,14 +696,14 @@ html.neon:not(#_):not(#__) .contact-form :is(input, select, textarea) {
 html.neon:not(#_):not(#__) .contact-form :is(input, select, textarea):focus { outline: none !important; box-shadow: 0 0 0 3px rgba(176, 77, 255, 0.45), 0 0 18px rgba(255, 43, 214, 0.35) !important; }
 /* Footer news and blog rows: leaderboard rows. */
 html.neon:not(#_):not(#__) .site-footer .fw-item { border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 10px; }
-html.neon:not(#_):not(#__) .site-footer .fw-meta, html.neon:not(#_):not(#__) .site-footer .fw-meta * { color: #ffb36b !important; -webkit-text-fill-color: #ffb36b !important; letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.68rem !important; }
+html.neon:not(#_):not(#__) .site-footer .fw-meta, html.neon:not(#_):not(#__) .site-footer .fw-meta * { color: #ff6ec7 !important; -webkit-text-fill-color: #ff6ec7 !important; letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.68rem !important; }
 
 /* ---- STAGE tags (neon-quest.js puts one at the top of each section) ---- */
 html.neon .gx-stage {
   position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;
   margin: 0 auto clamp(18px, 2.4vw, 30px); padding-top: clamp(26px, 3vw, 40px); font: 700 0.75rem/1 Oswald, sans-serif; letter-spacing: 0.3em; color: #fff; text-transform: uppercase;
 }
-html.neon .gx-stage span { color: #ffb36b; }
+html.neon .gx-stage span { color: #ff6ec7; }
 html.neon .gx-stage b { font-size: 1rem; text-shadow: 0 0 16px #ff2bd6; letter-spacing: 0.2em; }
 html.neon .gx-stage i { font-style: normal; padding: 5px 10px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.25); color: rgba(255, 255, 255, 0.6); letter-spacing: 0.2em; font-size: 0.65rem; }
 html.neon .gx-stage.is-cleared i { border-color: #7dffb2; color: #7dffb2; box-shadow: 0 0 14px rgba(125, 255, 178, 0.35); }
@@ -719,9 +719,9 @@ html.neon .gx-hud {
 }
 html.neon .gx-hud.on { opacity: 1; transform: none; }
 html.neon .gx-hud .gx-row { display: flex; justify-content: space-between; }
-html.neon .gx-hud .gx-row b { color: #ffb36b; }
+html.neon .gx-hud .gx-row b { color: #ff6ec7; }
 html.neon .gx-hud .gx-bar { height: 6px; margin: 8px 0 6px; border-radius: 999px; background: rgba(255, 255, 255, 0.1); overflow: hidden; }
-html.neon .gx-hud .gx-bar i { display: block; height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg, #b04dff, #ff2bd6, #ffb36b); box-shadow: 0 0 12px #ff2bd6; transition: width 0.6s cubic-bezier(.2, 1.2, .4, 1); }
+html.neon .gx-hud .gx-bar i { display: block; height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg, #b04dff, #ff2bd6, #ff6ec7); box-shadow: 0 0 12px #ff2bd6; transition: width 0.6s cubic-bezier(.2, 1.2, .4, 1); }
 html.neon .gx-hud .gx-dots { display: flex; gap: 5px; margin-top: 6px; }
 html.neon .gx-hud .gx-dots i { flex: 1; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.15); }
 html.neon .gx-hud .gx-dots i.on { background: #7dffb2; box-shadow: 0 0 8px rgba(125, 255, 178, 0.7); }
@@ -733,7 +733,7 @@ html.neon .gx-toast {
 }
 html.neon .gx-toast.on { opacity: 1; transform: translate(-50%, 0) scale(1); }
 html.neon .gx-toast b { display: block; font-size: 1.15rem; letter-spacing: 0.12em; text-shadow: 0 0 18px #ff2bd6; }
-html.neon .gx-toast em { font-style: normal; color: #ffb36b; }
+html.neon .gx-toast em { font-style: normal; color: #ff6ec7; }
 @media (max-width: 760px) {
   html.neon .gx-hud { top: 64px; right: 10px; width: 150px; padding: 9px 10px; font-size: 0.6rem; }
   html.neon .gx-toast { top: 120px; width: calc(100% - 40px); }
@@ -863,14 +863,14 @@ html.neon .arpg-sheet h4 { margin: 0 0 12px; font: 700 20px Oswald, sans-serif; 
 html.neon .arpg-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; margin-bottom: 12px; font-size: 13px; }
 html.neon .arpg-stats b { color: #ffd84a; float: right; }
 html.neon .arpg-slot { padding: 8px 0; border-top: 1px solid rgba(255, 255, 255, .08); font-size: 13px; }
-html.neon .arpg-slot small { display: block; text-transform: uppercase; letter-spacing: .2em; font-size: 10px; color: #ffb36b; }
+html.neon .arpg-slot small { display: block; text-transform: uppercase; letter-spacing: .2em; font-size: 10px; color: #ff6ec7; }
 html.neon .arpg-slot b { display: block; font: 700 15px Oswald, sans-serif; } html.neon .arpg-slot span { color: #d7c4ff; }
 html.neon .arpg-note { font-size: 12px; color: rgba(255, 255, 255, .6); }
 html.neon .arpg-intro { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(580px, calc(100% - 32px)); text-align: center;
   background: rgba(14, 6, 26, .82); border: 1px solid rgba(215, 170, 255, .35); border-radius: 16px; padding: 26px 24px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 0 40px rgba(176, 77, 255, .35); }
-html.neon:not(#_):not(#__) .arpg-intro h3 { font: 700 clamp(26px, 4vw, 40px)/1.05 Oswald, sans-serif; text-transform: uppercase; margin: 6px 0 10px; color: #fff !important; -webkit-text-fill-color: #fff !important; text-shadow: 0 0 18px rgba(255, 138, 43, .6) !important; }
+html.neon:not(#_):not(#__) .arpg-intro h3 { font: 700 clamp(26px, 4vw, 40px)/1.05 Oswald, sans-serif; text-transform: uppercase; margin: 6px 0 10px; color: #fff !important; -webkit-text-fill-color: #fff !important; text-shadow: 0 0 18px rgba(255, 43, 214, .6) !important; }
 html.neon .arpg-intro p { color: rgba(255, 255, 255, .85); margin: 0 0 14px; font-size: 15px; }
-html.neon .arpg-kicker { font: 700 12px Oswald, sans-serif !important; letter-spacing: .18em; color: #ffb36b !important; -webkit-text-fill-color: #ffb36b !important; }
+html.neon .arpg-kicker { font: 700 12px Oswald, sans-serif !important; letter-spacing: .18em; color: #ff6ec7 !important; -webkit-text-fill-color: #ff6ec7 !important; }
 html.neon .arpg-buttons { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
 html.neon .arpg-intro .arpg-play { font-size: 15px; padding: 13px 24px; background: #fff; color: #2e0b57; border: 0; display: inline-flex; align-items: center; justify-content: center; }
 html.neon .arpg-intro .arpg-play.arpg-alt { background: rgba(30, 14, 52, .85); color: #fff; border: 1px solid rgba(215, 170, 255, .4); }
@@ -901,3 +901,18 @@ html.neon .rts-zoom button { width: 44px; height: 44px; display: inline-flex; al
   border-radius: 10px; cursor: pointer; box-shadow: 0 0 14px rgba(176, 77, 255, .3); }
 html.neon .rts-zoom button:hover { border-color: #ff8af0; box-shadow: 0 0 18px rgba(255, 43, 214, .5); }
 @media (max-width: 760px) { html.neon .rts-zoom { right: 10px; top: 40%; } html.neon .rts-zoom button { width: 40px; height: 40px; } }
+
+/* =====================================================================================================================
+   PURPLE, BLACK AND PINK: black pages, purple-to-black panels, hot pink accents, buttons and glows.
+   ===================================================================================================================== */
+html.neon { --neon-purple: #8b2cf5; --neon-purple-dark: #4c1d95; --neon-pink: rgba(255, 43, 214, .6); --gx-edge: rgba(255, 43, 214, .55); }
+:root.neon { --red: #ff2bd6; --shu: #ff2bd6; --red-deep: #c4169f; --red-dark: #8e0f73; }
+html.neon:not(#_):not(#__) .site-header { background: rgba(0, 0, 0, .78) !important; border-bottom: 1px solid rgba(255, 43, 214, .35) !important; }
+html.neon:not(#_):not(#__) :is(.band, .svc-hero, .svc-cta) {
+  background: radial-gradient(ellipse 50% 90% at 50% 40%, rgba(255, 43, 214, .28), transparent 70%), linear-gradient(90deg, #12001f 0%, #3b0a6b 45%, #12001f 100%) !important;
+}
+html.neon:not(#_):not(#__) :is(.btn-primary, .btn-more) { background: linear-gradient(135deg, #ff2bd6, #a020f0) !important; border-color: #ff2bd6 !important; color: #fff !important; -webkit-text-fill-color: #fff !important; box-shadow: 0 0 22px rgba(255, 43, 214, .45) !important; }
+html.neon:not(#_):not(#__) :is(.btn-primary, .btn-more):hover { background: linear-gradient(135deg, #ff5ee0, #b23cff) !important; box-shadow: 0 0 34px rgba(255, 43, 214, .7) !important; }
+html.neon:not(#_):not(#__) :is(.eyebrow, .eyebrow *) { color: #ff6ec7 !important; -webkit-text-fill-color: #ff6ec7 !important; }
+html.neon:not(#_):not(#__) main a:not(.btn):not([class*="btn"]):hover { color: #ff6ec7 !important; }
+html.neon ::selection { background: #ff2bd6; color: #fff; }

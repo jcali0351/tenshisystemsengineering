@@ -6,7 +6,7 @@ run-name: Tenshi Scraper (${{ github.event_name == 'push' && 'from the Tenshi Ed
 
 on:
   push:
-    branches: [main]
+    branches: [tenshi-cms]
     paths: ["data/scrape-request.json"]
   workflow_dispatch:
 
@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: main   # the newest version, even if this run waited behind another job
+          ref: tenshi-cms   # the newest version, even if this run waited behind another job
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
@@ -46,7 +46,7 @@ jobs:
           if git diff --cached --quiet; then echo "Nothing changed."; exit 0; fi
           git commit -m "Tenshi Scraper: refresh news stories"
           for i in 1 2 3 4; do
-            git push origin HEAD:main && exit 0
-            git pull --rebase --autostash -X theirs origin main; sleep 5
+            git push origin HEAD:tenshi-cms && exit 0
+            git pull --rebase --autostash -X theirs origin tenshi-cms; sleep 5
           done
           exit 1

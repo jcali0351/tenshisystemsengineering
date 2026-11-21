@@ -48,7 +48,7 @@ html.neon.gx-page:not(#_):not(#__) main h3:not(.tpl-mock *) {
 html.neon.gx-page:not(#_):not(#__) main :is(.eyebrow, .kicker, [class*="eyebrow"], [class*="-meta"], .news-cat, .blog-meta):not(.tpl-mock *),
 html.neon.gx-page:not(#_):not(#__) main :is(.eyebrow, .kicker, [class*="eyebrow"], [class*="-meta"]) * {
   font-family: Oswald, sans-serif !important; letter-spacing: 0.22em !important; text-transform: uppercase;
-  color: #ffb36b !important; -webkit-text-fill-color: #ffb36b !important;
+  color: #ff6ec7 !important; -webkit-text-fill-color: #ff6ec7 !important;
 }
 /* Panels: cards, boxes and forms become the GAME OVER box. */
 html.neon.gx-page:not(#_):not(#__) main :is(
@@ -97,7 +97,7 @@ html.neon.gx-page:not(#_):not(#__) main :is(.service-card, .blog-card, .svc-deta
 html.neon.gx-page:not(#_):not(#__) .svc-hero :is(h1, .svc-hero-title) { text-shadow: 0 0 26px #ff2bd6, 0 2px 12px rgba(0, 0, 0, 0.7) !important; }
 /* Rules, dividers and table lines: faint white. */
 html.neon.gx-page:not(#_):not(#__) main :is(hr, table, td, th) { border-color: rgba(255, 255, 255, 0.12) !important; }
-html.neon.gx-page:not(#_):not(#__) main :is(code, pre) { background: #14052b !important; color: #ffb36b !important; border-radius: 8px; }
+html.neon.gx-page:not(#_):not(#__) main :is(code, pre) { background: #14052b !important; color: #ff6ec7 !important; border-radius: 8px; }
 @media (prefers-reduced-motion: reduce) {
   html.neon.gx-page:not(#_):not(#__) main :is(.service-card, .svc-detail, .blog-card, .tpl-card, .ab-focus, .team-detail, .news-panel):hover { transform: none; }
 }

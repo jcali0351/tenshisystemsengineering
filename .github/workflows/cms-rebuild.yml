@@ -6,7 +6,7 @@ run-name: Rebuild pages (${{ github.event.head_commit.message }})
 
 on:
   push:
-    branches: [main]
+    branches: [tenshi-cms]
     paths: ["data/slogan.json", "data/parallax.json", "data/buttons.json", "data/share.json", "data/fx.json", "fx-data.js", "fx.js", "fx.css", "buttons.css", "custom.css", "admin/**", "fonts/fonts.json", "*.html", "services/*.html", "projects/*.html", "translations.js", "img/**", "brand/**", "tools/build-pages.mjs", "src/tailwind.css", "package.json", "package-lock.json", "styles.css", "design.css", "site-theme.css", "share.css", "vendor/shareon/**", "app.js", "design.js", "chat.js", "chat.css", "rain.js", "search.css", "search.js"]
   workflow_dispatch:
 
@@ -38,7 +38,7 @@ jobs:
           if git diff --cached --quiet; then echo "Nothing changed."; exit 0; fi
           git commit -m "Rebuild pages and asset stamps after a site edit"
           for i in 1 2 3 4; do
-            git push origin HEAD:main && exit 0
-            git pull --rebase origin main; sleep 5
+            git push origin HEAD:tenshi-cms && exit 0
+            git pull --rebase origin tenshi-cms; sleep 5
           done
           exit 1

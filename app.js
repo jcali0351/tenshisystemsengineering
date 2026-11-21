@@ -494,66 +494,12 @@ const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
   const year = $("#year");
   if (year) year.textContent = new Date().getFullYear();
   const params = new URLSearchParams(location.search);
-  // The site opens in Japanese. On a first visit (no saved choice, no ?lang= in the address) a pop-up asks which
-  // language to use; the choice is remembered, so it only appears once.
+  // No language pop-up: a first visit (no saved choice, no ?lang= in the address) follows the browser language when
+  // the site has it, otherwise Japanese. The flag button at the top changes it any time.
   const saved = store.get("tse-lang");
-  setLanguage(params.get("lang") || saved || "ja");
-  if (!saved && !params.get("lang")) {
-    try { localStorage.removeItem("tse-lang"); } catch (e) { /* storage blocked: fine */ }   // not chosen yet
-    askLanguage();
-  }
-
-  function askLanguage() {
-    const LANGS = [
-      ["ja", "日本語", "Japanese"], ["en", "English", "English"],
-      ["ko", "한국어", "Korean"], ["zh", "中文", "Chinese"],
-      ["es", "Español", "Spanish"], ["de", "Deutsch", "German"],
-      ["pl", "Polski", "Polish"], ["pcm", "Naijá", "Nigerian Pidgin"],
-      ["ar", "العربية", "Arabic"], ["fa", "فارسی", "Farsi"]
-    ];
-    const logo = $(".brand-logo");
-    const dlg = document.createElement("dialog");
-    dlg.className = "lang-dialog";
-    dlg.setAttribute("aria-labelledby", "lang-dialog-title");
-    dlg.innerHTML = `
-      <div class="ld-top">
-        <img class="ld-logo" src="${logo ? logo.getAttribute("src").replace("tenshi-horizontal.png", "tenshi-logo.png") : "brand/tenshi-logo.png"}" alt="" width="240" height="240">
-        <p class="ld-brand">Tenshi Systems Engineering<span lang="ja">天使システムズエンジニアリング</span></p>
-        <button type="button" class="ld-close" aria-label="閉じる / Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
-      </div>
-      <div class="ld-body">
-        <h2 id="lang-dialog-title" class="ld-title">
-          <span lang="ja">言語を選択してください</span>
-          <span lang="en">Choose your language</span>
-          <span lang="ko">언어를 선택하세요</span>
-          <span lang="de">Sprache wählen</span>
-        </h2>
-        <ul class="ld-options">
-          ${LANGS.map(([code, native, english]) => `<li><button type="button" class="ld-option" data-pick="${code}" lang="${code}"${code === "ar" || code === "fa" ? " dir=\"rtl\"" : ""}>
-            <svg class="ld-flag" viewBox="0 0 30 20" aria-hidden="true"><use href="#flag-${code}"/></svg>
-            <span class="ld-native">${native}</span>
-            ${native !== english ? `<span class="ld-english" lang="en">${english}</span>` : ""}
-          </button></li>`).join("")}
-        </ul>
-        <p class="ld-note"><span lang="ja">あとから画面上部の国旗ボタンでいつでも変更できます。</span> <span lang="en">You can change it any time with the flag button at the top.</span></p>
-      </div>`;
-    document.body.appendChild(dlg);
-    const finish = (code) => {
-      setLanguage(code);   // also saves the choice, so the pop-up won't come back
-      dlg.classList.add("is-closing");
-      setTimeout(() => { if (dlg.open) dlg.close(); dlg.remove(); }, reduceMotion.matches ? 0 : 200);
-    };
-    $$(".ld-option", dlg).forEach((b) => b.addEventListener("click", () => finish(b.dataset.pick)));
-    $(".ld-close", dlg).addEventListener("click", () => finish(lang));
-    dlg.addEventListener("cancel", (e) => { e.preventDefault(); finish(lang); });   // Escape keeps Japanese
-    dlg.addEventListener("click", (e) => { if (e.target === dlg) finish(lang); });  // a click outside the card
-    // Wait a moment so the page shows behind the pop-up.
-    setTimeout(() => {
-      if (typeof dlg.showModal === "function") dlg.showModal(); else dlg.setAttribute("open", "");
-      const first = $(".ld-option", dlg);
-      if (first) first.focus();
-    }, 500);
-  }
+  const browserLang = ((navigator.languages || [navigator.language || ""]).map((l) => String(l).toLowerCase().split("-")[0])
+    .find((l) => ["ja", "en", "ko", "zh", "es", "de", "pl", "pcm", "ar", "fa"].includes(l)));
+  setLanguage(params.get("lang") || saved || browserLang || "ja");
   setupBand();
   startSlides();
   startCards();
