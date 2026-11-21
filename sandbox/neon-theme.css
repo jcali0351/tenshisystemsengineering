@@ -789,3 +789,30 @@ html.neon:not(#_):not(#__):not(#___) #services .service-card > p {
   width: 70% !important; margin-left: auto !important; margin-right: auto !important; align-self: center !important;
 }
 html.neon:not(#_):not(#__):not(#___) #services .service-card > .btn-more { align-self: flex-start !important; margin-left: 15% !important; }
+
+/* Feature sections: the text panel and the photo are even: two equal columns, same height, tops and bottoms lined up.
+   (The photo's scroll motion is turned off so it can't drift out of line; its picture still fills the frame.) */
+html.neon:not(#_):not(#__):not(#___) .feature .feature-inner {
+  display: grid !important; grid-template-columns: 1fr 1fr !important; gap: clamp(24px, 3vw, 44px) !important;
+  align-items: stretch !important; max-width: 1180px; margin-left: auto !important; margin-right: auto !important;
+}
+html.neon:not(#_):not(#__):not(#___) .feature .feature-inner > .feature-body { order: 1; width: auto !important; max-width: none !important; margin: 0 !important; float: none !important; }
+html.neon:not(#_):not(#__):not(#___) .feature .feature-inner > .feature-figure {
+  order: 2; position: relative !important; width: auto !important; max-width: none !important; height: auto !important; min-height: 100%;
+  margin: 0 !important; float: none !important; transform: none !important; top: auto !important; left: auto !important; right: auto !important;
+  border-radius: 20px !important; overflow: hidden !important;
+}
+html.neon:not(#_):not(#__):not(#___) .feature.feature--left .feature-inner > .feature-figure { order: 0; }
+@media (max-width: 860px) {
+  html.neon:not(#_):not(#__):not(#___) .feature .feature-inner { grid-template-columns: 1fr !important; }
+  html.neon:not(#_):not(#__):not(#___) .feature .feature-inner > .feature-figure { order: 0; min-height: 0; aspect-ratio: 16 / 10; }
+}
+/* Pin both to the same row (decorative extras inside the section must not take a grid slot). */
+html.neon:not(#_):not(#__):not(#___) .feature .feature-inner > .feature-body { grid-row: 1 !important; grid-column: 1 !important; }
+html.neon:not(#_):not(#__):not(#___) .feature .feature-inner > .feature-figure { grid-row: 1 !important; grid-column: 2 !important; }
+html.neon:not(#_):not(#__):not(#___) .feature.feature--left .feature-inner > .feature-body { grid-column: 2 !important; }
+html.neon:not(#_):not(#__):not(#___) .feature.feature--left .feature-inner > .feature-figure { grid-column: 1 !important; }
+html.neon:not(#_):not(#__):not(#___) .feature .feature-inner::before, html.neon:not(#_):not(#__):not(#___) .feature .feature-inner::after { display: none !important; }
+@media (max-width: 860px) {
+  html.neon:not(#_):not(#__):not(#___) .feature .feature-inner > :is(.feature-body, .feature-figure) { grid-column: 1 !important; grid-row: auto !important; }
+}
