@@ -141,7 +141,7 @@ cat > /etc/caddy/Caddyfile <<EOF
 
 $DOMAIN {
 	root * $APP
-	@private path /platform* /tools* /.git* /.github* /docs* /node_modules* /marketing* /src* /.claude* /package.json /package-lock.json /*.md /*.patch /.gitignore /*.mjs
+	@private path /platform* /tools* /.git* /.github* /docs* /node_modules* /marketing* /src* /.claude* /package.json /package-lock.json /*.md /*.patch /.gitignore /*.mjs *.py
 	respond @private 404
 	encode zstd gzip
 	header {
