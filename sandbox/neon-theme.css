@@ -1109,3 +1109,11 @@ html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav > ul > li > a
 html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav > ul > li.open > a {
   color: #fff !important; -webkit-text-fill-color: #fff !important; text-shadow: 0 0 14px rgba(255, 110, 199, .85) !important; background: transparent !important;
 }
+
+/* About › Our speciality: icon centred above each heading. */
+html.neon:not(#_):not(#__):not(#___) main .ab-focus-head {
+  display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important;
+  text-align: center !important; gap: 14px !important;
+}
+html.neon:not(#_):not(#__):not(#___) main .ab-focus-head > :is(.ab-icon, svg) { margin: 0 auto !important; }
+html.neon:not(#_):not(#__):not(#___) main .ab-focus-head h3 { margin: 0 !important; text-align: center !important; width: 100%; }
