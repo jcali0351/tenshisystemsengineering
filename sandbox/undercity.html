@@ -1,0 +1,35 @@
+<!doctype html>
+<!-- Undercity on its own page (to share with friends): just the game, no site menu. Same game files as the homepage;
+     bump the ?v= tags here too when neon-arpg.js / neon-theme.css / game-settings.js change. -->
+<html lang="en" class="neon">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Undercity · An Angel in Hell</title>
+  <meta name="description" content="Play Undercity free in your browser: an angel fights down through the nine circles of Hell, calls on God, casts down Satan and transcends.">
+  <meta property="og:title" content="Undercity · An Angel in Hell">
+  <meta property="og:description" content="Call on God. Cast down Satan. Transcend. Free to play in your browser.">
+  <meta property="og:image" content="https://tenshisystems.com/sandbox/art/undercity.webp">
+  <meta property="og:url" content="https://tenshisystems.com/sandbox/undercity.html">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Oswald:wght@500;700;800&display=swap">
+  <link rel="stylesheet" href="neon-theme.css?v=20261125o">
+  <style>
+    html, body { margin: 0; height: 100%; background: #0c0203; color: #fff; overflow: hidden; }
+    .parallax { position: relative; width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; }
+    .parallax-copy { visibility: hidden; position: absolute; }
+  </style>
+</head>
+<body>
+  <section class="parallax">
+    <div class="parallax-copy"><h2 id="parallax-px2-title">Undercity</h2></div>
+  </section>
+  <script src="game-settings.js?v=gs202611220030"></script>
+  <script src="tenshi-models.js?v=20261125c"></script>
+  <script src="neon-audio.js?v=20261125c"></script>
+  <script src="neon-arpg.js?v=20261125o"></script>
+</body>
+</html>

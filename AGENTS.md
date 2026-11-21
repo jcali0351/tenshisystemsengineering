@@ -101,7 +101,7 @@ Hero headline effects: `sandbox/neon-fx.js` (flashing messages, particles). Shar
 - `node tools/build-pages.mjs` regenerates all pages from index.html's header + translations, then runs
   tools/neon-pages.mjs (neon look, stamps), the search index and sitemap.
 - Homepage/neon-home scripts under `sandbox/` use hand-set cache tags (`?v=20261124x`): bump them when you change
-  those files (both `index.html` and `sandbox/neon-home.html`).
+  those files (`index.html`, `sandbox/neon-home.html`, and `sandbox/undercity.html`, the shareable game-only page).
 
 ## Deploying (every change)
 1. Commit to `tenshi-cms` and push.
