@@ -211,13 +211,17 @@ const svcLink = (slug, prefix) => {
 };
 const postsFor = (slug) => (BLOGDATA.posts || []).filter((b) => b.slug && (TOPIC_SVC[coverFor(b)] || []).includes(slug)).slice(0, 3);
 const postImg = (b) => (b.image && !b.image.generated && b.image.src) ? b.image : { src: `img/covers/${coverFor(b)}.svg`, generated: true };
-const CV = (src) => (/^img/covers//.test(src) ? src + "?v=20261121" : src);   // covers are redrawn now and then: bust old copies
+// News stories show a neon icon, never a stock photo: several designs per tab, picked by the story link so a list doesn't repeat.
+const NEWS_ICONS = { web: ["web", "code", "cursor", "seo"], gaming: ["gaming", "joystick", "alien"], ai: ["ai", "robot", "spark"],
+  tech: ["tech", "phone", "rocket", "hosting"], security: ["security", "lock", "key"], business: ["business", "briefcase", "rocket"] };
+const newsIcon = (n, cat) => { const list = NEWS_ICONS[cat] || [cat]; let h = 0; for (const ch of String((n && (n.url || n.title)) || "")) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return `img/covers/${list[h % list.length]}.svg`; };
+const CV = (src) => (src.startsWith("img/covers/") ? src + "?v=20261121" : src);   // covers are redrawn now and then: bust old copies
 const wSrc = (img, cat) => CV(img && img.src && !/^https?:/.test(img.src) ? img.src : `img/covers/${cat}.svg`);
 const wCredit = (img) => (img && !img.generated && img.src ? ` · <span data-i18n="photoLabel">${tx("photoLabel")}</span>: ${esc(img.creator || "Unknown")}${img.license ? ` (<a href="${wUrl(img.licenseUrl || img.page)}" target="_blank" rel="noopener">${esc(img.license)}</a>)` : ""}` : "");
 function footerWidgets() {
   const photo = (s) => s && s.image && !s.image.generated && s.image.src;
   // The newest story with a photo from each category, newest first
-  const news = NEWS.categories.map((c) => ({ c, s: c.items.find(photo) || c.items[0] })).filter((x) => x.s)
+  const news = NEWS.categories.map((c) => ({ c, s: c.items[0] })).filter((x) => x.s)
     .sort((a, b) => Date.parse(b.s.date || 0) - Date.parse(a.s.date || 0)).slice(0, 5);
   const posts = (BLOGDATA.posts || []).slice(0, 4);
   if (!news.length && !posts.length) return "";
@@ -229,11 +233,11 @@ ${items.join("\n")}
         <a class="fw-more" href="${href}"><span data-i18n="${moreKey}">${tx(moreKey)}</span></a>
       </section>`;
   const newsItems = news.map(({ c, s }) => `          <li class="fw-item">
-            <img class="fw-thumb" src="${esc(wSrc(s.image && !s.image.generated ? s.image : null, c.id))}" alt="" width="96" height="72" loading="lazy" decoding="async">
+            <img class="fw-thumb" src="${esc(CV(newsIcon(s, c.id)))}" alt="" width="96" height="72" loading="lazy" decoding="async">
             <div class="fw-text">
               <p class="fw-meta"><span data-i18n="${c.key}">${tx(c.key)}</span> · <time datetime="${wIso(s.date)}">${wDate(s.date)}</time></p>
               <a class="fw-link" href="${wUrl(s.url)}" target="_blank" rel="noopener">${esc(s.title)}<span class="sr-only"> <span data-i18n="techNewTab">${tx("techNewTab")}</span></span></a>
-              <p class="fw-src">${esc(s.source)}${wCredit(s.image)}</p>
+              <p class="fw-src">${esc(s.source)}</p>
             </div>
           </li>`);
   const blogItems = posts.map((b) => `          <li class="fw-item">
@@ -1681,7 +1685,7 @@ function featureImage(img, cat, cls, prefix = "") {
 }
 
 const newsItem = (n, cat) => `          <li class="news-item">
-            ${featureImage(n.image && !n.image.generated ? n.image : null, cat, "news-fig")}
+            ${featureImage({ src: newsIcon(n, cat), generated: true }, cat, "news-fig")}
             <div class="news-body">
               <p class="news-meta"><time datetime="${isoDay(n.date)}">${fmtDate(n.date)}</time></p>
               <h3>${ext(n.url, esc(n.title))}</h3>

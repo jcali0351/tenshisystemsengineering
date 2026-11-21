@@ -37,6 +37,30 @@ const ICONS = {
 };
 ICONS.stocks = ICONS.business;
 
+// Extra designs so a list of stories doesn't repeat one picture (news picks one per story, see NEWS_ICONS in build-pages.mjs).
+Object.assign(ICONS, {
+  // pointer clicking, with ripples
+  cursor: `<path d="M330 130l150 150-70 10 45 80-35 18-45-80-50 50z"/><path d="M470 150a60 60 0 0 1 40 40M490 120a95 95 0 0 1 62 62"/>`,
+  // arcade joystick
+  joystick: `<rect x="260" y="270" width="280" height="80" rx="22"/><path d="M400 270v-80"/><circle cx="400" cy="160" r="38"/><circle cx="480" cy="310" r="12"/><circle cx="320" cy="310" r="12"/>`,
+  // pixel alien
+  alien: `<path d="M330 150h30v30h-30zM440 150h30v30h-30zM300 180h200v30H300zM270 210h260v60H270zM300 270h40v30h-40zM460 270h40v30h-40zM270 300h30v30h-30zM500 300h30v30h-30z"/><path d="M340 225h25M435 225h25"/>`,
+  // robot head
+  robot: `<rect x="290" y="170" width="220" height="160" rx="30"/><path d="M400 170v-40"/><circle cx="400" cy="120" r="12"/><circle cx="355" cy="240" r="18"/><circle cx="445" cy="240" r="18"/><path d="M360 295h80M290 230h-30M510 230h30"/>`,
+  // AI sparkles
+  spark: `<path d="M400 120c12 70 40 98 110 110-70 12-98 40-110 110-12-70-40-98-110-110 70-12 98-40 110-110z"/><path d="M520 300c5 25 15 35 40 40-25 5-35 15-40 40-5-25-15-35-40-40 25-5 35-15 40-40z"/><path d="M285 120c4 18 12 26 30 30-18 4-26 12-30 30-4-18-12-26-30-30 18-4 26-12 30-30z"/>`,
+  // smartphone
+  phone: `<rect x="335" y="105" width="130" height="240" rx="22"/><path d="M380 130h40"/><circle cx="400" cy="315" r="10"/><path d="M360 190l30 25 50-50"/>`,
+  // rocket
+  rocket: `<path d="M400 100c55 40 75 110 55 190h-110c-20-80 0-150 55-190z"/><circle cx="400" cy="190" r="22"/><path d="M345 250l-40 50h55M455 250l40 50h-55M375 300c0 30 10 45 25 55 15-10 25-25 25-55"/>`,
+  // padlock
+  lock: `<rect x="300" y="210" width="200" height="140" rx="22"/><path d="M340 210v-40a60 60 0 0 1 120 0v40"/><circle cx="400" cy="270" r="16"/><path d="M400 286v28"/>`,
+  // key
+  key: `<circle cx="320" cy="225" r="65"/><circle cx="320" cy="225" r="20"/><path d="M385 225h170M505 225v45M545 225v35"/>`,
+  // briefcase
+  briefcase: `<rect x="270" y="170" width="260" height="170" rx="20"/><path d="M355 170v-30h90v30M270 235h260M385 235v25h30v-25"/>`,
+});
+
 const svg = (body) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
 <defs>
 <radialGradient id="bg" cx="50%" cy="40%" r="75%"><stop offset="0" stop-color="#2a0850"/><stop offset=".6" stop-color="#12041f"/><stop offset="1" stop-color="#05000a"/></radialGradient>
