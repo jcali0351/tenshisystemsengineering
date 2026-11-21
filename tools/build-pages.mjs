@@ -22,15 +22,15 @@ import { createRequire } from "node:module";
 
 // The order here is the order everywhere: on the homepage three sets of three.
 const SERVICES = [
-  { id: "software",   slug: "software-development",  img: "software.jpg",   w: 960,  h: 640 },
-  { id: "consulting", slug: "technology-consulting", img: "consulting.jpg", w: 960,  h: 640 },
-  { id: "media",      slug: "media-design",          img: "design.jpg",     w: 960,  h: 640 },
-  { id: "webdesign",  slug: "web-design",            img: "webdesign.jpg",  w: 1024, h: 683 },
-  { id: "webdev",     slug: "web-development",       img: "webdev.jpg",     w: 1024, h: 678 },
-  { id: "hosting",    slug: "hosting",               img: "hosting.jpg",    w: 1024, h: 576 },
-  { id: "ai",         slug: "ai-services",           img: "ai.jpg",         w: 1024, h: 1024 },
-  { id: "cms",        slug: "content-management",    img: "cms.jpg",        w: 960,  h: 640 },
-  { id: "branding",   slug: "branding",              img: "branding.jpg",   w: 960,  h: 644 },
+  { id: "software",   slug: "software-development",  img: "software.jpg", icon: "software.webp",   w: 960,  h: 640 },
+  { id: "consulting", slug: "technology-consulting", img: "consulting.jpg", icon: "consulting.webp", w: 960,  h: 640 },
+  { id: "media",      slug: "media-design",          img: "design.jpg", icon: "media.webp",     w: 960,  h: 640 },
+  { id: "webdesign",  slug: "web-design",            img: "webdesign.jpg", icon: "webdesign.webp",  w: 1024, h: 683 },
+  { id: "webdev",     slug: "web-development",       img: "webdev.jpg", icon: "webdev.webp",     w: 1024, h: 678 },
+  { id: "hosting",    slug: "hosting",               img: "hosting.jpg", icon: "hosting.webp",    w: 1024, h: 576 },
+  { id: "ai",         slug: "ai-services",           img: "ai.jpg", icon: "ai.webp",         w: 1024, h: 1024 },
+  { id: "cms",        slug: "content-management",    img: "cms.jpg", icon: "cms.webp",        w: 960,  h: 640 },
+  { id: "branding",   slug: "branding",              img: "branding.jpg", icon: "branding.webp",   w: 960,  h: 644 },
 ];
 const OFFERS = 5;
 
@@ -120,7 +120,7 @@ const ART = {
 /* ---------- homepage: cards in three sets, the form's topic list, the current menu item ---------- */
 const card = (s, pad, prefix) => `${pad}<article class="service-card">
 ${pad}  <h3 data-i18n="${k(s, "title")}">${tx(k(s, "title"))}</h3>
-${pad}  <img class="service-pic" src="${prefix}img/services/${s.img}" alt="${tx(k(s, "alt"))}" data-i18n-attr="alt:${k(s, "alt")}" width="${s.w}" height="${s.h}" loading="lazy">
+${pad}  <img class="service-pic service-icon" src="${prefix}img/services/icons/${s.icon}" alt="" width="512" height="512" loading="lazy" data-still-color>
 ${pad}  <p data-i18n="${k(s, "short")}">${tx(k(s, "short"))}</p>
 ${pad}  <a class="btn-more" href="${prefix}services/${s.slug}.html"><span data-i18n="more">${tx("more")}</span><span class="sr-only">: <span data-i18n="${k(s, "title")}">${tx(k(s, "title"))}</span></span></a>
 ${pad}</article>`;
