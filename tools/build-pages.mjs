@@ -196,7 +196,12 @@ const wUrl = (u) => (/^https?:\/\//.test(u || "") ? esc(u) : "#");
 const POST_COVER = { "web design": "web", "web development": "code", "software": "code", "engineering": "tech", "technology": "tech",
   "accessibility": "access", "security": "security", "branding": "brand", "seo": "seo", "services": "business", "business": "business",
   "ai": "ai", "gaming": "gaming", "hosting": "hosting", "content": "blog" };
-const postImg = (b) => (b.image && !b.image.generated && b.image.src) ? b.image : { src: `img/covers/${POST_COVER[String(b.cat || "").toLowerCase()] || "blog"}.svg`, generated: true };
+// A topic word in the slug wins over the category (the hosting guide gets the server stack, not the laptop).
+const POST_TOPIC = [[/hosting|server/, "hosting"], [/security|password|ssl/, "security"], [/accessib|wcag/, "access"], [/seo|search-engine/, "seo"],
+  [/analytics|metrics|forms-that-convert/, "business"], [/domain|email/, "web"], [/typograph|color|brand|logo/, "brand"], [/ai|-ai-|-ai$/, "ai"],
+  [/cms|static-site|content/, "code"], [/redesign|mobile-first|web-vitals/, "web"], [/gam(e|ing)/, "gaming"]];
+const coverFor = (b) => { const slug = String(b.slug || ""); const hit = POST_TOPIC.find(([re]) => re.test(slug)); return hit ? hit[1] : (POST_COVER[String(b.cat || "").toLowerCase()] || "blog"); };
+const postImg = (b) => (b.image && !b.image.generated && b.image.src) ? b.image : { src: `img/covers/${coverFor(b)}.svg`, generated: true };
 const wSrc = (img, cat) => (img && img.src && !/^https?:/.test(img.src) ? img.src : `img/covers/${cat}.svg`);
 const wCredit = (img) => (img && !img.generated && img.src ? ` · <span data-i18n="photoLabel">${tx("photoLabel")}</span>: ${esc(img.creator || "Unknown")}${img.license ? ` (<a href="${wUrl(img.licenseUrl || img.page)}" target="_blank" rel="noopener">${esc(img.license)}</a>)` : ""}` : "");
 function footerWidgets() {
