@@ -1005,3 +1005,6 @@ html.neon .svc-reading { padding: clamp(40px, 6vw, 72px) 0 0; }
 html.neon .svc-reading-list { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
 html.neon .svc-reading-list li { padding: 18px 20px; border-radius: 16px; background: var(--gx-panel); border: 1px solid var(--gx-edge); }
 html.neon .svc-reading-list span { display: block; margin-top: 6px; font-size: .9rem; color: #e6d9ff; }
+
+/* Footer thumbnails with a neon cover: zoom in on the icon so it fills the small frame. */
+html.neon .fw-thumb[src*="covers/"] { object-fit: cover; object-view-box: inset(14% 24% 14% 24%); }
