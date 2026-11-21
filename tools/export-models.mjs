@@ -185,19 +185,104 @@ function cone(base, tip, r, mat, seg = 6) {
   return polys;
 }
 const part = (name, polys) => objectFrom(name, polys);
+// Tonal texture: a face's material is swapped for a darker or lighter tone of it (tones are rounded so they share materials).
+const TONES = new Map();
+function tone(mat, f) {
+  const lv = Math.round(Math.max(0.45, Math.min(1.7, f)) * 20) / 20, key = mat.name + "_t" + Math.round(lv * 100);
+  if (!TONES.has(key)) TONES.set(key, M(key, mat.rgb.map(c => Math.min(255, Math.round(c * lv))), mat.glow));
+  return TONES.get(key);
+}
+function texturize(polys, only, f, seed = 7) {
+  let r0 = seed; const rnd = () => (r0 = (r0 * 9301 + 49297) % 233280) / 233280;
+  for (const q of polys) {
+    if (!only.includes(q.mat)) continue;
+    const c = [0, 1, 2].map(i => q.pts.reduce((t, pt) => t + pt[i], 0) / q.pts.length);
+    q.mat = tone(q.mat, f(c, rnd));
+  }
+}
+// A turned shape from a side profile [[radius, height], ...]; `rag` makes the bottom ring ragged (tattered hems).
+function lathe(c, prof, mat, seg = 12, rag = 0, seed = 1) {
+  let r0 = seed * 9301 + 49297; const rnd = () => (r0 = (r0 * 9301 + 49297) % 233280) / 233280;
+  const rings = prof.map(([r, y], i) => Array.from({ length: seg }, (_, k) => {
+    const a = 2 * Math.PI * k / seg, jag = i === 0 && rag ? 1 + (rnd() - 0.3) * rag : 1, dy = i === 0 && rag ? (rnd() - 0.5) * rag * 0.5 : 0;
+    return [c[0] + Math.cos(a) * r * jag, c[1] + y + dy, c[2] + Math.sin(a) * r * jag];
+  }));
+  const polys = [], centre = [c[0], c[1] + prof.reduce((t, q) => t + q[1], 0) / prof.length, c[2]];
+  for (let i = 0; i + 1 < rings.length; i++) for (let k = 0; k < seg; k++) polys.push({ pts: [rings[i][k], rings[i][(k + 1) % seg], rings[i + 1][(k + 1) % seg], rings[i + 1][k]], centre, mat });
+  return polys;
+}
+// A flat strip from a to b, `w` wide at a tapering to `wt` at b, `t` thick, lying flat to the plane with normal n.
+function slat(a, b, w, wt, t, n, mat) {
+  const u = sub(b, a), len = Math.hypot(...u), uu = u.map(v => v / len);
+  let v = cross(uu, n); const lv = Math.hypot(...v) || 1; v = v.map(x => x / lv);
+  const nn = cross(v, uu);
+  const P = [];
+  for (const [o, ww] of [[a, w], [b, wt]]) for (const sv of [-1, 1]) for (const sn of [-1, 1]) P.push(o.map((x, i) => x + v[i] * sv * ww / 2 + nn[i] * sn * t / 2));
+  const centre = a.map((x, i) => (x + b[i]) / 2);
+  return [[0, 1, 3, 2], [4, 6, 7, 5], [0, 4, 5, 1], [2, 3, 7, 6], [0, 2, 6, 4], [1, 5, 7, 3]].map(q => ({ pts: q.map(i => P[i]), centre, mat }));
+}
 const ARPG = {
   "arpg.hero": (() => {
-    const armor = M("hero_armor", "#7a6aa8"), trim = M("hero_trim", "#ffd84a"), skin = M("hero_skin", "#f2e4ff"), cape = M("hero_cape", "#ff2bd6"), blade = M("hero_blade", "#8fd8ff", true), visor = M("hero_visor", "#8fd8ff", true), dark = M("hero_dark", "#2a1a44");
-    return [
-      part("hero_leg_R", box([-0.12, 0.3, 0], [0.16, 0.6, 0.2], dark)), part("hero_leg_L", box([0.12, 0.3, 0], [0.16, 0.6, 0.2], dark)),
-      part("hero_body", [...box([0, 0.85, 0], [0.5, 0.55, 0.3], armor), ...box([0, 0.6, 0], [0.54, 0.1, 0.34], trim)]),
-      part("hero_shoulders", [...ellipsoid([-0.32, 1.08, 0], [0.13, 0.1, 0.14], trim, 8, 5), ...ellipsoid([0.32, 1.08, 0], [0.13, 0.1, 0.14], trim, 8, 5)]),
-      part("hero_arm_R", box([-0.33, 0.8, 0.05], [0.12, 0.45, 0.14], armor)), part("hero_arm_L", box([0.33, 0.8, 0.05], [0.12, 0.45, 0.14], armor)),
-      part("hero_head", [...ellipsoid([0, 1.32, 0], [0.17, 0.19, 0.17], skin, 10, 7), ...box([0, 1.34, 0.14], [0.26, 0.05, 0.05], visor)]),
-      part("hero_helmet", [...cone([0, 1.42, 0], [0, 1.68, -0.08], 0.18, armor, 8), ...cone([0, 1.5, -0.05], [0, 1.85, -0.3], 0.05, trim, 4)]),
-      part("hero_cape", box([0, 0.8, -0.2], [0.5, 0.95, 0.04], cape)),
-      part("hero_sword", [...box([-0.42, 0.62, 0.35], [0.05, 0.05, 0.75], blade), ...box([-0.42, 0.62, -0.05], [0.18, 0.06, 0.06], trim)]),
-    ];
+    // THE WRAITH (from your reference renders): a faceless hooded spectre in deep violet robes, arms held open, with two
+    // great feathered wings rising from its back and the robe's hem and sleeves dissolving into tattered streamers.
+    const robe = M("wraith_robe", "#3a1d6b"), fold = M("wraith_fold", "#5b34a3"), hood = M("wraith_hood", "#2a1450"), voidM = M("wraith_void", "#07040d"),
+      eyes = M("wraith_eyes", "#c79bff", true), hands = M("wraith_hands", "#a993dd"), wing = M("wraith_wing", "#4e2b98"), tip = M("wraith_feather_tip", "#8a64d6"),
+      tatter = M("wraith_tatter", "#4a2786");
+    const polys = { robe: [], hood: [], arms: [], wings: [], tatters: [] };
+    // Robe: flared at the floor, narrowing to the shoulders, with a ragged hem; folds down the front.
+    polys.robe.push(...lathe([0, 0.02, 0], [[0.46, 0], [0.42, 0.22], [0.34, 0.55], [0.27, 0.9], [0.24, 1.12], [0.2, 1.26]], robe, 14, 0.35, 3));
+    for (let k = -2; k <= 2; k++) polys.robe.push(...slat([k * 0.09, 1.1, 0.23 - Math.abs(k) * 0.02], [k * 0.15, 0.08, 0.43 - Math.abs(k) * 0.04], 0.05, 0.08, 0.02, [0, 0, 1], fold));
+    polys.robe.push(...ellipsoid([0, 1.27, -0.01], [0.33, 0.11, 0.23], fold, 12, 6));                    // mantle
+    for (let k = 0; k < 9; k++) { const a = Math.PI * (0.1 + 0.8 * k / 8); polys.robe.push(...cone([Math.cos(a) * 0.3, 1.25, -Math.sin(a) * 0.12 + 0.02], [Math.cos(a) * 0.42, 1.06, -Math.sin(a) * 0.2], 0.04, fold, 4)); }   // mantle spikes
+    // Hood: a tall peaked cowl with a dark void for a face and two faint eyes.
+    polys.hood.push(...ellipsoid([0, 1.47, -0.02], [0.17, 0.2, 0.18], hood, 12, 8));
+    polys.hood.push(...cone([0, 1.58, -0.06], [0, 1.82, -0.2], 0.1, hood, 6));
+    polys.hood.push(...ellipsoid([0, 1.44, 0.09], [0.11, 0.14, 0.08], voidM, 10, 6));
+    polys.hood.push(...ellipsoid([-0.045, 1.47, 0.165], [0.018, 0.012, 0.01], eyes, 6, 4), ...ellipsoid([0.045, 1.47, 0.165], [0.018, 0.012, 0.01], eyes, 6, 4));
+    // Arms held open: wide sleeves from the shoulders, clawed hands, streamers falling from the cuffs.
+    for (const sd of [-1, 1]) {
+      const sh = [sd * 0.26, 1.22, 0.02], wr = [sd * 0.62, 1.02, 0.24];
+      polys.arms.push(...cone(wr, sh, 0.12, robe, 8));                                                   // sleeve (wide at the wrist)
+      polys.arms.push(...ellipsoid([sd * 0.68, 1.0, 0.27], [0.06, 0.05, 0.07], hands, 8, 5));
+      for (let f = 0; f < 4; f++) polys.arms.push(...cone([sd * 0.7, 1.0, 0.27 + (f - 1.5) * 0.025], [sd * (0.8 + f * 0.01), 1.04 - f * 0.02, 0.3 + (f - 1.5) * 0.05], 0.012, hands, 3));   // fingers
+      for (let t = 0; t < 4; t++) polys.tatters.push(...slat([sd * (0.56 + t * 0.03), 0.96, 0.2 + t * 0.03], [sd * (0.6 + t * 0.06), 0.5 - t * 0.08, 0.16 + t * 0.06], 0.07, 0.01, 0.015, [0, 0, 1], tatter));
+    }
+    // Tattered streamers flowing off the hem.
+    for (let k = 0; k < 22; k++) {
+      // hanging from the lower robe and falling to the floor, flaring a little and trailing behind
+      const a = 2 * Math.PI * k / 22 + 0.2, top = 0.34 + (k % 3) * 0.08, r1 = 0.4 - top * 0.12, r2 = 0.5 + (k % 3) * 0.04, back = Math.sin(a) < 0 ? 0.16 : 0.02;
+      polys.tatters.push(...slat([Math.cos(a) * r1, top, Math.sin(a) * r1], [Math.cos(a) * r2, 0.0, Math.sin(a) * r2 - back], 0.08, 0.01, 0.01, [Math.cos(a), 0.15, Math.sin(a)], tatter));
+    }
+    // Wings: a curved bone from the shoulder blades up and out, covered in layered flat feathers that rise like flames.
+    for (const sd of [-1, 1]) {
+      const bone = t => { const sh = [sd * 0.14, 1.36, -0.18], el = [sd * 0.62, 1.82, -0.36], tp = [sd * 1.0, 2.15, -0.42];
+        return t < 0.5 ? sh.map((v, i) => v + (el[i] - v) * t * 2) : el.map((v, i) => v + (tp[i] - v) * (t - 0.5) * 2); };
+      const n = [0, 0.18, 1];
+      for (let i = 0; i < 13; i++) {                                                                     // flight feathers, long
+        const t = i / 12, base = bone(t), ang = -0.35 + t * 1.25, len = 0.45 + Math.sin(t * Math.PI) * 0.4 + t * 0.2;
+        const dir = [sd * Math.sin(ang), -Math.cos(ang) * 0.55 + 0.25 * t, -0.04];
+        const end = base.map((v, j) => v + dir[j] * len);
+        polys.wings.push(...slat(base, end, 0.11, 0.025, 0.02, n, i % 3 === 2 ? tip : wing));
+      }
+      for (let i = 0; i < 9; i++) {                                                                      // coverts, short, over the bone
+        const t = 0.05 + i / 10, base = bone(t), end = base.map((v, j) => v + [sd * 0.14, -0.22, 0.02][j]);
+        polys.wings.push(...slat(base.map((v, j) => v + [0, 0.02, 0.025][j]), end, 0.12, 0.04, 0.02, n, wing));
+      }
+      for (let i = 0; i < 4; i++) {                                                                      // primaries flaring up off the tip
+        const base = bone(0.92 + i * 0.02), end = base.map((v, j) => v + [sd * (0.18 + i * 0.05), 0.3 - i * 0.05, -0.02][j]);
+        polys.wings.push(...slat(base, end, 0.08, 0.015, 0.02, n, tip));
+      }
+      polys.wings.push(...cone(bone(0), bone(0.5), 0.04, robe, 5), ...cone(bone(0.5), bone(1), 0.03, robe, 5));   // wing bones
+    }
+    // Worn, uneven cloth: darker toward the hem and in the folds, lighter over the shoulders; feathers dark at the root and
+    // pale at the tip; streamers fading lighter as they trail off; a little grain everywhere.
+    const clamp01 = v => Math.max(0, Math.min(1, v));
+    texturize(polys.robe, [robe, fold], (c, r) => 0.62 + 0.5 * clamp01(c[1] / 1.3) + (r() - 0.5) * 0.24, 11);
+    texturize(polys.arms, [robe], (c, r) => 0.8 + 0.25 * clamp01((c[1] - 0.9) / 0.4) + (r() - 0.5) * 0.2, 13);
+    texturize(polys.hood, [hood], (c, r) => 0.85 + 0.35 * clamp01((c[1] - 1.35) / 0.45) + (r() - 0.5) * 0.15, 17);
+    texturize(polys.wings, [wing, tip, robe], (c, r) => 0.62 + 0.75 * clamp01((Math.abs(c[0]) - 0.15) / 0.95 + (c[1] - 1.4) * 0.35) + (r() - 0.5) * 0.18, 19);
+    texturize(polys.tatters, [tatter], (c, r) => 1.35 - 0.6 * clamp01(c[1] / 0.9) + (r() - 0.5) * 0.2, 23);
+    return [part("wraith_robe", polys.robe), part("wraith_hood", polys.hood), part("wraith_arms", polys.arms), part("wraith_wings", polys.wings), part("wraith_tatters", polys.tatters)];
   })(),
   "arpg.hollow": (() => {
     const skin = M("hollow_skin", "#5f7a68"), rags = M("hollow_rags", "#3a3048"), eye = M("hollow_eyes", "#ff6e3a", true), bone = M("hollow_bone", "#c9c2b0");

@@ -14,7 +14,7 @@ here, write its name in `models.json`, push.
   - **Vertex colours.**
   Fine detail painted *inside* one face won't show (one colour per face), so the look is clean and low-poly.
 - **Glowing parts** (eyes, engines, visors): give that material an *Emission* colour. Those faces stay bright.
-- **Detail is simplified automatically.** Models over about 1,500 triangles are reduced when they load (the colours are
+- **Detail is simplified automatically.** Models over about 2,400 triangles are reduced when they load (the colours are
   kept), so the games stay smooth. For the best result on very detailed models, reduce them yourself in Blender with a
   *Decimate* modifier first.
 - **No compression:** if your tool offers *Draco* or *meshopt* compression, turn it off. Compressed files can't be read.

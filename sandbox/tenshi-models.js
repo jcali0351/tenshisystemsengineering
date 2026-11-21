@@ -92,7 +92,7 @@
 
   // Turn a whole .glb scene into one flat, coloured triangle mesh. Colours come from (in order): the material's texture,
   // the model's vertex colours, the material's base colour. Heavy models are simplified to about MAX_TRIS triangles.
-  const MAX_TRIS = 1500;
+  const MAX_TRIS = 2400;
   async function toMesh(buffer) {
     const { json: g, bin } = parseGLB(buffer);
     const needs = g.extensionsRequired || [];

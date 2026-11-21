@@ -556,6 +556,7 @@
   if (window.TenshiModels) window.TenshiModels.whenReady(() => { for (const k in MODEL_CACHE) delete MODEL_CACHE[k]; });
   const VIEW = (() => { const v = [-1, -1, 1.25], l = Math.hypot(...v); return v.map(c => c / l); })();
   const KEY = (() => { const v = [-0.4, -0.9, 1.4], l = Math.hypot(...v); return v.map(c => c / l); })();
+  const RIM = [170, 120, 255];   // rim-light colour on the 3D models
   function drawMesh(mesh, x, y, face, height, flash, tint) {
     const c = Math.cos(face), s = Math.sin(face), k = height / 2;
     const P = mesh.v.map(([fx_, ly, uz]) => { const wx = x + (fx_ * c - ly * s) * k, wy = y + (fx_ * s + ly * c) * k, wz = uz * k; return [wx, wy, wz, sx(wx, wy), sy(wx, wy, wz)]; });
@@ -569,8 +570,16 @@
     }
     faces.sort((p, q) => p.depth - q.depth);
     for (const { f, n } of faces) {
-      const lit = f.glow ? 1.2 : 0.35 + 0.85 * Math.max(0, n[0] * KEY[0] + n[1] * KEY[1] + n[2] * KEY[2]);
-      let rgb = f.rgb.map(v => v * lit);
+      let rgb;
+      if (f.glow) rgb = f.rgb.map(v => v * 1.2);
+      else {
+        const key = Math.max(0, n[0] * KEY[0] + n[1] * KEY[1] + n[2] * KEY[2]), facing = Math.max(0, n[0] * VIEW[0] + n[1] * VIEW[1] + n[2] * VIEW[2]);
+        const amb = 0.26 + 0.16 * (n[2] * 0.5 + 0.5);                                   // brighter on faces turned up
+        const hx = KEY[0] + VIEW[0], hy = KEY[1] + VIEW[1], hz = KEY[2] + VIEW[2], hl = Math.hypot(hx, hy, hz) || 1;
+        const spec = Math.pow(Math.max(0, (n[0] * hx + n[1] * hy + n[2] * hz) / hl), 22) * 0.45;   // satin sheen
+        const rim = Math.pow(1 - facing, 2.4) * 0.5;                                     // violet glow around the edges
+        rgb = f.rgb.map((v, i) => v * (amb + 0.85 * key) + 255 * spec * (0.55 + 0.45 * v / 255) + RIM[i] * rim);
+      }
       if (tint) rgb = rgb.map((v, i) => v * 0.6 + tint[i] * 0.4);
       if (flash > 0.4) rgb = [255, 255, 255];
       const col = `rgb(${rgb.map(v => clamp(Math.round(v), 0, 255)).join(",")})`;
@@ -606,7 +615,7 @@
     const s = stats(), bob = hero.path.length ? Math.abs(Math.sin(hero.walk)) * 0.06 : Math.sin(now / 500) * 0.02;
     shadow(hero.x, hero.y, 0.35);
     const model = modelFor("arpg.hero");
-    if (model) drawMesh(model, hero.x, hero.y, hero.face, 1.5, hero.flash);
+    if (model) drawMesh(model, hero.x, hero.y, hero.face, 2.4, hero.flash);   // (the wraith's wide wings make the model fit a bigger ball, so draw it larger)
     else {
       const armor = hero.gear.armor ? hero.gear.armor.color : "#7a6aa8";
       // Cape behind
