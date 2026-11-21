@@ -20,6 +20,10 @@
   "rts.hive": "",
   "rts.asteroid": "",
   "rts.crystal": "",
+  "rts.turret": "",
+  "rts.depot": "",
+  "rts.outpost": "",
+  "rts.shipyard": "",
 
   "_arpg": "Undercity (the dungeon crawler)",
   "arpg.hero": "source/arpg.hero.glb",

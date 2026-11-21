@@ -42,7 +42,7 @@ Leave a slot as `""` to keep the built-in character.
 | Game | Slots |
 |---|---|
 | Hero arcade (top of the homepage) | `arcade.drone`, `arcade.saucer`, `arcade.cube`, `arcade.star`, `arcade.robot`, `arcade.kaiju` |
-| Station Defense (space strategy) | `rts.station`, `rts.miner`, `rts.interceptor`, `rts.gunship`, `rts.swarmling`, `rts.behemoth`, `rts.spitter`, `rts.hive`, `rts.asteroid`, `rts.crystal` |
+| Station Defense (space strategy) | `rts.station`, `rts.miner`, `rts.interceptor`, `rts.gunship`, `rts.swarmling`, `rts.behemoth`, `rts.spitter`, `rts.hive`, `rts.asteroid`, `rts.crystal`, `rts.turret`, `rts.depot`, `rts.outpost`, `rts.shipyard` |
 | Undercity (dungeon crawler) | `arpg.hero`, `arpg.hollow`, `arpg.skitter`, `arpg.wisp`, `arpg.golem`, `arpg.warden` |
 
 ## Try it with the example

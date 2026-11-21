@@ -109,7 +109,7 @@ NEON_GRID = {
 STATION_DEFENSE = {
     "map": {"w": 2600, "h": 1500},   # size of the battlefield
     "start": {"credits": 150, "sparks": 4, "blades": 2},   # starting crystals, miners and interceptors
-    "supply_cap": 30,                # the most ships you can have
+    "supply_cap": 30,                # ships you can have before building Supply Depots
     "waves": {"first": 75, "every": 45},   # seconds until the first alien wave, then between waves
     "crystal": {"amount": 1200, "carry": 8, "mineTime": 1100},   # crystals per field, per trip, time to mine
     # ---- ENEMY NUMBERS ---- (mite = Swarmling, brute = Behemoth, spitter = Spitter)
@@ -130,6 +130,15 @@ STATION_DEFENSE = {
         "brute":   {"hp": 230,  "speed": 1.25, "dmg": 26, "range": 20,  "cd": 1200, "sight": 240},   # Behemoth
         "spitter": {"hp": 70,   "speed": 1.8,  "dmg": 11, "range": 170, "cd": 1300, "sight": 260},   # Spitter
         "hive":    {"hp": 2400, "sight": 300},                                                      # Alien Hive
+        # Buildings your miners build (time = seconds to build). Select a miner, press 1-4, click where.
+        "tower":   {"hp": 420,  "sight": 300, "dmg": 12, "range": 240, "cd": 650, "cost": 100, "time": 16},   # Defense Turret
+        "depot":   {"hp": 380,  "sight": 200, "cost": 75,  "time": 14, "supply": 8},                          # Supply Depot (+8 ships)
+        "outpost": {"hp": 1000, "sight": 380, "cost": 250, "time": 30},                                       # Outpost (forward base)
+        "yard":    {"hp": 750,  "sight": 280, "cost": 200, "time": 26},                                       # Shipyard
+    },
+    "build": {
+        "radius": 420,               # you can build this far from the station or an outpost (chain outposts to expand)
+        "supplyMax": 80,             # the most ships Supply Depots can raise your fleet to
     },
 }
 

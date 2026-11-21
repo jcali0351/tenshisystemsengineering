@@ -12,7 +12,9 @@
 //
 // Controls (mouse):  click a unit to select it (Shift adds), drag a box to select several, right-click to move /
 //   attack / mine. A then click = attack-move (fight anything on the way). S = stop. Space = select your whole army.
-//   Q / W / E = train Spark / Blade / Lancer. Arrow keys or the screen edges move the camera; click the minimap to jump.
+//   Q / W / E = train Spark / Blade / Lancer. With a miner selected, 1 2 3 4 = build a Turret / Supply Depot /
+//   Outpost / Shipyard (then click where). Outposts are forward bases: you can only build near the station or an
+//   outpost, so chain outposts to push into alien space. Arrow keys or the screen edges move the camera; click the minimap to jump.
 // Controls (touch): tap a unit to select it, drag a box to select several, tap the ground / an enemy / a crystal to
 //   command them. Buttons on screen for army, attack-move and training. Tap the minimap to move the camera.
 //
@@ -41,7 +43,15 @@
     brute:   { name: "BEHEMOTH", team: "e", hp: 230, r: 17, speed: 1.25, dmg: 26, range: 20, cd: 1200, sight: 240, color: "#ff8a2b" },
     spitter: { name: "SPITTER", team: "e", hp: 70,  r: 11, speed: 1.8, dmg: 11, range: 170, cd: 1300, sight: 260, color: "#ffd166" },
     hive:    { name: "ALIEN HIVE", team: "e", hp: 2400, r: 56, building: true, sight: 300, color: "#ff8a2b" },
+    // Buildings your miners construct (cost in crystals, time = seconds to build)
+    tower:   { name: "DEFENSE TURRET", team: "p", hp: 420,  r: 18, building: true, sight: 300, dmg: 12, range: 240, cd: 650, cost: 100, time: 16, key: "1", color: "#ff5ae0", tip: "Shoots aliens in range. Guards miners and outposts." },
+    depot:   { name: "SUPPLY DEPOT",   team: "p", hp: 380,  r: 20, building: true, sight: 200, cost: 75,  time: 14, key: "2", color: "#d7aaff", supply: 8, tip: "Lets you have 8 more ships." },
+    outpost: { name: "OUTPOST",        team: "p", hp: 1000, r: 32, building: true, sight: 380, cost: 250, time: 30, key: "3", color: "#b04dff", tip: "Forward base: miners drop crystals here, it trains miners, and you can build around it." },
+    yard:    { name: "SHIPYARD",       team: "p", hp: 750,  r: 28, building: true, sight: 280, cost: 200, time: 26, key: "4", color: "#ff2bd6", tip: "Builds Interceptors and Gunships near the front." },
   };
+  const TRAINS = { core: ["spark", "blade", "lancer"], outpost: ["spark"], yard: ["blade", "lancer"] };   // who builds which ships
+  const BUILDS = ["tower", "depot", "outpost", "yard"];                                                    // what miners can build
+  const BUILD = { radius: 420, supplyMax: 80 };   // build within this distance of the station or an outpost; most ships depots can allow
   const CRYSTAL = { amount: 1200, carry: 8, mineTime: 1100 };
   // How many aliens: guarding the hive at the start, and in each wave (base + growth x wave number, rounded down).
   const ENEMIES = {
@@ -50,7 +60,7 @@
     waveGrowth: { mite: 2, brute: 0.5, spitter: 0.5 },
     maxAlive: 150,              // a wave stops adding aliens once this many are alive
   };
-  TUNE(MAP, CFG.map); TUNE(START, CFG.start); TUNE(WAVES, CFG.waves); TUNE(UNITS, CFG.units); TUNE(CRYSTAL, CFG.crystal); TUNE(ENEMIES, CFG.enemies);
+  TUNE(MAP, CFG.map); TUNE(START, CFG.start); TUNE(WAVES, CFG.waves); TUNE(UNITS, CFG.units); TUNE(CRYSTAL, CFG.crystal); TUNE(ENEMIES, CFG.enemies); TUNE(BUILD, CFG.build);
   // ==========================================================================================================
 
   const sfx = n => window.neonAudio && window.neonAudio.sfx(n);
@@ -81,7 +91,7 @@
       <h3>Mine. Build. Defend the Station.</h3>
       <p>An alien hive is sending swarms at your space station. Mine crystals, build a fleet and wipe out the hive.</p>
       <button type="button" class="rts-play">▶ PLAY</button>
-      <p class="rts-help">Drag to select · Right-click to command · A attack-move · Q W E train · Space whole fleet</p>
+      <p class="rts-help">Drag to select · Right-click to command · A attack-move · Q W E train · Miners: 1 2 3 4 build · Space whole fleet</p>
     </div>`;
   section.appendChild(root);   // on the section itself (the site moves things inside the viewport for its parallax effect)
   const canvas = root.querySelector(".rts-canvas"), ctx = canvas.getContext("2d");
@@ -104,7 +114,7 @@
 
   // ================================================ THE GAME STATE ================================================
   let ents = [], crystals = [], shots = [], fx = [], selected = [], credits = 0, nextId = 1;
-  let state = "intro", clock = 0, waveAt = 0, waveNo = 0, onScreen = false, amoveMode = false, kills = 0;
+  let placing = null, state = "intro", clock = 0, waveAt = 0, waveNo = 0, onScreen = false, amoveMode = false, kills = 0;
   const cam = { x: 0, y: 0 };
   const FOG = { cell: 50 };
   FOG.cols = Math.ceil(MAP.w / FOG.cell); FOG.rows = Math.ceil(MAP.h / FOG.cell);
@@ -117,13 +127,13 @@
 
   function spawn(type, x, y) {
     const T = UNITS[type];
-    const e = { id: nextId++, type, T, team: T.team, x, y, hp: T.hp, r: T.r, cd: 0, order: null, carry: 0, queue: [], rally: null, flash: 0, face: 0, bob: rand(0, 6.28) };
+    const e = { id: nextId++, type, T, team: T.team, x, y, hp: T.hp, r: T.r, built: 1, cd: 0, order: null, carry: 0, queue: [], rally: null, flash: 0, face: 0, bob: rand(0, 6.28) };
     ents.push(e);
     return e;
   }
   function newGame() {
     ents = []; crystals = []; shots = []; fx = []; selected = []; kills = 0;
-    explored.fill(0); credits = START.credits; clock = 0; waveNo = 0; waveAt = WAVES.first; amoveMode = false;
+    explored.fill(0); placing = null; credits = START.credits; clock = 0; waveNo = 0; waveAt = WAVES.first; amoveMode = false;
     const core = spawn("core", 300, MAP.h - 330);
     core.rally = { x: 470, y: MAP.h - 470 };
     // Crystals: a field round the base, a richer one in the middle of the map.
@@ -141,20 +151,27 @@
   }
   const core = () => ents.find(e => e.type === "core");
   const hive = () => ents.find(e => e.type === "hive");
-  const supply = () => ents.filter(e => e.team === "p" && !e.T.building).length + (core() ? core().queue.length : 0);
+  const done = e => e.built >= 1;
+  const hqs = () => ents.filter(e => e.team === "p" && (e.type === "core" || e.type === "outpost") && done(e));   // drop-off points and build zones
+  const supply = () => ents.reduce((t, e) => t + (e.team === "p" && !e.T.building ? 1 : 0) + e.queue.length, 0);
+  const supplyCap = () => Math.max(SUPPLY_CAP, Math.min(BUILD.supplyMax, SUPPLY_CAP + ents.reduce((t, e) => t + (e.type === "depot" && done(e) ? UNITS.depot.supply : 0), 0)));
+  const target = () => core() || ents.find(e => e.team === "p" && e.T.building) || null;   // where the waves head
+  function nearestHQ(e) { let best = null, bd = 1e9; for (const h of hqs()) { const d = dist(e, h); if (d < bd) { bd = d; best = h; } } return best; }
 
   // ================================================ ORDERS ================================================
   function harvest(e, c) { e.order = { type: "harvest", crystal: c, phase: e.carry ? "return" : "go", t: 0 }; }
   function command(x, y, attackMove) {
     const units = selected.filter(e => !e.T.building && e.hp > 0);
-    const c = core();
-    if (!units.length) { if (c && selected.includes(c)) { c.rally = { x, y }; ping(x, y, "#d7aaff"); } return; }
+    const makers = selected.filter(e => TRAINS[e.type]);
+    if (!units.length) { if (makers.length) { for (const m of makers) m.rally = { x, y }; ping(x, y, "#d7aaff"); } return; }
+    const site = ents.find(e => e.team === "p" && e.T.building && !done(e) && Math.hypot(e.x - x, e.y - y) < e.r + 10);
     // Did they click an enemy or a crystal?
     const enemy = ents.find(e => e.team === "e" && isSeen(e) && Math.hypot(e.x - x, e.y - y) < e.r + 10);
     const crystal = crystals.find(k => k.left > 0 && Math.hypot(k.x - x, k.y - y) < k.r + 12);
     const cx = units.reduce((t, u) => t + u.x, 0) / units.length, cy = units.reduce((t, u) => t + u.y, 0) / units.length;
     for (const u of units) {
       if (enemy) u.order = { type: "attack", target: enemy };
+      else if (site && u.type === "spark") u.order = { type: "build", site };
       else if (crystal && u.type === "spark") harvest(u, crystal);
       else {
         // Keep the group's shape, squeezed together a little, so they don't all pile onto one spot.
@@ -165,14 +182,65 @@
     if (enemy) ping(enemy.x, enemy.y, "#ff8a2b"); else ping(x, y, attackMove ? "#ff8a2b" : "#7dffb2");
     sfx("select");
   }
-  function train(type) {
-    const c = core(), T = UNITS[type];
-    if (!c || state !== "play") return;
+  function train(type, from) {
+    const T = UNITS[type];
+    if (state !== "play") return;
+    const able = ents.filter(e => e.team === "p" && done(e) && TRAINS[e.type] && TRAINS[e.type].includes(type));
+    const c = from && able.includes(from) ? from : able.find(e => selected.includes(e)) || able.sort((a, b) => a.queue.length - b.queue.length)[0];
+    if (!c) return say(type === "spark" ? "Needs the station or an outpost" : "Needs the station or a shipyard");
     if (credits < T.cost) return say("Not enough crystals ◆");
-    if (supply() >= SUPPLY_CAP) return say("Fleet is full (" + SUPPLY_CAP + ")");
+    if (supply() >= supplyCap()) return say("Fleet is full (" + supplyCap() + ") · build a Supply Depot");
     if (c.queue.length >= 5) return say("Training queue is full");
     credits -= T.cost; c.queue.push({ type, left: T.time * 1000 });
     sfx("select"); renderPanel();
+  }
+
+  // ================================================ CONSTRUCTION ================================================
+  // Select miners, pick a building (panel or keys 1-4), click where. The nearest selected miner flies there and builds
+  // it; more miners (right-click the site) build faster. You can only build near the station or a finished outpost.
+  function canPlace(type, x, y) {
+    const r = UNITS[type].r;
+    if (x < r + 10 || y < r + 10 || x > MAP.w - r - 10 || y > MAP.h - r - 10) return "Too close to the edge";
+    if (!explored[cellOf(x, y)]) return "Explore there first";
+    if (!hqs().some(h => Math.hypot(h.x - x, h.y - y) < BUILD.radius)) return "Too far: build near the station or an outpost";
+    if (ents.some(e => e.T.building && Math.hypot(e.x - x, e.y - y) < e.r + r + 8)) return "Something is in the way";
+    if (crystals.some(k => k.left > 0 && Math.hypot(k.x - x, k.y - y) < k.r + r + 10)) return "Too close to the crystals";
+    if (ents.some(e => e.team === "e" && isSeen(e) && Math.hypot(e.x - x, e.y - y) < e.r + r + 30)) return "Aliens are in the way";
+    return "";
+  }
+  function startPlacing(type) {
+    if (state !== "play") return;
+    if (!selected.some(e => e.type === "spark")) return say("Select a miner to build");
+    if (credits < UNITS[type].cost) return say("Not enough crystals ◆");
+    placing = { type }; amoveMode = false;
+    say("Click where to build the " + UNITS[type].name + " · right-click or Esc to cancel", 2600);
+  }
+  function place(x, y) {
+    const type = placing.type, why = canPlace(type, x, y);
+    if (why) { say(why); sfx("miss"); return false; }
+    const miners = selected.filter(e => e.type === "spark");
+    if (!miners.length || credits < UNITS[type].cost) { say(miners.length ? "Not enough crystals ◆" : "Select a miner to build"); placing = null; return false; }
+    credits -= UNITS[type].cost;
+    const site = spawn(type, x, y); site.built = 0; site.hp = Math.max(1, Math.round(UNITS[type].hp * 0.1));
+    if (TRAINS[type]) site.rally = { x: x + 90, y: y - 90 };
+    const builder = miners.reduce((b, m) => dist(m, site) < dist(b, site) ? m : b);
+    builder.order = { type: "build", site, then: builder.order && builder.order.type === "harvest" ? builder.order : null };
+    placing = null; ping(x, y, "#7dffb2"); sfx("select"); renderPanel();
+    return true;
+  }
+  function doBuild(e, o, dt) {
+    const s = o.site;
+    if (!s || !ents.includes(s) || done(s)) {                        // finished (or lost): back to mining
+      const k = o.then && o.then.crystal && o.then.crystal.left > 0 ? o.then.crystal : nearestCrystal(e);
+      e.order = null; if (k) harvest(e, k); return;
+    }
+    if (dist(e, s) > s.r + e.r + 12) { moveTo(e, s.x, s.y, dt); return; }
+    const step = dt / (s.T.time * 1000);
+    s.built = Math.min(1, s.built + step); s.hp = Math.min(s.T.hp, s.hp + s.T.hp * 0.9 * step);
+    e.face = Math.atan2(s.y - e.y, s.x - e.x);
+    if (Math.random() < dt / 70) fx.push({ beam: true, x: e.x, y: e.y, tx: s.x + rand(-0.6, 0.6) * s.r, ty: s.y + rand(-0.4, 0.4) * s.r, life: 1, color: "#7dffb2", h: 16 });
+    if (done(s)) { s.hp = s.T.hp; say(s.T.name + " complete"); sfx("power"); }
+    if (selected.includes(s)) renderPanel(true);
   }
 
   // ================================================ THE SIMULATION ================================================
@@ -232,7 +300,8 @@
     sfx(t.T.building ? "bigboom" : "boom");
     ents = ents.filter(e => e !== t); selected = selected.filter(e => e !== t);
     if (t.type === "hive") end(true);
-    if (t.type === "core") end(false);
+    if (t.team === "p" && t.T.building && !hqs().length) end(false);                       // lost when no station or outpost is left
+    else if (t.type === "core") say("The station has fallen! Hold your outposts!", 3000);
     renderPanel();
   }
   function boom(x, y, color, size) {
@@ -247,7 +316,7 @@
     let alive = ents.filter(e => e.team === "e" && !e.T.building).length;
     for (const [type, count] of Object.entries(n)) for (let i = 0; i < count && alive < ENEMIES.maxAlive; i++, alive++) {
       const u = spawn(type, h.x - 80 + rand(-70, 70), h.y + 90 + rand(-70, 70));
-      const c = core(); if (c) u.order = { type: "amove", x: c.x, y: c.y };
+      const c = target(); if (c) u.order = { type: "amove", x: c.x, y: c.y };
     }
     say("⚠ WAVE " + waveNo + " IS COMING", 2600); sfx("bomb");
     waveAt = clock + WAVES.every;
@@ -260,12 +329,12 @@
     const h = hive();
     if (h && Math.random() < dt / 9000 && ents.filter(e => e.team === "e" && !e.order).length < 12) spawn("mite", h.x - 100 + rand(-50, 50), h.y + 110 + rand(-50, 50));
     // Training.
-    const c = core();
-    if (c && c.queue.length) {
+    for (const c of ents) {
+      if (!c.queue.length || !done(c)) continue;
       const q = c.queue[0]; q.left -= dt;
       if (q.left <= 0) {
         c.queue.shift();
-        const u = spawn(q.type, c.x + rand(40, 70), c.y - rand(40, 70));
+        const u = spawn(q.type, c.x + rand(0.8, 1.4) * c.r, c.y - rand(0.8, 1.4) * c.r);
         if (u.type === "spark") { const k = nearestCrystal(u); if (k) harvest(u, k); }
         else if (c.rally) u.order = { type: "move", x: c.rally.x + rand(-30, 30), y: c.rally.y + rand(-30, 30) };
         say(UNITS[q.type].name + " ready"); sfx("power");
@@ -279,12 +348,18 @@
       e.cd = Math.max(0, e.cd - dt); e.flash = Math.max(0, e.flash - dt / 200);
       // The station defends itself with a point-defence laser.
       if (e.type === "core" && !e.cd) { const foe = nearestFoe(e, 280); if (foe) { damage(foe, 14, e); e.cd = 800; fx.push({ beam: true, x: e.x, y: e.y, tx: foe.x, ty: foe.y, life: 1, color: "#ff5ae0", h: 30 }); sfx("laser"); } }
+      // Defense turrets shoot the nearest alien in range.
+      if (e.T.dmg && e.T.building && e.team === "p" && done(e) && !e.cd) {
+        const foe = nearestFoe(e, e.T.range);
+        if (foe) { e.aim = Math.atan2(foe.y - e.y, foe.x - e.x); damage(foe, e.T.dmg, e); e.cd = e.T.cd; fx.push({ beam: true, x: e.x, y: e.y, tx: foe.x, ty: foe.y, life: 1, color: e.T.color, h: 30 }); if (Math.random() < 0.5) sfx("laser"); }
+      }
       if (e.T.building) continue;
       const o = e.order;
       if (o && o.type === "harvest") { doHarvest(e, o, dt); continue; }
+      if (o && o.type === "build") { doBuild(e, o, dt); continue; }
       if (o && o.type === "attack") {
         const t = o.target;
-        if (!t || t.hp <= 0 || !ents.includes(t)) { e.order = o.then || (e.team === "e" && core() && waveNo ? { type: "amove", x: core().x, y: core().y } : null); continue; }
+        if (!t || t.hp <= 0 || !ents.includes(t)) { e.order = o.then || (e.team === "e" && target() && waveNo ? { type: "amove", x: target().x, y: target().y } : null); continue; }
         if (dist(e, t) > e.T.range + e.r + t.r) moveTo(e, t.x, t.y, dt);
         else if (!e.cd) fire(e, t);
         continue;
@@ -320,7 +395,7 @@
     return best;
   }
   function doHarvest(e, o, dt) {
-    const c = core();
+    const c = nearestHQ(e);                                         // drop crystals at the nearest station or outpost
     if (!c) { e.order = null; return; }
     if (o.phase === "go") {
       if (!o.crystal || o.crystal.left <= 0) { o.crystal = nearestCrystal(e); if (!o.crystal) { e.order = null; return; } }
@@ -448,6 +523,35 @@
     }
     MODELS.ring = r;
   }
+  // ---- Buildings your miners construct ----
+  { // DEFENSE TURRET: an armoured pylon with a glowing band (its gun is the gunship turret, aiming on top).
+    const m = Mesh();
+    lathe(m, [[0.001, 0], [0.9, 0], [0.95, 0.15], [0.62, 0.32], [0.46, 0.85], [0.58, 0.95], [0.001, 1.0]], 8, (p) => p === 1 || p === 4 ? "trim" : "hull", { axis: "z", rot: Math.PI / 8 });
+    lathe(m, [[0.5, 0.55], [0.5, 0.66]], 8, "glow", { axis: "z", rot: Math.PI / 8 });
+    MODELS.tower = m;
+  }
+  { // SUPPLY DEPOT: a hexagonal stack of cargo bays with glowing seams and three loading pods.
+    const m = Mesh();
+    lathe(m, [[0.001, 0], [0.9, 0], [0.9, 0.32], [0.74, 0.38], [0.74, 0.7], [0.001, 0.72]], 6, (p) => p === 2 ? "trim" : p === 4 ? "dark" : "hull", { axis: "z" });
+    lathe(m, [[0.76, 0.48], [0.76, 0.55]], 6, "glow", { axis: "z" });
+    for (let k = 0; k < 3; k++) { const a = k / 3 * 6.2832 + 0.5; box(m, [Math.cos(a) * 1.0, Math.sin(a) * 1.0, 0.18], [0.36, 0.36, 0.36], "trim"); box(m, [Math.cos(a) * 1.0, Math.sin(a) * 1.0, 0.38], [0.2, 0.2, 0.05], "glow"); }
+    MODELS.depot = m;
+  }
+  { // OUTPOST: a smaller station hub with a glowing beacon spire and four landing pads.
+    const m = Mesh();
+    lathe(m, [[0.001, -0.1], [0.78, -0.05], [0.9, 0.18], [0.62, 0.45], [0.001, 0.5]], 6, (p) => p === 1 ? "trim" : "hull", { axis: "z", rot: Math.PI / 6 });
+    lathe(m, [[0.16, 0.5], [0.08, 1.1], [0.001, 1.16]], 6, "glow", { axis: "z" });
+    for (let k = 0; k < 4; k++) { const a = k / 4 * 6.2832 + 0.4; box(m, [Math.cos(a) * 0.62, Math.sin(a) * 0.62, 0.05], [0.7, 0.14, 0.1], "dark"); box(m, [Math.cos(a) * 1.08, Math.sin(a) * 1.08, 0.05], [0.34, 0.34, 0.08], "trim"); box(m, [Math.cos(a) * 1.08, Math.sin(a) * 1.08, 0.11], [0.12, 0.12, 0.03], "glow"); }
+    MODELS.outpost = m;
+  }
+  { // SHIPYARD: an open dock frame with rails, cross-beams and glowing guide strips.
+    const m = Mesh();
+    box(m, [0, 0, 0], [2.1, 1.4, 0.12], "dark");
+    for (const s of [-1, 1]) { box(m, [0, s * 0.56, 0.3], [2.0, 0.18, 0.5], "hull"); box(m, [0, s * 0.56, 0.57], [1.8, 0.06, 0.04], "glow"); }
+    for (const x of [-0.85, 0, 0.85]) box(m, [x, 0, 0.6], [0.16, 1.3, 0.14], "trim");
+    box(m, [-0.85, 0.56, 0.95], [0.18, 0.18, 0.6], "trim"); box(m, [-0.55, 0.3, 1.2], [0.8, 0.12, 0.12], "dark");
+    MODELS.yard = m;
+  }
   // ---- The aliens ----
   { // SWARMLING: a beetle-bug with a ridged carapace, a small head and glowing eyes (legs and wings are animated).
     const m = Mesh();
@@ -512,7 +616,7 @@
   const TILT = { y: 0.62, z: 0.8 };   // how the camera looks down: depth squashes y, height lifts things up the screen
 
   // ---- Blender models (models/models.json): a slot's model in this game's axes, or null for the built-in one ----
-  const SLOT = { core: "rts.station", spark: "rts.miner", blade: "rts.interceptor", lancer: "rts.gunship", mite: "rts.swarmling", brute: "rts.behemoth", spitter: "rts.spitter", hive: "rts.hive", crystal: "rts.crystal", rock: "rts.asteroid" };
+  const SLOT = { tower: "rts.turret", depot: "rts.depot", outpost: "rts.outpost", yard: "rts.shipyard", core: "rts.station", spark: "rts.miner", blade: "rts.interceptor", lancer: "rts.gunship", mite: "rts.swarmling", brute: "rts.behemoth", spitter: "rts.spitter", hive: "rts.hive", crystal: "rts.crystal", rock: "rts.asteroid" };
   const BLENDER = {};
   function blender(kind) {
     const slot = SLOT[kind];
@@ -664,6 +768,7 @@
     }
     ctx.globalAlpha = 1; ctx.shadowBlur = 0;
     drawFog();
+    if (placing) drawPlacing();
     if (drag && drag.box) {
       ctx.strokeStyle = "#7dffb2"; ctx.lineWidth = 1; ctx.fillStyle = "rgba(125,255,178,0.08)";
       const x = Math.min(drag.x0, drag.x1), y = Math.min(drag.y0, drag.y1), w = Math.abs(drag.x1 - drag.x0), h = Math.abs(drag.y1 - drag.y0);
@@ -674,8 +779,8 @@
   }
 
   // Height each kind floats at, and how big its model is compared with its hit circle.
-  const HOVER = { spark: 16, blade: 22, lancer: 18, core: 10, mite: 10, brute: 6, spitter: 26, hive: 4 };
-  const SIZE = { spark: 1.15, blade: 1.25, lancer: 1.1, core: 0.95, mite: 1.0, brute: 0.95, spitter: 1.0, hive: 0.95 };
+  const HOVER = { spark: 16, blade: 22, lancer: 18, core: 10, mite: 10, brute: 6, spitter: 26, hive: 4, tower: 2, depot: 2, outpost: 6, yard: 4 };
+  const SIZE = { spark: 1.15, blade: 1.25, lancer: 1.1, core: 0.95, mite: 1.0, brute: 0.95, spitter: 1.0, hive: 0.95, tower: 1.3, depot: 1.15, outpost: 1.0, yard: 1.0 };
   function drawEnt(e, now) {
     const T = e.T, paint = PAINT[e.team], flash = Math.min(1, e.flash);
     const h = HOVER[e.type] + (T.building ? 0 : Math.sin(now / 420 + e.bob) * 3), size = e.r * SIZE[e.type];
@@ -701,6 +806,8 @@
         ctx.stroke();
       }
       drawModel(blender("hive") || MODELS.hive, e.x, e.y, h, now / 6000, 0, size * pulse, paint, flash);
+    } else if (T.building) {
+      drawBuilding(e, now, X, Y, h, size, paint, flash);
     } else {
       // Ships bank into turns; aliens wobble.
       const turn = Math.atan2(Math.sin(e.face - (e.lastFace ?? e.face)), Math.cos(e.face - (e.lastFace ?? e.face)));
@@ -728,6 +835,38 @@
       ctx.shadowBlur = 0; ctx.fillStyle = "rgba(0,0,0,.6)"; ctx.fillRect(X - w / 2, top, w, 4);
       ctx.fillStyle = p > 0.5 ? "#7dffb2" : p > 0.25 ? "#ffd166" : "#ff8a2b"; ctx.fillRect(X - w / 2, top, w * p, 4);
     }
+  }
+  // Your buildings: see-through while under construction, with a green ring that fills as the miners build.
+  const YAW = { tower: 0, depot: 0.3, outpost: 0, yard: 0.55 };
+  function drawBuilding(e, now, X, Y, h, size, paint, flash) {
+    const k = e.built, alpha = k < 1 ? 0.3 + k * 0.5 : 1, own = blender(e.type);
+    if (k >= 1) bloom(X, Y - size * 0.4 * zoom, size * 1.9 * zoom, e.type === "tower" ? "255,90,230" : "176,77,255", 0.22);
+    const yaw = e.type === "outpost" ? now / 8000 : YAW[e.type] || 0;
+    drawModel(own || MODELS[e.type], e.x, e.y, h, yaw, 0, size * (own ? 1.2 : 1), paint, flash, alpha);
+    if (e.type === "tower" && !own) drawModel(MODELS.turret, e.x, e.y, h + size * 1.0, e.aim ?? -0.8, 0, size * 0.8, paint, flash, alpha);
+    const GX = sx(e.x), GY = sy(e.y);
+    if (k < 1) {
+      ctx.strokeStyle = "rgba(125,255,178,0.35)"; ctx.lineWidth = 2; ctx.setLineDash([5, 5]);
+      ctx.beginPath(); ctx.ellipse(GX, GY, size * 1.45 * zoom, size * 1.45 * zoom * TILT.y, 0, 0, 6.28); ctx.stroke(); ctx.setLineDash([]);
+      ctx.strokeStyle = "#7dffb2"; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.ellipse(GX, GY, size * 1.45 * zoom, size * 1.45 * zoom * TILT.y, 0, -1.57, -1.57 + k * 6.28); ctx.stroke();
+    } else if (e.queue.length) {
+      const q = e.queue[0], p = 1 - q.left / (UNITS[q.type].time * 1000);
+      ctx.strokeStyle = "#7dffb2"; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(GX, GY, size * 1.5 * zoom, size * 1.5 * zoom * TILT.y, 0, -1.57, -1.57 + p * 6.28); ctx.stroke();
+    }
+    if (e.rally && selected.includes(e) && done(e)) { ctx.setLineDash([6, 6]); ctx.strokeStyle = "rgba(215,170,255,.6)"; ctx.beginPath(); ctx.moveTo(GX, GY); ctx.lineTo(sx(e.rally.x), sy(e.rally.y)); ctx.stroke(); ctx.setLineDash([]); }
+  }
+  // Choosing where to build: the build zones (dashed) and a ghost of the building, green where it fits, red where not.
+  function drawPlacing() {
+    ctx.save(); ctx.setLineDash([8, 8]); ctx.lineWidth = 1.5; ctx.strokeStyle = "rgba(125,255,178,0.5)";
+    for (const hq of hqs()) { ctx.beginPath(); ctx.ellipse(sx(hq.x), sy(hq.y), BUILD.radius * zoom, BUILD.radius * zoom * TILT.y, 0, 0, 6.28); ctx.stroke(); }
+    ctx.restore();
+    if (!mouse.in) return;
+    const w = toWorld(mouse.x, mouse.y), T = UNITS[placing.type], ok = !canPlace(placing.type, w.x, w.y);
+    ctx.fillStyle = ok ? "rgba(125,255,178,0.16)" : "rgba(255,80,80,0.22)"; ctx.strokeStyle = ok ? "#7dffb2" : "#ff5050"; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.ellipse(sx(w.x), sy(w.y), T.r * 1.3 * zoom, T.r * 1.3 * zoom * TILT.y, 0, 0, 6.28); ctx.fill(); ctx.stroke();
+    if (T.range) { ctx.strokeStyle = "rgba(255,90,224,0.35)"; ctx.setLineDash([4, 6]); ctx.beginPath(); ctx.ellipse(sx(w.x), sy(w.y), T.range * zoom, T.range * zoom * TILT.y, 0, 0, 6.28); ctx.stroke(); ctx.setLineDash([]); }
+    drawModel(blender(placing.type) || MODELS[placing.type], w.x, w.y, HOVER[placing.type], YAW[placing.type] || 0, 0, T.r * SIZE[placing.type], PAINT.p, 0, 0.45);
   }
   // Alien legs: jointed lines that scuttle while moving.
   function drawLegs(e, now, X, Y, size, pairs, reach) {
@@ -792,28 +931,33 @@
   function ping(x, y, color) { fx.push({ ping: true, x, y, life: 1, color }); }
   let panelKey = "";
   function renderPanel(progressOnly) {
-    const c = core();
-    if (selected.length === 1 && selected[0] === c) {
-      const q = c.queue.map(item => `<span class="rts-q">${UNITS[item.type].name[0]}</span>`).join("");
-      const key = "core" + c.queue.length + credits;
-      if (progressOnly && key === panelKey) { const bar = panel.querySelector(".rts-prog b"); if (bar && c.queue[0]) bar.style.width = (1 - c.queue[0].left / (UNITS[c.queue[0].type].time * 1000)) * 100 + "%"; return; }
+    const one = selected.length === 1 ? selected[0] : null;
+    if (one && one.team === "p" && one.T.building) {             // one of your buildings
+      const T = one.T, makes = done(one) ? TRAINS[one.type] : null;
+      const key = one.id + ":" + one.queue.length + ":" + credits + ":" + (done(one) ? "done" : Math.floor(one.built * 20));
+      if (progressOnly && key === panelKey) { const bar = panel.querySelector(".rts-prog b"); if (bar) bar.style.width = progressOf(one) * 100 + "%"; return; }
       panelKey = key;
-      panel.innerHTML = `<div class="rts-sel"><b>TENSHI STATION</b><span>Build ships · right-click to set the rally point</span></div>
-        <div class="rts-btns">${["spark", "blade", "lancer"].map(t => `<button type="button" data-train="${t}" ${credits < UNITS[t].cost ? "disabled" : ""} title="${UNITS[t].tip}"><b>${UNITS[t].key}</b> ${UNITS[t].name}<i>◆ ${UNITS[t].cost}</i></button>`).join("")}</div>
-        <div class="rts-queue">${q || "<span class='rts-dim'>Queue empty</span>"}</div><div class="rts-prog"><b></b></div>`;
+      const info = !done(one) ? `Under construction · ${Math.floor(one.built * 100)}% · right-click it with miners to build faster`
+        : makes ? (one.type === "core" ? "Builds ships" : T.tip) + " · right-click to set the rally point" : T.tip;
+      const btn = t => `<button type="button" data-train="${t}" ${credits < UNITS[t].cost ? "disabled" : ""} title="${UNITS[t].tip}"><b>${UNITS[t].key}</b> ${UNITS[t].name}<i>◆ ${UNITS[t].cost}</i></button>`;
+      panel.innerHTML = `<div class="rts-sel"><b>${T.name}</b><span>${info}</span></div>` +
+        (makes ? `<div class="rts-btns">${makes.map(btn).join("")}</div><div class="rts-queue">${one.queue.map(item => `<span class="rts-q">${UNITS[item.type].name[0]}</span>`).join("") || "<span class='rts-dim'>Queue empty</span>"}</div>` : "") +
+        (makes || !done(one) ? `<div class="rts-prog"><b style="width:${progressOf(one) * 100}%"></b></div>` : "");
       return;
     }
     if (progressOnly) return;
     panelKey = "";
-    if (!selected.length) { panel.innerHTML = `<div class="rts-sel"><b>NOTHING SELECTED</b><span>Click a ship or drag a box. Click the station to build ships.</span></div>`; return; }
+    if (!selected.length) { panel.innerHTML = `<div class="rts-sel"><b>NOTHING SELECTED</b><span>Click a ship or drag a box. Click the station to build ships; select a miner to build turrets and outposts.</span></div>`; return; }
     const counts = {};
     for (const e of selected) counts[e.T.name] = (counts[e.T.name] || 0) + 1;
     panel.innerHTML = `<div class="rts-sel"><b>${selected.length} SELECTED</b><span>${Object.entries(counts).map(([n, k]) => k + " " + n).join(" · ")}</span></div>
-      <div class="rts-btns"><button type="button" data-act="amove"><b>A</b> ATTACK-MOVE</button><button type="button" data-act="stop"><b>S</b> STOP</button></div>`;
+      <div class="rts-btns"><button type="button" data-act="amove"><b>A</b> ATTACK-MOVE</button><button type="button" data-act="stop"><b>S</b> STOP</button>${selected.some(e => e.type === "spark") ? BUILDS.map(t => `<button type="button" data-build="${t}" ${credits < UNITS[t].cost ? "disabled" : ""} title="${UNITS[t].tip}"><b>${UNITS[t].key}</b> ${UNITS[t].name}<i>◆ ${UNITS[t].cost}</i></button>`).join("") : ""}</div>`;
   }
+  const progressOf = e => !done(e) ? e.built : e.queue[0] ? 1 - e.queue[0].left / (UNITS[e.queue[0].type].time * 1000) : 0;
   panel.addEventListener("click", e => {
     const b = e.target.closest("button"); if (!b) return;
-    if (b.dataset.train) train(b.dataset.train);
+    if (b.dataset.train) train(b.dataset.train, selected.length === 1 ? selected[0] : null);
+    if (b.dataset.build) startPlacing(b.dataset.build);
     if (b.dataset.act) act(b.dataset.act);
   });
   touchBar.addEventListener("click", e => { const b = e.target.closest("button"); if (b) act(b.dataset.act); });
@@ -824,7 +968,8 @@
   }
   function hud() {
     creditsEl.textContent = "◆ " + credits;
-    supplyEl.textContent = "▲ " + supply() + " / " + SUPPLY_CAP;
+    supplyEl.textContent = "▲ " + supply() + " / " + supplyCap();
+    for (const b of panel.querySelectorAll("[data-build], [data-train]")) b.disabled = credits < UNITS[b.dataset.build || b.dataset.train].cost;
     const t = Math.max(0, Math.ceil(waveAt - clock));
     waveEl.textContent = hive() ? `WAVE ${waveNo + 1} IN ${Math.floor(t / 60)}:${String(t % 60).padStart(2, "0")}` : "";
   }
@@ -837,7 +982,7 @@
   canvas.addEventListener("pointerdown", e => {
     if (state !== "play") return;
     const p = local(e);
-    if (e.button === 2) { const w = toWorld(p.x, p.y); command(w.x, w.y, false); return; }
+    if (e.button === 2) { if (placing) { placing = null; say("Cancelled"); return; } const w = toWorld(p.x, p.y); command(w.x, w.y, false); return; }
     if (e.button !== 0) return;
     canvas.setPointerCapture(e.pointerId);
     drag = { x0: p.x, y0: p.y, x1: p.x, y1: p.y, box: false, shift: e.shiftKey, touch: e.pointerType !== "mouse" };
@@ -850,6 +995,7 @@
   canvas.addEventListener("pointerup", e => {
     if (!drag) return;
     const d = drag; drag = null;
+    if (placing) { const w = toWorld(d.x1, d.y1); place(w.x, w.y); return; }
     if (d.box) {                                                    // box select: your units inside it (not the Core)
       const a = toWorld(Math.min(d.x0, d.x1), Math.min(d.y0, d.y1)), b = toWorld(Math.max(d.x0, d.x1), Math.max(d.y0, d.y1));
       const inBox = ents.filter(u => u.team === "p" && !u.T.building && u.x > a.x && u.x < b.x && u.y > a.y && u.y < b.y);
@@ -875,7 +1021,7 @@
   window.addEventListener("keydown", e => {
     if (state !== "play" || !onScreen || (e.target.closest && e.target.closest("input, textarea, select"))) return;
     const k = e.key.toLowerCase();
-    const handled = { arrowleft: 1, arrowright: 1, arrowup: 1, arrowdown: 1, " ": 1, a: 1, s: 1, q: 1, w: 1, e: 1, escape: 1 };
+    const handled = { arrowleft: 1, arrowright: 1, arrowup: 1, arrowdown: 1, " ": 1, a: 1, s: 1, q: 1, w: 1, e: 1, escape: 1, 1: 1, 2: 1, 3: 1, 4: 1 };
     if (!handled[k]) return;
     e.preventDefault(); keys[k] = true;
     if (k === "a") act("amove");
@@ -884,7 +1030,8 @@
     if (k === "q") train("spark");
     if (k === "w") train("blade");
     if (k === "e") train("lancer");
-    if (k === "escape") { amoveMode = false; selected = []; renderPanel(); }
+    if ("1234".includes(k)) startPlacing(BUILDS[+k - 1]);
+    if (k === "escape") { if (placing) { placing = null; say("Cancelled"); return; } amoveMode = false; selected = []; renderPanel(); }
   });
   window.addEventListener("keyup", e => { keys[e.key.toLowerCase()] = false; });
   function clampCamera() {
@@ -973,5 +1120,5 @@
   if (reduce) intro.querySelector(".rts-help").textContent += " · (Reduced motion: effects are toned down.)";
   requestAnimationFrame(loop);
   window.neonRTS = { state: () => ({ state, credits, clock: Math.round(clock), wave: waveNo, units: ents.filter(e => e.team === "p" && !e.T.building).length, enemies: ents.filter(e => e.team === "e").length, hive: hive() && hive().hp, core: core() && core().hp, selected: selected.length }),
-                     start, give: n => { credits += n; }, army: () => act("army"), seeAll: on => { seeAll = on; if (on) explored.fill(1); }, count: () => ents.reduce((m, e) => (m[e.type] = (m[e.type] || 0) + 1, m), {}), step: ms => { for (let t = 0; t < ms && state === "play"; t += 16) update(16); hud(); }, train, wave: sendWave, select: type => { selected = ents.filter(e => e.type === type); renderPanel(); }, command, killHive: () => { const h = hive(); if (h) damage(h, 1e6, null); }, camTo: (x, y) => { cam.x = x - W / zoom / 2; cam.y = y - H / zoom / 2; clampCamera(); } };
+                     start, give: n => { credits += n; }, army: () => act("army"), seeAll: on => { seeAll = on; if (on) explored.fill(1); }, count: () => ents.reduce((m, e) => (m[e.type] = (m[e.type] || 0) + 1, m), {}), step: ms => { for (let t = 0; t < ms && state === "play"; t += 16) update(16); hud(); }, train, wave: sendWave, select: type => { selected = ents.filter(e => e.type === type); renderPanel(); }, command, killHive: () => { const h = hive(); if (h) damage(h, 1e6, null); }, build: (type, x, y) => { selected = ents.filter(e => e.type === "spark" && !(e.order && e.order.type === "build")).slice(0, 1); placing = { type }; return place(x, y); }, buildings: () => ents.filter(e => e.team === "p" && e.T.building).map(e => ({ type: e.type, built: +e.built.toFixed(2), hp: Math.round(e.hp), queue: e.queue.length })), canPlace, cap: () => supplyCap(), camTo: (x, y) => { cam.x = x - W / zoom / 2; cam.y = y - H / zoom / 2; clampCamera(); } };
 })();

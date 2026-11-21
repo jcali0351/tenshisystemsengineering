@@ -95,9 +95,9 @@ function glb(objects, layoutInRow = false) {
 const fromRts = ([x, y, z]) => [-y, z, x];
 function rtsObject(slot, models, paint) {
   const polys = [];
-  for (const { m, offset = [0, 0, 0] } of models) for (const f of m.f) {
-    const pts = f.i.map(k => fromRts(m.v[k].map((c, j) => c + offset[j])));
-    polys.push({ pts, centre: fromRts((f.c || [0, 0, 0]).map((c, j) => c + offset[j])), mat: { name: slot.split(".")[1] + "_" + f.mat, rgb: (paint[f.mat] || paint.hull), glow: f.mat === "glow" } });
+  for (const { m, offset = [0, 0, 0], scale = 1 } of models) for (const f of m.f) {
+    const pts = f.i.map(k => fromRts(m.v[k].map((c, j) => c * scale + offset[j])));
+    polys.push({ pts, centre: fromRts((f.c || [0, 0, 0]).map((c, j) => c * scale + offset[j])), mat: { name: slot.split(".")[1] + "_" + f.mat, rgb: (paint[f.mat] || paint.hull), glow: f.mat === "glow" } });
   }
   return objectFrom(slot, polys);
 }
@@ -137,6 +137,10 @@ const rts = {
   "rts.hive": rtsObject("rts.hive", [{ m: RTS.MODELS.hive }], P.e),
   "rts.asteroid": rtsObject("rts.asteroid", [{ m: RTS.ROCKS[0] }], P.rock),
   "rts.crystal": rtsObject("rts.crystal", [{ m: RTS.MODELS.crystal }], P.crystal),
+  "rts.turret": rtsObject("rts.turret", [{ m: RTS.MODELS.tower }, { m: RTS.MODELS.turret, offset: [0, 0, 1.0], scale: 0.8 }], P.p),
+  "rts.depot": rtsObject("rts.depot", [{ m: RTS.MODELS.depot }], P.p),
+  "rts.outpost": rtsObject("rts.outpost", [{ m: RTS.MODELS.outpost }], P.p),
+  "rts.shipyard": rtsObject("rts.shipyard", [{ m: RTS.MODELS.yard }], P.p),
 };
 const arcade = {
   "arcade.drone": targetObject("arcade.drone", ARC.MODELS.drone, "#ff2bd6"),

@@ -239,7 +239,39 @@ window.TENSHI_GAMES = {
    "hive": {
     "hp": 2400,
     "sight": 300
+   },
+   "tower": {
+    "hp": 420,
+    "sight": 300,
+    "dmg": 12,
+    "range": 240,
+    "cd": 650,
+    "cost": 100,
+    "time": 16
+   },
+   "depot": {
+    "hp": 380,
+    "sight": 200,
+    "cost": 75,
+    "time": 14,
+    "supply": 8
+   },
+   "outpost": {
+    "hp": 1000,
+    "sight": 380,
+    "cost": 250,
+    "time": 30
+   },
+   "yard": {
+    "hp": 750,
+    "sight": 280,
+    "cost": 200,
+    "time": 26
    }
+  },
+  "build": {
+   "radius": 420,
+   "supplyMax": 80
   }
  },
  "arpg": {
