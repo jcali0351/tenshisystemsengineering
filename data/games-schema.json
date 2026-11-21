@@ -446,7 +446,9 @@
     "extraEveryTwoFloors": 1,
     "extraMax": 4,
     "bossEvery": 3,
-    "golemFromFloor": 1
+    "golemFromFloor": 1,
+    "startEase": 0.3,
+    "easeFloors": 3
    },
    "rarity": {
     "common": {
@@ -621,6 +623,8 @@
     "enemies.extraMax": "...but never more than this many extra",
     "enemies.bossEvery": "a Warden boss guards the stairs every this many floors (0 = never)",
     "enemies.golemFromFloor": "the Golem (Green Elemental) shows up from this floor on (1 = from the start)",
+    "enemies.startEase": "how much easier the start is: 0.3 = enemies have 30% less health and damage on floor 1",
+    "enemies.easeFloors": "...easing back to full strength over this many floors (full from floor 4)",
     "rarity": "loot: chance of each rarity, and how much stronger it is"
    }
   },

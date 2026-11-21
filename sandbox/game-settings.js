@@ -445,7 +445,9 @@ window.TENSHI_GAMES = {
    "extraEveryTwoFloors": 1,
    "extraMax": 4,
    "bossEvery": 3,
-   "golemFromFloor": 1
+   "golemFromFloor": 1,
+   "startEase": 0.3,
+   "easeFloors": 3
   },
   "rarity": {
    "common": {

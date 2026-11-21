@@ -222,6 +222,8 @@ UNDERCITY = {
         "extraMax": 4,               # ...but never more than this many extra
         "bossEvery": 3,              # a Warden boss guards the stairs every this many floors (0 = never)
         "golemFromFloor": 1,         # the Golem (Green Elemental) shows up from this floor on (1 = from the start)
+        "startEase": 0.3,            # how much easier the start is: 0.3 = enemies have 30% less health and damage on floor 1
+        "easeFloors": 3,             # ...easing back to full strength over this many floors (full from floor 4)
     },
     "rarity": {                      # loot: chance of each rarity, and how much stronger it is
         "common":    {"chance": 0.58,  "mult": 1},

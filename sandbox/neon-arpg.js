@@ -72,7 +72,7 @@
   TUNE(LABELS, CFG.labels);
   for (const r of RARITY) TUNE(r, (CFG.rarity || {})[r.id]);
   // How many monsters: per room (more every 2 floors, up to a limit), and how often a Warden boss floor comes.
-  const ENEMIES = { perRoomMin: 2, perRoomMax: 3, extraEveryTwoFloors: 1, extraMax: 4, bossEvery: 3, golemFromFloor: 1 };
+  const ENEMIES = { perRoomMin: 2, perRoomMax: 3, extraEveryTwoFloors: 1, extraMax: 4, bossEvery: 3, golemFromFloor: 1, startEase: 0.3, easeFloors: 3 };
   TUNE(ENEMIES, CFG.enemies);
   // Hell: the nine circles (Dante), Satan on the last floor, embers and lava pools (Game Studio > Undercity > hell).
   const HELL = { finalFloor: 9, embers: true, lavaPools: 0.05, verses: true };
@@ -297,9 +297,11 @@
     return "hollow";
   }
   function spawnMonster(type, x, y, n) {
-    const T = MONSTERS[type], scale = (1 + (n - 1) * 0.32) * (1 + 0.5 * ((hero && hero.ascensions) || 0));
+    // Easier start: enemies have startEase (30%) less health and damage on floor 1, back to full by floor 1 + easeFloors.
+    const ease = 1 - Math.max(0, 1 - (n - 1) / Math.max(1, ENEMIES.easeFloors)) * ENEMIES.startEase;
+    const T = MONSTERS[type], scale = (1 + (n - 1) * 0.32) * (1 + 0.5 * ((hero && hero.ascensions) || 0)) * ease;
     const champion = !T.boss && Math.random() < 0.08 + n * 0.01;
-    monsters.push({ type, T, x, y, hp: Math.round(T.hp * scale * (champion ? 2.2 : 1)), max: Math.round(T.hp * scale * (champion ? 2.2 : 1)), dmg: Math.round(T.dmg * (1 + (n - 1) * 0.2) * (champion ? 1.4 : 1)), champion, cd: rand(0, 800), face: 0, walk: rand(0, 6), flash: 0, slow: 0, aggro: false, path: [], repath: 0, home: { x, y } });
+    monsters.push({ type, T, x, y, hp: Math.round(T.hp * scale * (champion ? 2.2 : 1)), max: Math.round(T.hp * scale * (champion ? 2.2 : 1)), dmg: Math.max(1, Math.round(T.dmg * (1 + (n - 1) * 0.2) * (champion ? 1.4 : 1) * ease)), champion, cd: rand(0, 800), face: 0, walk: rand(0, 6), flash: 0, slow: 0, aggro: false, path: [], repath: 0, home: { x, y } });
   }
 
   // ---- Pathfinding (A*, 8 directions, no corner cutting) ----
