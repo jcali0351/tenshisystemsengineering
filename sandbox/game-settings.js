@@ -328,6 +328,10 @@ window.TENSHI_GAMES = {
     "damageBoost": 2
    }
   },
+  "inventory": {
+   "slots": 50,
+   "autoEquip": true
+  },
   "hell": {
    "finalFloor": 9,
    "embers": true,

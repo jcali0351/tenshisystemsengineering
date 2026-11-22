@@ -77,6 +77,9 @@
   // Hell: the nine circles (Dante), Satan on the last floor, embers and lava pools (Game Studio > Undercity > hell).
   const HELL = { finalFloor: 9, embers: true, lavaPools: 0.05, verses: true, bossIntro: { enabled: true, seconds: 2.5 } };
   TUNE(HELL, CFG.hell);
+  // Inventory: the bag holds this many relics (Game Studio > Undercity > inventory).
+  const INV = { slots: 50, autoEquip: true };
+  TUNE(INV, CFG.inventory);
   const CIRCLES = [
     ["LIMBO", "Abandon all hope, ye who enter here. · Dante, Inferno III"],
     ["LUST", "Create in me a clean heart, O God. · Psalm 51:10"],
@@ -235,7 +238,7 @@
 
   // ---- The hero ----
   function newHero() {
-    return { x: 0, y: 0, lvl: 1, xp: 0, gold: 0, hp: 80, mp: 40, gear: {}, potions: { hp: 3, mp: 2 }, holy: 0, gospel: 0, path: [], target: null, atkCd: 0, cds: { fireball: 0, nova: 0, abraham: 0, isaac: 0, jacob: 0 }, face: 0, walk: 0, swing: 0, flash: 0, best: 1 };
+    return { x: 0, y: 0, lvl: 1, xp: 0, gold: 0, hp: 80, mp: 40, gear: {}, bag: [], potions: { hp: 3, mp: 2 }, holy: 0, gospel: 0, path: [], target: null, atkCd: 0, cds: { fireball: 0, nova: 0, abraham: 0, isaac: 0, jacob: 0 }, face: 0, walk: 0, swing: 0, flash: 0, best: 1 };
   }
   function stats() {
     const g = Object.values(hero.gear), sum = k => g.reduce((t, it) => t + (it.stats[k] || 0), 0);
@@ -246,7 +249,7 @@
     };
   }
   const xpNeed = lvl => Math.round(60 * Math.pow(lvl, 1.55));
-  function save() { store.set({ lvl: hero.lvl, xp: hero.xp, gold: hero.gold, gear: hero.gear, potions: hero.potions, ascensions: hero.ascensions || 0, holy: Math.floor(hero.holy || 0), gospel: Math.floor(hero.gospel || 0), floor: floorNo, best: Math.max(hero.best || 1, floorNo) }); }
+  function save() { store.set({ lvl: hero.lvl, xp: hero.xp, gold: hero.gold, gear: hero.gear, bag: hero.bag || [], potions: hero.potions, ascensions: hero.ascensions || 0, holy: Math.floor(hero.holy || 0), gospel: Math.floor(hero.gospel || 0), floor: floorNo, best: Math.max(hero.best || 1, floorNo) }); }
 
   // ================================================ MAP ================================================
   function genFloor(n) {
@@ -687,22 +690,27 @@
     else if (l.kind === "hpot") { hero.potions.hp++; num(l.x, l.y, "+ holy water", "#ff6e8a"); sfx("combo"); }
     else if (l.kind === "mpot") { hero.potions.mp++; num(l.x, l.y, "+ manna", "#6ea8ff"); sfx("combo"); }
     else if (l.kind === "item") {
-      const it = l.item, cur = hero.gear[it.slot];
-      if (!cur || it.power > cur.power) {
+      const it = l.item, cur = hero.gear[it.slot], bag = hero.bag || (hero.bag = []);
+      if (INV.autoEquip && (!cur || it.power > cur.power)) {
         hero.gear[it.slot] = it;
+        if (cur) { if (bag.length < INV.slots) bag.push(cur); else hero.gold += sellPrice(cur); }   // the old piece goes in the bag
         const s = stats(); hero.hp = Math.min(hero.hp, s.maxHp); hero.mp = Math.min(hero.mp, s.maxMp);
         say("EQUIPPED · " + it.name.toUpperCase(), 2600, it.color);
         showTip(it, cur);
         sfx(it.rarity === "legendary" || it.rarity === "rare" ? "achievement" : "power");
         if (sheetOpen) renderSheet();
-      } else {
-        const g = Math.round(it.power * 2 * (RARITY.findIndex(r => r.id === it.rarity) + 1));
-        hero.gold += g; num(l.x, l.y, "sold " + it.name + " +" + g + "g", it.color);
+      } else if (bag.length < INV.slots) {                            // into the bag
+        bag.push(it); num(l.x, l.y, "+ " + it.name, it.color); sfx("combo");
+        if (sheetOpen) renderSheet();
+      } else {                                                        // bag full: sold on the spot
+        const g = sellPrice(it);
+        hero.gold += g; num(l.x, l.y, "bag full · sold +" + g + "g", it.color);
         sfx("combo");
       }
     }
     save();
   }
+  const sellPrice = it => Math.round(it.power * 2 * (RARITY.findIndex(r => r.id === it.rarity) + 1));
   function showTip(it, old) {
     tipEl.innerHTML = `<b style="color:${it.color}">${it.name}</b><small>${RARITY.find(r => r.id === it.rarity).name} ${it.slot}</small><p>${describe(it)}</p>${old ? `<em>replaces ${old.name}</em>` : ""}`;
     tipEl.hidden = false; clearTimeout(showTip.t); showTip.t = setTimeout(() => { tipEl.hidden = true; }, 3800);
@@ -1518,11 +1526,60 @@
     sheet.innerHTML = `<h4>HERO · LEVEL ${hero.lvl}</h4>
       <div class="arpg-stats"><span>Life <b>${s.maxHp}</b></span><span>Mana <b>${s.maxMp}</b></span><span>Damage <b>${s.dmg}${s.fire ? " +" + s.fire + " fire" : ""}</b></span><span>Armour <b>${s.armor}</b></span><span>Crit <b>${s.crit}%</b></span><span>Speed <b>${Math.round(s.speed / HERO.speed * 100)}%</b></span></div>
       ${["weapon", "armor", "ring", "amulet"].map(slot).join("")}
-      <p class="arpg-note">Better gear is equipped as you pick it up; the rest is sold. Deepest floor: ${Math.max(hero.best || 1, floorNo)}.</p>
+      ${bagHtml()}
+      <p class="arpg-note">Better gear is equipped as you pick it up; the rest goes in your bag. Click a relic to equip it, right-click to sell it. Deepest floor: ${Math.max(hero.best || 1, floorNo)}.</p>
       <button type="button" class="arpg-close">CLOSE (C)</button>`;
   }
+  const ICON = { weapon: "⚔", armor: "⛨", ring: "◎", amulet: "✚" };
+  function bagHtml() {
+    const bag = hero.bag || [], cells = [];
+    for (let i = 0; i < INV.slots; i++) {
+      const it = bag[i];
+      if (!it) { cells.push('<div class="arpg-cell"></div>'); continue; }
+      const cur = hero.gear[it.slot], diff = Math.round(it.power - (cur ? cur.power : 0));
+      const tip = `${it.name} (${it.rarity} ${it.slot})
+${describe(it)}
+${diff >= 0 ? "▲ +" + diff : "▼ " + diff} power vs equipped
+Click: equip · Right-click: sell for ${sellPrice(it)}g`;
+      cells.push(`<button type="button" class="arpg-cell" data-bag="${i}" title="${tip.replace(/"/g, "&quot;")}" style="--c:${it.color}">${ICON[it.slot] || "?"}${diff > 0 ? "<i>▲</i>" : ""}</button>`);
+    }
+    return `<div class="arpg-bag-head"><small>BAG · ${bag.length} / ${INV.slots}</small>${bag.length ? '<button type="button" class="arpg-sellall">SELL ALL WEAKER</button>' : ""}</div><div class="arpg-bag">${cells.join("")}</div>`;
+  }
+  function bagAction(i, sell) {
+    const bag = hero.bag || [], it = bag[i]; if (!it) return;
+    bag.splice(i, 1);
+    if (sell) { hero.gold += sellPrice(it); sfx("combo"); }
+    else {
+      const cur = hero.gear[it.slot]; hero.gear[it.slot] = it; if (cur) bag.splice(i, 0, cur);
+      const s = stats(); hero.hp = Math.min(hero.hp, s.maxHp); hero.mp = Math.min(hero.mp, s.maxMp);
+      say("EQUIPPED · " + it.name.toUpperCase(), 1800, it.color); sfx("power");
+    }
+    save(); renderHud(); renderSheet();
+  }
+  (() => {
+    const st = document.createElement("style");
+    st.textContent = `html.neon .arpg-sheet{width:min(520px,calc(100% - 32px))}
+.arpg-bag-head{display:flex;align-items:center;justify-content:space-between;margin:14px 0 6px;border-top:1px solid rgba(255,255,255,.08);padding-top:10px}
+.arpg-bag-head small{letter-spacing:.2em;font-size:10px;color:#ff6ec7}
+.arpg-sellall{padding:3px 8px;border-radius:6px;border:1px solid rgba(255,216,74,.6);background:rgba(80,50,0,.4);color:#ffd84a;font:700 10px Oswald,sans-serif;letter-spacing:.1em;cursor:pointer}
+.arpg-bag{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
+.arpg-cell{position:relative;aspect-ratio:1;border-radius:6px;border:1px solid rgba(180,108,255,.25);background:rgba(10,3,24,.55);padding:0;font-size:17px;line-height:1;color:var(--c,#fff);display:flex;align-items:center;justify-content:center}
+button.arpg-cell{cursor:pointer;border-color:var(--c);box-shadow:inset 0 0 10px color-mix(in srgb,var(--c) 35%,transparent);background:rgba(30,8,60,.8)}
+button.arpg-cell:hover{transform:scale(1.08);box-shadow:0 0 12px var(--c)}
+.arpg-cell i{position:absolute;top:1px;right:2px;font-size:8px;font-style:normal;color:#5dff8a}`;
+    document.head.appendChild(st);
+  })();
   function toggleSheet(on) { sheetOpen = on === undefined ? !sheetOpen : on; sheet.hidden = !sheetOpen; if (sheetOpen) renderSheet(); }
-  sheet.addEventListener("click", e => { if (e.target.closest(".arpg-close")) toggleSheet(false); });
+  sheet.addEventListener("click", e => {
+    if (e.target.closest(".arpg-close")) toggleSheet(false);
+    const b = e.target.closest("[data-bag]"); if (b) bagAction(+b.dataset.bag, e.shiftKey);
+    if (e.target.closest(".arpg-sellall")) {                          // sell every bag relic weaker than what's equipped
+      const keep = [];
+      for (const it of hero.bag || []) { const cur = hero.gear[it.slot]; if (cur && it.power <= cur.power) hero.gold += sellPrice(it); else keep.push(it); }
+      hero.bag = keep; sfx("combo"); save(); renderHud(); renderSheet();
+    }
+  });
+  sheet.addEventListener("contextmenu", e => { const b = e.target.closest("[data-bag]"); if (b) { e.preventDefault(); bagAction(+b.dataset.bag, true); } });
   root.querySelector(".arpg-godbtn").addEventListener("click", e => { e.stopPropagation(); powerOfGod(); });
   root.querySelector(".arpg-angelbtn").addEventListener("click", e => { e.stopPropagation(); archangel(); });
   root.querySelector(".arpg-bar").addEventListener("click", e => {
@@ -1577,7 +1634,7 @@
       if (gmKey) { e.preventDefault(); e.stopImmediatePropagation(); gmToggle(); return; }
     }
     if (state !== "play" || !takeover || (e.target.closest && e.target.closest("input, textarea, select"))) return;
-    const k = e.key.toLowerCase(), handled = { "1": 1, "2": 1, "3": 1, "4": 1, "5": 1, e: 1, r: 1, q: 1, w: 1, c: 1, escape: 1, "+": 1, "=": 1, "-": 1, "_": 1 };
+    const k = e.key.toLowerCase(), handled = { "1": 1, "2": 1, "3": 1, "4": 1, "5": 1, e: 1, r: 1, q: 1, w: 1, c: 1, i: 1, escape: 1, "+": 1, "=": 1, "-": 1, "_": 1 };
     if (!handled[k]) return;
     e.preventDefault(); e.stopImmediatePropagation();
     if (k === "1") castFireball(mouseWorld.x, mouseWorld.y);
@@ -1589,7 +1646,7 @@
     if (k === "r") archangel();
     if (k === "q") drink("hp");
     if (k === "w") drink("mp");
-    if (k === "c") toggleSheet();
+    if (k === "c" || k === "i") toggleSheet();
     if (k === "escape") toggleSheet(false);
     if (k === "+" || k === "=") zoomBy(1.2);
     if (k === "-" || k === "_") zoomBy(1 / 1.2);

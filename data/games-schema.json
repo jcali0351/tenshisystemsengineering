@@ -329,6 +329,10 @@
      "damageBoost": 2
     }
    },
+   "inventory": {
+    "slots": 50,
+    "autoEquip": true
+   },
    "hell": {
     "finalFloor": 9,
     "embers": true,
@@ -598,6 +602,8 @@
     "houses.abraham": "Covenant of Stars: unlock level, cooldown (s), damage (x hero damage) to every enemy in sight, extra gold drops",
     "houses.isaac": "Jehovah-Jireh: full heal and mana; a ram takes the next deadly blow within this many seconds",
     "houses.jacob": "Jacob's Ladder: tribe spirits fight for this long; hero damage multiplied meanwhile",
+    "inventory.slots": "how many relics the bag holds (open it with C or I); when full, new finds are sold",
+    "inventory.autoEquip": "put on better gear automatically when you pick it up (the old piece goes in the bag)",
     "hell.finalFloor": "the circle where Satan waits (Dante's ninth circle, the frozen lake); beat him to transcend",
     "hell.embers": "embers drifting up through Hell (snow on the frozen last floor)",
     "hell.lavaPools": "share of floor tiles that are lava pools (0 = none; just for looks)",

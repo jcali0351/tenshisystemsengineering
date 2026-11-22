@@ -178,6 +178,11 @@ UNDERCITY = {
         "isaac": {"level": 6, "cooldown": 45, "ramSeconds": 30},                # Jehovah-Jireh: full heal and mana; a ram takes the next deadly blow within this many seconds
         "jacob": {"level": 9, "cooldown": 60, "seconds": 15, "spirits": 12, "damageBoost": 2},   # Jacob's Ladder: tribe spirits fight for this long; hero damage multiplied meanwhile
     },
+    # ---- INVENTORY ----
+    "inventory": {
+        "slots": 50,                 # how many relics the bag holds (open it with C or I); when full, new finds are sold
+        "autoEquip": True,           # put on better gear automatically when you pick it up (the old piece goes in the bag)
+    },
     # ---- HELL ----
     "hell": {
         "finalFloor": 9,             # the circle where Satan waits (Dante's ninth circle, the frozen lake); beat him to transcend
