@@ -41,7 +41,7 @@ window.TENSHI_GAMES = {
     "points": 15,
     "size": 18,
     "speed": [
-     1.0,
+     1,
      1.8
     ],
     "weight": 3
@@ -365,7 +365,7 @@ window.TENSHI_GAMES = {
    "seconds": 10,
    "strikeEvery": 550,
    "radius": 7.5,
-   "bossDamage": 0.2
+   "bossDamage": 0.575
   },
   "monsters": {
    "hollow": {
@@ -383,7 +383,7 @@ window.TENSHI_GAMES = {
     "hp": 16,
     "dmg": 3,
     "speed": 3.4,
-    "reach": 1.0,
+    "reach": 1,
     "every": 650,
     "xp": 8,
     "weight": 4
@@ -402,7 +402,7 @@ window.TENSHI_GAMES = {
     "name": "Evil Wizard",
     "hp": 34,
     "dmg": 5,
-    "speed": 2.0,
+    "speed": 2,
     "reach": 1.2,
     "every": 1100,
     "xp": 15,
@@ -413,7 +413,7 @@ window.TENSHI_GAMES = {
     "hp": 22,
     "dmg": 4,
     "speed": 2.9,
-    "reach": 1.0,
+    "reach": 1,
     "every": 800,
     "xp": 10,
     "weight": 5
@@ -430,17 +430,17 @@ window.TENSHI_GAMES = {
    },
    "satan": {
     "name": "Satan",
-    "hp": 2600,
-    "dmg": 40,
-    "speed": 2.0,
+    "hp": 8806,
+    "dmg": 66,
+    "speed": 2,
     "reach": 1.9,
     "every": 1200,
-    "xp": 1500
+    "xp": 4037
    },
    "warden": {
     "name": "The Warden",
-    "hp": 700,
-    "dmg": 24,
+    "hp": 1901,
+    "dmg": 37,
     "speed": 1.9,
     "reach": 1.6,
     "every": 1300,
@@ -448,7 +448,7 @@ window.TENSHI_GAMES = {
    }
   },
   "enemies": {
-   "perRoomMin": 4,
+   "perRoomMin": 5,
    "perRoomMax": 5,
    "extraEveryTwoFloors": 1,
    "extraMax": 4,

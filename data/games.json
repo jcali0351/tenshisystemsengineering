@@ -1,7 +1,21 @@
 {
  "arpg": {
+  "gospel": {
+   "bossDamage": 0.575
+  },
+  "monsters": {
+   "satan": {
+    "hp": 8806,
+    "dmg": 66,
+    "xp": 4037
+   },
+   "warden": {
+    "hp": 1901,
+    "dmg": 37
+   }
+  },
   "enemies": {
-   "perRoomMin": 4,
+   "perRoomMin": 5,
    "perRoomMax": 5
   }
  }
