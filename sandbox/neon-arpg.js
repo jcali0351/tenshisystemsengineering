@@ -75,7 +75,7 @@
   const ENEMIES = { perRoomMin: 2, perRoomMax: 3, extraEveryTwoFloors: 1, extraMax: 4, bossEvery: 3, golemFromFloor: 1, startEase: 0.3, easeFloors: 3 };
   TUNE(ENEMIES, CFG.enemies);
   // Hell: the nine circles (Dante), Satan on the last floor, embers and lava pools (Game Studio > Undercity > hell).
-  const HELL = { finalFloor: 9, embers: true, lavaPools: 0.05, verses: true };
+  const HELL = { finalFloor: 9, embers: true, lavaPools: 0.05, verses: true, bossIntro: { enabled: true, seconds: 2.5 } };
   TUNE(HELL, CFG.hell);
   const CIRCLES = [
     ["LIMBO", "Abandon all hope, ye who enter here. · Dante, Inferno III"],
@@ -205,6 +205,7 @@
   let monsters = [], loot = [], urns = [], shots = [], fx = [], nums = [];
   let hero = null, state = "intro", onScreen = false, bossAlive = false;
   const cam = { x: 0, y: 0 };
+  let bossIntro = null;   // cinematic boss intro: { m, t0, dur, ice }
   const idx = (x, y) => y * MAPW + x;
   const isFloor = (x, y) => x >= 0 && y >= 0 && x < MAPW && y < MAPH && grid[idx(x | 0, y | 0)] === 1;
 
@@ -749,8 +750,9 @@
     for (const m of monsters) {
       m.cd = Math.max(0, m.cd - dt); m.flash = Math.max(0, m.flash - dt / 200); m.slow = Math.max(0, m.slow - dt);
       const d = dist(m, hero), speed = m.T.speed * (m.slow ? 0.45 : 1) * (m.champion ? 1.15 : 1);
-      if (!m.aggro && d < 7.5 && lineOfSight(m, hero)) { m.aggro = true; m.spotAt = performance.now(); if (m.T.boss) { say(m.T.name.toUpperCase() + " AWAKENS", 2400, m.type === "satan" ? "#ff3b1f" : "#ff2bd6"); sfx("bomb"); if (m.type === "satan") verse("Be sober, be vigilant; because your adversary the devil, as a roaring lion, walketh about. · 1 Peter 5:8", 6000); } }
+      if (!m.aggro && d < 7.5 && lineOfSight(m, hero)) { m.aggro = true; m.spotAt = performance.now(); if (m.T.boss) { if (HELL.bossIntro && HELL.bossIntro.enabled !== false) bossIntro = { m, t0: performance.now(), dur: Math.max(0.5, +HELL.bossIntro.seconds || 2.5) * 1000, ice: isFinal(floorNo) }; say(m.T.name.toUpperCase() + " AWAKENS", 2400, m.type === "satan" ? "#ff3b1f" : "#ff2bd6"); sfx("bomb"); if (m.type === "satan") verse("Be sober, be vigilant; because your adversary the devil, as a roaring lion, walketh about. · 1 Peter 5:8", 6000); } }
       if (!m.aggro) { if (Math.random() < dt / 3000) m.wander = { x: m.home.x + rand(-1.5, 1.5), y: m.home.y + rand(-1.5, 1.5) }; if (m.wander && isFloor(m.wander.x, m.wander.y)) moveToward(m, m.wander.x, m.wander.y, speed * 0.4, dt); continue; }
+      if (bossIntro && introK()) { m.face = Math.atan2(hero.y - m.y, hero.x - m.x); continue; }   // everyone holds still while the boss intro plays
       if (MONSTER_ANIMS[m.type] && performance.now() - (m.spotAt || 0) < MONSTER_ANIMS[m.type].spotMs) { m.face = Math.atan2(hero.y - m.y, hero.x - m.x); continue; }   // "come here!"
       if (m.T.ranged) {
         const see = lineOfSight(m, hero);
@@ -1347,7 +1349,10 @@
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
     ctx.fillStyle = isFinal(floorNo) ? "#02050c" : "#0c0203"; ctx.fillRect(0, 0, W, H);
     if (!grid) return;
-    cam.x += (isoX(hero.x, hero.y) - cam.x) * 0.2; cam.y += (isoY(hero.x, hero.y) - cam.y) * 0.2;
+    let tx = isoX(hero.x, hero.y), ty = isoY(hero.x, hero.y);
+    const bi = introK();                                              // boss intro: the camera leans toward the boss
+    if (bi) { const k = Math.sin(Math.PI * Math.min(1, bi.p * 1.15)) * 0.5; tx += (isoX(bi.m.x, bi.m.y) - tx) * k; ty += (isoY(bi.m.x, bi.m.y) - ty) * k; }
+    cam.x += (tx - cam.x) * (bi ? 0.08 : 0.2); cam.y += (ty - cam.y) * (bi ? 0.08 : 0.2);
     // Which tiles are on screen (a generous box around the hero).
     const span = Math.ceil(Math.max(W, H) / (TH * zoom)) + 4, hx = hero.x | 0, hy = hero.y | 0;
     const x0 = Math.max(0, hx - span), x1 = Math.min(MAPW - 1, hx + span), y0 = Math.max(0, hy - span), y1 = Math.min(MAPH - 1, hy + span);
@@ -1416,6 +1421,7 @@
       ctx.fillStyle = n.color; ctx.fillText(n.text, sx(n.x, n.y), sy(n.x, n.y, 1.4 + (1 - n.life) * 1.3));
     }
     ctx.globalAlpha = 1; ctx.textAlign = "start";
+    drawBossIntro();                                                  // cinematic boss intro: vignette and the giant name
     // Hovered monster / item name at the top.
     drawHoverLabel();
     drawMini();
@@ -1426,11 +1432,48 @@
     if (!best) for (const u of urns) { const d = Math.hypot(u.x - mouseWorld.x, u.y - mouseWorld.y); if (d < 0.6 && explored[idx(u.x | 0, u.y | 0)]) { best = u; break; } }
     return best;
   }
+  // Boss intro progress (0..1) while it plays, else null.
+  function introK() {
+    if (!bossIntro) return null;
+    const p = (performance.now() - bossIntro.t0) / bossIntro.dur;
+    if (p >= 1 || !monsters.includes(bossIntro.m) || state !== "play") { bossIntro = null; return null; }
+    return { p, m: bossIntro.m, ice: bossIntro.ice };
+  }
+  function drawBossIntro() {
+    const bi = introK(); if (!bi) return;
+    const p = bi.p, a = Math.min(1, p / 0.12) * Math.min(1, (1 - p) / 0.2);
+    // Darkened edges.
+    const r = Math.hypot(W, H) / 2, g = ctx.createRadialGradient(W / 2, H / 2, r * 0.25, W / 2, H / 2, r);
+    g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(1, `rgba(0,0,0,${0.88 * a})`);
+    ctx.save(); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    // Cinema bars.
+    const bar = H * 0.09 * a; ctx.fillStyle = "#000"; ctx.fillRect(0, 0, W, bar); ctx.fillRect(0, H - bar, W, bar);
+    // The giant name: fiery orange-red, icy blue for Satan in Cocytus.
+    const name = bi.m.T.name.toUpperCase(), sub = bi.m.type === "satan" ? "THE ADVERSARY" : "GUARDIAN OF THE CIRCLE";
+    let size = Math.min(150, W * 0.14); ctx.font = `800 ${size}px Oswald, sans-serif`;
+    const tw = ctx.measureText(name).width; if (tw > W * 0.9) { size *= W * 0.9 / tw; ctx.font = `800 ${size}px Oswald, sans-serif`; }
+    const sc = 1 + 0.25 * Math.pow(1 - Math.min(1, p / 0.2), 3), cy = H * 0.42;
+    ctx.translate(W / 2, cy); ctx.scale(sc, sc); ctx.globalAlpha = a; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    const lg = ctx.createLinearGradient(0, -size / 2, 0, size / 2);
+    if (bi.ice) { lg.addColorStop(0, "#ffffff"); lg.addColorStop(0.5, "#bfe6ff"); lg.addColorStop(1, "#3a8bff"); }
+    else { lg.addColorStop(0, "#fff2a8"); lg.addColorStop(0.45, "#ff8a2b"); lg.addColorStop(1, "#d81e10"); }
+    const glow = bi.ice ? "#5ab4ff" : "#ff3b1f", flick = 0.85 + Math.sin(performance.now() / 45) * 0.15;
+    ctx.shadowColor = glow; ctx.shadowBlur = 40 * flick; ctx.fillStyle = lg; ctx.fillText(name, 0, 0);
+    ctx.shadowBlur = 12; ctx.fillText(name, 0, 0);
+    ctx.shadowBlur = 0; ctx.lineWidth = 2; ctx.strokeStyle = bi.ice ? "rgba(230,248,255,.7)" : "rgba(255,230,160,.6)"; ctx.strokeText(name, 0, 0);
+    // Subtitle with lines either side.
+    const ss = Math.max(14, size * 0.2); ctx.font = `600 ${ss}px Oswald, sans-serif`;
+    const sw = ctx.measureText(sub.split("").join(" ")).width, y2 = size * 0.62, lw = Math.min(W * 0.3, size * 2) * Math.min(1, p / 0.35);
+    ctx.fillStyle = bi.ice ? "#d8f0ff" : "#ffd0a0"; ctx.shadowColor = glow; ctx.shadowBlur = 10; ctx.fillText(sub.split("").join(" "), 0, y2);
+    ctx.fillRect(-sw / 2 - 16 - lw, y2 - 1, lw, 2); ctx.fillRect(sw / 2 + 16, y2 - 1, lw, 2);
+    ctx.restore(); ctx.textAlign = "start"; ctx.textBaseline = "alphabetic";
+  }
   function drawHoverLabel() {
     const boss = monsters.find(m => m.T.boss && m.aggro);
     const t = boss || (mouseIn ? hoverTarget() : null);
     if (!t || !t.T) return;
-    const w = Math.min(420, W * 0.5), x = (W - w) / 2, y = 64;
+    const bi = boss && t === boss ? introK() : null;                  // the boss bar slides in during the intro
+    const w = Math.min(420, W * 0.5), x = (W - w) / 2, y = bi ? -30 + 94 * Math.pow(Math.min(1, Math.max(0, (bi.p - 0.3) / 0.4)), 0.5) : 64;
     ctx.fillStyle = "rgba(10,4,24,.85)"; ctx.fillRect(x, y, w, 26);
     ctx.fillStyle = t.T.boss ? "#ff2bd6" : t.champion ? "#ffd84a" : "#ff4f7a"; ctx.fillRect(x + 2, y + 2, (w - 4) * Math.max(0, t.hp / t.max), 22);
     ctx.font = "700 13px Oswald, sans-serif"; ctx.textAlign = "center"; ctx.fillStyle = "#fff";
@@ -1626,5 +1669,5 @@
   requestAnimationFrame(loop);
   // Test hook.
   window.neonARPG = { render: () => draw(performance.now()), state: () => ({ state, floor: floorNo, lvl: hero && hero.lvl, hp: hero && Math.round(hero.hp), gold: hero && hero.gold, monsters: monsters.length, loot: loot.length, gear: hero && Object.values(hero.gear).map(i => i.name) }),
-    start, step: ms => { for (let t = 0; t < ms && state === "play"; t += 16) update(16); renderHud(); }, give: n => { hero.gold += n; }, holy: n => { hero.holy = n; renderHud(); }, gospel: n => { hero.gospel = n; renderHud(); }, level: n => { hero.lvl = n; renderHud(); }, floor: n => { enterFloor(n); renderHud(); }, boss: () => { const b = monsters.find(m => m.T.boss); return b && { name: b.T.name, x: b.x, y: b.y, hp: b.hp }; }, slay: () => { const b = monsters.find(m => m.T.boss); if (b) { b.hp = 0; killMonster(b); } }, item: () => { const it = makeItem(5, 0.5); loot.push({ kind: "item", item: it, x: hero.x + 0.3, y: hero.y, bob: 0 }); return it.name; }, stairs: () => { bossAlive = false; hero.x = stairs.x + 0.5; hero.y = stairs.y + 0.5; }, nearest: () => { const m = nearestVisible(); return m && { type: m.type, x: m.x, y: m.y }; }, attack: () => { const m = monsters.reduce((b, m) => !b || dist(m, hero) < dist(b, hero) ? m : b, null); if (m) { hero.target = m; } return m && m.type; } };
+    start, step: ms => { for (let t = 0; t < ms && state === "play"; t += 16) update(16); renderHud(); }, give: n => { hero.gold += n; }, holy: n => { hero.holy = n; renderHud(); }, gospel: n => { hero.gospel = n; renderHud(); }, level: n => { hero.lvl = n; renderHud(); }, floor: n => { enterFloor(n); renderHud(); }, boss: () => { const b = monsters.find(m => m.T.boss); return b && { name: b.T.name, x: b.x, y: b.y, hp: b.hp }; }, awaken: () => { const b = monsters.find(m => m.T.boss); if (b) { b.aggro = false; b.spotAt = 0; for (let d = 2; d < 7; d++) for (const [dx, dy] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) { const p = { x: b.x + dx * d, y: b.y + dy * d }; if (grid[idx(p.x | 0, p.y | 0)] === 1 && lineOfSight(b, p)) { hero.x = p.x; hero.y = p.y; return true; } } } return !!b; }, slay: () => { const b = monsters.find(m => m.T.boss); if (b) { b.hp = 0; killMonster(b); } }, item: () => { const it = makeItem(5, 0.5); loot.push({ kind: "item", item: it, x: hero.x + 0.3, y: hero.y, bob: 0 }); return it.name; }, stairs: () => { bossAlive = false; hero.x = stairs.x + 0.5; hero.y = stairs.y + 0.5; }, nearest: () => { const m = nearestVisible(); return m && { type: m.type, x: m.x, y: m.y }; }, attack: () => { const m = monsters.reduce((b, m) => !b || dist(m, hero) < dist(b, hero) ? m : b, null); if (m) { hero.target = m; } return m && m.type; } };
 })();

@@ -332,7 +332,11 @@ window.TENSHI_GAMES = {
    "finalFloor": 9,
    "embers": true,
    "lavaPools": 0.05,
-   "verses": true
+   "verses": true,
+   "bossIntro": {
+    "enabled": true,
+    "seconds": 2.5
+   }
   },
   "labels": {
    "healthBars": true,

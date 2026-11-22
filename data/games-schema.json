@@ -333,7 +333,11 @@
     "finalFloor": 9,
     "embers": true,
     "lavaPools": 0.05,
-    "verses": true
+    "verses": true,
+    "bossIntro": {
+     "enabled": true,
+     "seconds": 2.5
+    }
    },
    "labels": {
     "healthBars": true,
@@ -598,6 +602,7 @@
     "hell.embers": "embers drifting up through Hell (snow on the frozen last floor)",
     "hell.lavaPools": "share of floor tiles that are lava pools (0 = none; just for looks)",
     "hell.verses": "show a Bible verse or Dante line when you enter a circle and use holy powers",
+    "hell.bossIntro": "cinematic intro when a boss first sees you: darkened edges, its name in giant fiery letters, camera leans toward it",
     "labels.healthBars": "show a health bar over every enemy",
     "labels.onlyWhenHurt": "True = only after it has been hit (the old way)",
     "labels.names": "show each enemy's name over it (champions say \"Champion ...\")",

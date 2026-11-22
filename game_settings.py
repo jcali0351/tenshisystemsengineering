@@ -184,6 +184,7 @@ UNDERCITY = {
         "embers": True,              # embers drifting up through Hell (snow on the frozen last floor)
         "lavaPools": 0.05,           # share of floor tiles that are lava pools (0 = none; just for looks)
         "verses": True,              # show a Bible verse or Dante line when you enter a circle and use holy powers
+        "bossIntro": {"enabled": True, "seconds": 2.5},   # cinematic intro when a boss first sees you: darkened edges, its name in giant fiery letters, camera leans toward it
     },
     # ---- ENEMY LABELS ----
     "labels": {
