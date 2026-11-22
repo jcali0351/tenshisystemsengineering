@@ -1570,7 +1570,12 @@
   });
   for (const ev of ["pointerup", "pointercancel"]) canvas.addEventListener(ev, e => { touches.delete(e.pointerId); if (touches.size < 2) pinch = 0; });
   window.addEventListener("keydown", e => {
-    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "g" && takeover) { e.preventDefault(); e.stopImmediatePropagation(); gmToggle(); return; }   // hidden gamemaster panel
+    const r = section.getBoundingClientRect(), onScreen = takeover || (r.bottom > 0 && r.top < innerHeight);
+    if (onScreen && !(e.target.closest && e.target.closest("input, textarea, select"))) {   // hidden gamemaster panel: Ctrl+Shift+G, or type g then m
+      const k0 = e.key.toLowerCase(), gmKey = (e.ctrlKey && e.shiftKey && k0 === "g") || (k0 === "m" && !e.ctrlKey && performance.now() - (gm.g || 0) < 1200);
+      gm.g = k0 === "g" && !e.ctrlKey ? performance.now() : 0;
+      if (gmKey) { e.preventDefault(); e.stopImmediatePropagation(); gmToggle(); return; }
+    }
     if (state !== "play" || !takeover || (e.target.closest && e.target.closest("input, textarea, select"))) return;
     const k = e.key.toLowerCase(), handled = { "1": 1, "2": 1, "3": 1, "4": 1, "5": 1, e: 1, r: 1, q: 1, w: 1, c: 1, escape: 1, "+": 1, "=": 1, "-": 1, "_": 1 };
     if (!handled[k]) return;
@@ -1670,7 +1675,8 @@
   requestAnimationFrame(loop);
   // Test hook.
   // ================================================ GAMEMASTER (hidden: Ctrl + Shift + G) ================================================
-  const gm = { god: false, el: null };
+  const gm = { god: false, el: null, g: 0 };
+  if (/[?&]gm/.test(location.search)) setTimeout(gmToggle, 500);   // or open the page with ?gm
   function gmToggle() {
     if (!gm.el) {
       const st = document.createElement("style");
