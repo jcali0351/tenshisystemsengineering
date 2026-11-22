@@ -78,6 +78,7 @@ Each game reads its settings from `window.TENSHI_GAMES` (sandbox/game-settings.j
    Ladder (12 tribe spirits fight 15 s, double damage); potions are holy water and manna. Embers, lava pools and verses: `HELL`.
    Walls and floor use procedural stone canvas textures (`STONE` in neon-arpg.js,
    mapped onto the isometric faces with `pattern.setTransform`). Cover art `sandbox/art/undercity.webp`, same 5 s fade.
+   **Gamemaster panel** (hidden): Ctrl + Shift + G while Undercity is open: jump to any circle, face/slay the boss, god mode, +5 levels, heal, fill Holy/Gospel, gold, drop a relic (`gmToggle`, `gmDo`). Boss intro: `drawBossIntro`, `hell.bossIntro`.
 5. **Quest** (`sandbox/neon-quest.js`): XP for exploring the site, on every page.
 Hero headline effects: `sandbox/neon-fx.js` (flashing messages, particles). Shared 3D model loader:
 `sandbox/tenshi-models.js` (reads models.json, parses .glb incl. textures, simplifies above 2,400 triangles).

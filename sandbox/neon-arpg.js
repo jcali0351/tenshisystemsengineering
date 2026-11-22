@@ -605,7 +605,7 @@
     save();
   }
   function hurtHero(amount, from) {
-    if (state !== "play") return;
+    if (state !== "play" || gm.god) return;
     if (angelOn()) {                                                    // Gabriel's shield takes the hit
       angel.shieldHit = performance.now();
       if (Math.random() < 0.35) num(hero.x, hero.y, "BLOCKED", "#bfe6ff");
@@ -1570,6 +1570,7 @@
   });
   for (const ev of ["pointerup", "pointercancel"]) canvas.addEventListener(ev, e => { touches.delete(e.pointerId); if (touches.size < 2) pinch = 0; });
   window.addEventListener("keydown", e => {
+    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "g" && takeover) { e.preventDefault(); e.stopImmediatePropagation(); gmToggle(); return; }   // hidden gamemaster panel
     if (state !== "play" || !takeover || (e.target.closest && e.target.closest("input, textarea, select"))) return;
     const k = e.key.toLowerCase(), handled = { "1": 1, "2": 1, "3": 1, "4": 1, "5": 1, e: 1, r: 1, q: 1, w: 1, c: 1, escape: 1, "+": 1, "=": 1, "-": 1, "_": 1 };
     if (!handled[k]) return;
@@ -1668,6 +1669,49 @@
   resize(); introButtons();
   requestAnimationFrame(loop);
   // Test hook.
+  // ================================================ GAMEMASTER (hidden: Ctrl + Shift + G) ================================================
+  const gm = { god: false, el: null };
+  function gmToggle() {
+    if (!gm.el) {
+      const st = document.createElement("style");
+      st.textContent = `.arpg-gm{position:absolute;top:100px;right:16px;z-index:30;width:250px;padding:12px 12px 10px;border-radius:14px;background:rgba(14,4,30,.92);border:1px solid #b46cff;box-shadow:0 0 24px rgba(255,43,214,.45);font:600 12px Oswald,sans-serif;color:#f2e4ff;letter-spacing:.04em}
+.arpg-gm h4{margin:0 0 8px;font:800 16px Oswald,sans-serif;letter-spacing:.12em;background:linear-gradient(90deg,#ff2bd6,#b46cff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.arpg-gm small{display:block;margin:8px 0 4px;color:#b9a3d9;font-size:10px;letter-spacing:.14em}
+.arpg-gm .row{display:flex;flex-wrap:wrap;gap:4px}
+.arpg-gm button{flex:1 1 auto;min-width:22px;padding:5px 6px;border-radius:7px;border:1px solid rgba(180,108,255,.6);background:rgba(60,20,110,.6);color:#fff;font:700 11px Oswald,sans-serif;cursor:pointer}
+.arpg-gm button:hover{background:#ff2bd6;border-color:#ff2bd6}
+.arpg-gm button.on{background:linear-gradient(90deg,#ffd84a,#ff8a2b);color:#200;border-color:#ffd84a}
+.arpg-gm .x{position:absolute;top:8px;right:10px;flex:none;padding:2px 7px;background:none;border:none}`;
+      document.head.appendChild(st);
+      gm.el = document.createElement("div"); gm.el.className = "arpg-gm"; gm.el.hidden = true;
+      gm.el.innerHTML = `<h4>GAMEMASTER</h4><button type="button" class="x" data-gm="close">✕</button>
+        <small>JUMP TO CIRCLE</small><div class="row">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button type="button" data-gm="floor" data-n="${n}">${ROMAN(n)}</button>`).join("")}</div>
+        <small>BOSS</small><div class="row"><button type="button" data-gm="awaken">Face the boss</button><button type="button" data-gm="slay">Slay boss</button><button type="button" data-gm="stairs">Go to stairs</button></div>
+        <small>HERO</small><div class="row"><button type="button" data-gm="god">God mode</button><button type="button" data-gm="lvl">+5 levels</button><button type="button" data-gm="heal">Full heal</button></div>
+        <div class="row" style="margin-top:4px"><button type="button" data-gm="holy">Holy 100%</button><button type="button" data-gm="gospel">Gospel 100%</button><button type="button" data-gm="gold">+1000 gold</button><button type="button" data-gm="loot">Drop relic</button></div>`;
+      for (const ev of ["pointerdown", "mousedown", "click", "wheel", "contextmenu"]) gm.el.addEventListener(ev, e => e.stopPropagation());
+      gm.el.addEventListener("click", e => { const b = e.target.closest("[data-gm]"); if (b) gmDo(b.dataset.gm, +b.dataset.n || 0, b); });
+      root.appendChild(gm.el);
+    }
+    gm.el.hidden = !gm.el.hidden;
+  }
+  function gmDo(act, n, btn) {
+    if (act === "close") { gm.el.hidden = true; return; }
+    if (state !== "play") start(store.get() ? "continue" : "new");
+    const s = stats();
+    if (act === "floor") { floorNo = n; enterFloor(n); cam.x = isoX(hero.x, hero.y); cam.y = isoY(hero.x, hero.y); }
+    if (act === "awaken") { const b = monsters.find(m => m.T.boss); if (!b) return say("NO BOSS ON THIS CIRCLE", 1600); b.aggro = false; b.spotAt = 0; for (let d = 2; d < 7; d++) for (const [dx, dy] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) { const p = { x: b.x + dx * d, y: b.y + dy * d }; if (grid[idx(p.x | 0, p.y | 0)] === 1 && lineOfSight(b, p)) { hero.x = p.x; hero.y = p.y; d = 9; break; } } }
+    if (act === "slay") { const b = monsters.find(m => m.T.boss); if (b) { b.hp = 0; killMonster(b); } }
+    if (act === "stairs") { hero.x = stairs.x + 0.5; hero.y = stairs.y + 1.5; if (grid[idx(hero.x | 0, hero.y | 0)] !== 1) hero.y = stairs.y + 0.5; }
+    if (act === "god") { gm.god = !gm.god; btn.classList.toggle("on", gm.god); say(gm.god ? "GOD MODE ON" : "GOD MODE OFF", 1400, "#ffd84a"); }
+    if (act === "lvl") { hero.lvl += 5; hero.xp = 0; const t = stats(); hero.hp = t.maxHp; hero.mp = t.maxMp; }
+    if (act === "heal") { hero.hp = s.maxHp; hero.mp = s.maxMp; }
+    if (act === "holy") hero.holy = 100;
+    if (act === "gospel") hero.gospel = 100;
+    if (act === "gold") hero.gold += 1000;
+    if (act === "loot") loot.push({ kind: "item", item: makeItem(floorNo + 5, 0.6), x: hero.x + 0.4, y: hero.y, bob: 0 });
+    renderHud(); save();
+  }
   window.neonARPG = { render: () => draw(performance.now()), state: () => ({ state, floor: floorNo, lvl: hero && hero.lvl, hp: hero && Math.round(hero.hp), gold: hero && hero.gold, monsters: monsters.length, loot: loot.length, gear: hero && Object.values(hero.gear).map(i => i.name) }),
     start, step: ms => { for (let t = 0; t < ms && state === "play"; t += 16) update(16); renderHud(); }, give: n => { hero.gold += n; }, holy: n => { hero.holy = n; renderHud(); }, gospel: n => { hero.gospel = n; renderHud(); }, level: n => { hero.lvl = n; renderHud(); }, floor: n => { enterFloor(n); renderHud(); }, boss: () => { const b = monsters.find(m => m.T.boss); return b && { name: b.T.name, x: b.x, y: b.y, hp: b.hp }; }, awaken: () => { const b = monsters.find(m => m.T.boss); if (b) { b.aggro = false; b.spotAt = 0; for (let d = 2; d < 7; d++) for (const [dx, dy] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) { const p = { x: b.x + dx * d, y: b.y + dy * d }; if (grid[idx(p.x | 0, p.y | 0)] === 1 && lineOfSight(b, p)) { hero.x = p.x; hero.y = p.y; return true; } } } return !!b; }, slay: () => { const b = monsters.find(m => m.T.boss); if (b) { b.hp = 0; killMonster(b); } }, item: () => { const it = makeItem(5, 0.5); loot.push({ kind: "item", item: it, x: hero.x + 0.3, y: hero.y, bob: 0 }); return it.name; }, stairs: () => { bossAlive = false; hero.x = stairs.x + 0.5; hero.y = stairs.y + 0.5; }, nearest: () => { const m = nearestVisible(); return m && { type: m.type, x: m.x, y: m.y }; }, attack: () => { const m = monsters.reduce((b, m) => !b || dist(m, hero) < dist(b, hero) ? m : b, null); if (m) { hero.target = m; } return m && m.type; } };
 })();
