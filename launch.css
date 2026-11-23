@@ -216,3 +216,25 @@
 @media (prefers-reduced-motion: reduce) {
   .lx *, .lx *::before, .lx *::after { animation: none !important; transition: none !important; }
 }
+
+/* ---------- Neon look fixes (the site's neon styles painted the tiles white under white text, and the buttons white) ----------
+   Weighted with :not(#…) so they beat the html.neon.gx-page rules in sandbox/neon-pages.css. */
+html.neon:not(#_):not(#__):not(#___) .lx-panel { padding: 50px; box-sizing: border-box; }
+@media (max-width: 600px) { html.neon:not(#_):not(#__):not(#___) .lx-panel { padding: 24px; } }
+
+/* Business type tiles: dark purple with white text; the chosen one glows pink. */
+html.neon:not(#_):not(#__):not(#___) .lx-choice span { background: #1a0838 !important; border: 1px solid rgba(176, 77, 255, .55) !important; border-radius: 12px; color: #fff !important; }
+html.neon:not(#_):not(#__):not(#___) .lx-choice b { color: #fff !important; -webkit-text-fill-color: #fff !important; }
+html.neon:not(#_):not(#__):not(#___) .lx-choice small { color: #d9c4ff !important; -webkit-text-fill-color: #d9c4ff !important; }
+html.neon:not(#_):not(#__):not(#___) .lx-choice:hover span { border-color: #ff2bd6 !important; }
+html.neon:not(#_):not(#__):not(#___) .lx-choice input:checked + span { background: #4c1d95 !important; border-color: #ff2bd6 !important; box-shadow: 0 0 0 1px #ff2bd6, 0 0 18px rgba(255, 43, 214, .45) !important; }
+html.neon:not(#_):not(#__):not(#___) .lx-choice input:checked + span b::before { color: #ff8ae6; }
+html.neon:not(#_):not(#__):not(#___) .lx-choice input:focus-visible + span { outline: 3px solid #ff2bd6; outline-offset: 2px; }
+
+/* Buttons: purple (main actions) or black (Back and other quiet ones), always with white text. */
+html.neon:not(#_):not(#__):not(#___) .lx .btn { color: #fff !important; -webkit-text-fill-color: #fff !important; border: 1px solid transparent !important; }
+html.neon:not(#_):not(#__):not(#___) .lx .btn-primary { background: linear-gradient(135deg, #8b2cf5, #c026d3) !important; box-shadow: 0 0 20px rgba(192, 38, 211, .45) !important; }
+html.neon:not(#_):not(#__):not(#___) .lx .btn-primary:hover, html.neon:not(#_):not(#__):not(#___) .lx .btn-primary:focus-visible { background: linear-gradient(135deg, #9d4dff, #d946ef) !important; box-shadow: 0 0 28px rgba(217, 70, 239, .65) !important; }
+html.neon:not(#_):not(#__):not(#___) .lx .btn-quiet { background: #000 !important; border-color: rgba(255, 255, 255, .35) !important; box-shadow: none !important; }
+html.neon:not(#_):not(#__):not(#___) .lx .btn-quiet:hover, html.neon:not(#_):not(#__):not(#___) .lx .btn-quiet:focus-visible { background: #14052b !important; border-color: #b04dff !important; }
+html.neon:not(#_):not(#__):not(#___) .lx .btn * { color: #fff !important; -webkit-text-fill-color: #fff !important; }
