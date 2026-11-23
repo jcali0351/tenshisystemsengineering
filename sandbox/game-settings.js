@@ -301,7 +301,24 @@ window.TENSHI_GAMES = {
     "cd": 1600
    }
   },
-  "custom": [],
+  "custom": [
+   {
+    "id": "emwtv6hi6",
+    "name": "Cursed Soldier",
+    "enabled": true,
+    "ranged": false,
+    "color": "#ff6ec7",
+    "hp": 30,
+    "dmg": 5,
+    "speed": 2,
+    "reach": 1.1,
+    "every": 1100,
+    "xp": 14,
+    "weight": 3,
+    "fromFloor": 1,
+    "size": 1.2
+   }
+  ],
   "holy": {
    "perHit": 0.8,
    "perKill": 6,
