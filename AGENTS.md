@@ -101,6 +101,16 @@ Hero headline effects: `sandbox/neon-fx.js` (flashing messages, particles). Shar
 - After editor commits, the GitHub Action **`.github/workflows/cms-rebuild.yml`** ("tenshi-editor-bot") runs
   `npm run build` and commits "Rebuild pages and asset stamps after a site edit". Expect it to race your pushes.
 
+## Leaderboards
+- `leaderboard-arcade.html`, `leaderboard-station-defense.html`, `leaderboard-undercity.html` are built by build-pages.mjs
+  (BOARDS) and filled live by `leaderboard.js` / `leaderboard.css` from `/api/scores`.
+- Server: `tools/server/scores_service.py` (systemd `tenshi-scores`, 127.0.0.1:9126, SQLite
+  `/srv/tenshi/data/scores/scores.db`). It works out each score from the run's stats (formulas in GAMES); keep the
+  "How to get on the board" text in build-pages.mjs in step with them.
+- The games post through `sandbox/neon-scores.js` (TenshiScores.post / .panel): arcade on Save initials, Station Defense
+  in end(), Undercity in die() / transcend() (hero.playMs and hero.kills are saved with the hero). Each game links to
+  its board with a root-relative `/leaderboard-*.html` link.
+
 ## Building pages
 - `node tools/build-pages.mjs` regenerates all pages from index.html's header + translations, then runs
   tools/neon-pages.mjs (neon look, stamps), the search index and sitemap.
