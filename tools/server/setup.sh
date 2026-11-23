@@ -160,6 +160,46 @@ NoNewPrivileges=true
 WantedBy=multi-user.target
 EOF
 
+echo "== 8b. Web file manager (File Browser) for files.$DOMAIN, over /srv/tenshi"
+FB_VERSION=2.63.23
+if ! /usr/local/bin/filebrowser version 2>/dev/null | grep -q "v$FB_VERSION"; then
+  FB_TMP=$(mktemp -d)
+  curl -sSL -o "$FB_TMP/fb.tar.gz" https://github.com/filebrowser/filebrowser/releases/download/v$FB_VERSION/linux-amd64-filebrowser.tar.gz
+  curl -sSL -o "$FB_TMP/sums.txt" https://github.com/filebrowser/filebrowser/releases/download/v$FB_VERSION/filebrowser_${FB_VERSION}_checksums.txt
+  echo "$(grep ' linux-amd64-filebrowser.tar.gz$' "$FB_TMP/sums.txt" | cut -d' ' -f1)  $FB_TMP/fb.tar.gz" | sha256sum -c -
+  tar xzf "$FB_TMP/fb.tar.gz" -C "$FB_TMP" filebrowser
+  install -m 755 "$FB_TMP/filebrowser" /usr/local/bin/filebrowser
+  rm -rf "$FB_TMP"
+fi
+install -d -o tenshi -g tenshi -m 750 /srv/tenshi/data/filebrowser
+FB_DB=/srv/tenshi/data/filebrowser/filebrowser.db
+if [ ! -f "$FB_DB" ]; then
+  FB_PW=$(openssl rand -base64 18 | tr -d '/+=')
+  sudo -u tenshi filebrowser -d "$FB_DB" config init --address 127.0.0.1 --port 9125 --root /srv/tenshi --baseURL "" \
+    --auth.method=json --minimumPasswordLength 12 --branding.name "Tenshi Files" --branding.disableExternal >/dev/null
+  sudo -u tenshi filebrowser -d "$FB_DB" users add admin "$FB_PW" --perm.admin >/dev/null
+  (umask 077; printf 'files.%s\nuser: admin\npassword: %s\n' "$DOMAIN" "$FB_PW" > /root/tenshi-files-admin.txt)
+fi
+cat > /etc/systemd/system/tenshi-files.service <<'EOF'
+[Unit]
+Description=Tenshi web file manager (File Browser)
+After=network.target
+
+[Service]
+User=tenshi
+Group=tenshi
+ExecStart=/usr/local/bin/filebrowser -d /srv/tenshi/data/filebrowser/filebrowser.db
+Restart=on-failure
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/srv/tenshi
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
 echo "== 9. Web server (Caddy): the website, the CMS and client sites, all on HTTPS"
 cat > /etc/caddy/Caddyfile <<EOF
 {
@@ -200,6 +240,19 @@ cms.$DOMAIN {
 		max_size 210MB
 	}
 	reverse_proxy 127.0.0.1:8000
+}
+
+files.$DOMAIN {
+	encode zstd gzip
+	request_body {
+		max_size 512MB
+	}
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Robots-Tag "noindex, nofollow"
+		-Server
+	}
+	reverse_proxy 127.0.0.1:9125
 }
 
 https:// {
@@ -247,10 +300,10 @@ echo "*/5 * * * * root /usr/local/bin/tenshi-deploy" > /etc/cron.d/tenshi-deploy
 
 echo "== 12. Start everything"
 systemctl daemon-reload
-systemctl enable --now tenshi-tls-ask tenshi-cms tenshi-contact >/dev/null
+systemctl enable --now tenshi-tls-ask tenshi-cms tenshi-contact tenshi-files >/dev/null
 systemctl restart tenshi-cms
 systemctl reload caddy || systemctl restart caddy
 sleep 3
-systemctl is-active tenshi-cms tenshi-tls-ask tenshi-contact caddy
+systemctl is-active tenshi-cms tenshi-tls-ask tenshi-contact tenshi-files caddy
 curl -s -o /dev/null -w "CMS on 127.0.0.1:8000 -> HTTP %{http_code}\n" http://127.0.0.1:8000/login
 echo "== done"

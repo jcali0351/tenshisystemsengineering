@@ -7,6 +7,7 @@ A Hostinger **KVM 2** VPS in Kuala Lumpur running **Ubuntu 24.04**. It serves:
 | `https://tenshisystems.com` | the website (the files in this repository) |
 | `https://www.tenshisystems.com` | redirects to the address above |
 | `https://cms.tenshisystems.com` | the Tenshi CMS (`platform/`) |
+| `https://files.tenshisystems.com` | web file manager (File Browser) over `/srv/tenshi`, password protected |
 | `https://<name>.tenshisystems.com` | client sites built by the CMS (HTTPS certificates are issued on first visit) |
 
 ## How it's put together
@@ -19,6 +20,10 @@ A Hostinger **KVM 2** VPS in Kuala Lumpur running **Ubuntu 24.04**. It serves:
 - **Web server:** Caddy, `/etc/caddy/Caddyfile`. HTTPS for everything is automatic. Private folders (`platform/`,
   `tools/`, `.git/`, `docs/` and so on) answer 404. `tenshi-tls-ask` makes sure certificates are only issued for real
   `*.tenshisystems.com` names.
+- **File manager:** `tenshi-files` (systemd, File Browser) on 127.0.0.1:9125, runs as `tenshi`, can only see `/srv/tenshi`.
+  Its users live in `/srv/tenshi/data/filebrowser/filebrowser.db`; the first sign-in is in `/root/tenshi-files-admin.txt`.
+  Files under `app/` are a git clone: `tenshi-deploy` resets them to GitHub on the next push, so change the website through
+  git or the CMS, and use the file manager for downloads, uploads to `data/`, logs and contact messages.
 - **Security:** firewall (ufw) allows only SSH, 80 and 443; SSH accepts keys only; fail2ban; automatic security updates.
 - **Backups:** every night at 03:30 into `/var/backups/tenshi` (kept 14 days), plus Hostinger's weekly snapshot.
 - **DNS:** at Hostinger: `@`, `cms` and `*` point to the server (A and AAAA); `www` is a CNAME to the main name.
@@ -37,6 +42,7 @@ journalctl -u tenshi-cms -n 50       # its recent log
 /usr/local/bin/tenshi-deploy         # pull from GitHub right now instead of waiting
 /usr/local/bin/tenshi-backup         # take a backup right now
 cat /root/tenshi-cms-admin.txt       # the first CMS admin sign-in (change the password after signing in)
+cat /root/tenshi-files-admin.txt     # the file manager's sign-in (change it under Settings after signing in)
 ```
 
 ## Rebuilding from scratch
