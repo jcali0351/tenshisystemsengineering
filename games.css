@@ -1,0 +1,40 @@
+/* The Games menu pages: games.html (hub), game-arcade.html, game-station-defense.html, game-undercity.html. */
+
+/* Buttons and small labels shared by the game pages. */
+.game-kicker { margin: 0 0 6px; font: 800 .72rem Oswald, sans-serif; letter-spacing: .22em; text-transform: uppercase; color: #ff8ae6; }
+.game-links { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 18px 0 0; }
+.game-btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; border-radius: 999px; text-decoration: none; color: #fff !important;
+  font: 800 .8rem/1 Oswald, sans-serif; letter-spacing: .14em; text-transform: uppercase;
+  background: linear-gradient(135deg, #ff2bd6, #b04dff); box-shadow: 0 0 22px rgba(255, 43, 214, .45); transition: transform .15s, box-shadow .2s; }
+.game-btn:hover, .game-btn:focus-visible { transform: translateY(-1px); box-shadow: 0 0 30px rgba(255, 43, 214, .7); }
+.game-btn-alt { background: rgba(18, 10, 42, .7); border: 1px solid rgba(255, 255, 255, .3); box-shadow: none; }
+
+/* Hub: one card per game. */
+.games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 26px; margin: 0; padding: 0; list-style: none; }
+.game-card { display: flex; flex-direction: column; overflow: hidden; border-radius: 20px; background: linear-gradient(160deg, rgba(46, 11, 87, .8), rgba(14, 4, 30, .92));
+  border: 1px solid rgba(255, 43, 214, .3); box-shadow: 0 0 34px rgba(176, 77, 255, .2); transition: transform .2s, box-shadow .2s; }
+.game-card:hover { transform: translateY(-3px); box-shadow: 0 0 44px rgba(255, 43, 214, .35); }
+.game-card-art { display: block; aspect-ratio: 16 / 9; overflow: hidden; }
+.game-card-art img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s; }
+.game-card:hover .game-card-art img { transform: scale(1.05); }
+.game-card-body { padding: 20px 22px 24px; }
+.game-card h2 { margin: 0 0 8px; }
+.game-card h2 a { color: #fff; text-decoration: none; }
+.game-card p { color: #e6d9ff; }
+
+/* Station Defense and Undercity pages: the game fills the screen under the header. */
+.game-crumbs { padding-top: 92px; padding-bottom: 10px; }
+.game-page .game-stage { position: relative; }
+.game-about h3 { margin-top: 1.4em; }
+.game-controls { padding-left: 1.2em; color: #e6d9ff; }
+.game-controls li { margin: .3em 0; }
+.game-more { margin-top: 18px; color: #b8a3dc; }
+.game-more a { color: #ffb347; }
+
+/* Neon Arcade page: a full-height hero for the city and the sky. */
+.arcade-page .arcade-hero { min-height: 100vh; min-height: 100dvh; display: grid; place-items: center; position: relative; z-index: 2; background: transparent; }
+.arcade-page .arcade-hero .hero-card { text-align: center; max-width: 720px; margin: 0 auto; padding: 120px 20px 40px; }
+.arcade-page .arcade-hero .crumbs { display: flex; justify-content: center; }
+.arcade-page .arcade-hero h1 { margin: 6px 0 12px; }
+.arcade-page .arcade-hero .game-links { justify-content: center; }
+.arcade-page .game-about { position: relative; z-index: 2; }

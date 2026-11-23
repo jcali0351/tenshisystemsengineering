@@ -2021,26 +2021,26 @@ writePage("portal.html", portalPage);
 /* ---------- game leaderboards: one page per homepage game, filled live by leaderboard.js from /api/scores ---------- */
 {
   const BOARDS = [
-    { game: "arcade", file: "leaderboard-arcade.html", name: "Neon Arcade", play: "index.html#top",
+    { game: "arcade", file: "leaderboard-arcade.html", name: "Neon Arcade", play: "game-arcade.html",
       lead: "The best defenders of the neon city: shoot the sky above our homepage, keep your shields up and climb the board.",
-      how: ["Shoot anything in the sky above the homepage headline to start a run.", "Your run ends when your shields are gone (or you scroll away). Type your initials on the Game Over screen and press Save.", "Score comes straight from the game: combos, bosses and power-ups all count."] },
-    { game: "station", file: "leaderboard-station-defense.html", name: "Station Defense", play: "index.html#station-defense",
+      how: ["Shoot anything in the sky on the Neon Arcade page (or above our homepage headline) to start a run.", "Your run ends when your shields are gone (or you scroll away). Type your initials on the Game Over screen and press Save.", "Score comes straight from the game: combos, bosses and power-ups all count."] },
+    { game: "station", file: "leaderboard-station-defense.html", name: "Station Defense", play: "game-station-defense.html",
       lead: "Commanders who held the station: mine crystals, build a fleet and destroy the alien hive.",
-      how: ["Play Station Defense on our homepage.", "When the hive falls (or your station does), enter a name and post your run.", "Score: 10 per alien destroyed, 150 per wave survived, and 5,000 for a victory plus a bonus for winning fast."] },
-    { game: "undercity", file: "leaderboard-undercity.html", name: "Undercity", play: "index.html#undercity",
+      how: ["Play Station Defense on its game page or on our homepage.", "When the hive falls (or your station does), enter a name and post your run.", "Score: 10 per alien destroyed, 150 per wave survived, and 5,000 for a victory plus a bonus for winning fast."] },
+    { game: "undercity", file: "leaderboard-undercity.html", name: "Undercity", play: "game-undercity.html",
       lead: "The heroes who went deepest: descend through the circles of the Undercity and carry your gold back to the light.",
-      how: ["Play Undercity on our homepage.", "When your hero falls or wins, enter a name and post your run. Time played counts every minute of that hero's journey.", "Score: 100 per level, 250 per circle reached, 5 per kill, 1 per 10 gold, 2,500 per ascension and 5,000 for defeating Satan."] },
+      how: ["Play Undercity on its game page or on our homepage.", "When your hero falls or wins, enter a name and post your run. Time played counts every minute of that hero's journey.", "Score: 100 per level, 250 per circle reached, 5 per kill, 1 per 10 gold, 2,500 per ascension and 5,000 for defeating Satan."] },
   ];
   for (const b of BOARDS) {
     const page = frame({
-      prefix: "", current: "", title: `${b.name} Leaderboard`, description: `Top scores, time played and records for ${b.name}, the free game on the Tenshi Systems Engineering homepage.`,
+      prefix: "", current: b.file.replace(".html", ""), title: `${b.name} Leaderboard`, description: `Top scores, time played and records for ${b.name}, the free game on the Tenshi Systems Engineering homepage.`,
       bodyClass: "page lb-page",
       extraHead: `  <link rel="stylesheet" href="leaderboard.css?v=20261123a">\n`,
       extraScripts: `  <script src="leaderboard.js?v=20261123a"></script>\n`,
       main: `    <section class="svc-hero">
       <div class="svc-hero-inner">
         <div class="svc-hero-text">
-          <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li>Games</li><li aria-current="page">${esc(b.name)} leaderboard</li></ol></nav>
+          <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li><a href="games.html">Games</a></li><li aria-current="page">${esc(b.name)} leaderboard</li></ol></nav>
           <h1>${esc(b.name)} Leaderboard</h1>
           <p class="svc-hero-lead">${esc(b.lead)}</p>
         </div>
@@ -2088,6 +2088,110 @@ ${b.how.map((h) => `            <li>${esc(h)}</li>`).join("\n")}
     });
     writePage(b.file, page);
   }
+}
+
+/* ---------- the Games menu: a hub (games.html) and a page per game where it fills the screen ---------- */
+{
+  const V = "20261123g";   // cache tag for the game scripts on these pages (bump with the homepage's when they change)
+  const js = (files) => files.map((f) => `  <script src="sandbox/${f}.js?v=${V}" defer></script>`).join("\n") + "\n";
+  // Deferred, so they run after game-settings.js, which tools/neon-pages.mjs adds at the end of every page.
+  const crumbs = (name) => `<nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li><a href="games.html">Games</a></li><li aria-current="page">${esc(name)}</li></ol></nav>`;
+  const GAMES = [
+    { id: "arcade", file: "game-arcade.html", board: "leaderboard-arcade.html", name: "Neon Arcade", art: "img/photos/osaka.jpg",
+      kicker: "Arcade shooter", short: "Shoot drones, saucers and bosses over a neon city, smash the headline and stop the kaiju.",
+      about: "Defend the neon city. Click (or tap) anywhere in the sky to fire: drones, saucers, cubes and shooting stars are worth points, combos multiply them, and every so often a mothership, a kaiju or a giant robot turns up to eat the skyline. Keep your shields up as long as you can.",
+      controls: ["Click or tap the sky to shoot; hold for rapid fire when you have it", "Weapons: the bar on the left, or keys 1 to 6", "Power-ups: R rapid fire, S spread shot, T slow time, N nuke", "Shoot the falling bombs before they reach the city", "Secret: the Konami code turns on INSANE MODE"] },
+    { id: "station", file: "game-station-defense.html", board: "leaderboard-station-defense.html", name: "Station Defense", art: "sandbox/art/station-defense-small.webp",
+      kicker: "Space strategy", short: "Mine crystals, build a fleet and turrets, survive the waves and destroy the alien hive.",
+      about: "Command a space station at the edge of an alien hive. Miners gather crystals, crystals buy turrets, depots, outposts and shipyards, and shipyards build the fleet. Waves of aliens arrive on a timer and grow every time. Explore through the fog, expand to new crystal fields and take the fight to the hive.",
+      controls: ["Drag to select, right-click to command (tap on phones)", "A attack-move · Q W E train ships · 1 2 3 4 build with a miner selected", "Space selects the whole fleet · wheel or + − to zoom · arrows or screen edges move the camera", "Click the minimap to jump there"] },
+    { id: "undercity", file: "game-undercity.html", board: "leaderboard-undercity.html", name: "Undercity", art: "sandbox/art/undercity-small.webp",
+      kicker: "Dungeon crawler RPG", short: "An angel fights down through the nine circles of Hell, gathers relics, casts down Satan and transcends.",
+      about: "You are Tenshi, an angel sent down through the nine circles of Hell. Fight through fire and ice, collect gear and holy relics, level up, call on the Power of God and the Archangel Gabriel, and cast down Satan. Your hero is saved in your browser, so you can come back and keep descending.",
+      controls: ["Click to move and attack · right-click Fireball · 2 Frost Nova", "Q / W potions · C hero sheet · E Power of God · R Archangel", "3 / 4 / 5 the Houses of Abraham, Isaac and Jacob", "Wheel or + − to zoom · Fullscreen button at the top"] },
+  ];
+  const others = (g) => GAMES.filter((o) => o.id !== g.id).map((o) => `<a href="${o.file}">${esc(o.name)}</a>`).join(" · ");
+  const about = (g) => `    <section class="page-section game-about" aria-labelledby="about-${g.id}">
+      <div class="page-inner">
+        <h2 id="about-${g.id}" class="section-title">About ${esc(g.name)}</h2>
+        <p class="page-lead">${esc(g.about)}</p>
+        <h3>Controls</h3>
+        <ul class="game-controls">
+${g.controls.map((c) => `          <li>${esc(c)}</li>`).join("\n")}
+        </ul>
+        <p class="game-links"><a class="game-btn" href="${g.board}">🏆 ${esc(g.name)} leaderboard</a> <a class="game-btn game-btn-alt" href="games.html">All games</a></p>
+        <p class="game-more">More games: ${others(g)}</p>
+      </div>
+    </section>
+`;
+
+  // Station Defense and Undercity find their place by the hidden section title (the same ids as on the homepage).
+  for (const [g, titleId, scripts] of [[GAMES[1], "parallax-px1-title", ["neon-display", "tenshi-models", "neon-audio", "neon-scores", "neon-rts"]],
+                                        [GAMES[2], "parallax-px2-title", ["neon-display", "tenshi-models", "neon-audio", "neon-scores", "neon-arpg"]]]) {
+    writePage(g.file, frame({
+      prefix: "", current: g.file.replace(".html", ""), title: `${g.name}: play free in your browser`, description: g.short,
+      bodyClass: "page game-page", extraHead: `  <link rel="stylesheet" href="games.css?v=${V}">\n`, extraScripts: js(scripts),
+      main: `    <div class="game-crumbs page-inner">${crumbs(g.name)}</div>
+    <section class="parallax game-stage" aria-label="${esc(g.name)}">
+      <div class="parallax-copy"><h2 class="parallax-title" id="${titleId}">${esc(g.name)}</h2></div>
+    </section>
+${about(g)}`,
+    }));
+  }
+
+  // Neon Arcade: its own hero, with the floor, particles, sky beasts and the arcade over it (as on the homepage).
+  {
+    const g = GAMES[0];
+    writePage(g.file, frame({
+      prefix: "", current: g.file.replace(".html", ""), title: `${g.name}: play free in your browser`, description: g.short,
+      bodyClass: "page game-page arcade-page", extraHead: `  <link rel="stylesheet" href="games.css?v=${V}">\n`,
+      extraScripts: js(["neon-display", "tenshi-models", "neon-bg", "neon-fx", "neon-audio", "neon-geo", "neon-beasts", "neon-scores", "neon-game"]),
+      main: `    <canvas id="neon-bg" aria-hidden="true"></canvas>
+    <canvas id="neon-particles" aria-hidden="true"></canvas>
+    <section class="hero arcade-hero" id="top" aria-labelledby="arcade-title">
+      <div class="hero-card">
+        ${crumbs(g.name)}
+        <p class="game-kicker">Free · plays right here</p>
+        <h1 id="arcade-title">${esc(g.name)}</h1>
+        <p class="hero-lead">Click anywhere in the sky to start shooting. Keep the city's shields up as long as you can.</p>
+        <p class="game-links"><a class="game-btn" href="${g.board}">🏆 Leaderboard</a></p>
+      </div>
+    </section>
+${about(g)}`,
+    }));
+  }
+
+  // The hub.
+  writePage("games.html", frame({
+    prefix: "", current: "games", title: "Games: play free in your browser", description: "Three free games made by Tenshi Systems Engineering: Neon Arcade, Station Defense and Undercity. No download, no sign-up, with live leaderboards.",
+    bodyClass: "page games-hub", extraHead: `  <link rel="stylesheet" href="games.css?v=${V}">\n`,
+    main: `    <section class="svc-hero">
+      <div class="svc-hero-inner">
+        <div class="svc-hero-text">
+          <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li aria-current="page">Games</li></ol></nav>
+          <h1>Games</h1>
+          <p class="svc-hero-lead">Three free games we built to show what a website can do. No download, no sign-up: they play right in your browser, with live leaderboards.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section" aria-label="Our games">
+      <div class="page-inner">
+        <ul class="games-grid">
+${GAMES.map((g) => `          <li class="game-card">
+            <a class="game-card-art" href="${g.file}" tabindex="-1" aria-hidden="true"><img src="${g.art}" alt="" width="640" height="360" loading="lazy"></a>
+            <div class="game-card-body">
+              <p class="game-kicker">${esc(g.kicker)}</p>
+              <h2><a href="${g.file}">${esc(g.name)}</a></h2>
+              <p>${esc(g.short)}</p>
+              <p class="game-links"><a class="game-btn" href="${g.file}">▶ Play</a> <a class="game-btn game-btn-alt" href="${g.board}">🏆 Leaderboard</a></p>
+            </div>
+          </li>`).join("\n")}
+        </ul>
+      </div>
+    </section>
+`,
+  }));
 }
 
 mkdirSync("projects", { recursive: true });
