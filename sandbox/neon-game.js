@@ -124,6 +124,7 @@
       <div class="neon-hud-row power" hidden><span data-k="powername"></span><b data-k="powertime"></b></div>
       <button type="button" data-k="pause" aria-pressed="false">PAUSE</button>
       <p class="neon-hud-tip">Click the sky to shoot</p>
+      <a class="neon-hud-board" href="/leaderboard-arcade.html">🏆 LEADERBOARD</a>
     </div>
     <div class="neon-bossbar" hidden><span>MOTHERSHIP</span><i><b></b></i></div>
     <div class="neon-banner" aria-live="polite"></div>
@@ -138,6 +139,7 @@
         <form data-k="form"><label>YOUR INITIALS <input data-k="initials" maxlength="3" autocomplete="off" required></label><button type="submit">SAVE</button></form>
         <ol data-k="board"></ol>
         <div class="neon-over-actions"><button type="button" data-k="again">PLAY AGAIN</button><button type="button" class="neon-over-quit" data-k="quit">CLOSE</button></div>
+        <p class="neon-over-board"><a href="/leaderboard-arcade.html">🏆 VIEW THE LEADERBOARD</a> <span data-k="posted"></span></p>
       </div>
     </div>`;
   document.body.appendChild(ui);
@@ -147,6 +149,7 @@
 
   // ---- Game state ----
   let score, combo, lastHit, level, shields, nextSpawn, nextPower, nextBossAt, boss, power, bombsShot, hits, over_;
+  let playMs = 0, bestCombo = 1, bossesBeaten = 0;   // for the leaderboard (leaderboard-arcade.html)
   let best = store.get("best", 0), unlocked = new Set(store.get("achievements", []));
   const objects = [], shards = [], beams = [], popups = [], bombs = [], cars = [], bossBeams = [];
   let started = false;        // nothing attacks until the visitor fires their first shot ("attract mode")
@@ -156,6 +159,7 @@
 
   function reset() {
     score = 0; combo = 1; lastHit = 0; level = 1; shields = GAME.shields; nextSpawn = 0; boss = null; power = null;
+    playMs = 0; bestCombo = 1; bossesBeaten = 0;
     bombsShot = 0; hits = 0; over_ = false; nextBossAt = GAME.bossEvery;
     nextPower = performance.now() + rand(...GAME.powerEvery) * 0.5;
     objects.length = shards.length = beams.length = popups.length = bombs.length = cars.length = bossBeams.length = 0;
@@ -520,6 +524,7 @@
     objects.splice(i, 1);
     if (target.kind === "power") { activatePower(target.type, now); explode(target, 1.4); return; }
     combo = now - lastHit < GAME.comboWindow ? Math.min(combo + 1, 9) : 1;
+    bestCombo = Math.max(bestCombo, combo);
     lastHit = now; hits++;
     if (combo > 1) sfx("combo");
     addScore(target.points * combo, target.x, target.y, target.color, target.service[0] + (combo > 1 ? "  x" + combo : ""));
@@ -575,7 +580,7 @@
     addScore(500 * level, bx, by, "#ffffff", "MOTHERSHIP DOWN");
     boss = null; bossBeams.length = 0; bossbar.hidden = true;
     showBanner("BOSS DEFEATED · LEVEL CLEAR", 2600);
-    achieve("boss"); cheer("YOU DID IT! The city is safe! 🎉"); hitStop(160); shakeIt(16);
+    bossesBeaten++; achieve("boss"); cheer("YOU DID IT! The city is safe! 🎉"); hitStop(160); shakeIt(16);
   }
 
   function hitCity(x, how) {
@@ -601,6 +606,7 @@
     over_ = true; boss = null; bossbar.hidden = true;
     $("final").textContent = score;
     $("form").hidden = score <= 0;
+    $("posted").textContent = "";
     renderBoard();
     over.hidden = false;
     setTimeout(() => { if (!$("form").hidden) $("initials").focus(); }, 50);
@@ -617,6 +623,12 @@
     board.push({ n, s: score }); board.sort((a, b) => b.s - a.s);
     store.set("top10", board.slice(0, 10));
     $("form").hidden = true; renderBoard();
+    if (window.TenshiScores && playMs >= 5000) {
+      const posted = $("posted"); posted.textContent = "Posting…";
+      TenshiScores.post("arcade", n, { time: Math.round(playMs / 1000), points: score, level, hits: hits || 0, combo: bestCombo, bosses: bossesBeaten })
+        .then(r => { posted.textContent = `· posted, #${r.rank} all time`; })
+        .catch(err => { posted.textContent = "· couldn't post: " + err.message; });
+    }
   });
   $("again").addEventListener("click", () => { reset(); started = true; showBanner("GO!", 900); });
   // Leaving the score screen: the close button, the Close button, Esc, or a click on the dark backdrop. The game goes back to
@@ -1182,7 +1194,7 @@
     setTimeout(() => sfx("bigboom"), 900);
     addScore(MONSTER.points, mo.x, ground - 6 * s, "#ffffff", mo.type === "kaiju" ? "KAIJU DOWN" : "ROBOT DOWN");
     showBanner(mo.type === "kaiju" ? "TOKAGE DEFEATED!" : "IRON RONIN DESTROYED!", 2200);
-    achieve(mo.type === "kaiju" ? "kaiju" : "robot"); hitStop(140); shakeIt(16);
+    bossesBeaten++; achieve(mo.type === "kaiju" ? "kaiju" : "robot"); hitStop(140); shakeIt(16);
     cheer(mo.type === "kaiju" ? "The kaiju is down! Osaka is saved! 🎉" : "Robot scrapped! Nice shooting! 🔧");
     nextMonsterAt = performance.now() + MONSTER.every;
   }
@@ -1199,7 +1211,8 @@
       else { awaySince = 0; if (runEnded) { runEnded = false; gameOver(); } }
     }
     const ts = paused || over_ || !visible ? 0 : timeScale(now), dt = (realDt / 16.7) * ts;   // frozen while scrolled away
-    const ff = realDt / 16.7;   // frames' worth of time since the last frame: effects fade at the same speed on 60, 120 or 144 Hz screens
+    const ff = realDt / 16.7;
+    if (started && visible && !paused && !over_) playMs += realDt;   // time played, for the leaderboard   // frames' worth of time since the last frame: effects fade at the same speed on 60, 120 or 144 Hz screens
     ctx.clearRect(0, 0, W, H);
     hud.classList.toggle("is-hidden", !visible);
     bossbar.classList.toggle("is-hidden", !visible);

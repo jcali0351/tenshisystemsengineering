@@ -160,6 +160,22 @@ NoNewPrivileges=true
 WantedBy=multi-user.target
 EOF
 
+echo "== 8a. Game leaderboards (tools/server/scores_service.py, SQLite in /srv/tenshi/data/scores)"
+install -d -o tenshi -g tenshi -m 750 /srv/tenshi/data/scores
+cat > /etc/systemd/system/tenshi-scores.service <<EOF
+[Unit]
+Description=Tenshi game leaderboards
+After=network.target
+[Service]
+User=tenshi
+Environment=SCORES_DB=/srv/tenshi/data/scores/scores.db
+ExecStart=/usr/bin/python3 $APP/tools/server/scores_service.py
+Restart=always
+NoNewPrivileges=true
+[Install]
+WantedBy=multi-user.target
+EOF
+
 echo "== 8b. Web file manager (File Browser) for files.$DOMAIN, over /srv/tenshi"
 FB_VERSION=2.63.23
 if ! /usr/local/bin/filebrowser version 2>/dev/null | grep -q "v$FB_VERSION"; then
@@ -227,6 +243,12 @@ $DOMAIN {
 		}
 		reverse_proxy 127.0.0.1:9124
 	}
+	handle /api/scores* {
+		request_body {
+			max_size 8KB
+		}
+		reverse_proxy 127.0.0.1:9126
+	}
 	file_server
 }
 
@@ -291,6 +313,7 @@ sudo -u tenshi git reset --quiet --hard origin/$BRANCH
 if ! git diff --quiet "\$OLD" "\$NEW" -- platform/requirements.txt; then sudo -u tenshi $APP/platform/.venv/bin/pip install -q -r platform/requirements.txt; fi
 if ! git diff --quiet "\$OLD" "\$NEW" -- platform/; then systemctl restart tenshi-cms; fi
 if ! git diff --quiet "\$OLD" "\$NEW" -- tools/server/contact_service.py; then systemctl restart tenshi-contact; fi
+if ! git diff --quiet "\$OLD" "\$NEW" -- tools/server/scores_service.py; then systemctl restart tenshi-scores; fi
 logger -t tenshi-deploy "deployed \$NEW"
 EOF
 chmod 755 /usr/local/bin/tenshi-deploy
@@ -300,10 +323,10 @@ echo "*/5 * * * * root /usr/local/bin/tenshi-deploy" > /etc/cron.d/tenshi-deploy
 
 echo "== 12. Start everything"
 systemctl daemon-reload
-systemctl enable --now tenshi-tls-ask tenshi-cms tenshi-contact tenshi-files >/dev/null
+systemctl enable --now tenshi-tls-ask tenshi-cms tenshi-contact tenshi-scores tenshi-files >/dev/null
 systemctl restart tenshi-cms
 systemctl reload caddy || systemctl restart caddy
 sleep 3
-systemctl is-active tenshi-cms tenshi-tls-ask tenshi-contact tenshi-files caddy
+systemctl is-active tenshi-cms tenshi-tls-ask tenshi-contact tenshi-scores tenshi-files caddy
 curl -s -o /dev/null -w "CMS on 127.0.0.1:8000 -> HTTP %{http_code}\n" http://127.0.0.1:8000/login
 echo "== done"

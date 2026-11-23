@@ -444,6 +444,34 @@ html.neon .hero-logo { filter: drop-shadow(0 0 12px var(--neon-pink)) drop-shado
   border-radius: 50%; background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .35); color: #fff; font: 400 1.6rem/1 Lato, system-ui, sans-serif; letter-spacing: 0; }
 .neon-over-box .neon-over-x:hover, .neon-over-box .neon-over-x:focus-visible { background: #ff2bd6; border-color: #ff2bd6; }
 .neon-over-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+/* Initials form: hidden when there's nothing to save (score 0). */
+.neon-over-box form[hidden] { display: none; }
+/* Leaderboard links: the arcade HUD and the Game Over box. */
+.neon-hud .neon-hud-board { display: block; margin-top: 6px; color: #ffb347; font: 800 .62rem Oswald, sans-serif; letter-spacing: .16em; text-decoration: none; text-align: center; }
+.neon-hud .neon-hud-board:hover, .neon-hud .neon-hud-board:focus-visible { color: #fff; text-shadow: 0 0 10px #ff2bd6; }
+.neon-over-board { margin: 14px 0 0; font: 700 .74rem Oswald, sans-serif; letter-spacing: .12em; }
+.neon-over-board a { color: #ffb347; text-decoration: none; }
+.neon-over-board a:hover, .neon-over-board a:focus-visible { color: #fff; text-decoration: underline; }
+.neon-over-board span { display: block; margin-top: 4px; color: #d9c4ff; letter-spacing: .06em; }
+/* "Post your run" panel on the Station Defense and Undercity end screens (sandbox/neon-scores.js). */
+/* Leaderboard links on the Station Defense and Undercity title and pause screens. */
+html.neon :is(.rts-intro, .arpg-intro) :is(.rts-board, .arpg-board) { display: inline-block; margin: 12px 0 4px; color: #ffb347; font: 800 .78rem Oswald, sans-serif;
+  letter-spacing: .16em; text-decoration: none; pointer-events: auto; }
+html.neon .rts-intro .rts-board { margin-left: 14px; }
+html.neon :is(.rts-intro, .arpg-intro) :is(.rts-board, .arpg-board):hover { color: #fff; text-shadow: 0 0 10px #ff2bd6; }
+html.neon .arpg-intro .arpg-board { display: block; }
+.ts-post { margin: 14px auto 0; max-width: 360px; text-align: center; }
+.ts-post .ts-form { display: flex; gap: 8px; align-items: end; justify-content: center; flex-wrap: wrap; }
+.ts-post label { display: grid; gap: 5px; text-align: left; font: 800 .62rem Oswald, sans-serif; letter-spacing: .2em; color: #fff; }
+.ts-post input { width: 190px; padding: 9px 12px; border-radius: 10px; border: 1px solid #b04dff; background: rgba(20, 5, 43, .9); color: #fff; font: 700 1rem Lato, system-ui, sans-serif; }
+.ts-post input:focus { outline: 2px solid #ff2bd6; outline-offset: 1px; }
+.ts-post button { padding: 10px 16px; border-radius: 999px; border: 0; cursor: pointer; background: linear-gradient(135deg, #ff2bd6, #b04dff); color: #fff;
+  font: 800 .78rem Oswald, sans-serif; letter-spacing: .14em; box-shadow: 0 0 16px rgba(255, 43, 214, .45); }
+.ts-post button:disabled { opacity: .6; cursor: wait; }
+.ts-post .ts-msg { min-height: 1.2em; margin: 8px 0 4px; font: 600 .9rem Lato, system-ui, sans-serif; color: #e6d9ff; }
+.ts-post .ts-msg b { color: #ffb347; }
+.ts-post .ts-board { display: inline-block; color: #ffb347; font: 800 .74rem Oswald, sans-serif; letter-spacing: .14em; text-decoration: none; }
+.ts-post .ts-board:hover, .ts-post .ts-board:focus-visible { color: #fff; text-decoration: underline; }
 .neon-over-box .neon-over-quit { background: transparent; color: #fff; border: 1px solid rgba(255, 255, 255, .55); }
 .neon-over-box .neon-over-quit:hover, .neon-over-box .neon-over-quit:focus-visible { background: rgba(255, 255, 255, .14); }
 

@@ -132,6 +132,9 @@
 
   // ================================================ THE PAGE ================================================
   section.classList.add("arpg-zone");
+  // An address for links (the leaderboard's Play button): jump here when the page opens with it.
+  if (!section.id) section.id = "undercity";
+  if (location.hash === "#undercity") setTimeout(() => section.scrollIntoView({ block: "start" }), 400);
   const root = document.createElement("div");
   root.className = "arpg";
   root.innerHTML = `
@@ -174,6 +177,7 @@
       <h3>Call on God. Cast down Satan. Transcend.</h3>
       <p>You are Tenshi, an angel sent through the nine circles of Hell. Fight down through fire and ice, gather holy relics, call on the Power of God and the Archangel Gabriel, and rise above it all.</p>
       <div class="arpg-buttons"></div>
+      <a class="arpg-board" href="/leaderboard-undercity.html">🏆 LEADERBOARD</a>
       <p class="arpg-help">Click to move &amp; attack · Right-click Fireball · 2 Frost Nova · Q/W potions · C hero · E Power of God · R Archangel · 3/4/5 Houses of Abraham, Isaac, Jacob · Wheel or +/− to zoom</p>
     </div>`;
   section.appendChild(root);
@@ -250,7 +254,7 @@
     };
   }
   const xpNeed = lvl => Math.round(60 * Math.pow(lvl, 1.55));
-  function save() { store.set({ lvl: hero.lvl, xp: hero.xp, gold: hero.gold, gear: hero.gear, bag: hero.bag || [], potions: hero.potions, ascensions: hero.ascensions || 0, holy: Math.floor(hero.holy || 0), gospel: Math.floor(hero.gospel || 0), floor: floorNo, best: Math.max(hero.best || 1, floorNo) }); }
+  function save() { store.set({ lvl: hero.lvl, xp: hero.xp, gold: hero.gold, gear: hero.gear, bag: hero.bag || [], potions: hero.potions, ascensions: hero.ascensions || 0, playMs: Math.round(hero.playMs || 0), kills: hero.kills || 0, holy: Math.floor(hero.holy || 0), gospel: Math.floor(hero.gospel || 0), floor: floorNo, best: Math.max(hero.best || 1, floorNo) }); }
 
   // ================================================ MAP ================================================
   function genFloor(n) {
@@ -369,6 +373,7 @@
   }
   function killMonster(m) {
     monsters = monsters.filter(x => x !== m);
+    hero.kills = (hero.kills || 0) + 1;
     gainHoly(m.T.boss ? HOLY.perBoss : m.champion ? HOLY.perChampion : HOLY.perKill);
     if (!angelOn()) gainGospel(GOSPEL.perKill);
     burst(m.x, m.y, m.T.color, m.T.boss ? 60 : 22, m.T.boss ? 6 : 3.5);
@@ -631,8 +636,15 @@
     sfx("bigboom");
     setTimeout(() => {
       showIntro(`<p class="arpg-kicker">YOU HAVE FALLEN · CIRCLE ${ROMAN(floorNo)}</p><h3>Hell claims you, for now.</h3><p class="arpg-quote">"Yea, though I walk through the valley of the shadow of death, I will fear no evil." · Psalm 23:4</p><p>You dropped ${lost} gold. Your level and gear are kept.</p><div class="arpg-buttons"><button type="button" class="arpg-play" data-go="retry">↺ TRY THIS FLOOR AGAIN</button><button type="button" class="arpg-play arpg-alt" data-go="new">✦ NEW HERO</button></div>`);
+      postPanel(false);
     }, 900);
     save();
+  }
+  // The leaderboard form on the death and victory screens (leaderboard-undercity.html). Best circle reached counts.
+  function postPanel(won) {
+    if (!window.TenshiScores || !hero) return;
+    intro.appendChild(TenshiScores.panel("undercity", { time: Math.round((hero.playMs || 0) / 1000), won: won ? 1 : 0, level: hero.lvl,
+      floor: Math.max(hero.best || 1, floorNo), gold: hero.gold, kills: hero.kills || 0, ascensions: Math.max(0, (hero.ascensions || 0) - (won ? 1 : 0)) }));
   }
   // Satan is cast down and the hero steps through the gate of light: the ending. "Ascend again" starts over at the
   // first circle with the same hero (each ascension makes Hell tougher).
@@ -645,6 +657,7 @@
         `<p>Tenshi, level ${hero.lvl}, cast down Satan and carried ${hero.gold} gold into the light.</p>` +
         `<div class="arpg-buttons"><button type="button" class="arpg-play" data-go="ascend">✦ DESCEND AGAIN · HELL GROWS STRONGER</button><button type="button" class="arpg-play arpg-alt" data-go="new">✦ NEW HERO</button></div>`);
       intro.classList.add("arpg-intro-ascend");
+      postPanel(true);
     }, 1200);
   }
   function enterFloor(n) {
@@ -1702,7 +1715,7 @@ button.arpg-cell:hover{transform:scale(1.08);box-shadow:0 0 12px var(--c)}
   exitBtn.addEventListener("click", () => {
     if (state === "play") { state = "paused"; save(); }
     leaveWindow();
-    showIntro(`<p class="arpg-kicker">PAUSED · CIRCLE ${ROMAN(floorNo)}</p><h3>Undercity</h3><p>Your hero is saved.</p><div class="arpg-buttons"><button type="button" class="arpg-play" data-go="resume">▶ RESUME</button></div>`);
+    showIntro(`<p class="arpg-kicker">PAUSED · CIRCLE ${ROMAN(floorNo)}</p><h3>Undercity</h3><p>Your hero is saved.</p><div class="arpg-buttons"><button type="button" class="arpg-play" data-go="resume">▶ RESUME</button></div><a class="arpg-board" href="/leaderboard-undercity.html">🏆 LEADERBOARD</a>`);
   });
   intro.addEventListener("click", e => { if (e.target.closest('[data-go="resume"]')) { e.stopPropagation(); enterWindow(); state = "play"; intro.hidden = true; showUI(true); } }, true);
 
@@ -1715,7 +1728,7 @@ button.arpg-cell:hover{transform:scale(1.08);box-shadow:0 0 12px var(--c)}
   function loop(now) {
     const dt = Math.min(50, now - last); last = now;
     if (onScreen && W) {
-      if (state === "play" && hero) { update(dt); if (now > hudAt) { renderHud(); hudAt = now + 100; } draw(now); }
+      if (state === "play" && hero) { hero.playMs = (hero.playMs || 0) + dt; update(dt); if (now > hudAt) { renderHud(); hudAt = now + 100; } draw(now); }
       else if (artReady && !artGone) { /* the cover art is showing */ }
       else if (hero && grid) draw(now);
       else drawAttract(now);

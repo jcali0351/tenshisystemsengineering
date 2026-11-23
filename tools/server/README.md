@@ -20,6 +20,10 @@ A Hostinger **KVM 2** VPS in Kuala Lumpur running **Ubuntu 24.04**. It serves:
 - **Web server:** Caddy, `/etc/caddy/Caddyfile`. HTTPS for everything is automatic. Private folders (`platform/`,
   `tools/`, `.git/`, `docs/` and so on) answer 404. `tenshi-tls-ask` makes sure certificates are only issued for real
   `*.tenshisystems.com` names.
+- **Leaderboards:** `tenshi-scores` (systemd, `tools/server/scores_service.py`) on 127.0.0.1:9126 behind
+  `https://tenshisystems.com/api/scores`. Finished runs from the three homepage games are kept in
+  `/srv/tenshi/data/scores/scores.db` (SQLite: name, stats, date; no IPs) and shown on the `leaderboard-*.html` pages.
+  To remove a run: `sqlite3 /srv/tenshi/data/scores/scores.db "DELETE FROM runs WHERE id = ..."` (find it with SELECT first).
 - **File manager:** `tenshi-files` (systemd, File Browser) on 127.0.0.1:9125, runs as `tenshi`, can only see `/srv/tenshi`.
   Its users live in `/srv/tenshi/data/filebrowser/filebrowser.db`; the first sign-in is in `/root/tenshi-files-admin.txt`.
   Files under `app/` are a git clone: `tenshi-deploy` resets them to GitHub on the next push, so change the website through

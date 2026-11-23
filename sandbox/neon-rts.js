@@ -72,6 +72,9 @@
 
   // ================================================ THE PAGE ================================================
   section.classList.add("rts-zone");
+  // An address for links (the leaderboard's Play button): jump here when the page opens with it.
+  if (!section.id) section.id = "station-defense";
+  if (location.hash === "#station-defense") setTimeout(() => section.scrollIntoView({ block: "start" }), 400);
   const root = document.createElement("div");
   root.className = "rts";
   root.innerHTML = `
@@ -95,6 +98,7 @@
       <h3>Mine. Build. Defend the Station.</h3>
       <p>An alien hive is sending swarms at your space station. Mine crystals, build a fleet and wipe out the hive.</p>
       <button type="button" class="rts-play">▶ PLAY STATION DEFENSE</button>
+      <a class="rts-board" href="/leaderboard-station-defense.html">🏆 LEADERBOARD</a>
       <p class="rts-help">Drag to select · Right-click to command · A attack-move · Q W E train · Miners: 1 2 3 4 build · Wheel / + − zoom · Space whole fleet</p>
     </div>`;
   section.appendChild(root);   // on the section itself (the site moves things inside the viewport for its parallax effect)
@@ -1213,6 +1217,8 @@
       <h3>${won ? "The alien hive is destroyed!" : "Defeat."}</h3>
       <p>${won ? "You won in" : "You lasted"} ${Math.floor(t / 60)}:${String(t % 60).padStart(2, "0")} · ${kills} aliens destroyed · ${waveNo} waves</p>
       <button type="button" class="rts-play">▶ PLAY AGAIN</button>`;
+    // Post the run to the leaderboard (leaderboard-station-defense.html).
+    if (window.TenshiScores) intro.appendChild(TenshiScores.panel("station", { time: t, won: won ? 1 : 0, kills, waves: waveNo }));
     setTimeout(() => { intro.hidden = false; showUI(false); }, won ? 1600 : 1200);
     if (won) sfx("achievement");
   }
@@ -1220,7 +1226,7 @@
   exitBtn.addEventListener("click", () => {
     if (state === "play") {
       state = "paused";
-      intro.innerHTML = `<p class="rts-kicker">PAUSED</p><h3>Station Defense</h3><button type="button" class="rts-play rts-resume">▶ RESUME</button> <button type="button" class="rts-play">↺ NEW GAME</button>`;
+      intro.innerHTML = `<p class="rts-kicker">PAUSED</p><h3>Station Defense</h3><button type="button" class="rts-play rts-resume">▶ RESUME</button> <button type="button" class="rts-play">↺ NEW GAME</button><a class="rts-board" href="/leaderboard-station-defense.html">🏆 LEADERBOARD</a>`;
     }
     leaveWindow(); showUI(false); intro.hidden = false;
   });

@@ -2018,6 +2018,78 @@ const portalPage = frame({
 });
 writePage("portal.html", portalPage);
 
+/* ---------- game leaderboards: one page per homepage game, filled live by leaderboard.js from /api/scores ---------- */
+{
+  const BOARDS = [
+    { game: "arcade", file: "leaderboard-arcade.html", name: "Neon Arcade", play: "index.html#top",
+      lead: "The best defenders of the neon city: shoot the sky above our homepage, keep your shields up and climb the board.",
+      how: ["Shoot anything in the sky above the homepage headline to start a run.", "Your run ends when your shields are gone (or you scroll away). Type your initials on the Game Over screen and press Save.", "Score comes straight from the game: combos, bosses and power-ups all count."] },
+    { game: "station", file: "leaderboard-station-defense.html", name: "Station Defense", play: "index.html#station-defense",
+      lead: "Commanders who held the station: mine crystals, build a fleet and destroy the alien hive.",
+      how: ["Play Station Defense on our homepage.", "When the hive falls (or your station does), enter a name and post your run.", "Score: 10 per alien destroyed, 150 per wave survived, and 5,000 for a victory plus a bonus for winning fast."] },
+    { game: "undercity", file: "leaderboard-undercity.html", name: "Undercity", play: "index.html#undercity",
+      lead: "The heroes who went deepest: descend through the circles of the Undercity and carry your gold back to the light.",
+      how: ["Play Undercity on our homepage.", "When your hero falls or wins, enter a name and post your run. Time played counts every minute of that hero's journey.", "Score: 100 per level, 250 per circle reached, 5 per kill, 1 per 10 gold, 2,500 per ascension and 5,000 for defeating Satan."] },
+  ];
+  for (const b of BOARDS) {
+    const page = frame({
+      prefix: "", current: "", title: `${b.name} Leaderboard`, description: `Top scores, time played and records for ${b.name}, the free game on the Tenshi Systems Engineering homepage.`,
+      bodyClass: "page lb-page",
+      extraHead: `  <link rel="stylesheet" href="leaderboard.css?v=20261123a">\n`,
+      extraScripts: `  <script src="leaderboard.js?v=20261123a"></script>\n`,
+      main: `    <section class="svc-hero">
+      <div class="svc-hero-inner">
+        <div class="svc-hero-text">
+          <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li>Games</li><li aria-current="page">${esc(b.name)} leaderboard</li></ol></nav>
+          <h1>${esc(b.name)} Leaderboard</h1>
+          <p class="svc-hero-lead">${esc(b.lead)}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section lb" data-board="${b.game}" aria-label="${esc(b.name)} leaderboard">
+      <div class="page-inner">
+        <ul class="lb-switch" aria-label="Leaderboards">
+${BOARDS.map((o) => `          <li><a href="${o.file}"${o.game === b.game ? ' aria-current="page"' : ""}>${esc(o.name)}</a></li>`).join("\n")}
+        </ul>
+        <ul class="lb-totals">
+          <li><b data-t="runs">–</b><span>Runs</span></li>
+          <li><b data-t="players">–</b><span>Players</span></li>
+          <li><b data-t="seconds">–</b><span>Time played</span></li>
+          <li><b data-t="best">–</b><span>Top score</span></li>
+        </ul>
+        <div class="lb-bar">
+          <div class="lb-periods" role="group" aria-label="Period">
+            <button type="button" data-period="all" aria-pressed="true">All time</button>
+            <button type="button" data-period="month" aria-pressed="false">30 days</button>
+            <button type="button" data-period="week" aria-pressed="false">This week</button>
+            <button type="button" data-period="today" aria-pressed="false">Today</button>
+          </div>
+          <a class="lb-play" href="${b.play}">▶ Play ${esc(b.name)}</a>
+        </div>
+        <div class="lb-wrap">
+          <table>
+            <caption class="sr-only">${esc(b.name)} top 50 runs. Choose a column heading to sort by it.</caption>
+            <thead><tr class="lb-head-row"></tr></thead>
+            <tbody class="lb-rows"><tr><td class="lb-empty">Loading the leaderboard…</td></tr></tbody>
+          </table>
+        </div>
+        <p class="lb-status" aria-live="polite"></p>
+        <div class="lb-how">
+          <h2 class="section-title">How to get on the board</h2>
+          <ul>
+${b.how.map((h) => `            <li>${esc(h)}</li>`).join("\n")}
+          </ul>
+          <p>Only the name you type and your run's numbers are kept. Please keep names friendly.</p>
+        </div>
+      </div>
+    </section>
+`,
+    });
+    writePage(b.file, page);
+  }
+}
+
 mkdirSync("projects", { recursive: true });
 for (const p of PROJECTS) writePage(`projects/${p.slug}.html`, projectPage(p));
 console.log(`index.html updated; about.html, team.html, services.html, technology.html, projects.html, contact.html, ${SERVICES.length} service pages and ${PROJECTS.length} project pages written; news.html, blog.html, ${slugPosts.length} blog post page(s) and portal.html written`);
