@@ -238,3 +238,11 @@ html.neon:not(#_):not(#__):not(#___) .lx .btn-primary:hover, html.neon:not(#_):n
 html.neon:not(#_):not(#__):not(#___) .lx .btn-quiet { background: #000 !important; border-color: rgba(255, 255, 255, .35) !important; box-shadow: none !important; }
 html.neon:not(#_):not(#__):not(#___) .lx .btn-quiet:hover, html.neon:not(#_):not(#__):not(#___) .lx .btn-quiet:focus-visible { background: #14052b !important; border-color: #b04dff !important; }
 html.neon:not(#_):not(#__):not(#___) .lx .btn * { color: #fff !important; -webkit-text-fill-color: #fff !important; }
+
+/* Logo drop zone: dark with a dashed purple edge and readable text; the preview only shows once a logo is chosen. */
+html.neon:not(#_):not(#__):not(#___) .lx-drop { background: #1a0838 !important; border: 2px dashed rgba(176, 77, 255, .7) !important; border-radius: 12px; color: #fff !important; }
+html.neon:not(#_):not(#__):not(#___) .lx-drop:hover, html.neon:not(#_):not(#__):not(#___) .lx-drop:focus-within { border-color: #ff2bd6 !important; background: #24104a !important; }
+html.neon:not(#_):not(#__):not(#___) .lx-drop-text, html.neon:not(#_):not(#__):not(#___) .lx-drop-text b { color: #fff !important; -webkit-text-fill-color: #fff !important; }
+html.neon:not(#_):not(#__):not(#___) .lx-drop-text small { color: #d9c4ff !important; -webkit-text-fill-color: #d9c4ff !important; }
+html.neon:not(#_):not(#__):not(#___) .lx-logo-preview[hidden] { display: none !important; }
+html.neon:not(#_):not(#__):not(#___) .lx .lx-link { color: #ff8ae6 !important; -webkit-text-fill-color: #ff8ae6 !important; background: none !important; }
