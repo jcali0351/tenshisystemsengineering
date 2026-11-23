@@ -34,7 +34,7 @@
 /* Neon Arcade page: a full-height hero for the city and the sky. */
 .arcade-page .arcade-hero { min-height: 100vh; min-height: 100dvh; display: grid; place-items: center; position: relative; z-index: 2; background: transparent; }
 /* The card is see-through, so the sky (where you shoot) isn't covered by a panel. */
-html.neon:not(#_):not(#__) .arcade-page .arcade-hero .hero-card, html.neon:not(#_):not(#__) .arcade-hero .hero-card {
+html.neon.gx-page:not(#_):not(#__) main .arcade-hero .hero-card {   /* outranks the dark card panel in neon-pages.css */
   text-align: center; max-width: 720px; margin: 0 auto; padding: 120px 20px 40px;
   background: none !important; border: 0 !important; box-shadow: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
 .arcade-hero .hero-lead { text-shadow: 0 2px 12px rgba(8, 2, 24, .9); }
