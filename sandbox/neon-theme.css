@@ -435,7 +435,7 @@ html.neon .hero-logo { filter: drop-shadow(0 0 12px var(--neon-pink)) drop-shado
 .neon-over-box form { display: flex; gap: 8px; justify-content: center; align-items: end; margin: 12px 0; }
 .neon-over-box label { display: grid; gap: 4px; font-size: .7rem; letter-spacing: .25em; }
 .neon-over-box input { width: 90px; padding: 8px; text-align: center; text-transform: uppercase; font: 800 1.2rem Oswald, sans-serif; letter-spacing: .3em; border-radius: 8px; border: 1px solid #b04dff; background: #14052b; color: #fff; }
-.neon-over-box button { padding: 9px 16px; border-radius: 999px; border: 0; background: #fff; color: #2e0b57; font: 800 .85rem Oswald, sans-serif; letter-spacing: .15em; cursor: pointer; }
+.neon-over-box button { padding: 9px 16px; border-radius: 999px; border: 1px solid #a855f7; background: #3b0d7a; color: #fff; font: 800 .85rem Oswald, sans-serif; letter-spacing: .15em; cursor: pointer; }
 .neon-over-box ol { text-align: left; margin: 10px auto 16px; padding-left: 28px; max-width: 220px; font-size: .95rem; }
 .neon-over-box li { display: flex; justify-content: space-between; } .neon-over-box li b { color: #ff6ec7; }
 /* Ways out of the score screen: a round close button in the corner and a Close button beside Play Again. */
@@ -720,15 +720,15 @@ html.neon:not(#_):not(#__) .feature-list { list-style: none !important; padding:
 html.neon:not(#_):not(#__) .feature-list li { display: flex; gap: 12px; align-items: baseline; padding: 9px 0 !important; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
 html.neon:not(#_):not(#__) .feature-list li::before { content: "◆" !important; position: static !important; transform: none !important; width: auto !important; height: auto !important; background: none !important; color: #ff6ec7; -webkit-text-fill-color: #ff6ec7; font-size: 0.7em; flex: none; }
 html.neon:not(#_):not(#__) .feature-list li { padding-left: 0 !important; }
-/* Buttons: white pills with dark purple text (PLAY AGAIN). */
+/* Buttons: dark purple pills with white text and a violet edge. */
 html.neon:not(#_):not(#__) .services .service-card a.btn-more.btn-more,
 html.neon:not(#_):not(#__) .contact .contact-form .btn.btn-primary.btn-primary {
-  display: inline-block; align-self: flex-start; padding: 10px 18px !important; border-radius: 999px !important; border: 0 !important;
-  background: #fff !important; color: #2e0b57 !important; -webkit-text-fill-color: #2e0b57 !important;
+  display: inline-block; align-self: flex-start; padding: 10px 18px !important; border-radius: 999px !important; border: 1px solid #a855f7 !important;
+  background: #3b0d7a !important; color: #fff !important; -webkit-text-fill-color: #fff !important;
   font: 800 0.8rem/1 Oswald, sans-serif !important; letter-spacing: 0.15em !important; text-transform: uppercase; text-decoration: none !important;
-  box-shadow: 0 0 18px rgba(255, 255, 255, 0.18); transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0 18px rgba(168, 85, 247, 0.35); transition: transform 0.2s, box-shadow 0.2s;
 }
-html.neon:not(#_):not(#__) .services .service-card a.btn-more.btn-more * { color: #2e0b57 !important; -webkit-text-fill-color: #2e0b57 !important; }
+html.neon:not(#_):not(#__) .services .service-card a.btn-more.btn-more * { color: #fff !important; -webkit-text-fill-color: #fff !important; }
 html.neon:not(#_):not(#__) .services .service-card a.btn-more.btn-more:hover,
 html.neon:not(#_):not(#__) .contact .contact-form .btn.btn-primary.btn-primary:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 0 26px rgba(255, 43, 214, 0.55); }
 /* Inputs: the initials box. */
@@ -957,7 +957,7 @@ html.neon:not(#_):not(#__) .arpg-intro h3 { font: 700 clamp(26px, 4vw, 40px)/1.0
 html.neon .arpg-intro p { color: rgba(255, 255, 255, .85); margin: 0 0 14px; font-size: 15px; }
 html.neon .arpg-kicker { font: 700 12px Oswald, sans-serif !important; letter-spacing: .18em; color: #ff6ec7 !important; -webkit-text-fill-color: #ff6ec7 !important; }
 html.neon .arpg-buttons { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
-html.neon .arpg-intro .arpg-play { font-size: 15px; padding: 13px 24px; background: #fff; color: #2e0b57; border: 0; display: inline-flex; align-items: center; justify-content: center; }
+html.neon .arpg-intro .arpg-play { font-size: 15px; padding: 13px 24px; background: #3b0d7a; color: #fff; border: 1px solid #a855f7; display: inline-flex; align-items: center; justify-content: center; }
 html.neon .arpg-intro .arpg-play.arpg-alt { background: rgba(30, 14, 52, .85); color: #fff; border: 1px solid rgba(215, 170, 255, .4); }
 html.neon .arpg-intro .arpg-help { font-size: 12px; color: rgba(255, 255, 255, .55) !important; margin: 14px 0 0; }
 /* While playing, the game fills the whole window. */

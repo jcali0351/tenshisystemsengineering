@@ -68,20 +68,20 @@ html.neon.gx-page:not(#_):not(#__) main :is(.service-card, .svc-detail, .blog-ca
 html.neon.gx-page:not(#_):not(#__) main :is(.svc-body, .blog-post-section, .ab-std, .svc-benefits, .svc-depth) li:not(.tpl-mock *) {
   border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-top: 6px; padding-bottom: 6px;
 }
-/* Links: lilac. Buttons: white pills with dark purple text (PLAY AGAIN). */
+/* Links: lilac. Buttons: dark purple pills with white text and a violet edge. */
 html.neon.gx-page:not(#_):not(#__) main a:not(.btn):not([class*="btn"]):not(.tpl-mock *):not(:has(img)),
 html.neon.gx-page:not(#_):not(#__) .site-footer a:not(.btn) { color: #d7b8ff !important; -webkit-text-fill-color: #d7b8ff !important; }
 html.neon.gx-page:not(#_):not(#__) main :is(a.btn, button.btn, .btn-primary, .btn-more, [class*="btn-"]:is(a, button), .svc-cta a, button[type="submit"], .prj-actions a, .tpl-actions a):not(.tpl-mock *) {
-  display: inline-block; padding: 11px 20px !important; border-radius: 999px !important; border: 0 !important;
-  background: #fff !important; color: #2e0b57 !important; -webkit-text-fill-color: #2e0b57 !important;
+  display: inline-block; padding: 11px 20px !important; border-radius: 999px !important; border: 1px solid #a855f7 !important;
+  background: #3b0d7a !important; color: #fff !important; -webkit-text-fill-color: #fff !important;
   font: 800 0.8rem/1 Oswald, sans-serif !important; letter-spacing: 0.15em !important; text-transform: uppercase; text-decoration: none !important;
-  box-shadow: 0 0 18px rgba(255, 255, 255, 0.18) !important; transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0 18px rgba(168, 85, 247, 0.35) !important; transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
 }
 html.neon.gx-page:not(#_):not(#__) main :is(a.btn, button.btn, .btn-primary, .btn-more, [class*="btn-"]:is(a, button), .svc-cta a, button[type="submit"], .prj-actions a, .tpl-actions a):not(.tpl-mock *) * {
-  color: #2e0b57 !important; -webkit-text-fill-color: #2e0b57 !important;
+  color: #fff !important; -webkit-text-fill-color: #fff !important;
 }
 html.neon.gx-page:not(#_):not(#__) main :is(a.btn, button.btn, .btn-primary, .btn-more, [class*="btn-"]:is(a, button), .svc-cta a, button[type="submit"]):hover {
-  transform: translateY(-2px) scale(1.03); box-shadow: 0 0 26px rgba(255, 43, 214, 0.55) !important;
+  transform: translateY(-2px) scale(1.03); background: #5b21b6 !important; box-shadow: 0 0 26px rgba(255, 43, 214, 0.55) !important;
 }
 /* Inputs: the initials box. */
 html.neon.gx-page:not(#_):not(#__) main :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
@@ -149,3 +149,25 @@ html.neon:not(#_):not(#__) .tech-card .tech-logo { margin: 0 auto 14px; }
 html.neon:not(#_):not(#__) .tech-card :is(.tech-name, .tech-desc) { text-align: center; margin-left: auto; margin-right: auto; }
 html.neon:not(#_):not(#__) .tech-card .tech-link { margin-top: 14px; align-self: center; }
 html.neon:not(#_):not(#__) .tech-group > .tech-grid { padding: 0 clamp(16px, 2.6vw, 32px) clamp(16px, 2.6vw, 32px); gap: clamp(14px, 1.8vw, 22px); }
+
+/* ======================================================================================================
+   NO LIGHT BOXES ON THE DARK PAGES. Leftovers from the old white site painted these white or light pink while the
+   neon look made their text white (unreadable). Default: dark purple with white text; the chosen one is brighter.
+   ====================================================================================================== */
+/* Filter and tab buttons: News categories, Portfolio categories, Technology groups. */
+html.neon.gx-page:not(#_):not(#__):not(#___) main :is(.news-tabs [role="tab"], .tpl-chip, .tech-filter button) {
+  background: #3b0d7a !important; color: #fff !important; -webkit-text-fill-color: #fff !important;
+  border: 1px solid #a855f7 !important; box-shadow: none !important;
+}
+html.neon.gx-page:not(#_):not(#__):not(#___) main :is(.news-tabs [role="tab"], .tpl-chip, .tech-filter button) * { color: #fff !important; -webkit-text-fill-color: #fff !important; }
+html.neon.gx-page:not(#_):not(#__):not(#___) main :is(.news-tabs [role="tab"], .tpl-chip, .tech-filter button):hover { background: #5b21b6 !important; border-color: #ff2bd6 !important; }
+html.neon.gx-page:not(#_):not(#__):not(#___) main :is(.news-tabs [role="tab"][aria-selected="true"], .tpl-chip[aria-pressed="true"], .tech-filter button[aria-pressed="true"]) {
+  background: linear-gradient(135deg, #8b2cf5, #c026d3) !important; border-color: #ff2bd6 !important; box-shadow: 0 0 16px rgba(255, 43, 214, .4) !important;
+}
+html.neon.gx-page:not(#_):not(#__):not(#___) main .news-tab-count { background: rgba(255, 255, 255, .16) !important; }
+/* Boxes: Portfolio's three steps, the Services tags, value icons. */
+html.neon.gx-page:not(#_):not(#__):not(#___) main :is(.tpl-steps li, .svc-detail-tags li, .value-icon) {
+  background: #1a0838 !important; border-color: rgba(176, 77, 255, .5) !important; color: #fff !important;
+}
+html.neon.gx-page:not(#_):not(#__):not(#___) main .tpl-steps li { border-top: 3px solid #ff2bd6 !important; border-radius: 14px; }
+html.neon.gx-page:not(#_):not(#__):not(#___) main .tpl-step-n { color: #ff8ae6 !important; -webkit-text-fill-color: #ff8ae6 !important; }
