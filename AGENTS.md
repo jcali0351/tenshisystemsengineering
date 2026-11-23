@@ -111,6 +111,13 @@ Hero headline effects: `sandbox/neon-fx.js` (flashing messages, particles). Shar
   in end(), Undercity in die() / transcend() (hero.playMs and hero.kills are saved with the hero). Each game links to
   its board with a root-relative `/leaderboard-*.html` link.
 
+## Games menu
+- The header's Games dropdown (in index.html, copied to every page) replaced Portfolio: games.html (hub) and a page per
+  game, game-arcade.html, game-station-defense.html, game-undercity.html (build-pages.mjs, "the Games menu";
+  styles games.css), then the three leaderboards. The game pages load the same sandbox scripts as the homepage with
+  `defer` (they must run after game-settings.js, which neon-pages.mjs adds last); bump `V` there when those scripts
+  change. Station Defense / Undercity find their section by the hidden titles #parallax-px1-title / #parallax-px2-title.
+
 ## Building pages
 - `node tools/build-pages.mjs` regenerates all pages from index.html's header + translations, then runs
   tools/neon-pages.mjs (neon look, stamps), the search index and sitemap.
