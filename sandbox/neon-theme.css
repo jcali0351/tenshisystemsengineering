@@ -400,8 +400,9 @@ html.neon .hero-logo { filter: drop-shadow(0 0 12px var(--neon-pink)) drop-shado
 /* While the boss bar is up, the banner sits just below it. */
 .neon-bossbar:not([hidden]):not(.is-hidden) ~ .neon-banner { top: 120px; }
 @media (max-width: 760px) {
-  .neon-banner { top: 72px; font-size: clamp(.95rem, 5vw, 1.4rem); }
-  .neon-bossbar:not([hidden]):not(.is-hidden) ~ .neon-banner { top: 138px; }
+  /* Phones: below the score strip (72-105px) and above the headline. */
+  .neon-banner { top: 110px; font-size: clamp(.95rem, 5vw, 1.4rem); }
+  .neon-bossbar:not([hidden]):not(.is-hidden) ~ .neon-banner { top: 140px; }
 }
 
 /* Service tip, bottom centre: what the thing you just shot means for a business. */
