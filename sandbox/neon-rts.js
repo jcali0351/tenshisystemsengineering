@@ -109,7 +109,7 @@
 
   let W = 0, H = 0, zoom = 1, baseZoom = 1, fitZoom = 0.1, userZoom = ZOOM.start;
   function resize() {
-    const r = root.getBoundingClientRect(), ratio = Math.min(window.devicePixelRatio || 1, 2);
+    const r = root.getBoundingClientRect(), ratio = window.TenshiDisplay ? window.TenshiDisplay.pixelRatio(r.width, r.height) : Math.min(window.devicePixelRatio || 1, 2);   // fits the display (neon-display.js)
     W = r.width; H = r.height;
     canvas.width = Math.round(W * ratio); canvas.height = Math.round(H * ratio);
     mainCtx.setTransform(ratio, 0, 0, ratio, 0, 0);
@@ -128,6 +128,7 @@
     userZoom *= f; applyZoom();
     cam.x = wx - px / zoom; cam.y = wy - py / zoom; clampCamera();
   }
+  window.addEventListener("tenshi:display", resize);
   window.addEventListener("resize", resize);
 
   // ================================================ THE GAME STATE ================================================

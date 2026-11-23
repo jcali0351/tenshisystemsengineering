@@ -195,13 +195,14 @@
   }
   function resize() {
     const r = root.getBoundingClientRect();
-    ratio = Math.min(window.devicePixelRatio || 1, 2);
+    ratio = window.TenshiDisplay ? window.TenshiDisplay.pixelRatio(r.width, r.height) : Math.min(window.devicePixelRatio || 1, 2);   // fits the display (neon-display.js)
     W = r.width; H = r.height;
     canvas.width = Math.round(W * ratio); canvas.height = Math.round(H * ratio);
     light.width = Math.round(W / 2); light.height = Math.round(H / 2);      // half-size light map: soft and cheap
     baseZoom = W < 760 ? 0.8 : clamp(W / 1400, 0.85, 1.3); zoom = baseZoom * userZoom;
   }
   window.addEventListener("resize", resize);
+  window.addEventListener("tenshi:display", resize);
 
   // ================================================ STATE ================================================
   let grid, explored, rooms, torches, stairs, startPos, floorNo = 1;

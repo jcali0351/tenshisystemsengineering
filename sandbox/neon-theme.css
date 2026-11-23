@@ -937,6 +937,11 @@ html.neon.arpg-takeover, html.neon.arpg-takeover body { overflow: hidden !import
 html.neon.arpg-takeover .parallax.arpg-zone { position: fixed !important; inset: 0 !important; width: 100vw !important; max-width: none !important; height: 100vh !important; height: 100dvh !important; min-height: 0 !important; margin: 0 !important; z-index: 5000 !important; }
 html.neon.arpg-takeover :is(.site-header, .gx-hud, .gx-toast, .tk-root, .neon-weapons, .neon-hud, .neon-banner, .neon-bubble, .neon-tip, .neon-bossbar, #neon-beasts, #neon-game, #neon-geo, #neon-particles) { visibility: hidden !important; }
 html.neon.arpg-takeover main { z-index: 5000 !important; }
+/* While a game fills the window, the page's other full-screen canvases are covered anyway: take them out entirely, so the
+   graphics card's memory goes to the game. On big high-resolution screens Chrome otherwise left the game window undrawn
+   for a few seconds and the page behind it showed through. */
+html.neon.arpg-takeover :is(#neon-bg, #neon-game, #neon-beasts, #neon-geo, #neon-particles, .rts-canvas),
+html.neon.rts-takeover :is(#neon-bg, #neon-game, #neon-beasts, #neon-geo, #neon-particles, .arpg-canvas) { display: none !important; }
 html.neon.arpg-takeover .neon-sound { z-index: 5001 !important; }
 html.neon.arpg-takeover .arpg-top, html.neon .arpg-zone:fullscreen .arpg-top { top: 14px; }
 html.neon.arpg-takeover .arpg-mini, html.neon .arpg-zone:fullscreen .arpg-mini { top: 14px; }
