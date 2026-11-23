@@ -2092,7 +2092,7 @@ ${b.how.map((h) => `            <li>${esc(h)}</li>`).join("\n")}
 
 /* ---------- the Games menu: a hub (games.html) and a page per game where it fills the screen ---------- */
 {
-  const V = "20261123j";   // cache tag for the game scripts on these pages (bump with the homepage's when they change)
+  const V = "20261123k";   // cache tag for the game scripts on these pages (bump with the homepage's when they change)
   const js = (files) => files.map((f) => `  <script src="sandbox/${f}.js?v=${V}" defer></script>`).join("\n") + "\n";
   // Deferred, so they run after game-settings.js, which tools/neon-pages.mjs adds at the end of every page.
   const crumbs = (name) => `<nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li><a href="games.html">Games</a></li><li aria-current="page">${esc(name)}</li></ol></nav>`;
@@ -2152,7 +2152,7 @@ ${about(g)}`,
       <div class="hero-card">
         ${crumbs(g.name)}
         <p class="game-kicker">Free · plays right here</p>
-        <h1 id="arcade-title">${esc(g.name)}</h1>
+        <h1 id="arcade-title" data-no-reel>${esc(g.name)}</h1>
         <p class="hero-lead">Click anywhere in the sky to start shooting. Keep the city's shields up as long as you can.</p>
         <p class="game-links"><a class="game-btn" href="${g.board}">🏆 Leaderboard</a></p>
       </div>

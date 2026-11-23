@@ -449,8 +449,18 @@
     h1.classList.remove("kx-away");
   }
 
+  // A headline with data-no-reel (the Neon Arcade page) keeps its own words: it punches in once, then only glows and
+  // glitches now and then; the business messages never replace it.
+  const noReel = h1.hasAttribute("data-no-reel");
+  let shownOnce = false;
+
   async function cycle() {
     split();
+    if (noReel && shownOnce) {
+      for (let g = 0; g < 2; g++) { await wait(2600 + Math.random() * 1800); const w = pick(words); replay(w, "kx-glitch"); fizzle(w.getBoundingClientRect(), 10); }
+      return;
+    }
+    shownOnce = true;
 
     // Step 1: hide every word, then punch them in one at a time, each in a strobe colour with a burst of sparks.
     words.forEach(w => { w.classList.add("kx-hidden"); w.classList.remove("kx-glow", "kx-fizzle", "kx-glitch"); });
@@ -477,7 +487,7 @@
     await wait(1200);
 
     // Step 4: the business messages take over for a moment, then the next cycle brings the headline back.
-    await playMessages();
+    if (!noReel) await playMessages();
   }
 
   (async function loop() {
