@@ -67,6 +67,22 @@
   });
   document.addEventListener("click", function (e) { if (!isMobile() && !e.target.closest(".site-nav .has-sub")) closeSubs(); });
 
+  /* ---------- hover with a grace period (wide screens) ----------
+     A dropdown opens as the mouse arrives and only closes once the mouse has been away from it for 350 ms, so a
+     diagonal move, the gap under the bar or the swing-in animation can't snap it shut. */
+  subs.forEach(function (li) {
+    var t = 0;
+    li.addEventListener("pointerenter", function (e) {
+      if (isMobile() || e.pointerType === "touch") return;
+      clearTimeout(t); closeSubs(li); setSub(li, true);
+    });
+    li.addEventListener("pointerleave", function (e) {
+      if (isMobile() || e.pointerType === "touch") return;
+      clearTimeout(t);
+      t = setTimeout(function () { if (!li.matches(":hover") && !li.contains(document.activeElement)) setSub(li, false); }, 350);
+    });
+  });
+
   /* ---------- the Menu button and panel ---------- */
   var setPanel = function (open) {
     if (open) header.style.setProperty("--nav-top", Math.max(0, Math.round(header.getBoundingClientRect().bottom)) + "px");
