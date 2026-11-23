@@ -132,11 +132,12 @@
     <div class="neon-bubble" aria-live="polite"></div>
     <div class="neon-over" hidden role="dialog" aria-label="Game over">
       <div class="neon-over-box">
+        <button type="button" class="neon-over-x" data-k="close" aria-label="Close and go back to the page">&times;</button>
         <h2>GAME OVER</h2>
         <p class="neon-over-score">SCORE <b data-k="final">0</b></p>
         <form data-k="form"><label>YOUR INITIALS <input data-k="initials" maxlength="3" autocomplete="off" required></label><button type="submit">SAVE</button></form>
         <ol data-k="board"></ol>
-        <button type="button" data-k="again">PLAY AGAIN</button>
+        <div class="neon-over-actions"><button type="button" data-k="again">PLAY AGAIN</button><button type="button" class="neon-over-quit" data-k="quit">CLOSE</button></div>
       </div>
     </div>`;
   document.body.appendChild(ui);
@@ -618,6 +619,13 @@
     $("form").hidden = true; renderBoard();
   });
   $("again").addEventListener("click", () => { reset(); started = true; showBanner("GO!", 900); });
+  // Leaving the score screen: the close button, the Close button, Esc, or a click on the dark backdrop. The game goes back to
+  // its quiet "click the sky to start" mode, so nothing attacks until the visitor shoots again.
+  function closeOver() { if (over.hidden) return; reset(); }
+  $("close").addEventListener("click", closeOver);
+  $("quit").addEventListener("click", closeOver);
+  over.addEventListener("click", e => { if (e.target === over) closeOver(); });
+  window.addEventListener("keydown", e => { if (e.key === "Escape" && !over.hidden) closeOver(); });
 
   // ================================================ INSANE MODE (Konami code) ================================================
   const KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
