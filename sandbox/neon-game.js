@@ -617,7 +617,8 @@
 
   // ================================================ EFFECTS ================================================
   function hitStop(ms) { hitStopUntil = Math.max(hitStopUntil, performance.now() + ms); }
-  function shakeIt(amount) { shake = Math.max(shake, amount); }
+  // Screen shake is switched off: it jolted the hero content and the page on every hit (display problems). Calls stay as no-ops.
+  function shakeIt(amount) { }
   function burst(x, y, color, n, speed) {
     for (let i = 0; i < n; i++) { const a = Math.random() * 6.28, v = rand(1, 4) * speed; shards.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 1, size: rand(1.5, 3.5), color }); }
   }
@@ -1175,12 +1176,9 @@
     hud.classList.toggle("is-hidden", !visible);
     bossbar.classList.toggle("is-hidden", !visible);
 
-    // Screen shake: the game canvas, the floor (neon-bg.js reads window.neonShake) and the hero all jolt together.
-    shake *= 0.86;
-    const sx = (Math.random() - 0.5) * shake, sy = (Math.random() - 0.5) * shake;
-    window.neonShake.x = sx; window.neonShake.y = sy;
-    if (hero) hero.style.transform = shake > 0.5 ? `translate(${sx * 0.6}px, ${sy * 0.6}px)` : "";
-    ctx.save(); ctx.translate(sx, sy);
+    // No screen shake: the canvas, the floor (neon-bg.js reads window.neonShake) and the hero stay still.
+    window.neonShake.x = 0; window.neonShake.y = 0;
+    ctx.save();
 
     if (visible && !paused && !over_) {
       const busy = insane ? 2 : 1;
