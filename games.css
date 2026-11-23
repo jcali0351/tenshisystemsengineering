@@ -23,7 +23,7 @@
 .game-card p { color: #e6d9ff; }
 
 /* Station Defense and Undercity pages: the game fills the screen under the header. */
-.game-crumbs { padding-top: 92px; padding-bottom: 10px; }
+.game-crumbs { padding-top: 92px; padding-bottom: 10px; padding-inline: max(var(--gutter, 20px), 20px); }
 .game-page .game-stage { position: relative; }
 .game-about h3 { margin-top: 1.4em; }
 .game-controls { padding-left: 1.2em; color: #e6d9ff; }
@@ -33,7 +33,11 @@
 
 /* Neon Arcade page: a full-height hero for the city and the sky. */
 .arcade-page .arcade-hero { min-height: 100vh; min-height: 100dvh; display: grid; place-items: center; position: relative; z-index: 2; background: transparent; }
-.arcade-page .arcade-hero .hero-card { text-align: center; max-width: 720px; margin: 0 auto; padding: 120px 20px 40px; }
+/* The card is see-through, so the sky (where you shoot) isn't covered by a panel. */
+html.neon:not(#_):not(#__) .arcade-page .arcade-hero .hero-card, html.neon:not(#_):not(#__) .arcade-hero .hero-card {
+  text-align: center; max-width: 720px; margin: 0 auto; padding: 120px 20px 40px;
+  background: none !important; border: 0 !important; box-shadow: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+.arcade-hero .hero-lead { text-shadow: 0 2px 12px rgba(8, 2, 24, .9); }
 .arcade-page .arcade-hero .crumbs { display: flex; justify-content: center; }
 .arcade-page .arcade-hero h1 { margin: 6px 0 12px; }
 .arcade-page .arcade-hero .game-links { justify-content: center; }
