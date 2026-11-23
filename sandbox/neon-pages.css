@@ -122,7 +122,7 @@ html.neon.gx-page:not(#_):not(#__):not(#___) main .service-card .service-pic {
 html.neon.gx-page:not(#_):not(#__):not(#___) main .service-card > p {
   width: 70% !important; margin-left: auto !important; margin-right: auto !important; align-self: center !important;
 }
-html.neon.gx-page:not(#_):not(#__):not(#___) main .service-card > .btn-more { align-self: flex-start !important; margin-left: 15% !important; }
+html.neon.gx-page:not(#_):not(#__):not(#___) main .service-card > .btn-more { align-self: center !important; margin-left: auto !important; margin-right: auto !important; }   /* centred in the card */
 
 /* Technology page: each group's transparent neon icon sits above its heading (no tile, frame or shadow behind it),
    with the heading and line of text centred underneath. */
