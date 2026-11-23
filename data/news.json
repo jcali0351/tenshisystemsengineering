@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-21T05:28:00.699Z",
+  "generatedAt": "2026-11-23T22:24:00.351Z",
   "generator": "Tenshi Scraper",
   "categories": [
     {
@@ -7,51 +7,11 @@
       "key": "newsCatWeb",
       "items": [
         {
-          "title": "Blanc, the browser made with AI, swaps Electron for Chromium",
-          "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE5VMVp5RjRVbFZWUm5VX0VmYWtNLXhYN3VoeFZ5YmFSWVQ3YTdPaE9Qa1UwQ0s2a0czemVKUkRwQkRMT0lVMUJjVm5jeE43aTU1QjcyQTdKejV4UGxmOUZFTG9PR0NvbG9DLWlNQ2NJVVPSAXZBVV95cUxQbzl3VC1wejVmZEJ5QVZFMkhwZ282V04yLUZ3MEhPdEppaGpBOEFCSHVKYWpMeVNLcGJuTzlxOURvd2dBSzZGY2VvVFg3RnhBUmYzckNJTDdVV1ZiVkJTclNNNVluQmc0czNqbVNzWFpidmQydUtB?oc=5",
-          "source": "OMG! Ubuntu",
-          "sourceUrl": "https://www.omgubuntu.co.uk",
-          "date": "2026-11-21T02:52:39.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/cbd6c172436e674d.jpg",
-            "query": "server room",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/6042704/photo-image-public-domain-free",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/c580cdaf-7228-4c08-92cf-1401c43a5d84/thumb/"
-          }
-        },
-        {
-          "title": "Magnetize ME Expands Web Design and Development Service for Small Businesses Across Atlanta and North Georgia",
-          "url": "https://news.google.com/rss/articles/CBMi9gFBVV95cUxPTEkyeHNwWFpCUm5ENGd3VEwtRkpadGl5OU1sSGtkNE9YQTRrVHQ0LWFQaHV3M0pzRmxrempUSThjSDJwTUh0d2dyMFlncVdQRXVfZERzbWJLMXl5cmZvNFNzc3ZoWE5CLU5ZV3RBT0UwRVRQQTNkRlR3ZXNfMVpYa0RQMzVRV0F1U2dfZDhqSjZ4MjhOQWFUT0tlZDV0V25HRk1INW1MaFh6anpsSkRTS2pKRVN6QlI2NWpoNlE0THAzX3ROX3UzazZSeHlGRFZuTnFDREdGNXZWcFh5bU5ZNjJ4M0w1SnVqWkRveHhTNVdfVzVBb0E?oc=5",
-          "source": "azcentral.com and The Arizona Republic",
-          "sourceUrl": "https://www.azcentral.com",
-          "date": "2026-11-20T21:27:35.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/c48074c31a903ee9.jpg",
-            "query": "web design laptop",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/5966952/macbook-css-code-web-design-desk",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/2a22061d-99eb-4ac1-9fdf-3420fb465851/thumb/"
-          }
-        },
-        {
-          "title": "How did the Mosaic browser make the World Wide Web easier to use?",
-          "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxNWVhYVmhLWlhNZERTa0FreXpSMTV1MC1RY3FnQUZra0JqMXRiUXlCSk9FR1JWaWpfRDJoSENaVHphM2p6cFFEcjdKbXRxV0w3bC1LUWhsNnQ3UXVyZUpOSVJDV0Z3MC1oRmk5ckRHYnlZSmp5Snl5VXU2d281OUkwV0hQZGRpMDhsZUhucHFfOVVONG1jajdCSVhlRXBVcW9hYUxnSg?oc=5",
-          "source": "Britannica",
-          "sourceUrl": "https://www.britannica.com",
-          "date": "2026-11-20T19:24:25.000Z",
+          "title": "Independent Web Browser/Engine \"Ladybird\" Goes Into Alpha Release",
+          "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxQd3hZal9ZYVRBNnM0TnM4bTk1RXdEc3pNaVhBdWN4NDlmYkdKN3Y1MDQzUThEaXJXdFBoSkVsX3NiU0NYSmlJVjdFaGE1eEdoNTMxaDE5b1FUVnRscEJKV09kUEI0WDdoTGg4emlLTXBWVE9RTG51dE5KQTE4VEUxWDltZzhDczhTNF9zcTh5ZXEwVjZiUUJ5WnNGdXZvNDjSAaQBQVVfeXFMTS15eDZ3aU5yQ2VxU2ZFQ0NYU2dLYjRjTkY4c2UxX1VoaDI3ZjU3aDBrUlJhRGZEeVdpUzl2UHVDNmlmTHNVS0xsellQSWl6bXJZZXhIMGhCM25xdF9hbVpYMlFBUUtncW9VQm1kUG1fRzBEN1VRR2RUQ0swQUlIbDZvTkJ6ZVd3WVRoektVMjZyR2YwdlJFUTAteVh1MFNJby1oSlE?oc=5",
+          "source": "TechPowerUp",
+          "sourceUrl": "https://www.techpowerup.com",
+          "date": "2026-11-23T21:53:08.000Z",
           "excerpt": "",
           "image": {
             "src": "img/stories/d680c21c4d6faaa9.jpg",
@@ -67,71 +27,31 @@
           }
         },
         {
-          "title": "Fast Mobile First Trust Driven Web Design for a 2027 Ready Website by Strategic Web Designs",
-          "url": "https://news.google.com/rss/articles/CBMilgJBVV95cUxQbl93Tzk4d2QzTFFfRlJLYU04QTZfRUVGaVptR1FiRHAzWWJPcmlReUFkalN6aW1PbXVXN1RncXkyb1RNSzhYdURDanlITlhNTGtvUzdBcnVVTy1sbFZ2NEtySWZiVUtNNVg3b1lBNnU0S0dWX2stbGtILWtaMzlpdy01TFVMcGRUQzVMTXFudGM0MnVaQ1FtRG5QQkh0MVpZeHJoTXhuUElPajlwWVNUV00yZENkWG03QmgzQkdISUlOVDRxLW9zcmN4WFVyQTNOSldoYmR5UHVFYVh0RFNObXZXU3NNZlFocGZEdng0R3dlZWg2X3NvaXdiWGNFdk45OUZvbGFpV1AyYzZUamthZ25MZjIzZw?oc=5",
-          "source": "mykxlg.com",
-          "sourceUrl": "https://www.mykxlg.com",
-          "date": "2026-11-20T17:20:46.000Z",
+          "title": "Build Platform Expands Custom Website Design Services Across the Treasure Valley",
+          "url": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxQeFg0dC00dGljZUg1ZUxZdWpaNmRHb3BUUGRTbFdjY2w3MzlhQTg4SHpUeUxqdVNWaXFLM2ZaYk4ydmdOejFOWVFZWWt4Y3pDYTZaamJNa3d5dllDalNMSXhXcjNsRkFaU3Z6NGNKVlVyQ2t0RnU5MVFfV1ltQlVQdDEwalpjT1JNOU9WdDRCUVM3c2RFZDI5bHJOYUVmNmszcU1YQ2dDRVlOMThieVd1WVk5anh2Y2tWWVJnUVhpdjhJTFNRM0xDcVE2ZDZNaHdOdmc?oc=5",
+          "source": "The Detroit News",
+          "sourceUrl": "https://www.detroitnews.com",
+          "date": "2026-11-23T21:12:12.000Z",
           "excerpt": "",
           "image": {
-            "src": "img/stories/21fdcffe2a5bc00b.jpg",
+            "src": "img/stories/c48074c31a903ee9.jpg",
             "query": "web design laptop",
-            "creator": "André Karwath aka Aka",
+            "creator": "Unknown",
             "creatorUrl": null,
-            "license": "CC BY-SA 4.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-            "page": "https://commons.wikimedia.org/wiki/File:IBM_Thinkpad_R51.jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0e/IBM_Thinkpad_R51.jpg/960px-IBM_Thinkpad_R51.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/5966952/macbook-css-code-web-design-desk",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/2a22061d-99eb-4ac1-9fdf-3420fb465851/thumb/"
           }
         },
         {
-          "title": "Andy Clarke answers six questions about Standout Designs for the Web",
-          "url": "https://css-tricks.com/andy-clarke-standout-designs-for-the-web-interview/",
-          "source": "CSS-Tricks",
-          "sourceUrl": "https://css-tricks.com",
-          "date": "2026-11-20T15:03:47.000Z",
-          "excerpt": "Web designer, author, and Stuff & Nonsense founder Andy Clarke has released Standout Designs for the Web , a new e-book that encourages designers to move beyond familiar templates and…",
-          "image": {
-            "src": "img/stories/db484b9bcd4da965.jpg",
-            "query": "web design laptop",
-            "creator": "VIA Technologies",
-            "creatorUrl": null,
-            "license": "CC BY 3.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
-            "page": "https://commons.wikimedia.org/wiki/File:VIA_OpenBook_CAD.jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e5/VIA_OpenBook_CAD.jpg/960px-VIA_OpenBook_CAD.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
-        },
-        {
-          "title": "AP Technology Web Design in OKC Launches New Website Featuring Web Design and AI SEO Services",
-          "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxPbk1kWU9PSEJGZmdwVUtPcUZ4azRvc19Eejg5SmNqeFR1OFBVQnNsY2VadHNUQ1pvMDZ2cWZCQzJwUTBZbkpLTnVIRmtMYkRlUmhsQjhMMFB3UFIwLXNqMlJraE1jV2VzV1JhNzBYMXg3d3NlWUZKN1pkOUNFQlgwRWctNlREWlZvQnM5MURkaElaZVF0aEc0dm9PRnF3VzQ?oc=5",
-          "source": "openPR.com",
-          "sourceUrl": "https://www.openpr.com",
-          "date": "2026-11-19T23:30:07.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/4c023cb13dc8e318.jpg",
-            "query": "server room",
-            "creator": "Alexis Lê-Quôc from New York, United States",
-            "creatorUrl": null,
-            "license": "CC BY-SA 2.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
-            "page": "https://commons.wikimedia.org/wiki/File:3PAR_SAN_in_the_server_room.jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8a/3PAR_SAN_in_the_server_room.jpg/960px-3PAR_SAN_in_the_server_room.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
-        },
-        {
-          "title": "Mirror Dimension for Agents: Evaluating Browser-Use Agents Without the Web",
-          "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE5TMnlkYm9IeHZzVWpIVjZTMUlFV283RTR5ZE04YU0xX095akx2bngzR2FJUUxoU2ExMW5GdUhsbWJIY0tPWEZwTHVGRE5HSENVYmloZVVDdEdndUNFZHV4VXo3TENCT0lI?oc=5",
-          "source": "blog.google",
-          "sourceUrl": "https://blog.google",
-          "date": "2026-11-19T17:17:46.000Z",
+          "title": "Ladybird Web Browser/Engine Reaches Alpha",
+          "url": "https://news.google.com/rss/articles/CBMiYkFVX3lxTE85VFlwVzJodlpoYy14cGljQ3hqNFlCUVpPQjZCVUpDR2FzRTJVY2VDalJPM3k4YVY3Z1dhUVdyd1JSTFZBMU5XS0pnLUxzY3B3LUVMNzNmelgydlhZOGR2WkJB?oc=5",
+          "source": "Phoronix",
+          "sourceUrl": "https://www.phoronix.com",
+          "date": "2026-11-23T21:00:00.000Z",
           "excerpt": "",
           "image": {
             "src": "img/stories/2e2f481bf6faeecd.jpg",
@@ -147,11 +67,11 @@
           }
         },
         {
-          "title": "Building a Browser-Based Image Editor With Web Workers and OffscreenCanvas",
-          "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxPdlczaDlUZmRiaHVtMWV0eTZnZXp3MTFLX0RzS0YzMGx3ZjNnR1lEZDg4bUxtcjZxMnUyNjZhMjhSd05BVlVGSHQxYzZSTVJoUE8tM21WZDUwdlRDaW84bkxmZ1FYX3BoMTNMWUVJaXYzaGdyeHM5R1VfUXVHN25mVEZtaHoyVnFpRXFsQVdLV2dESUQwdzEyb1dfZURjQQ?oc=5",
-          "source": "HackerNoon",
-          "sourceUrl": "https://hackernoon.com",
-          "date": "2026-11-19T15:06:21.000Z",
+          "title": "New Archive Rescues Lost Web Development Articles",
+          "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxPZUZzT2c5dzFXRlVCSTMzMlhZVkhFa21nWUNxOUs2TGNFbHBQRkhlTk1KaFl4WGhqRnNmbGtnWHJSaEFXZlg3TDg3QUlITE44MEw2Vk9YOG5ocDFQU2tQZXpWMHp4Q0lGcW1za0xRcVZDWTB3VVlPaDlORVhRTGgzUTJpME0?oc=5",
+          "source": "news.lavx.hu",
+          "sourceUrl": "https://news.lavx.hu",
+          "date": "2026-11-23T19:10:26.000Z",
           "excerpt": "",
           "image": {
             "src": "img/stories/6547d2e15f870b9b.jpg",
@@ -167,12 +87,12 @@
           }
         },
         {
-          "title": "scroll-state()",
-          "url": "https://css-tricks.com/almanac/functions/s/scroll-state/",
+          "title": "Using Fallbacks for a Robust Front-End",
+          "url": "https://css-tricks.com/using-frontend-fallbacks/",
           "source": "CSS-Tricks",
           "sourceUrl": "https://css-tricks.com",
-          "date": "2026-11-19T14:57:54.000Z",
-          "excerpt": "The CSS scroll-state() query, surprisingly, has nothing to do with whether you’re doom-scrolling in a state of existential dread. It does, however, allow you to change the CSS used based…",
+          "date": "2026-11-23T14:21:44.000Z",
+          "excerpt": "It’s important to use fallbacks to build a robust front end, either to quietly and discreetly avoid the error or to communicate it to our users. Using Fallbacks for a…",
           "image": {
             "src": "img/stories/e9e4693f868edd66.jpg",
             "query": "japan city",
@@ -187,38 +107,32 @@
           }
         },
         {
-          "title": "From Game Coding to AI Automation: The Growth Story of RGV Web Design — ThreeBestRated",
-          "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxOTDdjaFBJOTkwMlB6a1ZQOHdiTVB4OVpnT2t3dkxQRjg3eURjQWQ4Z3Q5SjFIXzF3bzJITHF2Z0FwX2VKOWxWTDE3RWd5QnozVnhseVFqaHFSUXRoTmRBNWhVTmduMDh0UEtWZ0FmQ19DZHNFUVVnRWxPalpjX3BWN1FfeGwzNklxX1l6LUw1UnFVYXRxQXdvT1RRamJHb0JJQy01enN0UnJRWU92MV9CSFRhaFJHLVcwem9HMUt6cFk?oc=5",
-          "source": "PR Underground",
-          "sourceUrl": "http://www.prunderground.com",
-          "date": "2026-11-19T14:13:07.000Z",
-          "excerpt": "",
+          "title": "Dev Material Archive",
+          "url": "https://css-tricks.com/dev-material-archive/",
+          "source": "CSS-Tricks",
+          "sourceUrl": "https://css-tricks.com",
+          "date": "2026-11-23T14:18:50.000Z",
+          "excerpt": "A new resource resurrecting lost web-dev articles and posts : This is an archive of written articles about web development, web design, and web accessibility that once existed on the…",
           "image": {
-            "src": "img/stories/448a8f138b05ddf1.jpg",
-            "query": "server room",
-            "creator": "Esquilo",
+            "src": "img/stories/21fdcffe2a5bc00b.jpg",
+            "query": "web design laptop",
+            "creator": "André Karwath aka Aka",
             "creatorUrl": null,
-            "license": "CC BY-SA 3.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-            "page": "https://commons.wikimedia.org/wiki/File:PDC_server_room.jpg",
+            "license": "CC BY-SA 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+            "page": "https://commons.wikimedia.org/wiki/File:IBM_Thinkpad_R51.jpg",
             "provider": "Wikimedia Commons",
             "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/11/PDC_server_room.jpg/960px-PDC_server_room.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0e/IBM_Thinkpad_R51.jpg/960px-IBM_Thinkpad_R51.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
           }
-        }
-      ]
-    },
-    {
-      "id": "gaming",
-      "key": "newsCatGaming",
-      "items": [
+        },
         {
-          "title": "9 Calvin and Hobbes Comics from the 1990s that Prove Bill Watterson is a Genius",
-          "url": "https://www.polygon.com/9-perfect-calvin-and-hobbes-1990s-comics/",
-          "source": "Polygon",
-          "sourceUrl": "https://polygon.com",
-          "date": "2026-11-21T05:00:18.000Z",
-          "excerpt": "Calvin and Hobbes creator Bill Watterson is a genius. Here are nine comics which prove it.",
+          "title": "How To Clear The Cache On Microsoft Edge",
+          "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxQclFlenZXS2JvT04yRm41X3phM1J4TWpqZEVNY2ltQ2UxWUVfNzhLdmpNZDg2MHVLelVuTWYxaWc4MW1uLUtxLWJjUUYxMy1kdnVVd2pjUVd5bVRmWWt2dUtNcFh3THNwN0p4b0dnYk40Z3JEcG00LVFxS2ozUnhfRA?oc=5",
+          "source": "Engadget",
+          "sourceUrl": "https://www.engadget.com",
+          "date": "2026-11-23T13:45:00.000Z",
+          "excerpt": "",
           "image": {
             "src": "img/stories/a3a0b45c3c2a1611.jpg",
             "query": "japan city",
@@ -233,443 +147,31 @@
           }
         },
         {
-          "title": "Maryville Game Design Students and Alumni Help Bring Smithsonian Games to Nintendo Switch",
-          "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxOTGZheU9rSWdUdVV2bFN0Y3E5T0c1ZEJiMFB2Q0xPa2JSTkt5bV9aTkZwT2kwRjZSQldWeGNQaXZ2N29ZVFNfN0pNSGZfMUxkY2Nsc1RHcERlSFBGNmZ3MDZxUWxwQXVDMjc5ZnVnUjFHZnJQcXVGakx5Qk5sZlppWkFabVZqYmVpUWlTdmRfUmRhTl9MTDI3QXBnekhIUU5JX212bHJnZFdQY0RfcWhtdUYtYzZMdFJGQVpMV3lmRHA?oc=5",
-          "source": "Maryville University",
-          "sourceUrl": "https://www.maryville.edu",
-          "date": "2026-11-21T02:59:55.000Z",
+          "title": "Fast Mobile First Trust Driven Web Design for a 2027 Ready Website by Strategic Web Designs",
+          "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxQQVE4SngtUWI5cDBTRUx4eWs2SUxhVjZ4SURfQVVIellCMk5zdE9nbVEwNm5UM2VuUDJkUUNHUDE5cXJ0cy1qNTk2NS1RX1VSdWNfZmZGN0ZsUTVpdkpKSDlHckNMTXVXZXJhUURKV1ZURUo4UFJtdlBrZ2VMVE9ha0pGdnJNVTlLZkI1Q3VDY1VQRmtScFg4MG1xY3FRN2h0V1oweg?oc=5",
+          "source": "openPR.com",
+          "sourceUrl": "https://www.openpr.com",
+          "date": "2026-11-23T12:44:56.000Z",
           "excerpt": "",
           "image": {
-            "src": "img/stories/1eb13f01214210d5.jpg",
-            "query": "japan city",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/3290342/free-photo-image-tokyo-architecture-2016",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/0eec4759-1b64-4e8d-b826-318bcafb62b5/thumb/"
-          }
-        },
-        {
-          "title": "Pokémon's 24-Part $399 Collection Officially Launches Next Week",
-          "url": "https://www.polygon.com/pokemon-movie-collection-amazon-blu-ray-november-2026/",
-          "source": "Polygon",
-          "sourceUrl": "https://polygon.com",
-          "date": "2026-11-21T02:15:17.000Z",
-          "excerpt": "All 24 Pokémon animated movies are coming in one Blu-ray collection, thanks to Viz Media and Amazon.com.",
-          "image": {
-            "src": "img/stories/0889b81e1bc4e7b8.jpg",
-            "query": "japan city",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/5907599/photo-image-public-domain-tree-free",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/1a604d3e-6357-4fe0-aa99-5d3c12fd157a/thumb/"
-          }
-        },
-        {
-          "title": "Pokémon Go Pawniard Community Day event guide",
-          "url": "https://www.polygon.com/pokemon-go-pawniward-community-day-shiny-bisharp-moveset/",
-          "source": "Polygon",
-          "sourceUrl": "https://polygon.com",
-          "date": "2026-11-21T02:01:17.000Z",
-          "excerpt": "Here's all you need to know for Pokémon Go's Pawniard Community Day event, including how to find a shiny Pawniard and evolve Bisharp into Kingambit.",
-          "image": {
-            "src": "img/stories/d6c1a146248fe448.jpg",
-            "query": "japan city",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/6042959/photo-image-desktop-wallpaper-public-domain-nature",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/c2776558-7b54-4f05-8b99-e961eccc65be/thumb/"
-          }
-        },
-        {
-          "title": "The Witcher 4 Gets Official Update on Physical Release",
-          "url": "https://www.polygon.com/the-witcher-4-physical-release-cd-projekt-red-ps5/",
-          "source": "Polygon",
-          "sourceUrl": "https://polygon.com",
-          "date": "2026-11-21T01:28:17.000Z",
-          "excerpt": "CD Projekt Red is planning a The Witcher 4 physical release, even though it admits it has \"no influence\" over PS5 and Xbox disc production",
-          "image": {
-            "src": "img/stories/2393d08db7da7981.jpg",
-            "query": "japan city",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/6042502/photo-image-public-domain-free-city",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/76b3a174-650b-47a1-8271-560757189c9d/thumb/"
-          }
-        },
-        {
-          "title": "Everything We Know About GTA 7",
-          "url": "https://www.polygon.com/gta-7-release-setting/",
-          "source": "Polygon",
-          "sourceUrl": "https://polygon.com",
-          "date": "2026-11-21T00:00:17.000Z",
-          "excerpt": "GTA 7 is not much more than a hypothetical at this point, with GTA 6 having just been released, but there are some hints about GTA's future.",
-          "image": {
-            "src": "img/stories/8cae0297ec2ebb62.jpg",
-            "query": "japan city",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/6083463/shadow-the-rain",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/44d2c6b4-a4ff-4a48-86a7-4fc3222f876b/thumb/"
-          }
-        },
-        {
-          "title": "8 Near-Perfect Fantasy Miniseries That Hook You in the First Episode",
-          "url": "https://www.polygon.com/8-near-perfect-fantasy-miniseries-that-hook-you-in-the-first-episode/",
-          "source": "Polygon",
-          "sourceUrl": "https://polygon.com",
-          "date": "2026-11-21T00:00:17.000Z",
-          "excerpt": "From gothic castles to hidden London underworlds, these essential fantasy miniseries cast an instant spell on viewers from episode one.",
-          "image": {
-            "src": "img/stories/b459fdfc7ee8fc5e.webp",
-            "query": "japan city",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/6077467/cineon",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/876f3a62-4e89-4b69-be25-d948f22ef9c2/thumb/"
-          }
-        },
-        {
-          "title": "'Steps' Ending Explained: Director Reveals the True Meaning Behind Cinderella Adaptation",
-          "url": "https://www.polygon.com/netflix-steps-ending-explained/",
-          "source": "Polygon",
-          "sourceUrl": "https://polygon.com",
-          "date": "2026-11-21T00:00:17.000Z",
-          "excerpt": "The inclusive ending of Netflix's hottest animated hit 'Steps' is perfectly explained by its directors.",
-          "image": {
-            "src": "img/stories/69218c3be1de6fa0.jpg",
-            "query": "japan city",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/6058698/free-public-domain-cc0-photo",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/e4f4a898-3beb-49c9-a75b-bc6207688acd/thumb/"
-          }
-        },
-        {
-          "title": "Who is Johannes Zuch supposed to be in GTA 6?",
-          "url": "https://www.polygon.com/gta-6-tenebrae-lux-jonathan-blow/",
-          "source": "Polygon",
-          "sourceUrl": "https://polygon.com",
-          "date": "2026-11-20T22:00:17.000Z",
-          "excerpt": "Grand Theft Auto 6 includes an arthouse game parody called Tenebrae Lux that lampoons The Witness creator Jonathan Blow.",
-          "image": {
-            "src": "img/stories/94e8b32cbca7d2c5.jpg",
-            "query": "japan city",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/6082913/alone",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/68aff388-0a16-4300-a783-845af17628a0/thumb/"
-          }
-        },
-        {
-          "title": "10 New Movies to Watch This Weekend on Netflix, Prime Video, and HBO Max (November 20 - 22)",
-          "url": "https://www.polygon.com/new-movies-streaming-this-weekend-netflix-november-20-22/",
-          "source": "Polygon",
-          "sourceUrl": "https://polygon.com",
-          "date": "2026-11-20T22:00:17.000Z",
-          "excerpt": "On this weekend's movie streaming and VOD column, there's the biggest movie of the year, Netflix's new animated movie, and more",
-          "image": {
-            "src": "img/stories/6345c2b298164f8a.jpg",
-            "query": "japan city",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/4025996/kabukicho-tokyo",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/d3d1043c-11b9-49a9-abd7-0a03ec62692d/thumb/"
-          }
-        }
-      ]
-    },
-    {
-      "id": "ai",
-      "key": "newsCatAI",
-      "items": [
-        {
-          "title": "Pediatric Bone Age Artificial Intelligence Matches Atlases Overall but Shows Individual Variability",
-          "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxQZ0g5Z01lZ1l5TmxFaXNMRTZFQmVkMi1uS0dOTTkwb0NFTG1iZDBiU2hhcjRFeDJ1bmVOclZZNFZXeFdaYU02X3FIQjdHeGhPMjUyQXEzZW95RFNCRmhQanpYcGJDMXdpakxpcERFcmVoM0x6S0I1dFdCX3NqMmEtMEdpYTdzVlRYOWV6eUtwTkpZeEh5UzZpZ3YxR09QZTkyRlUweDA0bHdFblRwdVNjMmRKOTNlVHFRcmktWVJBOEc4QQ?oc=5",
-          "source": "Bioengineer.org",
-          "sourceUrl": "https://bioengineer.org",
-          "date": "2026-11-21T05:07:16.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/dfe1af88bb665b95.jpg",
-            "query": "server room",
-            "creator": "The National Archives (UK)",
+            "src": "img/stories/db484b9bcd4da965.jpg",
+            "query": "web design laptop",
+            "creator": "VIA Technologies",
             "creatorUrl": null,
             "license": "CC BY 3.0",
             "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
-            "page": "https://commons.wikimedia.org/wiki/File:A_view_of_the_server_room_at_The_National_Archives.jpg",
+            "page": "https://commons.wikimedia.org/wiki/File:VIA_OpenBook_CAD.jpg",
             "provider": "Wikimedia Commons",
             "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e0/A_view_of_the_server_room_at_The_National_Archives.jpg/960px-A_view_of_the_server_room_at_The_National_Archives.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e5/VIA_OpenBook_CAD.jpg/960px-VIA_OpenBook_CAD.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
           }
         },
         {
-          "title": "Faisal Rahman Explores the Intersection of Artificial Intelligence, Cybersecurity, and Intelligent Digital Systems Through Research",
-          "url": "https://news.google.com/rss/articles/CBMi6gFBVV95cUxQY0J0RGRaRjU2OUswS0dwd2hlTWRaWHBEdURqMUV3TnJiUnFzN3QtSXJ1WGY0dDM4RWVzNXVZS3V4eXVuOERUWDU1THAyd1FPdTRNRTdldHpIWFdaUG94SVBLMUVSNlBCTFFHMUNhdXJLb0E4VVhwelRrai01aFBfUGlFNDNRTDVFUWVnY1ZzaV9TNURtTlEwZlkxdHJaY1hoTXVyN2dSc3B0eEFHSThCaUx2a1BDV1JRcW5WRXBTOVFvV3lidzlhQnpEVmNtOUVjS1AzbXo4QUNmR1F4WkF5ZGdSMzZJYmdLd1E?oc=5",
-          "source": "TechBullion",
-          "sourceUrl": "https://techbullion.com",
-          "date": "2026-11-21T03:55:58.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/d2415f9c15f47700.jpg",
-            "query": "server room",
-            "creator": "Intelligentguy89",
-            "creatorUrl": null,
-            "license": "CC BY-SA 3.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-            "page": "https://commons.wikimedia.org/wiki/File:RCoE_-_computer_-_Server_Room.jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://upload.wikimedia.org/wikipedia/commons/0/07/RCoE_-_computer_-_Server_Room.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
-          }
-        },
-        {
-          "title": "Artificial Intelligence Matches Expert Performance in Tuberculosis Radiography and Genomic Diagnostics",
-          "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxPWkpsOTU3MWl1QkFpQXhyQTVpZjdTa0VqamRDU0tvZUhCcU9JbEhKN1JaREtyYVQ5bXlnVkZFZWxoWElVY0pmcEFvckVmU1BxOXJTY184cEo0NzJ0Ni1UaTNZMnYzY2NRNGdlV3JzU3kxbVJnWGZWQzV5Y0xDcW9SY0xpQk5rYkE3WFBfOHZMTXZOMFhXNjh0MlR3eFVVTk8xVHo3UEtleVhnd0IxUXZoUzNmdVRvSzhrbTdTMmszNjBiOVFpS0E?oc=5",
-          "source": "Bioengineer.org",
-          "sourceUrl": "https://bioengineer.org",
-          "date": "2026-11-21T02:54:35.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/9ebecfefeb29af28.jpg",
-            "query": "server room",
-            "creator": "Carl Lender from Sunrise, USA",
-            "creatorUrl": null,
-            "license": "CC BY 2.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
-            "page": "https://commons.wikimedia.org/wiki/File:Server_Room_(22397102849).jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4d/Server_Room_%2822397102849%29.jpg/960px-Server_Room_%2822397102849%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
-        },
-        {
-          "title": "Structured Synthesis Links Artificial Intelligence to Supply Chain Resilience Through Core Capabilities",
-          "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxPT0ZfZXJQX3RWVVZXV3otbzVpRk5ibkc5MkkwMzI3dGtqc3lEQnA3dElDc3ZpUTIxNzlFWnFQaHZFYW1CbGxFNHc2eGlQbG9xVmkwUE9VQkhiSUVrcFRhbGJYalpwMDVCWWNUMlFuaGwtTm0yVFlhZHlpRzZOanJGVzZjbS02QVFBd1NPTFB2em1HMEJqNkdieHQtdXMxcUJ4ZG5kSGhmdWtyLWtaQnMxUXBpMDlZS013MzVxWE5rY050cS10aFN3?oc=5",
-          "source": "Bioengineer.org",
-          "sourceUrl": "https://bioengineer.org",
-          "date": "2026-11-21T02:36:08.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/bdf7a2509a4f7196.jpg",
-            "query": "server room",
-            "creator": "Mohammad Raiyan Tamzid",
-            "creatorUrl": null,
-            "license": "CC BY-SA 4.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-            "page": "https://commons.wikimedia.org/wiki/File:Rajshahi_College_server_room.jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/74/Rajshahi_College_server_room.jpg/960px-Rajshahi_College_server_room.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
-        },
-        {
-          "title": "Symbiotic Planning Framework Governs Artificial Intelligence to Protect Urban Equity and Legitimacy",
-          "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxPWWhZNS16bzZidjRlMW1aM1pnUGZYWlB1dlRzcjVPZW0zQU9mcTBNMC0wUGZVaERnbHFsb3ZvZWV0Y2xPVnRHN2pXbGFwMnhjbEJLUjBlRXU5em1FWlFMeEo4Z04tdkE4WFprTjdLdDVuTk5hYjRyWW5oRWVUUGJaWUpZMDQyc1UtdlJKTmRLTVgzSk9PMmVCNUZ3bjhKeE1JMXRvQk5VUWxDNmRweVZqODVuaEtaVXcxSE4xdWhsYTJ2Zw?oc=5",
-          "source": "Bioengineer.org",
-          "sourceUrl": "https://bioengineer.org",
-          "date": "2026-11-21T02:11:08.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/14da59db68148eaf.jpg",
-            "query": "server room",
-            "creator": "Mike Beltzner",
-            "creatorUrl": null,
-            "license": "CC BY-SA 2.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
-            "page": "https://commons.wikimedia.org/wiki/File:312_Adelaide_Street_-_6th_floor_server_room_(5278379952).jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ad/312_Adelaide_Street_-_6th_floor_server_room_%285278379952%29.jpg/960px-312_Adelaide_Street_-_6th_floor_server_room_%285278379952%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
-        },
-        {
-          "title": "Intensive Care Researchers Propose Adaptive Online Learning Systems for Clinical Decisions",
-          "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPVFliZ1pCdG5RakN1WjBLQ2JxU2d5Yl84eEwyZXQ4c05XRHd3d1QtRTJnT0lVY2FPWlFjZlFYUTZpWmEwaWItaUpXZXpweHpwTGI5ODJtcmxrd1BKTmthRWlSVWtRdHMtZnJxbzlyTjhrcTFVakNQZ3drS0dmRnFRZ1l4MWNzWTNyRkN5NU1VNHFIdGo3SFZFOURjYllpaEhzb2FPTFctNFJVdDBRa1FVMm5BZ1Z0dw?oc=5",
-          "source": "Bioengineer.org",
-          "sourceUrl": "https://bioengineer.org",
-          "date": "2026-11-21T01:52:30.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/728b8e54120ba5b2.jpg",
-            "query": "car assembly line",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/13958687/photo-image-person-public-domain-car",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/b53fcbbc-0024-46e2-b89f-c63ed55c89c1/thumb/"
-          }
-        },
-        {
-          "title": "Machine Learning Predicts Bearing Capacity of Fibreglass and Steel Rock Bolts",
-          "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxOaE9WdU16eDNPQ254Qjl0RGlqS3lmY0V4S2w2enFLakNLOGkwaDRxMFAtb1JNRkp1MjlQZGhQWTBwUFY1QnFQeXh4a3J6Y1BxTnF3cVM3WWpOUElnMmxWR2dEWmxiazBwXzNIWVgyeXM3TDJZbHlDMk9USW5faHo5ZFlZc3gzMkpDWXNxc0QydXhKRGRQaFhzSGNBRm1tT0NKdXJ1Wg?oc=5",
-          "source": "Bioengineer.org",
-          "sourceUrl": "https://bioengineer.org",
-          "date": "2026-11-21T00:51:08.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/ebc1eb6e4fb92e8b.jpg",
-            "query": "japan city",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/6058651/free-public-domain-cc0-photo",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/12a874ae-133e-4ed6-ae07-9870d2d1cbb0/thumb/"
-          }
-        },
-        {
-          "title": "Nuclear Fission and Fusion Trajectories Illuminate the Future of Artificial Intelligence",
-          "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPV0s0aHdkbnFxX1c0Q3l4SGladWZIeHdMZGYzZzNUM2lCTEpab01kVFAyN29aV3lvTzZYX2pscU9TR2ZJZG5uSXJ4cS1FSTFobElBQkhIaUo3Q1VOdjNDb0ItU0dhX0U0ekQyLTRjdFJubUJhdnFiM2xIdlJ0S1ZWR1BmaXlNZXJoOFRkYTIzNGwtMGpQcFhuanNXOVN5MHlnb3VKeEZ2cEFienBORGRUbE1yNA?oc=5",
-          "source": "Bioengineer.org",
-          "sourceUrl": "https://bioengineer.org",
-          "date": "2026-11-20T23:56:44.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/5853d9ef9186bc1a.jpg",
-            "query": "server room",
-            "creator": "Indrajit Das",
-            "creatorUrl": null,
-            "license": "CC BY-SA 3.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-            "page": "https://commons.wikimedia.org/wiki/File:139_Server_Room_01.jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5a/139_Server_Room_01.jpg/960px-139_Server_Room_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
-        },
-        {
-          "title": "Epistemological Review Finds Artificial Intelligence Shows Critical Gaps in Orthodontic Care",
-          "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxPdGlybF84NlhYakUxZk81XzdUSkQzb1JwUDlzQlJZTEVTTWN0TEtwNzJTQVFXNjRpMlROZkxnZFFpbVpxYkhudGZPOUlzUndYdEZxZ2sxd3hKdWhCV0xhTy12OW80d0ZTbXJSazBrZWMyVHZQNXExMno0TXRvVGwycEw4OXIxWFV1aGJYaVcwU05sRW5UdVZPd2NfbkRfTXJ5UHk5QTRVSU5NOFdSNUItZjFSN0ZHYnpz?oc=5",
-          "source": "Bioengineer.org",
-          "sourceUrl": "https://bioengineer.org",
-          "date": "2026-11-20T23:46:08.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/3e6d2bb6daf25ebf.jpg",
-            "query": "server room",
-            "creator": "Jon Parise",
-            "creatorUrl": null,
-            "license": "CC BY-SA 2.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
-            "page": "https://commons.wikimedia.org/wiki/File:Server_Room_Terminals_(183804054).jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ab/Server_Room_Terminals_%28183804054%29.jpg/960px-Server_Room_Terminals_%28183804054%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
-        },
-        {
-          "title": "NMSU receives DARPA award for solution to AI trust issues",
-          "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxQTDFLXzFYR2N3bkJIZzhLMVZxZHVmR0VxWVVwbzRpSE1VX2F3RlZUWEpVUVJRcXNrVnI3Qm1aaVVGdTNjRDdxUzBqNEQtVmdVdU9QUFJNZzdOZDFTVE0wODkzZ0VsNURkSHR5VkdTR0tqQVh3TlRyMFRyekZMeFkzYXp1SzJWcHdwVmswNEtNaW9icWMtNFd5TUlPaWItSksxc01xVndSR3ZfWDBudjBDdTdKZEtuSktBb1hpQnMtVHhaRFROb2c?oc=5",
-          "source": "New Mexico State University",
-          "sourceUrl": "https://newsroom.nmsu.edu",
-          "date": "2026-11-20T23:15:45.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/3e250ef3a6678495.jpg",
-            "query": "server room",
-            "creator": "Jemimus",
-            "creatorUrl": null,
-            "license": "CC BY 2.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
-            "page": "https://commons.wikimedia.org/wiki/File:Server_room_backup_power_generator_-_IMG_0451.jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d3/Server_room_backup_power_generator_-_IMG_0451.jpg/960px-Server_room_backup_power_generator_-_IMG_0451.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
-        }
-      ]
-    },
-    {
-      "id": "tech",
-      "key": "newsCatTech",
-      "items": [
-        {
-          "title": "Startup sues Apple in India over tap-to-share contacts feature",
-          "url": "https://techcrunch.com/2026/11/20/startup-sues-apple-in-india-over-tap-to-share-contacts-feature/",
-          "source": "TechCrunch",
-          "sourceUrl": "https://techcrunch.com",
-          "date": "2026-11-21T04:00:00.000Z",
-          "excerpt": "A U.S. startup is seeking $162 million in damages and an injunction to impact iPhone and Apple Watch imports to India.",
-          "image": {
-            "src": "img/stories/c8182ffe2b3278a7.jpg",
-            "query": "circuit board",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/5902389/photo-image-public-domain-technology-computer",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/d8481036-84c7-4766-9672-15ecb18f8c37/thumb/"
-          }
-        },
-        {
-          "title": "East Alabama Health uses robotic technology to diagnose early lung cancer",
-          "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQNTg1SW1qZFhzZnM0TmhlZG04WmQtd1FjVXZ2QVROd0U4cUtYRFNYOUlCVEFMeFRaQ200VWtTMFUyODJlY0V5eW1jSWI4bFZRMUhRZVp5Y3hWZVozRjdsTFdYLWVJeGxWbmRObl9Za2ZYYWloWFpYUFZybW5abHBmUmtJbjIzM0djQmFrUC1EaE01LTN5cG1qU3BkdnJKam1Odzl4RlRn?oc=5",
-          "source": "WTVM.com",
-          "sourceUrl": "https://www.wtvm.com",
-          "date": "2026-11-21T03:37:00.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/cfa34e1f8c50dba1.png",
-            "query": "industrial robot arm",
-            "creator": "Auledas",
-            "creatorUrl": null,
-            "license": "CC BY-SA 4.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-            "page": "https://commons.wikimedia.org/wiki/File:UR16e_robot_arm.png",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/16/UR16e_robot_arm.png/960px-UR16e_robot_arm.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
-        },
-        {
-          "title": "Quantum software matches classical benchmark for a molecular interaction",
-          "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQbkFXWWNEMC1icVRhWjNzTThpbDZuam85UU5sN3FGSGR2cFVJR2pOb3RkUmZRbG9VVGk2Z1NzdDFWRDdTUFJ1WmFQX25vaUFxb1ZDa1ZqVTI0Tm9hVENETTU4UHc1Um5ldzhna0lYZ2I4eUI4cV9MY2cxYzlnQlZkNnhYSUhrZzNV?oc=5",
-          "source": "Phys.org",
-          "sourceUrl": "https://phys.org",
-          "date": "2026-11-21T03:00:01.000Z",
+          "title": "Cybercriminals Could Hijack Your WhatsApp Web Session: Government Alert",
+          "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxQeVpxbWdlalVIVW43SjlqSUhVMlRNcEpiQjBiclBMVmU2LXVxdVFwTkNQOE1RbzFNSjRBQXNNRWx3bnYyTlJHeEtybktRVDdIU2tJbWZPY3Z0QTZ5b1dyZG9LXzZyRGdZQTR1MDFuamw0d1BwQW1ld2pkRnBxOGlGOGREOC0?oc=5",
+          "source": "PGurus",
+          "sourceUrl": "https://www.pgurus.com",
+          "date": "2026-11-23T11:24:30.000Z",
           "excerpt": "",
           "image": {
             "src": "img/stories/edda3044b202ab28.jpg",
@@ -685,111 +187,11 @@
           }
         },
         {
-          "title": "Women's Hockey wins 4-1 at Syracuse",
-          "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxQbXdUdHZiNGprZUd1TG10RjBMRlN5dEJUaXVQVXlod0xjN2Z6b0JHTWhQOVJfSVlsWlJDcTU1TS1nXzFVeHp1U1dYQzJKMTlrUVExNGx2VF9LSjhJZkJDLTRIZGZKOGhyTzI1SVM2WTZTT0JmOW91SXBpdkdXcDEtU3RjRFF3bkU?oc=5",
-          "source": "Rochester Institute of Technology Athletics",
-          "sourceUrl": "https://ritathletics.com",
-          "date": "2026-11-21T01:42:43.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/6c33c9eddc65be18.jpg",
-            "query": "circuit board",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/5917157/image-background-public-domain-technology",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/58409294-1bf3-4eca-a328-9cc561b0ea7b/thumb/"
-          }
-        },
-        {
-          "title": "Newport teacher awarded for innovative use of technology in the classroom",
-          "url": "https://news.google.com/rss/articles/CBMiggJBVV95cUxOTXhxVDk4QnR0YXRqTG9mZWxpNWktMWJsT1U2enNzNjB6VzM5RGVzek93SHFpTmZfei1TazllUkJWQTV6ZUZNbkZrWHE0SjRFYmN2Q0RxUFkzTmNoY25Gcy1XUlZSYWE3czhGTXFPcXNob0pTRTE2QU9Bb2ZjUFhqbElSVHAwdEt5VFAtOWFieTVnWDJrdXFkOWR4ZGZRQ0toNkcxM3VNTGp5b1VOUV9ZLXJ2cnctU2NWNGEtaTdKalptWU1vWE5ybXZpZGlUWWI1czB1cGVZYWpWLUZYSEsxT2RXWG1fMmdfUkY0NUFIWmEyM1VBSVhyUTFKUnlfR2hObkE?oc=5",
-          "source": "newscentermaine.com",
-          "sourceUrl": "https://www.newscentermaine.com",
-          "date": "2026-11-20T23:31:00.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/1248bf3b07b52258.jpg",
-            "query": "circuit board",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/5910545/image-public-domain-technology-computer",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/185ba948-a4bd-4caa-b4f1-19862fd05761/thumb/"
-          }
-        },
-        {
-          "title": "Henderson Elementary School Recognized for Thoughtful, Responsible Use of Technology",
-          "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxPR05TUTVjazc3by1HTm9Vb3lOUjlmdUhKTWF0YVh4cUkwT0FhY1k0bHJtbEswWWxjOXh0dGtuemZDbEVGU3ZWQVRQT044am1kbDBmWXVqY2tOR2ZKcmNJalVaNWVWeHRXZnY1eVA5bjZKNDdDSFBiTWR5MnJwY3FEY21uNnpKeDFobnhfNG9OT1AyTVdpcGtWb3E2clZYLTFmZUxyR0FTY0xhN1lYWU5NMHF1T2pNTUU?oc=5",
-          "source": "Prince William Living",
-          "sourceUrl": "https://princewilliamliving.com",
-          "date": "2026-11-20T23:10:01.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/ef8413c019118a5f.jpg",
-            "query": "circuit board",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/5912618/image-background-public-domain-technology",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/0b300d24-91b0-4b29-ba18-860c8bd37fce/thumb/"
-          }
-        },
-        {
-          "title": "Children First: How technology is helping students find their voice",
-          "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxPUndneDV2R0pRMjkyMzUzU0I5SG1zZ1dYcUg0cnBraDhaZWpZZTJEbWRoa1MzRlhfRDZwWUlGclhKNHBVUHVpaFhNUEFQc0gxMVhTTXpzd3NVeXdrTFVQRnk0LVlaRF9maVlJVXBac01CeVFHTlE1WUR2Vk4xbXdXTzhCeWJlUVk2NVZaaWlQTjJPNlpVUlR3R9IBngFBVV95cUxQd3NUc0ZnMFZySnNQcGF2enVIUU9GdGx1ZGdfbjlQRTVobmRCZWszUGVLSTZCMTlSSERUU29rTnFwLTQ4clFEeHhYdU13eGZ4RUREMFVycmJZVmdkbXoxaDNLWTBJaDBEZEY0MWlwX2tUQUhfZkVESGZpM2NWanpsT3BzeWxtZm5nV3JpVG9wZ1lqemJaZFVNOWJfeDdzUQ?oc=5",
-          "source": "ABC30 Fresno",
-          "sourceUrl": "https://abc30.com",
-          "date": "2026-11-20T23:08:16.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/a4a9fe3f63961bae.jpg",
-            "query": "circuit board",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/5907875/photo-image-public-domain-technology-computer",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/87379966-636f-4a13-828b-da3babe97b81/thumb/"
-          }
-        },
-        {
-          "title": "Tempe elementary school uses immersive technology to transform learning for gifted students",
-          "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxQTDJkdDJNNFIzX3U0c0E4dkdZb2hzRzlQZjdpQjQ0YXVJM3UxRlhWX0p5STNPaklwS19hZWFHVGwxeHc4YmNRa3ljTTlhTFVUOGN4ZUQ1UDB2MnB1LUVnNzExVlZDdFZSbi13VFlBay1xSkp5azBZNkk0X1BlcEw0N0FxMENaV0h3d0pYcDFScmpxYWtDMDhPVnMxM3BOTWlKY1Q5eXl0Tkx5dTBRM0d1SWU4VTlJeTNSLUNNYmZQekJ4R0hTeXRR?oc=5",
-          "source": "ABC15 Arizona",
-          "sourceUrl": "https://www.abc15.com",
-          "date": "2026-11-20T23:07:33.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/5b9b7632b3d980d4.jpg",
-            "query": "circuit board",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/5966842/computer-circuit-board-macro",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/529bb809-30c2-4431-b290-49c996262cc2/thumb/"
-          }
-        },
-        {
-          "title": "UltraTax CS vs. GoSystem Tax RS: Which software is best?",
-          "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOVXJDSzhfckozU282SU5xYWVqb09OYTM3NlZXN1lKR3JCMnlSVGZSMHFSaG5rdlQwRlllRXFBTHdPZm9nb3pDb3d5a1VOdk5TVlBUQnl4MDZVcEpLbU5TNjdsWGtHck4xVENOa09SY2k0eFR6dTRWcUpiU0xiY0loTExmcVppNThPTzJWVGhqWENMTjNpcV9sWkZZeXphSl9OYVc0OUtSWlNGcVZxN0xFdlE0VQ?oc=5",
-          "source": "Thomson Reuters tax",
-          "sourceUrl": "https://tax.thomsonreuters.com",
-          "date": "2026-11-20T22:56:15.000Z",
+          "title": "Government’s anti-cybercrime wing has ‘WhatsApp Web’ warning for you",
+          "url": "https://news.google.com/rss/articles/CBMi4gFBVV95cUxPeWtRWEpFY1UxUGRlSFVhd0xFOExPRVpDaHVqMGRfSVdXZTFEUDRaa0tZZWxvbTItT21XbDUtMFJJZGFhSG1xcE9YVlQxSlhpTHJ3UDZFOVNhTzRKdUU0NkJKZF8zeHIzVjZQMEFLZmhPOFItb2RmMUpTXzVIeVBTdUtRZHQzZGhVWGEtQ1NCNEhoNDQ0VU5IWS1iMlQtYV9qNVVlbFk1ZkxEdDBsWW94OXpDYVRxWW5wTFdabWliTTJfUnpsMHJ3NVBveGhRb3A3Wmd1Smh6Q2FiUFRadFF3bW1n0gHnAUFVX3lxTFA5NnlMOTFsdzNtRmZzX0FVT0RoNVdpbnlzczZzREQwTTZJYlNad0Z3dzRuZVNzaWpGOWo5MUZwakptQXJDdjR1bG0wZFN0bGJKTVNmY2VzbGJPZVh2LUt1c196RUtqSHVjVEpwNEpBUUNCTkIzdzNFY0lma2ZZMTJZazdUQjNBRTZHRENCblBPR2JvQTdXSkpWamxFQ2MxZjZhaUR0dEk3WWpYeHF3RzVXN1dEOThnbk42d21LX0pIY3ZIM0JtOE5aVkY3QlI2OXV1MmllOTZHQWFqQnJGZXJQSHlDNXd6RQ?oc=5",
+          "source": "The Times of India",
+          "sourceUrl": "https://timesofindia.indiatimes.com",
+          "date": "2026-11-23T11:20:00.000Z",
           "excerpt": "",
           "image": {
             "src": "img/stories/e77423a6fba900ac.webp",
@@ -803,80 +205,200 @@
             "via": "Openverse",
             "file": "https://api.openverse.org/v1/images/f4a0cabe-4e2d-4018-8700-9bd267beaa73/thumb/"
           }
-        },
-        {
-          "title": "Area golfers using technology to hone skills over the colder months",
-          "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxNdUxFX2poMWo4Zk13NGYtU1I0cF8zQTI3NjdmM1ltaGNDREVJNElHVlF6MmpZQTZHemF5NExpVXg3dEIxNDlvb1RNUzgxNkd2cVBQYWZ3MlE3ZmpjdF92R05mREI5NjFmMmdObUJVcUNXMDBHZXMtOU1tdHNabFFmVjhENS1uMTFwSXR1QmVkVjN3cEZXMDF2NW83ZFk1V0JvaWVUb1B3?oc=5",
-          "source": "KVII",
-          "sourceUrl": "https://abc7amarillo.com",
-          "date": "2026-11-20T22:38:44.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/fd1f6baf0e5656f4.webp",
-            "query": "golf course",
-            "creator": "Matt Bango",
-            "creatorUrl": "https://mattbango.photo",
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://stocksnap.io/photo/golf-course-AEHBQ3PXOG",
-            "provider": "stocksnap",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/a4c09629-ca58-4669-9aa9-28a139671441/thumb/"
-          }
         }
       ]
     },
     {
-      "id": "security",
-      "key": "newsCatSecurity",
+      "id": "gaming",
+      "key": "newsCatGaming",
       "items": [
         {
-          "title": "Expert weighs in after Ochsner Health reports data breach exposing patient information",
-          "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxQbDlEeGZ5MXR1ZlpmdUVDUUVPMUlJNGUzM2lHVmRnbkpGb1ZyS3U4UnFUVWlkSGFJWDRnYmMxZHVsSDZLZUFWY3JFbTJjTFF6a25pRUlELXRkN01WaFF2V2g4M1ZLVHhHajQ2MTRzZG9CNXREQzhvNWphSHJJTmJOblFWSkd3dDBhMEI4eHhOeEpYazNqWWlHa2xnUQ?oc=5",
-          "source": "WDSU",
-          "sourceUrl": "https://www.wdsu.com",
-          "date": "2026-11-21T04:34:00.000Z",
-          "excerpt": "",
+          "title": "Steam Officially Launches Its 2026 Game of the Year Awards Voting",
+          "url": "https://www.polygon.com/steam-awards-2026-game-of-the-year-nominations/",
+          "source": "Polygon",
+          "sourceUrl": "https://polygon.com",
+          "date": "2026-11-23T21:48:05.000Z",
+          "excerpt": "The Steam Awards nominations are now live, letting Steam users vote on the best games of 2026.",
           "image": {
-            "src": "img/stories/4a0e8d2bd841f6e9.jpg",
-            "query": "stethoscope",
-            "creator": "Negative Space",
-            "creatorUrl": "https://stocksnap.io/author/4440",
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://stocksnap.io/photo/stethoscope-medical-RAW1RLRTM7",
-            "provider": "stocksnap",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/029d8b5c-0500-49f2-86ba-0052ceddbe5a/thumb/"
-          }
-        },
-        {
-          "title": "FBI investigating potential breach of its crime database",
-          "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQdy14X2NKM3JhWUlQazJaSFZDT3NlSFVYNExGNFA2Nk40VmkyTFNaUlJ5Mkk4LVdOU3BlcmxVNS1XaFBQbG1vNjl5WXpBMUhROXpmYnNMSU1CQ1RVYlljVVk3V2VOampEOWY5SnROLVEzdXFyTEl5Y0l0SXNDOGtiVlJoREdXMUVUcXdHNXNhcE5adTZSVTNENHJNUVNIMjB6aGpCWUdwci16Nm1ZSzlXS0Vn?oc=5",
-          "source": "NBC News",
-          "sourceUrl": "https://www.nbcnews.com",
-          "date": "2026-11-21T04:19:00.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/b776c19d03cea841.jpg",
+            "src": "img/stories/1eb13f01214210d5.jpg",
             "query": "japan city",
             "creator": "Unknown",
             "creatorUrl": null,
             "license": "CC0",
             "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/6073339/tunnel-vision",
+            "page": "https://www.rawpixel.com/image/3290342/free-photo-image-tokyo-architecture-2016",
             "provider": "rawpixel",
             "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/2d2f18b5-c040-4851-b299-dfccec1ef5eb/thumb/"
+            "file": "https://api.openverse.org/v1/images/0eec4759-1b64-4e8d-b826-318bcafb62b5/thumb/"
           }
         },
         {
-          "title": "Hackers allegedly breach USDA system used to pay farmers: reports",
-          "url": "https://news.google.com/rss/articles/CBMivwJBVV95cUxNMWhjSWVVSzhtQ0E5RUZpRUNnS1JOU2dqVXNPVVhvU1ptMml3Q0JNZ05NaHZ5QlBBZFRabEhHQk00ejIteXQ2TC1nNlpMTnhYaEdBLXZ4MEpvV0F3M0o0TWFZRl9vUzhsWWNmUkdqU1ZrSmpyOEV1blJnZ2otYUIwU3JuOFVBcnRkZE1jLWQzdW5pTEZYNFlkY0VLVk5tUDkwYlBtRTZzRVp4ckpRcldBRjJlRVdOOVJVWHJqU2s0bDZBaHg0cEVpU01DWGQ5bkRGdGt2TUlOckJMQ2pkWDNQZVFkNTBlWThvMDVDQm5TQ0ZQWUFDQ3RIeE40d3RqSWlqWVRPSEhxb2MteEZCd0JHZkdzQ01kN2JPSjV5TWhsanplZFVRc180cVZ0V2NWdmFkSjRjdDVZMnh5a0Z3T0lZ?oc=5",
-          "source": "KATU",
-          "sourceUrl": "https://katu.com",
-          "date": "2026-11-21T03:42:50.000Z",
+          "title": "Goodbye, Mandy: GTA 6 Players Are Already Obsessed With Someone Else",
+          "url": "https://www.polygon.com/gta-6-vicki-chapter-2-girls-trip/",
+          "source": "Polygon",
+          "sourceUrl": "https://polygon.com",
+          "date": "2026-11-23T21:29:19.000Z",
+          "excerpt": "Grand Theft Auto 6 fans were obsessed with Mandy in Chapter 1, and have now moved on to obsessing over Vicki in Chapter 2.",
+          "image": {
+            "src": "img/stories/0889b81e1bc4e7b8.jpg",
+            "query": "japan city",
+            "creator": "Unknown",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/5907599/photo-image-public-domain-tree-free",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/1a604d3e-6357-4fe0-aa99-5d3c12fd157a/thumb/"
+          }
+        },
+        {
+          "title": "Devs can now utilize the high-end ambient occlusion technique seen in EVE: Frontier",
+          "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxQQklvNl85MlI5Vl9RcTl3d2xjT0U5eDVwcW9UUG9OVTBad3BKbEYyekpPNFJIZkpWTDdTT04tYlhqd0I2SlRYTU1oTkMwVG9tTzBLZFdoeDVFRXFpOEF0VHBxcGdZUHdwZHAyYURIMUUtMkFkcV9Pd2NrQ21Lc3dJMEswYktnRjZtQ2Nja25laGg3NmtIVWVlSy1UT0VEbTZuN3dwMURBMUgwMWlXNGJCdWxiNGxETWNhcEtxWg?oc=5",
+          "source": "Game Developer",
+          "sourceUrl": "https://www.gamedeveloper.com",
+          "date": "2026-11-23T21:09:48.000Z",
           "excerpt": "",
+          "image": {
+            "src": "img/stories/d6c1a146248fe448.jpg",
+            "query": "japan city",
+            "creator": "Unknown",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/6042959/photo-image-desktop-wallpaper-public-domain-nature",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/c2776558-7b54-4f05-8b99-e961eccc65be/thumb/"
+          }
+        },
+        {
+          "title": "Every Playable Video Game in GTA 6, Ranked Worst to Best",
+          "url": "https://www.polygon.com/gta-6-playable-video-games-ranked/",
+          "source": "Polygon",
+          "sourceUrl": "https://polygon.com",
+          "date": "2026-11-23T21:04:57.000Z",
+          "excerpt": "Grand Theft Auto 6 features four playable video games within the game. Here's how they stack up.",
+          "image": {
+            "src": "img/stories/2393d08db7da7981.jpg",
+            "query": "japan city",
+            "creator": "Unknown",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/6042502/photo-image-public-domain-free-city",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/76b3a174-650b-47a1-8271-560757189c9d/thumb/"
+          }
+        },
+        {
+          "title": "'Dealer's Choice' mission choices and outcomes in GTA 6",
+          "url": "https://www.polygon.com/gta-6-dealers-choice-pure-cut-explained/",
+          "source": "Polygon",
+          "sourceUrl": "https://polygon.com",
+          "date": "2026-11-23T20:57:33.000Z",
+          "excerpt": "'Dealer's Choice' is a mission in GTA 6 that makes you choose between pure or cut substances. Here are the 'Dealer's Choice' outcomes explained.",
+          "image": {
+            "src": "img/stories/8cae0297ec2ebb62.jpg",
+            "query": "japan city",
+            "creator": "Unknown",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/6083463/shadow-the-rain",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/44d2c6b4-a4ff-4a48-86a7-4fc3222f876b/thumb/"
+          }
+        },
+        {
+          "title": "Nicalis removes AI-generated music from The Binding of Isaac: Repentance+ after player backlash",
+          "url": "https://www.gamesindustry.biz/nicalis-removes-ai-generated-music-from-the-binding-of-isaac-repentance-after-player-backlash",
+          "source": "GamesIndustry.biz",
+          "sourceUrl": "https://gamesindustry.biz",
+          "date": "2026-11-23T20:56:00.000Z",
+          "excerpt": "Nicalis has pulled AI-generated music from The Binding of Isaac: Repentance+ after players discovered it in the game's latest update, prompting a wave of negative Steam reviews. Read more",
+          "image": {
+            "src": "img/stories/cbd6c172436e674d.jpg",
+            "query": "server room",
+            "creator": "Unknown",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/6042704/photo-image-public-domain-free",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/c580cdaf-7228-4c08-92cf-1401c43a5d84/thumb/"
+          }
+        },
+        {
+          "title": "Where to find the Silent Hill hotel in GTA 6",
+          "url": "https://www.polygon.com/gta-6-silent-hill-hotel-easter-egg-location-marbelle-hotel-safe/",
+          "source": "Polygon",
+          "sourceUrl": "https://polygon.com",
+          "date": "2026-11-23T20:26:31.000Z",
+          "excerpt": "Here's where to find the Silent Hill hotel in GTA 6, and how to open the safe inside the haunted Marbelle Hotel",
+          "image": {
+            "src": "img/stories/b459fdfc7ee8fc5e.webp",
+            "query": "japan city",
+            "creator": "Unknown",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/6077467/cineon",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/876f3a62-4e89-4b69-be25-d948f22ef9c2/thumb/"
+          }
+        },
+        {
+          "title": "Epic Games no longer plans to include Blueprints or Actor Gameplay Framework in Unreal Engine 6",
+          "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOTXF1WUZ3ZWpNakczN185VnZrempXS1BYWjdVVElaenZUTF9adG9vOENOZWwzR3lnSlp5SW4weFBxdWFoM0N3WUZ6cm1PNkFidkdmWlJ3cUFiVW9XTGUxY0dlQnJVMjVKQW9fTjhzLTloWXNKbWFnWS1kOFJpMHM4bXJ4dXZkZjNsSE9rcEpDVHF3eDg0ZUxBNVlMWmxvcWkweHpWeHp0UHB6eEM3U0cw?oc=5",
+          "source": "GameDev.net",
+          "sourceUrl": "https://gamedev.net",
+          "date": "2026-11-23T20:10:16.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/69218c3be1de6fa0.jpg",
+            "query": "japan city",
+            "creator": "Unknown",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/6058698/free-public-domain-cc0-photo",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/e4f4a898-3beb-49c9-a75b-bc6207688acd/thumb/"
+          }
+        },
+        {
+          "title": "Naruto Movie Officially Casts Fan-favorite Actor for Key Role",
+          "url": "https://www.polygon.com/live-action-naruto-movie-cast-hiroyuki-sanada/",
+          "source": "Polygon",
+          "sourceUrl": "https://polygon.com",
+          "date": "2026-11-23T19:53:45.000Z",
+          "excerpt": "Hiroyuki Sanada has been cast in the live-action Naruto movie from Spider-Man: Brand New Day director Destin Daniel Cretton.",
+          "image": {
+            "src": "img/stories/ab63ed5c0eab8b5d.jpg",
+            "query": "design studio desk",
+            "creator": "Burst",
+            "creatorUrl": "https://burst.shopify.com",
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://stocksnap.io/photo/paint-supplies-TCHBOFXNQ1",
+            "provider": "stocksnap",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/acacd593-029f-4d5c-96aa-331a819a8d68/thumb/"
+          }
+        },
+        {
+          "title": "GTA 6 leaker reportedly releases file needed to run leaked Xbox build",
+          "url": "https://www.gamesindustry.biz/gta-6-leaker-reportedly-releases-file-needed-to-run-leaked-xbox-build",
+          "source": "GamesIndustry.biz",
+          "sourceUrl": "https://gamesindustry.biz",
+          "date": "2026-11-23T19:43:30.000Z",
+          "excerpt": "GTA 6 leaker Cyberleek has reportedly released the executable file for the leaked Xbox build of the game, prompting concern that an unofficial PC port could follow. Read more",
           "image": {
             "src": "img/stories/6518ee506053a7b6.webp",
             "query": "cyber security",
@@ -889,13 +411,285 @@
             "via": "Openverse",
             "file": "https://api.openverse.org/v1/images/935857ed-3b0e-4da7-965c-ff885a19bbf9/thumb/"
           }
+        }
+      ]
+    },
+    {
+      "id": "ai",
+      "key": "newsCatAI",
+      "items": [
+        {
+          "title": "Anthropic launches Claude Ship, letting AI agents review, fix, and approve code changes",
+          "url": "https://techcrunch.com/2026/11/23/anthropic-launches-claude-ship-letting-ai-agents-review-fix-and-approve-code-changes/",
+          "source": "TechCrunch",
+          "sourceUrl": "https://techcrunch.com",
+          "date": "2026-11-23T22:05:50.000Z",
+          "excerpt": "As AI-generated code piles up, Anthropic's new developer tools aim to eliminate another bottleneck by letting agents handle routine approvals.",
+          "image": {
+            "src": "img/stories/4c023cb13dc8e318.jpg",
+            "query": "server room",
+            "creator": "Alexis Lê-Quôc from New York, United States",
+            "creatorUrl": null,
+            "license": "CC BY-SA 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+            "page": "https://commons.wikimedia.org/wiki/File:3PAR_SAN_in_the_server_room.jpg",
+            "provider": "Wikimedia Commons",
+            "via": "Wikimedia Commons",
+            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8a/3PAR_SAN_in_the_server_room.jpg/960px-3PAR_SAN_in_the_server_room.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+          }
         },
         {
-          "title": "The FBI was hacked again, this time the breach targeted its crime database",
-          "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxOZnJ0bzNoWGJlbG9sVk43STd6YTFMVEJCS2dHYVJVVnN2TFdWUVZlUWlRVUpBWlZOME5kOVlSV2g1a3U0ZUZJODYwVFJIVVNKRENfS21aYnRjaC1KQ2JnaUp0ZXRMb2JuV1QtU0JqcERjbXJsUlBqeFJQOG5qREozTDlmRFo?oc=5",
-          "source": "CNN",
-          "sourceUrl": "https://www.cnn.com",
-          "date": "2026-11-21T02:12:00.000Z",
+          "title": "Supertake raises $20M to let AI agents turn your market predictions into stock portfolios",
+          "url": "https://techcrunch.com/2026/11/23/supertake-raises-20m-to-let-ai-agents-turn-your-market-predictions-into-stock-portfolios/",
+          "source": "TechCrunch",
+          "sourceUrl": "https://techcrunch.com",
+          "date": "2026-11-23T22:02:05.000Z",
+          "excerpt": "Think you know where the market is headed? A startup called Supertake lets you put money behind your ideas without having to pick the stocks yourself.",
+          "image": {
+            "src": "img/stories/448a8f138b05ddf1.jpg",
+            "query": "server room",
+            "creator": "Esquilo",
+            "creatorUrl": null,
+            "license": "CC BY-SA 3.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+            "page": "https://commons.wikimedia.org/wiki/File:PDC_server_room.jpg",
+            "provider": "Wikimedia Commons",
+            "via": "Wikimedia Commons",
+            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/11/PDC_server_room.jpg/960px-PDC_server_room.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+          }
+        },
+        {
+          "title": "Elon Musk and others rejoice as Jensen Huang is reinstated at Nvidia amid scandal",
+          "url": "https://techcrunch.com/2026/11/23/elon-musk-and-others-rejoice-as-jensen-huang-is-reinstated-at-nvidia-amid-scandal/",
+          "source": "TechCrunch",
+          "sourceUrl": "https://techcrunch.com",
+          "date": "2026-11-23T21:47:41.000Z",
+          "excerpt": "\"The mistake has been corrected,\" Elon Musk chimed in.",
+          "image": {
+            "src": "img/stories/94e8b32cbca7d2c5.jpg",
+            "query": "japan city",
+            "creator": "Unknown",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/6082913/alone",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/68aff388-0a16-4300-a783-845af17628a0/thumb/"
+          }
+        },
+        {
+          "title": "Megaspeed, the company at the center of the Jensen Huang scandal, appears headed for a US blacklist",
+          "url": "https://techcrunch.com/2026/11/23/megaspeed-the-company-at-the-center-of-the-jensen-huang-scandal-appears-headed-for-a-u-s-blacklist/",
+          "source": "TechCrunch",
+          "sourceUrl": "https://techcrunch.com",
+          "date": "2026-11-23T21:25:42.000Z",
+          "excerpt": "Megaspeed, which was previously led by Alice Huang, would be barred from doing business with U.S. companies unless those companies attained a special license from the federal government.",
+          "image": {
+            "src": "img/stories/d5fd74ef02cbcd97.jpg",
+            "query": "power lines sunset",
+            "creator": "Unknown",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/6052654/free-public-domain-cc0-photo",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/00753109-26fd-4457-a103-dc6e30da76d5/thumb/"
+          }
+        },
+        {
+          "title": "Nvidia employees greet Jensen Huang like a hero as he returns to company’s HQ",
+          "url": "https://techcrunch.com/2026/11/23/nvidia-employees-greet-jensen-huang-like-a-hero-as-he-returns-to-companys-hq/",
+          "source": "TechCrunch",
+          "sourceUrl": "https://techcrunch.com",
+          "date": "2026-11-23T20:38:53.000Z",
+          "excerpt": "\"I'm going to be a better CEO the second time around,\" Huang told employees.",
+          "image": {
+            "src": "img/stories/6345c2b298164f8a.jpg",
+            "query": "japan city",
+            "creator": "Unknown",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/4025996/kabukicho-tokyo",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/d3d1043c-11b9-49a9-abd7-0a03ec62692d/thumb/"
+          }
+        },
+        {
+          "title": "Google Search’s AI Mode can now tap into Drive and Wallet for more personalized responses",
+          "url": "https://techcrunch.com/2026/11/23/google-searchs-ai-mode-can-now-tap-into-drive-and-wallet-for-more-personalized-responses/",
+          "source": "TechCrunch",
+          "sourceUrl": "https://techcrunch.com",
+          "date": "2026-11-23T19:14:46.000Z",
+          "excerpt": "By bringing Personal Intelligence in AI Mode to Drive, Wallet, and the Gemini app, Google is leveraging the wealth of user data that's already within its ecosystem",
+          "image": {
+            "src": "img/stories/dfe1af88bb665b95.jpg",
+            "query": "server room",
+            "creator": "The National Archives (UK)",
+            "creatorUrl": null,
+            "license": "CC BY 3.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+            "page": "https://commons.wikimedia.org/wiki/File:A_view_of_the_server_room_at_The_National_Archives.jpg",
+            "provider": "Wikimedia Commons",
+            "via": "Wikimedia Commons",
+            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e0/A_view_of_the_server_room_at_The_National_Archives.jpg/960px-A_view_of_the_server_room_at_The_National_Archives.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+          }
+        },
+        {
+          "title": "Jensen Huang scheduled to testify next week in Senate following reinstatement as Nvidia CEO",
+          "url": "https://techcrunch.com/2026/11/23/jensen-huang-scheduled-to-testify-next-week-in-senate-following-reinstatement-as-nvidia-ceo/",
+          "source": "TechCrunch",
+          "sourceUrl": "https://techcrunch.com",
+          "date": "2026-11-23T18:12:22.000Z",
+          "excerpt": "The public hearing follows bipartisan calls for Huang to testify about the affair with the suspected Chinese spy.",
+          "image": {
+            "src": "img/stories/ebc1eb6e4fb92e8b.jpg",
+            "query": "japan city",
+            "creator": "Unknown",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/6058651/free-public-domain-cc0-photo",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/12a874ae-133e-4ed6-ae07-9870d2d1cbb0/thumb/"
+          }
+        },
+        {
+          "title": "Artificial Intelligence Enhances Surgical Pathology Diagnosis, Biomarker Prediction, and Operative Decision Support",
+          "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxQbFl4VmtYNjBwV3hBQkhfMWtDVzNMMFZuQnc0OEEzQlhvVTlMazRJNUxXeFBtc2FveU1DWUVjMjRvNGkzR2duTy1MR3k4TWZWSW5Tc2lEZ19JUXQ2d1pLNUNvOUZ5Yk5LNV92bEhZcmxoWnBDdmk4S2lmOEROckg5QnJkemZTUEJ6SEpCMkJwOFRkX3NxOEs3dGhMdUJ6MVF5b212blZUTWZtdnF1T0ZDS1NETTlRMkZ3bFh2VXNaaGRFT3B6bjhQNFplYTRnTW9pSWlveA?oc=5",
+          "source": "Bioengineer.org",
+          "sourceUrl": "https://bioengineer.org",
+          "date": "2026-11-23T18:02:06.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/d2415f9c15f47700.jpg",
+            "query": "server room",
+            "creator": "Intelligentguy89",
+            "creatorUrl": null,
+            "license": "CC BY-SA 3.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+            "page": "https://commons.wikimedia.org/wiki/File:RCoE_-_computer_-_Server_Room.jpg",
+            "provider": "Wikimedia Commons",
+            "via": "Wikimedia Commons",
+            "file": "https://upload.wikimedia.org/wikipedia/commons/0/07/RCoE_-_computer_-_Server_Room.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+          }
+        },
+        {
+          "title": "Amazon snaps up Decart’s AI optimization tech for $7.5B as it prepares to sell Trainium chips",
+          "url": "https://techcrunch.com/2026/11/23/amazon-snaps-up-decarts-ai-optimization-tech-for-7-5b-as-it-prepares-to-sell-trainium-chips/",
+          "source": "TechCrunch",
+          "sourceUrl": "https://techcrunch.com",
+          "date": "2026-11-23T17:14:23.000Z",
+          "excerpt": "Amazon is acquiring Decart’s AI optimization technology and research team in a reported $7.5 billion deal.",
+          "image": {
+            "src": "img/stories/c167773a4913ec3b.jpg",
+            "query": "semiconductor wafer",
+            "creator": "Ixnayonthetimmay",
+            "creatorUrl": null,
+            "license": "CC BY-SA 3.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+            "page": "https://commons.wikimedia.org/wiki/File:Wafer_prober_service_configuration.jpg",
+            "provider": "Wikimedia Commons",
+            "via": "Wikimedia Commons",
+            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5b/Wafer_prober_service_configuration.jpg/960px-Wafer_prober_service_configuration.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+          }
+        },
+        {
+          "title": "Jensen Huang isn’t out of the woods yet",
+          "url": "https://techcrunch.com/2026/11/23/jensen-huang-isnt-out-of-the-woods-yet/",
+          "source": "TechCrunch",
+          "sourceUrl": "https://techcrunch.com",
+          "date": "2026-11-23T16:57:40.000Z",
+          "excerpt": "Tech leaders should be clear-eyed about all the problems likely to come with Huang's reinstatement.",
+          "image": {
+            "src": "img/stories/b776c19d03cea841.jpg",
+            "query": "japan city",
+            "creator": "Unknown",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/6073339/tunnel-vision",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/2d2f18b5-c040-4851-b299-dfccec1ef5eb/thumb/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "tech",
+      "key": "newsCatTech",
+      "items": [
+        {
+          "title": "Nvidia CEO Jensen Huang is back. What happens next?",
+          "url": "https://www.theverge.com/ai-artificial-intelligence/1030422/nvidia-jensen-huang-ai-china-alice-huang",
+          "source": "The Verge",
+          "sourceUrl": "https://theverge.com",
+          "date": "2026-11-23T22:10:32.000Z",
+          "excerpt": "After the leather-jacketed CEO, president, and co-founder of Nvidia, Jensen Huang, acknowledged an affair with Megaspeed exec Alice Huang, his company initially announced an investigation. However, after The New York…",
+          "image": {
+            "src": "img/stories/4e4760fd172c414c.jpg",
+            "query": "power lines sunset",
+            "creator": "Unknown",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/6048674/free-public-domain-cc0-photo",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/50bae118-3ea3-440c-9a0b-a957c284e252/thumb/"
+          }
+        },
+        {
+          "title": "Welcome to elite impunity, Jensen Huang",
+          "url": "https://www.theverge.com/ai-artificial-intelligence/1040819/welcome-to-elite-impunity-jensen-huang",
+          "source": "The Verge",
+          "sourceUrl": "https://theverge.com",
+          "date": "2026-11-23T22:09:26.000Z",
+          "excerpt": "I suppose I must issue a hearty congratulations to Jensen Huang. Huang is CEO of Nvidia again, to the surprise of basically everyone except President Donald Trump and Vice President…",
+          "image": {
+            "src": "img/stories/c8182ffe2b3278a7.jpg",
+            "query": "circuit board",
+            "creator": "Unknown",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/5902389/photo-image-public-domain-technology-computer",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/d8481036-84c7-4766-9672-15ecb18f8c37/thumb/"
+          }
+        },
+        {
+          "title": "PR News | For Technology Brands, the Three-Letter Buzzword Today is IRL, Not GEO - Mon., Nov. 23, 2026",
+          "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxORjdVbFZ0aVZXVUR5NV84T01RbmNSaVVXNDJ4R0Rkb20ydGlJQ1ZtVlAtQ0JkQzJ1bW55YWpWWW1SYUc3bTU2SmNEVlBLazd3VmstQVE0dUt2Q2FYeE9lS2lPUWFoY05CdlNaQ0pSaU9WbU5TemVFQ01RM1hYeU94em5Eb2RxSVp4Y09sajVfN19BZURhQVJLdmR4dXVyR0R0NW1WN2JETkx3aExhUUJrM0d3WllpMEd1a0NrNg?oc=5",
+          "source": "O'Dwyer's PR News",
+          "sourceUrl": "https://www.odwyerpr.com",
+          "date": "2026-11-23T22:04:23.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/9158c446752e6ec9.jpg",
+            "query": "design studio desk",
+            "creator": "andrew pilling",
+            "creatorUrl": null,
+            "license": "CC BY-SA 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+            "page": "https://commons.wikimedia.org/wiki/File:Andrew_Pilling%27s_2011_Recording_Equipment.jpg",
+            "provider": "Wikimedia Commons",
+            "via": "Wikimedia Commons",
+            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/39/Andrew_Pilling%27s_2011_Recording_Equipment.jpg/960px-Andrew_Pilling%27s_2011_Recording_Equipment.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+          }
+        },
+        {
+          "title": "Can Pirelli’s Cyber Tyre Technology Replace Traditional Drive Modes?",
+          "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxOSmQ3WmdFdG1IdnRCZDlVOTc4NkRJWFRrcVktdlB6ZDZBVnZwb2g2aWhUc1JrajRjUkc5OVlIVmQtMHRfWVBrN3dqRTFJV1A0ZUhVcWJRaXR5MDFPTjgzcWZSaEpfUjFUVGRMdWYta1ZtYTk0bm9TUkJLRjZ5MDluT3V4eXBkajA2dzQ1dVMzQUl6Zktx?oc=5",
+          "source": "Car and Driver",
+          "sourceUrl": "https://www.caranddriver.com",
+          "date": "2026-11-23T21:53:53.000Z",
           "excerpt": "",
           "image": {
             "src": "img/stories/2916a054e252ef1d.webp",
@@ -911,197 +705,11 @@
           }
         },
         {
-          "title": "Standing Dooms Data Breach Suit Against Union Fund",
-          "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxObmRyVXVsSVBHdnotSndLNmF6SEl0VmVlWldPeU9PZ280aHlFbTY5UXd4ejY4ZHd3X2tZbThIcE02MTRGYWcwdTd0bHdpSjh0dGpaVGZtYzBnTHpzbW51eEpXN1c0R3VDcm54WEVSZ0hsVXhhbzg4WmNXb1lRMWstMU9tNC1QTUU0LUZoWUZZUElrV2o2RUtoZzhJSjZSQlF5QTMydXhJM1pwbXRzTUtOU9IBckFVX3lxTE1UTklkQjdpYWliM3BpV2ZlQk50YXphYW5FNnhjVTlDZVBuR3VyNk92X2c4dUkyc1BjaFU3NzZWVWd4OGZsc01xUXp6dTRLOGhWM2w2bHhvV09vX0UtRTBRQ1ZQd0NYeUtwUGN5ejNUX241UQ?oc=5",
-          "source": "Law360",
-          "sourceUrl": "https://www.law360.com",
-          "date": "2026-11-21T01:53:10.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/e92253913914bb97.jpg",
-            "query": "japan city",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/6042329/photo-image-public-domain-person-free",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/b6eb4b62-280a-41ce-98d1-654e224530b2/thumb/"
-          }
-        },
-        {
-          "title": "Aesto Health Data Breach Exposes Critical Cybersecurity Risks Across Health Ecosystems",
-          "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNY0xoYS1rOEV4eklESklacWZvYnZzRlZxM18xdG16ZDJGd2s1Z1JnZ0JkS2EwNm5Cb3lYNmpKcjBJb2NjeW5PSXZuTHNZYzNlZWlzM0ZPRXBSTS0xaXJDelhDbmNpS3ZKb0stR3lIanpxZXRRekhfM3ZUMkdEWUg5OUc1ajNKdHJHcnZfQ2FWSW9oNHgwV2Y4VlJRRHJGa2I5OXR3WnZNcHhJczdfY0N5aw?oc=5",
-          "source": "Bioengineer.org",
-          "sourceUrl": "https://bioengineer.org",
-          "date": "2026-11-21T01:41:41.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/0a985e323b1ea398.jpg",
-            "query": "stethoscope",
-            "creator": "Negative Space",
-            "creatorUrl": "https://stocksnap.io/author/4440",
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://stocksnap.io/photo/stethoscope-medical-9M1HWW2JFV",
-            "provider": "stocksnap",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/e7d58d39-6f6e-454a-a195-e82dfa5a6f79/thumb/"
-          }
-        },
-        {
-          "title": "Uber Says Personal Data Was Exposed in Third-Party Data Breach",
-          "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxORWhDcExobzZzQjdnNVdQVHdDeklvbFlaY3Y1d1EzLVFvX3FaVVlaQXk0ZmhNYXVUYUtGNTB6ZXRiVnAzcnpTUDdDckhCOTduZ2xKZm04cVhHOHRXNTFqTzZvMW5jUllIbU5uM2hSN0hscHh6QnowN1NGX1J0d2M2ZTZkT3ZiVjdiTV9lLWV5YVk0TGtxdHM0bEc1WEI?oc=5",
-          "source": "WSJ",
-          "sourceUrl": "https://www.wsj.com",
-          "date": "2026-11-21T01:40:08.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/4cc1269812a33a52.jpg",
-            "query": "japan city",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/5925630/photo-image-public-domain-free-city",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/b1c52e84-0fd9-4bbc-9a4e-3ebfd7748b4e/thumb/"
-          }
-        },
-        {
-          "title": "Chase vendor hack could fuel wave of phishing scams, expert warns",
-          "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxOV1hXOThsY0lSbklSX0o5MW8wZXJBekgtNlQwaGRqWWx5ZW9uSG1lZGlrTG9zZ3h3VGVnXy1HWEpPVDV1SW1BRVVieXp2ZjhaaVNnSW5zZ2ZEZHNfeWFXVlNMbmxzOVhRZWR4UUJiT0VnS0lZb3RPX0R6eFlYUWVZYXpHMFRfWC1nX3lsVXNNONIBlAFBVV95cUxQU01MWVRHYk1PWVNxbzZTaWZrdmNwRkg4NllMVENmVzN1QVIxakZUZFZNT3FyX3BoRzJHQnJBSGQzdERSUmRCeEM0V3hpN2FzOEZZSk9VVTR3cnFyQnZPUGhQYTE1NG1ZMzVJd0JyUU04VHpzQ0NmYXU5QnhKVmdaY1dSYUJGY2tBVUJYMWsyLVVoaWM5?oc=5",
-          "source": "NewsNation",
-          "sourceUrl": "https://www.newsnationnow.com",
-          "date": "2026-11-21T01:13:40.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/a45c645da8b9b8df.webp",
-            "query": "cyber security",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/8811976/photo-image-phone-hands-public-domain",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/90a82606-71ea-4232-b845-7b56c441bff6/thumb/"
-          }
-        },
-        {
-          "title": "Carnegie Endowment for International Peace reports data breach",
-          "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxNSjYzNUhXUl95NDRRSGdaVnZWakVlWm5BLURlMDZHaDhlbU52MnBXSS12YXBGanl1NGJnazAzWXBNYWgtVy05WVFscXkwZmtNYzR6TWNGZV9oaWhDR1NfbGRIbE1LV0c4alhmQlVGWV9kaDliN2d0TW84dUpkTHdpMklPaXhtRXhFd3VnelY5YVRyUTYwX0o4?oc=5",
-          "source": "SC Media",
-          "sourceUrl": "https://www.scworld.com",
-          "date": "2026-11-21T00:50:58.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/33e6a56e812dc905.jpg",
-            "query": "car assembly line",
-            "creator": "U.S. Agency for International Development",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/4051109/image-public-domain-person-woman",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/14667bb6-fb41-4a56-9947-84706205b7d6/thumb/"
-          }
-        },
-        {
-          "title": "Bell Canada confirms data breach involving agentic threat actor",
-          "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxOb1dYMUdlTmY4Z2NjMHNmSVF5c0JmTzZvdWJGd1MyYXdkczVNRXE5emFHUWdHVEhQYzlNelIySnh6VkwyalZXd255SDJfLWxzX2RLZWtpNVZUM2dUNzBxZ3RJbWhBcHVVMHpwXzgxdklTZ09FN29ucG5ZZWNFWlFRUTdqVERJdnpGbWdQRkFYbEZ1RVRkUzdnWA?oc=5",
-          "source": "SC Media",
-          "sourceUrl": "https://www.scworld.com",
-          "date": "2026-11-21T00:46:14.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/0b250eda4456a104.jpg",
-            "query": "japan city",
-            "creator": "Unknown",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/6042954/photo-image-background-public-domain-person",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/821340ac-d2f1-477a-8bc8-707ce66742a9/thumb/"
-          }
-        }
-      ]
-    },
-    {
-      "id": "business",
-      "key": "newsCatBusiness",
-      "items": [
-        {
-          "title": "Adweek Highlights Digital.Marketing's AI Agent Approach",
-          "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxONUVDSE0tS3RTQWZyTGQtTHZFOTAwRG9nSVN2N1hkR2RXekJXdVhqYWJReXFMNTF0Sm1CcFRHLVlFU09Wd1FzVGVoa056OThjNzJkM2puM0JHQ1o1dEMtU2JWVUJHWURGV3lsNGwyUTAtR3o5djVUTHJkSXpNanIzQUln?oc=5",
-          "source": "Wisevoter",
-          "sourceUrl": "https://wisevoter.com",
-          "date": "2026-11-21T03:48:43.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/55f4dc9baefb75ad.jpg",
-            "query": "server room",
-            "creator": "Jemimus",
-            "creatorUrl": null,
-            "license": "CC BY 2.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
-            "page": "https://commons.wikimedia.org/wiki/File:Server_room_backup_power_generator_(2)_-_IMG_0449.jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/da/Server_room_backup_power_generator_%282%29_-_IMG_0449.jpg/960px-Server_room_backup_power_generator_%282%29_-_IMG_0449.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
-        },
-        {
-          "title": "EV Startup River Mobility’s FY26 Revenue Jumps 4.2X To ₹432 Cr",
-          "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxPMGJGanFhUjFoRFhMLXNJNkkyei1XTlNjbzZzdWJnX012LVFMeHMwVnB3MVNETDFrZ2VzWEt4elBYVlZ6cGt6c2xyTENpMjFhSWx1QWhXTDJNTnM5bUl4SXlzbUJaRElXXzA3d3NJa21HcVNlSjdhVHlfNTZYak81ZlkycFJ1ODIyVXNvOFA3RHlLNEFGWkdTYw?oc=5",
-          "source": "Inc42",
-          "sourceUrl": "https://inc42.com",
-          "date": "2026-11-21T03:00:53.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/84d4ff1096f08d17.jpg",
-            "query": "car assembly line",
-            "creator": "libraryofcongress",
-            "creatorUrl": null,
-            "license": "CC0",
-            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://www.rawpixel.com/image/6299656/image-vintage-furniture-building",
-            "provider": "rawpixel",
-            "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/71d4a86d-8f3e-4463-b8de-353022dac91b/thumb/"
-          }
-        },
-        {
-          "title": "Nasdaq 100 sinks 5.6% in worst week since Covid, S&P 500 corrects to 3.7% as investors sell off AI, tech stocks",
-          "url": "https://news.google.com/rss/articles/CBMikwJBVV95cUxNcFpCRXpoMkpkb2RxN2tRZzI2S204MElNNWUxQnBQOG9iblZPRV9tQV9BbmhpRlJha2gtS0RHZ0JiUnBjLUlvMlk5QWszcXpVcjZCR2dyTTdBc2REY3JRZjNkWjlmVWptdW9uN2VIUlNZRTMwRmJQRGJ1TzZsY2E5RGZCdFhJaGNheWpKWHNHMWlCVm8tWVFqTkFqbTZnMHk4SGZLWUpManQ0MWFPUXNSMjZJdmhzdHYyNUJ1ZUlBTGlTdkVtaEdGb0lwQkpUTTUxVXpFdW1BbFVlYTZzdkZPTklWN1NJcEN2UlI2aTM1WlZOTXZ2UjFLZGhsUkV3d3praG81ZlhoNWc2NmxQVGtqeTYyONIBmAJBVV95cUxOZXBWRUlFckFhYnUwUGtPcG1sUkJHMThRbUUwV01pLW1zNmhTMFFlT1JCNjZLSzVrYVlzc2JDbTR5THJ1VFNoRzlucEQ1Y3VxTG9hN2VUeDU4QlFiUmFhdDdwZ2RrYWRJMUdNU04yYnIzME9RYzNUck9WQ012OWtsa2NIRC1WazBlVW5vQUVSdGtyVVQzVVllV0JLRlBSU2tOeS1ZWHZ6cW1xLV9iOXpBZ0hTRXBQbzhkYmktZnJqLUE5eFFKdkJEM2h6V3RycUhiMHEwV0E4VWoyZ3pVM1JiU2pMWDR6LWI0ejdQTGZJT1RSNEVYUHpPMHlMRVRHY2k5RFBiWVhLQWtmVHVJYXdDZ0o1cENqMVNn?oc=5",
-          "source": "Livemint",
-          "sourceUrl": "https://www.livemint.com",
-          "date": "2026-11-21T01:36:43.000Z",
-          "excerpt": "",
-          "image": {
-            "src": "img/stories/7bfacaf1459fe1b6.jpg",
-            "query": "server room",
-            "creator": "Jemimus",
-            "creatorUrl": null,
-            "license": "CC BY 2.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
-            "page": "https://commons.wikimedia.org/wiki/File:UPS_units_in_the_main_server_room_-_IMG_0148.jpg",
-            "provider": "Wikimedia Commons",
-            "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/05/UPS_units_in_the_main_server_room_-_IMG_0148.jpg/960px-UPS_units_in_the_main_server_room_-_IMG_0148.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-          }
-        },
-        {
-          "title": "The Best Email Marketing Software for 2026",
-          "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxNYmRFYXlVcjl6V1RRa2dRR3hKTXZZVU91bXNZN290VTRHSkwyLTJZZDd3c2dGRkZ1bm1lY19DLS1fbEM5ckNreHVlbzhGWGdJdVE2bUhBcEIxWmlBbV9DWFBkeUNScm9LM2p4aklaeExRYW9MZGRjUXgxMFloRDk3QQ?oc=5",
-          "source": "PCMag UK",
-          "sourceUrl": "https://uk.pcmag.com",
-          "date": "2026-11-20T22:23:21.000Z",
+          "title": "PE steps back from software",
+          "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxQSXdXelB6M0tEQi1OR1hKNnJPcDNITDMtWGxZeDZRRFN4ZGl5eGZoVk13cmQ2MDExLXZzYWFNbklwbmtQeW1oVHItZFZ0eDdNMHpUbmhRbkdfX2I5TGFhSjZEb3dsLURGM1RKY2k5X1JiMFVQcnBVNElFby1FNHVTX0FLM0ZSc1R1aWJnM0FoUU9acTZxZnc?oc=5",
+          "source": "Axios",
+          "sourceUrl": "https://www.axios.com",
+          "date": "2026-11-23T21:43:52.000Z",
           "excerpt": "",
           "image": {
             "src": "img/stories/d37838deb999bcab.jpg",
@@ -1117,31 +725,329 @@
           }
         },
         {
-          "title": "SEOST Digital Marketing Conference Launches as the New Name for SEO Spring Training",
-          "url": "https://news.google.com/rss/articles/CBMi7gFBVV95cUxNbW1IVkxfUXZSeWhDZFo1cWdSZWVkNXpXZXUzYXhWaWt5TVdfV0hWb21nZ2hUTGRXMnVwQjNRREF6UnZJcFMxNGxBVHIwNVZaaU5GbVd5UXdMRlc1WEtuenpLV2Foek5aclk4WkhzY3Fuc2JqQXFmMzNMTS1oZG1UM1Nlbkk1T0ROOGplLUZuSXJLSjBQQ0g5aGRlOFY4YUFHdkdTQUJ3NklDQTNfb1dod2JnMldBOTFkam1UTnNzazdJRkxrdVRQbzkzTUlGblI5M2ZVc0VfX3o4VHQ2VXRXSTJ0ZUdwZ25jVEhwTl930gHzAUFVX3lxTE1xd3k1T19MMndDRkJJVG1OdUFSRWpXay1JdXNORUV0RF9fNm1DcHB5NTRLR09HU01NLU1MTk9BUmx3ZlhJNlpuYlMyR0t1NnFnb1pGVlkzXzhWRGFBS0NnckNpa2Voc0d6U2N1R1ZuTjZqQmY4cnhjTmdYeHNmNlNMcFBZWi0wczZQR3lQQlNGZWpmTlpJRGRDMTV0YXRrYThsV0RQTXlYZU5hZjJjQnZRbFR3U2hYdEk0SzVKUUptQUhvWFNDS0lVZkFueTRscnJBSXlGYUZfcnMzN1BPN2NGVnhnWV9kSk5QR3ZWTGllWXFWWQ?oc=5",
-          "source": "The Manila Times",
-          "sourceUrl": "https://www.manilatimes.net",
-          "date": "2026-11-20T20:04:46.000Z",
-          "excerpt": "",
+          "title": "The Apple Watch Series 12 is cheaper than ever ahead of Black Friday",
+          "url": "https://www.theverge.com/gadgets/1034512/apple-watch-series-12-black-friday-deal-sale",
+          "source": "The Verge",
+          "sourceUrl": "https://theverge.com",
+          "date": "2026-11-23T21:36:48.000Z",
+          "excerpt": "If you’re still sporting an Apple Watch that launched five or so years ago, now is a good time to upgrade. Apple’s latest smartwatch, the 42mm Apple Watch Series 12…",
           "image": {
-            "src": "img/stories/4e5dd0ee85de3dfe.jpg",
-            "query": "rain umbrella street",
-            "creator": "Gabriel Santiago",
-            "creatorUrl": "https://stocksnap.io/author/246",
+            "src": "img/stories/6c33c9eddc65be18.jpg",
+            "query": "circuit board",
+            "creator": "Unknown",
+            "creatorUrl": null,
             "license": "CC0",
             "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://stocksnap.io/photo/red-umbrella-45JIYYO371",
-            "provider": "stocksnap",
+            "page": "https://www.rawpixel.com/image/5917157/image-background-public-domain-technology",
+            "provider": "rawpixel",
             "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/9eabc16a-4183-4948-b4a6-1d5feec47bc8/thumb/"
+            "file": "https://api.openverse.org/v1/images/58409294-1bf3-4eca-a328-9cc561b0ea7b/thumb/"
           }
         },
         {
-          "title": "What 6 Southeast Investors Look for in a Startup",
-          "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxQNGhKUDItSkhDeTI2TXpUeWV1aGQ1NFMtZnNDNEJkZkhxckVnWm1fY2lhZGNGQXZndFI0UkE1R3plT20tenRkcDhhZFhwMGFMMmJySjVpckdyU2NuTVBIZFNsT28wTldvcU96a2NpVzNGUGMyOTZUdWlDc0lzdzJKQk1ubGxkYlNHZ3JXQVY4ZnJEc1YweXFSQm0tV3d3djNCaDhVR0ZuWTVuVGJ4Qnc?oc=5",
-          "source": "Hypepotamus",
-          "sourceUrl": "https://www.hypepotamus.com",
-          "date": "2026-11-20T16:28:33.000Z",
+          "title": "Tesla’s Latest Edition of Its Driver-Assistance Software Now Looks Like a Video Game",
+          "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxOV3BxXzg5clhFcjhqay1oS1BURy16WDZJQ3NfVU9GR3M0aUtGZnpITXVXdlA3TjRDYzF4TlVEMEk0VnhITFMtd2hUcmZmSjlFTXZsd2dsNl9VNDFVRVRGaDMwUk9sRktseUVuYmZuQzVobXk1MFNla1VpNDM0dVMzZ0p2enJzRWNHdFQtYmhucEZxZw?oc=5",
+          "source": "Car and Driver",
+          "sourceUrl": "https://www.caranddriver.com",
+          "date": "2026-11-23T21:33:53.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/83aa16e312f28a35.jpg",
+            "query": "programming code screen",
+            "creator": "Unknown",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/5916657/image-public-domain-computer-free",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/ecacfc43-a252-46e3-9681-760e45536305/thumb/"
+          }
+        },
+        {
+          "title": "Will this technology change the future of Bitcoin?",
+          "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxNOUstS1VIUGcyYVVTaUhjaXpoVjJkLTc5bHAtS3ByOThvSUotZHVQWm5GLXFpeE5WTjNwZnJXNUlvYlZQZU1CQWZSb2N6WC1KOEdBS3JuSlN3RlNxMzJfeFEteXh3Mi1ibE9hTlR0OHZnQzM2WV9WbjNFZ1YyMXFaRHJOQ2MyekVBcDNnQ1l6T3FubkpnSE5nWVpPYw?oc=5",
+          "source": "Fidelity Investments",
+          "sourceUrl": "https://www.fidelity.com",
+          "date": "2026-11-23T21:20:09.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/1248bf3b07b52258.jpg",
+            "query": "circuit board",
+            "creator": "Unknown",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/5910545/image-public-domain-technology-computer",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/185ba948-a4bd-4caa-b4f1-19862fd05761/thumb/"
+          }
+        },
+        {
+          "title": "Colorado Finalizes Automated Decision-Making Technology Rules: Servicing and Collections Are In, and Human Review Gets a Commercial Reasonableness Roadmap",
+          "url": "https://news.google.com/rss/articles/CBMiuAJBVV95cUxQXzdwMVdfV0xVQ1ZfM3poNjdlLWJpY3F4V2hzZnFGQXlQRzhyT0paMEVEN090VlRfNHBZNXJWeVhjU3FEUU53VTdpSXMtUzJROHNSOG1pc2hKRnFWdW0wQ3BXTDFvUG00bFdjZXA5cXNTellsT255YTBvTnhvRDFtVmpUUnlxdmpLdi1jN3BZV3NXRmM1T1dFWlpBZVNkWWdZek5PU081M2hMQWJ5YU5Kc2N0VmtGM3FnaWtRVko3SmxYVml3akp0N3FzUVBBeTU4OGZUUlo0WTNWVXlCVlRKVWl0b2tPWWE5Y2hEUG81TGIyaktNMFZTV0NqNDhCOEZieVVNdS1LNEk0QnR6U3BxSDJtZm9Cdnh4aUpDSk8zaEVuaW5lZDEtQkthOUpQSWVUQXNjR0pTdjg?oc=5",
+          "source": "Consumer Financial Services Law Monitor",
+          "sourceUrl": "https://www.consumerfinancialserviceslawmonitor.com",
+          "date": "2026-11-23T21:10:50.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/ef8413c019118a5f.jpg",
+            "query": "circuit board",
+            "creator": "Unknown",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/5912618/image-background-public-domain-technology",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/0b300d24-91b0-4b29-ba18-860c8bd37fce/thumb/"
+          }
+        },
+        {
+          "title": "Tungsten Automation sues Mortgage Cadence over alleged unlicensed software use",
+          "url": "https://news.google.com/rss/articles/CBMi3gFBVV95cUxPU3RQVXJlZDZJd2tzWnlqV2pHRHZZTWNsc25FRXlHM1A3cF9kTzJuSS1IUHI3Z1hxeHRZTmhSSXZpZm1ra1VQZTNaYUlGdXVvWFIxWnU2S3JVRjRyejJuMGlfT0tJcUFYS3d1R3pKNUs2dXhXMk9OS0prejh3d2Q5ejZudDRpcUVtN3B2UWZFUHBIQUxPTjVGQnE3YzAyWlBMaUFzQzl3YUJITzBsMVlhN1VZTVg0LVhHekdPeFhsWEdZcXpTVExwMFFPRWhRemhraUtnN1JNdTVOWmhWOXc?oc=5",
+          "source": "Mortgage Professional America",
+          "sourceUrl": "https://www.mpamag.com",
+          "date": "2026-11-23T21:09:52.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/653e21477860bdff.jpg",
+            "query": "programming code screen",
+            "creator": "Unknown",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/5906903/photo-image-background-public-domain-technology",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/899d9d73-9831-4e38-898f-b8726bd70132/thumb/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "security",
+      "key": "newsCatSecurity",
+      "items": [
+        {
+          "title": "GoFundMe says donor information was exposed in data breach",
+          "url": "https://news.google.com/rss/articles/CBMiywFBVV95cUxPTG1rN0ZObEtKa21qOVJmRHVxY2pFYWxvUXZyRWY0MGdDMUdKOHRPZlpZQnU1X1p0SEgyd3FxYVhjMFhMVXU5ZmRNOG5Iel9vdW9YaHlUMGhiTTVNdDQ4cUljMV9PZVJPNzhaOHYtVk9CZ2NtSEp0NzVPbFhUcXdTQVhEUVRGT0x3VVl6UU1tdnAwbXlnRXo3cG95MVlEczB3LTZFd2h2S3dPd0RQWHEtNEJtSmdaWjZxNF9MY1Bvc09MNjNJaEpEUGJuSQ?oc=5",
+          "source": "FOX43",
+          "sourceUrl": "https://www.fox43.com",
+          "date": "2026-11-23T21:54:00.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/e92253913914bb97.jpg",
+            "query": "japan city",
+            "creator": "Unknown",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/6042329/photo-image-public-domain-person-free",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/b6eb4b62-280a-41ce-98d1-654e224530b2/thumb/"
+          }
+        },
+        {
+          "title": "South Korea’s power giant KEPCO confirms data breach impacting 1.5 million",
+          "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxQS3RGRXNXRkdWZGhsZTlPRVBjZWNjenNCc2VEZV9mSlV6bWlfaXpGa214b0ZGSmd6NVRRZk5UQzhkQ25iT1huVWNFaXBGNVZJSnprVktrSkVEUjdiR0Z3YlhITF9wX3NFTDhMX2VpaUdqQU5VM1FmV3lmYl9XSDNBZFk0am5KQVR3V242dG83VmJGOUxQeEVRMWZmdlR5SE1Qdko1MWpmLUJOTGEtR2ZzNVlWTFkwd2JHd3d5RQ?oc=5",
+          "source": "BleepingComputer",
+          "sourceUrl": "https://www.bleepingcomputer.com",
+          "date": "2026-11-23T20:54:51.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/5fb7faa311a277fd.jpg",
+            "query": "power lines sunset",
+            "creator": "Unknown",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/3286547/free-photo-image-electric-energy-electricity-power-grid",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/4145a5ab-531d-4ae0-b329-40e7b8abee2d/thumb/"
+          }
+        },
+        {
+          "title": "Law firm K&L Gates notifies clients, state authorities about data security breach",
+          "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxOQ1J3cU9Tb2tIcUVKczU5TzBaek5FM1FHaWhjbmt2d1FaTzdsSVNzOGl4VEh5NFVFX2pFOXJNTVBHTkhUUEYxZTVNMGdWQmtLWG9GZkVaMVh5ZGxGM0dwbm5NN014aWV2TGJuOWp1YnpBNFBwNWRxemhndGFoYzFneVVzS0ZJTUxlRWZocjZaNGlYTXV0aTUtYVZMR3NLOHJNWllSZG1oV2ZvVm50Y0FOTklhSVZyb2VrYmhCT1VHdWRxeG9yWmlpeGZ6d3Q?oc=5",
+          "source": "Reuters",
+          "sourceUrl": "https://www.reuters.com",
+          "date": "2026-11-23T20:41:44.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/a45c645da8b9b8df.webp",
+            "query": "cyber security",
+            "creator": "Unknown",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/8811976/photo-image-phone-hands-public-domain",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/90a82606-71ea-4232-b845-7b56c441bff6/thumb/"
+          }
+        },
+        {
+          "title": "McAdam Financial Group Data Breach Exposes SSNs; Lawsuit Possible",
+          "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxOcGtwaVdJUkkzbTVDaUlndFdzRDM5LTZqeEJKM1h1cE12WmRpX0IwNmJ5RHhfQ2RhUGxLeVctSU0zaHhWZ3oxR3RMYWRCVWFfdFFUVmV6V3dGcjVPdTB2dU1Vc0dDUXlwMl9FMks2cmhsVlpweG1DaGdjNkJyM1FsZ1gtUDFoYnByVHZGRFln?oc=5",
+          "source": "ClassAction.org",
+          "sourceUrl": "https://www.classaction.org",
+          "date": "2026-11-23T20:11:33.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/4cc1269812a33a52.jpg",
+            "query": "japan city",
+            "creator": "Unknown",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/5925630/photo-image-public-domain-free-city",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/b1c52e84-0fd9-4bbc-9a4e-3ebfd7748b4e/thumb/"
+          }
+        },
+        {
+          "title": "Bausch Health Data Breach Exposes SSNs; Attorneys Investigating",
+          "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxOVXBsSGdMNG9jZXZRZzNvTE8xMWR3OUI2NzlUOEpqOERWYTlEcmF5NHQwQTFGbU53R0pHdEhUdUcxYm5XQkF5VkxHejIzU2Y4V2JHc2VOSnFVX2QxajhKRUxyYXF2TE56ZmRkRlVKQ0VGLXBNakZuMV8zYy1sUTlZUGo2blE0T1VyNmpJcE1qaw?oc=5",
+          "source": "ClassAction.org",
+          "sourceUrl": "https://www.classaction.org",
+          "date": "2026-11-23T19:11:15.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/4a0e8d2bd841f6e9.jpg",
+            "query": "stethoscope",
+            "creator": "Negative Space",
+            "creatorUrl": "https://stocksnap.io/author/4440",
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://stocksnap.io/photo/stethoscope-medical-RAW1RLRTM7",
+            "provider": "stocksnap",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/029d8b5c-0500-49f2-86ba-0052ceddbe5a/thumb/"
+          }
+        },
+        {
+          "title": "FBI reportedly facing second data breach involving National Crime Information Center",
+          "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE9qRVJ1U3pOT3J3aWhUMGoxYVdlbkZtMnhLelUxVTlNUDl5MGJZeGFJTDlSNXRXM0htVWtzZ1M1U3FFX3lhQ2NJUEY1Z25Qdkc3aURnRW5tVF9IRzlhMV83dw?oc=5",
+          "source": "The Record from Recorded Future News",
+          "sourceUrl": "https://therecord.media",
+          "date": "2026-11-23T18:38:28.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/0b250eda4456a104.jpg",
+            "query": "japan city",
+            "creator": "Unknown",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/6042954/photo-image-background-public-domain-person",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/821340ac-d2f1-477a-8bc8-707ce66742a9/thumb/"
+          }
+        },
+        {
+          "title": "$260,000 Sirva Relocation data breach class action settlement",
+          "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxPQk9SRFdzVjRUT25QaVExNzhaS3h5RU95QnFTczhaMjFza0J5Q1BBMmJzSk82Vk16Z3J5WlJPeW9kb21wWTI4RllOem5CRl9iSUJOa3J1ZF9PWWxPQWVtVzg3azRyQWdtbmdLbUhXbENqTzBSWFpYQVFSanJ1RUlkcHg4MEgzSkozR2tLcVRQeGtjWmpFXzJmekpOUF92UUJ5UV9nRGgtTlphZEFyMlowNm94QVF2UGV2WkZvc3FiMEx6NnFsSXNMVE9SU1dSQQ?oc=5",
+          "source": "Top Class Actions",
+          "sourceUrl": "https://topclassactions.com",
+          "date": "2026-11-23T18:06:30.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/0c32f4a2e7adb603.jpg",
+            "query": "japan city",
+            "creator": "thegetty",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/14306035/image-art-public-domain-painting",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/c0fc02e8-6f0e-42d1-b28a-68eb3bcb3e78/thumb/"
+          }
+        },
+        {
+          "title": "“Agentic Threat Actor” Behind Bell Data Breach",
+          "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxNTFJGaDhOR0lLZmk5T2VKT2xGel8yZjk2ZXEyYVV3M3E4OVJHT1EzcWF4bXpQb04ybWg0a2FyeF9GTGZzYkZjQ3I5YkphSEFnOEFaR0gxdFRnRDR4NjNTejlOVnkwbjVPVV9qcjJNNUZQdF9nckVCQWpKQkNfVTFBRkhaQW1QMFdONGZOeEQ2WXd6NktQeUV5aw?oc=5",
+          "source": "Security Magazine",
+          "sourceUrl": "https://www.securitymagazine.com",
+          "date": "2026-11-23T18:00:00.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/covers/blog.svg",
+            "generated": true,
+            "query": "japan city"
+          }
+        },
+        {
+          "title": "GAO Finds Gaps in Federal Food Supply Cybersecurity Protections",
+          "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTFB0cC0tMUFpNXFSOS1yTWhtOWpvR2t2cmQzNUN3YkJYWHNHblBsZkg4QWw4Zm9CbjUycmdwREdLV3hkQjJRY2hDV1JsOGF4dTkxbTk1U3VKcmhsN3NpdjNzNW1RMWpXYTJnOXJPNFY3ZUc3eGViNlNUdWxBQQ?oc=5",
+          "source": "Legis1",
+          "sourceUrl": "https://legis1.com",
+          "date": "2026-11-23T17:51:44.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/5543ce23c8ce0ebd.jpg",
+            "query": "sushi",
+            "creator": "Nesnad",
+            "creatorUrl": null,
+            "license": "CC BY 2.5",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.5",
+            "page": "https://commons.wikimedia.org/wiki/File:2007feb-sushi-odaiba-manytypes.jpg",
+            "provider": "Wikimedia Commons",
+            "via": "Wikimedia Commons",
+            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9c/2007feb-sushi-odaiba-manytypes.jpg/960px-2007feb-sushi-odaiba-manytypes.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+          }
+        },
+        {
+          "title": "Phoebe confirms data breach notifications issued by former third-party vendor",
+          "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxQOVdnN1J5WUt0ZDNOYlh2QjdCRWFJQjI1a19CSmN5ajc4U0cxT0FLNHVqWC1vaFBHakxMMGJocWNCWWdIUTBZR1R3OFY4WDRURkh2XzZVTTBDSnNRWEpVVldXeE5sOERvVkxpOTJiRVdwb0JsVnFIVVYxUldfNmVQbERSaVlEcEoxNjNaUzkybmZuZ05vV2UzYlhicFRqVVFhZDlKWV9oTVBNeks3ZjNRZXZiU1ZmU2NaQXJLSW9GZ3k?oc=5",
+          "source": "Americus Times-Recorder",
+          "sourceUrl": "https://americustimesrecorder.com",
+          "date": "2026-11-23T17:49:34.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/covers/blog.svg",
+            "generated": true,
+            "query": "japan city"
+          }
+        }
+      ]
+    },
+    {
+      "id": "business",
+      "key": "newsCatBusiness",
+      "items": [
+        {
+          "title": "Small Business Owners Need More from Your Bank Than Ever",
+          "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNbWNLRmNFbWJnUkFCSGg4Q050Q0FoTl9UVURmbjhvdGxlZEhuYnBTMk5GNXR5V2g3SWFZd1N4TTU5ei1VTjl5WEtwd29WQi1YZUtzOEF4STJ6VVREVFBDWWpvTjNkMjRsUW1VX3FYV0psQ0diNVg5UWZxTFVwYUppTEZjdHFOZFFoemxKLWhSS0dSNmdUeHNobzRKTkowMVNPMkZGbXNEZDRHdHVTdmdxcER5NW9zQQ?oc=5",
+          "source": "The Financial Brand",
+          "sourceUrl": "https://thefinancialbrand.com",
+          "date": "2026-11-23T21:07:21.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/e9f9498238154376.jpg",
+            "query": "japanese yen",
+            "creator": "Unknown",
+            "creatorUrl": null,
+            "license": "CC0",
+            "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "page": "https://www.rawpixel.com/image/8718530/photo-image-vintage-public-domain-money",
+            "provider": "rawpixel",
+            "via": "Openverse",
+            "file": "https://api.openverse.org/v1/images/a9f732e9-6e74-415a-8f62-c41b34e12266/thumb/"
+          }
+        },
+        {
+          "title": "Nigerian Startup WorldX builds digital ecosystem to compete with global tech giants",
+          "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxQa0dvdzh6enhRR1J3eVQ5VjNvN1l4ZmdrRkYxRy15ZVB3V2ItOEpPS2VmdTlDZEs4ZzBaVk93dFYwVDJUa0FHSml2RDFfVThOSUhjZlo4TGlQVUI1eHN0b2tSX1hyMXR6TVJ6em8tSHFDNmY5NVYwcnR2Q3RDbFRBcjdNYkpJQkJMVUZnMjNucUZBamp2dVp6QzU3NGlhOHVjZWpxeEt1ODRLVTZDSl9ZMXNGNFZCUnNjZ1lwN1RB?oc=5",
+          "source": "PM News Nigeria",
+          "sourceUrl": "https://pmnewsnigeria.com",
+          "date": "2026-11-23T15:39:05.000Z",
           "excerpt": "",
           "image": {
             "src": "img/stories/72932eef682b1e09.jpg",
@@ -1157,11 +1063,31 @@
           }
         },
         {
-          "title": "Vertex Ventures SE Asia & India Co-Leads Everful’s Latest Funding Round",
-          "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxNMUpvMTROb2hlWHhIa19YUHQzekxvNGcyQjdjQnFvQV81SzBDWm1UVmF4VVBURWlZTmRPVjIycGU4MjVGUm52QmN2cXR3YXhPWUQ2dm5WMFR3WWE5M2x2cUg5dUI4d2FocmJXd2JFYWY4VE9TZzY2NEhSWTR0SUhPdkhfUzZaNnkwekFFdVEwVXQtbkhUdmZzNm9ZM0pYWmVMeW5KRkN3T1dlS0xiOTkw?oc=5",
-          "source": "BW Disrupt",
-          "sourceUrl": "https://www.bwdisrupt.com",
-          "date": "2026-11-20T10:33:20.000Z",
+          "title": "Big Tech Dollars Flow to the Nuclear Supply Chain",
+          "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxQMnFpbVpFN3BXb0lrX2dTajg1LUY4aXM4Rm9FWjkxSVVJcGpNel9peFVyUlB6aHRrcmhDWjgzckJLem9Nc2RBLUdRdnluTlQ0Ml9rVjhrRnpGODFoVVVsdWktRFVyemgyajlfOHNjdzBhTjVFNmpnbGphTlBJMVdHTl9fQWxzZzBZM25uS25BOWVUZw?oc=5",
+          "source": "ETF Database",
+          "sourceUrl": "https://etfdb.com",
+          "date": "2026-11-23T15:33:46.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/9979c0dc8e085c04.jpg",
+            "query": "power plant",
+            "creator": "Gretar Ívarsson – Edited by Fir0002",
+            "creatorUrl": null,
+            "license": "Public domain",
+            "licenseUrl": null,
+            "page": "https://commons.wikimedia.org/wiki/File:NesjavellirPowerPlant_edit2.jpg",
+            "provider": "Wikimedia Commons",
+            "via": "Wikimedia Commons",
+            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9f/NesjavellirPowerPlant_edit2.jpg/960px-NesjavellirPowerPlant_edit2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+          }
+        },
+        {
+          "title": "Nvidia Brings Back Jensen Huang as CEO, Days After Saying It Wouldn’t",
+          "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxOd3RHTWhxQmJVS20zNGk3VWNYU2c5a1pPNFFGd3dscnk2YTNfN1JPaXhPT1VBR0dMbWFkU1hkZllCcnNvUi0tb1YweGExcU93Z3loanZYNnlIZlVleHplMDNEX1VBRTUydmFfLVBBQV95XzBUVXBzSTBCZU43cEljN1BKNU1aNEVPdEVzenlCNmYweC1GVllsaks1eEtDZw?oc=5",
+          "source": "Tech In Africa",
+          "sourceUrl": "https://www.techinafrica.com",
+          "date": "2026-11-23T14:34:12.000Z",
           "excerpt": "",
           "image": {
             "src": "img/stories/c07e01cbe678cbde.jpg",
@@ -1177,70 +1103,123 @@
           }
         },
         {
-          "title": "Performance Marketing in 2027: Why Businesses Are Rethinking Advertising Budgets and Customer Acquisition",
-          "url": "https://news.google.com/rss/articles/CBMi7AFBVV95cUxPdmRlVGJZU2I5eks4WEowME5ZRTJsZm9oUmxfWk9VdFR6Z2dJRGVQMlc3OGMtUlpoYklUZEl0SU9waVlOZEtDMWs5Q2hxNVJQNHFzcVRZbXFfV0VZaGpyaW5RR3dTaFNHYTdoaUdxVktBSzU0UWljZGxzVlBVN0pCVW53Z1ZUQzlfYW00cFZkWm1uS2VMeTA3OEZzbDJnS3NoUDRTdTVwZjM0bGVRZVF0YW5NU1Z0dFdQLTVhVDRad2lzTGN4LWdJQk13d2tmT2w1SnlvWjRQSGI1TmJIWFVDZjZhaWRiRXV2N1dtNQ?oc=5",
-          "source": "Business News This Week",
-          "sourceUrl": "https://businessnewsthisweek.com",
-          "date": "2026-11-20T09:51:44.000Z",
+          "title": "Amazon Is Said to Pay $7.5 Billion For AI Startup Decart’s Tech",
+          "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNTEtGbThuSmc5SGd2SmJVQjZDSTFPNVVpMjJ5TG10OTA5dWlTNUFnRUtSbTBxOW1WYUtOdGZoWGxySDNHb1BYVjQ0SVhxQlBfYTB4aFhCWFRHSVBnS21XQ1FpS1dYb2p4cGxzb2k4VjJzU1JmVnB1MzktempwZXRyYWw0VFpyR3gtOFFVaVhPdWszS3A1THNRV2RPS3hFNXJ3ZXlkMEY4Um1CZjQ1VmxUNDN3RQ?oc=5",
+          "source": "Bloomberg.com",
+          "sourceUrl": "https://www.bloomberg.com",
+          "date": "2026-11-23T13:48:51.000Z",
           "excerpt": "",
           "image": {
-            "src": "img/stories/ab63ed5c0eab8b5d.jpg",
-            "query": "design studio desk",
-            "creator": "Burst",
-            "creatorUrl": "https://burst.shopify.com",
+            "src": "img/stories/9ebecfefeb29af28.jpg",
+            "query": "server room",
+            "creator": "Carl Lender from Sunrise, USA",
+            "creatorUrl": null,
+            "license": "CC BY 2.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+            "page": "https://commons.wikimedia.org/wiki/File:Server_Room_(22397102849).jpg",
+            "provider": "Wikimedia Commons",
+            "via": "Wikimedia Commons",
+            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4d/Server_Room_%2822397102849%29.jpg/960px-Server_Room_%2822397102849%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+          }
+        },
+        {
+          "title": "Free Instant AI-Readiness Audit Helps Small Businesses Optimize for Both Classic Search and AI-Generated Answers",
+          "url": "https://news.google.com/rss/articles/CBMi_AFBVV95cUxPbzNzdjFvSnFBMnpSd1kxQTVVVTBXSl9ucXU3MGtDeDZSV3Z6eWFheF9ZelExQk9EYVpTdUhNNVV4MmlTVHF0OVg4T2ZZT2V6a2VySXFrckJpQjhnNGFudlYtOEYwbkdnNUljc0tLUEd2dFZfZ04wMG0zMFNKNFRGMzc1eVcxU2xPV01BUjVycmxnNExrU2dMcWFzNlhMYWtaZTF2eXVMMWxwUDFDdUREUWZfeGtEQ01JeDZpYnFmMDdtSzdkZDJtWVBiNE5yMm42ZW5kdHVnV1NWUXdoeXlYNWZCMkJleHVPR1NmV1FLa2IzbXEyOW5fQ3A2Z0w?oc=5",
+          "source": "The Detroit News",
+          "sourceUrl": "https://www.detroitnews.com",
+          "date": "2026-11-23T13:47:33.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/bdf7a2509a4f7196.jpg",
+            "query": "server room",
+            "creator": "Mohammad Raiyan Tamzid",
+            "creatorUrl": null,
+            "license": "CC BY-SA 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+            "page": "https://commons.wikimedia.org/wiki/File:Rajshahi_College_server_room.jpg",
+            "provider": "Wikimedia Commons",
+            "via": "Wikimedia Commons",
+            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/74/Rajshahi_College_server_room.jpg/960px-Rajshahi_College_server_room.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+          }
+        },
+        {
+          "title": "Playfly Sports expands deal with JABA across 11 schools",
+          "url": "https://news.google.com/rss/articles/CBMi4wFBVV95cUxNX2o4QTY1eThEbHdLS2VHSGRHbGZCYUZsYkExVkpPVG9rMG00bWZYaUVtbnctbHZ2NFNKMDRzTlBfUWR3WVR0NHJlQ1FKTzJDMy1ZanRkXzBTdkttNFFwaU5DY1dEVkRSNnM1MnN0OHpsbHNHR1FLNXpVSl9mTm5vbHYxaExGTC03Q3JoZUVrTWdiT2t6dy1ma0FYTnhLSnZMQjdoX3JLRkdYdXRCUy1kYlZDdUNKajZFeHdES00wMnVmQkUxTUVNRGFFZ1FRRlZZbC1MQk5zVS1Gd1RlOUlMLW9NZw?oc=5",
+          "source": "Sports Business Journal",
+          "sourceUrl": "https://www.sportsbusinessjournal.com",
+          "date": "2026-11-23T13:03:58.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/stories/fc7e3a4adb263f54.jpg",
+            "query": "tokyo office buildings",
+            "creator": "Unknown",
+            "creatorUrl": null,
             "license": "CC0",
             "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-            "page": "https://stocksnap.io/photo/paint-supplies-TCHBOFXNQ1",
-            "provider": "stocksnap",
+            "page": "https://www.rawpixel.com/image/6075084/shinagawa-tokyo-12nd-mar",
+            "provider": "rawpixel",
             "via": "Openverse",
-            "file": "https://api.openverse.org/v1/images/acacd593-029f-4d5c-96aa-331a819a8d68/thumb/"
+            "file": "https://api.openverse.org/v1/images/eb8ddb28-6f2d-4a8c-9039-2bf535e319bd/thumb/"
           }
         },
         {
-          "title": "Indian tech founder Yash Patil, 23, sells AI startup for $4.5 billion",
-          "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxONW1NQllXMVVRM08zUHdNTkdRdEFVZG5GWk1aSmhHQU9Lanhpcnl3aXRReS0xVlp4elRfaXBxTVBZZFY0QWNLYzRWTnlzdXJpUkpEckVrcFhHWmgwQWFTdHlOQ0V3YzN4SzdmLWpMNkFhQlVleG5ZdmUyMmp3S1ZzQlVTOG41aWpjZGNkdFdLVHcyVkVjaU90TmVBT0FLeU1JZ0lsOGl6VWZtN05qRFVj?oc=5",
-          "source": "Billionaires.Africa",
-          "sourceUrl": "https://www.billionaires.africa",
-          "date": "2026-11-20T09:51:30.000Z",
+          "title": "Malaysia tech sector faces rising derating risks despite resilient semiconductor upcycle",
+          "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxNR3c3UFV6dVNLQ0VaRVJoNkktMDdpVDA3QUsyMV9JaHRvSWZRQ1pQNm5zeXRic1VjZGEzX1NQZmh0dGE5aThURWxFQU5NMS1OU1h2UzFsc3lpZ0x5T1RvX2ZiZ1hUR2RTbzU2MHZodThPV0ZFcnplZEpaQktHTldIcUdqNENuUV82ZkdSVGFaX1pRWGhPOEgtcDdNQ3ZlRXMtRjlrR3J0S19qU1hrbktzUzBVOVdyNmRCZjIxYWQyeUhzdw?oc=5",
+          "source": "TNGlobal",
+          "sourceUrl": "https://technode.global",
+          "date": "2026-11-23T10:10:04.000Z",
           "excerpt": "",
           "image": {
-            "src": "img/stories/5dedfac6d4cbbb2c.jpg",
-            "query": "server room",
-            "creator": "Jemimus",
+            "src": "img/stories/077d67e54cbddc11.jpg",
+            "query": "semiconductor wafer",
+            "creator": "DrHughManning",
             "creatorUrl": null,
-            "license": "CC BY 2.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
-            "page": "https://commons.wikimedia.org/wiki/File:DHL_Netherlands_local_site_computer_room_server_racks_(2)_-_IMG_3299.jpg",
+            "license": "CC BY-SA 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+            "page": "https://commons.wikimedia.org/wiki/File:Semiconductor_Wafer_of_Microelectronics.jpg",
             "provider": "Wikimedia Commons",
             "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/aa/DHL_Netherlands_local_site_computer_room_server_racks_%282%29_-_IMG_3299.jpg/960px-DHL_Netherlands_local_site_computer_room_server_racks_%282%29_-_IMG_3299.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/41/Semiconductor_Wafer_of_Microelectronics.jpg/960px-Semiconductor_Wafer_of_Microelectronics.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
           }
         },
         {
-          "title": "Email Marketing Platform for Small Businesses: Comparison Website Announced",
-          "url": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxOS21JUlhUYjh1T3JMX3ZKdk9abnRUUW1iM21yZTV4WmJ1SXRmUUtqRFBhVW1Lb19vTGhnWGViQkNyR1BTUGk4Z2xhb1VXM3ZCMTRQcldpbEZRaHlpQUQ0d21EUmhkbmJXZ0QwMWg5TXdFOG9Qa1M3YnhJdXhoRHA4TG9TNzNvWXpXT2xiZ21FeUM3ME91OWVwSjlORHBsSGFHYTcxNzFhZDJpWHZ0UmJCaXlmb0ZDNjU5Vm5DUUdzNzFUWGY2bF9hNHAydEZIYTJKR05DY2hxdjI?oc=5",
-          "source": "FinancialContent",
-          "sourceUrl": "https://www.financialcontent.com",
-          "date": "2026-11-20T09:18:00.000Z",
+          "title": "The Future of Influencer Marketing: How Micro-Influencers Are Creating New Opportunities for Brands",
+          "url": "https://news.google.com/rss/articles/CBMi5AFBVV95cUxPY2NNZ2ttZm4tS1hILUFLTTdubkZYTUwwQ1RleHY1SC1xa3cyZTd2RmlVV0tBb2xJZTk0Smk0X1ZQN3ZHWFZYd0dIdTRFSEZNX2ZUUXdWWmpEOFNEc2tkem9GVmtDaXd2X1NFeXZhSnp2N1ZIaVlDMzlXRVNqNjNnc0VLUjhzcUdZLUcxYzlFNXlieXVBWHM3LU1HQU54NzRpVGk3QVJBdHktM1FqYy0zZlJCN2NCZ1dCZjNpdjhNSFVIcGFfYjZvaTNoTTlMSG9NVTdBMThJcmk2dTZZMlBZNENfcHA?oc=5",
+          "source": "Business News This Week",
+          "sourceUrl": "https://businessnewsthisweek.com",
+          "date": "2026-11-23T09:06:39.000Z",
           "excerpt": "",
           "image": {
-            "src": "img/stories/cfcecb21d0d28d02.jpg",
-            "query": "web design laptop",
-            "creator": "VIA Gallery",
+            "src": "img/stories/3e28cff006fdf7e1.jpg",
+            "query": "design studio desk",
+            "creator": "森正洋デザイン研究所 (Mori Masahiro Design Studio, LLC.)",
             "creatorUrl": null,
-            "license": "CC BY 2.0",
-            "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
-            "page": "https://commons.wikimedia.org/wiki/File:VIA_OpenBook_8.jpg",
+            "license": "CC BY 3.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+            "page": "https://commons.wikimedia.org/wiki/File:1974_DeskHaizara_Masahiro-Mori.jpg",
             "provider": "Wikimedia Commons",
             "via": "Wikimedia Commons",
-            "file": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/70/VIA_OpenBook_8.jpg/960px-VIA_OpenBook_8.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+            "file": "https://upload.wikimedia.org/wikipedia/commons/f/fe/1974_DeskHaizara_Masahiro-Mori.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+          }
+        },
+        {
+          "title": "Portugal joins Europe's top 10 for tech investment on back of Tekever funding round",
+          "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxQeUM0TWMtTW5VeGhmYk9jMDZQY3lkVWl6eno0a0JEbmtyV3V3eXlEbVViVXVjNWt5MnRhR1owN1ZIN1gyR1VlaXQ3cE5iekZNU1N6N282NWxFS0w2Q2JPRzVqX1FuUENMa2p6bnlSeGI0VkU5OUVZY3FhRFB1S01hNUlYdFg?oc=5",
+          "source": "Yahoo! Finance Canada",
+          "sourceUrl": "https://ca.finance.yahoo.com",
+          "date": "2026-11-23T07:08:00.000Z",
+          "excerpt": "",
+          "image": {
+            "src": "img/covers/business.svg",
+            "generated": true,
+            "query": "tokyo office buildings"
           }
         }
       ]
     }
   ],
   "lastRun": {
-    "at": "2026-11-21T05:28:00.699Z",
+    "at": "2026-11-23T22:24:00.351Z",
     "ok": true,
     "newStories": 60,
     "message": "Found 60 new stories."
