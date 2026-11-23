@@ -246,3 +246,15 @@ html.neon:not(#_):not(#__):not(#___) .lx-drop-text, html.neon:not(#_):not(#__):n
 html.neon:not(#_):not(#__):not(#___) .lx-drop-text small { color: #d9c4ff !important; -webkit-text-fill-color: #d9c4ff !important; }
 html.neon:not(#_):not(#__):not(#___) .lx-logo-preview[hidden] { display: none !important; }
 html.neon:not(#_):not(#__):not(#___) .lx .lx-link { color: #ff8ae6 !important; -webkit-text-fill-color: #ff8ae6 !important; background: none !important; }
+
+/* Step 3 summary and the web address box: dark, with readable text (they were white boxes under white text). */
+html.neon:not(#_):not(#__):not(#___) .lx-summary { background: #1a0838 !important; border: 1px solid rgba(176, 77, 255, .5) !important; border-top: 3px solid #ff2bd6 !important; border-radius: 14px; color: #fff !important; }
+html.neon:not(#_):not(#__):not(#___) .lx-facts dt { color: #d9c4ff !important; -webkit-text-fill-color: #d9c4ff !important; }
+html.neon:not(#_):not(#__):not(#___) .lx-facts dd, html.neon:not(#_):not(#__):not(#___) .lx-included li { color: #fff !important; -webkit-text-fill-color: #fff !important; }
+html.neon:not(#_):not(#__):not(#___) .lx-included li::before { color: #ff8ae6; }
+html.neon:not(#_):not(#__):not(#___) .lx-domain { background: #0e0420 !important; border: 1px solid rgba(176, 77, 255, .6) !important; border-radius: 10px; }
+html.neon:not(#_):not(#__):not(#___) .lx-domain:focus-within { border-color: #ff2bd6 !important; box-shadow: 0 0 0 3px rgba(255, 43, 214, .2) !important; }
+html.neon:not(#_):not(#__):not(#___) .lx .lx-domain input { background: transparent !important; color: #fff !important; -webkit-text-fill-color: #fff !important; }
+html.neon:not(#_):not(#__):not(#___) .lx-domain > span { color: #d9c4ff !important; -webkit-text-fill-color: #d9c4ff !important; }
+html.neon:not(#_):not(#__):not(#___) .lx-recommended { background: #c026d3 !important; color: #fff !important; }
+html.neon:not(#_):not(#__):not(#___) .lx-next-steps, html.neon:not(#_):not(#__):not(#___) .lx-next-steps b { color: #fff !important; -webkit-text-fill-color: #fff !important; }
