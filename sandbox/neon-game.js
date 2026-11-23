@@ -86,14 +86,31 @@
   document.body.appendChild(canvas);
   const ctx = canvas.getContext("2d");
   let W = 0, H = 0;
+  // ---- Fitting the visitor's display (sandbox/neon-display.js) ----
+  // Phones and tablets get bigger targets, a more forgiving aim and a less crowded sky; big monitors get bigger targets too.
+  // Targets cross the screen in about the same time on any width. Weaker devices draw fewer particles and less glow.
+  const DISP = window.TenshiDisplay;
+  const VIEW = { size: 1, speed: 1, crowd: 1, reach: 1, fx: 1, glow: 1, text: 1 };
+  function fitView() {
+    const kind = DISP ? DISP.kind : "desktop";
+    VIEW.size = { phone: 1.3, tablet: 1.15, large: 1.25 }[kind] || 1;
+    VIEW.speed = Math.min(1.5, Math.max(0.55, W / 1440));
+    VIEW.crowd = { phone: 0.6, tablet: 0.8, large: 1.2 }[kind] || 1;
+    VIEW.reach = DISP && DISP.touch ? 1.35 : 1;
+    VIEW.fx = DISP ? DISP.effects() : 1;
+    VIEW.glow = DISP ? DISP.glow() : 1;
+    VIEW.text = kind === "phone" ? 0.85 : kind === "large" ? 1.2 : 1;
+  }
   function resize() {
-    const ratio = Math.min(window.devicePixelRatio || 1, 2);
     W = window.innerWidth; H = window.innerHeight;
+    const ratio = DISP ? DISP.pixelRatio(W, H) : Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = Math.round(W * ratio); canvas.height = Math.round(H * ratio);
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    fitView();
   }
   resize();
   window.addEventListener("resize", resize);
+  window.addEventListener("tenshi:display", resize);
 
   // ---- Panels: score, boss bar, banner, tip, achievement toast, Tanaka bubble, game over ----
   const ui = document.createElement("div");
@@ -191,20 +208,20 @@
   function spawnTarget(now) {
     const pool = Object.entries(TYPES).flatMap(([name, t]) => Array(Math.ceil(t.weight * 2)).fill(name));
     const kind = pick(pool), t = TYPES[kind], fromLeft = Math.random() < 0.5;
-    const speed = rand(...t.speed) * (1 + (level - 1) * 0.12);
+    const speed = rand(...t.speed) * (1 + (level - 1) * 0.12) * VIEW.speed;
     const y = rand(H * 0.12, H * 0.6);
-    objects.push({ kind, size: t.size, color: pick(t.color), points: t.points, service: pick(SERVICES),
+    objects.push({ kind, size: t.size * VIEW.size, color: pick(t.color), points: t.points, service: pick(SERVICES),
       x: fromLeft ? -40 : W + 40, y, baseY: y, vx: fromLeft ? speed : -speed, wobble: rand(10, 40), freq: rand(0.01, 0.025),
       phase: Math.random() * 6.28, spin: Math.random() * 6.28, nextBomb: now + rand(5000, 10000) });
   }
   function spawnPower() {
     const type = pick(Object.keys(POWERS)), fromLeft = Math.random() < 0.5, y = rand(H * 0.18, H * 0.5);
-    objects.push({ kind: "power", type, size: 18, color: POWERS[type].color, points: 0, x: fromLeft ? -40 : W + 40, y, baseY: y,
-      vx: fromLeft ? 1.6 : -1.6, wobble: 20, freq: 0.02, phase: 0, spin: 0 });
+    objects.push({ kind: "power", type, size: 18 * VIEW.size, color: POWERS[type].color, points: 0, x: fromLeft ? -40 : W + 40, y, baseY: y,
+      vx: (fromLeft ? 1.6 : -1.6) * VIEW.speed, wobble: 20, freq: 0.02, phase: 0, spin: 0 });
   }
   function spawnCar() {
     const fromLeft = Math.random() < 0.5, y = H * 0.4 * (0.55 + Math.random() * 0.35);
-    cars.push({ x: fromLeft ? -60 : W + 60, y, vx: (fromLeft ? 1 : -1) * rand(5, 8), trail: [] });
+    cars.push({ x: fromLeft ? -60 : W + 60, y, vx: (fromLeft ? 1 : -1) * rand(5, 8) * VIEW.speed, trail: [] });
   }
   function spawnBoss() {
     const hp = 30 + level * 8;
@@ -423,7 +440,7 @@
     for (const b of bombs) if (Math.hypot(b.x - x, b.y - y) < 18 + extraReach) { defuse(b); return true; }
     for (const c of cars) if (Math.hypot(c.x - x, c.y - y) < 22) { hitCar(c); return true; }
     let target = null, bestD = Infinity;
-    for (const o of objects) { const d = Math.hypot(o.x - x, o.y - y); if (d < o.size * GAME.hitRadius + 6 + extraReach && d < bestD) { target = o; bestD = d; } }
+    for (const o of objects) { const d = Math.hypot(o.x - x, o.y - y); if (d < o.size * GAME.hitRadius * VIEW.reach + 6 + extraReach && d < bestD) { target = o; bestD = d; } }
     if (!target) {
       const letter = letterAt(x, y, 4 + extraReach);   // a letter of the headline?
       if (letter) { shootLetter(letter); return true; }
@@ -620,15 +637,17 @@
   // Screen shake is switched off: it jolted the hero content and the page on every hit (display problems). Calls stay as no-ops.
   function shakeIt(amount) { }
   function burst(x, y, color, n, speed) {
+    n = Math.max(1, Math.round(n * VIEW.fx));
+    if (shards.length > 700 * VIEW.fx) return;          // enough pieces on screen already
     for (let i = 0; i < n; i++) { const a = Math.random() * 6.28, v = rand(1, 4) * speed; shards.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 1, size: rand(1.5, 3.5), color }); }
   }
   function explode(o, scale) {
     burst(o.x, o.y, o.color, Math.round(26 * scale), 1.6 * scale);
     burst(o.x, o.y, "#ffffff", Math.round(10 * scale), 1.1);
-    for (let i = 0; i < 10 * scale; i++) { const a = Math.random() * 6.28, v = rand(2, 6) * scale; shards.push({ x: o.x, y: o.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 1, size: rand(6, 14), color: o.color, spin: rand(-0.3, 0.3), angle: a, line: true }); }
+    for (let i = 0; i < 10 * scale * VIEW.fx; i++) { const a = Math.random() * 6.28, v = rand(2, 6) * scale; shards.push({ x: o.x, y: o.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 1, size: rand(6, 14), color: o.color, spin: rand(-0.3, 0.3), angle: a, line: true }); }
     shards.push({ x: o.x, y: o.y, flash: true, life: 1, size: (o.size || 16) * 3 * scale, color: o.color });
   }
-  function glow(color, blur) { ctx.shadowColor = color; ctx.shadowBlur = blur; }
+  function glow(color, blur) { ctx.shadowColor = color; ctx.shadowBlur = blur * VIEW.glow; }
 
   // ================================================ DRAWING ================================================
   // ---- 3D targets: little see-through glass models, lit from the top left, tumbling as they fly ----
@@ -1172,6 +1191,7 @@
       else { awaySince = 0; if (runEnded) { runEnded = false; gameOver(); } }
     }
     const ts = paused || over_ || !visible ? 0 : timeScale(now), dt = (realDt / 16.7) * ts;   // frozen while scrolled away
+    const ff = realDt / 16.7;   // frames' worth of time since the last frame: effects fade at the same speed on 60, 120 or 144 Hz screens
     ctx.clearRect(0, 0, W, H);
     hud.classList.toggle("is-hidden", !visible);
     bossbar.classList.toggle("is-hidden", !visible);
@@ -1182,7 +1202,7 @@
 
     if (visible && !paused && !over_) {
       const busy = insane ? 2 : 1;
-      if (now > nextSpawn && objects.length < (GAME.maxTargets + level * GAME.moreTargetsPerLevel) * busy && !boss) { spawnTarget(now); nextSpawn = now + GAME.baseSpawnEvery / (1 + (level - 1) * 0.25) / busy * rand(0.6, 1.3); }
+      if (now > nextSpawn && objects.length < Math.max(3, Math.round((GAME.maxTargets + level * GAME.moreTargetsPerLevel) * busy * VIEW.crowd)) && !boss) { spawnTarget(now); nextSpawn = now + GAME.baseSpawnEvery / (1 + (level - 1) * 0.25) / busy * rand(0.6, 1.3); }
       if (boss && now > nextSpawn && objects.length < GAME.targetsDuringBoss) { spawnTarget(now); nextSpawn = now + 2500; }
       if (now > nextPower) { spawnPower(); nextPower = now + rand(...GAME.powerEvery); }
       if (Math.random() < 0.004 * busy && cars.length < 2) spawnCar();
@@ -1275,7 +1295,7 @@
         // A rocket explodes when it reaches the click, or early if it touches something on the way.
         const touched = objects.some(o => Math.hypot(o.x - p.x, o.y - p.y) < o.size + 8) || (boss && Math.abs(p.x - boss.x) < 120 && Math.abs(p.y - boss.y) < 40) || !!monsterAt(p.x, p.y);
         if (arrived || touched) { blast(p.x, p.y, 110, now, p.bossDmg); projectiles.splice(i, 1); continue; }
-        if (Math.random() < 0.8) shards.push({ x: p.x - p.ux * 10, y: p.y - p.uy * 10, vx: rand(-0.5, 0.5), vy: rand(-0.5, 0.5), life: 0.8, size: rand(2, 4), color: Math.random() < 0.5 ? "#b9a3d9" : "#ff8a2b" });   // smoke + flame trail
+        if (Math.random() < 0.8 * Math.min(1, ff)) shards.push({ x: p.x - p.ux * 10, y: p.y - p.uy * 10, vx: rand(-0.5, 0.5), vy: rand(-0.5, 0.5), life: 0.8, size: rand(2, 4), color: Math.random() < 0.5 ? "#b9a3d9" : "#ff8a2b" });   // smoke + flame trail
         if (visible) {
           ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(Math.atan2(p.uy, p.ux));
           glow("#ff8a2b", 14); ctx.fillStyle = "#ffffff"; ctx.fillRect(-9, -3, 16, 6);
@@ -1289,7 +1309,7 @@
     // Railgun beams: a thick violet line with a white-hot core, fading fast.
     for (let i = rails.length - 1; i >= 0; i--) {
       const r = rails[i];
-      r.life -= 0.05;
+      r.life -= 0.05 * ff;
       if (r.life <= 0) { rails.splice(i, 1); continue; }
       ctx.globalAlpha = r.life;
       ctx.strokeStyle = "#c48bff"; ctx.lineWidth = 16 * r.life; glow("#b04dff", 26);
@@ -1300,7 +1320,7 @@
     // Lightning bolts: jagged white-violet lines that flicker as they fade.
     for (let i = bolts.length - 1; i >= 0; i--) {
       const b = bolts[i];
-      b.life -= 0.07;
+      b.life -= 0.07 * ff;
       if (b.life <= 0) { bolts.splice(i, 1); continue; }
       ctx.globalAlpha = b.life * (0.6 + Math.random() * 0.4);
       ctx.strokeStyle = "#f3e6ff"; ctx.lineWidth = 2.5; glow("#c48bff", 20);
@@ -1311,7 +1331,7 @@
     // Laser beams from the bottom corners (and shotgun pellet streaks from the middle).
     for (let i = beams.length - 1; i >= 0; i--) {
       const b = beams[i];
-      b.life -= b.kind === "pellet" ? 0.12 : 0.09;
+      b.life -= (b.kind === "pellet" ? 0.12 : 0.09) * ff;
       if (b.life <= 0) { beams.splice(i, 1); continue; }
       if (b.kind === "pellet") {
         ctx.globalAlpha = b.life; ctx.strokeStyle = "#ffe08a"; ctx.lineWidth = 1.5; glow("#ffb347", 10);
@@ -1332,7 +1352,8 @@
     // Explosion pieces.
     for (let i = shards.length - 1; i >= 0; i--) {
       const p = shards[i];
-      p.life -= (p.flash ? 0.08 : 0.022) * Math.max(ts, 0.3);
+      const step = Math.max(ts, 0.3) * ff;
+      p.life -= (p.flash ? 0.08 : 0.022) * step;
       if (p.life <= 0) { shards.splice(i, 1); continue; }
       ctx.globalAlpha = Math.max(0, p.life);
       if (p.flash) {
@@ -1340,19 +1361,19 @@
         g.addColorStop(0, "rgba(255,255,255,.9)"); g.addColorStop(0.4, p.color); g.addColorStop(1, "rgba(0,0,0,0)");
         ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, p.size * (1.4 - p.life * 0.4), 0, 6.28); ctx.fill(); continue;
       }
-      p.x += p.vx * Math.max(ts, 0.3); p.y += p.vy * Math.max(ts, 0.3); p.vx *= 0.96; p.vy = p.vy * 0.96 + 0.06;
+      const damp = Math.pow(0.96, ff); p.x += p.vx * step; p.y += p.vy * step; p.vx *= damp; p.vy = p.vy * damp + 0.06 * ff;
       if (p.line) {
-        p.angle += p.spin; ctx.strokeStyle = p.color; ctx.lineWidth = 2; ctx.beginPath();
+        p.angle += p.spin * ff; ctx.strokeStyle = p.color; ctx.lineWidth = 2; ctx.beginPath();
         ctx.moveTo(p.x - Math.cos(p.angle) * p.size / 2, p.y - Math.sin(p.angle) * p.size / 2); ctx.lineTo(p.x + Math.cos(p.angle) * p.size / 2, p.y + Math.sin(p.angle) * p.size / 2); ctx.stroke();
       } else { ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x, p.y, p.size * p.life, 0, 6.28); ctx.fill(); }
     }
 
     // Score pop-ups.
     ctx.globalCompositeOperation = "source-over";
-    ctx.font = "800 17px Oswald, 'Arial Narrow', sans-serif"; ctx.textAlign = "center";
+    ctx.font = `800 ${Math.round(17 * VIEW.text)}px Oswald, 'Arial Narrow', sans-serif`; ctx.textAlign = "center";
     for (let i = popups.length - 1; i >= 0; i--) {
       const p = popups[i];
-      p.life -= 0.016; p.y -= 0.7;
+      p.life -= 0.016 * ff; p.y -= 0.7 * ff;
       if (p.life <= 0) { popups.splice(i, 1); continue; }
       ctx.globalAlpha = p.life; glow(p.color, 12); ctx.fillStyle = "#ffffff"; ctx.fillText(p.text, p.x, p.y);
     }

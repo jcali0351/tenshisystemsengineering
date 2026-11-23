@@ -26,7 +26,7 @@ let W = 0, H = 0;   // the screen size in CSS pixels
 
 // Make the canvas match the window (and stay sharp on high-resolution screens).
 function resize() {
-  const ratio = Math.min(window.devicePixelRatio || 1, 2);
+  const ratio = window.TenshiDisplay ? window.TenshiDisplay.pixelRatio(window.innerWidth, window.innerHeight) : Math.min(window.devicePixelRatio || 1, 2);   // fits the display (neon-display.js)
   W = window.innerWidth;
   H = window.innerHeight;
   canvas.width = Math.round(W * ratio);
@@ -36,6 +36,7 @@ function resize() {
   if (reduceMotion) draw(0);   // nothing is animating, so redraw once at the new size
 }
 window.addEventListener("resize", resize);
+window.addEventListener("tenshi:display", resize);
 
 // A repeatable "random" number between 0 and 1 for each tile, so every tile keeps its own personality.
 function tileRandom(col, row, salt) {

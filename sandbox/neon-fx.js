@@ -58,7 +58,7 @@
   }
 
   function resize() {
-    const ratio = Math.min(window.devicePixelRatio || 1, 2);
+    const ratio = window.TenshiDisplay ? window.TenshiDisplay.pixelRatio(window.innerWidth, window.innerHeight) : Math.min(window.devicePixelRatio || 1, 2);   // fits the display (neon-display.js)
     W = window.innerWidth;
     H = window.innerHeight;
     canvas.width = Math.round(W * ratio);
@@ -66,6 +66,7 @@
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
   }
   window.addEventListener("resize", resize);
+  window.addEventListener("tenshi:display", resize);
   window.addEventListener("pointermove", e => { mouse.x = e.clientX; mouse.y = e.clientY; });
   window.addEventListener("pointerleave", () => { mouse.x = mouse.y = -9999; });
 
