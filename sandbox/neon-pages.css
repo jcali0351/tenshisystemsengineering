@@ -173,3 +173,5 @@ html.neon.gx-page:not(#_):not(#__):not(#___) main .tpl-steps li { border-top: 3p
 html.neon.gx-page:not(#_):not(#__):not(#___) main .tpl-step-n { color: #ff8ae6 !important; -webkit-text-fill-color: #ff8ae6 !important; }
 /* Table headings (blog tables): dark purple band with white text. */
 html.neon.gx-page:not(#_):not(#__):not(#___) main :is(th, thead td) { background: #2a0d55 !important; color: #fff !important; -webkit-text-fill-color: #fff !important; }
+/* Service cards: text centred. */
+html.neon.gx-page:not(#_):not(#__):not(#___) main .service-card > p { text-align: center !important; }

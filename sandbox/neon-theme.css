@@ -1398,3 +1398,5 @@ html.neon .nav-soon { cursor: default !important; pointer-events: none; }
 /* Menu: only one pink line at a time. While the hover highlight (with its own line along the header's bottom) is showing,
    the current page's underline steps aside; it comes back when the pointer leaves the menu. */
 html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav > ul:is(:hover, :focus-within) > li > a[aria-current="page"] { box-shadow: none !important; }
+/* Service cards (homepage): text centred. */
+html.neon:not(#_):not(#__):not(#___) #services .service-card > p { text-align: center !important; }
