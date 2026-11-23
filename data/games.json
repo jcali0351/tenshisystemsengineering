@@ -5,8 +5,9 @@
   },
   "monsters": {
    "satan": {
-    "hp": 8806,
-    "dmg": 66,
+    "hp": 9452,
+    "dmg": 71,
+    "speed": 5,
     "xp": 4037
    },
    "warden": {

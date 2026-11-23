@@ -430,9 +430,9 @@ window.TENSHI_GAMES = {
    },
    "satan": {
     "name": "Satan",
-    "hp": 8806,
-    "dmg": 66,
-    "speed": 2,
+    "hp": 9452,
+    "dmg": 71,
+    "speed": 5,
     "reach": 1.9,
     "every": 1200,
     "xp": 4037
