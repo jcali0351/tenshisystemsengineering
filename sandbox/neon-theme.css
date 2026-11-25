@@ -773,7 +773,16 @@ html.neon:not(#_):not(#__) .site-footer .fw-meta, html.neon:not(#_):not(#__) .si
 /* ---- STAGE tags (neon-quest.js puts one at the top of each section) ---- */
 html.neon .gx-stage {
   position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;
-  margin: 0 auto clamp(18px, 2.4vw, 30px); padding-top: clamp(26px, 3vw, 40px); padding-bottom: 100px; font: 700 0.75rem/1 Oswald, sans-serif; letter-spacing: 0.3em; color: #fff; text-transform: uppercase;
+  margin: 0 auto; padding-top: 100px; padding-bottom: 100px; font: 700 0.75rem/1 Oswald, sans-serif; letter-spacing: 0.3em; color: #fff; text-transform: uppercase;
+}
+/* The tag should sit in a balanced band (equal space above and below). Some sections already
+   carry large padding-top (site-theme.css, or the Design bleed after #services), and the
+   homepage services block has padding-top: 0 so the tag was hugging the edge. When a stage
+   is present, let the tag's own padding be the only top spacing. */
+html.neon:not(#_):not(#__):not(#___) main section#services + section.feature:has(> .gx-stage),
+html.neon:not(#_):not(#__):not(#___) main :is(section, .page-section, .feature, .services, .contact, .svc-body, .svc-offer-section, .svc-process, .svc-benefits, .svc-tech-section, .svc-cta, .svc-detail-section, .prj-section, .prj-editions, .prj-gallery, .prj-fair, .tech-section, .team-section, .pat-section, .tinted):has(> .gx-stage),
+html.neon:not(#_):not(#__):not(#___) .site-footer:has(> .gx-stage) {
+  padding-top: 0 !important;
 }
 html.neon .gx-stage span { color: #ff6ec7; }
 html.neon .gx-stage b { font-size: 1rem; text-shadow: 0 0 16px #ff2bd6; letter-spacing: 0.2em; }
@@ -820,7 +829,7 @@ html.neon .gx-stage { flex: 0 0 100%; width: 100%; }
   html.neon .gx-hud { width: 124px; padding: 7px 9px; }
   html.neon .gx-hud .gx-dots { display: none; }
   html.neon .gx-stage::before, html.neon .gx-stage::after { display: none; }
-  html.neon .gx-stage { gap: 8px; letter-spacing: 0.2em; }
+  html.neon .gx-stage { gap: 8px; letter-spacing: 0.2em; padding-top: 56px; padding-bottom: 56px; }
 }
 
 /* ---- Station Defense game window: while playing, the game fills the whole browser window ---- */
