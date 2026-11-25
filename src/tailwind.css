@@ -16,6 +16,8 @@
 @source "../app.js";
 @source "../design.js";
 @source not "../admin.html";
+/* Plain words used as class names in hand-written page content (e.g. tools/team-main.html), styled by the site itself. */
+@source not inline("container");
 
 /* Tenshi brand colours and fonts as Tailwind names: bg-tenshi-red, text-tenshi-ink, font-sans, ... */
 @theme {

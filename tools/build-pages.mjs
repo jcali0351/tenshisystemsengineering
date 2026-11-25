@@ -563,7 +563,7 @@ function chrome(html, prefix, current) {
     .replace(/href="((?:index|about|services|contact|team|technology|projects|portfolio|launch|news|blog|portal|wisconsin)\.html|projects\/[a-z-]+\.html|blog\/[a-z-]+\.html)"/g, `href="${prefix}$1"`);
 }
 
-function frame({ prefix, current, titleKey, descKey, title, description, bodyClass, main, photoCredits = "", extraHead = "", extraScripts = "" }) {
+function frame({ prefix, current, titleKey, descKey, title, description, bodyClass, main, rawMain = "", photoCredits = "", extraHead = "", extraScripts = "" }) {
   const pageTitle = title != null ? esc(title) : tx(titleKey);
   const pageDesc = description != null ? esc(description) : tx(descKey);
   const seo = seoHead({ key: title != null ? null : titleKey, url: "__SEO_URL__", title: `${title != null ? title : tx(titleKey)} | ${tx("brandName").trim()}`, desc: title != null ? description : tx(descKey) });
@@ -607,9 +607,9 @@ ${extraHead}</head>
 
 ${chrome(HEADER, prefix, navCurrent(current))}
 
-  <main id="main">
+${rawMain || `  <main id="main">
 ${main}
-  </main>
+  </main>`}
 
 ${chrome(FOOTER, prefix, current).replace("    </div>\n  </footer>", photoCredits + "    </div>\n  </footer>")}
 
@@ -875,44 +875,13 @@ ${cta("contact.html")}`,
 writePage("about.html", about);
 
 /* ---------- Team ---------- */
+// The team page's content is the owner's own <main> block, kept word for word in tools/team-main.html (edit it there).
+// Its look is in team.css, linked just before it so the header and <head> stay the same as on every other page.
+// (The old generated team cards, TEAM and the staff* translations are no longer shown on this page.)
 const teamPage = frame({
   prefix: "", current: "team", titleKey: "teamTitle", descKey: "teamLead", bodyClass: "page team-page",
-  main: `${banner("", [{ key: "navAbout", href: "about.html" }, { key: "navTeam" }], "teamTitle", "teamLead")}
-
-    <section class="page-section team-section" aria-labelledby="team-list-title">
-      <div class="page-inner">
-        <h2 id="team-list-title" class="sr-only" data-i18n="teamTitle">${tx("teamTitle")}</h2>
-        ${t("p", "teamIntro", 'class="section-intro"')}
-        <ul class="team-grid">
-${TEAM.map((m) => `          <li>
-            <button type="button" class="team-card" data-member="${m.n}" aria-haspopup="dialog">
-              <span class="team-photo"><img src="img/team/${m.img}" alt="${tx("teamPhotoAlt")}" data-i18n-attr="alt:teamPhotoAlt" width="400" height="480"></span>
-              <span class="team-text">
-                <span class="team-name" data-i18n="staff${m.n}Name">${tx(`staff${m.n}Name`)}</span>
-                <span class="team-role" data-i18n="staff${m.n}Role">${tx(`staff${m.n}Role`)}</span>
-                <span class="team-view"><span data-i18n="teamView">${tx("teamView")}</span> <span aria-hidden="true">→</span></span>
-              </span>
-            </button>
-            <div class="team-detail" id="member-${m.n}" hidden>
-              <img class="td-photo" src="img/team/${m.img}" alt="${tx("teamPhotoAlt")}" data-i18n-attr="alt:teamPhotoAlt" width="400" height="480">
-              <div class="td-text">
-                <p class="td-role" data-i18n="staff${m.n}Role">${tx(`staff${m.n}Role`)}</p>
-                <h3 class="td-name" data-i18n="staff${m.n}Name">${tx(`staff${m.n}Name`)}</h3>
-                <p class="td-bio" data-i18n="staff${m.n}Bio">${tx(`staff${m.n}Bio`)}</p>
-                <p class="td-skills-title" data-i18n="teamSkills">${tx("teamSkills")}</p>
-                <ul class="td-skills">
-${m.skills.map((id) => { const s = SERVICES.find((x) => x.id === id); return `                  <li><a href="services/${s.slug}.html" data-i18n="${k(s, "title")}">${tx(k(s, "title"))}</a></li>`; }).join("\n")}
-                </ul>
-                <a class="btn btn-primary td-contact" href="contact.html" data-i18n="teamContact">${tx("teamContact")}</a>
-              </div>
-            </div>
-          </li>`).join("\n")}
-        </ul>
-        ${t("p", "teamPlaceholder", 'class="team-note"')}
-      </div>
-    </section>
-
-${cta("contact.html")}`,
+  rawMain: `  <link rel="stylesheet" href="team.css">
+${readFileSync("tools/team-main.html", "utf8").replace(/\s+$/, "")}`,
 });
 writePage("team.html", teamPage);
 
