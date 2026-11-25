@@ -222,22 +222,25 @@ html.neon .hero-card .kx-reel .kx-word.kx-fizzle { animation: kx-fizzle .55s eas
   100% { opacity: 0;   filter: brightness(.6) blur(4px); transform: translateY(-6px) scale(1.04); }
 }
 
-/* ---------- The hero button ("Deploy Your Future"): white with dark purple text ----------
-   (Extra :not(#…) parts make this rule stronger than the site's own button styles.) */
-html.neon { --neon-ink: #2e0b57; --neon-purple: #6d28d9; --neon-purple-dark: #4c1d95; }
+/* ---------- The hero button ("Deploy Your Future"): site orange with white text, white arrow circle with an orange arrow ----------
+   (Extra :not(#…) parts make this rule stronger than the site's own button styles, buttons.css and neon-recolor.css.) */
+html.neon { --neon-ink: #2e0b57; --neon-purple: #6d28d9; --neon-purple-dark: #4c1d95; --neon-orange: #ff8c1a; --neon-orange-deep: #e07811; }
 html.neon .hero-cta-glass .hg-btn:not(#_):not(#__):not(#___) {
-  background: #ffffff !important;
-  color: var(--neon-ink) !important;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, .6), 0 0 28px rgba(255, 43, 214, .45), 0 10px 30px -10px rgba(46, 11, 87, .8) !important;
+  background: var(--neon-orange) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 0 1px rgba(255, 196, 140, .55), 0 0 28px rgba(255, 140, 26, .5), 0 10px 30px -10px rgba(46, 11, 87, .8) !important;
 }
-html.neon .hero-cta-glass .hg-btn:not(#_):not(#__):not(#___) .hg-text { color: var(--neon-ink) !important; -webkit-text-fill-color: var(--neon-ink) !important; }
-html.neon .hero-cta-glass .hg-btn:not(#_):not(#__):not(#___):hover {
-  background: #f6efff !important;
-  box-shadow: 0 0 0 1px #fff, 0 0 42px rgba(255, 43, 214, .7), 0 14px 34px -10px rgba(46, 11, 87, .9) !important;
+html.neon .hero-cta-glass .hg-btn:not(#_):not(#__):not(#___) .hg-text { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; text-shadow: 0 1px 2px rgba(120, 50, 0, .45); }
+html.neon .hero-cta-glass .hg-btn:not(#_):not(#__):not(#___):is(:hover, :focus-visible) {
+  background: #ff9a33 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 0 1px rgba(255, 214, 170, .8), 0 0 44px rgba(255, 140, 26, .8), 0 14px 34px -10px rgba(46, 11, 87, .9) !important;
 }
-html.neon .hero-cta-glass .hg-btn:not(#_):not(#__):not(#___) .hg-icon { background: var(--neon-ink) !important; box-shadow: 0 0 10px rgba(255, 43, 214, .5) !important; }
+html.neon .hero-cta-glass .hg-btn:not(#_):not(#__):not(#___):active { background: var(--neon-orange-deep) !important; }
+html.neon .hero-cta-glass .hg-btn:not(#_):not(#__):not(#___):focus-visible { outline: 3px solid #ffffff !important; outline-offset: 3px !important; }
+html.neon .hero-cta-glass .hg-btn:not(#_):not(#__):not(#___) .hg-icon { background: #ffffff !important; box-shadow: 0 0 10px rgba(255, 255, 255, .45) !important; }
 html.neon .hero-cta-glass .hg-btn:not(#_):not(#__):not(#___) .hg-svg,
-html.neon .hero-cta-glass .hg-btn:not(#_):not(#__):not(#___) .hg-svg path { fill: #ffffff !important; }
+html.neon .hero-cta-glass .hg-btn:not(#_):not(#__):not(#___) .hg-svg path { fill: var(--neon-orange) !important; }
 
 /* ---------- "Ask Tanaka" chat: white and purple instead of white and red ---------- */
 html.neon .tk-launch { color: var(--neon-ink); background: #fff; border: 1.5px solid var(--neon-purple); box-shadow: 0 0 22px rgba(176, 77, 255, .45); }
