@@ -610,7 +610,7 @@ window.TRANSLATIONS = {
     wiLead: "Websites, managed web hosting and practical AI services for small businesses across Wisconsin, from a Madison-based team.",
     wiCrumb: "Wisconsin",
     photoCredits: "Skyline photos from Wikimedia Commons, resized and tinted:",
-    feat1Alt: "City skyline at dusk behind Tenshi's web design and AI services",
+    feat1Alt: "A designer at a neon-lit desk sketching on a tablet, surrounded by floating website mockups and a color palette: Tenshi's web and graphic design work",
     feat1Eyebrow: "Brand, web and media",
     feat1Title: "Design",
     feat1Lead: "Good design makes a business easy to understand and easy to trust. Our Wisconsin web design team shapes how your company looks, sounds and feels online, so every customer meets the same clear, confident brand wherever they find you.",
