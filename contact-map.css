@@ -39,6 +39,14 @@
     linear-gradient(180deg, rgba(6, 5, 10, 0.35) 0%, rgba(6, 5, 10, 0) 25%, rgba(6, 5, 10, 0.72) 100%);
 }
 
+.contact-map-hero:has(#cm-popover:not([hidden])) .cm-stage {
+  z-index: 6;
+}
+
+.contact-map-hero:has(#cm-popover:not([hidden])) .svc-hero-inner {
+  z-index: 3;
+}
+
 .contact-map-hero .svc-hero-inner {
   position: relative;
   z-index: 4;
@@ -677,7 +685,7 @@
 
 /* Neon page typography is very broad (h2 glow, [class*="-meta"] in pink Oswald).
    Keep the map HUD and pin popups in the site orange / purple palette. */
-html.neon.gx-page:not(#_):not(#__) .cm-route-kicker {
+html.neon.gx-page:not(#_):not(#__):not(#___) main .cm-route-kicker {
   font-family: Oswald, "Arial Narrow", sans-serif !important;
   letter-spacing: 0.16em !important;
   text-transform: uppercase !important;
@@ -686,8 +694,8 @@ html.neon.gx-page:not(#_):not(#__) .cm-route-kicker {
   text-shadow: 0 0 10px rgba(255, 122, 48, 0.4);
 }
 
-html.neon.gx-page:not(#_):not(#__) .cm-route-kicker span,
-html.neon.gx-page:not(#_):not(#__) .cm-route-total {
+html.neon.gx-page:not(#_):not(#__):not(#___) main .cm-route-kicker span,
+html.neon.gx-page:not(#_):not(#__):not(#___) main .cm-route-total {
   font-family: Lato, "Segoe UI", system-ui, sans-serif !important;
   font-weight: 600 !important;
   letter-spacing: 0.01em !important;
@@ -697,38 +705,38 @@ html.neon.gx-page:not(#_):not(#__) .cm-route-total {
   text-shadow: none !important;
 }
 
-html.neon.gx-page:not(#_):not(#__) .cm-hop {
+html.neon.gx-page:not(#_):not(#__):not(#___) main .cm-hop {
   color: #fff !important;
   -webkit-text-fill-color: #fff !important;
 }
 
-html.neon.gx-page:not(#_):not(#__) .cm-hop--you {
+html.neon.gx-page:not(#_):not(#__):not(#___) main .cm-hop--you {
   color: #ff2bd6 !important;
   -webkit-text-fill-color: #ff2bd6 !important;
 }
 
-html.neon.gx-page:not(#_):not(#__) .cm-hop--host {
+html.neon.gx-page:not(#_):not(#__):not(#___) main .cm-hop--host {
   color: #ff944d !important;
   -webkit-text-fill-color: #ff944d !important;
 }
 
-html.neon.gx-page:not(#_):not(#__) .cm-hop--server {
+html.neon.gx-page:not(#_):not(#__):not(#___) main .cm-hop--server {
   color: #d3a4ff !important;
   -webkit-text-fill-color: #d3a4ff !important;
 }
 
-html.neon.gx-page:not(#_):not(#__) .cm-hop--metro,
-html.neon.gx-page:not(#_):not(#__) .cm-hop--ixp {
+html.neon.gx-page:not(#_):not(#__):not(#___) main .cm-hop--metro,
+html.neon.gx-page:not(#_):not(#__):not(#___) main .cm-hop--ixp {
   color: #f3eeff !important;
   -webkit-text-fill-color: #f3eeff !important;
 }
 
-html.neon.gx-page:not(#_):not(#__) .cm-hop-arrow {
+html.neon.gx-page:not(#_):not(#__):not(#___) main .cm-hop-arrow {
   color: #c084fc !important;
   -webkit-text-fill-color: #c084fc !important;
 }
 
-html.neon.gx-page:not(#_):not(#__) .cm-popover-title {
+html.neon.gx-page:not(#_):not(#__):not(#___) main .cm-popover-title {
   font-family: Oswald, "Arial Narrow", sans-serif !important;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -737,33 +745,33 @@ html.neon.gx-page:not(#_):not(#__) .cm-popover-title {
   text-shadow: 0 0 14px rgba(168, 85, 247, 0.55) !important;
 }
 
-html.neon.gx-page:not(#_):not(#__) .cm-popover-tag--host {
+html.neon.gx-page:not(#_):not(#__):not(#___) main .cm-popover-tag--host {
   color: #ff944d !important;
   -webkit-text-fill-color: #ff944d !important;
 }
 
-html.neon.gx-page:not(#_):not(#__) .cm-popover-tag--server {
+html.neon.gx-page:not(#_):not(#__):not(#___) main .cm-popover-tag--server {
   color: #d3a4ff !important;
   -webkit-text-fill-color: #d3a4ff !important;
 }
 
-html.neon.gx-page:not(#_):not(#__) .cm-popover-tag--you {
+html.neon.gx-page:not(#_):not(#__):not(#___) main .cm-popover-tag--you {
   color: #ff6ec7 !important;
   -webkit-text-fill-color: #ff6ec7 !important;
 }
 
-html.neon.gx-page:not(#_):not(#__) .cm-popover-tag--metro {
+html.neon.gx-page:not(#_):not(#__):not(#___) main .cm-popover-tag--metro {
   color: #ff944d !important;
   -webkit-text-fill-color: #ff944d !important;
 }
 
-html.neon.gx-page:not(#_):not(#__) .cm-popover-tag--ixp {
+html.neon.gx-page:not(#_):not(#__):not(#___) main .cm-popover-tag--ixp {
   color: #d3a4ff !important;
   -webkit-text-fill-color: #d3a4ff !important;
 }
 
-html.neon.gx-page:not(#_):not(#__) .cm-popover-meta,
-html.neon.gx-page:not(#_):not(#__) .cm-popover-meta * {
+html.neon.gx-page:not(#_):not(#__):not(#___) main .cm-popover-meta,
+html.neon.gx-page:not(#_):not(#__):not(#___) main .cm-popover-meta * {
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace !important;
   letter-spacing: 0.02em !important;
   text-transform: none !important;
@@ -772,7 +780,7 @@ html.neon.gx-page:not(#_):not(#__) .cm-popover-meta * {
   text-shadow: none !important;
 }
 
-html.neon.gx-page:not(#_):not(#__) .cm-popover-meta strong {
+html.neon.gx-page:not(#_):not(#__):not(#___) main .cm-popover-meta strong {
   font-family: Oswald, "Arial Narrow", sans-serif !important;
   font-weight: 700 !important;
   font-size: 10px !important;
@@ -782,12 +790,12 @@ html.neon.gx-page:not(#_):not(#__) .cm-popover-meta strong {
   -webkit-text-fill-color: #FF7A30 !important;
 }
 
-html.neon.gx-page:not(#_):not(#__) .cm-popover--server .cm-popover-meta strong {
+html.neon.gx-page:not(#_):not(#__):not(#___) main .cm-popover--server .cm-popover-meta strong {
   color: #d3a4ff !important;
   -webkit-text-fill-color: #d3a4ff !important;
 }
 
-html.neon.gx-page:not(#_):not(#__) .cm-pop-val {
+html.neon.gx-page:not(#_):not(#__):not(#___) main .cm-pop-val {
   color: #f3eeff !important;
   -webkit-text-fill-color: #f3eeff !important;
   font-variant-numeric: tabular-nums;
