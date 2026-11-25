@@ -619,7 +619,7 @@ window.TRANSLATIONS = {
     feat1Item1: "Brand identity, logos and style guides",
     feat1Item2: "Website and app interfaces, from wireframe to prototype",
     feat1Item3: "Photography, illustration, video and motion graphics",
-    feat2Alt: "City skyline at sunset behind Tenshi's web hosting and development",
+    feat2Alt: "Glowing panels of Python deployment code and a pip install terminal beside a neon city of server towers and drones at sunset: Tenshi's software and web development work",
     feat2Eyebrow: "Software and web",
     feat2Title: "Development",
     feat2Lead: "We turn designs and ideas into fast, reliable websites and software. Our web development for Wisconsin businesses is built on proven technology and written to be maintained for years, not rewritten in months.",

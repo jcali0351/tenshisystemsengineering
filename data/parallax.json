@@ -251,9 +251,9 @@
     },
     "feature2": {
       "enabled": true,
-      "image": "img/photos/tokyo.jpg",
+      "image": "img/photos/development-section.webp",
       "speed": 0.12,
-      "position": "42% 62%",
+      "position": "64% 50%",
       "overlayMode": "none",
       "overlay": "#12050a",
       "overlayOpacity": 0.35,
