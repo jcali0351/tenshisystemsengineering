@@ -5,18 +5,15 @@
 //   3. glowing sparks start at the front of the road and race away to the horizon, shrinking and fading
 //   4. painted server-tower fans get spinning blades (22 fans, each an ellipse in photo pixels, spun in the
 //      plane of the tower face so foreshortened side-face housings stay aligned)
-//   5. the sky clouds drift slowly left to right from a clean inpainted sky plate, composited only where a
-//      precomputed per-pixel mask says "cloud" — towers, palms, the sun and the city stay fixed
 // Everything is placed in the photo's own pixels (2352 x 1008) and mapped through the same "background-size: cover;
 // background-position: center" math as the CSS, recomputed on resize, so it lines up on every screen and crop.
-// Reduced motion: one still frame with a soft glow and static fan blades (no cloud drift). Low-quality mode
-// (neon-display.js, html.disp-q-low): fewer lights and sparks at 30 fps, no cloud drift. Pauses when the hero is
+// Reduced motion: one still frame with a soft glow and static fan blades. Low-quality mode
+// (neon-display.js, html.disp-q-low): fewer lights and sparks at 30 fps. Pauses when the hero is
 // off screen or the tab is hidden. No libraries.
 (function () {
   const host = document.querySelector(".hero > .hero-photo-placeholder");
   if (!host || !window.HTMLCanvasElement) return;
   const IW = 2352, IH = 1008;
-  const cloudsOnly = /(?:^|[?&])cloudsonly=1(?:&|$)/.test(location.search);
   // The road's vanishing point (where the painted lane lines meet, at the foot of the sun) in photo pixels.
   const VX = 1188, VY = 862;
   // Painted lane lines: x = VX + (k - 0.56) * 262 * (dy / 143), dy = y - VY (fitted to the pink lines at y = 990 and 1005).
@@ -84,9 +81,6 @@
     // right-tower pair
     1689.5,749.5,13,13.5,0, 1720.5,749.5,13,13.5,0
   ];
-  const CLOUD_PX_S = 20; // image px / s; about 12–18 screen px/s at typical desktop cover scale
-  const WRAP_BLEND = 360;
-  const SKY_VER = "202611251430"; // keep in sync with index.html hero-anim.js?v=
 
   let W = 0, H = 0, k = 1, ox = 0, oy = 0, dpr = 1;
 
@@ -98,72 +92,6 @@
     k = Math.max(W / IW, H / IH); ox = (W - IW * k) / 2; oy = (H - IH * k) / 2;   // cover + center, as in the CSS
   }
   const px = (x) => (ox + x * k) * dpr, py = (y) => (oy + y * k) * dpr;
-
-  let skyReady = false, skyTile = null, skyMask = null;
-  function loadImg(src) {
-    return new Promise((resolve, reject) => {
-      const im = new Image();
-      im.decoding = "async";
-      im.onload = () => resolve(im);
-      im.onerror = reject;
-      im.src = src;
-    });
-  }
-  function makeSkyTile(img) {
-    const iw = img.naturalWidth || IW, ih = img.naturalHeight || IH;
-    const tile = document.createElement("canvas");
-    tile.width = iw * 2; tile.height = ih;
-    const tg = tile.getContext("2d");
-    tg.drawImage(img, 0, 0); tg.drawImage(img, iw, 0);
-    const B = Math.min(WRAP_BLEND, iw >> 1);
-    const sl = tg.getImageData(iw - B, 0, B, ih);
-    const d = sl.data;
-    const p0 = tg.getImageData(iw, 0, 1, ih).data;
-    for (let y = 0; y < ih; y++) {
-      const r0 = p0[y * 4], g0 = p0[y * 4 + 1], b0 = p0[y * 4 + 2];
-      for (let x = 0; x < B; x++) {
-        const fade = (x + 1) / B, i = (y * B + x) * 4, u = 1 - fade;
-        d[i] = d[i] * u + r0 * fade;
-        d[i + 1] = d[i + 1] * u + g0 * fade;
-        d[i + 2] = d[i + 2] * u + b0 * fade;
-      }
-    }
-    tg.putImageData(sl, iw - B, 0);
-    return tile;
-  }
-  function lumaToAlpha(img) {
-    const c = document.createElement("canvas");
-    c.width = img.naturalWidth || IW;
-    c.height = img.naturalHeight || IH;
-    const cg = c.getContext("2d", { willReadFrequently: true });
-    cg.drawImage(img, 0, 0, c.width, c.height);
-    const id = cg.getImageData(0, 0, c.width, c.height);
-    const d = id.data;
-    for (let i = 0; i < d.length; i += 4) d[i + 3] = d[i];
-    cg.putImageData(id, 0, 0);
-    return c;
-  }
-  Promise.all([
-    loadImg("img/photos/hero-sky-plate.webp?v=" + SKY_VER),
-    loadImg("img/photos/hero-sky-mask.webp?v=" + SKY_VER)
-  ]).then(([plate, mask]) => {
-    skyTile = makeSkyTile(plate);
-    skyMask = lumaToAlpha(mask);
-    skyReady = true;
-    if (reduce) frame(0, 0);
-  }).catch(() => {});
-
-  function drawClouds(t) {
-    if (!skyReady || !skyTile || !skyMask) return;
-    const dx = ox * dpr, dy = oy * dpr, dw = IW * k * dpr, dh = IH * k * dpr;
-    const shift = ((t * CLOUD_PX_S) % IW + IW) % IW;
-    // Source window starts at IW - shift so clouds drift left → right; t = 0 is the unshifted plate.
-    g.save();
-    g.drawImage(skyTile, IW - shift, 0, IW, IH, dx, dy, dw, dh);
-    g.globalCompositeOperation = "destination-in";
-    g.drawImage(skyMask, 0, 0, IW, IH, dx, dy, dw, dh);
-    g.restore();
-  }
 
   function drawFans(t) {
     const n = FANS.length / 5;
@@ -208,8 +136,6 @@
     const L = low();
     g.setTransform(1, 0, 0, 1, 0, 0);
     g.clearRect(0, 0, cv.width, cv.height);
-    if (!reduce && !L && skyReady) drawClouds(t);
-    if (cloudsOnly) return;
     g.globalCompositeOperation = "lighter";
     const unit = k * dpr, bottom = IH + 40;
 
