@@ -1363,15 +1363,35 @@ html[dir="rtl"] .svc-for h3, html:lang(ja) .svc-for h3, html:lang(zh) .svc-for h
 .section-title.light::after { background: #ff5c74; }
 
 .svc-offer-section { padding: clamp(48px, 7vw, 88px) var(--gutter); background: var(--pale); border-top: 1px solid var(--line); }
-.offer-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+.offer-grid {
+  --offer-gap: clamp(19.72px, 2.58vw, 34px);
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: stretch;
+  gap: var(--offer-gap);
+}
 .offer-card {
-  position: relative; padding: 28px; border-radius: 14px; background: #fff; border: 1px solid var(--line);
+  position: relative; box-sizing: border-box;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  text-align: center;
+  flex: 1 1 100%; max-width: 100%; min-width: 0;
+  padding: 28px; border-radius: 14px; background: #fff; border: 1px solid var(--line);
   box-shadow: 0 10px 26px rgba(22, 32, 48, .06); transition: transform .25s, box-shadow .25s, border-color .25s;
 }
+@media (min-width: 700px) {
+  .offer-card { flex-basis: calc((100% - var(--offer-gap)) / 2); max-width: calc((100% - var(--offer-gap)) / 2); }
+}
+@media (min-width: 1100px) {
+  .offer-card { flex-basis: calc((100% - 2 * var(--offer-gap)) / 3); max-width: calc((100% - 2 * var(--offer-gap)) / 3); }
+}
 .offer-card:hover { transform: translateY(-3px); border-color: var(--red); box-shadow: 0 16px 34px rgba(22, 32, 48, .1); }
-.offer-num { display: block; font-size: 2rem; font-weight: 900; line-height: 1; color: var(--red); margin-bottom: 12px; }
-.offer-card h3 { font-size: 1.15rem; font-weight: 900; margin-bottom: 8px; }
-.offer-card p { font-size: 1rem; color: var(--text); line-height: 1.6; }
+.offer-num {
+  display: block; margin: 0 0 12px;
+  font-family: Oswald, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 2rem; font-weight: 700; font-style: normal; font-synthesis: none;
+  line-height: 1; letter-spacing: .06em; text-align: center; color: var(--red);
+}
+.offer-card h3 { font-size: 1.15rem; font-weight: 900; margin: 0 0 10px; text-align: center; }
+.offer-card p { font-size: 1rem; color: var(--text); line-height: 1.6; margin: 0; text-align: center; }
 
 .svc-benefits {
   padding: clamp(48px, 7vw, 88px) var(--gutter); color: #fff;

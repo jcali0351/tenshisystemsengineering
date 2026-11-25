@@ -197,6 +197,53 @@ html.neon.gx-page:not(#_):not(#__):not(#___) main .benefit-card {
 html.neon.gx-page:not(#_):not(#__):not(#___) main .benefit-icon { margin: 0 !important; }
 html.neon.gx-page:not(#_):not(#__):not(#___) main .benefit-card h3 { margin: 0 !important; }
 html.neon.gx-page:not(#_):not(#__):not(#___) main .benefit-card p { grid-column: 1 / -1; margin: 0 !important; }
+/* Offer cards: number, heading and body in a centered stack. Oswald 700 (the font has no 900),
+   in the site pink accent, so the numerals are not left in the body font or forced white by the
+   general span colour rule. Leftover cards in the last row stay the same width and sit in the
+   middle (flex + justify-content:center, from styles.css). */
+html.neon.gx-page:not(#_):not(#__):not(#___) main .offer-grid {
+  --offer-gap: clamp(19.72px, 2.58vw, 34px);
+  display: flex !important; flex-wrap: wrap; justify-content: center; align-items: stretch;
+  gap: var(--offer-gap);
+}
+html.neon.gx-page:not(#_):not(#__):not(#___) main .offer-card {
+  display: flex !important; flex-direction: column; justify-content: center; align-items: center;
+  text-align: center !important;
+  flex: 1 1 100%; max-width: 100%; min-width: 0;
+}
+@media (min-width: 700px) {
+  html.neon.gx-page:not(#_):not(#__):not(#___) main .offer-card {
+    flex-basis: calc((100% - var(--offer-gap)) / 2); max-width: calc((100% - var(--offer-gap)) / 2);
+  }
+}
+@media (min-width: 1100px) {
+  html.neon.gx-page:not(#_):not(#__):not(#___) main .offer-card {
+    flex-basis: calc((100% - 2 * var(--offer-gap)) / 3); max-width: calc((100% - 2 * var(--offer-gap)) / 3);
+  }
+}
+html.neon.gx-page:not(#_):not(#__):not(#___) main .offer-num {
+  display: block; margin: 0 0 12px !important;
+  font-family: Oswald, "Segoe UI", Helvetica, Arial, sans-serif !important;
+  font-size: 2rem !important; font-weight: 700 !important; font-style: normal !important;
+  font-synthesis: none; line-height: 1; letter-spacing: 0.06em;
+  text-align: center !important;
+  color: var(--red, #ff2bd6) !important; -webkit-text-fill-color: var(--red, #ff2bd6) !important;
+  text-shadow: 0 0 16px rgba(255, 43, 214, 0.55);
+}
+html.neon.gx-page:not(#_):not(#__):not(#___) main .offer-card h3 {
+  margin: 0 0 10px !important; text-align: center !important;
+}
+html.neon.gx-page:not(#_):not(#__):not(#___) main .offer-card p {
+  margin: 0 !important; text-align: center !important;
+}
+/* Keep the "What we offer" heading in step with the other section titles on the same page
+   (Why it matters, Technologies we use): same size, glow, left alignment and underline treatment. */
+html.neon.gx-page:not(#_):not(#__):not(#___) main .svc-offer-section .section-title,
+html.neon.gx-page:not(#_):not(#__):not(#___) main .svc-benefits .section-title,
+html.neon.gx-page:not(#_):not(#__):not(#___) main .svc-tech-section .section-title {
+  text-align: left;
+  margin-bottom: 0.56em !important;
+}
 /* Project "in fairness" band: same flush-icon problem (.svc-wide.prj-fair-inner). */
 html.neon.gx-page:not(#_):not(#__):not(#___) main .prj-fair-inner { align-items: center; gap: 18px; }
 @media (max-width: 560px) {
