@@ -1,0 +1,11 @@
+/* The Neon Arcade in the homepage's "Let's build what's next" band (sandbox/arcade-px3.js). */
+.parallax.has-arcade { --px-h: 100vh !important; height: 100vh; min-height: 100vh; background: #070212; }
+.parallax.has-arcade .parallax-layer,
+.parallax.has-arcade .parallax-overlay,
+.parallax.has-arcade .parallax-fireflies { display: none !important; }
+.parallax.has-arcade .px3-arcade { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; border: 0; display: block; background: #070212; }
+/* The words stay readable on top but never block a shot; links and buttons in them still work. */
+.parallax.has-arcade .parallax-copy { position: relative; z-index: 2; pointer-events: none !important; }
+.parallax.has-arcade .parallax-copy :is(a, button) { pointer-events: auto; }
+.parallax.has-arcade .parallax-title,
+.parallax.has-arcade .parallax-text { text-shadow: 0 2px 4px rgba(8, 2, 24, .9), 0 0 18px rgba(8, 2, 24, .85), 0 0 42px rgba(8, 2, 24, .7); }

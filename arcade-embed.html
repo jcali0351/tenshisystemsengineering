@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" class="neon arcade-embed">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Neon Arcade (embedded on the homepage)</title>
+  <!-- The Neon Arcade, framed by the homepage's "Let's build what's next" band (sandbox/arcade-px3.js loads this page in an
+       iframe). Kept as its own page so the game's full-window canvases, its .hero checks and its window-sized drawing work
+       unchanged, without touching the homepage's static hero. Not a page to visit on its own (noindex; not in the sitemap). -->
+  <base target="_top">
+  <style>
+    @font-face { font-family: "Oswald"; font-style: normal; font-weight: 400; font-display: swap; src: url("fonts/oswald/oswald-400-normal.woff2") format("woff2"); }
+    @font-face { font-family: "Oswald"; font-style: normal; font-weight: 700; font-display: swap; src: url("fonts/oswald/oswald-700-normal.woff2") format("woff2"); }
+  </style>
+  <link rel="stylesheet" href="sandbox/neon-recolor.css">
+  <link rel="stylesheet" href="sandbox/neon-theme.css">
+  <style>
+    html, body { margin: 0; height: 100%; overflow: hidden; background: #070212; color: #fff; font-family: "Lato", "Segoe UI", Helvetica, Arial, sans-serif; }
+    html.neon .hero { position: relative; min-height: 0 !important; height: 100vh; margin: 0; padding: 0; }
+    html.neon .hero-card { position: absolute; inset: 0; pointer-events: none; }
+    /* Clear of the homepage's fixed header and its Quest panel (top right, about 78 to 160px down) */
+    html.arcade-embed .neon-hud:not(#_) { top: 172px; right: 16px; bottom: auto; left: auto; }
+    @media (max-width: 760px) { html.arcade-embed .neon-hud:not(#_) { top: 172px; left: 10px; right: auto; max-width: calc(100vw - 20px); box-sizing: border-box; flex-flow: row wrap; row-gap: 2px; border-radius: 14px; } }
+  </style>
+  <script>
+    // Sound and the beat come from the homepage (its SOUND button), so the arcade never plays a second soundtrack.
+    (function () {
+      var host = null;
+      try { if (window.parent !== window && window.parent.location.origin === location.origin) host = window.parent; } catch (e) {}
+      ["neonAudio", "neonBeat", "neonBeatAt"].forEach(function (k) {
+        Object.defineProperty(window, k, { configurable: true, get: function () { return host ? host[k] : undefined; } });
+      });
+      // The homepage pauses the arcade while it's scrolled out of view: animation frames wait until it's back.
+      var raf = window.requestAnimationFrame.bind(window), waiting = [], paused = false;
+      window.requestAnimationFrame = function (cb) { if (paused) { waiting.push(cb); return 0; } return raf(cb); };
+      window.tenshiArcadePause = function (p) {
+        paused = !!p;
+        if (!paused) { var list = waiting; waiting = []; list.forEach(function (cb) { raf(cb); }); }
+      };
+    })();
+  </script>
+</head>
+<body>
+  <canvas id="neon-bg" aria-hidden="true"></canvas>
+  <canvas id="neon-particles" aria-hidden="true"></canvas>
+  <section class="hero" id="top" aria-label="Neon Arcade: click or tap the sky to shoot the flying targets">
+    <div class="hero-card"></div>
+  </section>
+  <script src="sandbox/neon-display.js"></script>
+  <script src="sandbox/game-settings.js"></script>
+  <script src="sandbox/tenshi-models.js"></script>
+  <script src="sandbox/neon-bg.js"></script>
+  <script src="sandbox/neon-fx.js"></script>
+  <script src="sandbox/neon-geo.js"></script>
+  <script src="sandbox/neon-beasts.js"></script>
+  <script src="sandbox/neon-scores.js"></script>
+  <script src="sandbox/neon-game.js"></script>
+</body>
+</html>

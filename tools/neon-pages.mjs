@@ -11,7 +11,7 @@
 import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
 import { createHash } from "node:crypto";
 
-const SKIP = ["index.html", "classic.html", "admin.html", "client-portal.html", "404.html", "projects.html"];
+const SKIP = ["index.html", "classic.html", "admin.html", "client-portal.html", "404.html", "projects.html", "arcade-embed.html"];
 const FILES = ["sandbox/neon-recolor.css", "sandbox/neon-theme.css", "sandbox/neon-pages.css", "sandbox/neon-recolor-live.js", "sandbox/neon-quest.js", "sandbox/game-settings.js"];
 const v = createHash("sha256").update(FILES.map((f) => readFileSync(f)).join("\n")).digest("hex").slice(0, 8);
 const pages = [

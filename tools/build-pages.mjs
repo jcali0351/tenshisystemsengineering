@@ -2279,7 +2279,7 @@ writeFileSync("fx-data.js", createRequire(import.meta.url)("../fx.js").dataJs(re
 if (!existsSync("custom.css")) writeFileSync("custom.css", "/* Custom CSS (Tenshi Editor › Custom CSS). Rules here load last on every page and override the site's styles. */\n");
 {
   const pagesWithTheme = [
-    ...readdirSync(".").filter((f) => f.endsWith(".html") && !["admin.html", "client-portal.html", "404.html"].includes(f)),
+    ...readdirSync(".").filter((f) => f.endsWith(".html") && !["admin.html", "client-portal.html", "404.html", "arcade-embed.html"].includes(f)),
     ...["services", "projects", "blog"].flatMap((d) => existsSync(d) ? readdirSync(d).filter((f) => f.endsWith(".html")).map((f) => d + "/" + f) : []),
   ];
   let linked = 0;
@@ -2332,7 +2332,7 @@ await import("./neon-pages.mjs");
   const LANGS = Object.keys(T);
   const pages = [
     "index.html",
-    ...readdirSync(".").filter((f) => f.endsWith(".html") && !["index.html", "admin.html", "client-portal.html", "404.html"].includes(f)).sort(),
+    ...readdirSync(".").filter((f) => f.endsWith(".html") && !["index.html", "admin.html", "client-portal.html", "404.html", "arcade-embed.html"].includes(f)).sort(),
     ...["services", "projects", "blog"].flatMap((d) => existsSync(d) ? readdirSync(d).filter((f) => f.endsWith(".html")).sort().map((f) => d + "/" + f) : []),
   ];
   const decode = (s) => s.replace(/&(#x[0-9a-f]+|#\d+|amp|lt|gt|quot|apos|nbsp|#39);/gi, (m, e) => {
