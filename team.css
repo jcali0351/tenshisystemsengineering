@@ -118,6 +118,7 @@
   height: auto;
   aspect-ratio: 600 / 720;
   object-fit: cover;
+  object-position: 48% 45%;
   border-radius: 12px;
 }
 :root:not(#_):not(#__):not(#___):not(#____) .team-page #main-content .portrait-caption {

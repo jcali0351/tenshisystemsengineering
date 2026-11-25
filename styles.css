@@ -1061,13 +1061,29 @@ html:lang(ja) .td-role, html:lang(ko) .td-role { letter-spacing: .04em; }
 .td-count { min-width: 60px; text-align: center; font-weight: 700; color: #b98790; font-size: .9rem; }
 .team-dialog :focus-visible { outline: 3px solid #ff4d67; outline-offset: 2px; }
 
-/* About page: a row of faces leading to the team page */
+/* About page: team photo leading to the team page */
 .team-teaser { background: var(--pale); border-top: 1px solid var(--line); }
 .teaser-inner { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: clamp(28px, 5vw, 56px); align-items: center; }
-.teaser-faces { list-style: none; margin: 0; padding: 0; display: flex; }
-.teaser-faces li { width: 96px; height: 96px; border-radius: 50%; overflow: hidden; border: 4px solid #fff; box-shadow: 0 8px 20px rgba(22, 32, 48, .18); }
-.teaser-faces li + li { margin-left: -22px; }
-.teaser-faces img { width: 100%; height: 100%; object-fit: cover; }
+.teaser-photo-card {
+  margin: 0;
+  width: 420px;
+  max-width: 100%;
+  padding: 8px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 4px solid #fff;
+  box-shadow: 0 8px 20px rgba(22, 32, 48, .18);
+  background: #fff;
+}
+.teaser-photo-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  object-position: 48% 45%;
+  border-radius: 12px;
+}
 
 @media (max-width: 980px) {
   .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -1077,7 +1093,7 @@ html:lang(ja) .td-role, html:lang(ko) .td-role { letter-spacing: .04em; }
   .td-photo { min-height: 0; max-height: 300px; }
   .td-text { padding: 26px 22px 22px; }
   .teaser-inner { grid-template-columns: minmax(0, 1fr); }
-  .teaser-faces li { width: 76px; height: 76px; }
+  .teaser-photo-card { width: 100%; max-width: 360px; }
 }
 @media (max-width: 420px) {
   .team-grid { grid-template-columns: minmax(0, 1fr); max-width: 320px; margin: 0 auto; }
@@ -1207,7 +1223,6 @@ html[dir="rtl"] .btn-more:hover .btn-more-arrow { transform: scaleX(-1) translat
 html[dir="rtl"] .contact:not(.page-section) .field select { background-position: left 14px center; padding-right: 12px; padding-left: 40px; }
 html[dir="rtl"] .contact:not(.page-section)::before { left: auto; right: 0; transform: scaleX(-1); }
 html[dir="rtl"] .svc-hero::after { right: auto; left: 0; transform: none; }
-html[dir="rtl"] .teaser-faces li + li { margin-left: 0; margin-right: -22px; }
 html[dir="rtl"] .td-close { right: auto; left: 14px; }
 html[dir="rtl"] .ld-close { right: auto; left: 14px; }
 html[dir="rtl"] .ld-top { padding: 22px 24px 22px 60px; }

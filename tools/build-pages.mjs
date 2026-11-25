@@ -855,9 +855,9 @@ ${aboutFind()}
     <p class="page-inner about-credits">Skyline photos used on this site, from Wikimedia Commons: <a href="https://commons.wikimedia.org/wiki/File:Osaka,_Japan_-_Umeda_district_-_city_view_of_Osaka,_Japan.jpg">Marek Ślusarczyk (Tupungato)</a>, <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Minato_City,_Tokyo,_Japan.jpg">David Kernan</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:View_of_Kyoto_skyline_from_Kiyomizu-dera.jpg">Henrysz</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Minato_Mirai_21_From_Osambashi_202403.jpg">Sunwater</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Kobe_skyline_and_Harbor_Highway.jpg">Dudva</a>, <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a></p>
     <section class="page-section team-teaser" aria-labelledby="meet-title">
       <div class="page-inner teaser-inner">
-        <ul class="teaser-faces" aria-hidden="true">
-${TEAM.map((m) => `          <li><img src="img/team/${m.img}" alt="" width="400" height="480" loading="lazy"></li>`).join("\n")}
-        </ul>
+        <figure class="teaser-photo-card">
+          <img src="img/photos/team.webp?v=20261125t" srcset="img/photos/team-mobile.webp?v=20261125t 800w, img/photos/team.webp?v=20261125t 1024w" sizes="(max-width: 680px) 92vw, 420px" alt="The Tenshi Systems team: our founder with the office dog" width="1024" height="1024" loading="lazy" decoding="async">
+        </figure>
         <div>
           <h2 id="meet-title" class="section-title" data-i18n="aboutTeamTitle">${tx("aboutTeamTitle")}</h2>
           ${t("p", "aboutTeamText", 'class="page-lead"')}
