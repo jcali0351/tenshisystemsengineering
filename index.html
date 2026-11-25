@@ -32,8 +32,8 @@
   <link rel="icon" href="brand/favicon-192.png?v=20261119" type="image/png" sizes="192x192">
   <link rel="apple-touch-icon" href="brand/tenshi-apple-touch-icon.png?v=20261119">
   <link rel="preload" href="img/photos/osaka.jpg" as="image" type="image/jpeg">
-  <link rel="stylesheet" href="tailwind.css?v=093e6a7b">
-  <link rel="stylesheet" href="styles.css?v=28136655">
+  <link rel="stylesheet" href="tailwind.css?v=fa9ef6d5">
+  <link rel="stylesheet" href="styles.css?v=a5df9897">
   <link rel="stylesheet" href="design.css?v=ea6e1648">
   <link rel="stylesheet" href="chat.css?v=2395252a">
   <link rel="stylesheet" href="site-theme.css?v=20261123h1">
@@ -46,11 +46,12 @@
   <link rel="stylesheet" href="sandbox/neon-theme.css?v=20261123ctr2">
   <link rel="stylesheet" href="buttons.css?v=e152053f">
   <link rel="stylesheet" href="custom.css?v=743f7d62">
+  <link rel="preload" as="image" href="img/photos/hero-synthwave.webp?v=20261125" type="image/webp" fetchpriority="high">
   <script src="sandbox/neon-recolor-live.js?v=20261125c"></script>
 </head>
 <body data-seo>
-  <canvas id="neon-bg" aria-hidden="true"></canvas>
-  <canvas id="neon-particles" aria-hidden="true"></canvas>
+  <!-- Hero game switched off (2026-11-25): its two canvases were <canvas id="neon-bg"> and <canvas id="neon-particles">.
+       To bring the game back, restore them here and the hero game scripts at the end of <body>. -->
   <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
 
   <header class="site-header">
@@ -139,6 +140,10 @@
 
   <main id="main">
     <section class="hero" id="top" aria-labelledby="hero-title">
+      <!-- Hero photo: img/photos/hero-synthwave.webp, set as background-image on .hero-photo-placeholder in styles.css
+           (the "Hero photo spot" rule; black shows until it loads). To change the photo, swap the file or that url and the
+           aria-label below. -->
+      <div class="hero-media hero-photo-placeholder" role="img" aria-label="Synthwave city at sunset: a striped orange sun between neon server-rack buildings and palm trees, over a glowing road grid"></div>
       <div class="hero-slides" aria-hidden="true">
         <div class="slide is-active" data-src="img/photos/osaka.jpg"></div>
         <div class="slide" data-src="img/photos/tokyo.jpg"></div>
@@ -576,16 +581,18 @@
   <script src="sandbox/neon-display.js?v=20261123a"></script>
   <script src="sandbox/game-settings.js?v=gs202611232335"></script>
   <script src="sandbox/tenshi-models.js?v=20261125c"></script>
-  <script src="sandbox/neon-bg.js?v=20261123disp"></script>
-  <script src="sandbox/neon-fx.js?v=20261123k"></script>
   <script src="sandbox/neon-header.js?v=20261125c"></script>
   <script src="sandbox/neon-audio.js?v=20261125c"></script>
-  <script src="sandbox/neon-geo.js?v=20261123disp"></script>
-  <script src="sandbox/neon-beasts.js?v=20261123disp"></script>
   <script src="sandbox/neon-scores.js?v=20261123lb"></script>
-  <script src="sandbox/neon-game.js?v=20261123lb"></script>
   <script src="sandbox/neon-rts.js?v=20261123lb"></script>
   <script src="sandbox/neon-arpg.js?v=20261123lb"></script>
   <script src="sandbox/neon-quest.js?v=20261125c"></script>
+  <!-- Hero game switched off (2026-11-25). To bring it back, put neon-bg.js and neon-fx.js back just before neon-header.js,
+       and neon-geo.js, neon-beasts.js and neon-game.js just after neon-audio.js (neon-game.js after neon-scores.js):
+       <script src="sandbox/neon-bg.js?v=20261123disp"></script>
+       <script src="sandbox/neon-fx.js?v=20261123k"></script>
+       <script src="sandbox/neon-geo.js?v=20261123disp"></script>
+       <script src="sandbox/neon-beasts.js?v=20261123disp"></script>
+       <script src="sandbox/neon-game.js?v=20261123lb"></script> -->
 </body>
 </html>

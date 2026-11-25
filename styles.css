@@ -2618,3 +2618,11 @@ main section#services + section.feature:not(#_):not(#__) { padding-top: clamp(72
 
 /* Menu: Portfolio is not clickable for now */
 .nav-soon { cursor: default; pointer-events: none; }
+
+/* Hero photo spot (index.html): the hero game is switched off; the hero photo fills the hero behind the text, with black
+   underneath until it loads. To change the photo, swap img/photos/hero-synthwave.webp (or this url) and bump ?v=. */
+.hero > .hero-photo-placeholder:not(#_):not(#__) {
+  position: absolute; inset: 0; z-index: -3; pointer-events: none;
+  background-color: #000 !important; background-image: url("img/photos/hero-synthwave.webp?v=20261125") !important;
+  background-position: center; background-size: cover; background-repeat: no-repeat;
+}
