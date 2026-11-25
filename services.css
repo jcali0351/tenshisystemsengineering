@@ -1,0 +1,51 @@
+/* Hero: the neon Wisconsin artwork is the full-bleed interior header. The outline stays in the upper band; the title sits on the dark lower area. */
+:root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero {
+  --px-pos: center top !important;
+  min-height: clamp(680px, 50vw, 860px) !important;
+  justify-content: flex-end !important;
+  padding-top: clamp(28px, 3vw, 48px) !important;
+  padding-bottom: clamp(24px, 3vw, 44px) !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero[data-overlay="gradient"] .parallax-overlay,
+:root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .parallax-overlay {
+  background: var(--px-grad, linear-gradient(180deg, rgba(26, 11, 46, 0.08) 0%, 52%, rgba(26, 11, 46, 0.78) 100%)) !important;
+  opacity: 1 !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .svc-hero-inner {
+  position: relative;
+  z-index: 1;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .svc-hero-text {
+  max-width: min(44rem, 78%);
+  position: relative;
+  z-index: 1;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero h1 {
+  font-size: clamp(2rem, 4vw, 3.25rem) !important;
+  line-height: 1.08 !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .crumbs ol {
+  margin-bottom: 10px;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .svc-hero-lead {
+  margin-top: 10px;
+  font-size: clamp(1rem, 1.4vw, 1.2rem) !important;
+  max-width: 46ch;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .parallax-layer img {
+  filter: none !important;
+}
+@media (max-width: 760px) {
+  :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero {
+    --px-pos: center top !important;
+    min-height: 620px !important;
+    padding-top: 24px !important;
+    padding-bottom: 28px !important;
+  }
+  :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .svc-hero-text {
+    max-width: 100%;
+  }
+  :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero h1 {
+    font-size: 2rem !important;
+  }
+}

@@ -936,7 +936,9 @@ const depthSection = (s) => `    <section class="svc-depth" aria-labelledby="dep
 /* ---------- Services overview ---------- */
 const servicesPage = frame({
   prefix: "", current: "services", titleKey: "navServices", descKey: "servicesLead", bodyClass: "page services-page",
-  main: `${banner("", [{ key: "navServices" }], "servicesTitle", "servicesLead", ART.services)}
+  extraHead: `  <link rel="preload" as="image" href="img/photos/services-hero.webp" imagesrcset="img/photos/services-hero-mobile.webp 1200w, img/photos/services-hero.webp 2736w" imagesizes="100vw" fetchpriority="high">
+`,
+  main: `${banner("", [{ key: "navServices" }], "servicesTitle", "servicesLead")}
     <p class="page-inner wi-note"><a href="wisconsin.html">Web design, hosting and AI services for Wisconsin small businesses →</a></p>
 
     <section class="page-section red-section" aria-labelledby="all-title">
@@ -2358,6 +2360,28 @@ await import("./neon-pages.mjs");
     html = html.replace(
       /(<div class="px-hero-bg"[^>]*>[\s\S]*?<img )src="img\/photos\/tech-hero\.webp" alt="" width="1920" height="1080" decoding="async" fetchpriority="high"/,
       `$1src="img/photos/tech-hero.webp" srcset="img/photos/tech-hero-mobile.webp 1200w, img/photos/tech-hero.webp 2352w" sizes="100vw" alt="" width="2352" height="1008" decoding="async" fetchpriority="high"`
+    );
+    writeFileSync(file, html);
+  }
+}
+
+// Services hero assets must load after neon-pages.css so the Wisconsin artwork and lower-band title stay intact.
+{
+  const file = "services.html";
+  if (existsSync(file)) {
+    let html = readFileSync(file, "utf8");
+    html = html.replace(/\n?[ \t]*<link rel="stylesheet" href="services\.css[^"]*">/g, "");
+    if (!html.includes('href="services.css')) {
+      if (/<link rel="stylesheet" href="sandbox\/neon-pages\.css[^"]*">/.test(html)) {
+        html = html.replace(/(<link rel="stylesheet" href="sandbox\/neon-pages\.css[^"]*">)/, `$1\n  <link rel="stylesheet" href="services.css">`);
+      } else {
+        html = html.replace(/(<link rel="stylesheet" href="[^"]+">)(?![\s\S]*<link rel="stylesheet")/, `$1\n  <link rel="stylesheet" href="services.css">`);
+      }
+    }
+    // LCP hero: correct dimensions, srcset (mobile 1200w), already fetchpriority=high and not lazy.
+    html = html.replace(
+      /(<div class="px-hero-bg"[^>]*>[\s\S]*?<img )src="img\/photos\/services-hero\.webp" alt="" width="1920" height="1080" decoding="async" fetchpriority="high"/,
+      `$1src="img/photos/services-hero.webp" srcset="img/photos/services-hero-mobile.webp 1200w, img/photos/services-hero.webp 2736w" sizes="100vw" alt="" width="2736" height="912" decoding="async" fetchpriority="high"`
     );
     writeFileSync(file, html);
   }

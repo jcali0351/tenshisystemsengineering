@@ -451,7 +451,21 @@
         "image": "img/photos/yokohama.jpg"
       },
       "services": {
-        "image": "img/photos/tokyo.jpg"
+        "image": "img/photos/services-hero.webp",
+        "position": "center top",
+        "overlayMode": "gradient",
+        "overlay": "#1a0b2e",
+        "overlayOpacity": 0.2,
+        "gradient": {
+          "type": "linear",
+          "angle": 180,
+          "from": "#1a0b2e",
+          "fromOpacity": 0.1,
+          "to": "#1a0b2e",
+          "toOpacity": 0.72,
+          "stop": 55
+        },
+        "grayFade": { "enabled": false }
       },
       "services/*": {
         "image": "img/photos/tokyo.jpg"
