@@ -21,8 +21,8 @@
     { key: "textLink", label: "\u201cAll posts / All news\u201d links", sel: ".fw-more, .svc-tech-more a, .blog-read", note: "Footer \u201cAll news / All posts\u201d, \u201cSee the technology\u201d and blog card \u201cRead\u201d links." },
     { key: "tabs", label: "News tabs", sel: ".news-tabs [role=tab]", note: "The category tabs on the news page (the selected tab keeps its red look unless you set colors)." },
     { key: "lang", label: "Language picker", sel: ".lang-current", note: "The flag button in the header that opens the language menu." },
-    { key: "chat", label: "Ask Tanaka chat button", sel: ".tk-launch", note: "The round chat launcher at the bottom corner." },
-    { key: "chatSend", label: "Chat send button", sel: ".tk-send", note: "The send arrow inside the Tanaka chat window." },
+    { key: "chat", label: "Ask Tenshi chat button", sel: ".tk-launch", note: "The round chat launcher at the bottom corner." },
+    { key: "chatSend", label: "Chat send button", sel: ".tk-send", note: "The send arrow inside the Tenshi chat window." },
     /* The homepage hero's glass pill (hero-cta.css). It has its own controls: they set the --hg-* variables that
        hero-cta.css builds the button from, so the glass layers, icon and phone sizes all follow. */
     { key: "heroGlass", label: "Hero button (Deploy Your Future)", sel: ".hero-cta-glass .hg-btn",

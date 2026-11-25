@@ -1,10 +1,10 @@
-/* Tanaka Matsumoto, the AI assistant (chat.css for the look).
-   - Without CHAT.endpoint, Tanaka answers from the site's own text in translations.js (services, contact, location,
+/* Tenshi, the site's AI assistant (chat.css for the look). Called Tanaka Matsumoto until Nov 2026.
+   - Without CHAT.endpoint, Tenshi answers from the site's own text in translations.js (services, contact, location,
      languages), in the visitor's language (English, Japanese, Korean or German).
-   - With CHAT.endpoint set to the Cloudflare Worker in tools/chat-worker/, Tanaka answers with Claude, fed the site's
+   - With CHAT.endpoint set to the Cloudflare Worker in tools/chat-worker/, Tenshi answers with Claude, fed the site's
      service descriptions. The Claude API key lives only in the Worker, never in this file.
    - "Talk to a person" opens the visitor's email app with their message (and the chat, if they want) to CONTACT_EMAIL (app.js).
-   Tanaka says plainly that he is an AI. Loaded on every page after translations.js and app.js. */
+   Tenshi says plainly that he is an AI. Loaded on every page after translations.js and app.js. */
 (function () {
   "use strict";
 
@@ -29,12 +29,12 @@
   /* ---------- the chat's own words, in each language ---------- */
   var UI = {
     en: {
-      launch: "Ask Tanaka", launchLabel: "Chat with Tanaka Matsumoto, AI assistant",
+      launch: "Ask Tenshi", launchLabel: "Chat with Tenshi, AI assistant",
       role: "AI assistant · Tenshi Systems Engineering", online: "online", introRole: "AI assistant",
       introNote: "Tenshi Systems Engineering · always available",
       placeholder: "Ask about our services…", send: "Send", close: "Close chat", human: "Talk to a person",
-      foot: "Tanaka is an AI assistant and can make mistakes.", typing: "Tanaka is typing",
-      greet: "Hello, I'm **Tanaka Matsumoto**, the AI assistant for Tenshi Systems Engineering. Ask me about our services, or how to request a consultation.",
+      foot: "Tenshi is an AI assistant and can make mistakes.", typing: "Tenshi is typing",
+      greet: "Hello, I'm **Tenshi**, the AI assistant for Tenshi Systems Engineering. Ask me about our services, or how to request a consultation.",
       chips: [["What services do you offer?", "What services do you offer?"], ["Web design", "Tell me about web design"], ["AI services", "Tell me about AI services"], ["Request a consultation", "How do I request a consultation?"]],
       more: [["All services", "What services do you offer?"], ["Prices", "How much does a project cost?"], ["Where are you based?", "Where are you based?"], ["Request a consultation", "How do I request a consultation?"]],
       listIntro: "We offer nine services. Ask me about any of them:",
@@ -44,7 +44,7 @@
       price: "We don't publish fixed prices, because every project is different. Send a consultation request with a few details and the team will reply with a proposal.",
       location: "Tenshi Systems Engineering is based in **Osaka, Japan**.",
       lang: "This website is available in ten languages: English, Japanese, Korean, Chinese, Spanish, German, Polish, Nigerian Pidgin, Arabic and Farsi. Use the flag button at the top to switch, and write to me in any of them.",
-      who: "I'm Tanaka Matsumoto, an **AI assistant**, not a person. I can explain our services and help you get in touch with the team.",
+      who: "I'm Tenshi, an **AI assistant**, not a person. I can explain our services and help you get in touch with the team.",
       thanks: "You're welcome. Is there anything else I can help with?",
       hello: "Hello! What can I help you with today?",
       fallback: "I'm not sure about that one. I can tell you about our services, or pass your question on to a person on the team.",
@@ -52,15 +52,15 @@
       formMsg: "Your message", formLog: "Include this chat", formSend: "Open email", formCopy: "Copy message", formCopied: "Copied",
       formEmpty: "Please write a short message first.",
       formDone: "Your email app should open now with the message. If it doesn't, write to {email}.",
-      mailSubject: "Message from the website chat", chatHeader: "Chat with Tanaka (AI assistant)", visitor: "Visitor"
+      mailSubject: "Message from the website chat", chatHeader: "Chat with Tenshi (AI assistant)", visitor: "Visitor"
     },
     ja: {
-      launch: "Tanakaに相談", launchLabel: "AIアシスタント Tanaka Matsumoto とチャット",
+      launch: "Tenshiに相談", launchLabel: "AIアシスタント Tenshi とチャット",
       role: "AIアシスタント・天使システムズエンジニアリング", online: "オンライン", introRole: "AIアシスタント",
       introNote: "天使システムズエンジニアリング・いつでも対応",
       placeholder: "サービスについて質問する…", send: "送信", close: "チャットを閉じる", human: "担当者と話す",
-      foot: "TanakaはAIアシスタントのため、誤りがある場合があります。", typing: "Tanakaが入力中",
-      greet: "こんにちは。天使システムズエンジニアリングのAIアシスタント、**Tanaka Matsumoto**です。サービス内容やご相談の方法について、お気軽にご質問ください。",
+      foot: "TenshiはAIアシスタントのため、誤りがある場合があります。", typing: "Tenshiが入力中",
+      greet: "こんにちは。天使システムズエンジニアリングのAIアシスタント、**Tenshi**です。サービス内容やご相談の方法について、お気軽にご質問ください。",
       chips: [["どんなサービスがありますか？", "どんなサービスがありますか？"], ["ウェブデザイン", "ウェブデザインについて教えてください"], ["AIサービス", "AIサービスについて教えてください"], ["相談を申し込む", "相談はどうやって申し込めますか？"]],
       more: [["すべてのサービス", "どんなサービスがありますか？"], ["料金", "料金はいくらですか？"], ["所在地", "どこにありますか？"], ["相談を申し込む", "相談はどうやって申し込めますか？"]],
       listIntro: "9つのサービスをご提供しています。気になるものをお尋ねください：",
@@ -70,7 +70,7 @@
       price: "プロジェクトごとに内容が異なるため、固定の料金は掲載していません。概要を添えてご相談いただければ、担当者からご提案をお送りします。",
       location: "天使システムズエンジニアリングは**大阪**を拠点としています。",
       lang: "このウェブサイトは、英語・日本語・韓国語・中国語・スペイン語・ドイツ語・ポーランド語・ナイジェリア・ピジン語・アラビア語・ペルシャ語の10言語でご覧いただけます。上部の国旗ボタンで切り替えられ、どの言語でも話しかけていただけます。",
-      who: "私はTanaka Matsumoto、**AIアシスタント**で、人間ではありません。サービスのご説明や、担当者へのご連絡のお手伝いをします。",
+      who: "私はTenshi、**AIアシスタント**で、人間ではありません。サービスのご説明や、担当者へのご連絡のお手伝いをします。",
       thanks: "どういたしまして。ほかにお手伝いできることはありますか？",
       hello: "こんにちは。今日はどのようなご用件でしょうか？",
       fallback: "その点については分かりかねます。サービスについてのご説明か、担当者へのお取り次ぎができます。",
@@ -78,15 +78,15 @@
       formMsg: "メッセージ", formLog: "このチャットの内容を添える", formSend: "メールを作成", formCopy: "メッセージをコピー", formCopied: "コピーしました",
       formEmpty: "先に短いメッセージをご入力ください。",
       formDone: "メッセージが入った状態でメールアプリが開きます。開かない場合は {email} までご連絡ください。",
-      mailSubject: "ウェブサイトのチャットからのメッセージ", chatHeader: "Tanaka（AIアシスタント）とのチャット", visitor: "訪問者"
+      mailSubject: "ウェブサイトのチャットからのメッセージ", chatHeader: "Tenshi（AIアシスタント）とのチャット", visitor: "訪問者"
     },
     ko: {
-      launch: "Tanaka에게 문의", launchLabel: "AI 어시스턴트 Tanaka Matsumoto와 채팅",
+      launch: "Tenshi에게 문의", launchLabel: "AI 어시스턴트 Tenshi와 채팅",
       role: "AI 어시스턴트 · 텐시 시스템즈 엔지니어링", online: "온라인", introRole: "AI 어시스턴트",
       introNote: "텐시 시스템즈 엔지니어링 · 언제든지 응답",
       placeholder: "서비스에 대해 물어보세요…", send: "보내기", close: "채팅 닫기", human: "담당자와 이야기하기",
-      foot: "Tanaka는 AI 어시스턴트이므로 틀릴 수 있습니다.", typing: "Tanaka가 입력 중",
-      greet: "안녕하세요. 텐시 시스템즈 엔지니어링의 AI 어시스턴트 **Tanaka Matsumoto**입니다. 서비스나 상담 신청 방법에 대해 편하게 물어보세요.",
+      foot: "Tenshi는 AI 어시스턴트이므로 틀릴 수 있습니다.", typing: "Tenshi가 입력 중",
+      greet: "안녕하세요. 텐시 시스템즈 엔지니어링의 AI 어시스턴트 **Tenshi**입니다. 서비스나 상담 신청 방법에 대해 편하게 물어보세요.",
       chips: [["어떤 서비스가 있나요?", "어떤 서비스가 있나요?"], ["웹 디자인", "웹 디자인에 대해 알려 주세요"], ["AI 서비스", "AI 서비스에 대해 알려 주세요"], ["상담 신청", "상담은 어떻게 신청하나요?"]],
       more: [["모든 서비스", "어떤 서비스가 있나요?"], ["가격", "비용은 얼마인가요?"], ["위치", "어디에 있나요?"], ["상담 신청", "상담은 어떻게 신청하나요?"]],
       listIntro: "9가지 서비스를 제공합니다. 궁금한 것을 물어보세요:",
@@ -96,7 +96,7 @@
       price: "프로젝트마다 내용이 달라 정해진 가격은 공개하지 않습니다. 간단한 내용을 적어 상담을 신청하시면 담당자가 제안을 보내 드립니다.",
       location: "텐시 시스템즈 엔지니어링은 **일본 오사카**에 있습니다.",
       lang: "이 웹사이트는 영어, 일본어, 한국어, 중국어, 스페인어, 독일어, 폴란드어, 나이지리아 피진어, 아랍어, 페르시아어의 10개 언어로 볼 수 있습니다. 위쪽 국기 버튼으로 바꾸시고, 어느 언어로든 말씀해 주세요.",
-      who: "저는 Tanaka Matsumoto, 사람이 아닌 **AI 어시스턴트**입니다. 서비스를 설명해 드리고 담당자와 연락하실 수 있도록 도와드립니다.",
+      who: "저는 Tenshi, 사람이 아닌 **AI 어시스턴트**입니다. 서비스를 설명해 드리고 담당자와 연락하실 수 있도록 도와드립니다.",
       thanks: "천만에요. 더 도와드릴 일이 있을까요?",
       hello: "안녕하세요! 무엇을 도와드릴까요?",
       fallback: "그 부분은 잘 모르겠습니다. 서비스에 대해 알려 드리거나, 질문을 담당자에게 전해 드릴 수 있습니다.",
@@ -104,15 +104,15 @@
       formMsg: "메시지", formLog: "이 채팅 내용 포함", formSend: "이메일 작성", formCopy: "메시지 복사", formCopied: "복사됨",
       formEmpty: "먼저 짧은 메시지를 적어 주세요.",
       formDone: "메시지가 작성된 상태로 이메일 앱이 열립니다. 열리지 않으면 {email}로 연락해 주세요.",
-      mailSubject: "웹사이트 채팅에서 보낸 메시지", chatHeader: "Tanaka(AI 어시스턴트)와의 채팅", visitor: "방문자"
+      mailSubject: "웹사이트 채팅에서 보낸 메시지", chatHeader: "Tenshi(AI 어시스턴트)와의 채팅", visitor: "방문자"
     },
     de: {
-      launch: "Tanaka fragen", launchLabel: "Chat mit Tanaka Matsumoto, KI-Assistent",
+      launch: "Tenshi fragen", launchLabel: "Chat mit Tenshi, KI-Assistent",
       role: "KI-Assistent · Tenshi Systems Engineering", online: "online", introRole: "KI-Assistent",
       introNote: "Tenshi Systems Engineering · jederzeit erreichbar",
       placeholder: "Fragen Sie zu unseren Leistungen…", send: "Senden", close: "Chat schließen", human: "Mit einem Menschen sprechen",
-      foot: "Tanaka ist ein KI-Assistent und kann sich irren.", typing: "Tanaka schreibt",
-      greet: "Hallo, ich bin **Tanaka Matsumoto**, der KI-Assistent von Tenshi Systems Engineering. Fragen Sie mich zu unseren Leistungen oder wie Sie eine Beratung anfragen.",
+      foot: "Tenshi ist ein KI-Assistent und kann sich irren.", typing: "Tenshi schreibt",
+      greet: "Hallo, ich bin **Tenshi**, der KI-Assistent von Tenshi Systems Engineering. Fragen Sie mich zu unseren Leistungen oder wie Sie eine Beratung anfragen.",
       chips: [["Welche Leistungen bieten Sie an?", "Welche Leistungen bieten Sie an?"], ["Webdesign", "Erzählen Sie mir von Webdesign"], ["KI-Dienste", "Erzählen Sie mir von KI-Diensten"], ["Beratung anfragen", "Wie kann ich eine Beratung anfragen?"]],
       more: [["Alle Leistungen", "Welche Leistungen bieten Sie an?"], ["Preise", "Was kostet ein Projekt?"], ["Standort", "Wo sitzen Sie?"], ["Beratung anfragen", "Wie kann ich eine Beratung anfragen?"]],
       listIntro: "Wir bieten neun Leistungen an. Fragen Sie mich zu jeder davon:",
@@ -122,7 +122,7 @@
       price: "Wir veröffentlichen keine Festpreise, weil jedes Projekt anders ist. Senden Sie eine Beratungsanfrage mit ein paar Details, und das Team antwortet mit einem Angebot.",
       location: "Tenshi Systems Engineering hat seinen Sitz in **Osaka, Japan**.",
       lang: "Diese Website gibt es in zehn Sprachen: Englisch, Japanisch, Koreanisch, Chinesisch, Spanisch, Deutsch, Polnisch, Nigerianisches Pidgin, Arabisch und Persisch. Mit der Flaggen-Schaltfläche oben wechseln Sie die Sprache, und Sie können mir in jeder davon schreiben.",
-      who: "Ich bin Tanaka Matsumoto, ein **KI-Assistent** und kein Mensch. Ich erkläre unsere Leistungen und helfe Ihnen, Kontakt mit dem Team aufzunehmen.",
+      who: "Ich bin Tenshi, ein **KI-Assistent** und kein Mensch. Ich erkläre unsere Leistungen und helfe Ihnen, Kontakt mit dem Team aufzunehmen.",
       thanks: "Gern geschehen. Kann ich sonst noch helfen?",
       hello: "Hallo! Wobei kann ich Ihnen heute helfen?",
       fallback: "Da bin ich mir nicht sicher. Ich kann Ihnen unsere Leistungen erklären oder Ihre Frage an einen Menschen im Team weitergeben.",
@@ -130,11 +130,11 @@
       formMsg: "Ihre Nachricht", formLog: "Diesen Chat anhängen", formSend: "E-Mail öffnen", formCopy: "Nachricht kopieren", formCopied: "Kopiert",
       formEmpty: "Bitte schreiben Sie zuerst eine kurze Nachricht.",
       formDone: "Ihr E-Mail-Programm sollte sich jetzt mit der Nachricht öffnen. Falls nicht, schreiben Sie an {email}.",
-      mailSubject: "Nachricht aus dem Website-Chat", chatHeader: "Chat mit Tanaka (KI-Assistent)", visitor: "Besucher"
+      mailSubject: "Nachricht aus dem Website-Chat", chatHeader: "Chat mit Tenshi (KI-Assistent)", visitor: "Besucher"
     },
     es: {
-      "launch": "Pregunte a Tanaka",
-      "launchLabel": "Chatear con Tanaka Matsumoto, asistente de IA",
+      "launch": "Pregunte a Tenshi",
+      "launchLabel": "Chatear con Tenshi, asistente de IA",
       "role": "Asistente de IA · Tenshi Systems Engineering",
       "online": "en línea",
       "introRole": "Asistente de IA",
@@ -143,9 +143,9 @@
       "send": "Enviar",
       "close": "Cerrar chat",
       "human": "Hablar con una persona",
-      "foot": "Tanaka es un asistente de IA y puede equivocarse.",
-      "typing": "Tanaka está escribiendo",
-      "greet": "Hola, soy **Tanaka Matsumoto**, el asistente de IA de Tenshi Systems Engineering. Pregúnteme por nuestros servicios o cómo solicitar una consulta.",
+      "foot": "Tenshi es un asistente de IA y puede equivocarse.",
+      "typing": "Tenshi está escribiendo",
+      "greet": "Hola, soy **Tenshi**, el asistente de IA de Tenshi Systems Engineering. Pregúnteme por nuestros servicios o cómo solicitar una consulta.",
       "chips": [
             [
                   "¿Qué servicios ofrecen?",
@@ -190,7 +190,7 @@
       "price": "No publicamos precios fijos porque cada proyecto es diferente. Envíe una solicitud de consulta con algunos detalles y el equipo le responderá con una propuesta.",
       "location": "Tenshi Systems Engineering tiene su sede en **Osaka, Japón**.",
       "lang": "Este sitio web está disponible en diez idiomas: inglés, japonés, coreano, chino, español, alemán, polaco, pidgin nigeriano, árabe y persa. Use el botón de la bandera arriba para cambiar y escríbame en cualquiera de ellos.",
-      "who": "Soy Tanaka Matsumoto, un **asistente de IA**, no una persona. Puedo explicarle nuestros servicios y ayudarle a contactar con el equipo.",
+      "who": "Soy Tenshi, un **asistente de IA**, no una persona. Puedo explicarle nuestros servicios y ayudarle a contactar con el equipo.",
       "thanks": "De nada. ¿Puedo ayudarle en algo más?",
       "hello": "¡Hola! ¿En qué puedo ayudarle hoy?",
       "fallback": "No estoy seguro de eso. Puedo contarle sobre nuestros servicios o pasar su pregunta a una persona del equipo.",
@@ -203,12 +203,12 @@
       "formEmpty": "Escriba primero un mensaje breve.",
       "formDone": "Su aplicación de correo debería abrirse ahora con el mensaje. Si no, escriba a {email}.",
       "mailSubject": "Mensaje desde el chat del sitio web",
-      "chatHeader": "Chat con Tanaka (asistente de IA)",
+      "chatHeader": "Chat con Tenshi (asistente de IA)",
       "visitor": "Visitante"
     },
     zh: {
-      "launch": "问问 Tanaka",
-      "launchLabel": "与 AI 助手 Tanaka Matsumoto 聊天",
+      "launch": "问问 Tenshi",
+      "launchLabel": "与 AI 助手 Tenshi 聊天",
       "role": "AI 助手 · 天使系统工程",
       "online": "在线",
       "introRole": "AI 助手",
@@ -217,9 +217,9 @@
       "send": "发送",
       "close": "关闭聊天",
       "human": "与工作人员沟通",
-      "foot": "Tanaka 是 AI 助手，回答可能有误。",
-      "typing": "Tanaka 正在输入",
-      "greet": "您好，我是天使系统工程的 AI 助手 **Tanaka Matsumoto**。欢迎咨询我们的服务或如何预约咨询。",
+      "foot": "Tenshi 是 AI 助手，回答可能有误。",
+      "typing": "Tenshi 正在输入",
+      "greet": "您好，我是天使系统工程的 AI 助手 **Tenshi**。欢迎咨询我们的服务或如何预约咨询。",
       "chips": [
             [
                   "你们提供哪些服务？",
@@ -264,7 +264,7 @@
       "price": "每个项目都不同，因此我们不公布固定价格。请提交咨询并附上一些细节，团队会回复您一份方案。",
       "location": "天使系统工程总部位于**日本大阪**。",
       "lang": "本网站提供十种语言：英语、日语、韩语、中文、西班牙语、德语、波兰语、尼日利亚皮钦语、阿拉伯语和波斯语。点击顶部的国旗按钮即可切换，您可以用其中任何一种语言和我交流。",
-      "who": "我是 Tanaka Matsumoto，一个 **AI 助手**，不是真人。我可以介绍我们的服务，并帮您联系团队。",
+      "who": "我是 Tenshi，一个 **AI 助手**，不是真人。我可以介绍我们的服务，并帮您联系团队。",
       "thanks": "不客气。还有什么可以帮您？",
       "hello": "您好！今天有什么可以帮您？",
       "fallback": "这个问题我不太确定。我可以介绍我们的服务，或把您的问题转给团队的工作人员。",
@@ -277,12 +277,12 @@
       "formEmpty": "请先写一段简短的留言。",
       "formDone": "您的邮件应用即将打开并已写好消息。如果没有打开，请发送邮件至 {email}。",
       "mailSubject": "来自网站聊天的消息",
-      "chatHeader": "与 Tanaka（AI 助手）的聊天",
+      "chatHeader": "与 Tenshi（AI 助手）的聊天",
       "visitor": "访客"
     },
     ar: {
-      "launch": "اسأل تاناكا",
-      "launchLabel": "تحدّث مع المساعد الذكي تاناكا ماتسوموتو",
+      "launch": "اسأل تنشي",
+      "launchLabel": "تحدّث مع المساعد الذكي تنشي",
       "role": "مساعد ذكي · تنشي لهندسة الأنظمة",
       "online": "متصل",
       "introRole": "مساعد ذكي",
@@ -291,9 +291,9 @@
       "send": "إرسال",
       "close": "إغلاق المحادثة",
       "human": "تحدّث مع شخص",
-      "foot": "تاناكا مساعد ذكي وقد يخطئ.",
-      "typing": "تاناكا يكتب",
-      "greet": "مرحبًا، أنا **تاناكا ماتسوموتو**، المساعد الذكي لشركة تنشي لهندسة الأنظمة. اسألني عن خدماتنا أو عن طريقة طلب استشارة.",
+      "foot": "تنشي مساعد ذكي وقد يخطئ.",
+      "typing": "تنشي يكتب",
+      "greet": "مرحبًا، أنا **تنشي**، المساعد الذكي لشركة تنشي لهندسة الأنظمة. اسألني عن خدماتنا أو عن طريقة طلب استشارة.",
       "chips": [
             [
                   "ما الخدمات التي تقدّمونها؟",
@@ -338,7 +338,7 @@
       "price": "لا ننشر أسعارًا ثابتة لأن كل مشروع مختلف. أرسلوا طلب استشارة مع بعض التفاصيل وسيرد الفريق بعرض مناسب.",
       "location": "يقع مقرّ تنشي لهندسة الأنظمة في **أوساكا، اليابان**.",
       "lang": "يتوفر هذا الموقع بعشر لغات: الإنجليزية واليابانية والكورية والصينية والإسبانية والألمانية والبولندية والبيدجن النيجيرية والعربية والفارسية. استخدموا زر العلم في الأعلى للتبديل، واكتبوا لي بأيٍّ منها.",
-      "who": "أنا تاناكا ماتسوموتو، **مساعد ذكي** ولست إنسانًا. يمكنني شرح خدماتنا ومساعدتكم على التواصل مع الفريق.",
+      "who": "أنا تنشي، **مساعد ذكي** ولست إنسانًا. يمكنني شرح خدماتنا ومساعدتكم على التواصل مع الفريق.",
       "thanks": "على الرحب والسعة. هل يمكنني مساعدتكم في شيء آخر؟",
       "hello": "مرحبًا! كيف يمكنني مساعدتكم اليوم؟",
       "fallback": "لست متأكدًا من ذلك. يمكنني إخباركم عن خدماتنا أو نقل سؤالكم إلى أحد أعضاء الفريق.",
@@ -351,12 +351,12 @@
       "formEmpty": "يرجى كتابة رسالة قصيرة أولًا.",
       "formDone": "من المفترض أن يُفتح تطبيق البريد الآن والرسالة جاهزة. إن لم يُفتح، راسلونا على {email}.",
       "mailSubject": "رسالة من محادثة الموقع",
-      "chatHeader": "محادثة مع تاناكا (مساعد ذكي)",
+      "chatHeader": "محادثة مع تنشي (مساعد ذكي)",
       "visitor": "زائر"
     },
     pl: {
-      "launch": "Zapytaj Tanakę",
-      "launchLabel": "Czat z Tanaką Matsumoto, asystentem AI",
+      "launch": "Zapytaj Tenshi",
+      "launchLabel": "Czat z Tenshi, asystentem AI",
       "role": "Asystent AI · Tenshi Systems Engineering",
       "online": "online",
       "introRole": "Asystent AI",
@@ -365,9 +365,9 @@
       "send": "Wyślij",
       "close": "Zamknij czat",
       "human": "Porozmawiaj z człowiekiem",
-      "foot": "Tanaka jest asystentem AI i może się mylić.",
-      "typing": "Tanaka pisze",
-      "greet": "Dzień dobry, jestem **Tanaka Matsumoto**, asystent AI Tenshi Systems Engineering. Proszę pytać o nasze usługi lub o to, jak umówić konsultację.",
+      "foot": "Tenshi jest asystentem AI i może się mylić.",
+      "typing": "Tenshi pisze",
+      "greet": "Dzień dobry, jestem **Tenshi**, asystent AI Tenshi Systems Engineering. Proszę pytać o nasze usługi lub o to, jak umówić konsultację.",
       "chips": [
             [
                   "Jakie usługi oferujecie?",
@@ -412,7 +412,7 @@
       "price": "Nie publikujemy stałych cen, bo każdy projekt jest inny. Proszę wysłać zapytanie z kilkoma szczegółami, a zespół odpowie ofertą.",
       "location": "Tenshi Systems Engineering ma siedzibę w **Osace w Japonii**.",
       "lang": "Strona jest dostępna w dziesięciu językach: angielskim, japońskim, koreańskim, chińskim, hiszpańskim, niemieckim, polskim, nigeryjskim pidżynie, arabskim i perskim. Język zmienia się przyciskiem z flagą u góry, a pisać do mnie można w każdym z nich.",
-      "who": "Jestem Tanaka Matsumoto, **asystent AI**, a nie człowiek. Mogę opowiedzieć o naszych usługach i pomóc skontaktować się z zespołem.",
+      "who": "Jestem Tenshi, **asystent AI**, a nie człowiek. Mogę opowiedzieć o naszych usługach i pomóc skontaktować się z zespołem.",
       "thanks": "Proszę bardzo. Czy mogę jeszcze w czymś pomóc?",
       "hello": "Dzień dobry! W czym mogę dziś pomóc?",
       "fallback": "Nie jestem tego pewien. Mogę opowiedzieć o naszych usługach albo przekazać pytanie osobie z zespołu.",
@@ -425,12 +425,12 @@
       "formEmpty": "Proszę najpierw napisać krótką wiadomość.",
       "formDone": "Program pocztowy powinien się teraz otworzyć z wiadomością. Jeśli nie, proszę pisać na {email}.",
       "mailSubject": "Wiadomość z czatu na stronie",
-      "chatHeader": "Czat z Tanaką (asystent AI)",
+      "chatHeader": "Czat z Tenshi (asystent AI)",
       "visitor": "Gość"
     },
     pcm: {
-      "launch": "Ask Tanaka",
-      "launchLabel": "Chat with Tanaka Matsumoto, AI assistant",
+      "launch": "Ask Tenshi",
+      "launchLabel": "Chat with Tenshi, AI assistant",
       "role": "AI assistant · Tenshi Systems Engineering",
       "online": "online",
       "introRole": "AI assistant",
@@ -439,9 +439,9 @@
       "send": "Send",
       "close": "Close chat",
       "human": "Talk to person",
-      "foot": "Tanaka na AI assistant, e fit make mistake.",
-      "typing": "Tanaka dey type",
-      "greet": "How far! I be **Tanaka Matsumoto**, di AI assistant for Tenshi Systems Engineering. Ask me about our services, or how you fit request consultation.",
+      "foot": "Tenshi na AI assistant, e fit make mistake.",
+      "typing": "Tenshi dey type",
+      "greet": "How far! I be **Tenshi**, di AI assistant for Tenshi Systems Engineering. Ask me about our services, or how you fit request consultation.",
       "chips": [
             [
                   "Which services una dey offer?",
@@ -486,7 +486,7 @@
       "price": "We no dey put fixed price because every project different. Send consultation request with small details and di team go reply with proposal.",
       "location": "Tenshi Systems Engineering dey **Osaka, Japan**.",
       "lang": "Dis website dey for ten languages: English, Japanese, Korean, Chinese, Spanish, German, Polish, Nigerian Pidgin, Arabic and Farsi. Use di flag button for top to change, and you fit write me for any of dem.",
-      "who": "I be Tanaka Matsumoto, **AI assistant**, I no be human. I fit explain our services and help you reach di team.",
+      "who": "I be Tenshi, **AI assistant**, I no be human. I fit explain our services and help you reach di team.",
       "thanks": "No wahala. Anything else wey I fit help you with?",
       "hello": "How you dey! Wetin I fit do for you today?",
       "fallback": "I no too sure about dat one. I fit tell you about our services, or I go pass your question give person for di team.",
@@ -499,12 +499,12 @@
       "formEmpty": "Abeg write short message first.",
       "formDone": "Your email app suppose open now with di message. If e no open, write us for {email}.",
       "mailSubject": "Message from website chat",
-      "chatHeader": "Chat with Tanaka (AI assistant)",
+      "chatHeader": "Chat with Tenshi (AI assistant)",
       "visitor": "Visitor"
     },
     fa: {
-      "launch": "از تاناکا بپرسید",
-      "launchLabel": "گفت‌وگو با تاناکا ماتسوموتو، دستیار هوش مصنوعی",
+      "launch": "از تنشی بپرسید",
+      "launchLabel": "گفت‌وگو با تنشی، دستیار هوش مصنوعی",
       "role": "دستیار هوش مصنوعی · تنشی سیستمز انجینیرینگ",
       "online": "آنلاین",
       "introRole": "دستیار هوش مصنوعی",
@@ -513,9 +513,9 @@
       "send": "ارسال",
       "close": "بستن گفت‌وگو",
       "human": "گفت‌وگو با یک فرد",
-      "foot": "تاناکا دستیار هوش مصنوعی است و ممکن است اشتباه کند.",
-      "typing": "تاناکا در حال نوشتن است",
-      "greet": "سلام، من **تاناکا ماتسوموتو** هستم، دستیار هوش مصنوعی تنشی سیستمز انجینیرینگ. دربارهٔ خدمات ما یا نحوهٔ درخواست مشاوره از من بپرسید.",
+      "foot": "تنشی دستیار هوش مصنوعی است و ممکن است اشتباه کند.",
+      "typing": "تنشی در حال نوشتن است",
+      "greet": "سلام، من **تنشی** هستم، دستیار هوش مصنوعی تنشی سیستمز انجینیرینگ. دربارهٔ خدمات ما یا نحوهٔ درخواست مشاوره از من بپرسید.",
       "chips": [
             [
                   "چه خدماتی ارائه می‌دهید؟",
@@ -560,7 +560,7 @@
       "price": "چون هر پروژه متفاوت است، قیمت ثابت منتشر نمی‌کنیم. درخواست مشاوره را با چند جزئیات بفرستید تا تیم با یک پیشنهاد پاسخ دهد.",
       "location": "دفتر تنشی سیستمز انجینیرینگ در **اوساکا، ژاپن** است.",
       "lang": "این وب‌سایت به ده زبان در دسترس است: انگلیسی، ژاپنی، کره‌ای، چینی، اسپانیایی، آلمانی، لهستانی، پیجین نیجریه‌ای، عربی و فارسی. با دکمهٔ پرچم در بالای صفحه زبان را تغییر دهید و به هر کدام که خواستید برایم بنویسید.",
-      "who": "من تاناکا ماتسوموتو هستم، یک **دستیار هوش مصنوعی** و نه یک انسان. می‌توانم خدمات ما را توضیح دهم و به شما کمک کنم با تیم تماس بگیرید.",
+      "who": "من تنشی هستم، یک **دستیار هوش مصنوعی** و نه یک انسان. می‌توانم خدمات ما را توضیح دهم و به شما کمک کنم با تیم تماس بگیرید.",
       "thanks": "خواهش می‌کنم. کار دیگری هست که بتوانم انجام دهم؟",
       "hello": "سلام! امروز چه کمکی از من برمی‌آید؟",
       "fallback": "از این مورد مطمئن نیستم. می‌توانم دربارهٔ خدمات ما بگویم یا پرسش شما را به یکی از اعضای تیم برسانم.",
@@ -573,7 +573,7 @@
       "formEmpty": "لطفاً ابتدا پیامی کوتاه بنویسید.",
       "formDone": "برنامهٔ ایمیل شما باید اکنون با پیام باز شود. اگر باز نشد، به {email} بنویسید.",
       "mailSubject": "پیامی از گفت‌وگوی وب‌سایت",
-      "chatHeader": "گفت‌وگو با تاناکا (دستیار هوش مصنوعی)",
+      "chatHeader": "گفت‌وگو با تنشی (دستیار هوش مصنوعی)",
       "visitor": "بازدیدکننده"
     }
   };
@@ -615,14 +615,14 @@
     }[name];
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + "</svg>";
   }
-  // Tanaka's badge: a monogram in the company's red, with a spark for "AI". An emblem, not a photo of a person.
+  // The assistant's badge: a monogram in the company's red, with a spark for "AI". An emblem, not a photo of a person.
   var BADGE = '<svg class="tk-badge" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="tkg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e0263f"/><stop offset="1" stop-color="#8e0b20"/></linearGradient></defs>' +
     '<circle cx="24" cy="24" r="24" fill="url(#tkg)"/><circle cx="24" cy="24" r="20.5" fill="none" stroke="#fff" stroke-opacity=".35"/>' +
     '<text x="24" y="30.5" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-weight="800" font-size="17" fill="#fff" letter-spacing=".5">TM</text>' +
     '<path d="M36.5 9.5l1.2 2.8 2.8 1.2-2.8 1.2-1.2 2.8-1.2-2.8-2.8-1.2 2.8-1.2z" fill="#fff"/></svg>';
 
-  // His illustrated portrait (img/tanaka.svg) replaces the monogram wherever it appears.
-  BADGE = '<img class="tk-badge" src="' + BASE + 'img/tanaka.svg" alt="" width="200" height="200">';
+  // The site's own 天 mark (the same white logo the neon header uses) replaces the monogram wherever it appears.
+  BADGE = '<img class="tk-badge tk-logo" src="' + BASE + 'sandbox/logo-white.png" alt="" width="512" height="512" decoding="async">';
 
   /* ---------- answers from the site's own text ---------- */
   var KEYS = {
@@ -682,7 +682,7 @@
   }
 
   /* ---------- fun mode: switched on when a visitor asks for a joke ("be serious" switches it off) ----------
-     Jokes are written for each language (puns don't translate). Tanaka's English stays fluent: the humour is in
+     Jokes are written for each language (puns don't translate). Tenshi's English stays fluent: the humour is in
      the jokes and his over-the-top politeness, never in how anyone speaks. */
   var FUN = {
     en: {
@@ -972,14 +972,14 @@
   }
 
   /* ---------- the chat itself ---------- */
-  var KEY = "tse-chat-v1";
+  var KEY = "tse-chat-v2";   // v2: renamed to Tenshi, so old "Tanaka" chats from this session are not replayed
   var state = store(KEY) || { msgs: [], opened: false };
   var root, launch, panel, log, chipsEl, ta, sendBtn, busy = false, aiDown = false;
   function save() { state.msgs = state.msgs.slice(-60); store(KEY, state); }
 
   function rowHTML(m, cont) {
-    if (m.r === "intro") return '<div class="tk-intro">' + BADGE.replace('class="tk-badge"', 'class="tk-badge tk-badge-lg"') +
-      '<div class="tk-intro-cap"><b>TANAKA MATSUMOTO</b><span>' + esc(u("introRole")) + "</span><em>" + esc(u("introNote")) + "</em></div></div>";
+    if (m.r === "intro") return '<div class="tk-intro">' + BADGE.replace('class="tk-badge ', 'class="tk-badge tk-badge-lg ') +
+      '<div class="tk-intro-cap"><b>TENSHI</b><span>' + esc(u("introRole")) + "</span><em>" + esc(u("introNote")) + "</em></div></div>";
     var links = (m.links || []).map(function (l) {
       return '<a href="' + esc(BASE + l.href) + '">' + esc(l.label) + "</a>";
     }).join("");
@@ -1059,7 +1059,7 @@
   }
   function transcript() {
     return state.msgs.filter(function (m) { return m.r === "me" || m.r === "bot"; }).map(function (m) {
-      return (m.r === "me" ? u("visitor") : "Tanaka") + ": " + String(m.text).replace(/\*\*/g, "").replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1");
+      return (m.r === "me" ? u("visitor") : "Tenshi") + ": " + String(m.text).replace(/\*\*/g, "").replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1");
     }).join("\n");
   }
   function showForm(prefill) {
@@ -1204,7 +1204,7 @@
     root.insertAdjacentHTML("beforeend",
       '<section class="tk-panel" id="tk-panel" role="dialog" aria-modal="false" aria-labelledby="tk-name" aria-describedby="tk-status" hidden>' +
       '<header class="tk-head"><span class="tk-ava">' + BADGE + '<i class="tk-ava-dot" aria-hidden="true"></i></span>' +
-      '<div class="tk-who"><b id="tk-name">Tanaka Matsumoto</b><span class="tk-status" id="tk-status"><i class="tk-live" aria-hidden="true"></i>' +
+      '<div class="tk-who"><b id="tk-name">Tenshi</b><span class="tk-status" id="tk-status"><i class="tk-live" aria-hidden="true"></i>' +
       '<span class="tk-online"></span><span class="tk-sep" aria-hidden="true">·</span><span class="tk-role"></span></span></div>' +
       '<button class="tk-hbtn" type="button" data-human>' + svg("human") + "</button>" +
       '<button class="tk-hbtn" type="button" data-close>' + svg("close") + "</button></header>" +
