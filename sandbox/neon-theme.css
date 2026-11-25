@@ -747,7 +747,7 @@ html.neon:not(#_):not(#__) .site-footer .fw-meta, html.neon:not(#_):not(#__) .si
 /* ---- STAGE tags (neon-quest.js puts one at the top of each section) ---- */
 html.neon .gx-stage {
   position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;
-  margin: 0 auto clamp(18px, 2.4vw, 30px); padding-top: clamp(26px, 3vw, 40px); font: 700 0.75rem/1 Oswald, sans-serif; letter-spacing: 0.3em; color: #fff; text-transform: uppercase;
+  margin: 0 auto clamp(18px, 2.4vw, 30px); padding-top: clamp(26px, 3vw, 40px); padding-bottom: 100px; font: 700 0.75rem/1 Oswald, sans-serif; letter-spacing: 0.3em; color: #fff; text-transform: uppercase;
 }
 html.neon .gx-stage span { color: #ff6ec7; }
 html.neon .gx-stage b { font-size: 1rem; text-shadow: 0 0 16px #ff2bd6; letter-spacing: 0.2em; }
