@@ -42,6 +42,7 @@
   <link rel="stylesheet" href="sandbox/neon-recolor.css?v=3b203ac5">
   <link rel="stylesheet" href="sandbox/neon-theme.css?v=3b203ac5">
   <link rel="stylesheet" href="sandbox/neon-pages.css?v=3b203ac5">
+  <link rel="stylesheet" href="contact-map.css?v=486130c4">
   <script src="sandbox/neon-recolor-live.js?v=3b203ac5"></script>
 </head>
 <body class="page contact-page" data-title-key="contactPageTitle" data-desc-key="contactPageLead" data-seo>
@@ -133,13 +134,39 @@
   </header>
 
   <main id="main">
-    <section class="svc-hero has-art px-hero" data-parallax data-speed="0.3" data-overlay="gradient" data-fx-letters="rise" style="--px-h:auto;--px-overlay:#12050a;--px-op:0.6;--px-pos:center center;--px-grad:linear-gradient(180deg,rgba(18,5,10,0.55) 0%,55%,rgba(18,5,10,0.8) 100%);--pxl-step:30ms;--pxl-dur:0.8s;--pxl-delay:0.1s">
-      <div class="px-hero-bg" aria-hidden="true">
-        <div class="parallax-layer">
-          <img src="img/photos/osaka.jpg" alt="" width="1920" height="1080" decoding="async" fetchpriority="high" data-still data-still-color>
+    <section class="svc-hero contact-map-hero" id="contact-map-hero">
+      <div class="cm-stage" id="cm-stage">
+        <canvas class="cm-canvas" id="cm-canvas" role="img" aria-label="Interactive map of the Tenshi Systems host in Madison, Wisconsin and the server in Kuala Lumpur"></canvas>
+        <div class="cm-markers">
+          <button type="button" class="cm-pin cm-pin--host" id="cm-pin-host" aria-label="Host — Downtown Madison, WI">
+            <span class="cm-pin-badge">Host</span>
+            <span class="cm-pin-stem"></span>
+          </button>
+          <button type="button" class="cm-pin cm-pin--server" id="cm-pin-server" aria-label="Server — Kuala Lumpur, Malaysia">
+            <span class="cm-pin-badge">Server</span>
+            <span class="cm-pin-stem"></span>
+          </button>
         </div>
-        <div class="parallax-overlay"></div>
+        <div class="cm-popover" id="cm-popover" hidden>
+          <div class="cm-popover-head">
+            <div>
+              <span class="cm-popover-tag" id="cm-pop-tag"></span>
+              <h2 class="cm-popover-title" id="cm-pop-title"></h2>
+            </div>
+            <button type="button" class="cm-popover-close" id="cm-pop-close" aria-label="Close">×</button>
+          </div>
+          <div class="cm-popover-meta" id="cm-pop-meta"></div>
+          <div class="cm-popover-actions">
+            <button type="button" id="cm-pop-focus">Focus HOST</button>
+            <button type="button" id="cm-pop-arcs">Toggle arcs</button>
+          </div>
+        </div>
+        <div class="cm-tooltip" id="cm-tooltip" hidden>
+          <strong id="cm-tip-city"></strong>
+          <span id="cm-tip-meta"></span>
+        </div>
       </div>
+      <div class="cm-scrim" aria-hidden="true"></div>
       <div class="svc-hero-inner">
         <div class="svc-hero-text">
           <nav class="crumbs" aria-label="Breadcrumb" data-i18n-attr="aria-label:crumbLabel">
@@ -148,14 +175,29 @@
               <li aria-current="page" data-i18n="navContact">Contact</li>
             </ol>
           </nav>
-          <h1 data-px-title data-still data-i18n="contactPageTitle">Contact us</h1>
+          <h1 data-i18n="contactPageTitle">Contact us</h1>
           <p class="svc-hero-lead" data-i18n="contactPageLead">Planning a new website, a redesign or an AI project? Tell us about it. We help small businesses in Madison and across Wisconsin, and the first conversation is free.</p>
+          <div class="cm-hero-actions">
+            <button type="button" class="cm-pill-btn" data-cm-action="host"><span class="cm-dot cm-dot--host"></span> Host</button>
+            <button type="button" class="cm-pill-btn" data-cm-action="server"><span class="cm-dot cm-dot--server"></span> Server</button>
+          </div>
         </div>
-        <svg class="page-art" viewBox="0 0 320 220" aria-hidden="true" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="70" y="70" width="150" height="104" rx="12" stroke-opacity=".85" stroke-width="2.5"/><path d="m70 82 75 52 75-52" stroke-opacity=".85" stroke-width="2.5"/>
-      <path d="M232 52h58v40h-34l-14 12V92h-10z" fill="#fff" fill-opacity=".9" stroke="none"/><path d="M246 66h30M246 78h20" stroke="#c8102e" stroke-width="3"/>
-      <path d="M30 150c20-30 30-60 70-80" stroke-opacity=".35" stroke-width="1.5" stroke-dasharray="4 7"/>
-    </svg>
+      </div>
+      <div class="cm-hud">
+        <div class="cm-legend">
+          <button type="button" data-cm-action="host"><span class="cm-dot cm-dot--host"></span> Host</button>
+          <button type="button" data-cm-action="server"><span class="cm-dot cm-dot--server"></span> Server</button>
+          <span class="cm-sep"></span>
+          <span><span class="cm-dot cm-dot--visitor"></span> Visitors</span>
+        </div>
+        <div class="cm-toolbar">
+          <button type="button" data-cm-action="zoom-out" aria-label="Zoom out">−</button>
+          <span class="cm-zoom-readout" id="cm-zoom-readout">100%</span>
+          <button type="button" data-cm-action="zoom-in" aria-label="Zoom in">+</button>
+          <span class="cm-sep"></span>
+          <button type="button" data-cm-action="fit">Fit</button>
+          <button type="button" data-cm-action="ping">Ping</button>
+        </div>
       </div>
     </section>
 
@@ -412,5 +454,6 @@
   <script src="chat.js?v=e6aee4be"></script>
   <script src="sandbox/game-settings.js?v=3b203ac5"></script>
   <script src="sandbox/neon-quest.js?v=3b203ac5"></script>
+  <script src="contact-map.js?v=b5b4a20b"></script>
 </body>
 </html>

@@ -448,6 +448,8 @@ function phSettings(key) {
 }
 // Rewrites the first .svc-hero of a generated interior page; html without one is returned unchanged.
 function heroPx(html, key) {
+  // The contact page uses the interactive map hero; don't wrap it in the interior photo header.
+  if (/\bcontact-map-hero\b/.test(html)) return html;
   const s = phSettings(key);
   if (s.enabled === false) return html;
   const image = pxImage(s.image);
@@ -637,6 +639,74 @@ ${crumbs.map((c) => c.href ? `              <li><a href="${c.href}" data-i18n="$
           <p class="svc-hero-lead" data-i18n="${leadKey}">${tx(leadKey)}</p>
         </div>
 ${art ? "        " + art + "\n" : ""}      </div>
+    </section>`;
+
+// Interactive world map in the contact page hero (contact-map.css / contact-map.js). Replaces the photo header.
+const contactMapHero = (prefix) => `    <section class="svc-hero contact-map-hero" id="contact-map-hero">
+      <div class="cm-stage" id="cm-stage">
+        <canvas class="cm-canvas" id="cm-canvas" role="img" aria-label="Interactive map of the Tenshi Systems host in Madison, Wisconsin and the server in Kuala Lumpur"></canvas>
+        <div class="cm-markers">
+          <button type="button" class="cm-pin cm-pin--host" id="cm-pin-host" aria-label="Host — Downtown Madison, WI">
+            <span class="cm-pin-badge">Host</span>
+            <span class="cm-pin-stem"></span>
+          </button>
+          <button type="button" class="cm-pin cm-pin--server" id="cm-pin-server" aria-label="Server — Kuala Lumpur, Malaysia">
+            <span class="cm-pin-badge">Server</span>
+            <span class="cm-pin-stem"></span>
+          </button>
+        </div>
+        <div class="cm-popover" id="cm-popover" hidden>
+          <div class="cm-popover-head">
+            <div>
+              <span class="cm-popover-tag" id="cm-pop-tag"></span>
+              <h2 class="cm-popover-title" id="cm-pop-title"></h2>
+            </div>
+            <button type="button" class="cm-popover-close" id="cm-pop-close" aria-label="Close">×</button>
+          </div>
+          <div class="cm-popover-meta" id="cm-pop-meta"></div>
+          <div class="cm-popover-actions">
+            <button type="button" id="cm-pop-focus">Focus HOST</button>
+            <button type="button" id="cm-pop-arcs">Toggle arcs</button>
+          </div>
+        </div>
+        <div class="cm-tooltip" id="cm-tooltip" hidden>
+          <strong id="cm-tip-city"></strong>
+          <span id="cm-tip-meta"></span>
+        </div>
+      </div>
+      <div class="cm-scrim" aria-hidden="true"></div>
+      <div class="svc-hero-inner">
+        <div class="svc-hero-text">
+          <nav class="crumbs" aria-label="${tx("crumbLabel")}" data-i18n-attr="aria-label:crumbLabel">
+            <ol>
+              <li><a href="${prefix}index.html" data-i18n="crumbHome">${tx("crumbHome")}</a></li>
+              <li aria-current="page" data-i18n="navContact">${tx("navContact")}</li>
+            </ol>
+          </nav>
+          <h1 data-i18n="contactPageTitle">${tx("contactPageTitle")}</h1>
+          <p class="svc-hero-lead" data-i18n="contactPageLead">${tx("contactPageLead")}</p>
+          <div class="cm-hero-actions">
+            <button type="button" class="cm-pill-btn" data-cm-action="host"><span class="cm-dot cm-dot--host"></span> Host</button>
+            <button type="button" class="cm-pill-btn" data-cm-action="server"><span class="cm-dot cm-dot--server"></span> Server</button>
+          </div>
+        </div>
+      </div>
+      <div class="cm-hud">
+        <div class="cm-legend">
+          <button type="button" data-cm-action="host"><span class="cm-dot cm-dot--host"></span> Host</button>
+          <button type="button" data-cm-action="server"><span class="cm-dot cm-dot--server"></span> Server</button>
+          <span class="cm-sep"></span>
+          <span><span class="cm-dot cm-dot--visitor"></span> Visitors</span>
+        </div>
+        <div class="cm-toolbar">
+          <button type="button" data-cm-action="zoom-out" aria-label="Zoom out">−</button>
+          <span class="cm-zoom-readout" id="cm-zoom-readout">100%</span>
+          <button type="button" data-cm-action="zoom-in" aria-label="Zoom in">+</button>
+          <span class="cm-sep"></span>
+          <button type="button" data-cm-action="fit">Fit</button>
+          <button type="button" data-cm-action="ping">Ping</button>
+        </div>
+      </div>
     </section>`;
 
 const process = () => `    <section class="svc-process" aria-labelledby="process-title">
@@ -1007,7 +1077,7 @@ writePage("technology.html", techPage);
 /* ---------- Contact ---------- */
 const contactPage = frame({
   prefix: "", current: "contact", titleKey: "contactPageTitle", descKey: "contactPageLead", bodyClass: "page contact-page",
-  main: `${banner("", [{ key: "navContact" }], "contactPageTitle", "contactPageLead", ART.contact)}
+  main: `${contactMapHero("")}
 
     <section class="page-section contact" id="contact" aria-labelledby="form-title" tabindex="-1">
       <div class="page-inner contact-layout">
@@ -2230,6 +2300,27 @@ if (!existsSync("custom.css")) writeFileSync("custom.css", "/* Custom CSS (Tensh
 }
 // The neon game look on every page but the homepage (links after custom.css, the quest script): tools/neon-pages.mjs
 await import("./neon-pages.mjs");
+
+// Contact map assets must load after neon-pages.css so the map hero isn't restyled by the neon skin.
+{
+  const file = "contact.html";
+  if (existsSync(file)) {
+    let html = readFileSync(file, "utf8");
+    html = html.replace(/\n?[ \t]*<link rel="stylesheet" href="contact-map\.css[^"]*">/g, "");
+    html = html.replace(/\n?[ \t]*<script src="contact-map\.js[^"]*"><\/script>/g, "");
+    if (!html.includes('href="contact-map.css')) {
+      if (/<link rel="stylesheet" href="sandbox\/neon-pages\.css[^"]*">/.test(html)) {
+        html = html.replace(/(<link rel="stylesheet" href="sandbox\/neon-pages\.css[^"]*">)/, `$1\n  <link rel="stylesheet" href="contact-map.css">`);
+      } else {
+        html = html.replace(/(<link rel="stylesheet" href="[^"]+">)(?![\s\S]*<link rel="stylesheet")/, `$1\n  <link rel="stylesheet" href="contact-map.css">`);
+      }
+    }
+    if (!html.includes('src="contact-map.js')) {
+      html = html.replace(/\n<\/body>/, `\n  <script src="contact-map.js"><\/script>\n</body>`);
+    }
+    writeFileSync(file, html);
+  }
+}
 
 /* ---------- Footer search (search.js, search.css): data/search/<lang>.json ----------
    One small index per language of every page the build writes, plus the homepage: its address, title, description,
