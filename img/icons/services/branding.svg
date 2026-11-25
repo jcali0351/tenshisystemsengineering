@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#paint-branding)" stroke-width="1.0" stroke-linecap="round" stroke-linejoin="round" shape-rendering="geometricPrecision" role="img" aria-label="Branding">
+  <title>Branding</title>
+  <defs>
+  <linearGradient id="paint-branding" x1="3" y1="3" x2="21" y2="21" gradientUnits="userSpaceOnUse">
+    <stop offset="0.5" stop-color="#22D3EE"/>
+    <stop offset="0.5" stop-color="#FF3DCB"/>
+  </linearGradient>
+    <style><![CDATA[
+      .mark { fill: url(#paint-branding); stroke: none; }
+    ]]></style>
+  </defs>
+
+  <path d="M12 3.25 19.35 6.15v5.7c0 4.55-3.55 7.5-7.35 8.85C8.2 19.35 4.65 16.4 4.65 11.85v-5.7Z"/>
+  <path class="mark" d="M12.00 7.75L12.87 10.15L15.42 10.24L13.41 11.81L14.12 14.26L12.00 12.83L9.88 14.26L10.59 11.81L8.58 10.24L11.13 10.15Z"/>
+
+</svg>

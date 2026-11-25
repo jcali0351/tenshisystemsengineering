@@ -1052,18 +1052,18 @@ html.neon:not(#_):not(#__) :is(.eyebrow, .eyebrow *) { color: #ff6ec7 !important
 html.neon:not(#_):not(#__) main a:not(.btn):not([class*="btn"]):hover { color: #ff6ec7 !important; }
 html.neon ::selection { background: #ff2bd6; color: #fff; }
 
-/* Service icons (img/services/icons/*.webp, transparent neon line art): centred, full colour, glowing brighter on hover. */
+/* Service icons (img/icons/services/*.svg, crisp two-tone line art): centred, full colour, no glow or filter. */
 html.neon:not(#_):not(#__) #services .service-card > .service-pic.service-icon,
 html.neon:not(#_):not(#__):not(#___):not(#____) main .service-card .service-pic.service-icon {
   width: 35% !important; max-width: 120px !important; height: auto !important; aspect-ratio: 1 / 1 !important; object-fit: contain !important;
   margin: 4px auto clamp(16px, 1.6vw, 22px) !important; display: block !important;
   background: transparent !important; border-radius: 0 !important; box-shadow: none !important; mix-blend-mode: normal !important;
-  filter: drop-shadow(0 0 6px rgba(255, 43, 214, .25)) !important;
-  transition: filter .35s ease, transform .35s cubic-bezier(.2, 1.4, .4, 1) !important;
+  filter: none !important;
+  transition: transform .35s cubic-bezier(.2, 1.4, .4, 1) !important;
 }
 html.neon:not(#_):not(#__) #services .service-card:is(:hover, :focus-within) > .service-pic.service-icon,
 html.neon:not(#_):not(#__):not(#___):not(#____) main .service-card:is(:hover, :focus-within) .service-pic.service-icon {
-  filter: brightness(1.25) saturate(1.2) drop-shadow(0 0 10px rgba(255, 43, 214, .85)) drop-shadow(0 0 26px rgba(0, 240, 255, .55)) drop-shadow(0 0 48px rgba(176, 77, 255, .45)) !important;
+  filter: none !important;
   transform: translateY(-4px) scale(1.06) !important;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1150,7 +1150,7 @@ html.neon .wi-why li::before { content: "\25C6  "; color: #ff6ec7; font-size: .7
 html.neon .wi-svc-grid { list-style: none; padding: 0; margin: 28px 0 0; display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
 html.neon .wi-svc { padding: 26px; border-radius: 20px; background: var(--gx-panel); border: 1px solid var(--gx-edge); box-shadow: var(--gx-glow); text-align: center; transition: transform .25s, box-shadow .25s; }
 html.neon .wi-svc:hover { transform: translateY(-4px); box-shadow: var(--gx-glow-hot); }
-html.neon .wi-svc img { width: 96px; height: 96px; margin: 0 auto 10px; display: block; filter: drop-shadow(0 0 8px rgba(255, 43, 214, .4)); }
+html.neon .wi-svc img { width: 96px; height: 96px; margin: 0 auto 10px; display: block; filter: none !important; }
 html.neon .wi-svc h3 a { color: #fff !important; -webkit-text-fill-color: #fff !important; text-decoration: none; }
 html.neon .wi-svc p { color: #e6d9ff; font-size: .95rem; }
 html.neon .wi-cities { list-style: none; padding: 0; margin: 24px auto 0; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 900px; }

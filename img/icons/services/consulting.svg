@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#paint-consulting)" stroke-width="1.0" stroke-linecap="round" stroke-linejoin="round" shape-rendering="geometricPrecision" role="img" aria-label="Consulting">
+  <title>Consulting</title>
+  <defs>
+  <linearGradient id="paint-consulting" x1="3" y1="3" x2="21" y2="21" gradientUnits="userSpaceOnUse">
+    <stop offset="0.5" stop-color="#22D3EE"/>
+    <stop offset="0.5" stop-color="#FF3DCB"/>
+  </linearGradient>
+    <style><![CDATA[
+      .mark { fill: url(#paint-consulting); stroke: none; }
+    ]]></style>
+  </defs>
+
+  <path d="M10.3 14C9 12.9 7.65 11.55 7.65 9.2a4.35 4.35 0 1 1 8.7 0c0 2.35-1.35 3.7-2.65 4.8v1.7h-3.4Z"/>
+  <path d="M10.15 17.7h3.7"/>
+  <path d="M10.6 20.15h2.8"/>
+  <path d="M12 3.15v1.15"/>
+  <path d="M6.15 5.5 7.2 6.3"/>
+  <path d="M17.85 5.5 16.8 6.3"/>
+
+</svg>

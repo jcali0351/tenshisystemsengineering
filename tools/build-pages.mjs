@@ -24,22 +24,24 @@ import { knowledgeBaseMain } from "./build-knowledge-base.mjs";
 
 // The order here is the order everywhere: on the homepage three sets of three.
 const SERVICES = [
-  { id: "software",   slug: "software-development",  img: "software.jpg", icon: "software.webp",   w: 960,  h: 640 },
-  { id: "consulting", slug: "technology-consulting", img: "consulting.jpg", icon: "consulting.webp", w: 960,  h: 640 },
-  { id: "media",      slug: "media-design",          img: "design.jpg", icon: "media.webp",     w: 960,  h: 640 },
-  { id: "webdesign",  slug: "web-design",            img: "webdesign.jpg", icon: "webdesign.webp",  w: 1024, h: 683 },
-  { id: "webdev",     slug: "web-development",       img: "webdev.jpg", icon: "webdev.webp",     w: 1024, h: 678 },
-  { id: "hosting",    slug: "hosting",               img: "hosting.jpg", icon: "hosting.webp",    w: 1024, h: 576 },
-  { id: "ai",         slug: "ai-services",           img: "ai.jpg", icon: "ai.webp",         w: 1024, h: 1024 },
-  { id: "cms",        slug: "content-management",    img: "cms.jpg", icon: "cms.webp",        w: 960,  h: 640 },
-  { id: "branding",   slug: "branding",              img: "branding.jpg", icon: "branding.webp",   w: 960,  h: 644 },
+  { id: "software",   slug: "software-development",  img: "software.jpg", icon: "development.svg",         w: 960,  h: 640 },
+  { id: "consulting", slug: "technology-consulting", img: "consulting.jpg", icon: "consulting.svg",         w: 960,  h: 640 },
+  { id: "media",      slug: "media-design",          img: "design.jpg", icon: "design.svg",                 w: 960,  h: 640 },
+  { id: "webdesign",  slug: "web-design",            img: "webdesign.jpg", icon: "web-design.svg",          w: 1024, h: 683 },
+  { id: "webdev",     slug: "web-development",       img: "webdev.jpg", icon: "web-development.svg",       w: 1024, h: 678 },
+  { id: "hosting",    slug: "hosting",               img: "hosting.jpg", icon: "hosting.svg",               w: 1024, h: 576 },
+  { id: "ai",         slug: "ai-services",           img: "ai.jpg", icon: "ai-services.svg",               w: 1024, h: 1024 },
+  { id: "cms",        slug: "content-management",    img: "cms.jpg", icon: "content-management.svg",       w: 960,  h: 640 },
+  { id: "branding",   slug: "branding",              img: "branding.jpg", icon: "branding.svg",             w: 960,  h: 644 },
 ];
+const ICON_DIR = "img/icons/services";
+const ICON_V = "20261125s";
 const OFFERS = 5;
 
 // The Technology page: groups (pictures from img/services) and the tools in each, with their logos (img/tech, from
 // Simple Icons, CC0) and official sites. Descriptions are in translations.js (tech_<slug>, techG<n>Title/Text).
-// Each technology group shows its service's transparent neon icon (img/services/icons/), above the group's heading.
-const techIcon = (gr) => { const sv = SERVICES.find((x) => x.img === gr.img); return sv && sv.icon ? `icons/${sv.icon}` : gr.img; };
+// Each technology group shows its service's crisp two-tone icon (img/icons/services/), above the group's heading.
+const techIcon = (gr) => { const sv = SERVICES.find((x) => x.img === gr.img); return sv && sv.icon ? `${ICON_DIR}/${sv.icon}?v=${ICON_V}` : `img/services/${gr.img}`; };
 const TECH_GROUPS = [
   { n: 1, img: "design.jpg", items: [["figma", "Figma", "https://www.figma.com"], ["adobephotoshop", "Adobe Photoshop", "https://www.adobe.com/products/photoshop.html"], ["adobeillustrator", "Adobe Illustrator", "https://www.adobe.com/products/illustrator.html"], ["adobeaftereffects", "Adobe After Effects", "https://www.adobe.com/products/aftereffects.html"], ["adobepremierepro", "Adobe Premiere Pro", "https://www.adobe.com/products/premiere.html"], ["blender", "Blender", "https://www.blender.org"]] },
   { n: 2, img: "webdev.jpg", items: [["html5", "HTML5", "https://developer.mozilla.org/docs/Web/HTML"], ["css3", "CSS", "https://developer.mozilla.org/docs/Web/CSS"], ["javascript", "JavaScript", "https://developer.mozilla.org/docs/Web/JavaScript"], ["typescript", "TypeScript", "https://www.typescriptlang.org"], ["react", "React", "https://react.dev"], ["vuedotjs", "Vue.js", "https://vuejs.org"], ["nextdotjs", "Next.js", "https://nextjs.org"], ["tailwindcss", "Tailwind CSS", "https://tailwindcss.com"], ["sass", "Sass", "https://sass-lang.com"]] },
@@ -123,7 +125,7 @@ const ART = {
 /* ---------- homepage: cards in three sets, the form's topic list, the current menu item ---------- */
 const card = (s, pad, prefix) => `${pad}<article class="service-card">
 ${pad}  <h3 data-i18n="${k(s, "title")}">${tx(k(s, "title"))}</h3>
-${pad}  <img class="service-pic service-icon" src="${prefix}img/services/icons/${s.icon}?v=20261125i" alt="${esc(((SEO[k(s, "title")] || {}).service || tx(k(s, "title"))) + " for small business")}" width="512" height="512" loading="lazy" decoding="async" data-still-color>
+${pad}  <img class="service-pic service-icon" src="${prefix}${ICON_DIR}/${s.icon}?v=${ICON_V}" alt="${esc(((SEO[k(s, "title")] || {}).service || tx(k(s, "title"))) + " for small business")}" width="120" height="120" decoding="async" data-still-color>
 ${pad}  <p data-i18n="${k(s, "short")}">${tx(k(s, "short"))}</p>
 ${pad}  <a class="btn-more" href="${prefix}services/${s.slug}.html"><span data-i18n="more">${tx("more")}</span><span class="sr-only">: <span data-i18n="${k(s, "title")}">${tx(k(s, "title"))}</span></span></a>
 ${pad}</article>`;
@@ -1032,7 +1034,7 @@ ${TECH_GROUPS.map((gr) => `          <button type="button" data-filter="${gr.n}"
         </div>
 ${TECH_GROUPS.map((gr) => `        <section class="tech-group" data-group="${gr.n}" aria-labelledby="tech-g${gr.n}">
           <div class="tech-group-head">
-            <img class="tech-group-pic" src="img/services/${techIcon(gr)}" alt="${esc(tx(`techG${gr.n}Title`))} tools for small business websites and software" width="512" height="512" loading="lazy">
+            <img class="tech-group-pic" src="${techIcon(gr)}" alt="${esc(tx(`techG${gr.n}Title`))} tools for small business websites and software" width="120" height="120" decoding="async" data-still-color>
             <div>
               <h3 id="tech-g${gr.n}" class="tech-group-title" data-i18n="techG${gr.n}Title">${tx(`techG${gr.n}Title`)}</h3>
               <p class="tech-group-text" data-i18n="techG${gr.n}Text">${tx(`techG${gr.n}Text`)}</p>
@@ -1170,7 +1172,7 @@ writePage("contact.html", contactPage);
         <h2 id="wi-svc-title" class="section-title center">Services for Wisconsin small businesses</h2>
         <ul class="wi-svc-grid">
 ${WI_SVC.map((id) => { const sv = SERVICES.find((x) => x.id === id); const seo = SEO[`svc_${id}_title`] || {}; return `          <li class="wi-svc">
-            <img src="img/services/icons/${sv.icon}?v=20261125i" alt="${esc((seo.service || "") + " for Wisconsin small businesses")}" width="512" height="512" loading="lazy" decoding="async" data-still-color>
+            <img class="service-icon" src="${ICON_DIR}/${sv.icon}?v=${ICON_V}" alt="${esc((seo.service || "") + " for Wisconsin small businesses")}" width="120" height="120" decoding="async" data-still-color>
             <h3><a href="services/${sv.slug}.html">${esc((seo.service || tx(k(sv, "title"))) + " in Wisconsin")}</a></h3>
             <p>${esc(seo.desc || tx(k(sv, "short")))}</p>
           </li>`; }).join("\n")}

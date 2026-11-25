@@ -129,7 +129,7 @@ html.neon.gx-page:not(#_):not(#__):not(#___) main .service-card > .btn-more { al
 html.neon:not(#_):not(#__) .tech-group-head { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; margin-bottom: 24px; }
 html.neon:not(#_):not(#__) .tech-group-head > div { display: flex; flex-direction: column; align-items: center; }
 html.neon:not(#_):not(#__) .tech-group-pic { width: 96px; height: 96px; object-fit: contain; background: none !important; border: 0 !important; border-radius: 0 !important;
-  box-shadow: none !important; filter: drop-shadow(0 0 14px rgba(255, 43, 214, .35)); }
+  box-shadow: none !important; filter: none !important; }
 html.neon:not(#_):not(#__) .tech-group-title { margin: 0 0 6px; text-align: center; }
 html.neon:not(#_):not(#__) .tech-group-text { margin: 0; text-align: center; }
 @media (max-width: 760px) { html.neon:not(#_):not(#__) .tech-group-pic { width: 76px; height: 76px; } }

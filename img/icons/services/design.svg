@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#paint-design)" stroke-width="1.0" stroke-linecap="round" stroke-linejoin="round" shape-rendering="geometricPrecision" role="img" aria-label="Design">
+  <title>Design</title>
+  <defs>
+  <linearGradient id="paint-design" x1="3" y1="3" x2="21" y2="21" gradientUnits="userSpaceOnUse">
+    <stop offset="0.5" stop-color="#22D3EE"/>
+    <stop offset="0.5" stop-color="#FF3DCB"/>
+  </linearGradient>
+    <style><![CDATA[
+      .mark { fill: url(#paint-design); stroke: none; }
+    ]]></style>
+  </defs>
+
+  <path d="M12 3.3 17.7 11.3 12 20.7 6.3 11.3Z"/>
+  <circle cx="12" cy="10.4" r="1.85"/>
+  <path d="M12 12.25v4.2"/>
+
+</svg>

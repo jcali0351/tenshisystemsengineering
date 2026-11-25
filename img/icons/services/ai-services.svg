@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#paint-ai-services)" stroke-width="1.0" stroke-linecap="round" stroke-linejoin="round" shape-rendering="geometricPrecision" role="img" aria-label="AI Services">
+  <title>AI Services</title>
+  <defs>
+  <linearGradient id="paint-ai-services" x1="3" y1="3" x2="21" y2="21" gradientUnits="userSpaceOnUse">
+    <stop offset="0.5" stop-color="#22D3EE"/>
+    <stop offset="0.5" stop-color="#FF3DCB"/>
+  </linearGradient>
+    <style><![CDATA[
+      .mark { fill: url(#paint-ai-services); stroke: none; }
+    ]]></style>
+  </defs>
+
+  <rect x="7.2" y="7.2" width="9.6" height="9.6" rx="1.4"/>
+  <path d="M7.2 9.55H4.6M7.2 14.45H4.6M16.8 9.55h2.6M16.8 14.45h2.6M9.55 7.2V4.6M14.45 7.2V4.6M9.55 16.8v2.6M14.45 16.8v2.6"/>
+  <path class="mark" d="M12 8.58 12.74 11.26 15.42 12 12.74 12.74 12 15.42 11.26 12.74 8.58 12 11.26 11.26Z"/>
+
+</svg>

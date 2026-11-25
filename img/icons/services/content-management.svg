@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#paint-content-management)" stroke-width="1.0" stroke-linecap="round" stroke-linejoin="round" shape-rendering="geometricPrecision" role="img" aria-label="Content Management">
+  <title>Content Management</title>
+  <defs>
+  <linearGradient id="paint-content-management" x1="3" y1="3" x2="21" y2="21" gradientUnits="userSpaceOnUse">
+    <stop offset="0.5" stop-color="#22D3EE"/>
+    <stop offset="0.5" stop-color="#FF3DCB"/>
+  </linearGradient>
+    <style><![CDATA[
+      .mark { fill: url(#paint-content-management); stroke: none; }
+    ]]></style>
+  </defs>
+
+  <rect x="7.55" y="3.5" width="12.05" height="15.15" rx="1.45"/>
+  <rect x="4.4" y="5.7" width="12.05" height="15.15" rx="1.45"/>
+  <path d="M6.85 10.15h7.15"/>
+  <path d="M6.85 13h7.15"/>
+  <path d="M6.85 15.85h4.7"/>
+
+</svg>

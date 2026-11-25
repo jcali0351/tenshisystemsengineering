@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#paint-web-design)" stroke-width="1.0" stroke-linecap="round" stroke-linejoin="round" shape-rendering="geometricPrecision" role="img" aria-label="Web Design">
+  <title>Web Design</title>
+  <defs>
+  <linearGradient id="paint-web-design" x1="3" y1="3" x2="21" y2="21" gradientUnits="userSpaceOnUse">
+    <stop offset="0.5" stop-color="#22D3EE"/>
+    <stop offset="0.5" stop-color="#FF3DCB"/>
+  </linearGradient>
+    <style><![CDATA[
+      .mark { fill: url(#paint-web-design); stroke: none; }
+    ]]></style>
+  </defs>
+
+  <rect x="3.4" y="4.1" width="17.2" height="15.8" rx="2.1"/>
+  <circle cx="6.25" cy="6.45" r="0.95" class="mark"/>
+  <circle cx="8.35" cy="6.45" r="0.95" class="mark"/>
+  <circle cx="10.45" cy="6.45" r="0.95" class="mark"/>
+  <path d="M5.55 9.25h12.9"/>
+
+  <path d="M8.05 11.15v6.35"/>
+  <rect x="10.85" y="11.15" width="7.15" height="6.35" rx="1.15"/>
+
+</svg>
