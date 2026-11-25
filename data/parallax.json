@@ -457,7 +457,9 @@
         "overlayMode": "none",
         "overlay": "#1a0b2e",
         "overlayOpacity": 0,
-        "grayFade": { "enabled": false }
+        "grayFade": {
+          "enabled": false
+        }
       },
       "services/*": {
         "image": "img/photos/tokyo.jpg"
@@ -523,7 +525,15 @@
         }
       },
       "legal": {
-        "image": "img/photos/osaka.jpg"
+        "image": "img/photos/legal-hero.webp",
+        "position": "center center",
+        "speed": 0,
+        "overlayMode": "none",
+        "overlay": "#1a0b2e",
+        "overlayOpacity": 0,
+        "grayFade": {
+          "enabled": false
+        }
       }
     }
   }

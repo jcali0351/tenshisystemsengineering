@@ -42,8 +42,10 @@
   <link rel="stylesheet" href="sandbox/neon-recolor.css?v=18b28ec9">
   <link rel="stylesheet" href="sandbox/neon-theme.css?v=18b28ec9">
   <link rel="stylesheet" href="sandbox/neon-pages.css?v=18b28ec9">
-  <link rel="stylesheet" href="legal.css?v=175f031a">
+  <link rel="stylesheet" href="legal.css?v=98213fe3">
   <script src="sandbox/neon-recolor-live.js?v=18b28ec9"></script>
+  <link rel="preload" as="image" href="img/photos/legal-hero-mobile.webp" media="(max-width: 900px)" fetchpriority="high">
+  <link rel="preload" as="image" href="img/photos/legal-hero.webp" media="(min-width: 901px)" fetchpriority="high">
 </head>
 <body class="page legal-page" data-title-key="legalTitle" data-desc-key="legalLead" data-seo>
   <!-- Written by tools/build-pages.mjs: edit translations.js and the script, not this file. -->
@@ -136,10 +138,13 @@
   </header>
 
   <main id="main">
-    <section class="svc-hero px-hero" data-parallax data-speed="0.3" data-overlay="gradient" data-fx-letters="rise" style="--px-h:auto;--px-overlay:#12050a;--px-op:0.6;--px-pos:center center;--px-grad:linear-gradient(180deg,rgba(18,5,10,0.55) 0%,55%,rgba(18,5,10,0.8) 100%);--pxl-step:30ms;--pxl-dur:0.8s;--pxl-delay:0.1s">
+    <section class="svc-hero px-hero" data-parallax data-speed="0" data-overlay="none" data-fx-letters="rise" style="--px-h:auto;--px-overlay:#1a0b2e;--px-op:0;--px-pos:center center;--pxl-step:30ms;--pxl-dur:0.8s;--pxl-delay:0.1s">
       <div class="px-hero-bg" aria-hidden="true">
         <div class="parallax-layer">
-          <img src="img/photos/osaka.jpg" alt="" width="1920" height="1080" decoding="async" fetchpriority="high" data-still data-still-color>
+          <picture>
+          <source media="(max-width: 900px)" srcset="img/photos/legal-hero-mobile.webp" width="1600" height="942">
+          <img src="img/photos/legal-hero.webp" alt="" width="2352" height="1008" decoding="async" fetchpriority="high" data-still data-still-color>
+        </picture>
         </div>
         <div class="parallax-overlay"></div>
       </div>

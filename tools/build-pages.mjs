@@ -1080,6 +1080,9 @@ writePage("knowledge-base.html", kbPage);
 const LEGAL_EMAIL = "admin@tenshisystems.com";
 const legalPage = frame({
   prefix: "", current: "legal", titleKey: "legalTitle", descKey: "legalLead", bodyClass: "page legal-page",
+  extraHead: `  <link rel="preload" as="image" href="img/photos/legal-hero-mobile.webp" media="(max-width: 900px)" fetchpriority="high">
+  <link rel="preload" as="image" href="img/photos/legal-hero.webp" media="(min-width: 901px)" fetchpriority="high">
+`,
   main: `${banner("", [{ key: "navAbout", href: "about.html" }, { key: "navLegal" }], "legalTitle", "legalLead")}
 
     <section class="page-section legal-body" aria-labelledby="legal-doc-title">
@@ -2424,6 +2427,11 @@ await import("./neon-pages.mjs");
         html = html.replace(/(<link rel="stylesheet" href="[^"]+">)(?![\s\S]*<link rel="stylesheet")/, `$1\n  <link rel="stylesheet" href="legal.css">`);
       }
     }
+    // LCP hero: <picture> so phones get the courthouse-and-gavel crop, not a short 7:3 strip.
+    html = html.replace(
+      /(<div class="px-hero-bg"[^>]*>[\s\S]*?)<img src="img\/photos\/legal-hero\.webp" alt="" width="1920" height="1080" decoding="async" fetchpriority="high" data-still data-still-color>/,
+      `$1<picture>\n          <source media="(max-width: 900px)" srcset="img/photos/legal-hero-mobile.webp" width="1600" height="942">\n          <img src="img/photos/legal-hero.webp" alt="" width="2352" height="1008" decoding="async" fetchpriority="high" data-still data-still-color>\n        </picture>`
+    );
     writeFileSync(file, html);
   }
 }

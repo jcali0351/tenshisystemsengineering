@@ -183,3 +183,125 @@
   content: " · ";
   color: var(--legal-muted);
 }
+
+/* Legal hero: fill the 7:3 artwork edge to edge (cover inside a matching
+   aspect-ratio box) with the title centred in the image. A light scrim sits
+   only behind the type so the neon colour stays vivid. */
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .svc-hero.px-hero {
+  --px-pos: center center !important;
+  --px-grad: none !important;
+  box-sizing: border-box;
+  width: 100%;
+  aspect-ratio: 2352 / 1008;
+  min-height: 280px;
+  height: auto;
+  overflow: visible;
+  padding-top: clamp(28px, 3vw, 48px) !important;
+  padding-bottom: clamp(24px, 2.6vw, 40px) !important;
+  padding-inline: var(--site-gutter, var(--gutter));
+  background: #12050a !important;
+  text-align: center !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .svc-hero.px-hero[data-overlay="gradient"] .parallax-overlay,
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .svc-hero.px-hero[data-overlay="none"] .parallax-overlay,
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .svc-hero.px-hero .parallax-overlay {
+  background: none !important;
+  opacity: 0 !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .svc-hero.px-hero .svc-hero-inner {
+  position: relative;
+  z-index: 1;
+  width: 100% !important;
+  max-width: var(--site-inner, 1150px) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .svc-hero.px-hero .svc-hero-text {
+  width: 100%;
+  max-width: 52rem;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
+  position: relative;
+  z-index: 1;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .svc-hero.px-hero .svc-hero-text::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  inset: -1.25rem -2.5rem;
+  background: radial-gradient(ellipse at center,
+    rgba(10, 4, 16, 0.48) 0%,
+    rgba(10, 4, 16, 0.2) 48%,
+    rgba(10, 4, 16, 0) 76%);
+}
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .svc-hero.px-hero h1,
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .svc-hero.px-hero h1 * {
+  text-align: center !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .svc-hero.px-hero h1 {
+  margin-bottom: 0.28em !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .svc-hero.px-hero .crumbs ol {
+  margin-bottom: 12px !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .svc-hero.px-hero .crumbs,
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .svc-hero.px-hero .crumbs ol,
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .svc-hero.px-hero .crumbs li {
+  text-align: center !important;
+  justify-content: center !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .svc-hero.px-hero .svc-hero-lead {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
+}
+/* Keep the shared 160% cover layer from zooming: the layer matches the 7:3
+   (or mobile-crop) box, and cover fills it with almost no crop. */
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .svc-hero.px-hero .parallax-layer {
+  top: 0 !important;
+  height: 100% !important;
+  transform: none !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .svc-hero.px-hero .parallax-layer picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .svc-hero.px-hero .parallax-layer img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
+}
+/* Below the width where a 7:3 box is too short for the title, use the
+   courthouse-and-gavel crop and its 1600/942 aspect. */
+@media (max-width: 900px) {
+  :root:not(#_):not(#__):not(#___):not(#____) .legal-page .svc-hero.px-hero {
+    --px-pos: center center !important;
+    aspect-ratio: auto;
+    min-height: max(280px, calc(100vw * 942 / 1600));
+  }
+  :root:not(#_):not(#__):not(#___):not(#____) .legal-page .svc-hero.px-hero .svc-hero-text {
+    max-width: 100%;
+  }
+  :root:not(#_):not(#__):not(#___):not(#____) .legal-page .svc-hero.px-hero .svc-hero-text::before {
+    inset: -1rem -1.25rem;
+  }
+}
