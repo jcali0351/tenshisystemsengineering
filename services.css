@@ -123,8 +123,8 @@
 /* Wisconsin link under the hero: same inset as a page-section + page-inner,
    so it is not flush to the edge under 1150px. Uses the shared gutter token. */
 :root:not(#_):not(#__):not(#___):not(#____) .services-page .wi-note.page-inner {
-  width: min(1150px, calc(100% - 2 * var(--gutter)));
-  max-width: 1150px;
+  width: min(var(--site-inner, 1150px), calc(100% - 2 * var(--site-gutter, var(--gutter))));   /* the site box: starts under the logo */
+  max-width: var(--site-inner, 1150px);
   margin-inline: auto;
   box-sizing: border-box;
 }

@@ -14,9 +14,9 @@
 
 :root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-shell {
   width: 100%;
-  max-width: 920px;
+  max-width: var(--site-inner, 920px);   /* the site's content box: starts under the header logo (styles.css) */
   margin-inline: auto;
-  padding-inline: clamp(18px, 4vw, 40px);
+  padding-inline: 0;
   box-sizing: border-box;
 }
 
@@ -593,3 +593,7 @@
     flex-basis: 16px;
   }
 }
+
+/* The glossary now spans the site's content box (left edge under the header logo); keep each definition's lines
+   at a readable length on wide screens. */
+:root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-term p { max-width: 56rem; }

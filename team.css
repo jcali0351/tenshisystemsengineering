@@ -21,9 +21,9 @@
 }
 :root:not(#_):not(#__):not(#___):not(#____) .team-page #main-content .container {
   width: 100%;
-  max-width: 1180px;
+  max-width: var(--site-max, 1180px);   /* same box as the header: content starts under the logo (styles.css) */
   margin-inline: auto;
-  padding-inline: clamp(18px, 4vw, 40px);
+  padding-inline: var(--site-gutter, clamp(18px, 4vw, 40px));
   box-sizing: border-box;
 }
 :root:not(#_):not(#__):not(#___):not(#____) .team-page #main-content section { position: relative; }
@@ -208,7 +208,7 @@
 :root:not(#_):not(#__):not(#___):not(#____) .team-page #main-content .founder-quote {
   position: relative;
   max-width: 900px;
-  margin: 0 auto;
+  margin: 0;   /* anchored to the site margin (under the logo), not centred */
   padding: clamp(28px, 5vw, 52px) clamp(24px, 5vw, 60px);
   border: 1px solid rgba(255, 140, 26, 0.35);
   border-radius: 22px;

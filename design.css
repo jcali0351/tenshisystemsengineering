@@ -375,7 +375,7 @@ html.anim-on img.gs.gs-in { filter: grayscale(0) !important; }
 @media print { html.anim-on :is(.a-l, .a-r, .a-up, .a-img), html.anim-on .ch-split .ch { opacity: 1 !important; transform: none !important; } }
 
 /* ---------- Footer widgets: latest news and newest blog posts (built from the bots' data) ---------- */
-.footer-widgets { max-width: 1150px; margin: 0 auto; padding: clamp(48px, 7vw, 88px) var(--gutter) clamp(28px, 4vw, 44px);
+.footer-widgets { max-width: var(--site-max); margin: 0 auto; padding: clamp(48px, 7vw, 88px) var(--site-gutter) clamp(28px, 4vw, 44px);
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(28px, 5vw, 72px); border-bottom: 1px solid var(--hair); }
 .fw-title { font-size: clamp(1.25rem, 2vw, 1.55rem); font-weight: 800; margin: 0 0 18px; }
 .fw-title a { color: inherit; text-decoration: none; }

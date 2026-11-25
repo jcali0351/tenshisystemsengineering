@@ -875,7 +875,7 @@ html.neon:not(#_):not(#__):not(#___) #services .service-card > .btn-more { align
    (The photo's scroll motion is turned off so it can't drift out of line; its picture still fills the frame.) */
 html.neon:not(#_):not(#__):not(#___) .feature .feature-inner {
   display: grid !important; grid-template-columns: 1fr 1fr !important; gap: clamp(24px, 3vw, 44px) !important;
-  align-items: stretch !important; max-width: 1180px; margin-left: auto !important; margin-right: auto !important;
+  align-items: stretch !important; max-width: var(--site-inner); margin-left: auto !important; margin-right: auto !important;
 }
 html.neon:not(#_):not(#__):not(#___) .feature .feature-inner > .feature-body { order: 1; width: auto !important; max-width: none !important; margin: 0 !important; float: none !important; }
 html.neon:not(#_):not(#__):not(#___) .feature .feature-inner > .feature-figure {
@@ -1438,3 +1438,58 @@ html.neon .nav-soon { cursor: default !important; pointer-events: none; }
 html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav > ul:is(:hover, :focus-within) > li > a[aria-current="page"] { box-shadow: none !important; }
 /* Service cards (homepage): text centred. */
 html.neon:not(#_):not(#__):not(#___) #services .service-card > p { text-align: center !important; }
+
+/* ==== Site margin (one shared box for the header and all content) ====================================================
+   The header logo's left edge is the site's content margin, and the language switch's right edge mirrors it.
+   --site-max / --site-gutter / --site-inner live in styles.css (:root); every content wrapper below uses the same box,
+   so headings, copy, card grids, hero text and footer columns all start exactly under the logo at every width.
+   Full-bleed section backgrounds stay full-bleed (the section keeps its gutter padding; only the inner box is sized).
+   Narrow prose keeps a readable width but is anchored to the left margin instead of centred in a wider box.
+   Content the owner asked to centre (home hero, services hero text, stage tags, CTA bands) stays centred inside it.
+   The 5-id prefix outranks the page sheets (team.css, knowledge-base.css: 4 ids) that load after this file. */
+:root:not(#_):not(#__):not(#___):not(#____):not(#_____) .site-header .header-inner {
+  max-width: var(--site-max); padding-inline: var(--site-gutter);
+}
+/* Full-width content boxes, inside sections that pad by the gutter. */
+:root:not(#_):not(#__):not(#___):not(#____):not(#_____) :is(.svc-hero-inner, .svc-wide, .page-inner, .svc-body-inner,
+  .svc-process-inner, .svc-others-inner, .feature-inner, .contact-inner) {
+  max-width: var(--site-inner); margin-inline: auto;
+}
+:root:not(#_):not(#__):not(#___):not(#____):not(#_____) #services .svc-carousel {
+  max-width: var(--site-inner) !important; margin-inline: auto;
+}
+/* Narrow blocks: readable width, left-anchored to the margin. */
+:root:not(#_):not(#__):not(#___):not(#____):not(#_____) .page-inner.narrow { max-width: var(--site-inner); }
+:root:not(#_):not(#__):not(#___):not(#____):not(#_____) .page-inner.narrow > * { max-width: 820px; }
+/* Sections that dropped their side padding: give it back so the inner box lands on the margin. */
+:root:not(#_):not(#__):not(#___):not(#____):not(#_____) .svc-reading { padding-inline: var(--site-gutter); }
+:root:not(#_):not(#__):not(#___):not(#____):not(#_____) .contact-map-hero { padding-inline: var(--site-gutter); }
+:root:not(#_):not(#__):not(#___):not(#____):not(#_____) .contact-map-hero .svc-hero-inner { padding-inline: 0; }
+/* Footer: news/blog widgets and the bottom row use the header's box. */
+:root:not(#_):not(#__):not(#___):not(#____):not(#_____) .site-footer :is(.footer-widgets, .footer-inner) {
+  max-width: var(--site-max); padding-inline: var(--site-gutter); margin-inline: auto;
+}
+/* Team page (team.css): its .container carried its own 1180px box and padding. */
+:root:not(#_):not(#__):not(#___):not(#____):not(#_____) .team-page #main-content .container {
+  max-width: var(--site-max); padding-inline: var(--site-gutter);
+}
+/* Knowledge Base (knowledge-base.css): the 920px centred shell becomes the full content box; the intro copy keeps
+   its own readable max-width (46rem), now starting at the margin. */
+:root:not(#_):not(#__):not(#___):not(#____):not(#_____) .kb-page .kb-shell {
+  max-width: var(--site-inner); padding-inline: 0; margin-inline: auto;
+}
+/* Phones/tablets: the "photo left" feature (Development) kept its desktop column 2, so the panel was pushed in by the
+   gap and the photo overflowed; stack both in the one column like the other features. */
+@media (max-width: 860px) {
+  :root:not(#_):not(#__):not(#___):not(#____):not(#_____) .feature.feature--left .feature-inner > :is(.feature-body, .feature-figure) { grid-column: 1 !important; }
+  /* Services grid: full content width (was a 520px centred column). */
+  :root:not(#_):not(#__):not(#___):not(#____):not(#_____) .red-section .svc-grid { max-width: none; margin-inline: 0; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  :root:not(#_):not(#__):not(#___):not(#____):not(#_____) .red-section .svc-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 719px) {
+  :root:not(#_):not(#__):not(#___):not(#____):not(#_____) #services .svc-set { max-width: none !important; margin-inline: 0 !important; }
+}
+/* Launch wizard: its frame uses the site box (the 980px wizard itself stays centred in it). */
+:root:not(#_):not(#__):not(#___):not(#____):not(#_____) .lx { padding-inline: max(var(--site-gutter), calc((100% - var(--site-max)) / 2 + var(--site-gutter))); }
