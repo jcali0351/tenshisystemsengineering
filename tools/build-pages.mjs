@@ -663,6 +663,9 @@ const contactMapHero = (prefix) => `    <section class="svc-hero contact-map-her
           </button>
         </div>
         <div class="cm-popover" id="cm-popover" hidden>
+          <figure class="cm-popover-photo" id="cm-pop-photo" hidden>
+            <img id="cm-pop-photo-img" alt="" width="640" height="320" decoding="async">
+          </figure>
           <div class="cm-popover-head">
             <div>
               <span class="cm-popover-tag" id="cm-pop-tag"></span>

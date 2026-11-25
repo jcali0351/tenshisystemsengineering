@@ -26,6 +26,23 @@
   const geoNote = document.getElementById('cm-geo-note');
   const locateBtn = document.getElementById('cm-locate');
   const youLegendBtn = document.getElementById('cm-legend-you');
+  const popPhoto = document.getElementById('cm-pop-photo');
+  const popPhotoImg = document.getElementById('cm-pop-photo-img');
+
+  const POP_PHOTOS = {
+    host: {
+      src: 'img/photos/map-host-madison.webp?v=424c8717',
+      srcset: 'img/photos/map-host-madison.webp?v=424c8717 640w, img/photos/map-host-madison-2x.webp?v=6e56f9ca 1200w',
+      sizes: '300px',
+      alt: 'The Wisconsin State Capitol in downtown Madison at dusk, seen from the State Street mall'
+    },
+    server: {
+      src: 'img/photos/map-server-kl.webp?v=69382b90',
+      srcset: 'img/photos/map-server-kl.webp?v=69382b90 640w, img/photos/map-server-kl-2x.webp?v=1d4927fa 1280w',
+      sizes: '300px',
+      alt: 'Aerial view of a data center in Kuala Lumpur, with the NEXTDC building at the centre of the campus'
+    }
+  };
 
   const WORLD_W = 1600;
   const WORLD_H = 820;
@@ -454,7 +471,7 @@
         city: metro.city,
         lat: metro.lat,
         lon: metro.lon,
-        color: '#5eead4'
+        color: '#ff8c1a'
       });
     }
 
@@ -471,7 +488,7 @@
       city: ixp.city,
       lat: ixp.lat,
       lon: ixp.lon,
-      color: '#67e8f9',
+      color: '#c084fc',
       colocated: !ixpFar
     });
 
@@ -539,8 +556,20 @@
       routeEl.hidden = true;
       return;
     }
-    const parts = routeHops.map((h) => h.short);
-    routePathEl.textContent = parts.join(' → ');
+    routePathEl.replaceChildren();
+    routeHops.forEach((h, i) => {
+      if (i) {
+        const arrow = document.createElement('span');
+        arrow.className = 'cm-hop-arrow';
+        arrow.setAttribute('aria-hidden', 'true');
+        arrow.textContent = ' → ';
+        routePathEl.appendChild(arrow);
+      }
+      const hop = document.createElement('span');
+      hop.className = 'cm-hop' + (h.kind ? ' cm-hop--' + h.kind : '');
+      hop.textContent = h.short;
+      routePathEl.appendChild(hop);
+    });
     routeTotalEl.textContent = `~${routeHops.totalMs} ms total · approximate / illustrative`;
     routeEl.hidden = false;
   }
@@ -693,19 +722,42 @@
     };
   }
 
+  function setPopoverPhoto(key) {
+    if (!popPhoto || !popPhotoImg) return;
+    const photo = POP_PHOTOS[key];
+    if (!photo) {
+      popPhoto.hidden = true;
+      popPhotoImg.removeAttribute('srcset');
+      popPhotoImg.removeAttribute('sizes');
+      popPhotoImg.removeAttribute('src');
+      popPhotoImg.alt = '';
+      return;
+    }
+    popPhotoImg.alt = photo.alt;
+    popPhotoImg.sizes = photo.sizes;
+    popPhotoImg.srcset = photo.srcset;
+    popPhotoImg.src = photo.src;
+    popPhoto.hidden = false;
+  }
+
   function openPopover(key) {
     const node = popoverModel(key);
     if (!node) return;
     activeNode = key;
+    popover.classList.remove('cm-popover--host', 'cm-popover--server', 'cm-popover--you');
+    if (key === 'host' || key === 'server' || key === 'you') {
+      popover.classList.add('cm-popover--' + key);
+    }
     popTag.textContent = node.tag;
     popTag.className = 'cm-popover-tag cm-popover-tag--' + (key === 'you' ? 'you' : key);
     popTitle.textContent = node.title;
     const bits = [];
-    if (node.tz) bits.push(`<div><strong>Local Time:</strong> ${formatTime(node.tz)}</div>`);
-    bits.push(`<div><strong>Coords:</strong> ${node.coords}</div>`);
+    if (node.tz) bits.push(`<div><strong>Local Time:</strong> <span class="cm-pop-val">${formatTime(node.tz)}</span></div>`);
+    bits.push(`<div><strong>Coords:</strong> <span class="cm-pop-val">${node.coords}</span></div>`);
     if (node.hopMeta) bits.push(`<div>${node.hopMeta}</div>`);
     popMeta.innerHTML = bits.join('');
     popFocus.textContent = cam.tzoom > 1.7 ? 'Fit All' : `Focus ${node.label}`;
+    setPopoverPhoto(key);
     popover.hidden = false;
   }
 
@@ -1079,8 +1131,24 @@
 
     if (activeNode && !popover.hidden) {
       const pos = popoverAnchor();
-      popover.style.left = Math.max(145, Math.min(width - 145, pos.x)) + 'px';
-      popover.style.top = Math.max(190, pos.y) + 'px';
+      const pad = 10;
+      const gap = 46;
+      const popW = popover.offsetWidth || 300;
+      const popH = popover.offsetHeight || 260;
+      const half = Math.min(popW, Math.max(0, width - 2 * pad)) / 2;
+      popover.style.left = Math.max(half + pad, Math.min(width - half - pad, pos.x)) + 'px';
+      if (pos.y - popH - gap < pad) {
+        const below = pos.y + gap;
+        if (below + popH <= height - pad) {
+          popover.style.top = below + 'px';
+        } else {
+          popover.style.top = pad + 'px';
+        }
+        popover.style.transform = 'translate(-50%, 0)';
+      } else {
+        popover.style.top = pos.y + 'px';
+        popover.style.transform = 'translate(-50%, calc(-100% - ' + gap + 'px))';
+      }
     }
 
     rafId = requestAnimationFrame(render);
