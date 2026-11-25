@@ -1,64 +1,54 @@
-/* Hero: neon Wisconsin artwork is the full-bleed header. The outline stays in the upper band;
-   the title, lead and breadcrumb sit in the dark lower band, centered on the outline's axis. */
+/* Hero: same interior-header behavior as technology and knowledge-base
+   (content height, shared padding, min-height 280px). Text is centered in
+   the image region so it is not left-columned; the Wisconsin art may sit behind it. */
 :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero {
-  --px-pos: center top !important;
-  --px-grad: linear-gradient(180deg, rgba(26, 11, 46, 0.06) 0%, 58%, rgba(26, 11, 46, 0.8) 100%) !important;
-  height: clamp(800px, 58vw, 940px) !important;
-  min-height: clamp(800px, 58vw, 940px) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: flex-end !important;
-  align-items: stretch !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
+  --px-pos: center center !important;
+  --px-grad: linear-gradient(180deg, rgba(26, 11, 46, 0.46) 0%, 50%, rgba(26, 11, 46, 0.62) 100%) !important;
+  min-height: 280px;
   text-align: center !important;
+  justify-content: center !important;
+  align-items: center !important;
 }
 :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero[data-overlay="gradient"] .parallax-overlay,
 :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .parallax-overlay {
   background: var(--px-grad) !important;
   opacity: 1 !important;
 }
-/* Lock the text to the bottom 41% (the dark band below the outline). min-height:0 stops
-   the flex item from growing upward and overlapping the Wisconsin outline. */
 :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .svc-hero-inner {
   position: relative;
   z-index: 1;
   width: 100% !important;
   max-width: none !important;
-  margin: 0 auto !important;
-  flex: 0 0 41% !important;
-  min-height: 0 !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
   display: flex !important;
+  flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
-  box-sizing: border-box;
-  padding: 24px var(--gutter, 24px) !important;
   text-align: center !important;
 }
 :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .svc-hero-text {
   width: 100%;
-  max-width: 760px;
-  margin: 0 auto;
-  text-align: center;
+  max-width: 52rem;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
   position: relative;
   z-index: 1;
 }
-:root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero h1 {
-  font-size: clamp(2.05rem, 4.2vw, 3.15rem) !important;
-  line-height: 1.08 !important;
+:root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero h1,
+:root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero h1 * {
   text-align: center !important;
 }
-:root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .crumbs {
-  text-align: center;
-}
-:root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .crumbs ol {
-  justify-content: center;
-  margin-bottom: 10px;
+:root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .crumbs,
+:root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .crumbs ol,
+:root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .crumbs li {
+  text-align: center !important;
+  justify-content: center !important;
 }
 :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .svc-hero-lead {
-  margin: 10px auto 0 !important;
-  font-size: clamp(1rem, 1.3vw, 1.15rem) !important;
-  max-width: 42rem;
+  margin-left: auto !important;
+  margin-right: auto !important;
   text-align: center !important;
 }
 :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .parallax-layer img {
@@ -66,18 +56,9 @@
 }
 @media (max-width: 760px) {
   :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero {
-    --px-pos: center top !important;
-    height: 840px !important;
-    min-height: 840px !important;
-  }
-  :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .svc-hero-inner {
-    flex-basis: 41% !important;
-    padding: 28px var(--gutter, 20px) !important;
+    --px-pos: center center !important;
   }
   :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .svc-hero-text {
     max-width: 100%;
-  }
-  :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero h1 {
-    font-size: 1.9rem !important;
   }
 }

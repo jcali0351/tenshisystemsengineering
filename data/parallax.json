@@ -452,7 +452,7 @@
       },
       "services": {
         "image": "img/photos/services-hero.webp",
-        "position": "center top",
+        "position": "center center",
         "overlayMode": "gradient",
         "overlay": "#1a0b2e",
         "overlayOpacity": 0.2,
@@ -460,10 +460,10 @@
           "type": "linear",
           "angle": 180,
           "from": "#1a0b2e",
-          "fromOpacity": 0.06,
+          "fromOpacity": 0.46,
           "to": "#1a0b2e",
-          "toOpacity": 0.8,
-          "stop": 58
+          "toOpacity": 0.62,
+          "stop": 50
         },
         "grayFade": { "enabled": false }
       },
