@@ -693,20 +693,28 @@ html.neon:not(#_):not(#__) :is(.services, .feature, .contact, .site-footer) {
 }
 /* The homepage services section: full-width photo of a purple concrete wall with server racks at the sides
    (img/photos/services-bg.webp, 2736x912; phones get the centre crop services-bg-mobile.webp, 1368x912).
-   A soft fade at the top and bottom blends it into the sections around it; the middle stays clear for the cards. */
+   It fades at the bottom into a deep wall purple (#160c26), exactly where the Design section below starts with that same
+   purple, so the wall flows on without a line. The Design section (#feature) carries on with the bare wall texture
+   (img/photos/design-bg.webp, a centre crop with no racks or cables) and fades to the page's near-black at its foot. */
 html.neon:not(#_):not(#__):not(#___) section.services#services {
   background:
-    linear-gradient(180deg, rgba(3, 0, 6, 0.55) 0%, rgba(3, 0, 6, 0) 14%, rgba(3, 0, 6, 0) 86%, rgba(3, 0, 6, 0.6) 100%),
+    linear-gradient(180deg, rgba(3, 0, 6, 0.55) 0%, rgba(3, 0, 6, 0) 14%, rgba(22, 12, 38, 0) 62%, rgba(22, 12, 38, 0.75) 90%, #160c26 100%),
     radial-gradient(ellipse 46% 60% at 50% 50%, rgba(8, 2, 20, 0.28), transparent 75%),
     url("../img/photos/services-bg.webp?v=20261125") center / cover no-repeat,
-    #12062a !important;
+    #160c26 !important;
+}
+html.neon:not(#_):not(#__):not(#___) section.feature#feature {
+  background:
+    linear-gradient(180deg, #160c26 0%, rgba(22, 12, 38, 0.6) 16%, rgba(22, 12, 38, 0.38) 42%, rgba(14, 6, 30, 0.6) 72%, rgba(8, 2, 18, 0.92) 92%, #05000a 100%),
+    url("../img/photos/design-bg.webp?v=20261125") center / cover no-repeat,
+    #160c26 !important;
 }
 @media (max-width: 760px) {
   html.neon:not(#_):not(#__):not(#___) section.services#services {
     background:
-      linear-gradient(180deg, rgba(3, 0, 6, 0.55) 0%, rgba(3, 0, 6, 0) 10%, rgba(3, 0, 6, 0) 90%, rgba(3, 0, 6, 0.6) 100%),
+      linear-gradient(180deg, rgba(3, 0, 6, 0.55) 0%, rgba(3, 0, 6, 0) 10%, rgba(22, 12, 38, 0) 78%, rgba(22, 12, 38, 0.75) 95%, #160c26 100%),
       url("../img/photos/services-bg-mobile.webp?v=20261125") center / cover no-repeat,
-      #12062a !important;
+      #160c26 !important;
   }
 }
 /* Panels: the GAME OVER box. */
