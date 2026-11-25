@@ -51,6 +51,52 @@ export function loadGlossary() {
   return { sections, all, resolve };
 }
 
+const ICO = (key, cls = "kb-ico") => `<svg class="${cls}" aria-hidden="true" focusable="false"><use href="#kb-ico-${key}"></use></svg>`;
+
+const KB_SPRITE = `    <svg class="kb-sprite" width="0" height="0" aria-hidden="true" focusable="false">
+      <symbol id="kb-ico-dev" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8.25 6.75 3.5 12l4.75 5.25"/>
+          <path d="M15.75 6.75 20.5 12l-4.75 5.25"/>
+          <path d="M13.6 5.75 10.4 18.25"/>
+        </g>
+      </symbol>
+      <symbol id="kb-ico-design" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3.5" y="3.75" width="17" height="16.5" rx="3"/>
+          <path d="M3.5 8.5h17"/>
+          <rect x="6.5" y="11.5" width="7" height="5.5" rx="1.25"/>
+        </g>
+      </symbol>
+      <symbol id="kb-ico-seo" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 17.25V13"/>
+          <path d="M7.35 17.25V10.25"/>
+          <path d="M10.7 17.25V7.5"/>
+          <circle cx="15.1" cy="11.15" r="4.15"/>
+          <path d="m18.1 14.2 3.15 3.15"/>
+        </g>
+      </symbol>
+      <symbol id="kb-ico-saas" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6.6 14.15h10.9a3 3 0 0 0 .2-5.9 4.15 4.15 0 0 0-7.9-1.25 3.35 3.35 0 0 0-3.2 7.15z"/>
+          <path d="M5.75 16.55h12.5"/>
+          <path d="M6.85 18.8h10.3"/>
+          <path d="M8.15 21.05h7.7"/>
+        </g>
+      </symbol>
+      <symbol id="kb-ico-ai" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="7" y="7" width="10" height="10" rx="2"/>
+          <path d="M9.25 7V4.4M12 7V4.4M14.75 7V4.4"/>
+          <path d="M9.25 17v2.6M12 17v2.6M14.75 17v2.6"/>
+          <path d="M7 9.25H4.4M7 12H4.4M7 14.75H4.4"/>
+          <path d="M17 9.25h2.6M17 12h2.6M17 14.75h2.6"/>
+          <path d="M12 8.45 13.05 11.15 15.55 12 13.05 12.85 12 15.55 10.95 12.85 8.45 12 10.95 11.15Z"/>
+        </g>
+      </symbol>
+    </svg>`;
+
 export function knowledgeBaseMain({ tx, esc, t, banner, cta, art = "" }) {
   const { sections, all, resolve } = loadGlossary();
   const letterOf = (term) => {
@@ -68,7 +114,7 @@ export function knowledgeBaseMain({ tx, esc, t, banner, cta, art = "" }) {
   const filters = [
     `<button type="button" class="kb-chip" role="radio" aria-checked="true" data-kb-sec="all">${t("span", "kbAll")}<span class="kb-chip-n">${all.length}</span></button>`,
     ...sections.map((s) =>
-      `<button type="button" class="kb-chip" role="radio" aria-checked="false" data-kb-sec="${s.key}">${t("span", s.labelKey)}<span class="kb-chip-n">${s.entries.length}</span></button>`
+      `<button type="button" class="kb-chip" role="radio" aria-checked="false" data-kb-sec="${s.key}">${ICO(s.key)}<span data-i18n="${s.labelKey}">${tx(s.labelKey)}</span><span class="kb-chip-n">${s.entries.length}</span></button>`
     ),
   ].join("\n            ");
 
@@ -85,14 +131,19 @@ export function knowledgeBaseMain({ tx, esc, t, banner, cta, art = "" }) {
   const renderTerm = (e) => `            <article class="kb-term" id="${e.id}" data-kb-sec="${e.sec}" data-kb-term="${esc(e.term)}" data-kb-id="${e.id}">
               <div class="kb-term-top">
                 <h3 class="kb-term-name">${esc(e.term)}</h3>
-                <p class="kb-term-sec" data-i18n="${e.labelKey}">${tx(e.labelKey)}</p>
+                <p class="kb-term-sec">${ICO(e.sec)}<span data-i18n="${e.labelKey}">${tx(e.labelKey)}</span></p>
               </div>
               <p class="kb-term-def">${esc(e.def)}</p>
 ${e.why ? `              <p class="kb-term-why"><span data-i18n="kbWhy">${tx("kbWhy")}</span> ${esc(e.why)}</p>\n` : ""}${renderSee(e)}            </article>`;
 
   const sectionBlocks = sections.map((s) => `          <section class="kb-sec" id="${s.slug}" data-kb-sec="${s.key}" aria-labelledby="kb-h-${s.key}">
-            <h2 class="kb-sec-title" id="kb-h-${s.key}" data-i18n="${s.labelKey}">${tx(s.labelKey)}</h2>
-            <p class="kb-sec-count"><span class="kb-sec-n">${s.entries.length}</span> <span data-i18n="kbTermsWord">${tx("kbTermsWord")}</span></p>
+            <div class="kb-sec-head">
+              <span class="kb-badge" aria-hidden="true">${ICO(s.key, "kb-ico kb-ico-lg")}</span>
+              <div class="kb-sec-copy">
+                <h2 class="kb-sec-title" id="kb-h-${s.key}" data-i18n="${s.labelKey}">${tx(s.labelKey)}</h2>
+                <p class="kb-sec-count"><span class="kb-sec-n">${s.entries.length}</span> <span data-i18n="kbTermsWord">${tx("kbTermsWord")}</span></p>
+              </div>
+            </div>
 ${s.entries.map(renderTerm).join("\n")}
           </section>`).join("\n");
 
@@ -116,7 +167,9 @@ ${items}
             </div>`;
   }).join("\n");
 
-  return `${banner("", [{ key: "navAbout", href: "about.html" }, { key: "navKnowledgeBase" }], "kbTitle", "kbLead", art)}
+  return `${KB_SPRITE}
+
+${banner("", [{ key: "navAbout", href: "about.html" }, { key: "navKnowledgeBase" }], "kbTitle", "kbLead", art)}
 
     <section class="kb-intro page-section" aria-labelledby="kb-intro-title">
       <div class="kb-shell">

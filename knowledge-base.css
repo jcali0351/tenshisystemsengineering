@@ -462,3 +462,107 @@
     z-index: 0;
   }
 }
+
+/* Category icons: one SVG sprite (kb-sprite), used as a line icon or an orange badge. */
+:root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-ico {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  display: inline-block;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: -0.2em;
+  overflow: visible;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-ico-lg {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  vertical-align: middle;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border-radius: 12px;
+  background: #ff8c1a;
+  color: #1a0b2e;
+  box-shadow: 0 0 16px rgba(255, 140, 26, 0.28);
+}
+:root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-badge .kb-ico {
+  color: #1a0b2e;
+  stroke: #1a0b2e;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-sec-head {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin: 0 0 0.85rem;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-sec-head .kb-sec-title {
+  margin: 0;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-sec-head .kb-sec-count {
+  margin: 0.15rem 0 0;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-chip .kb-ico {
+  color: var(--kb-orange);
+  stroke: var(--kb-orange);
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-chip[aria-checked="true"] .kb-ico {
+  color: #1a0b2e;
+  stroke: #1a0b2e;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-term-sec {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-term-sec .kb-ico {
+  color: var(--kb-orange);
+  stroke: var(--kb-orange);
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  vertical-align: middle;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-term-sec span {
+  color: var(--kb-orange) !important;
+  -webkit-text-fill-color: var(--kb-orange) !important;
+  font-family: "Oswald", "Lato", sans-serif !important;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  text-shadow: none !important;
+}
+@media (max-width: 640px) {
+  :root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-badge {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+    border-radius: 10px;
+  }
+  :root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-ico-lg {
+    width: 24px;
+    height: 24px;
+    flex-basis: 24px;
+  }
+  :root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-term-top {
+    gap: 0.3rem 0.65rem;
+  }
+}
