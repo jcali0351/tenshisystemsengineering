@@ -1,7 +1,7 @@
-# Tanaka Matsumoto's AI (optional)
+# Tenshi's AI (optional)
 
-Without this, Tanaka still works: he answers from the website's own text (services, consultation, location, languages)
-in English, Japanese, Korean and German. With it, he answers with Claude and can handle any question about the services.
+Without this, Tenshi (the site's chat assistant) still works: he answers from the website's own text (services, consultation, location, languages)
+in all ten site languages, and says the company is based in Madison, Wisconsin. With it, he answers with Claude and can handle any question about the services.
 
 The Claude API key lives only in this Worker as a secret. Never put it in chat.js or any other file in the repository.
 
@@ -18,5 +18,5 @@ The Claude API key lives only in this Worker as a secret. Never put it in chat.j
 6. Put it in `chat.js` at the top: `endpoint: "https://tenshi-chat.yourname.workers.dev"`, run
    `node tools/stamp-assets.mjs`, then commit and push.
 
-If the Worker is down or not set up, Tanaka quietly falls back to the website's own answers.
+If the Worker is down or not set up, Tenshi quietly falls back to the website's own answers.
 Each visitor can ask up to 30 questions in 10 minutes; replies are capped at about 500 tokens.

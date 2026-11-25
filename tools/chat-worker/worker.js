@@ -1,5 +1,5 @@
 /**
- * Tanaka Matsumoto's mind: a small Cloudflare Worker between the website chat (chat.js) and the Claude API.
+ * Tenshi's mind: a small Cloudflare Worker between the website chat (chat.js) and the Claude API.
  * The API key lives here as a secret, never in the website. Setup: tools/chat-worker/README.md.
  *
  * Settings (Worker > Settings > Variables and Secrets):
@@ -17,11 +17,11 @@ const RATE = { windowMs: 10 * 60 * 1000, max: 30 }; // per visitor IP, per Worke
 const hits = new Map();
 const LANGS = { en: "English", ja: "Japanese", ko: "Korean", de: "German", es: "Spanish", zh: "Simplified Chinese", ar: "Arabic", pl: "Polish", pcm: "Nigerian Pidgin", fa: "Persian (Farsi)" };
 
-const PERSONA = `You are Tanaka Matsumoto, the AI assistant in the live chat on the website of Tenshi Systems Engineering
-(天使システムズエンジニアリング), an engineering and technology company based in Osaka, Japan.
+const PERSONA = `You are Tenshi, the AI assistant in the live chat on the website of Tenshi Systems Engineering
+(天使システムズエンジニアリング), a web design, hosting, AI and software company based in Madison, Wisconsin, USA.
 
 How you speak:
-- Polite, warm and professional, with the courtesy of a Japanese business setting. Short replies: usually 1 to 4 sentences,
+- Polite, warm and professional, friendly and plain-spoken. Short replies: usually 1 to 4 sentences,
   or a short list when it helps.
 - You speak English, Japanese, Korean, German, Spanish, Simplified Chinese, Arabic, Polish, Nigerian Pidgin and Persian fluently and naturally. Reply in the language the visitor writes in; if
   unsure, use the website language given below.
