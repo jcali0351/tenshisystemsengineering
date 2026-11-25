@@ -3,7 +3,7 @@
 //     footer widgets, and the two homepage parallax bands (data/parallax.json, between the Design / Development /
 //     Optimization panels)
 //   - the photo header of every interior page (data/parallax.json "pageHeader", see heroPx)
-//   - about.html, team.html, knowledge-base.html, services.html, contact.html, news.html, blog.html
+//   - about.html, team.html, knowledge-base.html, legal.html, services.html, contact.html, news.html, blog.html
 //   - portfolio.html (designs from data/templates.json + our own software) and launch.html (the Launch Sequence)
 //   - services/<slug>.html, one full page per service
 //   - blog/<slug>.html, one page per long-form post that has a slug in data/blog.json
@@ -555,7 +555,7 @@ const FORM = index.match(/        <form class="contact-form"[\s\S]*?<\/form>/)[0
 
 // The header menu's dropdowns: a page in a dropdown also marks its top-level item (on Team, About shows as current).
 // The footer menu is flat, so only the page itself is marked there. Project pages pass ["portfolio", "p-<slug>"] already.
-const NAV_PARENT = { team: "about", technology: "about", "knowledge-base": "about", blog: "news", portal: "contact", "p-storycaster": "portfolio", "p-master-baiter-pro": "portfolio" };
+const NAV_PARENT = { team: "about", technology: "about", "knowledge-base": "about", legal: "about", blog: "news", portal: "contact", "p-storycaster": "portfolio", "p-master-baiter-pro": "portfolio" };
 const navCurrent = (current) => [].concat(current).flatMap((c) => NAV_PARENT[c] ? [c, NAV_PARENT[c]] : [c]);
 // Point the copied links at the right folder and mark the current menu item.
 function chrome(html, prefix, current) {
@@ -563,7 +563,7 @@ function chrome(html, prefix, current) {
     .replace('href="#top"', `href="${prefix}index.html"`)
     .replace(/src="((?:brand|img)\/[\w.\/-]+(?:\?[^"]*)?)"/g, `src="${prefix}$1"`)
     .replace(/href="((?:news|blog)\.html#[^"]*)"/g, `href="${prefix}$1"`)
-    .replace(/href="((?:index|about|services|contact|team|technology|knowledge-base|projects|portfolio|launch|news|blog|portal|wisconsin)\.html|projects\/[a-z-]+\.html|blog\/[a-z-]+\.html)"/g, `href="${prefix}$1"`);
+    .replace(/href="((?:index|about|services|contact|team|technology|knowledge-base|legal|projects|portfolio|launch|news|blog|portal|wisconsin)\.html|projects\/[a-z-]+\.html|blog\/[a-z-]+\.html)"/g, `href="${prefix}$1"`);
 }
 
 function frame({ prefix, current, titleKey, descKey, title, description, bodyClass, main, rawMain = "", photoCredits = "", extraHead = "", extraScripts = "" }) {
@@ -1072,6 +1072,26 @@ const kbPage = frame({
   main: knowledgeBaseMain({ tx, esc, t, banner, cta, art: "" }),
 });
 writePage("knowledge-base.html", kbPage);
+
+/* ---------- Legal & Privacy ---------- */
+// Terms of Service & Privacy Policy. Body lives in tools/legal-main.html. Look: legal.css,
+// linked after neon-pages.css below. LEGAL_EMAIL is the only contact address on this page;
+// it replaces __LEGAL_EMAIL__ in the source (the mailto link also gets data-legal-email).
+const LEGAL_EMAIL = "admin@tenshisystems.com";
+const legalPage = frame({
+  prefix: "", current: "legal", titleKey: "legalTitle", descKey: "legalLead", bodyClass: "page legal-page",
+  main: `${banner("", [{ key: "navAbout", href: "about.html" }, { key: "navLegal" }], "legalTitle", "legalLead")}
+
+    <section class="page-section legal-body" aria-labelledby="legal-doc-title">
+      <div class="page-inner">
+        <article class="legal-col" id="legal-doc">
+          <h2 id="legal-doc-title" class="sr-only" data-i18n="legalTitle">${tx("legalTitle")}</h2>
+${readFileSync("tools/legal-main.html", "utf8").replace(/\s+$/, "").replaceAll("__LEGAL_EMAIL__", LEGAL_EMAIL)}
+        </article>
+      </div>
+    </section>`,
+});
+writePage("legal.html", legalPage);
 
 /* ---------- Contact ---------- */
 const contactPage = frame({
@@ -2265,7 +2285,7 @@ ${GAMES.map((g) => `          <li class="game-card">
 
 mkdirSync("projects", { recursive: true });
 for (const p of PROJECTS) writePage(`projects/${p.slug}.html`, projectPage(p));
-console.log(`index.html updated; about.html, team.html, knowledge-base.html, services.html, technology.html, projects.html, contact.html, ${SERVICES.length} service pages and ${PROJECTS.length} project pages written; news.html, blog.html, ${slugPosts.length} blog post page(s) and portal.html written`);
+console.log(`index.html updated; about.html, team.html, knowledge-base.html, legal.html, services.html, technology.html, projects.html, contact.html, ${SERVICES.length} service pages and ${PROJECTS.length} project pages written; news.html, blog.html, ${slugPosts.length} blog post page(s) and portal.html written`);
 
 /* ---------- Buttons and Custom CSS (Tenshi Editor › Buttons, › Custom CSS) ----------
    data/buttons.json → buttons.css (no settings = only the hero button's default Flat red look). custom.css is written by the
@@ -2387,6 +2407,23 @@ await import("./neon-pages.mjs");
       /(<div class="px-hero-bg"[^>]*>[\s\S]*?)<img src="img\/photos\/services-hero\.webp" alt="" width="1920" height="1080" decoding="async" fetchpriority="high" data-still data-still-color>/,
       `$1<picture>\n          <source media="(max-width: 900px)" srcset="img/photos/services-hero-mobile.webp" width="1200" height="912">\n          <img src="img/photos/services-hero.webp" alt="" width="2736" height="912" decoding="async" fetchpriority="high" data-still data-still-color>\n        </picture>`
     );
+    writeFileSync(file, html);
+  }
+}
+
+// Legal page assets must load after neon-pages.css so the prose column and callout aren't restyled by the neon skin.
+{
+  const file = "legal.html";
+  if (existsSync(file)) {
+    let html = readFileSync(file, "utf8");
+    html = html.replace(/\n?[ \t]*<link rel="stylesheet" href="legal\.css[^"]*">/g, "");
+    if (!html.includes('href="legal.css')) {
+      if (/<link rel="stylesheet" href="sandbox\/neon-pages\.css[^"]*">/.test(html)) {
+        html = html.replace(/(<link rel="stylesheet" href="sandbox\/neon-pages\.css[^"]*">)/, `$1\n  <link rel="stylesheet" href="legal.css">`);
+      } else {
+        html = html.replace(/(<link rel="stylesheet" href="[^"]+">)(?![\s\S]*<link rel="stylesheet")/, `$1\n  <link rel="stylesheet" href="legal.css">`);
+      }
+    }
     writeFileSync(file, html);
   }
 }

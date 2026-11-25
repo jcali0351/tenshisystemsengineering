@@ -1404,7 +1404,8 @@
   var PH_NAMED = [
     ["about", "About"], ["team", "Team"], ["services", "Services (overview)"], ["services/*", "Every service page"],
     ["technology", "Technology"], ["projects", "Projects (overview)"], ["projects/*", "Every project page"],
-    ["news", "News"], ["blog", "Blog (list)"], ["blog/*", "Every blog post"], ["contact", "Contact"], ["portal", "Portal"]
+    ["news", "News"], ["blog", "Blog (list)"], ["blog/*", "Every blog post"], ["contact", "Contact"], ["portal", "Portal"],
+    ["legal", "Legal & Privacy"]
   ];
   var phOpen = {};
   function phIsObj(v) { return !!v && typeof v === "object" && !Array.isArray(v); }

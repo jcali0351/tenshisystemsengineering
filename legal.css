@@ -1,0 +1,185 @@
+/* legal.css: Legal & Privacy (legal.html). Scoped to body.legal-page.
+   The :root:not(#_)... prefix lifts these rules above sandbox/neon-pages.css.
+   Linked after that file by tools/build-pages.mjs. */
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page {
+  --legal-orange: #ff8c1a;
+  --legal-orange-soft: #ffd19a;
+  --legal-purple: #a855f7;
+  --legal-ink: #f4ecff;
+  --legal-muted: #cbb8e8;
+  --legal-line: rgba(190, 120, 255, 0.28);
+}
+
+/* Prose column: max ~760px, left-aligned to the shared .page-inner (the site content margin). */
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .legal-col {
+  max-width: 760px;
+  margin: 0;
+  margin-inline: 0 auto;
+  color: var(--legal-ink);
+}
+
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .legal-col :is(p, li) {
+  color: var(--legal-muted) !important;
+  -webkit-text-fill-color: var(--legal-muted) !important;
+  font-size: 1.05rem;
+  line-height: 1.75;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  font-family: Lato, "Segoe UI", system-ui, sans-serif !important;
+}
+
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .legal-col p {
+  margin: 0 0 1.25rem;
+}
+
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .legal-col p + p {
+  margin-top: 0;
+}
+
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .legal-col ul {
+  margin: 0 0 1.35rem;
+  padding-left: 1.35rem;
+}
+
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .legal-col li {
+  margin: 0 0 0.7rem;
+  padding: 0;
+  border: 0 !important;
+}
+
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .legal-col li:last-child {
+  margin-bottom: 0;
+}
+
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .legal-col strong {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  font-weight: 700;
+}
+
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .legal-col :is(a, a:visited, a:link) {
+  color: var(--legal-orange) !important;
+  -webkit-text-fill-color: var(--legal-orange) !important;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--legal-orange) 55%, transparent);
+  text-underline-offset: 3px;
+}
+
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .legal-col a:hover {
+  color: var(--legal-orange-soft) !important;
+  -webkit-text-fill-color: var(--legal-orange-soft) !important;
+}
+
+/* Section headings: site display font, mixed case so long legal titles stay readable. */
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .legal-col :is(h2, .legal-toc-title) {
+  font-family: Oswald, Roboto, "Segoe UI", sans-serif !important;
+  font-weight: 600;
+  font-size: clamp(1.2rem, 2.4vw, 1.55rem);
+  line-height: 1.3;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  text-transform: none !important;
+  letter-spacing: 0.02em !important;
+  text-shadow: 0 0 18px rgba(255, 43, 214, 0.28), 0 0 2px rgba(255, 255, 255, 0.3) !important;
+  margin: 0 0 0.85rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid var(--legal-line);
+}
+
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .legal-sec {
+  margin: 2.5rem 0 0;
+  scroll-margin-top: 6rem;
+}
+
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .legal-sec:first-of-type {
+  margin-top: 2rem;
+}
+
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .legal-dates {
+  margin: 0 0 1.6rem !important;
+  color: var(--legal-muted) !important;
+  -webkit-text-fill-color: var(--legal-muted) !important;
+  font-size: 0.925rem !important;
+  letter-spacing: 0.01em !important;
+  text-transform: none !important;
+  font-family: Lato, "Segoe UI", system-ui, sans-serif !important;
+}
+
+/* Table of contents */
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .legal-toc {
+  margin: 0 0 2rem;
+}
+
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .legal-col .legal-toc-title {
+  font-size: 0.95rem !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: #ff6ec7 !important;
+  -webkit-text-fill-color: #ff6ec7 !important;
+  text-shadow: none !important;
+  border-bottom: 0 !important;
+  padding-bottom: 0 !important;
+  margin-bottom: 0.7rem;
+}
+
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .legal-toc :is(ol, ul) {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .legal-toc li {
+  margin: 0 0 0.45rem;
+  color: var(--legal-ink) !important;
+  -webkit-text-fill-color: var(--legal-ink) !important;
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+
+/* Dark glass callout with a purple edge and an orange accent bar. */
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .legal-callout {
+  background: rgba(18, 6, 36, 0.72);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid rgba(168, 85, 247, 0.45);
+  border-left: 4px solid var(--legal-orange);
+  border-radius: 0 16px 16px 0;
+  box-shadow: 0 0 0 1px rgba(255, 140, 26, 0.08), 0 12px 40px rgba(10, 0, 24, 0.4);
+  padding: 1.25rem 1.5rem;
+  margin: 0 0 0.5rem;
+}
+
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .legal-callout p {
+  margin: 0;
+  color: var(--legal-ink) !important;
+  -webkit-text-fill-color: var(--legal-ink) !important;
+}
+
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .legal-callout strong {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+
+@media (max-width: 600px) {
+  :root:not(#_):not(#__):not(#___):not(#____) .legal-page .legal-callout {
+    padding: 1.1rem 1.15rem;
+  }
+}
+
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .legal-close {
+  margin: 2.75rem 0 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--legal-line);
+  color: var(--legal-muted) !important;
+  -webkit-text-fill-color: var(--legal-muted) !important;
+  font-size: 0.88rem !important;
+  line-height: 1.55 !important;
+  letter-spacing: 0.01em !important;
+  text-transform: none !important;
+  font-family: Lato, "Segoe UI", system-ui, sans-serif !important;
+}
+
+:root:not(#_):not(#__):not(#___):not(#____) .legal-page .legal-close span + span::before {
+  content: " · ";
+  color: var(--legal-muted);
+}

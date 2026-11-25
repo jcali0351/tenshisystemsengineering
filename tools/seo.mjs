@@ -24,6 +24,10 @@ export const SEO = {
     title: "Knowledge Base | Web, SEO, SaaS & AI Glossary | Tenshi",
     desc: "A plain-English glossary of 434 terms in web development, web design, SEO, SaaS and AI, written for small and mid-size business owners.",
   },
+  legalTitle: {
+    title: "Legal & Privacy | Tenshi Systems",
+    desc: "Terms of Service and Privacy Policy for Tenshi Systems. We collect only the data needed to run the tool, and we never sell, rent, or trade your information.",
+  },
   navServices: {
     title: "Small Business Web Design, Hosting & AI Services | Tenshi",
     desc: "Web design, web development, web hosting, AI services, branding, CMS, custom software and IT consulting for small businesses in Wisconsin and across the US.",

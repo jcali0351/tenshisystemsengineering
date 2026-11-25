@@ -477,7 +477,9 @@
           "toOpacity": 0.04,
           "stop": 36
         },
-        "grayFade": { "enabled": false }
+        "grayFade": {
+          "enabled": false
+        }
       },
       "projects": {
         "image": "img/photos/kobe.jpg"
@@ -516,7 +518,12 @@
           "toOpacity": 0.04,
           "stop": 36
         },
-        "grayFade": { "enabled": false }
+        "grayFade": {
+          "enabled": false
+        }
+      },
+      "legal": {
+        "image": "img/photos/osaka.jpg"
       }
     }
   }
