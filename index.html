@@ -33,7 +33,7 @@
   <link rel="apple-touch-icon" href="brand/tenshi-apple-touch-icon.png?v=20261119">
   <link rel="preload" href="img/photos/osaka.jpg" as="image" type="image/jpeg">
   <link rel="stylesheet" href="tailwind.css?v=093e6a7b">
-  <link rel="stylesheet" href="styles.css?v=6a668ee1">
+  <link rel="stylesheet" href="styles.css?v=383405ac">
   <link rel="stylesheet" href="design.css?v=ea6e1648">
   <link rel="stylesheet" href="chat.css?v=2395252a">
   <link rel="stylesheet" href="site-theme.css?v=2c33aa72">
@@ -49,8 +49,8 @@
   <script src="sandbox/neon-recolor-live.js?v=20261123r"></script>
 </head>
 <body data-seo>
-  <canvas id="neon-bg" aria-hidden="true"></canvas>
-  <canvas id="neon-particles" aria-hidden="true"></canvas>
+  <!-- Hero game switched off (2026-11-25): its two canvases were <canvas id="neon-bg"> and <canvas id="neon-particles">.
+       To bring the game back, restore them here and the hero game scripts at the end of <body>. -->
   <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
 
   <header class="site-header">
@@ -134,6 +134,10 @@
 
   <main id="main">
     <section class="hero" id="top" aria-labelledby="hero-title">
+      <!-- Hero photo spot: a plain black block filling the hero, behind the text. To add the photo, put it in img/photos/
+           and set background-image on .hero-photo-placeholder in styles.css (see the "Hero photo spot" rule), and describe
+           the photo in aria-label below. -->
+      <div class="hero-media hero-photo-placeholder" role="img" aria-label=""></div>
       <div class="hero-slides" aria-hidden="true">
         <div class="slide is-active" data-src="img/photos/osaka.jpg"></div>
         <div class="slide" data-src="img/photos/tokyo.jpg"></div>
@@ -570,15 +574,17 @@
   <script src="chat.js?v=e6aee4be"></script>
   <script src="sandbox/game-settings.js?v=20261123r"></script>
   <script src="sandbox/tenshi-models.js?v=20261123r"></script>
-  <script src="sandbox/neon-bg.js?v=20261123r"></script>
-  <script src="sandbox/neon-fx.js?v=20261123r"></script>
   <script src="sandbox/neon-header.js?v=20261123r"></script>
   <script src="sandbox/neon-audio.js?v=20261123r"></script>
-  <script src="sandbox/neon-geo.js?v=20261123r"></script>
-  <script src="sandbox/neon-beasts.js?v=20261123r"></script>
-  <script src="sandbox/neon-game.js?v=20261123r"></script>
   <script src="sandbox/neon-rts.js?v=20261123r"></script>
   <script src="sandbox/neon-arpg.js?v=20261123r"></script>
   <script src="sandbox/neon-quest.js?v=20261123r"></script>
+  <!-- Hero game switched off (2026-11-25). To bring it back, put neon-bg.js and neon-fx.js back just before neon-header.js,
+       and neon-geo.js, neon-beasts.js and neon-game.js just after neon-audio.js:
+       <script src="sandbox/neon-bg.js?v=20261123r"></script>
+       <script src="sandbox/neon-fx.js?v=20261123r"></script>
+       <script src="sandbox/neon-geo.js?v=20261123r"></script>
+       <script src="sandbox/neon-beasts.js?v=20261123r"></script>
+       <script src="sandbox/neon-game.js?v=20261123r"></script> -->
 </body>
 </html>

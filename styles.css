@@ -2611,3 +2611,10 @@ main section#services + section.feature:not(#_):not(#__) { padding-top: clamp(72
   .site-footer .footer-brand > .footer-logo:not(#_):not(#__) { margin-block: 19px; }   /* centred on the 72px badge row */
   .site-footer .footer-brand > .tse-finder:not(#_):not(#__) { width: 100%; }
 }
+
+/* Hero photo spot (index.html): the hero game is switched off and a plain black block fills the hero behind the text.
+   To show a photo, add e.g.  background-image: url("img/photos/your-photo.jpg");  to this rule (cover + center are set). */
+.hero > .hero-photo-placeholder:not(#_):not(#__) {
+  position: absolute; inset: 0; z-index: -3; pointer-events: none;
+  background-color: #000 !important; background-position: center; background-size: cover; background-repeat: no-repeat;
+}
