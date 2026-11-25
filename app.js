@@ -1,5 +1,5 @@
-// The address the consultation form writes to. Change it here if the company email changes.
-const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
+// The public contact address shown on the site (contact card, mailto links, and form error messages). Change it here if the company email changes.
+const CONTACT_EMAIL = "admin@tenshisystems.com";
 
 // Used by the homepage and the service pages; each part below only runs if its section is on the page.
 (function () {

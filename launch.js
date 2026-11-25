@@ -28,7 +28,7 @@
   var LAUNCH_ENDPOINT = "https://cms.tenshisystems.com/api/launch";
 
   // Where launch requests go by email. app.js already has the address (CONTACT_EMAIL), so use that when it exists.
-  var TEAM_EMAIL = (typeof CONTACT_EMAIL !== "undefined" && CONTACT_EMAIL) || "tenshisystemsengineering@gmail.com";
+  var TEAM_EMAIL = (typeof CONTACT_EMAIL !== "undefined" && CONTACT_EMAIL) || "admin@tenshisystems.com";
 
   var BASE_DOMAIN = "tenshisystems.com";       // every site gets <name>.tenshisystems.com
   var LOGO_MAX_BYTES = 2 * 1024 * 1024;     // 2 MB
