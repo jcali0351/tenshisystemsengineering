@@ -123,7 +123,7 @@ const ART = {
 /* ---------- homepage: cards in three sets, the form's topic list, the current menu item ---------- */
 const card = (s, pad, prefix) => `${pad}<article class="service-card">
 ${pad}  <h3 data-i18n="${k(s, "title")}">${tx(k(s, "title"))}</h3>
-${pad}  <img class="service-pic service-icon" src="${prefix}img/services/icons/${s.icon}?v=20261121c" alt="${esc(((SEO[k(s, "title")] || {}).service || tx(k(s, "title"))) + " for small business")}" width="512" height="512" loading="lazy" data-still-color>
+${pad}  <img class="service-pic service-icon" src="${prefix}img/services/icons/${s.icon}?v=20261125i" alt="${esc(((SEO[k(s, "title")] || {}).service || tx(k(s, "title"))) + " for small business")}" width="512" height="512" loading="lazy" decoding="async" data-still-color>
 ${pad}  <p data-i18n="${k(s, "short")}">${tx(k(s, "short"))}</p>
 ${pad}  <a class="btn-more" href="${prefix}services/${s.slug}.html"><span data-i18n="more">${tx("more")}</span><span class="sr-only">: <span data-i18n="${k(s, "title")}">${tx(k(s, "title"))}</span></span></a>
 ${pad}</article>`;
@@ -559,7 +559,7 @@ const navCurrent = (current) => [].concat(current).flatMap((c) => NAV_PARENT[c] 
 function chrome(html, prefix, current) {
   return markCurrent(html, current)
     .replace('href="#top"', `href="${prefix}index.html"`)
-    .replace(/src="((?:brand|img)\/[\w.\/-]+)"/g, `src="${prefix}$1"`)
+    .replace(/src="((?:brand|img)\/[\w.\/-]+(?:\?[^"]*)?)"/g, `src="${prefix}$1"`)
     .replace(/href="((?:news|blog)\.html#[^"]*)"/g, `href="${prefix}$1"`)
     .replace(/href="((?:index|about|services|contact|team|technology|knowledge-base|projects|portfolio|launch|news|blog|portal|wisconsin)\.html|projects\/[a-z-]+\.html|blog\/[a-z-]+\.html)"/g, `href="${prefix}$1"`);
 }
@@ -1175,7 +1175,7 @@ writePage("contact.html", contactPage);
         <h2 id="wi-svc-title" class="section-title center">Services for Wisconsin small businesses</h2>
         <ul class="wi-svc-grid">
 ${WI_SVC.map((id) => { const sv = SERVICES.find((x) => x.id === id); const seo = SEO[`svc_${id}_title`] || {}; return `          <li class="wi-svc">
-            <img src="img/services/icons/${sv.icon}?v=20261121c" alt="${esc((seo.service || "") + " for Wisconsin small businesses")}" width="512" height="512" loading="lazy" data-still-color>
+            <img src="img/services/icons/${sv.icon}?v=20261125i" alt="${esc((seo.service || "") + " for Wisconsin small businesses")}" width="512" height="512" loading="lazy" decoding="async" data-still-color>
             <h3><a href="services/${sv.slug}.html">${esc((seo.service || tx(k(sv, "title"))) + " in Wisconsin")}</a></h3>
             <p>${esc(seo.desc || tx(k(sv, "short")))}</p>
           </li>`; }).join("\n")}

@@ -241,7 +241,9 @@ const CONTACT_EMAIL = "tenshisystemsengineering@gmail.com";
   }
 
   /* ---------- Skyline slideshow ---------- */
-  const slides = $$(".hero-slides .slide");
+  // Only when the slideshow is actually shown: themes that hide it (html.neon) shouldn't download its five big photos.
+  const slideBox = $(".hero-slides");
+  const slides = slideBox && getComputedStyle(slideBox).display !== "none" ? $$(".hero-slides .slide") : [];
   let startSlides = () => {};
   if (slides.length) {
     const dots = $$(".slide-dots .dot");

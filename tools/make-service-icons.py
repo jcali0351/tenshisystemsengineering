@@ -1,4 +1,4 @@
-# Draws two neon line icons (cyan -> pink, white-hot core, soft glow) on transparent 512px canvases.
+# Draws two neon line icons (cyan -> pink, white-hot core, soft glow) on transparent canvases, saved at 256px (the cards show them at about 110px).
 import math, sys
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
@@ -12,7 +12,7 @@ def gradient():
     t = np.clip((x * 0.8 + y * 0.2 - 0.25) * 1.9, 0, 1)
     return (CYAN * (1 - t) + PINK * t)
 
-def render(draw_fn, out, size=512, blur1=10, blur2=34, coremin=13, coremix=0.35):
+def render(draw_fn, out, size=256, blur1=10, blur2=34, coremin=13, coremix=0.35):
     line = Image.new("L", (S, S), 0)
     d = ImageDraw.Draw(line)
     draw_fn(d)
