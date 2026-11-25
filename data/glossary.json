@@ -1,0 +1,4309 @@
+{
+ "Web Development": [
+  {
+   "term": "Agile",
+   "d": "A way of running software projects in short cycles, delivering working pieces often and adjusting based on feedback rather than fixing every detail up front.",
+   "why": "You see progress early and can change priorities without restarting the project.",
+   "see": [
+    "Sprint",
+    "Backlog",
+    "MVP (Minimum Viable Product)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "API (Application Programming Interface)",
+   "d": "A set of rules that lets one piece of software ask another for data or actions. When your website shows a map, takes a card payment or pulls in reviews, it is usually talking to another service through an API.",
+   "why": "APIs let you connect tools you already pay for instead of rebuilding them.",
+   "see": [
+    "REST API",
+    "Webhook",
+    "Integration",
+    "SDK (Software Development Kit)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Asynchronous (async)",
+   "d": "Code that starts a task, such as loading data, and carries on with other work instead of waiting for it to finish.",
+   "why": "Async code keeps pages responsive while slower tasks run in the background.",
+   "see": [
+    "JavaScript",
+    "API (Application Programming Interface)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Authentication",
+   "d": "Checking who someone is, usually with a password, a code or a passkey, before letting them in.",
+   "why": "Strong sign-in protects customer accounts and your admin areas.",
+   "see": [
+    "Authorization",
+    "Two-factor authentication (2FA)",
+    "Single sign-on (SSO)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Authorization",
+   "d": "Deciding what a signed-in person is allowed to see or do, such as whether they can edit pages or only view them.",
+   "why": "Limits the damage if one account is misused.",
+   "see": [
+    "Authentication",
+    "Role-based access control (RBAC)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Back end",
+   "d": "The part of a website or app that runs on the server: databases, business logic, user accounts and anything the visitor does not see directly.",
+   "why": "",
+   "see": [
+    "Front end",
+    "Full stack",
+    "Server",
+    "Database"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Backup",
+   "d": "A saved copy of your site files and database that can be restored if something breaks, is hacked or is deleted by mistake.",
+   "why": "A tested, recent backup is the difference between a bad afternoon and losing your site.",
+   "see": [
+    "Rollback",
+    "Disaster recovery"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Browser",
+   "d": "The program people use to view websites, such as Chrome, Safari, Edge or Firefox. Each one displays code slightly differently, so sites are tested in several.",
+   "why": "",
+   "see": [
+    "HTML (HyperText Markup Language)",
+    "Cross-browser testing"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Bug",
+   "d": "A mistake in code that makes software behave in a way nobody intended.",
+   "why": "",
+   "see": [
+    "Debugging",
+    "Testing"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Build",
+   "d": "The step that turns source code into the optimized files that are actually served to visitors, often bundling, minifying and checking the code along the way.",
+   "why": "",
+   "see": [
+    "Deployment",
+    "Minification",
+    "CI/CD"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Cache",
+   "d": "A stored copy of data or pages kept close at hand so they can be served faster the next time, without redoing the work.",
+   "why": "Good caching makes sites feel fast and lowers hosting load. Stale caches are also why changes sometimes do not show up right away.",
+   "see": [
+    "CDN (Content Delivery Network)",
+    "Page speed"
+   ],
+   "n": 4
+  },
+  {
+   "term": "CDN (Content Delivery Network)",
+   "d": "A network of servers around the world that stores copies of your site's files and serves each visitor from a nearby location.",
+   "why": "Faster loading for visitors far from your main server, plus extra protection against traffic spikes.",
+   "see": [
+    "Cache",
+    "Hosting",
+    "Edge computing"
+   ],
+   "n": 4
+  },
+  {
+   "term": "CI/CD",
+   "d": "Continuous Integration and Continuous Delivery or Deployment: automated steps that test and release code every time a change is made.",
+   "why": "Fewer manual mistakes and quicker, safer updates.",
+   "see": [
+    "Build",
+    "Deployment",
+    "Testing",
+    "Git"
+   ],
+   "n": 4
+  },
+  {
+   "term": "CLI (Command-Line Interface)",
+   "d": "A text-based way to control software by typing commands instead of clicking buttons.",
+   "why": "",
+   "see": [
+    "Package manager"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Client-side rendering",
+   "d": "Building a page in the visitor's browser with JavaScript after the initial download, rather than on the server.",
+   "why": "Can feel app-like, but if done carelessly it can slow first loads and make content harder for search engines to read.",
+   "see": [
+    "Server-side rendering (SSR)",
+    "Single-page application (SPA)",
+    "JavaScript"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Code review",
+   "d": "A teammate reading proposed code changes before they go live to catch bugs, security issues and confusing code.",
+   "why": "",
+   "see": [
+    "Pull request",
+    "Version control"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Container",
+   "d": "A lightweight package that bundles an application with everything it needs to run, so it behaves the same on a laptop, a test server and production. Docker is the best-known tool.",
+   "why": "",
+   "see": [
+    "Docker",
+    "Server",
+    "Deployment"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Content management system (CMS)",
+   "d": "Software that lets non-developers create and edit website content through an admin screen.",
+   "why": "Your team can update the site without calling a developer for every change.",
+   "see": [
+    "WordPress",
+    "Headless CMS"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Cookie",
+   "d": "A small piece of data a website stores in the browser to remember things like a login, a cart or preferences.",
+   "why": "Some cookies need visitor consent under privacy laws, so your site may need a consent banner.",
+   "see": [
+    "Session",
+    "GDPR"
+   ],
+   "n": 4
+  },
+  {
+   "term": "CORS (Cross-Origin Resource Sharing)",
+   "d": "A browser security rule that controls which other websites are allowed to request data from your server.",
+   "why": "",
+   "see": [
+    "API (Application Programming Interface)",
+    "Browser"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Cron job",
+   "d": "A task scheduled to run automatically at set times, such as a nightly backup or a weekly report.",
+   "why": "",
+   "see": [
+    "Server",
+    "Backup"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Cross-browser testing",
+   "d": "Checking that a site looks and works correctly across different browsers and devices.",
+   "why": "",
+   "see": [
+    "Browser",
+    "Responsive design"
+   ],
+   "n": 4
+  },
+  {
+   "term": "CRUD",
+   "d": "Create, Read, Update, Delete: the four basic things most apps do with data.",
+   "why": "",
+   "see": [
+    "Database",
+    "API (Application Programming Interface)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "CSS (Cascading Style Sheets)",
+   "d": "The language that controls how web pages look: colors, fonts, spacing and layout.",
+   "why": "",
+   "see": [
+    "HTML (HyperText Markup Language)",
+    "Responsive design",
+    "Typography"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Database",
+   "d": "An organized store of information, such as products, orders or users, that an app can search and update quickly.",
+   "why": "",
+   "see": [
+    "SQL",
+    "Back end",
+    "CRUD"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Debugging",
+   "d": "Finding and fixing the cause of a bug.",
+   "why": "",
+   "see": [
+    "Bug",
+    "Testing"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Dependency",
+   "d": "An outside library or package your code relies on.",
+   "why": "Outdated dependencies are a common source of security holes, so they need regular updates.",
+   "see": [
+    "Library",
+    "Package manager",
+    "Technical debt"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Deployment",
+   "d": "Putting a new version of a site or app live on a server so people can use it.",
+   "why": "",
+   "see": [
+    "CI/CD",
+    "Staging environment",
+    "Rollback"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Disaster recovery",
+   "d": "The plan and tools for getting systems running again after a serious failure, attack or data loss.",
+   "why": "Knowing how long recovery takes helps you judge how much downtime you can live with.",
+   "see": [
+    "Backup",
+    "Uptime",
+    "Service level agreement (SLA)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "DNS (Domain Name System)",
+   "d": "The internet's address book. It turns a domain like example.com into the numeric address of the server that hosts it.",
+   "why": "DNS settings control where your website and email go, so mistakes here can take both offline.",
+   "see": [
+    "Domain name",
+    "Hosting",
+    "SSL/TLS certificate"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Docker",
+   "d": "A popular tool for creating and running containers.",
+   "why": "",
+   "see": [
+    "Container"
+   ],
+   "n": 4
+  },
+  {
+   "term": "DOM (Document Object Model)",
+   "d": "The browser's live, structured model of a web page, which JavaScript reads and changes to update what you see.",
+   "why": "",
+   "see": [
+    "HTML (HyperText Markup Language)",
+    "JavaScript"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Domain name",
+   "d": "The human-readable address of a website, such as tenshi.example. You rent it yearly from a registrar.",
+   "why": "Register it in your company's name and turn on auto-renew so it cannot lapse.",
+   "see": [
+    "DNS (Domain Name System)",
+    "Hosting"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Edge computing",
+   "d": "Running code on servers close to the visitor, often inside a CDN, instead of in one central data center.",
+   "why": "Lower delay for visitors spread across regions.",
+   "see": [
+    "CDN (Content Delivery Network)",
+    "Serverless"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Encryption",
+   "d": "Scrambling data so only someone with the right key can read it. HTTPS encrypts data in transit; disk or database encryption protects data at rest.",
+   "why": "",
+   "see": [
+    "HTTPS",
+    "SSL/TLS certificate"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Environment variables",
+   "d": "Settings, such as API keys or database addresses, kept outside the code so they can differ between test and live systems and stay out of public view.",
+   "why": "Keeps secrets out of your code repository.",
+   "see": [
+    "Staging environment",
+    "API (Application Programming Interface)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Firewall",
+   "d": "A filter that blocks unwanted network traffic. A web application firewall (WAF) specifically screens website requests for common attacks.",
+   "why": "",
+   "see": [
+    "Security patch",
+    "Rate limiting"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Framework",
+   "d": "A ready-made structure and toolkit for building software, such as React-based Next.js, Laravel or Django, so developers do not start from scratch.",
+   "why": "",
+   "see": [
+    "Library",
+    "React"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Front end",
+   "d": "Everything visitors see and interact with in the browser: layout, buttons, forms and animations.",
+   "why": "",
+   "see": [
+    "Back end",
+    "HTML (HyperText Markup Language)",
+    "CSS (Cascading Style Sheets)",
+    "JavaScript"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Full stack",
+   "d": "Work, or a developer, covering both the front end and the back end.",
+   "why": "",
+   "see": [
+    "Front end",
+    "Back end"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Git",
+   "d": "The most widely used version control system. It records every change to code and lets teams work on the same project safely.",
+   "why": "",
+   "see": [
+    "Version control",
+    "Repository",
+    "GitHub"
+   ],
+   "n": 4
+  },
+  {
+   "term": "GitHub",
+   "d": "A website for hosting Git repositories, reviewing code and running automation. It can also host simple static websites.",
+   "why": "",
+   "see": [
+    "Git",
+    "Repository",
+    "Pull request"
+   ],
+   "n": 4
+  },
+  {
+   "term": "GraphQL",
+   "d": "A way of building APIs where the app asks for exactly the fields it needs in one request.",
+   "why": "",
+   "see": [
+    "API (Application Programming Interface)",
+    "REST API"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Headless CMS",
+   "d": "A content management system that stores and edits content but leaves the display to a separate front end, connected through an API.",
+   "why": "Lets you reuse the same content on a website, an app and elsewhere.",
+   "see": [
+    "Content management system (CMS)",
+    "API (Application Programming Interface)",
+    "Jamstack"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Hosting",
+   "d": "Renting space on a server so your website is available on the internet around the clock.",
+   "why": "",
+   "see": [
+    "Server",
+    "VPS (Virtual Private Server)",
+    "Uptime",
+    "Domain name"
+   ],
+   "n": 4
+  },
+  {
+   "term": "HTML (HyperText Markup Language)",
+   "d": "The language that structures web page content into headings, paragraphs, links, images and forms.",
+   "why": "",
+   "see": [
+    "CSS (Cascading Style Sheets)",
+    "DOM (Document Object Model)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "HTTP",
+   "d": "The protocol browsers and servers use to request and send web pages.",
+   "why": "",
+   "see": [
+    "HTTPS",
+    "Status code"
+   ],
+   "n": 4
+  },
+  {
+   "term": "HTTPS",
+   "d": "The secure, encrypted version of HTTP, shown by the padlock in the browser.",
+   "why": "Browsers warn visitors about sites without it, and it protects any data people send you.",
+   "see": [
+    "SSL/TLS certificate",
+    "Encryption"
+   ],
+   "n": 4
+  },
+  {
+   "term": "IDE (Integrated Development Environment)",
+   "d": "A code editor with built-in tools for writing, running and debugging code.",
+   "why": "",
+   "see": [
+    "Debugging"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Jamstack",
+   "d": "An approach that serves pre-built pages from a CDN and adds dynamic features through JavaScript and APIs.",
+   "why": "Often fast, secure and cheap to host.",
+   "see": [
+    "Static site",
+    "Headless CMS",
+    "CDN (Content Delivery Network)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "JavaScript",
+   "d": "The programming language that runs in web browsers and makes pages interactive. It also runs on servers through Node.js.",
+   "why": "",
+   "see": [
+    "TypeScript",
+    "Node.js",
+    "Front end"
+   ],
+   "n": 4
+  },
+  {
+   "term": "JSON",
+   "d": "A simple text format for structured data that is easy for both people and programs to read. Most APIs send data as JSON.",
+   "why": "",
+   "see": [
+    "API (Application Programming Interface)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Lazy loading",
+   "d": "Waiting to load images or other content until the visitor is about to scroll to them.",
+   "why": "Speeds up the first view of a page.",
+   "see": [
+    "Page speed",
+    "Image optimization"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Library",
+   "d": "A collection of ready-made code for a specific job, such as handling dates or drawing charts, that developers plug into a project.",
+   "why": "",
+   "see": [
+    "Framework",
+    "Dependency"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Load balancer",
+   "d": "A system that spreads incoming traffic across several servers so no single one is overwhelmed.",
+   "why": "",
+   "see": [
+    "Scalability",
+    "Server"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Localhost",
+   "d": "A developer's own computer acting as a private web server for building and testing before anything goes live.",
+   "why": "",
+   "see": [
+    "Staging environment"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Microservices",
+   "d": "An architecture where an app is split into many small, independent services that talk to each other through APIs.",
+   "why": "Can help large systems scale, but adds complexity most small projects do not need.",
+   "see": [
+    "API (Application Programming Interface)",
+    "Monolith"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Middleware",
+   "d": "Software that sits between parts of a system, such as checking logins or logging requests before they reach the main app.",
+   "why": "",
+   "see": [
+    "Back end"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Minification",
+   "d": "Removing spaces, comments and long names from code files to make them smaller and faster to download.",
+   "why": "",
+   "see": [
+    "Build",
+    "Page speed"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Monolith",
+   "d": "An app built and deployed as one single unit. Simpler to run than microservices and often the right choice for small teams.",
+   "why": "",
+   "see": [
+    "Microservices"
+   ],
+   "n": 4
+  },
+  {
+   "term": "MVP (Minimum Viable Product)",
+   "d": "The simplest version of a product that solves the core problem well enough to test with real users.",
+   "why": "Lets you learn what customers want before spending heavily.",
+   "see": [
+    "Agile",
+    "Product-market fit"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Node.js",
+   "d": "A runtime that lets JavaScript run on servers, widely used for back ends and developer tooling.",
+   "why": "",
+   "see": [
+    "JavaScript",
+    "Back end",
+    "Package manager"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Open source",
+   "d": "Software whose source code is public and can be used, changed and shared under its license.",
+   "why": "Can lower costs, but check the license and that the project is actively maintained.",
+   "see": [
+    "Library",
+    "WordPress"
+   ],
+   "n": 4
+  },
+  {
+   "term": "ORM (Object-Relational Mapping)",
+   "d": "A tool that lets developers work with database records as normal code objects instead of writing raw SQL.",
+   "why": "",
+   "see": [
+    "Database",
+    "SQL"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Package manager",
+   "d": "A tool, such as npm, that installs and updates the libraries a project depends on.",
+   "why": "",
+   "see": [
+    "Dependency",
+    "Library"
+   ],
+   "n": 4
+  },
+  {
+   "term": "PHP",
+   "d": "A server-side programming language that powers WordPress and many other websites.",
+   "why": "",
+   "see": [
+    "WordPress",
+    "Back end"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Progressive Web App (PWA)",
+   "d": "A website that behaves like an app: it can be installed on a home screen, load quickly and sometimes work offline.",
+   "why": "App-like convenience without app store fees or separate builds.",
+   "see": [
+    "Service worker",
+    "Responsive design"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Pull request",
+   "d": "A proposed set of code changes submitted for review before being merged into the main code.",
+   "why": "",
+   "see": [
+    "Code review",
+    "Git",
+    "GitHub"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Python",
+   "d": "A readable, general-purpose programming language popular for back ends, automation, data work and AI.",
+   "why": "",
+   "see": [
+    "Back end",
+    "Machine learning"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Rate limiting",
+   "d": "Capping how many requests someone can make in a set time, to stop abuse and keep a service stable.",
+   "why": "",
+   "see": [
+    "API (Application Programming Interface)",
+    "Firewall"
+   ],
+   "n": 4
+  },
+  {
+   "term": "React",
+   "d": "A popular JavaScript library for building interactive user interfaces from reusable components.",
+   "why": "",
+   "see": [
+    "JavaScript",
+    "Framework",
+    "Single-page application (SPA)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Repository",
+   "d": "The storage place for a project's code and its full change history.",
+   "why": "",
+   "see": [
+    "Git",
+    "GitHub"
+   ],
+   "n": 4
+  },
+  {
+   "term": "REST API",
+   "d": "A common style of API that uses standard web addresses and HTTP methods to read and change data.",
+   "why": "",
+   "see": [
+    "API (Application Programming Interface)",
+    "GraphQL",
+    "JSON"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Rollback",
+   "d": "Returning a site or app to its previous working version after a bad update.",
+   "why": "",
+   "see": [
+    "Deployment",
+    "Backup"
+   ],
+   "n": 4
+  },
+  {
+   "term": "SDK (Software Development Kit)",
+   "d": "A bundle of tools, code and documentation that makes it easier to build on a particular platform or API.",
+   "why": "",
+   "see": [
+    "API (Application Programming Interface)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Security patch",
+   "d": "An update that fixes a known security weakness in software.",
+   "why": "Applying patches promptly is one of the cheapest ways to avoid being hacked.",
+   "see": [
+    "Dependency",
+    "WordPress"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Server",
+   "d": "A computer that stores websites, apps or data and responds to requests from browsers and other software.",
+   "why": "",
+   "see": [
+    "Hosting",
+    "Web server",
+    "Back end"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Server-side rendering (SSR)",
+   "d": "Building the full page on the server before sending it, so visitors and search engines receive ready-to-read content.",
+   "why": "Often helps first-load speed and search visibility.",
+   "see": [
+    "Client-side rendering",
+    "Static site"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Serverless",
+   "d": "Running code on a cloud provider's infrastructure that starts on demand, so you do not manage servers yourself and usually pay only for what you use.",
+   "why": "",
+   "see": [
+    "Edge computing",
+    "Hosting",
+    "Cloud computing"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Service worker",
+   "d": "A background script that lets a website cache files, work offline and send notifications.",
+   "why": "",
+   "see": [
+    "Progressive Web App (PWA)",
+    "Cache"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Session",
+   "d": "A temporary record that keeps a visitor signed in or remembers their cart as they move between pages.",
+   "why": "",
+   "see": [
+    "Cookie",
+    "Authentication"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Single-page application (SPA)",
+   "d": "A website that loads once and then updates content in place as you click, without full page reloads.",
+   "why": "",
+   "see": [
+    "Client-side rendering",
+    "React"
+   ],
+   "n": 4
+  },
+  {
+   "term": "SQL",
+   "d": "Structured Query Language, the standard language for asking questions of and updating relational databases.",
+   "why": "",
+   "see": [
+    "Database",
+    "ORM (Object-Relational Mapping)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "SSL/TLS certificate",
+   "d": "A digital certificate that proves your site's identity and enables HTTPS encryption. TLS is the modern successor to SSL, though both names are used.",
+   "why": "Needed for the browser padlock; many hosts provide free certificates that renew automatically.",
+   "see": [
+    "HTTPS",
+    "Encryption"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Staging environment",
+   "d": "A private copy of your live site used to test changes before visitors see them.",
+   "why": "Catches problems before they reach customers.",
+   "see": [
+    "Deployment",
+    "Localhost"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Static site",
+   "d": "A website made of pre-built files served the same way to every visitor, without a database building each page on request.",
+   "why": "Typically fast, secure and inexpensive to host.",
+   "see": [
+    "Static site generator",
+    "Jamstack"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Static site generator",
+   "d": "A tool that turns templates and content into a complete static website at build time.",
+   "why": "",
+   "see": [
+    "Static site",
+    "Build"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Status code",
+   "d": "A three-digit number a server returns with each response, such as 200 for OK, 301 for moved permanently or 404 for not found.",
+   "why": "",
+   "see": [
+    "HTTP",
+    "404 error",
+    "301 redirect"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Technical debt",
+   "d": "The future cost of shortcuts taken in code today, which make later changes slower and riskier.",
+   "why": "Some debt is fine, but unmanaged debt makes every new feature cost more.",
+   "see": [
+    "Dependency",
+    "Code review"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Testing",
+   "d": "Checking that software works as intended, often with automated tests that run on every change. Unit tests check small pieces; end-to-end tests check whole user journeys.",
+   "why": "",
+   "see": [
+    "Bug",
+    "CI/CD"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Two-factor authentication (2FA)",
+   "d": "Signing in with a second proof, such as a code from an app, in addition to a password.",
+   "why": "Turn it on for your hosting, domain, email and admin accounts.",
+   "see": [
+    "Authentication",
+    "Multi-factor authentication (MFA)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "TypeScript",
+   "d": "JavaScript with added type checking, which catches many mistakes before code runs.",
+   "why": "",
+   "see": [
+    "JavaScript"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Uptime",
+   "d": "The share of time a site or service is available and working.",
+   "why": "",
+   "see": [
+    "Hosting",
+    "Service level agreement (SLA)",
+    "Uptime monitoring"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Uptime monitoring",
+   "d": "A service that regularly checks your site and alerts you when it goes down.",
+   "why": "",
+   "see": [
+    "Uptime"
+   ],
+   "n": 4
+  },
+  {
+   "term": "URL",
+   "d": "The full web address of a specific page or file, such as https://example.com/about.",
+   "why": "",
+   "see": [
+    "Domain name",
+    "Slug"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Version control",
+   "d": "A system that tracks every change to code so teams can collaborate, review history and undo mistakes.",
+   "why": "",
+   "see": [
+    "Git",
+    "Repository"
+   ],
+   "n": 4
+  },
+  {
+   "term": "VPS (Virtual Private Server)",
+   "d": "A virtual server with its own guaranteed share of a physical machine, giving more control than shared hosting.",
+   "why": "",
+   "see": [
+    "Hosting",
+    "Server"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Web server",
+   "d": "Software, such as Nginx or Apache, that receives browser requests and sends back pages and files.",
+   "why": "",
+   "see": [
+    "Server",
+    "HTTP"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Webhook",
+   "d": "An automatic message one app sends to another the moment something happens, such as a new order or payment.",
+   "why": "Lets tools react instantly without someone copying data across.",
+   "see": [
+    "API (Application Programming Interface)",
+    "Integration"
+   ],
+   "n": 4
+  },
+  {
+   "term": "WebSocket",
+   "d": "A connection that stays open between browser and server so data can flow both ways instantly, used for chat and live updates.",
+   "why": "",
+   "see": [
+    "HTTP"
+   ],
+   "n": 4
+  },
+  {
+   "term": "WordPress",
+   "d": "A widely used open-source content management system written in PHP, extended with themes and plugins.",
+   "why": "Flexible and familiar, but plugins and core need regular updates to stay secure.",
+   "see": [
+    "Content management system (CMS)",
+    "PHP",
+    "Security patch"
+   ],
+   "n": 4
+  }
+ ],
+ "Web Design": [
+  {
+   "term": "A/B testing",
+   "d": "Showing two versions of a page or element to different visitors and measuring which performs better against a goal.",
+   "why": "Replaces guesswork with evidence from your own visitors.",
+   "see": [
+    "Conversion rate",
+    "Call to action (CTA)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Above the fold",
+   "d": "The part of a page visible before scrolling. The term comes from the top half of a folded newspaper.",
+   "why": "Your main message and next step should be clear here.",
+   "see": [
+    "Hero section",
+    "Call to action (CTA)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Accessibility",
+   "d": "Designing and building so people with disabilities, including those using screen readers, keyboards or magnification, can use your site.",
+   "why": "Widens your audience, improves usability for everyone and is a legal requirement in many places.",
+   "see": [
+    "WCAG",
+    "Alt text",
+    "Color contrast"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Affordance",
+   "d": "A visual clue that suggests how something is used, such as a button that looks pressable.",
+   "why": "",
+   "see": [
+    "Usability",
+    "Microinteraction"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Alt text",
+   "d": "A short written description of an image, read aloud by screen readers and shown if the image fails to load.",
+   "why": "Helps accessibility and helps search engines understand your images.",
+   "see": [
+    "Accessibility",
+    "Image SEO"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Aspect ratio",
+   "d": "The proportion of an image's or video's width to its height, such as 16:9 or 1:1.",
+   "why": "",
+   "see": [
+    "Responsive design",
+    "Image optimization"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Brand guidelines",
+   "d": "A document setting out how your logo, colors, fonts, imagery and voice should be used.",
+   "why": "Keeps every page, post and print piece consistent.",
+   "see": [
+    "Brand identity",
+    "Style guide",
+    "Brand voice"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Brand identity",
+   "d": "The visible and verbal elements that make your business recognizable: name, logo, colors, type and tone.",
+   "why": "",
+   "see": [
+    "Logo",
+    "Brand guidelines",
+    "Color palette"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Brand voice",
+   "d": "The consistent personality and tone in your writing, such as warm and plain-spoken or formal and technical.",
+   "why": "",
+   "see": [
+    "Brand identity",
+    "Microcopy"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Breadcrumbs",
+   "d": "A small trail of links, such as Home > Services > Web Design, showing where a page sits in the site.",
+   "why": "Helps visitors and search engines understand your site structure.",
+   "see": [
+    "Navigation",
+    "Information architecture"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Breakpoint",
+   "d": "A screen width at which a responsive layout changes, for example from one column on phones to three on desktops.",
+   "why": "",
+   "see": [
+    "Responsive design",
+    "Mobile-first design"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Call to action (CTA)",
+   "d": "A prompt that asks the visitor to take the next step, such as Book a call or Get a quote.",
+   "why": "Every key page should make the next step obvious.",
+   "see": [
+    "Conversion rate",
+    "Landing page"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Card",
+   "d": "A boxed block that groups an image, a title and a short summary, often arranged in grids.",
+   "why": "",
+   "see": [
+    "Grid system",
+    "Layout"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Card sorting",
+   "d": "A research method where people group topics into categories, used to shape navigation and labels.",
+   "why": "",
+   "see": [
+    "Information architecture"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Carousel",
+   "d": "A rotating set of slides or images in one space.",
+   "why": "Visitors often miss slides after the first, so put the most important message somewhere static.",
+   "see": [
+    "Hero section"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Color contrast",
+   "d": "The difference in brightness between text and its background. WCAG sets minimum contrast ratios for readable text.",
+   "why": "",
+   "see": [
+    "Accessibility",
+    "WCAG",
+    "Readability"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Color palette",
+   "d": "The defined set of colors a brand or site uses, usually with primary, secondary and neutral shades.",
+   "why": "",
+   "see": [
+    "Brand identity",
+    "Hex code"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Conversion rate",
+   "d": "The share of visitors who complete a goal you care about, such as sending an inquiry, booking a call or buying.",
+   "why": "Improving it gets more results from the traffic you already have.",
+   "see": [
+    "Call to action (CTA)",
+    "A/B testing",
+    "Landing page"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Dark mode",
+   "d": "A color scheme with light text on a dark background, often following the visitor's device setting.",
+   "why": "",
+   "see": [
+    "Color palette",
+    "Color contrast"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Design system",
+   "d": "A shared library of reusable components, patterns and rules, with guidance on how to use them.",
+   "why": "Speeds up design and development and keeps products consistent as they grow.",
+   "see": [
+    "Style guide",
+    "UI (User Interface)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Dropdown menu",
+   "d": "A menu that reveals a list of options when clicked or hovered.",
+   "why": "",
+   "see": [
+    "Navigation",
+    "Hamburger menu"
+   ],
+   "n": 4
+  },
+  {
+   "term": "F-pattern",
+   "d": "A common way people scan text-heavy pages: across the top, then down the left side, glancing right.",
+   "why": "Put key words at the start of headings and lines.",
+   "see": [
+    "Visual hierarchy",
+    "Readability"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Favicon",
+   "d": "The small icon shown in the browser tab, bookmarks and sometimes search results.",
+   "why": "",
+   "see": [
+    "Brand identity",
+    "Logo"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Figma",
+   "d": "A popular browser-based tool for designing interfaces, wireframes and prototypes collaboratively.",
+   "why": "",
+   "see": [
+    "Wireframe",
+    "Prototype"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Flat design",
+   "d": "A clean style that avoids heavy shadows, textures and 3D effects in favor of simple shapes and color.",
+   "why": "",
+   "see": [
+    "Minimalism"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Font pairing",
+   "d": "Choosing typefaces that work well together, often one for headings and another for body text.",
+   "why": "",
+   "see": [
+    "Typography",
+    "Typeface"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Footer",
+   "d": "The bottom area of a site, usually holding contact details, key links, legal pages and social links.",
+   "why": "",
+   "see": [
+    "Header",
+    "Navigation"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Form design",
+   "d": "Laying out forms so they are quick and clear to complete: few fields, clear labels and helpful error messages.",
+   "why": "Every unnecessary field can cost you inquiries.",
+   "see": [
+    "Conversion rate",
+    "Microcopy"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Gestalt principles",
+   "d": "Psychology-based rules about how people group what they see, such as items placed close together being seen as related.",
+   "why": "",
+   "see": [
+    "Visual hierarchy",
+    "Whitespace"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Grid system",
+   "d": "An invisible set of columns and gutters used to align content consistently.",
+   "why": "",
+   "see": [
+    "Layout",
+    "Responsive design"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Hamburger menu",
+   "d": "The three-line icon that opens a hidden menu, common on mobile.",
+   "why": "",
+   "see": [
+    "Navigation",
+    "Mobile-first design"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Header",
+   "d": "The top area of a site, usually holding the logo and main navigation.",
+   "why": "",
+   "see": [
+    "Footer",
+    "Sticky header"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Heatmap",
+   "d": "A visual overlay showing where visitors click, move or scroll on a page.",
+   "why": "Shows what people actually notice and ignore.",
+   "see": [
+    "User behavior analytics",
+    "A/B testing"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Hero section",
+   "d": "The large opening area at the top of a page, usually with a headline, a short message, an image and a call to action.",
+   "why": "",
+   "see": [
+    "Above the fold",
+    "Call to action (CTA)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Hex code",
+   "d": "A six-character code, such as #1A2B3C, that defines a color on the web.",
+   "why": "",
+   "see": [
+    "Color palette",
+    "RGB vs CMYK"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Iconography",
+   "d": "The set of icons used across a site and their consistent style.",
+   "why": "",
+   "see": [
+    "UI (User Interface)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Image optimization",
+   "d": "Resizing and compressing images, and using modern formats such as WebP or AVIF, so they load quickly without looking worse.",
+   "why": "Images are often the heaviest part of a page.",
+   "see": [
+    "Page speed",
+    "Lazy loading"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Information architecture",
+   "d": "How content is organized, labeled and connected so people can find what they need.",
+   "why": "",
+   "see": [
+    "Navigation",
+    "Sitemap",
+    "Card sorting"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Kerning",
+   "d": "Adjusting the space between specific pairs of letters.",
+   "why": "",
+   "see": [
+    "Typography",
+    "Leading"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Landing page",
+   "d": "A focused page built for one goal, often the destination for an ad or campaign.",
+   "why": "",
+   "see": [
+    "Call to action (CTA)",
+    "Conversion rate"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Layout",
+   "d": "The arrangement of text, images and other elements on a page.",
+   "why": "",
+   "see": [
+    "Grid system",
+    "Visual hierarchy"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Leading",
+   "d": "The vertical space between lines of text, also called line height.",
+   "why": "",
+   "see": [
+    "Typography",
+    "Readability"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Logo",
+   "d": "The graphic mark or wordmark that identifies your business.",
+   "why": "",
+   "see": [
+    "Brand identity",
+    "Vector graphics"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Microcopy",
+   "d": "The small bits of text in an interface, such as button labels, hints and error messages.",
+   "why": "Clear microcopy reduces confusion and support questions.",
+   "see": [
+    "Brand voice",
+    "Form design"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Microinteraction",
+   "d": "A small animated response to an action, such as a button changing when pressed.",
+   "why": "",
+   "see": [
+    "Affordance",
+    "UI (User Interface)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Minimalism",
+   "d": "A design approach that strips away anything unnecessary so key content stands out.",
+   "why": "",
+   "see": [
+    "Whitespace",
+    "Flat design"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Mobile-first design",
+   "d": "Designing for small screens first, then expanding the layout for larger screens.",
+   "why": "Many visitors arrive on phones, and search engines evaluate the mobile version of your site.",
+   "see": [
+    "Responsive design",
+    "Mobile-first indexing"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Mockup",
+   "d": "A static, realistic picture of what a page will look like, more detailed than a wireframe.",
+   "why": "",
+   "see": [
+    "Wireframe",
+    "Prototype"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Modal",
+   "d": "A window that appears over the page and requires interaction before returning to the content.",
+   "why": "",
+   "see": [
+    "Pop-up"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Mood board",
+   "d": "A collage of images, colors and type that sets the visual direction before design starts.",
+   "why": "",
+   "see": [
+    "Brand identity"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Navigation",
+   "d": "The menus and links that help visitors move around a site.",
+   "why": "",
+   "see": [
+    "Information architecture",
+    "Breadcrumbs"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Parallax scrolling",
+   "d": "An effect where background and foreground move at different speeds as you scroll.",
+   "why": "Use lightly; heavy effects can slow pages and bother some visitors.",
+   "see": [
+    "Microinteraction"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Persona",
+   "d": "A research-based profile of a typical customer, describing goals, needs and frustrations.",
+   "why": "Keeps design decisions focused on real customers.",
+   "see": [
+    "User journey",
+    "UX (User Experience)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Pop-up",
+   "d": "A box that appears over content, often to collect emails or show offers.",
+   "why": "Intrusive pop-ups annoy visitors, especially on mobile.",
+   "see": [
+    "Modal"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Prototype",
+   "d": "A clickable model of a site or app used to test ideas before building.",
+   "why": "",
+   "see": [
+    "Wireframe",
+    "Usability testing"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Readability",
+   "d": "How easy text is to read and understand, shaped by wording, font size, line length and contrast.",
+   "why": "",
+   "see": [
+    "Typography",
+    "Color contrast"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Responsive design",
+   "d": "Building pages that adapt their layout to any screen size.",
+   "why": "",
+   "see": [
+    "Breakpoint",
+    "Mobile-first design"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Retina display",
+   "d": "A high-density screen, also called high-DPI, that needs sharper images to avoid looking blurry.",
+   "why": "",
+   "see": [
+    "Image optimization",
+    "Vector graphics"
+   ],
+   "n": 4
+  },
+  {
+   "term": "RGB vs CMYK",
+   "d": "RGB is the color model used for screens; CMYK is used for printing.",
+   "why": "Your brand colors need both versions to look consistent online and in print.",
+   "see": [
+    "Hex code",
+    "Color palette"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Sans-serif",
+   "d": "A typeface without small strokes at the ends of letters.",
+   "why": "",
+   "see": [
+    "Serif",
+    "Typography"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Serif",
+   "d": "A typeface with small strokes at the ends of letters.",
+   "why": "",
+   "see": [
+    "Sans-serif",
+    "Typography"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Sitemap",
+   "d": "A plan of all a site's pages and how they relate. Designers use visual sitemaps for planning; search engines use XML sitemaps.",
+   "why": "",
+   "see": [
+    "Information architecture",
+    "XML sitemap"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Skeleton screen",
+   "d": "A gray placeholder outline shown while content loads.",
+   "why": "Makes waiting feel shorter.",
+   "see": [
+    "Lazy loading"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Social proof",
+   "d": "Signals that others trust you, such as reviews, case studies and client logos.",
+   "why": "Only use genuine reviews and real clients.",
+   "see": [
+    "Trust signals",
+    "Reviews"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Sticky header",
+   "d": "A header that stays at the top of the screen while scrolling.",
+   "why": "",
+   "see": [
+    "Header",
+    "Navigation"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Style guide",
+   "d": "A reference for visual and writing standards, often part of brand guidelines or a design system.",
+   "why": "",
+   "see": [
+    "Brand guidelines",
+    "Design system"
+   ],
+   "n": 4
+  },
+  {
+   "term": "SVG",
+   "d": "Scalable Vector Graphics, a format for logos, icons and illustrations that stay crisp at any size.",
+   "why": "",
+   "see": [
+    "Vector graphics",
+    "Logo"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Template",
+   "d": "A reusable page layout or design starting point.",
+   "why": "",
+   "see": [
+    "Theme"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Theme",
+   "d": "A packaged design for a platform like WordPress or Shopify that controls the look of the whole site.",
+   "why": "",
+   "see": [
+    "Template",
+    "WordPress"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Trust signals",
+   "d": "Elements that reassure visitors, such as clear contact details, HTTPS, privacy policies and real reviews.",
+   "why": "",
+   "see": [
+    "Social proof",
+    "HTTPS"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Typeface",
+   "d": "A family of type designs, such as Helvetica. A font is one specific style within it, such as Helvetica Bold.",
+   "why": "",
+   "see": [
+    "Typography",
+    "Font pairing"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Typography",
+   "d": "The art of arranging type: choosing typefaces, sizes, spacing and hierarchy.",
+   "why": "",
+   "see": [
+    "Typeface",
+    "Leading",
+    "Kerning"
+   ],
+   "n": 4
+  },
+  {
+   "term": "UI (User Interface)",
+   "d": "The parts of a site or app people see and interact with: buttons, menus, forms and screens.",
+   "why": "",
+   "see": [
+    "UX (User Experience)",
+    "Design system"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Usability",
+   "d": "How easily people can use something to reach their goals.",
+   "why": "",
+   "see": [
+    "Usability testing",
+    "UX (User Experience)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Usability testing",
+   "d": "Watching real people try tasks on your site to find where they get stuck.",
+   "why": "A few sessions often reveal problems your team cannot see.",
+   "see": [
+    "Prototype",
+    "Usability"
+   ],
+   "n": 4
+  },
+  {
+   "term": "User behavior analytics",
+   "d": "Tools that record anonymized clicks, scrolls and session replays to show how people use a site.",
+   "why": "",
+   "see": [
+    "Heatmap"
+   ],
+   "n": 4
+  },
+  {
+   "term": "User flow",
+   "d": "The steps a visitor takes to complete a task, such as from product page to checkout.",
+   "why": "",
+   "see": [
+    "User journey",
+    "Conversion rate"
+   ],
+   "n": 4
+  },
+  {
+   "term": "User journey",
+   "d": "The full path a customer takes with your business, from first hearing of you to buying and returning.",
+   "why": "",
+   "see": [
+    "Persona",
+    "User flow"
+   ],
+   "n": 4
+  },
+  {
+   "term": "UX (User Experience)",
+   "d": "How it feels to use a product or site overall: ease, clarity, speed and satisfaction.",
+   "why": "",
+   "see": [
+    "UI (User Interface)",
+    "Usability"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Vector graphics",
+   "d": "Images defined by shapes and math rather than pixels, so they scale without losing quality. Raster images, like photos, are made of pixels.",
+   "why": "",
+   "see": [
+    "SVG",
+    "Logo"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Visual hierarchy",
+   "d": "Arranging elements by size, color, contrast and position so people notice the most important things first.",
+   "why": "",
+   "see": [
+    "Typography",
+    "Layout"
+   ],
+   "n": 4
+  },
+  {
+   "term": "WCAG",
+   "d": "The Web Content Accessibility Guidelines, the international standard for web accessibility, with levels A, AA and AAA.",
+   "why": "Many laws and contracts reference WCAG Level AA.",
+   "see": [
+    "Accessibility",
+    "Color contrast"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Web fonts",
+   "d": "Fonts loaded from the web so text looks the same on every device.",
+   "why": "Too many font files can slow a page down.",
+   "see": [
+    "Typography",
+    "Page speed"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Whitespace",
+   "d": "Empty space around and between elements, also called negative space.",
+   "why": "Makes pages calmer and easier to scan.",
+   "see": [
+    "Minimalism",
+    "Layout"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Wireframe",
+   "d": "A simple black-and-white sketch of a page's structure, without final visuals.",
+   "why": "",
+   "see": [
+    "Mockup",
+    "Prototype"
+   ],
+   "n": 4
+  }
+ ],
+ "SEO": [
+  {
+   "term": "301 redirect",
+   "d": "A permanent redirect that sends visitors and search engines from an old URL to a new one.",
+   "why": "Keeps the search value of old pages when you move or rename them.",
+   "see": [
+    "302 redirect",
+    "Redirect chain",
+    "404 error"
+   ],
+   "n": 4
+  },
+  {
+   "term": "302 redirect",
+   "d": "A temporary redirect, used when a page will come back to its original URL.",
+   "why": "",
+   "see": [
+    "301 redirect"
+   ],
+   "n": 4
+  },
+  {
+   "term": "404 error",
+   "d": "The not-found response shown when a page does not exist.",
+   "why": "A helpful custom 404 page keeps lost visitors on your site.",
+   "see": [
+    "301 redirect",
+    "Status code"
+   ],
+   "n": 4
+  },
+  {
+   "term": "AI Overviews",
+   "d": "Google's AI-generated summaries that can appear at the top of some search results, with links to sources.",
+   "why": "",
+   "see": [
+    "Generative engine optimization (GEO)",
+    "Zero-click search"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Algorithm",
+   "d": "The rules and calculations a search engine uses to decide which pages to show and in what order.",
+   "why": "",
+   "see": [
+    "Ranking factor"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Anchor text",
+   "d": "The clickable words of a link.",
+   "why": "Descriptive anchor text helps people and search engines know what the linked page is about.",
+   "see": [
+    "Internal link",
+    "Backlink"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Backlink",
+   "d": "A link from another website to yours.",
+   "why": "Links from relevant, reputable sites are a strong trust signal for search engines.",
+   "see": [
+    "Link building",
+    "Nofollow"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Black hat SEO",
+   "d": "Tactics that try to trick search engines, such as hidden text or paid link schemes, against search engine guidelines.",
+   "why": "Can lead to penalties that are slow to recover from.",
+   "see": [
+    "White hat SEO"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Bounce rate",
+   "d": "The share of visits where someone leaves without engaging further. Definitions vary between analytics tools.",
+   "why": "",
+   "see": [
+    "Engagement rate",
+    "Google Analytics"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Breadcrumb markup",
+   "d": "Structured data that tells search engines a page's breadcrumb trail, which can show in search results.",
+   "why": "",
+   "see": [
+    "Breadcrumbs",
+    "Schema markup"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Canonical tag",
+   "d": "A tag that tells search engines which version of similar or duplicate pages is the main one.",
+   "why": "",
+   "see": [
+    "Duplicate content"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Click-through rate (CTR)",
+   "d": "The share of people who click a result or ad after seeing it.",
+   "why": "Clear titles and descriptions can earn more clicks from the same rankings.",
+   "see": [
+    "Impressions",
+    "Title tag",
+    "Meta description"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Content marketing",
+   "d": "Attracting customers by publishing genuinely useful content such as articles, guides and videos.",
+   "why": "",
+   "see": [
+    "Evergreen content",
+    "Topic cluster"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Core Web Vitals",
+   "d": "Google's set of metrics for real-world page experience: loading (Largest Contentful Paint), responsiveness (Interaction to Next Paint) and visual stability (Cumulative Layout Shift).",
+   "why": "Faster, steadier pages help both visitors and search performance.",
+   "see": [
+    "Largest Contentful Paint (LCP)",
+    "Interaction to Next Paint (INP)",
+    "Cumulative Layout Shift (CLS)",
+    "Page experience"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Crawl budget",
+   "d": "Roughly how many pages a search engine will crawl on your site in a given time. Mostly a concern for very large sites.",
+   "why": "",
+   "see": [
+    "Crawler",
+    "robots.txt"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Crawl error",
+   "d": "A problem that stops a search engine reaching a page, such as a broken link or server error.",
+   "why": "",
+   "see": [
+    "Google Search Console",
+    "404 error"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Crawler",
+   "d": "A program, also called a bot or spider, that search engines use to discover and read web pages.",
+   "why": "",
+   "see": [
+    "Indexing",
+    "robots.txt"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Cumulative Layout Shift (CLS)",
+   "d": "A Core Web Vitals metric measuring how much content unexpectedly jumps around while a page loads.",
+   "why": "",
+   "see": [
+    "Core Web Vitals"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Domain authority",
+   "d": "A third-party score estimating how strong a site's backlink profile is. It is a vendor metric, not something Google uses.",
+   "why": "",
+   "see": [
+    "Backlink"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Duplicate content",
+   "d": "The same or very similar content appearing at more than one URL.",
+   "why": "",
+   "see": [
+    "Canonical tag",
+    "Thin content"
+   ],
+   "n": 4
+  },
+  {
+   "term": "E-E-A-T",
+   "d": "Experience, Expertise, Authoritativeness and Trustworthiness: qualities Google's quality rater guidelines use to describe helpful, reliable content.",
+   "why": "Show real experience, named authors and clear contact details.",
+   "see": [
+    "Helpful content",
+    "Trust signals"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Engagement rate",
+   "d": "In Google Analytics 4, the share of sessions where someone engaged meaningfully, for example by staying a while or viewing more than one page.",
+   "why": "",
+   "see": [
+    "Bounce rate",
+    "Google Analytics"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Evergreen content",
+   "d": "Content that stays useful for a long time rather than going out of date quickly.",
+   "why": "",
+   "see": [
+    "Content marketing"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Featured snippet",
+   "d": "A highlighted answer shown at the top of some search results, pulled from a web page.",
+   "why": "",
+   "see": [
+    "SERP",
+    "Rich results"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Generative engine optimization (GEO)",
+   "d": "Making content easy for AI-powered search and assistants to understand, trust and cite. Much of it overlaps with good SEO: clear, accurate, well-structured content.",
+   "why": "",
+   "see": [
+    "AI Overviews",
+    "AI search"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Google Analytics",
+   "d": "Google's free tool for measuring website traffic and visitor behavior. The current version is Google Analytics 4 (GA4).",
+   "why": "",
+   "see": [
+    "Google Search Console",
+    "UTM parameters"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Google Business Profile",
+   "d": "Your free business listing on Google Search and Maps, showing hours, location, photos and reviews.",
+   "why": "Essential for local customers finding you.",
+   "see": [
+    "Local SEO",
+    "NAP consistency",
+    "Reviews"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Google Search Console",
+   "d": "Google's free tool showing how your site performs in search, which pages are indexed and any problems found.",
+   "why": "",
+   "see": [
+    "Google Analytics",
+    "Indexing"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Heading tags",
+   "d": "HTML tags from H1 to H6 that structure a page's headings. Usually one H1 states the page's main topic.",
+   "why": "Clear headings help readers scan and help search engines understand your content.",
+   "see": [
+    "On-page SEO",
+    "HTML (HyperText Markup Language)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Helpful content",
+   "d": "Content written for people first, that fully answers their question, rather than content made mainly to rank.",
+   "why": "",
+   "see": [
+    "E-E-A-T",
+    "Thin content"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Hreflang",
+   "d": "A tag telling search engines which language or region each version of a page is for.",
+   "why": "Important for sites in more than one language, such as Japanese and English.",
+   "see": [
+    "Multilingual SEO"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Image SEO",
+   "d": "Helping images appear in search through descriptive file names, alt text, sensible sizes and surrounding text.",
+   "why": "",
+   "see": [
+    "Alt text",
+    "Image optimization"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Impressions",
+   "d": "How many times your page appeared in search results, whether or not anyone clicked.",
+   "why": "",
+   "see": [
+    "Click-through rate (CTR)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Indexing",
+   "d": "A search engine storing a page in its database so it can appear in results.",
+   "why": "",
+   "see": [
+    "Crawler",
+    "Noindex"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Interaction to Next Paint (INP)",
+   "d": "A Core Web Vitals metric measuring how quickly a page responds to clicks, taps and key presses.",
+   "why": "",
+   "see": [
+    "Core Web Vitals"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Internal link",
+   "d": "A link from one page on your site to another.",
+   "why": "Guides visitors and spreads search value across your pages.",
+   "see": [
+    "Anchor text",
+    "Site architecture"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Keyword",
+   "d": "A word or phrase people type into a search engine.",
+   "why": "",
+   "see": [
+    "Keyword research",
+    "Search intent"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Keyword difficulty",
+   "d": "A third-party estimate of how hard it would be to rank for a keyword.",
+   "why": "",
+   "see": [
+    "Keyword research"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Keyword research",
+   "d": "Finding the words and phrases your customers actually use when searching.",
+   "why": "",
+   "see": [
+    "Keyword",
+    "Search volume",
+    "Long-tail keyword"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Keyword stuffing",
+   "d": "Cramming keywords unnaturally into content. It hurts readability and goes against search guidelines.",
+   "why": "",
+   "see": [
+    "Black hat SEO"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Knowledge panel",
+   "d": "An information box in search results about a business, person or thing.",
+   "why": "",
+   "see": [
+    "Google Business Profile"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Largest Contentful Paint (LCP)",
+   "d": "A Core Web Vitals metric measuring how long the main content of a page takes to appear.",
+   "why": "",
+   "see": [
+    "Core Web Vitals",
+    "Image optimization"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Lighthouse",
+   "d": "A free Google tool that audits a page's performance, accessibility, best practices and SEO.",
+   "why": "",
+   "see": [
+    "PageSpeed Insights"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Link building",
+   "d": "Earning links from other reputable websites, for example through useful content, partnerships or PR.",
+   "why": "Earned links last; bought links risk penalties.",
+   "see": [
+    "Backlink"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Local SEO",
+   "d": "Improving visibility in searches with local intent, such as web designer in Osaka.",
+   "why": "",
+   "see": [
+    "Google Business Profile",
+    "NAP consistency"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Long-tail keyword",
+   "d": "A longer, more specific search phrase. Fewer people search for it, but they often know exactly what they want.",
+   "why": "",
+   "see": [
+    "Keyword research"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Meta description",
+   "d": "A short page summary in the HTML that search engines may show under your title in results.",
+   "why": "Doesn't directly lift rankings, but a good one can win more clicks.",
+   "see": [
+    "Title tag",
+    "Click-through rate (CTR)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Mobile-first indexing",
+   "d": "Google mainly uses the mobile version of a site's content for indexing and ranking.",
+   "why": "",
+   "see": [
+    "Mobile-first design",
+    "Responsive design"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Multilingual SEO",
+   "d": "Optimizing a site in several languages so each version is found by the right audience.",
+   "why": "",
+   "see": [
+    "Hreflang"
+   ],
+   "n": 4
+  },
+  {
+   "term": "NAP consistency",
+   "d": "Keeping your business Name, Address and Phone number identical across your site and online listings.",
+   "why": "",
+   "see": [
+    "Local SEO",
+    "Google Business Profile"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Nofollow",
+   "d": "A link attribute asking search engines not to pass ranking credit through a link. Related values mark sponsored and user-generated links.",
+   "why": "",
+   "see": [
+    "Backlink"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Noindex",
+   "d": "An instruction telling search engines not to include a page in results.",
+   "why": "",
+   "see": [
+    "Indexing",
+    "robots.txt"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Off-page SEO",
+   "d": "Work done outside your site to build its reputation, such as earning links and reviews.",
+   "why": "",
+   "see": [
+    "Link building",
+    "On-page SEO"
+   ],
+   "n": 4
+  },
+  {
+   "term": "On-page SEO",
+   "d": "Improving the content and HTML of your own pages, such as titles, headings, text and internal links.",
+   "why": "",
+   "see": [
+    "Off-page SEO",
+    "Technical SEO"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Organic traffic",
+   "d": "Visitors who arrive from unpaid search results.",
+   "why": "",
+   "see": [
+    "Paid search (PPC)",
+    "Referral traffic"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Orphan page",
+   "d": "A page with no internal links pointing to it, so visitors and crawlers struggle to find it.",
+   "why": "",
+   "see": [
+    "Internal link"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Page experience",
+   "d": "Google's broader view of how pleasant a page is to use, including Core Web Vitals, HTTPS and avoiding intrusive pop-ups.",
+   "why": "",
+   "see": [
+    "Core Web Vitals"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Page speed",
+   "d": "How quickly a page loads and becomes usable.",
+   "why": "Slow pages lose visitors and inquiries.",
+   "see": [
+    "Core Web Vitals",
+    "PageSpeed Insights"
+   ],
+   "n": 4
+  },
+  {
+   "term": "PageSpeed Insights",
+   "d": "A free Google tool that reports a page's speed and Core Web Vitals, with suggestions.",
+   "why": "",
+   "see": [
+    "Lighthouse",
+    "Core Web Vitals"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Paid search (PPC)",
+   "d": "Ads that appear in search results, usually paid per click.",
+   "why": "",
+   "see": [
+    "SEM (Search Engine Marketing)",
+    "Organic traffic"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Pillar page",
+   "d": "A comprehensive page on a broad topic that links to more detailed related articles.",
+   "why": "",
+   "see": [
+    "Topic cluster"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Ranking factor",
+   "d": "Something a search engine considers when ordering results. Search engines do not publish full lists or weights.",
+   "why": "",
+   "see": [
+    "Algorithm"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Redirect chain",
+   "d": "Several redirects in a row before reaching the final page, which slows visitors and crawlers.",
+   "why": "",
+   "see": [
+    "301 redirect"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Referral traffic",
+   "d": "Visitors who arrive by clicking a link on another website.",
+   "why": "",
+   "see": [
+    "Backlink",
+    "Organic traffic"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Reviews",
+   "d": "Customer ratings and comments on platforms such as Google.",
+   "why": "Real reviews influence choices and local visibility. Never fake or buy them.",
+   "see": [
+    "Google Business Profile",
+    "Social proof"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Rich results",
+   "d": "Enhanced search listings with extras such as star ratings, prices or FAQs, often enabled by structured data.",
+   "why": "",
+   "see": [
+    "Schema markup",
+    "Featured snippet"
+   ],
+   "n": 4
+  },
+  {
+   "term": "robots.txt",
+   "d": "A file at the root of your site telling crawlers which areas they may visit.",
+   "why": "A wrong line here can hide a whole site from search.",
+   "see": [
+    "Crawler",
+    "Noindex"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Schema markup",
+   "d": "Structured data code, usually from the Schema.org vocabulary, that labels content such as businesses, products, events and articles for search engines.",
+   "why": "",
+   "see": [
+    "Rich results",
+    "Structured data"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Search intent",
+   "d": "The goal behind a search: to learn something, find a site, compare options or buy.",
+   "why": "Match each page to the intent behind its keywords.",
+   "see": [
+    "Keyword"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Search volume",
+   "d": "An estimate of how often a keyword is searched in a period.",
+   "why": "",
+   "see": [
+    "Keyword research"
+   ],
+   "n": 4
+  },
+  {
+   "term": "SEM (Search Engine Marketing)",
+   "d": "Getting visibility in search engines, usually meaning paid ads, sometimes including SEO.",
+   "why": "",
+   "see": [
+    "Paid search (PPC)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "SEO (Search Engine Optimization)",
+   "d": "Improving a website so it appears more often, and higher, in unpaid search results for relevant searches.",
+   "why": "",
+   "see": [
+    "On-page SEO",
+    "Technical SEO",
+    "Off-page SEO"
+   ],
+   "n": 4
+  },
+  {
+   "term": "SERP",
+   "d": "Search Engine Results Page: the page of results shown after a search.",
+   "why": "",
+   "see": [
+    "Featured snippet",
+    "Rich results"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Site architecture",
+   "d": "How a site's pages are organized and linked together.",
+   "why": "",
+   "see": [
+    "Information architecture",
+    "Internal link"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Slug",
+   "d": "The readable end part of a URL that identifies a page, such as /web-design-services.",
+   "why": "",
+   "see": [
+    "URL"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Structured data",
+   "d": "Information formatted in a standard way so machines can understand it. On the web it usually means schema markup.",
+   "why": "",
+   "see": [
+    "Schema markup"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Technical SEO",
+   "d": "Making sure search engines can crawl, render and index a site, covering speed, sitemaps, redirects and code.",
+   "why": "",
+   "see": [
+    "Crawler",
+    "XML sitemap",
+    "Core Web Vitals"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Thin content",
+   "d": "Pages with little useful content.",
+   "why": "",
+   "see": [
+    "Helpful content",
+    "Duplicate content"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Title tag",
+   "d": "The HTML title of a page, usually shown as the clickable headline in search results and in the browser tab.",
+   "why": "",
+   "see": [
+    "Meta description",
+    "On-page SEO"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Topic cluster",
+   "d": "A group of related articles linked to a central pillar page, covering a subject thoroughly.",
+   "why": "",
+   "see": [
+    "Pillar page",
+    "Internal link"
+   ],
+   "n": 4
+  },
+  {
+   "term": "UTM parameters",
+   "d": "Tags added to a link, such as ?utm_source=newsletter, so analytics can show which campaign brought visitors.",
+   "why": "",
+   "see": [
+    "Google Analytics"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Voice search",
+   "d": "Searching by speaking to a phone or smart speaker, often using longer, question-style phrases.",
+   "why": "",
+   "see": [
+    "Long-tail keyword"
+   ],
+   "n": 4
+  },
+  {
+   "term": "White hat SEO",
+   "d": "Ethical SEO that follows search engine guidelines and focuses on real value for people.",
+   "why": "",
+   "see": [
+    "Black hat SEO"
+   ],
+   "n": 4
+  },
+  {
+   "term": "XML sitemap",
+   "d": "A file listing your important pages to help search engines find them.",
+   "why": "",
+   "see": [
+    "Sitemap",
+    "Google Search Console"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Zero-click search",
+   "d": "A search where the person gets their answer on the results page and does not click any website.",
+   "why": "",
+   "see": [
+    "Featured snippet",
+    "AI Overviews"
+   ],
+   "n": 4
+  }
+ ],
+ "SaaS": [
+  {
+   "term": "Activation",
+   "d": "The moment a new user first gets real value from a product.",
+   "why": "Users who reach it early are more likely to stay.",
+   "see": [
+    "Onboarding",
+    "Retention"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Admin panel",
+   "d": "The back-office area where account owners manage settings, users and billing.",
+   "why": "",
+   "see": [
+    "Role-based access control (RBAC)",
+    "Dashboard"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Annual plan",
+   "d": "A subscription paid yearly, often discounted compared with paying monthly.",
+   "why": "",
+   "see": [
+    "Billing cycle",
+    "Monthly recurring revenue (MRR)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "APPI",
+   "d": "Japan's Act on the Protection of Personal Information, the main law governing how businesses handle personal data in Japan.",
+   "why": "Affects how you collect, store and share customer data in Japan. Get legal advice for specifics.",
+   "see": [
+    "GDPR",
+    "Data residency"
+   ],
+   "n": 4
+  },
+  {
+   "term": "ARPU (Average Revenue Per User)",
+   "d": "Revenue divided by the number of users or accounts over a period.",
+   "why": "",
+   "see": [
+    "Monthly recurring revenue (MRR)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "ARR (Annual Recurring Revenue)",
+   "d": "The yearly value of active subscriptions, excluding one-off fees.",
+   "why": "",
+   "see": [
+    "Monthly recurring revenue (MRR)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Audit log",
+   "d": "A record of who did what and when inside a system.",
+   "why": "Helps with security investigations and compliance.",
+   "see": [
+    "SOC 2",
+    "Role-based access control (RBAC)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "B2B",
+   "d": "Business to business: selling to other companies.",
+   "why": "",
+   "see": [
+    "B2C"
+   ],
+   "n": 4
+  },
+  {
+   "term": "B2C",
+   "d": "Business to consumer: selling directly to individuals.",
+   "why": "",
+   "see": [
+    "B2B"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Backlog",
+   "d": "The prioritized list of features, fixes and tasks waiting to be worked on.",
+   "why": "",
+   "see": [
+    "Roadmap",
+    "User story",
+    "Sprint"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Beta",
+   "d": "A pre-release version shared with selected users to find problems before full launch.",
+   "why": "",
+   "see": [
+    "Release notes",
+    "Feature flag"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Billing cycle",
+   "d": "How often a subscription is charged, such as monthly or yearly.",
+   "why": "",
+   "see": [
+    "Proration",
+    "Annual plan"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Changelog",
+   "d": "A running record of product updates and fixes.",
+   "why": "",
+   "see": [
+    "Release notes"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Churn",
+   "d": "The rate at which customers cancel or revenue is lost over a period.",
+   "why": "Small monthly churn compounds into big annual losses.",
+   "see": [
+    "Retention",
+    "Net revenue retention (NRR)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Cloud computing",
+   "d": "Using computing power, storage and software over the internet from a provider instead of owning the hardware.",
+   "why": "",
+   "see": [
+    "IaaS",
+    "PaaS",
+    "SaaS (Software as a Service)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Cohort",
+   "d": "A group of customers who share a starting point, such as signing up in the same month, tracked over time.",
+   "why": "",
+   "see": [
+    "Retention",
+    "Churn"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Cross-sell",
+   "d": "Offering a related product to an existing customer.",
+   "why": "",
+   "see": [
+    "Upsell",
+    "Expansion revenue"
+   ],
+   "n": 4
+  },
+  {
+   "term": "CSAT (Customer Satisfaction Score)",
+   "d": "A survey score measuring how satisfied customers are with a specific interaction or product.",
+   "why": "",
+   "see": [
+    "NPS (Net Promoter Score)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Customer acquisition cost (CAC)",
+   "d": "The total sales and marketing cost to win one new customer.",
+   "why": "",
+   "see": [
+    "Customer lifetime value (LTV)",
+    "Payback period"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Customer lifetime value (LTV)",
+   "d": "The total revenue or profit you expect from a customer over the whole relationship.",
+   "why": "Compare it with acquisition cost to judge if growth is profitable.",
+   "see": [
+    "Customer acquisition cost (CAC)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Customer success",
+   "d": "A team or practice focused on helping customers achieve their goals with your product, which reduces churn.",
+   "why": "",
+   "see": [
+    "Onboarding",
+    "Churn"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Dashboard",
+   "d": "A screen that summarizes key information and metrics at a glance.",
+   "why": "",
+   "see": [
+    "Admin panel"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Data export",
+   "d": "The ability to download your data from a service in a usable format.",
+   "why": "Check this before signing up so you are never trapped.",
+   "see": [
+    "Vendor lock-in"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Data residency",
+   "d": "Where data is physically stored, which can matter for legal and contractual rules.",
+   "why": "",
+   "see": [
+    "APPI",
+    "GDPR"
+   ],
+   "n": 4
+  },
+  {
+   "term": "DAU/MAU",
+   "d": "Daily active users divided by monthly active users, a common measure of how habitually people use a product.",
+   "why": "",
+   "see": [
+    "Stickiness"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Downgrade",
+   "d": "Moving a customer to a cheaper plan.",
+   "why": "",
+   "see": [
+    "Upgrade",
+    "Tiered pricing"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Dunning",
+   "d": "The process of retrying failed payments and reminding customers to update their card.",
+   "why": "Reduces involuntary churn from expired cards.",
+   "see": [
+    "Churn",
+    "Payment gateway"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Encryption at rest and in transit",
+   "d": "Protecting stored data (at rest) and data moving between systems (in transit) by encrypting it.",
+   "why": "",
+   "see": [
+    "Encryption",
+    "SOC 2"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Expansion revenue",
+   "d": "Extra revenue from existing customers through upgrades, more seats or add-ons.",
+   "why": "",
+   "see": [
+    "Upsell",
+    "Net revenue retention (NRR)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Feature flag",
+   "d": "A switch that turns a feature on or off for some users without releasing new code.",
+   "why": "Allows safe testing and gradual rollouts.",
+   "see": [
+    "Beta",
+    "A/B testing"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Feature request",
+   "d": "A suggestion from a customer for something new.",
+   "why": "",
+   "see": [
+    "Roadmap",
+    "Backlog"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Free trial",
+   "d": "Full or partial access for a limited time before paying.",
+   "why": "",
+   "see": [
+    "Freemium"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Freemium",
+   "d": "A model offering a free plan with limits, with paid plans for more features or usage.",
+   "why": "",
+   "see": [
+    "Free trial",
+    "Product-led growth (PLG)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "GDPR",
+   "d": "The EU's General Data Protection Regulation, which governs how personal data of people in the EU is handled. It can apply to businesses outside the EU.",
+   "why": "",
+   "see": [
+    "APPI",
+    "Cookie"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Go-to-market (GTM)",
+   "d": "The plan for how a product reaches customers: audience, pricing, channels and messaging.",
+   "why": "",
+   "see": [
+    "Product-market fit"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Help desk",
+   "d": "Software for managing customer support requests.",
+   "why": "",
+   "see": [
+    "Ticket",
+    "Knowledge base"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Horizontal SaaS",
+   "d": "Software that serves many industries with a common need, such as accounting or email marketing.",
+   "why": "",
+   "see": [
+    "Vertical SaaS"
+   ],
+   "n": 4
+  },
+  {
+   "term": "IaaS",
+   "d": "Infrastructure as a Service: renting raw computing resources like servers and storage from a cloud provider.",
+   "why": "",
+   "see": [
+    "PaaS",
+    "SaaS (Software as a Service)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Integration",
+   "d": "A connection that lets two software products share data or trigger actions in each other.",
+   "why": "",
+   "see": [
+    "API (Application Programming Interface)",
+    "Webhook",
+    "iPaaS"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Invoice",
+   "d": "A bill listing what a customer owes and when.",
+   "why": "",
+   "see": [
+    "Billing cycle"
+   ],
+   "n": 4
+  },
+  {
+   "term": "iPaaS",
+   "d": "Integration Platform as a Service: tools that connect apps and automate workflows between them without much code.",
+   "why": "",
+   "see": [
+    "Integration",
+    "Workflow automation"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Knowledge base",
+   "d": "A searchable library of help articles and guides for customers or staff.",
+   "why": "Answers common questions around the clock and reduces support load.",
+   "see": [
+    "Help desk"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Low-code and no-code",
+   "d": "Platforms that let people build apps or automations with visual tools and little or no programming.",
+   "why": "Quick for simple needs; check limits, costs and data export before you rely on one.",
+   "see": [
+    "iPaaS",
+    "Vendor lock-in"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Micro-SaaS",
+   "d": "A small, focused software product, often run by a tiny team, serving a narrow need.",
+   "why": "",
+   "see": [
+    "Vertical SaaS"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Monthly recurring revenue (MRR)",
+   "d": "The predictable monthly revenue from active subscriptions.",
+   "why": "",
+   "see": [
+    "ARR (Annual Recurring Revenue)",
+    "Churn"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Multi-factor authentication (MFA)",
+   "d": "Requiring two or more proofs of identity to sign in.",
+   "why": "",
+   "see": [
+    "Two-factor authentication (2FA)",
+    "Single sign-on (SSO)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Multi-tenant",
+   "d": "An architecture where many customers share the same software and infrastructure while their data is kept separate.",
+   "why": "Usually lowers costs and makes updates easier for everyone.",
+   "see": [
+    "Tenant",
+    "Single-tenant"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Net revenue retention (NRR)",
+   "d": "Revenue kept from a group of existing customers over a period, including upgrades and minus churn and downgrades.",
+   "why": "",
+   "see": [
+    "Churn",
+    "Expansion revenue"
+   ],
+   "n": 4
+  },
+  {
+   "term": "NPS (Net Promoter Score)",
+   "d": "A survey metric based on how likely customers are to recommend you, on a 0 to 10 scale.",
+   "why": "",
+   "see": [
+    "CSAT (Customer Satisfaction Score)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Onboarding",
+   "d": "The process of helping new users set up and start getting value quickly.",
+   "why": "",
+   "see": [
+    "Activation",
+    "Customer success"
+   ],
+   "n": 4
+  },
+  {
+   "term": "PaaS",
+   "d": "Platform as a Service: a managed platform for running your own apps without managing servers.",
+   "why": "",
+   "see": [
+    "IaaS",
+    "SaaS (Software as a Service)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Pay-as-you-go",
+   "d": "Paying only for what you use, with no fixed commitment.",
+   "why": "",
+   "see": [
+    "Usage-based pricing"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Payback period",
+   "d": "How long it takes for a customer's revenue to cover the cost of acquiring them.",
+   "why": "",
+   "see": [
+    "Customer acquisition cost (CAC)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Payment gateway",
+   "d": "A service that securely processes online card and wallet payments.",
+   "why": "",
+   "see": [
+    "Dunning",
+    "PCI DSS"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Paywall",
+   "d": "A barrier that limits access to content or features until someone pays.",
+   "why": "",
+   "see": [
+    "Freemium"
+   ],
+   "n": 4
+  },
+  {
+   "term": "PCI DSS",
+   "d": "The Payment Card Industry Data Security Standard, security rules for any business handling card data.",
+   "why": "Using a reputable payment gateway greatly reduces what you must handle yourself.",
+   "see": [
+    "Payment gateway"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Per-seat pricing",
+   "d": "Charging per user who has access.",
+   "why": "",
+   "see": [
+    "Usage-based pricing",
+    "Tiered pricing"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Product-led growth (PLG)",
+   "d": "A strategy where the product itself, through trials and self-serve sign-up, drives acquisition and expansion.",
+   "why": "",
+   "see": [
+    "Freemium",
+    "Self-serve"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Product-market fit",
+   "d": "When a product clearly meets the needs of a market that is willing to pay for it.",
+   "why": "",
+   "see": [
+    "MVP (Minimum Viable Product)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Proration",
+   "d": "Adjusting a charge for the part of a billing period used when a plan changes.",
+   "why": "",
+   "see": [
+    "Billing cycle",
+    "Upgrade"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Release notes",
+   "d": "A summary of what changed in a specific version.",
+   "why": "",
+   "see": [
+    "Changelog"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Retention",
+   "d": "The share of customers who keep using or paying for a product over time.",
+   "why": "",
+   "see": [
+    "Churn",
+    "Cohort"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Roadmap",
+   "d": "A plan of upcoming features and priorities over time.",
+   "why": "",
+   "see": [
+    "Backlog"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Role-based access control (RBAC)",
+   "d": "Giving permissions based on a person's role, such as admin, editor or viewer.",
+   "why": "",
+   "see": [
+    "Authorization",
+    "Admin panel"
+   ],
+   "n": 4
+  },
+  {
+   "term": "SaaS (Software as a Service)",
+   "d": "Software you use through the internet on a subscription, instead of installing and maintaining it yourself.",
+   "why": "",
+   "see": [
+    "Subscription",
+    "Cloud computing",
+    "Multi-tenant"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Sandbox",
+   "d": "A safe test environment where you can try features or integrations without affecting real data.",
+   "why": "",
+   "see": [
+    "Staging environment"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Scalability",
+   "d": "How well a system handles growth in users, data or traffic without breaking or slowing down.",
+   "why": "",
+   "see": [
+    "Load balancer",
+    "Cloud computing"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Self-serve",
+   "d": "Customers can sign up, pay and manage their account without talking to sales.",
+   "why": "",
+   "see": [
+    "Product-led growth (PLG)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Service level agreement (SLA)",
+   "d": "A contract term defining promised service levels, such as uptime or support response time, and what happens if they are missed.",
+   "why": "",
+   "see": [
+    "Uptime",
+    "Disaster recovery"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Single sign-on (SSO)",
+   "d": "Signing in once with one account, such as a company Google or Microsoft account, to access several apps.",
+   "why": "Easier for staff and simpler to remove access when someone leaves.",
+   "see": [
+    "Authentication",
+    "Multi-factor authentication (MFA)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Single-tenant",
+   "d": "An architecture where each customer gets their own separate instance of the software.",
+   "why": "",
+   "see": [
+    "Multi-tenant"
+   ],
+   "n": 4
+  },
+  {
+   "term": "SOC 2",
+   "d": "An auditing framework, from the AICPA, for how a service provider protects customer data. Common in B2B software buying.",
+   "why": "",
+   "see": [
+    "Audit log",
+    "Encryption at rest and in transit"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Sprint",
+   "d": "A short, fixed period, often one to four weeks, in which a team completes a set of work.",
+   "why": "",
+   "see": [
+    "Agile",
+    "Backlog"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Stickiness",
+   "d": "How often users return to a product, often measured by DAU/MAU.",
+   "why": "",
+   "see": [
+    "DAU/MAU",
+    "Retention"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Subscription",
+   "d": "Paying regularly, monthly or yearly, for ongoing access.",
+   "why": "",
+   "see": [
+    "SaaS (Software as a Service)",
+    "Billing cycle"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Tenant",
+   "d": "One customer's account and data within a multi-tenant system.",
+   "why": "",
+   "see": [
+    "Multi-tenant"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Ticket",
+   "d": "A single customer support request tracked in a help desk.",
+   "why": "",
+   "see": [
+    "Help desk"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Tiered pricing",
+   "d": "Plans at different price points with different features or limits.",
+   "why": "",
+   "see": [
+    "Per-seat pricing",
+    "Usage-based pricing"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Total cost of ownership (TCO)",
+   "d": "The full cost of a tool over time, including subscription, setup, training, integration and switching costs.",
+   "why": "",
+   "see": [
+    "Vendor lock-in"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Upgrade",
+   "d": "Moving a customer to a higher plan.",
+   "why": "",
+   "see": [
+    "Downgrade",
+    "Expansion revenue"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Upsell",
+   "d": "Encouraging a customer to buy a higher plan or add more.",
+   "why": "",
+   "see": [
+    "Cross-sell",
+    "Expansion revenue"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Usage-based pricing",
+   "d": "Charging based on consumption, such as messages sent or storage used.",
+   "why": "",
+   "see": [
+    "Pay-as-you-go",
+    "Per-seat pricing"
+   ],
+   "n": 4
+  },
+  {
+   "term": "User story",
+   "d": "A short description of a feature from the user's point of view, such as As a shop owner, I want to export orders so that I can do my accounts.",
+   "why": "",
+   "see": [
+    "Backlog"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Vendor lock-in",
+   "d": "Being so dependent on one provider that switching becomes difficult or costly.",
+   "why": "",
+   "see": [
+    "Data export",
+    "Total cost of ownership (TCO)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Vertical SaaS",
+   "d": "Software built for one specific industry, such as restaurants, clinics or real estate.",
+   "why": "",
+   "see": [
+    "Horizontal SaaS"
+   ],
+   "n": 4
+  },
+  {
+   "term": "White label",
+   "d": "A product made by one company and rebranded and sold by another as its own.",
+   "why": "",
+   "see": [
+    "Brand identity"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Workflow automation",
+   "d": "Using software to carry out routine steps automatically, such as sending a welcome email when a form is submitted.",
+   "why": "",
+   "see": [
+    "iPaaS",
+    "AI agent"
+   ],
+   "n": 4
+  }
+ ],
+ "AI": [
+  {
+   "term": "Agentic workflow",
+   "d": "A process in which an AI system plans and carries out several steps toward a goal, using tools along the way, rather than answering a single question.",
+   "why": "",
+   "see": [
+    "AI agent",
+    "Tool use",
+    "Human in the loop"
+   ],
+   "n": 4
+  },
+  {
+   "term": "AI agent",
+   "d": "An AI system that can take actions, such as searching, filling forms or calling APIs, to complete a task with some independence.",
+   "why": "Can handle routine multi-step work, but needs clear limits and human checks on important actions.",
+   "see": [
+    "Agentic workflow",
+    "Tool use",
+    "Guardrails"
+   ],
+   "n": 4
+  },
+  {
+   "term": "AI ethics",
+   "d": "Principles for building and using AI fairly, safely, transparently and with respect for privacy.",
+   "why": "",
+   "see": [
+    "Bias",
+    "Responsible AI",
+    "Explainability"
+   ],
+   "n": 4
+  },
+  {
+   "term": "AI search",
+   "d": "Search experiences where AI writes an answer from several sources instead of only listing links.",
+   "why": "",
+   "see": [
+    "Generative engine optimization (GEO)",
+    "AI Overviews"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Algorithm",
+   "d": "A step-by-step set of instructions for solving a problem. In AI, algorithms are used to learn patterns from data.",
+   "why": "",
+   "see": [
+    "Machine learning",
+    "Model"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Artificial general intelligence (AGI)",
+   "d": "A hypothetical AI that could match humans across almost any intellectual task. There is no agreed definition or test for it.",
+   "why": "",
+   "see": [
+    "Artificial intelligence (AI)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Artificial intelligence (AI)",
+   "d": "Computer systems that perform tasks normally needing human intelligence, such as understanding language, recognizing images or making predictions.",
+   "why": "",
+   "see": [
+    "Machine learning",
+    "Generative AI"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Benchmark",
+   "d": "A standard test used to compare AI models on specific tasks.",
+   "why": "Benchmarks rarely match your real work; test models on your own examples.",
+   "see": [
+    "Evaluation (evals)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Bias",
+   "d": "Systematic unfairness in AI output, often inherited from skewed or incomplete training data.",
+   "why": "Can harm customers and your reputation; review outputs in sensitive areas such as hiring or lending.",
+   "see": [
+    "Training data",
+    "AI ethics"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Chain of thought",
+   "d": "Having a model work through intermediate reasoning steps before giving an answer, which can improve results on complex problems.",
+   "why": "",
+   "see": [
+    "Reasoning model",
+    "Prompt engineering"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Chatbot",
+   "d": "Software that holds a conversation with people through text or voice. Modern chatbots are often powered by large language models.",
+   "why": "Can answer common questions instantly, but needs clear limits and an easy route to a human.",
+   "see": [
+    "Large language model (LLM)",
+    "Retrieval-augmented generation (RAG)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Classification",
+   "d": "An AI task that sorts items into categories, such as spam or not spam.",
+   "why": "",
+   "see": [
+    "Supervised learning"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Computer vision",
+   "d": "AI that interprets images and video, such as recognizing objects, reading text or inspecting products.",
+   "why": "",
+   "see": [
+    "OCR (Optical Character Recognition)",
+    "Multimodal"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Context window",
+   "d": "The maximum amount of text, measured in tokens, a model can consider at once, including your prompt, documents and its reply.",
+   "why": "",
+   "see": [
+    "Token",
+    "Large language model (LLM)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Copilot",
+   "d": "An AI assistant built into a tool to help people as they work, such as suggesting code or drafting emails.",
+   "why": "",
+   "see": [
+    "AI agent"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Data annotation",
+   "d": "Labeling data, such as tagging images or classifying text, so it can be used to train or test models.",
+   "why": "",
+   "see": [
+    "Training data",
+    "Supervised learning"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Deep learning",
+   "d": "Machine learning that uses neural networks with many layers. It powers most modern AI.",
+   "why": "",
+   "see": [
+    "Neural network",
+    "Machine learning"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Deepfake",
+   "d": "AI-generated or altered audio, images or video that realistically imitate a real person.",
+   "why": "Be wary of urgent payment requests by voice or video, and verify through another channel.",
+   "see": [
+    "Generative AI",
+    "AI ethics"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Diffusion model",
+   "d": "A type of generative model, common in image generation, that creates images by gradually turning random noise into a picture.",
+   "why": "",
+   "see": [
+    "Image generation",
+    "Generative AI"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Embedding",
+   "d": "A list of numbers representing the meaning of text, images or other data, so similar things end up close together.",
+   "why": "Powers smart search and recommendations over your own content.",
+   "see": [
+    "Vector database",
+    "Retrieval-augmented generation (RAG)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Evaluation (evals)",
+   "d": "Systematically testing an AI system's quality on examples that reflect real use.",
+   "why": "The only reliable way to know whether an AI feature works for your business.",
+   "see": [
+    "Benchmark",
+    "Human in the loop"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Explainability",
+   "d": "How well people can understand why an AI system produced a particular output.",
+   "why": "",
+   "see": [
+    "AI ethics"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Few-shot prompting",
+   "d": "Giving a model a few examples in the prompt to show the pattern you want.",
+   "why": "",
+   "see": [
+    "Zero-shot prompting",
+    "Prompt engineering"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Fine-tuning",
+   "d": "Further training an existing model on your own examples to specialize its behavior or style.",
+   "why": "Often unnecessary; good prompts and retrieval usually come first.",
+   "see": [
+    "Retrieval-augmented generation (RAG)",
+    "Foundation model"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Foundation model",
+   "d": "A large model trained on broad data that can be adapted to many tasks.",
+   "why": "",
+   "see": [
+    "Large language model (LLM)",
+    "Fine-tuning"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Function calling",
+   "d": "A model's ability to request that a specific function or API be run with structured inputs. Often called tool use.",
+   "why": "",
+   "see": [
+    "Tool use",
+    "API (Application Programming Interface)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Generative AI",
+   "d": "AI that creates new content, such as text, images, audio, code or video, based on patterns learned from data.",
+   "why": "",
+   "see": [
+    "Large language model (LLM)",
+    "Diffusion model"
+   ],
+   "n": 4
+  },
+  {
+   "term": "GPU (Graphics Processing Unit)",
+   "d": "A chip originally built for graphics that is very good at the parallel math AI needs for training and inference.",
+   "why": "",
+   "see": [
+    "Inference",
+    "Training"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Grounding",
+   "d": "Connecting a model's answers to trusted sources, such as your documents or the web, so responses are based on facts.",
+   "why": "Reduces made-up answers.",
+   "see": [
+    "Retrieval-augmented generation (RAG)",
+    "Hallucination"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Guardrails",
+   "d": "Rules and checks that keep an AI system's behavior within safe, intended limits.",
+   "why": "",
+   "see": [
+    "Prompt injection",
+    "Human in the loop"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Hallucination",
+   "d": "When an AI states something false or invented with confidence.",
+   "why": "Always check AI output for facts, figures and citations before publishing.",
+   "see": [
+    "Grounding",
+    "Retrieval-augmented generation (RAG)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Human in the loop",
+   "d": "A design where people review or approve AI decisions at key points.",
+   "why": "Keeps quality and accountability in your hands.",
+   "see": [
+    "Guardrails",
+    "AI agent"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Image generation",
+   "d": "Creating images from text descriptions or other images using AI.",
+   "why": "Check usage rights and label AI images where appropriate.",
+   "see": [
+    "Diffusion model",
+    "Generative AI"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Inference",
+   "d": "Running a trained model to produce an output, such as answering a question.",
+   "why": "",
+   "see": [
+    "Training",
+    "Latency"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Knowledge cutoff",
+   "d": "The date after which a model has no information from its training data.",
+   "why": "For current facts, the model needs search or your own documents.",
+   "see": [
+    "Grounding",
+    "Training data"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Large language model (LLM)",
+   "d": "A model trained on large amounts of text to understand and generate language.",
+   "why": "",
+   "see": [
+    "Generative AI",
+    "Token",
+    "Transformer"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Latency",
+   "d": "The delay between sending a request and getting a response.",
+   "why": "",
+   "see": [
+    "Inference"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Machine learning",
+   "d": "A branch of AI where systems learn patterns from data instead of following hand-written rules.",
+   "why": "",
+   "see": [
+    "Deep learning",
+    "Supervised learning"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Machine translation",
+   "d": "Automatically translating text between languages with AI.",
+   "why": "Useful for drafts, but have important customer-facing text checked by a fluent speaker.",
+   "see": [
+    "Natural language processing (NLP)",
+    "Multilingual SEO"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Model",
+   "d": "The trained system that takes inputs and produces outputs, such as predictions or text.",
+   "why": "",
+   "see": [
+    "Parameters",
+    "Training"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Model Context Protocol (MCP)",
+   "d": "An open standard for connecting AI assistants to tools and data sources in a consistent way.",
+   "why": "",
+   "see": [
+    "Tool use",
+    "Integration"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Multimodal",
+   "d": "A model that can work with more than one kind of input or output, such as text, images and audio.",
+   "why": "",
+   "see": [
+    "Computer vision",
+    "Speech-to-text"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Natural language processing (NLP)",
+   "d": "The field of AI concerned with understanding and producing human language.",
+   "why": "",
+   "see": [
+    "Large language model (LLM)",
+    "Sentiment analysis"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Neural network",
+   "d": "A computing system loosely inspired by the brain, made of layers of connected nodes that learn from data.",
+   "why": "",
+   "see": [
+    "Deep learning",
+    "Parameters"
+   ],
+   "n": 4
+  },
+  {
+   "term": "OCR (Optical Character Recognition)",
+   "d": "Technology that turns text in images or scanned documents into editable text.",
+   "why": "Automates data entry from receipts, invoices and forms.",
+   "see": [
+    "Computer vision"
+   ],
+   "n": 4
+  },
+  {
+   "term": "On-device AI",
+   "d": "AI that runs directly on a phone or computer rather than in the cloud.",
+   "why": "Can be faster and keep data on the device.",
+   "see": [
+    "Small language model"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Open-weight model",
+   "d": "A model whose trained parameters are published so others can run or adapt it, subject to its license.",
+   "why": "",
+   "see": [
+    "Parameters",
+    "Open source"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Overfitting",
+   "d": "When a model learns its training data too closely and performs poorly on new data.",
+   "why": "",
+   "see": [
+    "Training data"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Parameters",
+   "d": "The internal values a model learns during training. Model size is often described by its number of parameters.",
+   "why": "",
+   "see": [
+    "Model",
+    "Training"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Predictive analytics",
+   "d": "Using data and models to forecast outcomes, such as demand or which customers may cancel.",
+   "why": "",
+   "see": [
+    "Machine learning",
+    "Churn"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Prompt",
+   "d": "The instructions and content you give an AI model.",
+   "why": "",
+   "see": [
+    "Prompt engineering",
+    "System prompt"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Prompt engineering",
+   "d": "Crafting prompts to get more accurate, useful results, for example by giving context, examples and a clear format.",
+   "why": "",
+   "see": [
+    "Prompt",
+    "Few-shot prompting"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Prompt injection",
+   "d": "An attack where hidden instructions in text, web pages or documents try to make an AI ignore its rules.",
+   "why": "A key risk when AI reads outside content or can take actions.",
+   "see": [
+    "Guardrails",
+    "AI agent"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Reasoning model",
+   "d": "A model designed to spend more computation thinking through a problem step by step before answering.",
+   "why": "",
+   "see": [
+    "Chain of thought"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Recommendation engine",
+   "d": "A system that suggests products or content based on behavior and similarities.",
+   "why": "",
+   "see": [
+    "Machine learning",
+    "Embedding"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Reinforcement learning",
+   "d": "Training an AI by rewarding good outcomes and penalizing bad ones as it acts.",
+   "why": "",
+   "see": [
+    "RLHF"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Responsible AI",
+   "d": "Developing and using AI with attention to safety, fairness, privacy, transparency and accountability.",
+   "why": "",
+   "see": [
+    "AI ethics",
+    "Human in the loop"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Retrieval-augmented generation (RAG)",
+   "d": "A technique where the system first finds relevant information, such as from your documents, and gives it to the model to use when answering.",
+   "why": "Lets AI answer from your own up-to-date content.",
+   "see": [
+    "Embedding",
+    "Vector database",
+    "Grounding"
+   ],
+   "n": 4
+  },
+  {
+   "term": "RLHF",
+   "d": "Reinforcement learning from human feedback: refining a model using people's ratings of its answers.",
+   "why": "",
+   "see": [
+    "Reinforcement learning",
+    "Fine-tuning"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Sentiment analysis",
+   "d": "Using AI to judge whether text expresses positive, negative or neutral feeling.",
+   "why": "Helps you understand reviews and feedback at scale.",
+   "see": [
+    "Natural language processing (NLP)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Small language model",
+   "d": "A compact language model that is cheaper and faster to run, sometimes on-device, often for narrower tasks.",
+   "why": "",
+   "see": [
+    "On-device AI",
+    "Large language model (LLM)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Speech-to-text",
+   "d": "Converting spoken audio into written text.",
+   "why": "",
+   "see": [
+    "Text-to-speech",
+    "Multimodal"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Summarization",
+   "d": "Using AI to condense long text into the key points.",
+   "why": "",
+   "see": [
+    "Large language model (LLM)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Supervised learning",
+   "d": "Training a model on labeled examples where the right answer is known.",
+   "why": "",
+   "see": [
+    "Unsupervised learning",
+    "Data annotation"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Synthetic data",
+   "d": "Artificially generated data used to train or test models, often when real data is scarce or sensitive.",
+   "why": "",
+   "see": [
+    "Training data"
+   ],
+   "n": 4
+  },
+  {
+   "term": "System prompt",
+   "d": "Background instructions that set an AI assistant's role, tone and rules before the conversation starts.",
+   "why": "",
+   "see": [
+    "Prompt",
+    "Guardrails"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Temperature",
+   "d": "A setting that controls how random or predictable a model's outputs are. Lower is more consistent; higher is more varied.",
+   "why": "",
+   "see": [
+    "Prompt"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Text-to-speech",
+   "d": "Converting written text into natural-sounding speech.",
+   "why": "",
+   "see": [
+    "Speech-to-text"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Token",
+   "d": "A chunk of text, often part of a word, that a language model reads and writes. Usage and limits are often counted in tokens.",
+   "why": "",
+   "see": [
+    "Context window",
+    "Large language model (LLM)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Tool use",
+   "d": "An AI model's ability to use external tools, such as search, calculators or APIs, to complete tasks.",
+   "why": "",
+   "see": [
+    "Function calling",
+    "AI agent",
+    "Model Context Protocol (MCP)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Training",
+   "d": "The process of teaching a model by adjusting its parameters using data.",
+   "why": "",
+   "see": [
+    "Training data",
+    "Inference"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Training data",
+   "d": "The examples a model learns from.",
+   "why": "Quality, rights and privacy of data matter.",
+   "see": [
+    "Bias",
+    "Training"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Transformer",
+   "d": "The neural network architecture behind most modern language models, built around a mechanism called attention.",
+   "why": "",
+   "see": [
+    "Large language model (LLM)",
+    "Neural network"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Unsupervised learning",
+   "d": "Training a model to find patterns in data without labeled answers, such as grouping similar customers.",
+   "why": "",
+   "see": [
+    "Supervised learning"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Vector database",
+   "d": "A database designed to store embeddings and quickly find the most similar items.",
+   "why": "",
+   "see": [
+    "Embedding",
+    "Retrieval-augmented generation (RAG)"
+   ],
+   "n": 4
+  },
+  {
+   "term": "Zero-shot prompting",
+   "d": "Asking a model to do a task with no examples, relying on its general training.",
+   "why": "",
+   "see": [
+    "Few-shot prompting"
+   ],
+   "n": 4
+  }
+ ]
+}

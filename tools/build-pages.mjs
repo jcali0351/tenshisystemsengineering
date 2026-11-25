@@ -3,7 +3,7 @@
 //     footer widgets, and the two homepage parallax bands (data/parallax.json, between the Design / Development /
 //     Optimization panels)
 //   - the photo header of every interior page (data/parallax.json "pageHeader", see heroPx)
-//   - about.html, services.html, contact.html, news.html, blog.html
+//   - about.html, team.html, knowledge-base.html, services.html, contact.html, news.html, blog.html
 //   - portfolio.html (designs from data/templates.json + our own software) and launch.html (the Launch Sequence)
 //   - services/<slug>.html, one full page per service
 //   - blog/<slug>.html, one page per long-form post that has a slug in data/blog.json
@@ -20,6 +20,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 
 import vm from "node:vm";
 import { createRequire } from "node:module";
 import { SEO, seoHead } from "./seo.mjs";
+import { knowledgeBaseMain } from "./build-knowledge-base.mjs";
 
 // The order here is the order everywhere: on the homepage three sets of three.
 const SERVICES = [
@@ -552,7 +553,7 @@ const FORM = index.match(/        <form class="contact-form"[\s\S]*?<\/form>/)[0
 
 // The header menu's dropdowns: a page in a dropdown also marks its top-level item (on Team, About shows as current).
 // The footer menu is flat, so only the page itself is marked there. Project pages pass ["portfolio", "p-<slug>"] already.
-const NAV_PARENT = { team: "about", technology: "about", blog: "news", portal: "contact", "p-storycaster": "portfolio", "p-master-baiter-pro": "portfolio" };
+const NAV_PARENT = { team: "about", technology: "about", "knowledge-base": "about", blog: "news", portal: "contact", "p-storycaster": "portfolio", "p-master-baiter-pro": "portfolio" };
 const navCurrent = (current) => [].concat(current).flatMap((c) => NAV_PARENT[c] ? [c, NAV_PARENT[c]] : [c]);
 // Point the copied links at the right folder and mark the current menu item.
 function chrome(html, prefix, current) {
@@ -560,7 +561,7 @@ function chrome(html, prefix, current) {
     .replace('href="#top"', `href="${prefix}index.html"`)
     .replace(/src="((?:brand|img)\/[\w.\/-]+)"/g, `src="${prefix}$1"`)
     .replace(/href="((?:news|blog)\.html#[^"]*)"/g, `href="${prefix}$1"`)
-    .replace(/href="((?:index|about|services|contact|team|technology|projects|portfolio|launch|news|blog|portal|wisconsin)\.html|projects\/[a-z-]+\.html|blog\/[a-z-]+\.html)"/g, `href="${prefix}$1"`);
+    .replace(/href="((?:index|about|services|contact|team|technology|knowledge-base|projects|portfolio|launch|news|blog|portal|wisconsin)\.html|projects\/[a-z-]+\.html|blog\/[a-z-]+\.html)"/g, `href="${prefix}$1"`);
 }
 
 function frame({ prefix, current, titleKey, descKey, title, description, bodyClass, main, rawMain = "", photoCredits = "", extraHead = "", extraScripts = "" }) {
@@ -1056,6 +1057,14 @@ ${gr.items.map(([slug, name, url]) => `            <li class="tech-card">
 ${cta("contact.html")}`,
 });
 writePage("technology.html", techPage);
+
+/* ---------- Knowledge Base ---------- */
+// Glossary of 434 terms from data/glossary.json (tools/build-knowledge-base.mjs). Look: knowledge-base.css / knowledge-base.js.
+const kbPage = frame({
+  prefix: "", current: "knowledge-base", titleKey: "kbTitle", descKey: "kbLead", bodyClass: "page kb-page",
+  main: knowledgeBaseMain({ tx, esc, t, banner, cta, art: ART.blog }),
+});
+writePage("knowledge-base.html", kbPage);
 
 /* ---------- Contact ---------- */
 const contactPage = frame({
@@ -2249,7 +2258,7 @@ ${GAMES.map((g) => `          <li class="game-card">
 
 mkdirSync("projects", { recursive: true });
 for (const p of PROJECTS) writePage(`projects/${p.slug}.html`, projectPage(p));
-console.log(`index.html updated; about.html, team.html, services.html, technology.html, projects.html, contact.html, ${SERVICES.length} service pages and ${PROJECTS.length} project pages written; news.html, blog.html, ${slugPosts.length} blog post page(s) and portal.html written`);
+console.log(`index.html updated; about.html, team.html, knowledge-base.html, services.html, technology.html, projects.html, contact.html, ${SERVICES.length} service pages and ${PROJECTS.length} project pages written; news.html, blog.html, ${slugPosts.length} blog post page(s) and portal.html written`);
 
 /* ---------- Buttons and Custom CSS (Tenshi Editor › Buttons, › Custom CSS) ----------
    data/buttons.json → buttons.css (no settings = only the hero button's default Flat red look). custom.css is written by the
@@ -2300,6 +2309,27 @@ await import("./neon-pages.mjs");
     }
     if (!html.includes('src="contact-map.js')) {
       html = html.replace(/\n<\/body>/, `\n  <script src="contact-map.js"><\/script>\n</body>`);
+    }
+    writeFileSync(file, html);
+  }
+}
+
+// Knowledge Base assets must load after neon-pages.css so term titles and accents aren't restyled by the neon skin.
+{
+  const file = "knowledge-base.html";
+  if (existsSync(file)) {
+    let html = readFileSync(file, "utf8");
+    html = html.replace(/\n?[ \t]*<link rel="stylesheet" href="knowledge-base\.css[^"]*">/g, "");
+    html = html.replace(/\n?[ \t]*<script src="knowledge-base\.js[^"]*"><\/script>/g, "");
+    if (!html.includes('href="knowledge-base.css')) {
+      if (/<link rel="stylesheet" href="sandbox\/neon-pages\.css[^"]*">/.test(html)) {
+        html = html.replace(/(<link rel="stylesheet" href="sandbox\/neon-pages\.css[^"]*">)/, `$1\n  <link rel="stylesheet" href="knowledge-base.css">`);
+      } else {
+        html = html.replace(/(<link rel="stylesheet" href="[^"]+">)(?![\s\S]*<link rel="stylesheet")/, `$1\n  <link rel="stylesheet" href="knowledge-base.css">`);
+      }
+    }
+    if (!html.includes('src="knowledge-base.js')) {
+      html = html.replace(/\n<\/body>/, `\n  <script src="knowledge-base.js"><\/script>\n</body>`);
     }
     writeFileSync(file, html);
   }

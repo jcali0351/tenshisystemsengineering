@@ -20,6 +20,10 @@ export const SEO = {
     title: "Our Team | Web Designers, Developers & AI Engineers | Tenshi",
     desc: "Meet the web designers, developers and AI engineers behind Tenshi Systems Engineering, a Madison, Wisconsin studio for small business technology.",
   },
+  kbTitle: {
+    title: "Knowledge Base | Web, SEO, SaaS & AI Glossary | Tenshi",
+    desc: "A plain-English glossary of 434 terms in web development, web design, SEO, SaaS and AI, written for small and mid-size business owners.",
+  },
   navServices: {
     title: "Small Business Web Design, Hosting & AI Services | Tenshi",
     desc: "Web design, web development, web hosting, AI services, branding, CMS, custom software and IT consulting for small businesses in Wisconsin and across the US.",
