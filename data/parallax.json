@@ -315,9 +315,9 @@
     },
     "feature3": {
       "enabled": true,
-      "image": "img/photos/yokohama.jpg",
+      "image": "img/photos/optimization-section.webp",
       "speed": 0.12,
-      "position": "42% 66%",
+      "position": "88% 50%",
       "overlayMode": "none",
       "overlay": "#12050a",
       "overlayOpacity": 0.35,

@@ -628,7 +628,7 @@ window.TRANSLATIONS = {
     feat2Item1: "Websites and web applications built to last",
     feat2Item2: "Custom software, automation and AI assistants",
     feat2Item3: "Secure hosting, monitoring and long-term support",
-    feat3Alt: "Waterfront skyline under a clear blue sky",
+    feat3Alt: "Neon city highways at night beside glowing performance gauges for speed, load time, bandwidth and response time: Tenshi's website speed and performance optimization",
     feat3Eyebrow: "Performance and growth",
     feat3Title: "Optimization",
     feat3Lead: "Launch day is only the beginning. We measure how your website performs in the real world, then improve it step by step, so it loads faster, ranks higher in searches across Wisconsin and beyond, and turns more visitors into customers.",
