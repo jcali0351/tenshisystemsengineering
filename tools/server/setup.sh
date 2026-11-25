@@ -222,6 +222,8 @@ cat > /etc/caddy/Caddyfile <<EOF
 	on_demand_tls {
 		ask http://127.0.0.1:9123/check
 	}
+	# enable this if browsers stall on images/large files over HTTP/3 (h3), which turns HTTP/3 off.
+	# servers { protocols h1 h2 }
 }
 
 $DOMAIN {
