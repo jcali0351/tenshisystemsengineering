@@ -214,48 +214,7 @@ html.neon .pat-co a:hover, html.neon .pat-co a:focus-visible { border-color: #a6
 html.neon .pat-sources a { color: #c78fff; }
 html.neon .contact-form :is(input, select, textarea):focus { box-shadow: 0 0 0 4px rgba(108, 16, 200, .12) !important; }
 
-/* ---- from chat.css ---- */
-html.neon .tk-launch { background: linear-gradient(135deg, #8326e0 0%, #6c10c8 55%, #4c0b8e 100%); box-shadow: 0 10px 30px rgba(68, 10, 126, .35), 0 0 0 0 rgba(108, 16, 200, .45); }
-html.neon .tk-launch:hover { box-shadow: 0 14px 36px rgba(68, 10, 126, .45); }
-@keyframes tk-call { 0%, 100% { box-shadow: 0 10px 30px rgba(68, 10, 126, .35), 0 0 0 0 rgba(108, 16, 200, .4); } 50% { box-shadow: 0 10px 30px rgba(68, 10, 126, .35), 0 0 0 10px rgba(108, 16, 200, 0); } }
-html.neon .tk-head { background: radial-gradient(360px 120px at 0% 0%, rgba(182, 110, 255, .45), transparent 70%), linear-gradient(135deg, #6c10c8, #4c0b8e); }
-html.neon .tk-ava::after { border: 2px solid #560ca1; }
-html.neon .tk-log { scrollbar-color: #d3c3e3 transparent; }
-html.neon .tk-intro { background: radial-gradient(260px 120px at 100% 0%, rgba(187, 120, 255, .4), transparent 70%), linear-gradient(135deg, #6c10c8, #440a7e); box-shadow: 0 10px 26px rgba(68, 10, 126, .25); }
-html.neon .tk-row.me .tk-bub { background: linear-gradient(135deg, #6c10c8, #560ca1); box-shadow: 0 6px 16px rgba(108, 16, 200, .25); }
-html.neon .tk-links a { border: 1px solid #e2d4f0; }
-html.neon .tk-links a:hover { background: #f4e9ff; }
-html.neon .tk-chips button { border: 1px solid #dcc9f0; }
-html.neon .tk-chips button:hover { background: #f4e9ff; }
-html.neon .tk-input textarea:focus { box-shadow: 0 0 0 3px rgba(108, 16, 200, .15); }
-html.neon .tk-send { background: linear-gradient(135deg, #8326e0, #560ca1); box-shadow: 0 6px 16px rgba(108, 16, 200, .3); }
-html.neon .tk-form textarea:focus { box-shadow: 0 0 0 3px rgba(108, 16, 200, .15); }
-html.neon .tk-err { color: #5e0db0; }
-html.neon .tk-launch { color: #7616d6; border: 1.5px solid #7616d6; }
-html.neon .tk-launch:hover { background: #7616d6; }
-html.neon .tk-launch:focus-visible { outline: 3px solid #7616d6; }
-html.neon .tk-hbtn:focus-visible { outline-color: #7616d6; }
-html.neon .tk-intro-cap em { color: #7616d6; }
-html.neon .tk-row.me .tk-bub { background: #7616d6; }
-html.neon .tk-bub a { color: #7616d6; }
-html.neon .tk-links a { color: #7616d6; }
-html.neon .tk-links a:hover { border-color: #7616d6; color: #650ebc; }
-html.neon .tk-typing i { background: #7616d6; }
-html.neon .tk-chips button:hover, html.neon .tk-chips button.human:hover { border-color: #7616d6; color: #7616d6; }
-html.neon .tk-chips button:focus-visible { outline: 2px solid #7616d6; }
-html.neon .tk-input textarea:focus { border-color: #7616d6; box-shadow: 0 0 0 3px rgba(118, 22, 214, .15); }
-html.neon .tk-send { background: #7616d6; }
-html.neon .tk-send:hover { background: #650ebc; }
-html.neon .tk-send:focus-visible { outline: 3px solid #7616d6; }
-html.neon .tk-foot button { color: #7616d6; }
-html.neon .tk-foot button:hover { color: #650ebc; }
-html.neon .tk-form textarea:focus { border-color: #7616d6; box-shadow: 0 0 0 3px rgba(118, 22, 214, .15); }
-html.neon .tk-form .tk-check input { accent-color: #7616d6; }
-html.neon .tk-err { color: #650ebc; }
-html.neon .tk-form-actions button { background: #7616d6; border-color: #7616d6; }
-html.neon .tk-form-actions button:hover { background: #650ebc; border-color: #650ebc; }
-html.neon .tk-form-actions .tk-copy { color: #7616d6; }
-html.neon .tk-form-actions .tk-copy:hover { border-color: #7616d6; color: #650ebc; }
+/* ---- chat.css: the Ask Tanaka chat has its own neon look now, nothing to recolour. ---- */
 
 /* ---- from site-theme.css ---- */
 :root.neon { --red:#6c10c8; --shu:#6c10c8; --red-deep:color-mix(in srgb,#6c10c8 82%,#000); --red-dark:color-mix(in srgb,#6c10c8 65%,#000); }

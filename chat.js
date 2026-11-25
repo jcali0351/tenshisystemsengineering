@@ -1099,24 +1099,32 @@
   /* ---------- open, close, language ---------- */
   function labels() {
     var rtl = lang() === "ar" || lang() === "fa";
-    panel.setAttribute("dir", rtl ? "rtl" : "ltr");
     launch.setAttribute("dir", rtl ? "rtl" : "ltr");
     launch.setAttribute("aria-label", u("launchLabel"));
     launch.querySelector(".tk-label").textContent = u("launch");
+    if (!panel) return;            // the panel is only built the first time someone opens the chat
+    panel.setAttribute("dir", rtl ? "rtl" : "ltr");
     panel.setAttribute("aria-label", u("launchLabel"));
-    panel.querySelector(".tk-who span").textContent = u("role") + " · " + u("online");
+    panel.querySelector(".tk-role").textContent = u("role");
+    panel.querySelector(".tk-online").textContent = u("online");
     panel.querySelector("[data-close]").setAttribute("aria-label", u("close"));
+    panel.querySelector("[data-close]").title = u("close");
     panel.querySelector(".tk-head [data-human]").setAttribute("aria-label", u("human"));
     panel.querySelector(".tk-head [data-human]").title = u("human");
     ta.placeholder = u("placeholder");
     ta.setAttribute("aria-label", u("placeholder"));
     sendBtn.setAttribute("aria-label", u("send"));
+    chipsEl.setAttribute("aria-label", u("launch"));
     panel.querySelector(".tk-foot span").textContent = u("foot");
     panel.querySelector(".tk-foot button").textContent = u("human");
   }
   function open() {
+    buildPanel();
+    if (!panel.hidden && !panel.classList.contains("tk-out")) { ta.focus({ preventScroll: true }); return; }
+    clearTimeout(closeTimer);
     document.documentElement.classList.add("tk-open");
     panel.hidden = false;
+    launch.setAttribute("aria-expanded", "true");
     panel.classList.remove("tk-out"); panel.classList.add("tk-in");
     state.opened = true; save();
     if (!state.msgs.length) {
@@ -1130,56 +1138,47 @@
     }
     setTimeout(function () { ta.focus({ preventScroll: true }); }, 80);
   }
+  var closeTimer;
   function close() {
-    if (panel.hidden) return;
+    if (!panel || panel.hidden) return;
     var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
     panel.classList.remove("tk-in"); panel.classList.add("tk-out");
-    setTimeout(function () {
+    launch.setAttribute("aria-expanded", "false");
+    closeTimer = setTimeout(function () {
       panel.hidden = true; panel.classList.remove("tk-out");
       document.documentElement.classList.remove("tk-open");
       state.opened = false; save();
       launch.focus({ preventScroll: true });
-    }, reduce ? 0 : 170);
+    }, reduce ? 0 : 200);
   }
   function autosize() { ta.style.height = "auto"; ta.style.height = Math.min(120, ta.scrollHeight) + "px"; sendBtn.disabled = busy || !ta.value.trim(); }
 
+  // Keep Tab inside the open chat (it covers the whole screen on phones).
+  function trapTab(e) {
+    if (e.key !== "Tab") return;
+    var f = Array.prototype.filter.call(panel.querySelectorAll("button, a[href], textarea, input, [tabindex]:not([tabindex='-1'])"), function (el) {
+      return !el.disabled && !el.closest("[hidden]") && el.offsetParent !== null;
+    });
+    if (!f.length) return;
+    var first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+
+  // The launcher is built when the page loads; the chat window itself only when it is first opened (or hovered).
   function build() {
     root = document.createElement("div");
     root.className = "tk-root";
     root.innerHTML =
-      '<button class="tk-launch" type="button"><span class="tk-orb">' + BADGE + '</span><span class="tk-dot" aria-hidden="true"></span><span class="tk-label"></span></button>' +
-      '<section class="tk-panel" role="dialog" hidden>' +
-      '<header class="tk-head"><span class="tk-ava">' + BADGE + '</span><div class="tk-who"><b>Tanaka Matsumoto</b><span></span></div>' +
-      '<button class="tk-hbtn" type="button" data-human>' + svg("human") + "</button>" +
-      '<button class="tk-hbtn" type="button" data-close>' + svg("close") + "</button></header>" +
-      '<div class="tk-log" role="log" aria-live="polite"></div>' +
-      '<div class="tk-chips" hidden></div>' +
-      '<form class="tk-input"><textarea rows="1" maxlength="1500"></textarea><button class="tk-send" type="submit" disabled>' + svg("send") + "</button></form>" +
-      '<div class="tk-foot"><span></span> <button type="button" data-human></button></div>' +
-      "</section>";
+      '<button class="tk-launch" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="tk-panel">' +
+      '<span class="tk-orb">' + BADGE + '</span><span class="tk-dot" aria-hidden="true"></span><span class="tk-label"></span>' +
+      '<span class="tk-spark" aria-hidden="true">AI</span></button>';
     document.body.appendChild(root);
     launch = root.querySelector(".tk-launch");
-    panel = root.querySelector(".tk-panel");
-    log = root.querySelector(".tk-log");
-    chipsEl = root.querySelector(".tk-chips");
-    ta = root.querySelector(".tk-input textarea");
-    sendBtn = root.querySelector(".tk-send");
     labels();
-
     launch.addEventListener("click", open);
-    root.querySelector(".tk-input").addEventListener("submit", function (e) { e.preventDefault(); ask(ta.value); });
-    ta.addEventListener("input", autosize);
-    ta.addEventListener("keydown", function (e) { if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); ask(ta.value); } });
-    panel.addEventListener("keydown", function (e) { if (e.key === "Escape") { e.stopPropagation(); close(); } });
-    panel.addEventListener("click", function (e) {
-      var t = e.target;
-      if (t.closest("[data-close]")) { close(); return; }
-      if (t.closest("[data-human]")) { e.preventDefault(); startHuman(); return; }
-      if (t.closest(".tk-copy")) { copyHuman(t.closest("form"), t.closest(".tk-copy")); return; }
-      var c = t.closest("[data-say]");
-      if (c) ask(c.dataset.say);
-    });
-    panel.addEventListener("submit", function (e) { if (e.target.classList.contains("tk-form")) { e.preventDefault(); sendHuman(e.target); } });
+    // Warm up the window the moment someone points at the button, so it opens instantly.
+    ["pointerenter", "focus", "touchstart"].forEach(function (ev) { launch.addEventListener(ev, buildPanel, { passive: true, once: true }); });
     // The site's language switch: relabel the chat and redraw its messages' own wording.
     // A new language starts a fresh conversation in that language, so old and new languages never mix.
     var chatLang = lang();
@@ -1189,6 +1188,7 @@
       chatLang = lang();
       var hadChat = state.msgs.some(function (m) { return m.r === "me" || m.r === "bot"; });
       state.msgs = []; state.fun = false; save();
+      if (!panel) return;
       if (!panel.hidden) {
         log.innerHTML = "";
         push({ r: "intro", text: "" });
@@ -1198,6 +1198,42 @@
         log.innerHTML = "";
       }
     });
+  }
+  function buildPanel() {
+    if (panel) return;
+    root.insertAdjacentHTML("beforeend",
+      '<section class="tk-panel" id="tk-panel" role="dialog" aria-modal="false" aria-labelledby="tk-name" aria-describedby="tk-status" hidden>' +
+      '<header class="tk-head"><span class="tk-ava">' + BADGE + '<i class="tk-ava-dot" aria-hidden="true"></i></span>' +
+      '<div class="tk-who"><b id="tk-name">Tanaka Matsumoto</b><span class="tk-status" id="tk-status"><i class="tk-live" aria-hidden="true"></i>' +
+      '<span class="tk-online"></span><span class="tk-sep" aria-hidden="true">·</span><span class="tk-role"></span></span></div>' +
+      '<button class="tk-hbtn" type="button" data-human>' + svg("human") + "</button>" +
+      '<button class="tk-hbtn" type="button" data-close>' + svg("close") + "</button></header>" +
+      '<div class="tk-log" role="log" aria-live="polite" aria-relevant="additions" tabindex="-1"></div>' +
+      '<div class="tk-chips" role="group" hidden></div>' +
+      '<form class="tk-input"><div class="tk-field"><textarea rows="1" maxlength="1500" enterkeyhint="send"></textarea>' +
+      '<button class="tk-send" type="submit" disabled>' + svg("send") + "</button></div></form>" +
+      '<div class="tk-foot"><span></span> <button type="button" data-human></button></div>' +
+      "</section>");
+    panel = root.querySelector(".tk-panel");
+    log = root.querySelector(".tk-log");
+    chipsEl = root.querySelector(".tk-chips");
+    ta = root.querySelector(".tk-input textarea");
+    sendBtn = root.querySelector(".tk-send");
+    labels();
+
+    root.querySelector(".tk-input").addEventListener("submit", function (e) { e.preventDefault(); ask(ta.value); });
+    ta.addEventListener("input", autosize);
+    ta.addEventListener("keydown", function (e) { if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); ask(ta.value); } });
+    panel.addEventListener("keydown", function (e) { if (e.key === "Escape") { e.stopPropagation(); close(); } else trapTab(e); });
+    panel.addEventListener("click", function (e) {
+      var t = e.target;
+      if (t.closest("[data-close]")) { close(); return; }
+      if (t.closest("[data-human]")) { e.preventDefault(); startHuman(); return; }
+      if (t.closest(".tk-copy")) { copyHuman(t.closest("form"), t.closest(".tk-copy")); return; }
+      var c = t.closest("[data-say]");
+      if (c) ask(c.dataset.say);
+    });
+    panel.addEventListener("submit", function (e) { if (e.target.classList.contains("tk-form")) { e.preventDefault(); sendHuman(e.target); } });
   }
 
   function init() {

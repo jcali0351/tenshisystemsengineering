@@ -242,57 +242,10 @@ html.neon .hero-cta-glass .hg-btn:not(#_):not(#__):not(#___) .hg-icon { backgrou
 html.neon .hero-cta-glass .hg-btn:not(#_):not(#__):not(#___) .hg-svg,
 html.neon .hero-cta-glass .hg-btn:not(#_):not(#__):not(#___) .hg-svg path { fill: var(--neon-orange) !important; }
 
-/* ---------- "Ask Tanaka" chat: white and purple instead of white and red ---------- */
-html.neon .tk-launch { color: var(--neon-ink); background: #fff; border: 1.5px solid var(--neon-purple); box-shadow: 0 0 22px rgba(176, 77, 255, .45); }
-html.neon .tk-launch:hover { background: var(--neon-purple); color: #fff; border-color: var(--neon-purple); box-shadow: 0 0 30px rgba(176, 77, 255, .7); }
-html.neon .tk-launch:focus-visible { outline-color: var(--neon-purple); }
-html.neon .tk-orb { box-shadow: 0 0 0 2px var(--neon-purple); }
-
-/* The "online" light: a pink-to-orange dot that pulses, with a ring rippling out from it. */
-html.neon .tk-dot,
-html.neon .tk-ava::after {
-  background: radial-gradient(circle at 35% 35%, #ffd0a0, #ff2bd6 45%, #ff2bd6 100%) !important;
-  border-color: #fff !important;
-  animation: neon-online 1.6s ease-in-out infinite;
-}
-@keyframes neon-online {
-  0%   { box-shadow: 0 0 0 0 rgba(255, 90, 160, .75), 0 0 8px rgba(255, 43, 214, .9); transform: scale(1); }
-  50%  { box-shadow: 0 0 0 7px rgba(255, 90, 160, 0), 0 0 14px rgba(255, 43, 214, 1); transform: scale(1.15); }
-  100% { box-shadow: 0 0 0 0 rgba(255, 90, 160, 0), 0 0 8px rgba(255, 43, 214, .9); transform: scale(1); }
-}
-
-/* Inside the chat panel: purple everywhere the red accent used to be. */
-html.neon .tk-hbtn:focus-visible { outline-color: var(--neon-purple); }
-html.neon .tk-intro-cap em { color: var(--neon-purple); }
-html.neon .tk-row.me .tk-bub { background: var(--neon-purple); }
-html.neon .tk-bub a, html.neon .tk-links a { color: var(--neon-purple); }
-html.neon .tk-row.me .tk-bub a { color: #fff; }
-html.neon .tk-links a:hover { border-color: var(--neon-purple); color: var(--neon-purple-dark); }
-html.neon .tk-typing i { background: var(--neon-purple); }
-html.neon .tk-chips button:hover, html.neon .tk-chips button.human:hover { border-color: var(--neon-purple); color: var(--neon-purple); }
-html.neon .tk-chips button:focus-visible { outline-color: var(--neon-purple); }
-html.neon .tk-input textarea:focus { border-color: var(--neon-purple); box-shadow: 0 0 0 3px rgba(109, 40, 217, .18); }
-html.neon .tk-send { background: var(--neon-purple); }
-html.neon .tk-send:hover { background: var(--neon-purple-dark); }
-html.neon .tk-send:focus-visible { outline-color: var(--neon-purple); }
-html.neon .tk-foot button { color: var(--neon-purple); }
-html.neon .tk-foot button:hover { color: var(--neon-purple-dark); }
-html.neon .tk-form textarea:focus { border-color: var(--neon-purple); box-shadow: 0 0 0 3px rgba(109, 40, 217, .18); }
-html.neon .tk-form .tk-check input { accent-color: var(--neon-purple); }
-html.neon .tk-err { color: var(--neon-purple-dark); }
-html.neon .tk-form-actions button { background: var(--neon-purple); border-color: var(--neon-purple); }
-html.neon .tk-form-actions button:hover { background: var(--neon-purple-dark); border-color: var(--neon-purple-dark); }
-html.neon .tk-form-actions .tk-copy { background: #fff; color: var(--neon-purple); border-color: #e5e5ea; }
-html.neon .tk-form-actions .tk-copy:hover { border-color: var(--neon-purple); color: var(--neon-purple-dark); }
-
-/* People who asked for less motion: the online light stays still. */
-@media (prefers-reduced-motion: reduce) {
-  html.neon .tk-dot, html.neon .tk-ava::after { animation: none; }
-}
+/* ---------- "Ask Tanaka" chat: its neon look lives in chat.css. ---------- */
 
 /* ---------- Tanaka as a purple robot: every picture of him is swapped for tanaka-robot.svg ---------- */
 html.neon img[src*="tanaka.svg"] { content: url("tanaka-robot.svg"); }
-html.neon .tk-orb, html.neon .tk-ava, html.neon .tk-badge-lg { background: #2e0b57; box-shadow: 0 0 0 2px #a855f7, 0 0 14px rgba(168, 85, 247, .6) !important; }
 
 /* ---------- The header over WHITE content (neon-header.js adds .neon-light while white is underneath) ----------
    Logo: all black with a light gray outer glow. Menu and language button: dark text. Everything fades between looks. */
@@ -846,8 +799,8 @@ html.neon .rts-zone:fullscreen { width: 100vw !important; height: 100vh !importa
 html.neon .rts-top .rts-full { margin-left: 8px; }
 @media (max-width: 760px) { html.neon.rts-takeover .rts-top { top: 10px; } }
 
-/* Ask Tanaka (the chat button and panel) is switched off for now, on every page. Delete this rule to bring it back. */
-html.neon .tk-root, html.neon .neon-bubble, html.neon .chat-card { display: none !important; }
+/* Ask Tanaka is back (chat.css). The game's speech bubble stays off. */
+html.neon .neon-bubble { display: none !important; }
 
 /* Buttons: text centred both ways (the site gives them a fixed height, so lay the label out with flexbox). */
 html.neon:not(#_):not(#__) .services .service-card a.btn-more.btn-more,
