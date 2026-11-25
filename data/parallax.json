@@ -187,9 +187,9 @@
   "panels": {
     "feature1": {
       "enabled": true,
-      "image": "img/photos/kyoto.jpg",
+      "image": "img/photos/design-section.webp",
       "speed": 0.12,
-      "position": "68% 70%",
+      "position": "76% 55%",
       "overlayMode": "none",
       "overlay": "#12050a",
       "overlayOpacity": 0.35,
