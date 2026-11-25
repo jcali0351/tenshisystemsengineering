@@ -32,8 +32,8 @@
   <link rel="icon" href="brand/favicon-192.png?v=20261119" type="image/png" sizes="192x192">
   <link rel="apple-touch-icon" href="brand/tenshi-apple-touch-icon.png?v=20261119">
   <link rel="preload" href="img/photos/osaka.jpg" as="image" type="image/jpeg">
-  <link rel="stylesheet" href="tailwind.css?v=093e6a7b">
-  <link rel="stylesheet" href="styles.css?v=383405ac">
+  <link rel="stylesheet" href="tailwind.css?v=fa9ef6d5">
+  <link rel="stylesheet" href="styles.css?v=7a93fecd">
   <link rel="stylesheet" href="design.css?v=ea6e1648">
   <link rel="stylesheet" href="chat.css?v=2395252a">
   <link rel="stylesheet" href="site-theme.css?v=2c33aa72">
@@ -46,6 +46,7 @@
   <link rel="stylesheet" href="sandbox/neon-theme.css?v=20261123r">
   <link rel="stylesheet" href="buttons.css?v=f676c1a0">
   <link rel="stylesheet" href="custom.css?v=743f7d62">
+  <link rel="preload" as="image" href="img/photos/hero-synthwave.webp?v=20261125" type="image/webp" fetchpriority="high">
   <script src="sandbox/neon-recolor-live.js?v=20261123r"></script>
 </head>
 <body data-seo>
@@ -134,10 +135,10 @@
 
   <main id="main">
     <section class="hero" id="top" aria-labelledby="hero-title">
-      <!-- Hero photo spot: a plain black block filling the hero, behind the text. To add the photo, put it in img/photos/
-           and set background-image on .hero-photo-placeholder in styles.css (see the "Hero photo spot" rule), and describe
-           the photo in aria-label below. -->
-      <div class="hero-media hero-photo-placeholder" role="img" aria-label=""></div>
+      <!-- Hero photo: img/photos/hero-synthwave.webp, set as background-image on .hero-photo-placeholder in styles.css
+           (the "Hero photo spot" rule; black shows until it loads). To change the photo, swap the file or that url and the
+           aria-label below. -->
+      <div class="hero-media hero-photo-placeholder" role="img" aria-label="Synthwave city at sunset: a striped orange sun between neon server-rack buildings and palm trees, over a glowing road grid"></div>
       <div class="hero-slides" aria-hidden="true">
         <div class="slide is-active" data-src="img/photos/osaka.jpg"></div>
         <div class="slide" data-src="img/photos/tokyo.jpg"></div>
