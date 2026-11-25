@@ -691,6 +691,24 @@ html.neon:not(#_):not(#__) :is(.services, .feature, .contact, .site-footer) {
     #030006 !important;
   position: relative;
 }
+/* The homepage services section: full-width photo of a purple concrete wall with server racks at the sides
+   (img/photos/services-bg.webp, 2736x912; phones get the centre crop services-bg-mobile.webp, 1368x912).
+   A soft fade at the top and bottom blends it into the sections around it; the middle stays clear for the cards. */
+html.neon:not(#_):not(#__):not(#___) section.services#services {
+  background:
+    linear-gradient(180deg, rgba(3, 0, 6, 0.55) 0%, rgba(3, 0, 6, 0) 14%, rgba(3, 0, 6, 0) 86%, rgba(3, 0, 6, 0.6) 100%),
+    radial-gradient(ellipse 46% 60% at 50% 50%, rgba(8, 2, 20, 0.28), transparent 75%),
+    url("../img/photos/services-bg.webp?v=20261125") center / cover no-repeat,
+    #12062a !important;
+}
+@media (max-width: 760px) {
+  html.neon:not(#_):not(#__):not(#___) section.services#services {
+    background:
+      linear-gradient(180deg, rgba(3, 0, 6, 0.55) 0%, rgba(3, 0, 6, 0) 10%, rgba(3, 0, 6, 0) 90%, rgba(3, 0, 6, 0.6) 100%),
+      url("../img/photos/services-bg-mobile.webp?v=20261125") center / cover no-repeat,
+      #12062a !important;
+  }
+}
 /* Panels: the GAME OVER box. */
 html.neon:not(#_):not(#__) :is(.service-card, .contact-form, .feature-body, .contact-intro, .site-footer .fw) {
   background: var(--gx-panel) !important;
