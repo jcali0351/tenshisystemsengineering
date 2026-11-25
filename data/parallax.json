@@ -454,18 +454,9 @@
         "image": "img/photos/services-hero.webp",
         "position": "center center",
         "speed": 0,
-        "overlayMode": "gradient",
+        "overlayMode": "none",
         "overlay": "#1a0b2e",
-        "overlayOpacity": 0.2,
-        "gradient": {
-          "type": "linear",
-          "angle": 180,
-          "from": "#1a0b2e",
-          "fromOpacity": 0.46,
-          "to": "#1a0b2e",
-          "toOpacity": 0.62,
-          "stop": 50
-        },
+        "overlayOpacity": 0,
         "grayFade": { "enabled": false }
       },
       "services/*": {

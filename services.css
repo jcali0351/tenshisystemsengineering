@@ -1,18 +1,28 @@
-/* Hero: same interior-header behavior as technology and knowledge-base
-   (content height, shared padding, min-height 280px). Text is centered in
-   the image region so it is not left-columned; the Wisconsin art may sit behind it. */
+/* Services hero: fill the 3:1 artwork edge to edge (cover inside a matching
+   aspect-ratio box) with the title centred on the Wisconsin glow. A light
+   scrim sits only behind the type so the neon colour stays vivid. */
 :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero {
   --px-pos: center center !important;
-  --px-grad: linear-gradient(180deg, rgba(26, 11, 46, 0.46) 0%, 50%, rgba(26, 11, 46, 0.62) 100%) !important;
+  --px-grad: none !important;
+  box-sizing: border-box;
+  width: 100%;
+  aspect-ratio: 3 / 1;
   min-height: 280px;
+  height: auto;
+  overflow: visible;
+  padding-top: clamp(28px, 3vw, 48px) !important;
+  padding-bottom: clamp(24px, 2.6vw, 40px) !important;
+  padding-inline: var(--gutter);
+  background: #12050a !important;
   text-align: center !important;
   justify-content: center !important;
   align-items: center !important;
 }
 :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero[data-overlay="gradient"] .parallax-overlay,
+:root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero[data-overlay="none"] .parallax-overlay,
 :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .parallax-overlay {
-  background: var(--px-grad) !important;
-  opacity: 1 !important;
+  background: none !important;
+  opacity: 0 !important;
 }
 :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .svc-hero-inner {
   position: relative;
@@ -36,9 +46,26 @@
   position: relative;
   z-index: 1;
 }
+:root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .svc-hero-text::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  inset: -1.25rem -2.5rem;
+  background: radial-gradient(ellipse at center,
+    rgba(10, 4, 16, 0.48) 0%,
+    rgba(10, 4, 16, 0.2) 48%,
+    rgba(10, 4, 16, 0) 76%);
+}
 :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero h1,
 :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero h1 * {
   text-align: center !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero h1 {
+  margin-bottom: 0.28em !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .crumbs ol {
+  margin-bottom: 12px !important;
 }
 :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .crumbs,
 :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .crumbs ol,
@@ -51,17 +78,16 @@
   margin-right: auto !important;
   text-align: center !important;
 }
-:root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero {
-  background: #12050a !important;
-}
-/* The shared parallax layer is 160% tall with object-fit:cover, which zooms
-   in so far that the top of the Wisconsin outline is clipped. Size the layer
-   to the hero and use contain so the full 3:1 artwork (and the mobile crop)
-   stays visible, with the dark hero background filling any leftover band. */
+/* Keep the shared 160% cover layer from zooming: the layer matches the 3:1
+   (or mobile-crop) box, and cover fills it with almost no crop. */
 :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .parallax-layer {
   top: 0 !important;
   height: 100% !important;
   transform: none !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
 }
 :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .parallax-layer picture {
   display: block;
@@ -71,15 +97,34 @@
 :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .parallax-layer img {
   width: 100% !important;
   height: 100% !important;
-  object-fit: contain !important;
+  object-fit: cover !important;
   object-position: center center !important;
   filter: none !important;
+  -webkit-filter: none !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
 }
-@media (max-width: 760px) {
+/* Below the width where a 3:1 box is too short for the title, use the
+   Wisconsin-centred crop and its 1200/912 aspect. */
+@media (max-width: 900px) {
   :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero {
     --px-pos: center center !important;
+    /* Let the box grow with the title when 1200/912 is shorter than the type. */
+    aspect-ratio: auto;
+    min-height: max(280px, calc(100vw * 912 / 1200));
   }
   :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .svc-hero-text {
     max-width: 100%;
   }
+  :root:not(#_):not(#__):not(#___):not(#____) .services-page .svc-hero.px-hero .svc-hero-text::before {
+    inset: -1rem -1.25rem;
+  }
+}
+/* Wisconsin link under the hero: same inset as a page-section + page-inner,
+   so it is not flush to the edge under 1150px. Uses the shared gutter token. */
+:root:not(#_):not(#__):not(#___):not(#____) .services-page .wi-note.page-inner {
+  width: min(1150px, calc(100% - 2 * var(--gutter)));
+  max-width: 1150px;
+  margin-inline: auto;
+  box-sizing: border-box;
 }
