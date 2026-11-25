@@ -447,7 +447,7 @@
 }
 @media (max-width: 760px) {
   :root:not(#_):not(#__):not(#___):not(#____) .kb-page .svc-hero.px-hero {
-    --px-pos: 75% center;
+    --px-pos: 75% center !important;
   }
   :root:not(#_):not(#__):not(#___):not(#____) .kb-page .svc-hero.px-hero .svc-hero-text {
     max-width: 100%;
