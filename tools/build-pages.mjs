@@ -682,14 +682,7 @@ const contactMapHero = (prefix) => `    <section class="svc-hero contact-map-her
       <div class="cm-scrim" aria-hidden="true"></div>
       <div class="svc-hero-inner">
         <div class="svc-hero-text">
-          <nav class="crumbs" aria-label="${tx("crumbLabel")}" data-i18n-attr="aria-label:crumbLabel">
-            <ol>
-              <li><a href="${prefix}index.html" data-i18n="crumbHome">${tx("crumbHome")}</a></li>
-              <li aria-current="page" data-i18n="navContact">${tx("navContact")}</li>
-            </ol>
-          </nav>
           <h1 data-i18n="contactPageTitle">${tx("contactPageTitle")}</h1>
-          <p class="svc-hero-lead" data-i18n="contactPageLead">${tx("contactPageLead")}</p>
           <div class="cm-hero-actions">
             <button type="button" class="cm-pill-btn" data-cm-action="host"><span class="cm-dot cm-dot--host"></span> Host</button>
             <button type="button" class="cm-pill-btn" data-cm-action="server"><span class="cm-dot cm-dot--server"></span> Server</button>
