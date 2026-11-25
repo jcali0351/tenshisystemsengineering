@@ -431,14 +431,14 @@
       id: 'you',
       kind: 'you',
       short: 'You',
-      label: visitor.precise ? 'You are here' : 'You are here (approx.)',
-      title: visitor.precise ? 'You are here' : 'You are here (approx.)',
+      label: 'You',
+      title: 'You',
       tag: 'YOU',
       city: visitor.city,
       country: visitor.country || '',
       lat: visitor.lat,
       lon: visitor.lon,
-      color: '#ffb067',
+      color: '#ff2bd6',
       tz: visitor.tz || ''
     });
 
@@ -548,12 +548,9 @@
   function updateYouChrome() {
     if (pinYou) {
       pinYou.hidden = !you;
-      const label = you
-        ? (you.precise ? 'You are here' : 'You are here (approx.)')
-        : 'You are here';
-      pinYou.setAttribute('aria-label', label);
+      pinYou.setAttribute('aria-label', 'You');
     }
-    if (youApproxEl) youApproxEl.hidden = !you || you.precise;
+    if (youApproxEl) youApproxEl.hidden = true;
     if (youLegendBtn) youLegendBtn.hidden = !you;
   }
 
@@ -676,7 +673,7 @@
         id: 'you',
         label: 'YOU',
         tag: 'YOU',
-        title: you.precise ? 'You are here' : 'You are here (approx.)',
+        title: 'You',
         tz: you.tz,
         coords: formatCoords(you.lat, you.lon),
         hopMeta: you.precise
@@ -1028,14 +1025,14 @@
       const p = (time * 0.5) % 1;
       ctx.beginPath();
       ctx.arc(yp.x, yp.y, (7 + p * 28) / cam.zoom, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(255, 176, 103, ${(1 - p) * 0.7})`;
+      ctx.strokeStyle = `rgba(255, 43, 214, ${(1 - p) * 0.7})`;
       ctx.lineWidth = 1.8 / cam.zoom;
       ctx.stroke();
     }
     if (yp) {
       ctx.beginPath();
       ctx.arc(yp.x, yp.y, 4.2 / cam.zoom, 0, Math.PI * 2);
-      ctx.fillStyle = '#ffb067';
+      ctx.fillStyle = '#ff2bd6';
       ctx.fill();
     }
 

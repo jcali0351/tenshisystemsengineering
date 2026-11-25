@@ -654,8 +654,8 @@ const contactMapHero = (prefix) => `    <section class="svc-hero contact-map-her
             <span class="cm-pin-badge">Server</span>
             <span class="cm-pin-stem"></span>
           </button>
-          <button type="button" class="cm-pin cm-pin--you" id="cm-pin-you" hidden aria-label="You are here (approx.)">
-            <span class="cm-pin-badge"><span class="cm-pin-short">You</span><span class="cm-pin-full">You are here</span><span class="cm-pin-approx" id="cm-you-approx"> (approx.)</span></span>
+          <button type="button" class="cm-pin cm-pin--you" id="cm-pin-you" hidden aria-label="You">
+            <span class="cm-pin-badge">You</span>
             <span class="cm-pin-stem"></span>
           </button>
         </div>

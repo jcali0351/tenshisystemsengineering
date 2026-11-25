@@ -396,8 +396,8 @@
 }
 
 .cm-dot--you {
-  background: #ffb067;
-  box-shadow: 0 0 8px #ffb067, 0 0 0 2px rgba(255, 176, 103, 0.28);
+  background: #ff2bd6;
+  box-shadow: 0 0 8px #ff2bd6, 0 0 0 2px rgba(255, 43, 214, 0.28);
 }
 
 .cm-pin[hidden] {
@@ -410,16 +410,16 @@
 }
 
 .cm-pin--you .cm-pin-badge {
-  background: linear-gradient(135deg, #ff9f3c, #ffd08a);
-  color: #1a0b2e;
-  box-shadow: 0 0 18px rgba(255, 176, 103, 0.7), 0 4px 12px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 240, 210, 0.7);
+  background: linear-gradient(135deg, #e018b8, #ff2bd6);
+  color: #fff;
+  box-shadow: 0 0 18px rgba(255, 43, 214, 0.7), 0 4px 12px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 180, 230, 0.7);
   text-transform: none;
   letter-spacing: 0.02em;
 }
 
 .cm-pin--you .cm-pin-stem {
-  background: linear-gradient(180deg, #ffb067, transparent);
+  background: linear-gradient(180deg, #ff2bd6, transparent);
 }
 
 .cm-pin-short {
@@ -431,9 +431,9 @@
 }
 
 .cm-popover-tag--you {
-  background: rgba(255, 176, 103, 0.2);
-  color: #ffd08a;
-  border: 1px solid rgba(255, 176, 103, 0.45);
+  background: rgba(255, 43, 214, 0.2);
+  color: #ff6ec7;
+  border: 1px solid rgba(255, 43, 214, 0.45);
 }
 
 .cm-popover-tag--metro {

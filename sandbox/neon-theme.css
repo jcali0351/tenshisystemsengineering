@@ -36,7 +36,7 @@ html.neon .site-header:not(#_):not(#__) {
   --nav-ink: #ffffff;
   --nav-ink-strong: #ffffff;
   --nav-line: var(--neon-line);
-  --nav-accent: #ff4fbf;
+  --nav-accent: #FF7A30;
   border-bottom: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
@@ -60,7 +60,7 @@ html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav > ul > li > .
 html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav .nav-glow {
   background: linear-gradient(180deg, rgba(255, 255, 255, .2), rgba(255, 255, 255, .08)) !important;
   border-color: rgba(255, 255, 255, .35) !important;
-  box-shadow: 0 0 18px -4px var(--neon-pink), inset 0 1px 0 rgba(255, 255, 255, .3) !important;
+  box-shadow: 0 0 18px -4px rgba(255, 122, 48, .55), inset 0 1px 0 rgba(255, 255, 255, .3) !important;
 }
 html.neon .site-header:not(.nav-ready):not(#_):not(#__) .site-nav > ul > li > a[aria-current="page"] {
   background: transparent !important; box-shadow: none !important;
@@ -68,9 +68,9 @@ html.neon .site-header:not(.nav-ready):not(#_):not(#__) .site-nav > ul > li > a[
 html.neon .site-header:not(.nav-ready):not(#_):not(#__) .site-nav > ul > li > a:hover {
   background: rgba(255, 255, 255, .14) !important; box-shadow: inset 0 0 0 1px var(--neon-line) !important;
 }
-/* The current page is marked by a thin pink line under it instead. */
+/* The current page is marked by a thin orange line under it instead. */
 html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav > ul > li > a[aria-current="page"] {
-  box-shadow: inset 0 -2px 0 #ff4fbf !important;
+  box-shadow: inset 0 -2px 0 #FF7A30 !important;
 }
 
 /* Dropdown panels and their little pointer */
@@ -1191,12 +1191,12 @@ html.neon:not(#_):not(#__):not(#___) main .pitch-why li { padding: 18px 22px 18p
 html.neon:not(#_):not(#__):not(#___) main .pitch-why li::before { inset-inline-start: 20px !important; top: 21px !important; }
 html.neon:not(#_):not(#__):not(#___) main .pitch-why li::after { inset-inline-start: 27px !important; top: 25px !important; }
 
-/* Menu highlight: a full-height column of light down the whole header bar, glowing pink edge along the bottom.
+/* Menu highlight: a full-height column of light down the whole header bar, glowing orange edge along the bottom.
    No box outline or corner brackets. */
 html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav .nav-glow {
   top: -16px !important; bottom: -17px !important; border: 0 !important; border-radius: 0 !important;
-  background: linear-gradient(180deg, rgba(139, 44, 245, 0) 0%, rgba(139, 44, 245, .16) 40%, rgba(255, 43, 214, .30) 100%) !important;
-  box-shadow: inset 0 -3px 0 #ff2bd6, 0 10px 22px -10px rgba(255, 43, 214, .9) !important;
+  background: linear-gradient(180deg, rgba(139, 44, 245, 0) 0%, rgba(139, 44, 245, .16) 40%, rgba(255, 122, 48, .30) 100%) !important;
+  box-shadow: inset 0 -3px 0 #FF7A30, 0 10px 22px -10px rgba(255, 122, 48, .9) !important;
   -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
   transition: left .35s cubic-bezier(.2, .9, .3, 1), width .35s cubic-bezier(.2, .9, .3, 1), opacity .25s ease !important;
 }
@@ -1204,7 +1204,7 @@ html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav .nav-glow::be
 html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav .nav-glow::after { display: none !important; }
 html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav > ul > li > a:is(:hover, :focus-visible),
 html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav > ul > li.open > a {
-  color: #fff !important; -webkit-text-fill-color: #fff !important; text-shadow: 0 0 14px rgba(255, 110, 199, .85) !important; background: transparent !important;
+  color: #fff !important; -webkit-text-fill-color: #fff !important; text-shadow: 0 0 14px rgba(255, 122, 48, .85) !important; background: transparent !important;
 }
 
 /* About › Our speciality: icon centred above each heading. */
@@ -1395,7 +1395,7 @@ html.neon .hero img { pointer-events: none; }
 /* Menu: Portfolio is not clickable for now (looks like the other items, no link, no dropdown). */
 html.neon .nav-soon { cursor: default !important; pointer-events: none; }
 
-/* Menu: only one pink line at a time. While the hover highlight (with its own line along the header's bottom) is showing,
+/* Menu: only one orange line at a time. While the hover highlight (with its own line along the header's bottom) is showing,
    the current page's underline steps aside; it comes back when the pointer leaves the menu. */
 html.neon .site-header:not(.nav-mobile):not(#_):not(#__) .site-nav > ul:is(:hover, :focus-within) > li > a[aria-current="page"] { box-shadow: none !important; }
 /* Service cards (homepage): text centred. */
