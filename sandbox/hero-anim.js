@@ -3,10 +3,13 @@
 //   1. the painted neon road lines glow and pulse, and new cross lines roll toward you along the same perspective
 //   2. the windows and neon tubes of the server towers breathe, flicker and now and then flash
 //   3. glowing sparks start at the front of the road and race away to the horizon, shrinking and fading
+//   4. painted server-tower fans get spinning blades (22 fans, mapped in photo pixels to the round housings)
+//   5. the sky clouds drift slowly left to right, clipped so towers, palms, the sun and the city stay fixed
 // Everything is placed in the photo's own pixels (2352 x 1008) and mapped through the same "background-size: cover;
 // background-position: center" math as the CSS, recomputed on resize, so it lines up on every screen and crop.
-// Reduced motion: one still frame with a soft glow. Low-quality mode (neon-display.js, html.disp-q-low): fewer lights
-// and sparks at 30 fps. Pauses when the hero is off screen or the tab is hidden. No libraries.
+// Reduced motion: one still frame with a soft glow and static fan blades (no cloud drift). Low-quality mode
+// (neon-display.js, html.disp-q-low): fewer lights and sparks at 30 fps, no cloud drift. Pauses when the hero is
+// off screen or the tab is hidden. No libraries.
 (function () {
   const host = document.querySelector(".hero > .hero-photo-placeholder");
   if (!host || !window.HTMLCanvasElement) return;
@@ -59,7 +62,30 @@
     return s;
   }
 
+  // Fans: x, y, r in photo pixels (22 visible round housings). Speed/direction are set when drawing.
+  const FANS = [
+    469,706,13, 495,706,13, 521,706,13,
+    602,446,15, 628,444,15, 655,444,15, 608,510,15, 650,510,15,
+    598,692,13, 625,692,13, 652,692,13, 598,715,13, 625,715,13, 652,715,13,
+    740,600,12, 764,600,12, 740,624,13, 764,624,13, 746,716,14, 774,716,14,
+    1689,749,16, 1718,749,16
+  ];
+  // Skyline polyline (x,y) — clouds may move above this, with a soft feather. Sun and palms are punched later.
+  const SKYLINE = [
+    0,660, 140,658, 200,652, 380,650, 428,640, 428,405, 500,398, 530,398,
+    540,350, 550,350, 560,390, 575,372, 620,362, 700,362, 755,368,
+    768,455, 820,468, 845,505, 870,555, 900,575, 920,700, 960,730,
+    1040,745, 1100,755, 1180,762, 1260,755, 1320,740, 1380,730, 1420,720,
+    1440,655, 1520,652, 1550,655, 1570,730, 1610,720, 1625,528, 1685,518,
+    1700,448, 1750,442, 1840,442, 1875,448, 1882,500, 1918,500, 1930,620,
+    1940,630, 1970,632, 2140,632, 2240,640, 2352,655
+  ];
+  const SUN = [1179, 690, 136];
+  const CLOUD_PX_S = 20; // image px / s; about 12–18 screen px/s at typical desktop cover scale
+  const WRAP_BLEND = 360;
+
   let W = 0, H = 0, k = 1, ox = 0, oy = 0, dpr = 1;
+
   function fit() {
     const r = host.getBoundingClientRect();
     W = Math.max(1, r.width); H = Math.max(1, r.height);
@@ -69,10 +95,181 @@
   }
   const px = (x) => (ox + x * k) * dpr, py = (y) => (oy + y * k) * dpr;
 
+  let skyReady = false, skyTile = null, skyMask = null;
+  function photoURL() {
+    const bg = getComputedStyle(host).backgroundImage;
+    const m = bg && bg.match(/url\(["']?([^"')]+)["']?\)/);
+    return m ? m[1] : "img/photos/hero-synthwave.webp";
+  }
+  function buildSky(img) {
+    const iw = img.naturalWidth || IW, ih = img.naturalHeight || IH;
+    // Loopable sky: two copies of the photo, with the right edge of the first morphing into pixel 0
+    // so a sliding window of width iw has no hard seam.
+    const tile = document.createElement("canvas");
+    tile.width = iw * 2; tile.height = ih;
+    const tg = tile.getContext("2d");
+    tg.drawImage(img, 0, 0); tg.drawImage(img, iw, 0);
+    const B = Math.min(WRAP_BLEND, iw >> 1);
+    const sl = tg.getImageData(iw - B, 0, B, ih);
+    const d = sl.data;
+    // sample photo[0] from the second copy
+    const p0 = tg.getImageData(iw, 0, 1, ih).data;
+    for (let y = 0; y < ih; y++) {
+      const r0 = p0[y * 4], g0 = p0[y * 4 + 1], b0 = p0[y * 4 + 2];
+      for (let x = 0; x < B; x++) {
+        const fade = (x + 1) / B, i = (y * B + x) * 4, u = 1 - fade;
+        d[i] = d[i] * u + r0 * fade;
+        d[i + 1] = d[i + 1] * u + g0 * fade;
+        d[i + 2] = d[i + 2] * u + b0 * fade;
+      }
+    }
+    tg.putImageData(sl, iw - B, 0);
+    skyTile = tile;
+
+    // Mask: opaque above the skyline, soft feather, then punch the sun and the palm silhouettes.
+    const mask = document.createElement("canvas");
+    mask.width = iw; mask.height = ih;
+    const mg = mask.getContext("2d");
+    mg.fillStyle = "#fff";
+    mg.beginPath();
+    mg.moveTo(0, 0); mg.lineTo(iw, 0);
+    const sln = SKYLINE;
+    for (let i = sln.length - 2; i >= 0; i -= 2) mg.lineTo(sln[i], sln[i + 1]);
+    mg.closePath(); mg.fill();
+    const feathered = document.createElement("canvas");
+    feathered.width = iw; feathered.height = ih;
+    const fg = feathered.getContext("2d");
+    if (typeof fg.filter === "string") {
+      fg.filter = "blur(11px)";
+      fg.drawImage(mask, 0, 0);
+      fg.filter = "none";
+    } else {
+      fg.drawImage(mask, 0, 0);
+    }
+    const sg = feathered.getContext("2d");
+    sg.globalCompositeOperation = "destination-out";
+    const rad = SUN[2], sx = SUN[0], sy = SUN[1];
+    const grd = sg.createRadialGradient(sx, sy, rad, sx, sy, rad + 8);
+    grd.addColorStop(0, "#000"); grd.addColorStop(1, "rgba(0,0,0,0)");
+    sg.fillStyle = grd;
+    sg.beginPath(); sg.arc(sx, sy, rad + 8, 0, Math.PI * 2); sg.fill();
+
+    const pc = document.createElement("canvas");
+    pc.width = iw; pc.height = ih;
+    const pg = pc.getContext("2d");
+    pg.drawImage(img, 0, 0);
+    const pix = pg.getImageData(0, 0, iw, ih).data;
+    const seen = new Uint8Array(iw * ih);
+    const stack = [];
+    const seeds = [
+      50,680, 60,620, 70,560, 80,520, 100,500, 130,490, 160,500, 200,530,
+      2320,700, 2300,640, 2280,580, 2260,530, 2220,500, 2180,490, 2140,520
+    ];
+    for (let i = 0; i < seeds.length; i += 2) {
+      const x = seeds[i], y = seeds[i + 1];
+      if (x >= 0 && y >= 0 && x < iw && y < ih) stack.push(y * iw + x);
+    }
+    const punch = pc.getContext("2d").createImageData(iw, ih);
+    const pd = punch.data;
+    while (stack.length) {
+      const i = stack.pop();
+      if (seen[i]) continue;
+      seen[i] = 1;
+      const x = i % iw, y = (i / iw) | 0;
+      if (y < 330 || y > 820) continue;
+      if (!(x < 400 || x > 2000)) continue;
+      const o = i * 4, lum = 0.299 * pix[o] + 0.587 * pix[o + 1] + 0.114 * pix[o + 2];
+      if (lum >= 24) continue;
+      pd[o + 3] = 255;
+      if (x > 0) stack.push(i - 1);
+      if (x < iw - 1) stack.push(i + 1);
+      if (y > 0) stack.push(i - iw);
+      if (y < ih - 1) stack.push(i + iw);
+    }
+    // 1px dilate
+    const dil = pc.getContext("2d").createImageData(iw, ih);
+    const dd = dil.data;
+    for (let y = 1; y < ih - 1; y++) {
+      for (let x = 1; x < iw - 1; x++) {
+        let on = 0;
+        for (let dy = -1; dy <= 1 && !on; dy++)
+          for (let dx = -1; dx <= 1; dx++)
+            if (pd[((y + dy) * iw + (x + dx)) * 4 + 3]) on = 1;
+        if (on) dd[(y * iw + x) * 4 + 3] = 255;
+      }
+    }
+    pg.clearRect(0, 0, iw, ih);
+    pg.putImageData(dil, 0, 0);
+    sg.drawImage(pc, 0, 0);
+    skyMask = feathered;
+  }
+  const photo = new Image();
+  photo.decoding = "async";
+  photo.onload = () => { buildSky(photo); skyReady = true; if (reduce) frame(0, 0); };
+  photo.src = photoURL();
+
+  function drawClouds(t) {
+    if (!skyReady || !skyTile || !skyMask) return;
+    const dx = ox * dpr, dy = oy * dpr, dw = IW * k * dpr, dh = IH * k * dpr;
+    const shift = ((t * CLOUD_PX_S) % IW + IW) % IW;
+    g.save();
+    g.drawImage(skyTile, shift, 0, IW, IH, dx, dy, dw, dh);
+    g.globalCompositeOperation = "destination-in";
+    g.drawImage(skyMask, dx, dy, dw, dh);
+    g.restore();
+  }
+
+  function fanRim(x) {
+    if (x < 540) return "rgba(224,140,232,0.75)";
+    if (x < 700) return "rgba(210,130,230,0.7)";
+    if (x < 900) return "rgba(150,175,205,0.65)";
+    return "rgba(120,205,220,0.7)";
+  }
+  function drawFans(t) {
+    const n = FANS.length / 3;
+    for (let i = 0; i < n; i++) {
+      const x = FANS[i * 3], y = FANS[i * 3 + 1], r = FANS[i * 3 + 2];
+      const R = r * k * dpr;
+      if (R < 1.2) continue;
+      const dir = (i % 2) ? 1 : -1;
+      const rev = (0.52 + (i * 0.163) % 0.7) * dir;
+      const ang = reduce ? i * 0.37 : t * rev * Math.PI * 2;
+      const blades = 5 + (i % 3 === 0 ? 1 : 0); // 5 or 6
+      const cx = px(x), cy = py(y);
+      g.save();
+      g.translate(cx, cy);
+      g.beginPath(); g.arc(0, 0, R, 0, Math.PI * 2); g.clip();
+      g.strokeStyle = fanRim(x);
+      g.globalAlpha = 0.42;
+      g.lineWidth = Math.max(1, R * 0.1);
+      g.beginPath(); g.arc(0, 0, R * 0.93, 0, Math.PI * 2); g.stroke();
+      const passes = reduce ? 1 : 3;
+      for (let p = 0; p < passes; p++) {
+        const a0 = ang - dir * p * 0.14;
+        g.globalAlpha = reduce ? 0.4 : (0.36 - p * 0.1);
+        g.fillStyle = "#0b0714";
+        g.beginPath();
+        const step = Math.PI * 2 / blades, span = step * 0.36;
+        for (let b = 0; b < blades; b++) {
+          const a = a0 + b * step;
+          g.moveTo(Math.cos(a + span * 0.5) * R * 0.12, Math.sin(a + span * 0.5) * R * 0.12);
+          g.arc(0, 0, R * 0.88, a, a + span);
+          g.closePath();
+        }
+        g.fill();
+      }
+      g.globalAlpha = 0.55;
+      g.fillStyle = "#160e24";
+      g.beginPath(); g.arc(0, 0, R * 0.17, 0, Math.PI * 2); g.fill();
+      g.restore();
+    }
+  }
+
   function frame(t, dt) {
     const L = low();
     g.setTransform(1, 0, 0, 1, 0, 0);
     g.clearRect(0, 0, cv.width, cv.height);
+    if (!reduce && !L && skyReady) drawClouds(t);
     g.globalCompositeOperation = "lighter";
     const unit = k * dpr, bottom = IH + 40;
 
@@ -142,6 +339,7 @@
       g.globalAlpha = 1;
     }
     g.globalCompositeOperation = "source-over";
+    drawFans(t);
   }
 
   let on = true, visible = !document.hidden, raf = 0, last = 0, acc = 0;
