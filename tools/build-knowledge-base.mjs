@@ -130,8 +130,11 @@ export function knowledgeBaseMain({ tx, esc, t, banner, cta, art = "" }) {
 
   const renderTerm = (e) => `            <article class="kb-term" id="${e.id}" data-kb-sec="${e.sec}" data-kb-term="${esc(e.term)}" data-kb-id="${e.id}">
               <div class="kb-term-top">
-                <h3 class="kb-term-name">${esc(e.term)}</h3>
-                <p class="kb-term-sec">${ICO(e.sec)}<span data-i18n="${e.labelKey}">${tx(e.labelKey)}</span></p>
+                <span class="kb-badge kb-badge-sm" aria-hidden="true">${ICO(e.sec, "kb-ico kb-ico-md")}</span>
+                <div class="kb-term-heading">
+                  <h3 class="kb-term-name">${esc(e.term)}</h3>
+                  <p class="kb-term-sec"><span data-i18n="${e.labelKey}">${tx(e.labelKey)}</span></p>
+                </div>
               </div>
               <p class="kb-term-def">${esc(e.def)}</p>
 ${e.why ? `              <p class="kb-term-why"><span data-i18n="kbWhy">${tx("kbWhy")}</span> ${esc(e.why)}</p>\n` : ""}${renderSee(e)}            </article>`;

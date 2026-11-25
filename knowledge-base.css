@@ -235,9 +235,17 @@
 
 :root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-term-top {
   display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: 0.7rem;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-term-heading {
+  display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 0.35rem 0.85rem;
+  gap: 0.25rem 0.7rem;
+  min-width: 0;
+  flex: 1;
 }
 
 :root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-term-name {
@@ -505,6 +513,20 @@
   color: #1a0b2e;
   stroke: #1a0b2e;
 }
+:root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-badge-sm {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(255, 140, 26, 0.22);
+  margin-top: 0.05rem;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-ico-md {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  vertical-align: middle;
+}
 :root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-sec-head {
   display: flex;
   align-items: center;
@@ -533,14 +555,6 @@
   align-items: center;
   gap: 0.35rem;
 }
-:root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-term-sec .kb-ico {
-  color: var(--kb-orange);
-  stroke: var(--kb-orange);
-  width: 16px;
-  height: 16px;
-  flex: 0 0 16px;
-  vertical-align: middle;
-}
 :root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-term-sec span {
   color: var(--kb-orange) !important;
   -webkit-text-fill-color: var(--kb-orange) !important;
@@ -563,6 +577,19 @@
     flex-basis: 24px;
   }
   :root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-term-top {
-    gap: 0.3rem 0.65rem;
+    gap: 0.55rem;
+    align-items: flex-start;
+  }
+  :root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-badge-sm {
+    width: 28px;
+    height: 28px;
+    flex-basis: 28px;
+    border-radius: 7px;
+    margin-top: 0.05rem;
+  }
+  :root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-ico-md {
+    width: 16px;
+    height: 16px;
+    flex-basis: 16px;
   }
 }
