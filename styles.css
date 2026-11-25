@@ -1350,7 +1350,7 @@ html[dir="rtl"] .svc-for h3, html:lang(ja) .svc-for h3, html:lang(zh) .svc-for h
 .svc-offer-section { padding: clamp(48px, 7vw, 88px) var(--gutter); background: var(--pale); border-top: 1px solid var(--line); }
 .offer-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
 .offer-card {
-  position: relative; padding: 26px 24px 24px; border-radius: 14px; background: #fff; border: 1px solid var(--line);
+  position: relative; padding: 28px; border-radius: 14px; background: #fff; border: 1px solid var(--line);
   box-shadow: 0 10px 26px rgba(22, 32, 48, .06); transition: transform .25s, box-shadow .25s, border-color .25s;
 }
 .offer-card:hover { transform: translateY(-3px); border-color: var(--red); box-shadow: 0 16px 34px rgba(22, 32, 48, .1); }
@@ -1363,11 +1363,14 @@ html[dir="rtl"] .svc-for h3, html:lang(ja) .svc-for h3, html:lang(zh) .svc-for h
   background: radial-gradient(ellipse 50% 70% at 15% 20%, rgba(200, 16, 46, .45), transparent 70%), linear-gradient(140deg, #7e0a1b, #4a0510);
 }
 .benefit-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
-.benefit-card { padding: 28px 24px; border-radius: 14px; background: rgba(13, 4, 6, .35); border: 1px solid rgba(255, 92, 116, .35); }
-.benefit-icon { display: grid; place-items: center; width: 58px; height: 58px; border-radius: 14px; margin-bottom: 18px; color: #fff; background: linear-gradient(135deg, #e0263f, #a10c23); box-shadow: 0 8px 20px rgba(0, 0, 0, .3); }
+.benefit-card {
+  display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: 16px; row-gap: 16px;
+  padding: 28px; border-radius: 14px; background: rgba(13, 4, 6, .35); border: 1px solid rgba(255, 92, 116, .35);
+}
+.benefit-icon { display: grid; place-items: center; width: 58px; height: 58px; border-radius: 14px; margin: 0; color: #fff; background: linear-gradient(135deg, #e0263f, #a10c23); box-shadow: 0 8px 20px rgba(0, 0, 0, .3); }
 .benefit-icon svg { width: 30px; height: 30px; }
-.benefit-card h3 { color: #fff; font-size: 1.25rem; font-weight: 900; margin-bottom: 8px; }
-.benefit-card p { color: rgba(255, 255, 255, .88); font-size: 1.02rem; }
+.benefit-card h3 { color: #fff; font-size: 1.25rem; font-weight: 900; margin: 0; }
+.benefit-card p { grid-column: 1 / -1; margin: 0; color: rgba(255, 255, 255, .88); font-size: 1.02rem; }
 
 .svc-tech-section { padding: clamp(48px, 7vw, 88px) var(--gutter); }
 .svc-tech-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; }
@@ -1601,8 +1604,12 @@ html[dir="rtl"] .svc-icon-badge { left: auto; right: 16px; }
 .svc-detail-tags li { padding: 6px 12px; border-radius: 999px; font-size: .86rem; font-weight: 700; color: var(--red-dark, #7e0a1b); background: #fff1f3; border: 1px solid #f6c9d1; }
 
 .svc-depth { padding: clamp(44px, 6vw, 76px) var(--gutter); background: #fff; border-top: 1px solid var(--line); }
-.svc-depth-inner { display: flex; gap: clamp(18px, 3vw, 32px); align-items: flex-start; }
-.svc-depth p { font-size: clamp(1.02rem, 1.4vw, 1.12rem); line-height: 1.75; color: var(--text); max-width: 75ch; margin-top: 14px; }
+.svc-depth-inner { display: flex; flex-direction: column; gap: 18px; align-items: stretch; }
+.svc-depth-head { display: flex; align-items: center; gap: 18px; }
+.svc-depth-head .section-title { margin: 0; }
+.svc-depth-copy { max-width: 72ch; }
+.svc-depth p { font-size: clamp(1.02rem, 1.4vw, 1.12rem); line-height: 1.75; color: var(--text); max-width: 72ch; margin: 0; }
+.svc-depth p + p { margin-top: 16px; }
 
 @media (max-width: 860px) {
   .svc-detail, .svc-detail:nth-child(even) { grid-template-columns: minmax(0, 1fr); }
@@ -1610,7 +1617,9 @@ html[dir="rtl"] .svc-icon-badge { left: auto; right: 16px; }
   .svc-detail-pic { margin-bottom: 14px; }
 }
 @media (max-width: 560px) {
-  .svc-depth-inner { flex-direction: column; }
+  .svc-depth-head { gap: 16px; }
+  .svc-icon-lg { width: 56px; height: 56px; border-radius: 14px; }
+  .svc-icon-lg svg { width: 30px; height: 30px; }
   .svc-detail-title .svc-icon { width: 40px; height: 40px; }
 }
 

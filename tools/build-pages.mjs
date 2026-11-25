@@ -925,9 +925,11 @@ ${[1, 2, 3, 4, 5].map((n) => `                <li data-i18n="${k(s, "o" + n)}">$
     </section>`;
 const depthSection = (s) => `    <section class="svc-depth" aria-labelledby="depth-title">
       <div class="svc-wide svc-depth-inner">
-        ${svcIcon(s, "svc-icon svc-icon-lg")}
-        <div>
+        <div class="svc-depth-head">
+          ${svcIcon(s, "svc-icon svc-icon-lg")}
           <h2 id="depth-title" class="section-title" data-i18n="depthTitle">${tx("depthTitle")}</h2>
+        </div>
+        <div class="svc-depth-copy">
           <p data-i18n="${k(s, "long1")}">${tx(k(s, "long1"))}</p>
           <p data-i18n="${k(s, "long2")}">${tx(k(s, "long2"))}</p>
         </div>

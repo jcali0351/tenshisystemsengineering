@@ -175,3 +175,30 @@ html.neon.gx-page:not(#_):not(#__):not(#___) main .tpl-step-n { color: #ff8ae6 !
 html.neon.gx-page:not(#_):not(#__):not(#___) main :is(th, thead td) { background: #2a0d55 !important; color: #fff !important; -webkit-text-fill-color: #fff !important; }
 /* Service cards: text centred. */
 html.neon.gx-page:not(#_):not(#__):not(#___) main .service-card > p { text-align: center !important; }
+
+/* Even inner padding on the glass panels (.svc-wide is a max-width wrapper that this
+   skin turns into a card). Keeps icons and titles off the border, with equal space on
+   every side: 48px on a desktop, 24px on a phone, scaling in between. */
+html.neon.gx-page:not(#_):not(#__):not(#___) main .svc-wide {
+  padding: clamp(24px, 4vw, 48px) !important;
+}
+/* In Depth cards: icon and title on one row, body starting at the padding edge. */
+html.neon.gx-page:not(#_):not(#__):not(#___) main .svc-depth-inner { gap: 18px; }
+html.neon.gx-page:not(#_):not(#__):not(#___) main .svc-depth-head { display: flex; align-items: center; gap: 18px; }
+html.neon.gx-page:not(#_):not(#__):not(#___) main .svc-depth-head .section-title { margin: 0 !important; }
+html.neon.gx-page:not(#_):not(#__):not(#___) main .svc-depth-copy,
+html.neon.gx-page:not(#_):not(#__):not(#___) main .svc-depth-copy p { max-width: 72ch; }
+html.neon.gx-page:not(#_):not(#__):not(#___) main .svc-depth p { margin: 0 !important; }
+html.neon.gx-page:not(#_):not(#__):not(#___) main .svc-depth p + p { margin-top: 16px !important; }
+/* Benefit cards on the same pages: icon lined up with the title. Padding stays with site-theme.css. */
+html.neon.gx-page:not(#_):not(#__):not(#___) main .benefit-card {
+  display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: 16px; row-gap: 16px;
+}
+html.neon.gx-page:not(#_):not(#__):not(#___) main .benefit-icon { margin: 0 !important; }
+html.neon.gx-page:not(#_):not(#__):not(#___) main .benefit-card h3 { margin: 0 !important; }
+html.neon.gx-page:not(#_):not(#__):not(#___) main .benefit-card p { grid-column: 1 / -1; margin: 0 !important; }
+/* Project "in fairness" band: same flush-icon problem (.svc-wide.prj-fair-inner). */
+html.neon.gx-page:not(#_):not(#__):not(#___) main .prj-fair-inner { align-items: center; gap: 18px; }
+@media (max-width: 560px) {
+  html.neon.gx-page:not(#_):not(#__):not(#___) main .svc-depth-head { gap: 16px; }
+}
