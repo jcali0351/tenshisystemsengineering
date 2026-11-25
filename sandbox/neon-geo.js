@@ -118,6 +118,7 @@
   });
 
   const hero = document.querySelector(".hero");
+  const dotBatches = new Map();
   function frame(now) {
     ctx.clearRect(0, 0, W, H);
     const heroBottom = hero ? hero.getBoundingClientRect().bottom : H;
@@ -171,11 +172,22 @@
       }
     }
     // The points: nearer ones are bigger and brighter; everything flares a little on the beat.
+    // Performance: points are batched by colour and one of 8 opacity steps, one fill per batch instead of one per point.
     for (const p of pts) {
       const size = Math.max(0.8, 2.4 * p.scale * (1 + beat * 0.5));
-      ctx.globalAlpha = OPACITY * Math.min(1, 0.25 + (p.scale - 0.6) * 1.1 + beat * 0.3);
-      ctx.fillStyle = p.color;
-      ctx.beginPath(); ctx.arc(p.sx, p.sy, size, 0, TAU); ctx.fill();
+      const k = Math.round(Math.max(0, Math.min(1, OPACITY * Math.min(1, 0.25 + (p.scale - 0.6) * 1.1 + beat * 0.3))) * 8);
+      if (!k) continue;
+      const key = p.color + "|" + k; let b = dotBatches.get(key); if (!b) dotBatches.set(key, b = []);
+      b.push(p.sx, p.sy, size);
+    }
+    for (const [key, b] of dotBatches) {
+      if (!b.length) continue;
+      const bar = key.indexOf("|");
+      ctx.globalAlpha = +key.slice(bar + 1) / 8; ctx.fillStyle = key.slice(0, bar);
+      ctx.beginPath();
+      for (let i = 0; i < b.length; i += 3) { ctx.moveTo(b[i] + b[i + 2], b[i + 1]); ctx.arc(b[i], b[i + 1], b[i + 2], 0, TAU); }
+      ctx.fill();
+      b.length = 0;
     }
     ctx.globalAlpha = 1;
     ctx.globalCompositeOperation = "source-over";

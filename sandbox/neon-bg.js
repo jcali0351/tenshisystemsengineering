@@ -19,7 +19,7 @@ if (window.TENSHI_TUNE) window.TENSHI_TUNE(SETTINGS, (window.TENSHI_GAMES || {})
 // ==========================================================================================
 
 const canvas = document.getElementById("neon-bg");
-const ctx = canvas.getContext("2d");
+const ctx = canvas.getContext("2d", { alpha: false });   // the floor covers the whole screen: an opaque canvas is cheaper to put on screen
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 let W = 0, H = 0;   // the screen size in CSS pixels
@@ -479,6 +479,22 @@ function warp(p, jag = 0) {
   return [p[0] + (dx / d) * push - (dy / d) * (swirl + crack), p[1] + (dy / d) * push * 0.7 + (dx / d) * (swirl + crack) * 0.7];
 }
 
+// Draw the batched tiles: one path (and one fill or stroke) per colour.
+function addShapes(list) {
+  ctx.beginPath();
+  for (const pts of list) {
+    ctx.moveTo(pts[0][0], pts[0][1]);
+    for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+    ctx.closePath();
+  }
+}
+function flushTiles(fills, lines, halos) {
+  for (const [style, list] of fills) { addShapes(list); ctx.fillStyle = style; ctx.fill(); }
+  ctx.lineWidth = 1;
+  for (const [style, list] of lines) { addShapes(list); ctx.strokeStyle = style; ctx.stroke(); }
+  for (const [key, list] of halos) { const bar = key.indexOf("|"); addShapes(list); ctx.lineWidth = +key.slice(0, bar); ctx.strokeStyle = key.slice(bar + 1); ctx.stroke(); }
+}
+
 // Draw one outline (a list of [x, y] points) as a filled, outlined neon shape.
 function tracePath(points) {
   ctx.beginPath();
@@ -514,6 +530,12 @@ function drawFloor(time) {
 
   // "lighter" adds colours together where they overlap, which is what makes neon look like it glows.
   ctx.globalCompositeOperation = "lighter";
+  // Performance: the ~1,500 tiles used to be filled and outlined one by one (about 3,000 draw calls a frame). With
+  // "lighter" the drawing order doesn't change the result, so tiles are now collected into batches that share a
+  // colour (rounded very slightly) and each batch is drawn in one call (flushTiles, below).
+  const fills = new Map(), lines = new Map(), halos = new Map();
+  const batch = (map, key, shape) => { const list = map.get(key); if (list) list.push(shape); else map.set(key, [shape]); };
+  const q = (v, step) => Math.round(v / step) * step;
 
   // Draw from far to near, so near tiles are painted on top of far ones.
   for (let r = rows; r >= 0; r--) {
@@ -602,24 +624,16 @@ function drawFloor(time) {
           return shard.map(([x, y]) => [gx + (x - gx) * cs - (y - gy) * sn, gy + (x - gx) * sn + (y - gy) * cs]);
         });
       }
-      for (const shape of shapes) {
-        tracePath(shape);
-        ctx.fillStyle = `hsla(${hue}, 95%, ${45 + 25 * pulse}%, ${glowAmount})`;
-        ctx.fill();
-        ctx.strokeStyle = `hsla(${hue}, 100%, 75%, ${Math.min(1, glowAmount * 1.8)})`;
-        ctx.lineWidth = 1;
-        ctx.stroke();
-      }
-      tracePath(shapes[0]);
+      const qh = q(hue, 4), qa = q(glowAmount, 0.02) || 0.01;
+      const fillKey = `hsla(${qh}, 95%, ${q(45 + 25 * pulse, 4)}%, ${qa})`;
+      const lineKey = tileWidth > 3 ? `hsla(${qh}, 100%, 75%, ${Math.min(1, q(glowAmount * 1.8, 0.04) || 0.02)})` : null;   // outlines too small to see are skipped
+      for (const shape of shapes) { batch(fills, fillKey, shape); if (lineKey) batch(lines, lineKey, shape); }
 
       // Hot tiles near their biggest get a halo: a wide, faint outline (much faster than a real blur).
-      if (gone === 0 && isHot && pulse > 0.5) {
-        ctx.strokeStyle = `hsla(${hue}, 100%, 65%, ${glowAmount * 0.35})`;
-        ctx.lineWidth = 8 * fade;
-        ctx.stroke();
-      }
+      if (gone === 0 && isHot && pulse > 0.5) batch(halos, `${q(8 * fade, 0.5) || 0.5}|hsla(${qh}, 100%, 65%, ${q(glowAmount * 0.35, 0.02) || 0.01})`, shapes[0]);
     }
   }
+  flushTiles(fills, lines, halos);
 
   ctx.globalCompositeOperation = "source-over";
 

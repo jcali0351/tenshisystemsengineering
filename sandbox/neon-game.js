@@ -302,13 +302,15 @@
     fire(holdX, holdY, now);
   }
 
+  function startGame(now) {                          // the first shot (or the homepage's PLAY NOW button) starts it for real
+    if (started) return;
+    started = true;
+    showBanner("GAME ON!", 1100);
+    hud.querySelector(".neon-hud-tip").textContent = "Shoot the bombs before they land!";
+    for (const o of objects) o.nextBomb = now + rand(5000, 9000);
+  }
   function fire(x, y, now) {
-    if (!started) {                                   // the first shot starts the game for real
-      started = true;
-      showBanner("GAME ON!", 1100);
-      hud.querySelector(".neon-hud-tip").textContent = "Shoot the bombs before they land!";
-      for (const o of objects) o.nextBomb = now + rand(5000, 9000);
-    }
+    startGame(now);
     const spread = power && power.type === "S" && power.until > now;
     const fan = spread ? [[0, 0], [-70, -20], [70, -20], [-140, -40], [140, -40]] : [[0, 0]];
     let hit = false, instant = true;
@@ -633,7 +635,7 @@
   $("again").addEventListener("click", () => { reset(); started = true; showBanner("GO!", 900); });
   // Leaving the score screen: the close button, the Close button, Esc, or a click on the dark backdrop. The game goes back to
   // its quiet "click the sky to start" mode, so nothing attacks until the visitor shoots again.
-  function closeOver() { if (over.hidden) return; reset(); }
+  function closeOver() { if (over.hidden) return; reset(); window.dispatchEvent(new CustomEvent("neon:closed")); }   // the homepage band goes back to its PLAY NOW screen
   $("close").addEventListener("click", closeOver);
   $("quit").addEventListener("click", closeOver);
   over.addEventListener("click", e => { if (e.target === over) closeOver(); });
@@ -667,7 +669,31 @@
     for (let i = 0; i < 10 * scale * VIEW.fx; i++) { const a = Math.random() * 6.28, v = rand(2, 6) * scale; shards.push({ x: o.x, y: o.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 1, size: rand(6, 14), color: o.color, spin: rand(-0.3, 0.3), angle: a, line: true }); }
     shards.push({ x: o.x, y: o.y, flash: true, life: 1, size: (o.size || 16) * 3 * scale, color: o.color });
   }
-  function glow(color, blur) { ctx.shadowColor = color; ctx.shadowBlur = blur * VIEW.glow; }
+  // Glow. shadowBlur blurs every shape on its own and was the main cause of the stutter (hundreds of blurred strokes a
+  // frame: each target's faces, every beam, bullet and pop-up). Now shapes are drawn sharp and one BLOOM pass at the end of
+  // the frame (bloomPass) lays a small, blurred copy of the whole layer back on top: the same neon halo for two drawImage calls.
+  function glow() { /* the halo comes from bloomPass() */ }
+  const bloomCv = document.createElement("canvas"), bloomCtx = bloomCv.getContext("2d");
+  let bloomTick = 0, resized = true;
+  function bloomPass() {
+    if (VIEW.glow <= 0) return;
+    const bw = Math.max(2, Math.round(W / 4)), bh = Math.max(2, Math.round(H / 4));
+    if (bloomCv.width !== bw || bloomCv.height !== bh) { bloomCv.width = bw; bloomCv.height = bh; resized = true; }
+    // The halo is refreshed every other frame (it's soft, so a one-frame lag can't be seen) and reused in between.
+    if ((bloomTick = (bloomTick + 1) % 2) === 0 || resized) {
+      resized = false;
+      bloomCtx.clearRect(0, 0, bw, bh);
+      bloomCtx.imageSmoothingQuality = "medium";
+      if ("filter" in bloomCtx) bloomCtx.filter = "blur(2px)";   // 2px at quarter size = an 8px halo on screen, cheap on a tiny canvas
+      bloomCtx.drawImage(canvas, 0, 0, bw, bh);
+      if ("filter" in bloomCtx) bloomCtx.filter = "none";
+    }
+    ctx.save();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = Math.min(1, 1.1 * VIEW.glow);
+    ctx.drawImage(bloomCv, 0, 0, canvas.width, canvas.height);
+    ctx.restore();
+  }
 
   // ================================================ DRAWING ================================================
   // ---- 3D targets: little see-through glass models, lit from the top left, tumbling as they fly ----
@@ -1400,6 +1426,7 @@
     }
     ctx.shadowBlur = 0; ctx.globalAlpha = 1;
     ctx.restore();
+    if (visible) bloomPass();
     requestAnimationFrame(frame);
   }
 
@@ -1407,5 +1434,5 @@
   requestAnimationFrame(frame);
 
   // Handy for testing from the browser console: neonGame.boss(), neonGame.power(), neonGame.end()
-  window.neonGame = { cityHit: () => hitCity(W / 2, "TEST"), monster: t => spawnMonster(t), placeMonster: (i, x) => { if (monsters[i]) monsters[i].x = x; }, monsters: () => monsters.map(m => ({ type: m.type, hp: +m.hp.toFixed(1), state: m.state, x: Math.round(m.x), target: m.target, smashes: m.smashes, parts: m.circles.length, cy: m.circles.length ? Math.round(m.circles[0].y) : 0 })), boss: spawnBoss, power: spawnPower, end: gameOver, state: () => ({ score, level, shields, combo, boss: !!boss, objects: objects.length, kinds: objects.map(o => o.kind + "@" + Math.round(o.x) + "," + Math.round(o.y)).join(" "), power: power && power.type }) };
+  window.neonGame = { start: () => startGame(performance.now()), cityHit: () => hitCity(W / 2, "TEST"), monster: t => spawnMonster(t), placeMonster: (i, x) => { if (monsters[i]) monsters[i].x = x; }, monsters: () => monsters.map(m => ({ type: m.type, hp: +m.hp.toFixed(1), state: m.state, x: Math.round(m.x), target: m.target, smashes: m.smashes, parts: m.circles.length, cy: m.circles.length ? Math.round(m.circles[0].y) : 0 })), boss: spawnBoss, power: spawnPower, end: gameOver, state: () => ({ score, level, shields, combo, boss: !!boss, objects: objects.length, kinds: objects.map(o => o.kind + "@" + Math.round(o.x) + "," + Math.round(o.y)).join(" "), power: power && power.type }) };
 })();

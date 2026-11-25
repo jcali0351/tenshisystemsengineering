@@ -13,8 +13,8 @@
     @font-face { font-family: "Oswald"; font-style: normal; font-weight: 400; font-display: swap; src: url("fonts/oswald/oswald-400-normal.woff2") format("woff2"); }
     @font-face { font-family: "Oswald"; font-style: normal; font-weight: 700; font-display: swap; src: url("fonts/oswald/oswald-700-normal.woff2") format("woff2"); }
   </style>
-  <link rel="stylesheet" href="sandbox/neon-recolor.css">
-  <link rel="stylesheet" href="sandbox/neon-theme.css">
+  <link rel="stylesheet" href="sandbox/neon-recolor.css?v=20261125g">
+  <link rel="stylesheet" href="sandbox/neon-theme.css?v=20261125g">
   <style>
     html, body { margin: 0; height: 100%; overflow: hidden; background: #070212; color: #fff; font-family: "Lato", "Segoe UI", Helvetica, Arial, sans-serif; }
     html.neon .hero { position: relative; min-height: 0 !important; height: 100vh; margin: 0; padding: 0; }
@@ -31,13 +31,25 @@
       ["neonAudio", "neonBeat", "neonBeatAt"].forEach(function (k) {
         Object.defineProperty(window, k, { configurable: true, get: function () { return host ? host[k] : undefined; } });
       });
-      // The homepage pauses the arcade while it's scrolled out of view: animation frames wait until it's back.
-      var raf = window.requestAnimationFrame.bind(window), waiting = [], paused = false;
-      window.requestAnimationFrame = function (cb) { if (paused) { waiting.push(cb); return 0; } return raf(cb); };
-      window.tenshiArcadePause = function (p) {
-        paused = !!p;
-        if (!paused) { var list = waiting; waiting = []; list.forEach(function (cb) { raf(cb); }); }
-      };
+      // One animation loop for the whole arcade. Its five canvases (floor, dots, shapes, beasts, game) each ask for
+      // frames; they're collected and run together off a single browser frame, so they always draw in step.
+      // The homepage pauses it while the band is scrolled out of view, and it stops while the tab is hidden.
+      var nativeRaf = window.requestAnimationFrame.bind(window), queue = [], pending = 0, paused = false, ids = 0;
+      function run(t) {
+        pending = 0;
+        var list = queue; queue = [];
+        for (var i = 0; i < list.length; i++) { try { list[i](t); } catch (e) { setTimeout(function () { throw e; }); } }
+      }
+      function schedule() { if (!pending && !paused && !document.hidden && queue.length) pending = nativeRaf(run); }
+      window.requestAnimationFrame = function (cb) { queue.push(cb); schedule(); return ++ids; };
+      document.addEventListener("visibilitychange", schedule);
+      window.tenshiArcadePause = function (p) { paused = !!p; schedule(); };
+      // The homepage's PLAY NOW button opens this page with ?play=1: start the game straight away.
+      window.addEventListener("load", function () {
+        if (/[?&]play=1/.test(location.search) && window.neonGame && window.neonGame.start) window.neonGame.start();
+      });
+      // Closing the GAME OVER box sends the homepage band back to its PLAY NOW screen.
+      window.addEventListener("neon:closed", function () { try { host && host.tenshiArcadeClosed && host.tenshiArcadeClosed(); } catch (e) {} });
     })();
   </script>
 </head>
@@ -47,14 +59,14 @@
   <section class="hero" id="top" aria-label="Neon Arcade: click or tap the sky to shoot the flying targets">
     <div class="hero-card"></div>
   </section>
-  <script src="sandbox/neon-display.js"></script>
-  <script src="sandbox/game-settings.js"></script>
-  <script src="sandbox/tenshi-models.js"></script>
-  <script src="sandbox/neon-bg.js"></script>
-  <script src="sandbox/neon-fx.js"></script>
-  <script src="sandbox/neon-geo.js"></script>
-  <script src="sandbox/neon-beasts.js"></script>
-  <script src="sandbox/neon-scores.js"></script>
-  <script src="sandbox/neon-game.js"></script>
+  <script src="sandbox/neon-display.js?v=20261125g"></script>
+  <script src="sandbox/game-settings.js?v=20261125g"></script>
+  <script src="sandbox/tenshi-models.js?v=20261125g"></script>
+  <script src="sandbox/neon-bg.js?v=20261125g"></script>
+  <script src="sandbox/neon-fx.js?v=20261125g"></script>
+  <script src="sandbox/neon-geo.js?v=20261125g"></script>
+  <script src="sandbox/neon-beasts.js?v=20261125g"></script>
+  <script src="sandbox/neon-scores.js?v=20261125g"></script>
+  <script src="sandbox/neon-game.js?v=20261125g"></script>
 </body>
 </html>

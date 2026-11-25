@@ -9,3 +9,40 @@
 .parallax.has-arcade .parallax-copy :is(a, button) { pointer-events: auto; }
 .parallax.has-arcade .parallax-title,
 .parallax.has-arcade .parallax-text { text-shadow: 0 2px 4px rgba(8, 2, 24, .9), 0 0 18px rgba(8, 2, 24, .85), 0 0 42px rgba(8, 2, 24, .7); }
+
+/* Idle: a still picture of the arcade and a PLAY NOW button. Nothing animates until it's pressed (arcade-px3.js). */
+.parallax.has-arcade .px3-poster {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: #070212 url("../img/photos/arcade-poster.webp?v=20261125g") center / cover no-repeat;
+  transition: opacity .4s ease;
+}
+@media (max-width: 760px) and (orientation: portrait) {
+  .parallax.has-arcade .px3-poster { background-image: url("../img/photos/arcade-poster-mobile.webp?v=20261125g"); }
+}
+.parallax.has-arcade.is-playing .px3-poster { opacity: 0; }
+/* The band's sweeping light and pulsing glow paint the whole screen every frame; they stay still while idle and are
+   switched off while the game runs (they blended over the game and cost frames). */
+html.neon .parallax.has-arcade:has(#parallax-px3-title) .parallax-viewport::before { animation: none; background-position: 180% 0, 0 0; }
+html.neon .parallax.has-arcade.is-playing:has(#parallax-px3-title) .parallax-viewport::before,
+html.neon .parallax.has-arcade.is-playing:has(#parallax-px3-title) .parallax-viewport::after { display: none; }
+
+/* PLAY NOW: the same look as the arcade's own buttons (the PAUSE button and the score panel, sandbox/neon-theme.css):
+   Oswald, wide letter spacing, a thin white border on frosted purple glass, a soft violet glow, pink on hover. */
+.parallax.has-arcade .px3-play {
+  display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+  margin: 26px auto 0; min-width: 220px; min-height: 52px; padding: 14px 30px 14px 26px;
+  font: 700 1.05rem/1 Oswald, "Arial Narrow", sans-serif; letter-spacing: .2em; text-transform: uppercase; color: #fff;
+  background: rgba(18, 10, 42, .55); border: 1px solid rgba(255, 255, 255, .35); border-radius: 12px;
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  box-shadow: 0 0 22px rgba(176, 77, 255, .35), inset 0 0 0 1px rgba(255, 255, 255, .06);
+  text-shadow: 0 0 10px #ff2bd6; cursor: pointer; pointer-events: auto;
+  transition: background .2s, box-shadow .2s, transform .2s;
+}
+.parallax.has-arcade .px3-play:hover { background: rgba(255, 43, 214, .35); box-shadow: 0 0 34px rgba(255, 43, 214, .6); transform: translateY(-1px); }
+.parallax.has-arcade .px3-play:focus-visible { outline: 2px solid #ff2bd6; outline-offset: 4px; }
+.parallax.has-arcade .px3-play:active { transform: translateY(1px); }
+.parallax.has-arcade .px3-play[disabled] { cursor: progress; opacity: .85; }
+.parallax.has-arcade .px3-play-icon { width: 0; height: 0; border-style: solid; border-width: 8px 0 8px 13px; border-color: transparent transparent transparent #fff; filter: drop-shadow(0 0 6px #ff2bd6); }
+.parallax.has-arcade .px3-play-label { padding-left: .2em; }   /* letter spacing adds a gap after the last letter; this evens it out */
+.parallax.has-arcade.is-playing .px3-play { display: none; }
+@media (max-width: 760px) { .parallax.has-arcade .px3-play { margin-top: 20px; min-width: 200px; font-size: .95rem; } }

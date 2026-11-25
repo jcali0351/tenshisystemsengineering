@@ -125,6 +125,7 @@
     }
   });
 
+  const cores = new Map();
   function drawDots() {
     const vx = W / 2, vy = H * DOTS.horizon;
     const wanted = Math.min(DOTS.max, Math.round((W * H) / DOTS.density));
@@ -203,11 +204,18 @@
       ctx.globalAlpha = alpha * (0.35 + d.hot * 0.4);
       const glow = drawSize * 5;
       ctx.drawImage(sprite(d.color), sx - glow, sy - glow, glow * 2, glow * 2);
-      ctx.globalAlpha = alpha;
-      ctx.fillStyle = d.color;
+      // The bright cores are batched by colour and opacity step and filled together below (fewer draw calls).
+      const k = Math.round(alpha * 8);
+      if (k > 0) { const key = d.color + "|" + k; let b = cores.get(key); if (!b) cores.set(key, b = []); b.push(sx, sy, Math.max(0.3, drawSize / 2)); }
+    }
+    for (const [key, b] of cores) {
+      if (!b.length) continue;
+      const bar = key.indexOf("|");
+      ctx.globalAlpha = +key.slice(bar + 1) / 8; ctx.fillStyle = key.slice(0, bar);
       ctx.beginPath();
-      ctx.arc(sx, sy, Math.max(0.3, drawSize / 2), 0, Math.PI * 2);
+      for (let i = 0; i < b.length; i += 3) { ctx.moveTo(b[i] + b[i + 2], b[i + 1]); ctx.arc(b[i], b[i + 1], b[i + 2], 0, Math.PI * 2); }
       ctx.fill();
+      b.length = 0;
     }
 
     // Threads from the pointer to the nearby dots, like a little constellation following the mouse.

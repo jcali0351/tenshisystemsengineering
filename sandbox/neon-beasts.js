@@ -277,11 +277,38 @@
   function speck(o, x, y, size, color, phase, strength = 1, depth = 1, scale = 1) {
     o.sx = x; o.sy = y;
     if (o.gone) return;
-    ctx.globalAlpha = BEASTS.opacity * strength * (0.25 + 0.75 * depth) * cur.alpha * (0.45 + Math.random() * 0.55) * (0.85 + beat * 0.3);
-    ctx.fillStyle = cur.flash > 0.2 && Math.random() < cur.flash ? "#ffffff" : color;   // flashes white when hit
+    const a = BEASTS.opacity * strength * (0.25 + 0.75 * depth) * cur.alpha * (0.45 + Math.random() * 0.55) * (0.85 + beat * 0.3);
+    const c = cur.flash > 0.2 && Math.random() < cur.flash ? "#ffffff" : color;   // flashes white when hit
     const s = size * scale * (0.75 + 0.35 * depth) * (1 + beat * 0.3);
-    ctx.fillRect(x + rand(-0.5, 0.5) - s / 2, y + rand(-0.5, 0.5) - s / 2, s, s);
+    dot(x + rand(-0.5, 0.5) - s / 2, y + rand(-0.5, 0.5) - s / 2, s, c, a);
   }
+  // Performance: the two creatures are ~9,000 specks a frame. Drawing each one on its own (set colour, set opacity,
+  // fillRect) was one of the arcade's biggest costs. Specks are now sorted into batches by colour and one of 10
+  // opacity steps, and each batch is drawn as one shape (flushDots, at the end of the frame). With "lighter" blending
+  // the order they're drawn in doesn't matter.
+  const STEPS = 10, batches = new Map();
+  function dot(x, y, s, color, alpha) {
+    const k = Math.round(Math.min(1, alpha) * STEPS);
+    if (k <= 0) return;
+    let lv = batches.get(color);
+    if (!lv) { lv = Array.from({ length: STEPS + 1 }, () => []); batches.set(color, lv); }
+    lv[k].push(x, y, s);
+  }
+  function flushDots() {
+    for (const [color, lv] of batches) {
+      ctx.fillStyle = color;
+      for (let k = 1; k <= STEPS; k++) {
+        const b = lv[k]; if (!b.length) continue;
+        ctx.globalAlpha = k / STEPS;
+        ctx.beginPath();
+        for (let i = 0; i < b.length; i += 3) ctx.rect(b[i], b[i + 1], b[i + 2], b[i + 2]);
+        ctx.fill();
+        b.length = 0;
+      }
+    }
+  }
+  // Remove item i from a list whose order doesn't matter, without shifting everything after it.
+  function drop(list, i) { const last = list.pop(); if (i < list.length) list[i] = last; }
 
   // ---- 3D ----
   // Each creature is a little 3D model: x points forward, y down, z out to its right side. It's turned by
@@ -482,10 +509,8 @@
     for (let i = debris.length - 1; i >= 0; i--) {
       const d = debris[i];
       d.x += d.vx; d.y += d.vy; d.vx *= 0.96; d.vy = d.vy * 0.96 + 0.04; d.life -= d.fade;
-      if (d.life <= 0) { debris.splice(i, 1); continue; }
-      ctx.globalAlpha = d.life * (0.5 + Math.random() * 0.5);
-      ctx.fillStyle = d.color;
-      ctx.fillRect(d.x, d.y, d.size, d.size);
+      if (d.life <= 0) { drop(debris, i); continue; }
+      dot(d.x, d.y, d.size, d.color, d.life * (0.5 + Math.random() * 0.5));
     }
     if (debris.length > 6000) debris.splice(0, debris.length - 6000);
 
@@ -493,13 +518,12 @@
     for (let i = sparks.length - 1; i >= 0; i--) {
       const s = sparks[i];
       s.x += s.vx; s.y += s.vy; s.vx += rand(-0.08, 0.08); s.life -= s.fade;
-      if (s.life <= 0) { sparks.splice(i, 1); continue; }
-      ctx.globalAlpha = BEASTS.opacity * s.life * (0.4 + Math.random() * 0.6);
-      ctx.fillStyle = s.color;
-      ctx.fillRect(s.x, s.y, s.size, s.size);
+      if (s.life <= 0) { drop(sparks, i); continue; }
+      dot(s.x, s.y, s.size, s.color, BEASTS.opacity * s.life * (0.4 + Math.random() * 0.6));
     }
     if (sparks.length > 1500) sparks.splice(0, sparks.length - 1500);
 
+    flushDots();
     ctx.globalAlpha = 1;
     ctx.globalCompositeOperation = "source-over";
     requestAnimationFrame(frame);

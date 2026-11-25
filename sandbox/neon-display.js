@@ -12,6 +12,8 @@
   const nav = navigator, conn = nav.connection || {};
   const QUALITY = ["low", "medium", "high"];
   const PIXEL_CAP = { low: 1, medium: 1.5, high: 2 };                 // most canvas pixels per CSS pixel
+  // The Neon Arcade stacks five full-screen canvases, so it stops at 1.5 even on sharp screens (the glow hides the difference).
+  if (document.documentElement.classList.contains("arcade-embed")) PIXEL_CAP.high = 1.5;
   const PIXEL_BUDGET = { low: 1.2e6, medium: 2.4e6, high: 4.4e6 };    // most pixels in one full-screen canvas
 
   const forced = (new URLSearchParams(location.search).get("display") || "").toLowerCase();
