@@ -936,7 +936,8 @@ const depthSection = (s) => `    <section class="svc-depth" aria-labelledby="dep
 /* ---------- Services overview ---------- */
 const servicesPage = frame({
   prefix: "", current: "services", titleKey: "navServices", descKey: "servicesLead", bodyClass: "page services-page",
-  extraHead: `  <link rel="preload" as="image" href="img/photos/services-hero.webp" imagesrcset="img/photos/services-hero-mobile.webp 1200w, img/photos/services-hero.webp 2736w" imagesizes="100vw" fetchpriority="high">
+  extraHead: `  <link rel="preload" as="image" href="img/photos/services-hero-mobile.webp" media="(max-width: 760px)" fetchpriority="high">
+  <link rel="preload" as="image" href="img/photos/services-hero.webp" media="(min-width: 761px)" fetchpriority="high">
 `,
   main: `${banner("", [{ key: "navServices" }], "servicesTitle", "servicesLead")}
     <p class="page-inner wi-note"><a href="wisconsin.html">Web design, hosting and AI services for Wisconsin small businesses →</a></p>
@@ -2378,10 +2379,10 @@ await import("./neon-pages.mjs");
         html = html.replace(/(<link rel="stylesheet" href="[^"]+">)(?![\s\S]*<link rel="stylesheet")/, `$1\n  <link rel="stylesheet" href="services.css">`);
       }
     }
-    // LCP hero: correct dimensions, srcset (mobile 1200w), already fetchpriority=high and not lazy.
+    // LCP hero: <picture> so phones get the Wisconsin-centred crop, not a letterboxed 3:1 strip.
     html = html.replace(
-      /(<div class="px-hero-bg"[^>]*>[\s\S]*?<img )src="img\/photos\/services-hero\.webp" alt="" width="1920" height="1080" decoding="async" fetchpriority="high"/,
-      `$1src="img/photos/services-hero.webp" srcset="img/photos/services-hero-mobile.webp 1200w, img/photos/services-hero.webp 2736w" sizes="100vw" alt="" width="2736" height="912" decoding="async" fetchpriority="high"`
+      /(<div class="px-hero-bg"[^>]*>[\s\S]*?)<img src="img\/photos\/services-hero\.webp" alt="" width="1920" height="1080" decoding="async" fetchpriority="high" data-still data-still-color>/,
+      `$1<picture>\n          <source media="(max-width: 760px)" srcset="img/photos/services-hero-mobile.webp" width="1200" height="912">\n          <img src="img/photos/services-hero.webp" alt="" width="2736" height="912" decoding="async" fetchpriority="high" data-still data-still-color>\n        </picture>`
     );
     writeFileSync(file, html);
   }

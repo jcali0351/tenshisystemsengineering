@@ -453,6 +453,7 @@
       "services": {
         "image": "img/photos/services-hero.webp",
         "position": "center center",
+        "speed": 0,
         "overlayMode": "gradient",
         "overlay": "#1a0b2e",
         "overlayOpacity": 0.2,
