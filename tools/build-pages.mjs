@@ -654,6 +654,10 @@ const contactMapHero = (prefix) => `    <section class="svc-hero contact-map-her
             <span class="cm-pin-badge">Server</span>
             <span class="cm-pin-stem"></span>
           </button>
+          <button type="button" class="cm-pin cm-pin--you" id="cm-pin-you" hidden aria-label="You are here (approx.)">
+            <span class="cm-pin-badge"><span class="cm-pin-short">You</span><span class="cm-pin-full">You are here</span><span class="cm-pin-approx" id="cm-you-approx"> (approx.)</span></span>
+            <span class="cm-pin-stem"></span>
+          </button>
         </div>
         <div class="cm-popover" id="cm-popover" hidden>
           <div class="cm-popover-head">
@@ -692,19 +696,29 @@ const contactMapHero = (prefix) => `    <section class="svc-hero contact-map-her
         </div>
       </div>
       <div class="cm-hud">
-        <div class="cm-legend">
-          <button type="button" data-cm-action="host"><span class="cm-dot cm-dot--host"></span> Host</button>
-          <button type="button" data-cm-action="server"><span class="cm-dot cm-dot--server"></span> Server</button>
-          <span class="cm-sep"></span>
-          <span><span class="cm-dot cm-dot--visitor"></span> Visitors</span>
+        <div class="cm-route" id="cm-route" hidden>
+          <div class="cm-route-kicker">Route <span>(approximate / illustrative)</span></div>
+          <div class="cm-route-path" id="cm-route-path"></div>
+          <div class="cm-route-total" id="cm-route-total"></div>
         </div>
-        <div class="cm-toolbar">
-          <button type="button" data-cm-action="zoom-out" aria-label="Zoom out">−</button>
-          <span class="cm-zoom-readout" id="cm-zoom-readout">100%</span>
-          <button type="button" data-cm-action="zoom-in" aria-label="Zoom in">+</button>
-          <span class="cm-sep"></span>
-          <button type="button" data-cm-action="fit">Fit</button>
-          <button type="button" data-cm-action="ping">Ping</button>
+        <p class="cm-geo-note" id="cm-geo-note" hidden></p>
+        <div class="cm-hud-row">
+          <div class="cm-legend">
+            <button type="button" data-cm-action="host"><span class="cm-dot cm-dot--host"></span> Host</button>
+            <button type="button" data-cm-action="server"><span class="cm-dot cm-dot--server"></span> Server</button>
+            <button type="button" data-cm-action="you" id="cm-legend-you" hidden><span class="cm-dot cm-dot--you"></span> You</button>
+            <span class="cm-sep"></span>
+            <span><span class="cm-dot cm-dot--visitor"></span> Visitors</span>
+          </div>
+          <div class="cm-toolbar">
+            <button type="button" data-cm-action="zoom-out" aria-label="Zoom out">−</button>
+            <span class="cm-zoom-readout" id="cm-zoom-readout">100%</span>
+            <button type="button" data-cm-action="zoom-in" aria-label="Zoom in">+</button>
+            <span class="cm-sep"></span>
+            <button type="button" data-cm-action="fit">Fit</button>
+            <button type="button" data-cm-action="ping">Ping</button>
+            <button type="button" data-cm-action="locate" id="cm-locate"><span class="cm-locate-full">Show my location</span><span class="cm-locate-short">My location</span></button>
+          </div>
         </div>
       </div>
     </section>`;
