@@ -1024,7 +1024,9 @@ ${PAT_CO.map((c) => `          <li><a href="${gp("(robot)", "&amp;assignee=" + e
 /* ---------- Technology ---------- */
 const techPage = frame({
   prefix: "", current: "technology", titleKey: "techTitle", descKey: "techLead", bodyClass: "page tech-page",
-  main: `${banner("", [{ key: "navTech" }], "techTitle", "techLead", ART.services)}
+  extraHead: `  <link rel="preload" as="image" href="img/photos/tech-hero.webp" imagesrcset="img/photos/tech-hero-mobile.webp 1200w, img/photos/tech-hero.webp 2352w" imagesizes="100vw" fetchpriority="high">
+`,
+  main: `${banner("", [{ key: "navTech" }], "techTitle", "techLead")}
 
     <section class="page-section tech-section" aria-labelledby="tech-list-title">
       <div class="page-inner">
@@ -2341,6 +2343,29 @@ await import("./neon-pages.mjs");
     writeFileSync(file, html);
   }
 }
+
+// Technology hero assets must load after neon-pages.css so the workshop photo and left-side text stay intact.
+{
+  const file = "technology.html";
+  if (existsSync(file)) {
+    let html = readFileSync(file, "utf8");
+    html = html.replace(/\n?[ \t]*<link rel="stylesheet" href="technology\.css[^"]*">/g, "");
+    if (!html.includes('href="technology.css')) {
+      if (/<link rel="stylesheet" href="sandbox\/neon-pages\.css[^"]*">/.test(html)) {
+        html = html.replace(/(<link rel="stylesheet" href="sandbox\/neon-pages\.css[^"]*">)/, `$1\n  <link rel="stylesheet" href="technology.css">`);
+      } else {
+        html = html.replace(/(<link rel="stylesheet" href="[^"]+">)(?![\s\S]*<link rel="stylesheet")/, `$1\n  <link rel="stylesheet" href="technology.css">`);
+      }
+    }
+    // LCP hero: correct dimensions, srcset (mobile 1200w), already fetchpriority=high and not lazy.
+    html = html.replace(
+      /(<div class="px-hero-bg"[^>]*>[\s\S]*?<img )src="img\/photos\/tech-hero\.webp" alt="" width="1920" height="1080" decoding="async" fetchpriority="high"/,
+      `$1src="img/photos/tech-hero.webp" srcset="img/photos/tech-hero-mobile.webp 1200w, img/photos/tech-hero.webp 2352w" sizes="100vw" alt="" width="2352" height="1008" decoding="async" fetchpriority="high"`
+    );
+    writeFileSync(file, html);
+  }
+}
+
 
 /* ---------- Footer search (search.js, search.css): data/search/<lang>.json ----------
    One small index per language of every page the build writes, plus the homepage: its address, title, description,

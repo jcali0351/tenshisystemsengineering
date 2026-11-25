@@ -1,0 +1,36 @@
+/* Hero: the workshop photo is the full-bleed interior header. Text sits on the dark left; the worker stays on the right. */
+:root:not(#_):not(#__):not(#___):not(#____) .tech-page .svc-hero.px-hero {
+  --px-pos: right center !important;
+  min-height: 280px;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .tech-page .svc-hero.px-hero[data-overlay="gradient"] .parallax-overlay,
+:root:not(#_):not(#__):not(#___):not(#____) .tech-page .svc-hero.px-hero .parallax-overlay {
+  background: var(--px-grad, linear-gradient(90deg, rgba(26, 11, 46, 0.78) 0%, 36%, rgba(26, 11, 46, 0.04) 100%)) !important;
+  opacity: 1 !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .tech-page .svc-hero.px-hero .svc-hero-inner {
+  position: relative;
+  z-index: 1;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .tech-page .svc-hero.px-hero .svc-hero-text {
+  max-width: min(38rem, 58%);
+  position: relative;
+  z-index: 1;
+}
+@media (max-width: 760px) {
+  :root:not(#_):not(#__):not(#___):not(#____) .tech-page .svc-hero.px-hero {
+    --px-pos: 75% center !important;
+  }
+  :root:not(#_):not(#__):not(#___):not(#____) .tech-page .svc-hero.px-hero .svc-hero-text {
+    max-width: 100%;
+  }
+  :root:not(#_):not(#__):not(#___):not(#____) .tech-page .svc-hero.px-hero .svc-hero-inner::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: min(100%, 28rem);
+    background: linear-gradient(90deg, rgba(16, 6, 32, 0.88) 0%, rgba(16, 6, 32, 0.7) 58%, rgba(16, 6, 32, 0) 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+}
