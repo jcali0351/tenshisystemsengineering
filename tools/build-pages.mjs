@@ -1062,7 +1062,9 @@ writePage("technology.html", techPage);
 // Glossary of 434 terms from data/glossary.json (tools/build-knowledge-base.mjs). Look: knowledge-base.css / knowledge-base.js.
 const kbPage = frame({
   prefix: "", current: "knowledge-base", titleKey: "kbTitle", descKey: "kbLead", bodyClass: "page kb-page",
-  main: knowledgeBaseMain({ tx, esc, t, banner, cta, art: ART.blog }),
+  extraHead: `  <link rel="preload" as="image" href="img/photos/kb-hero.webp" imagesrcset="img/photos/kb-hero-mobile.webp 1200w, img/photos/kb-hero.webp 2352w" imagesizes="100vw" fetchpriority="high">
+`,
+  main: knowledgeBaseMain({ tx, esc, t, banner, cta, art: "" }),
 });
 writePage("knowledge-base.html", kbPage);
 
@@ -2331,6 +2333,11 @@ await import("./neon-pages.mjs");
     if (!html.includes('src="knowledge-base.js')) {
       html = html.replace(/\n<\/body>/, `\n  <script src="knowledge-base.js"><\/script>\n</body>`);
     }
+    // LCP hero: correct dimensions, srcset (mobile 1200w), already fetchpriority=high and not lazy.
+    html = html.replace(
+      /(<div class="px-hero-bg"[^>]*>[\s\S]*?<img )src="img\/photos\/kb-hero\.webp" alt="" width="1920" height="1080" decoding="async" fetchpriority="high"/,
+      `$1src="img/photos/kb-hero.webp" srcset="img/photos/kb-hero-mobile.webp 1200w, img/photos/kb-hero.webp 2352w" sizes="100vw" alt="" width="2352" height="1008" decoding="async" fetchpriority="high"`
+    );
     writeFileSync(file, html);
   }
 }

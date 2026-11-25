@@ -42,8 +42,9 @@
   <link rel="stylesheet" href="sandbox/neon-recolor.css?v=31bcd7a0">
   <link rel="stylesheet" href="sandbox/neon-theme.css?v=31bcd7a0">
   <link rel="stylesheet" href="sandbox/neon-pages.css?v=31bcd7a0">
-  <link rel="stylesheet" href="knowledge-base.css?v=5a341038">
+  <link rel="stylesheet" href="knowledge-base.css?v=0e3fb688">
   <script src="sandbox/neon-recolor-live.js?v=31bcd7a0"></script>
+  <link rel="preload" as="image" href="img/photos/kb-hero.webp" imagesrcset="img/photos/kb-hero-mobile.webp 1200w, img/photos/kb-hero.webp 2352w" imagesizes="100vw" fetchpriority="high">
 </head>
 <body class="page kb-page" data-title-key="kbTitle" data-desc-key="kbLead" data-seo>
   <!-- Written by tools/build-pages.mjs: edit translations.js and the script, not this file. -->
@@ -135,10 +136,10 @@
   </header>
 
   <main id="main">
-    <section class="svc-hero has-art px-hero" data-parallax data-speed="0.3" data-overlay="gradient" data-fx-letters="rise" style="--px-h:auto;--px-overlay:#12050a;--px-op:0.6;--px-pos:center center;--px-grad:linear-gradient(180deg,rgba(18,5,10,0.55) 0%,55%,rgba(18,5,10,0.8) 100%);--pxl-step:30ms;--pxl-dur:0.8s;--pxl-delay:0.1s">
+    <section class="svc-hero px-hero" data-parallax data-speed="0.3" data-overlay="gradient" data-fx-letters="rise" style="--px-h:auto;--px-overlay:#1a0b2e;--px-op:0.2;--px-pos:right center;--px-grad:linear-gradient(90deg,rgba(26,11,46,0.78) 0%,36%,rgba(26,11,46,0.04) 100%);--pxl-step:30ms;--pxl-dur:0.8s;--pxl-delay:0.1s">
       <div class="px-hero-bg" aria-hidden="true">
         <div class="parallax-layer">
-          <img src="img/photos/osaka.jpg" alt="" width="1920" height="1080" decoding="async" fetchpriority="high" data-still data-still-color>
+          <img src="img/photos/kb-hero.webp" srcset="img/photos/kb-hero-mobile.webp 1200w, img/photos/kb-hero.webp 2352w" sizes="100vw" alt="" width="2352" height="1008" decoding="async" fetchpriority="high" data-still data-still-color>
         </div>
         <div class="parallax-overlay"></div>
       </div>
@@ -154,11 +155,6 @@
           <h1 data-px-title data-still data-i18n="kbTitle">Knowledge Base</h1>
           <p class="svc-hero-lead" data-i18n="kbLead">A plain-English glossary of 434 terms across web development, web design, SEO, SaaS and AI.</p>
         </div>
-        <svg class="page-art" viewBox="0 0 320 220" aria-hidden="true" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M50 54c30-10 70-10 100 8v120c-30-18-70-18-100-8z" stroke-opacity=".85" stroke-width="2.5"/><path d="M250 54c-30-10-70-10-100 8v120c30-18 70-18 100-8z" stroke-opacity=".85" stroke-width="2.5"/>
-      <path d="M70 84c20-5 42-4 62 4M70 108c20-5 42-4 62 4M70 132c20-5 42-4 62 4M168 88c20-8 42-9 62-4M168 112c20-8 42-9 62-4" stroke-opacity=".45" stroke-width="2"/>
-      <path d="M256 168 292 70l14 6-36 98-16 10z" fill="#fff" fill-opacity=".9" stroke="none"/>
-    </svg>
       </div>
     </section>
 

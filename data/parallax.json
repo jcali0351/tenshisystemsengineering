@@ -480,6 +480,23 @@
       },
       "portal": {
         "image": "img/photos/yokohama.jpg"
+      },
+      "knowledge-base": {
+        "image": "img/photos/kb-hero.webp",
+        "position": "right center",
+        "overlayMode": "gradient",
+        "overlay": "#1a0b2e",
+        "overlayOpacity": 0.2,
+        "gradient": {
+          "type": "linear",
+          "angle": 90,
+          "from": "#1a0b2e",
+          "fromOpacity": 0.78,
+          "to": "#1a0b2e",
+          "toOpacity": 0.04,
+          "stop": 36
+        },
+        "grayFade": { "enabled": false }
       }
     }
   }
