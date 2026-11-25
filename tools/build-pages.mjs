@@ -587,9 +587,9 @@ function frame({ prefix, current, titleKey, descKey, title, description, bodyCla
   <meta property="og:title" content="${seoTitle}">
   <meta property="og:description" content="${seoDesc}">
   <meta property="og:type" content="website">
-${seo.tags}  <link rel="icon" href="${prefix}brand/favicon-32.png?v=20261119" type="image/png" sizes="32x32">
-  <link rel="icon" href="${prefix}brand/favicon-192.png?v=20261119" type="image/png" sizes="192x192">
-  <link rel="apple-touch-icon" href="${prefix}brand/tenshi-apple-touch-icon.png?v=20261119">
+${seo.tags}  <link rel="icon" href="${prefix}brand/favicon-32.png?v=20261125o" type="image/png" sizes="32x32">
+  <link rel="icon" href="${prefix}brand/favicon-192.png?v=20261125o" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="${prefix}brand/tenshi-apple-touch-icon.png?v=20261125o">
   <link rel="stylesheet" href="${prefix}tailwind.css">
   <link rel="stylesheet" href="${prefix}styles.css">
   <link rel="stylesheet" href="${prefix}design.css">
