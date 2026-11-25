@@ -46,8 +46,8 @@
     <h2 style="margin-top:18px">Storage</h2>
     {% set total = stats.storage_total or 1 %}
     <p><b>{{ stats.storage_total | size }}</b> <span class="muted small">in use</span></p>
-    <div class="meter"><i style="width:{{ stats.storage.media / total * 100 }}%;background:var(--red)"></i><i style="width:{{ stats.storage.builds / total * 100 }}%;background:#3d4249"></i><i style="width:{{ stats.storage.backups / total * 100 }}%;background:#b26b00"></i></div>
-    <p class="small muted" style="margin-top:6px"><span style="color:var(--red)">■</span> Media {{ stats.storage.media | size }} · ■ Deployments {{ stats.storage.builds | size }} · <span style="color:#b26b00">■</span> Backups {{ stats.storage.backups | size }}</p>
+    <div class="meter"><i style="width:{{ stats.storage.media / total * 100 }}%;background:var(--accent)"></i><i style="width:{{ stats.storage.builds / total * 100 }}%;background:var(--chart-2)"></i><i style="width:{{ stats.storage.backups / total * 100 }}%;background:var(--warn)"></i></div>
+    <p class="small muted" style="margin-top:6px"><span style="color:var(--accent)">■</span> Media {{ stats.storage.media | size }} · <span style="color:var(--chart-2)">■</span> Deployments {{ stats.storage.builds | size }} · <span style="color:var(--warn)">■</span> Backups {{ stats.storage.backups | size }}</p>
   </section>
 </div>
 
