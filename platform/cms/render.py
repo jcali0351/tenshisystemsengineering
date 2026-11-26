@@ -24,7 +24,7 @@ from markupsafe import Markup, escape
 
 from tenshi import profile as prof
 
-from . import db, media as media_mod, templates, theme as theme_mod, widgets
+from . import config, db, media as media_mod, posts as posts_mod, templates, theme as theme_mod, widgets
 
 
 # ---------------------------------------------------------------------------------------------- cleaning HTML
@@ -193,7 +193,7 @@ class SiteRenderer:
             self._widget_settings[w.name] = widgets.load_settings(self.site.get("id"), w.name)
         ctx = widgets.WidgetContext(site=self.site, mode=self.mode, editing=self.editing, settings=self._widget_settings[w.name],
                                     asset=lambda file, n=w.name: widgets.asset_url(n, file, self.mode),
-                                    link=self.link, profile=self.profile)
+                                    link=self.link, profile=self.profile, media=self.media, media_alt=self.media_alt)
         return w.render(block, ctx)
 
     # --- pages ------------------------------------------------------------------------------------------------
@@ -223,7 +223,19 @@ class SiteRenderer:
             sources = widgets.block_sources(ctx["blocks"])
             if sources:
                 self.page_sources[file] = sources
-        return widgets.inject_assets(theme_mod.inject(html, self.theme), used, self.mode)
+        html = theme_mod.inject(html, self.theme)
+        if self.mode != "preview" and self.has_posts():
+            html = html.replace("</head>", f'<link rel="alternate" type="application/rss+xml" title="{escape(self.site.get("name") or "")}" href="feed.xml">\n</head>', 1)
+        return widgets.inject_assets(html, used, self.mode)
+
+    def has_posts(self):
+        if not hasattr(self, "_has_posts"):
+            self._has_posts = bool(self.site.get("id") and posts_mod.published(self.site["id"], limit=1))
+        return self._has_posts
+
+    def render_post(self, post, menu_pages):
+        """One blog post on its own page: the template's frame around the hidden "post" widget."""
+        return self.render_page(posts_mod.page_for(post), menu_pages)
 
 
 def site_pages(site_id):
@@ -236,6 +248,9 @@ def preview(site, slug, editing=False):
     """One page of a site, drawn for the CMS preview."""
     pages, menu = site_pages(site["id"])
     page = next((p for p in pages if p["slug"] == slug), None)
+    if not page and slug.startswith(posts_mod.PREFIX):            # a blog post (drafts too: this is the CMS preview)
+        post = db.one("SELECT * FROM posts WHERE site_id = ? AND slug = ?", site["id"], slug[len(posts_mod.PREFIX):])
+        return SiteRenderer(site, "preview", editing).render_post(post, menu) if post else None
     if not page:
         return None
     return SiteRenderer(site, "preview", editing).render_page(page, menu)
@@ -250,6 +265,10 @@ def build_to(site, out_dir, mode="hosted"):
     for page in pages:
         html = renderer.render_page(page, menu)
         (out / ("index.html" if page["slug"] == "index" else f"{page['slug']}.html")).write_text(html, encoding="utf-8")
+    # Blog: each published post on its own page, the RSS feed and the sitemap (posts.py)
+    live_posts = posts_mod.published(site["id"]) if site.get("id") else []
+    for post in live_posts:
+        (out / posts_mod.file_name(post)).write_text(renderer.render_post(post, menu), encoding="utf-8")
     # The template's own files (style.css, site.js, pictures …): everything that isn't a Jinja template
     tpl = templates.current_dir(renderer.template_id)
     for file in tpl.rglob("*"):
@@ -260,6 +279,13 @@ def build_to(site, out_dir, mode="hosted"):
     # Widgets: their own files (only the widgets this site uses), and which page uses which (for the CSP when served)
     used = sorted({n for names in renderer.used_widgets.values() for n in names})
     widgets.copy_files(used, out)
+    if site.get("id"):
+        base_url = config.site_url(site["subdomain"])
+        if live_posts:
+            (out / "feed.xml").write_text(posts_mod.feed_xml(site, base_url, renderer.profile), encoding="utf-8")
+        (out / "sitemap.xml").write_text(posts_mod.sitemap_xml(site, base_url, pages), encoding="utf-8")
+        if not (out / "robots.txt").exists():
+            (out / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {base_url}sitemap.xml\n", encoding="utf-8")
     if mode == "hosted":
         widgets.write_manifest(out, renderer.used_widgets, renderer.page_sources)
     if renderer.used_files:

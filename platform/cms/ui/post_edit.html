@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+{% block title %}{{ post.title if post else 'New post' }} · Blog posts{% endblock %}
+{% block heading %}{{ 'Edit post' if post else 'New post' }}{% endblock %}
+{% block actions %}
+<span class="save-state" id="save-state">{{ 'Saved' if post else 'Not saved yet' }}</span>
+<a class="btn" id="preview" href="{{ '/sites/' ~ site.id ~ '/preview/' ~ post.file[:-5] if post else '#' }}" target="_blank" rel="noopener" {% if not post %}hidden{% endif %}>Preview</a>
+<button class="btn btn-primary" id="save" type="button">Save</button>
+<button class="btn" data-deploy="{{ site.id }}" data-note="Published from Blog posts">Publish site</button>
+{% endblock %}
+{% block body %}
+<p class="small"><a href="/sites/{{ site.id }}/posts">← All posts</a></p>
+<div class="post-edit">
+  <section class="card">
+    <label class="field"><span>Title <span class="req">*</span></span><input type="text" id="title" class="post-title" maxlength="200" value="{{ post.title if post else '' }}" placeholder="A clear, helpful title"></label>
+    <div class="field"><span>Text</span>
+      <div class="rte-bar" role="toolbar" aria-label="Formatting">
+        <button type="button" data-cmd="formatBlock" data-arg="H2" title="Heading">H2</button>
+        <button type="button" data-cmd="formatBlock" data-arg="H3" title="Smaller heading">H3</button>
+        <button type="button" data-cmd="formatBlock" data-arg="P" title="Paragraph">¶</button>
+        <button type="button" data-cmd="bold" title="Bold"><b>B</b></button>
+        <button type="button" data-cmd="italic" title="Italic"><i>I</i></button>
+        <button type="button" data-cmd="insertUnorderedList" title="List">• List</button>
+        <button type="button" data-cmd="insertOrderedList" title="Numbered list">1. List</button>
+        <button type="button" data-cmd="formatBlock" data-arg="BLOCKQUOTE" title="Quote">“ ”</button>
+        <button type="button" data-cmd="createLink" title="Link">Link</button>
+        <button type="button" data-cmd="unlink" title="Remove link">Unlink</button>
+        <span style="flex:1"></span>
+        <button type="button" id="html-toggle" aria-pressed="false">HTML</button>
+      </div>
+      <div class="rte" id="body" contenteditable="true" aria-label="Post text" spellcheck="true">{{ (post.body if post else '') | safe }}</div>
+      <textarea id="body-html" class="code" rows="18" hidden spellcheck="false"></textarea>
+      <small>Scripts, styles and forms are removed when you save. YouTube, Vimeo and Google Maps embeds are kept.</small>
+    </div>
+  </section>
+  <aside class="card">
+    <label class="field"><span>Status</span><select id="status">
+      <option value="draft" {% if not post or post.status == 'draft' %}selected{% endif %}>Draft (only you see it)</option>
+      <option value="published" {% if post and post.status == 'published' %}selected{% endif %}>Published</option></select></label>
+    <label class="field"><span>Publish date</span><input type="datetime-local" id="published_at" data-utc="{{ post.published_at if post else '' }}">
+      <small>Empty = now. A future date waits: the post goes live on the first Publish after it.</small></label>
+    <label class="field"><span>Short summary (excerpt)</span><textarea id="excerpt" rows="3" maxlength="500">{{ post.excerpt if post else '' }}</textarea><small>Shown on the blog list, in Google and in the feed.</small></label>
+    <div class="field"><span>Cover picture</span><div class="media-field" data-site="{{ site.id }}" data-kind="image"><input type="hidden" id="cover" value="{{ post.cover_media_id if post and post.cover_media_id else '' }}"></div></div>
+    <label class="field"><span>Tags</span><input type="text" id="tags" list="tag-list" value="{{ post.tags if post else '' }}" placeholder="comma separated, e.g. Tips, Kitchens"></label>
+    <datalist id="tag-list">{% for t in all_tags %}<option value="{{ t }}">{% endfor %}</datalist>
+    <label class="field"><span>Author (optional)</span><input type="text" id="author" maxlength="100" value="{{ post.author if post else '' }}"></label>
+    <label class="field"><span>Address</span><input type="text" id="slug" maxlength="80" value="{{ post.slug if post else '' }}" placeholder="made from the title"><small id="slug-note">{{ 'post-' ~ post.slug ~ '.html' if post else '' }}</small></label>
+    {% if post %}<button class="btn btn-danger" id="delete" type="button" style="margin-top:8px">Delete post</button>{% endif %}
+  </aside>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  var T = Tenshi, $ = T.$, siteId = {{ site.id }}, postId = {{ post.id if post else 'null' }};
+  var body = $("#body"), html = $("#body-html"), state = $("#save-state");
+  T.$$(".media-field").forEach(function (b) { T.mediaField(b, function () { dirty(); }); });
+  var pub = $("#published_at");
+  function pad(n) { return String(n).padStart(2, "0"); }
+  if (pub.dataset.utc) { var d = new Date(pub.dataset.utc); pub.value = d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) + "T" + pad(d.getHours()) + ":" + pad(d.getMinutes()); }
+  function dirty() { state.textContent = "Unsaved changes"; }
+  document.querySelector(".post-edit").addEventListener("input", dirty);
+  T.$$(".rte-bar [data-cmd]").forEach(function (b) {
+    b.addEventListener("mousedown", function (e) { e.preventDefault(); });           // keep the selection in the text
+    b.addEventListener("click", function () {
+      var arg = b.dataset.arg || null;
+      if (b.dataset.cmd === "createLink") { arg = prompt("Link address (https://…, or a page like contact.html)"); if (!arg) return; }
+      document.execCommand(b.dataset.cmd, false, arg); body.focus(); dirty();
+    });
+  });
+  $("#html-toggle").onclick = function () {
+    var showHtml = html.hidden;
+    if (showHtml) { html.value = body.innerHTML; } else { body.innerHTML = html.value; }
+    html.hidden = !showHtml; body.hidden = showHtml; this.setAttribute("aria-pressed", String(showHtml));
+  };
+  function value() {
+    return { title: $("#title").value, body: html.hidden ? body.innerHTML : html.value, excerpt: $("#excerpt").value,
+             tags: $("#tags").value, author: $("#author").value, slug: $("#slug").value, status: $("#status").value,
+             cover_media_id: $("#cover").value, published_at: pub.value ? new Date(pub.value).toISOString() : "" };
+  }
+  $("#save").onclick = function () {
+    var req = postId ? T.api("PATCH", "/api/sites/" + siteId + "/posts/" + postId, value()) : T.api("POST", "/api/sites/" + siteId + "/posts", value());
+    T.busy(this, req.then(function (p) {
+      if (!postId) { location.replace("/sites/" + siteId + "/posts/" + p.id + "?saved=1"); return; }
+      body.innerHTML = p.body; if (!html.hidden) html.value = p.body;
+      $("#slug").value = p.slug; $("#slug-note").textContent = p.file;
+      $("#preview").href = "/sites/" + siteId + "/preview/" + p.file.slice(0, -5); $("#preview").hidden = false;
+      state.textContent = p.status === "draft" ? "Saved as a draft" : (p.live ? "Saved. Publish the site to put it live." : "Saved. Scheduled for " + new Date(p.published_at).toLocaleString());
+      T.toast("Post saved");
+    }));
+  };
+  if (/saved=1/.test(location.search)) T.toast("Post saved");
+  var del = $("#delete");
+  if (del) del.onclick = function () {
+    if (confirm("Delete this post? Its cover picture stays in the Media Center.")) T.api("DELETE", "/api/sites/" + siteId + "/posts/" + postId).then(function () { location.href = "/sites/" + siteId + "/posts"; });
+  };
+  window.addEventListener("beforeunload", function (e) { if (/Unsaved/.test(state.textContent)) { e.preventDefault(); e.returnValue = ""; } });
+})();
+</script>
+{% endblock %}

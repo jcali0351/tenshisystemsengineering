@@ -29,7 +29,7 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from tenshi import forms as tforms, profile as prof, scanner
 
-from . import auth, blocks, config, db, media, members, ratelimit, render, revisions, sanitize, security, sites, templates, theme as theme_mod, widgets
+from . import auth, blocks, config, db, media, members, posts, ratelimit, render, revisions, sanitize, security, sites, templates, theme as theme_mod, widgets
 
 VERSION = "1.0.0"
 UI_DIR = Path(__file__).parent / "ui"
@@ -126,6 +126,8 @@ async def serve_site(request: Request, subdomain: str, path: str):
         # The site's own extra allowed hosts and its report-only switch (Settings & theme › Security, security.py).
         sec = security.load(site["id"])
         headers[security.header_name(sec)] = widgets.csp_for_file(folder, file.relative_to(folder.resolve()).as_posix(), security.extra_sources(sec))
+    if file.name == "feed.xml":
+        return FileResponse(file, headers=headers, media_type="application/rss+xml; charset=utf-8")
     return FileResponse(file, headers=headers)
 
 
@@ -165,6 +167,7 @@ def api_user(request: Request, admin=False):
 @app.exception_handler(members.MemberError)
 @app.exception_handler(security.SecurityError)
 @app.exception_handler(theme_mod.ThemeError)
+@app.exception_handler(posts.PostError)
 async def friendly_errors(request, error):
     return JSONResponse({"error": str(error)}, status_code=400)
 
@@ -550,7 +553,7 @@ async def api_new_page(request: Request, site_id: int):
     user = api_user(request)
     body = await request.json()
     title = (body.get("title") or "New page").strip()
-    slug = sites.slugify(body.get("slug") or title) or "page"
+    slug = posts.safe_page_slug(sites.slugify(body.get("slug") or title) or "page")
     base, n = slug, 2
     while db.one("SELECT id FROM pages WHERE site_id = ? AND slug = ?", site_id, slug):
         slug, n = f"{base}-{n}", n + 1
@@ -595,7 +598,7 @@ async def api_save_page(request: Request, page_id: int):
     if "in_menu" in body:
         changes["in_menu"] = 1 if body["in_menu"] else 0
     if "slug" in body and page["slug"] != "index":
-        slug = sites.slugify(body["slug"])
+        slug = posts.safe_page_slug(sites.slugify(body["slug"])) if sites.slugify(body["slug"]) else ""
         if not slug or db.one("SELECT id FROM pages WHERE site_id = ? AND slug = ? AND id != ?", page["site_id"], slug, page_id):
             raise sites.SiteError("That page address is empty or already used.")
         changes["slug"] = slug
@@ -971,6 +974,65 @@ async def api_portfolio_order(request: Request, site_id: int):
 def api_delete_portfolio(request: Request, item_id: int):
     api_user(request)
     db.run("DELETE FROM portfolio_items WHERE id = ?", item_id)
+    return {"ok": True}
+
+
+# ---------------------------------------------------------------------------------------------- blog posts
+
+def post_json(row):
+    m = db.one("SELECT * FROM media WHERE id = ?", row["cover_media_id"]) if row["cover_media_id"] else None
+    return {**row, "cover_thumb": media_json(m)["thumb"] if m else "", "live": posts.is_live(row),
+            "date": posts.nice_date(row["published_at"]), "file": posts.file_name(row)}
+
+
+@app.get("/sites/{site_id}/posts", response_class=HTMLResponse)
+def posts_page(request: Request, site_id: int):
+    user = page_user(request)
+    site = site_or_404(site_id)
+    rows = [post_json(r) for r in posts.all_for(site_id)]
+    blog_on = any(b.get("type") == "blog" for p in db.all("SELECT blocks_json FROM pages WHERE site_id = ?", site_id) for b in db.j(p["blocks_json"], []))
+    return show("posts.html", request, user, site=site, section="posts", rows=rows, blog_on=blog_on)
+
+
+@app.get("/sites/{site_id}/posts/{post_id}", response_class=HTMLResponse)
+def post_edit_page(request: Request, site_id: int, post_id: str):
+    """The post editor. post_id "new" starts a blank post."""
+    user = page_user(request)
+    site = site_or_404(site_id)
+    row = None
+    if post_id != "new":
+        row = posts.get(int(post_id) if post_id.isdigit() else 0, site_id)
+        if not row:
+            raise HTTPException(404, "No such post.")
+    tags = sorted({t for r in posts.all_for(site_id) for t in posts.tags_of(r)}, key=str.lower)
+    return show("post_edit.html", request, user, site=site, section="posts", post=post_json(row) if row else None, all_tags=tags)
+
+
+@app.get("/api/sites/{site_id}/posts")
+def api_posts(request: Request, site_id: int):
+    api_user(request)
+    sites.get(site_id)
+    return {"posts": [post_json(r) for r in posts.all_for(site_id)]}
+
+
+@app.post("/api/sites/{site_id}/posts")
+async def api_new_post(request: Request, site_id: int):
+    user = api_user(request)
+    sites.get(site_id)
+    return post_json(posts.save(site_id, await request.json(), user))
+
+
+@app.patch("/api/sites/{site_id}/posts/{post_id}")
+async def api_save_post(request: Request, site_id: int, post_id: int):
+    user = api_user(request)
+    sites.get(site_id)
+    return post_json(posts.save(site_id, await request.json(), user, post_id))
+
+
+@app.delete("/api/sites/{site_id}/posts/{post_id}")
+def api_delete_post(request: Request, site_id: int, post_id: int):
+    user = api_user(request)
+    posts.delete(post_id, site_id, user)
     return {"ok": True}
 
 

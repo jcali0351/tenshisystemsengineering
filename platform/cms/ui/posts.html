@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block title %}Blog posts · {{ site.name }}{% endblock %}
+{% block heading %}Blog posts{% endblock %}
+{% block actions %}<a class="btn btn-primary" href="/sites/{{ site.id }}/posts/new">+ New post</a>{% endblock %}
+{% block body %}
+<p class="muted">Posts show on any page with a <b>Blog</b> block, each on its own page. The site also gets an RSS feed
+  (<code>feed.xml</code>) and the posts go into its sitemap. New and changed posts go live when you <b>Publish</b> the site.</p>
+{% if not blog_on %}<p class="note">No page has a Blog block yet. In <a href="/sites/{{ site.id }}/pages">Pages &amp; builder</a>, add a page (e.g. “Blog”) and a <b>Blog</b> block to it.</p>{% endif %}
+<section class="card" style="margin-top:14px">
+  {% if rows %}
+  <div class="table-wrap"><table class="table" id="posts">
+    <thead><tr><th></th><th>Title</th><th>Status</th><th>Date</th><th>Tags</th><th></th></tr></thead>
+    <tbody>
+    {% for p in rows %}
+    <tr data-post="{{ p.id }}">
+      <td style="width:76px">{% if p.cover_thumb %}<img src="{{ p.cover_thumb }}" alt="" style="width:64px;height:44px;object-fit:cover;border-radius:6px">{% endif %}</td>
+      <td><a href="/sites/{{ site.id }}/posts/{{ p.id }}"><b>{{ p.title }}</b></a><br><small class="muted">{{ p.excerpt[:90] }}</small></td>
+      <td>{% if p.status == 'draft' %}<span class="badge badge-draft">Draft</span>{% elif p.live %}<span class="badge badge-live">Published</span>{% else %}<span class="badge badge-new">Scheduled</span>{% endif %}</td>
+      <td class="small" data-utc="{{ p.published_at }}">{{ p.date }}</td>
+      <td class="small">{{ p.tags }}</td>
+      <td style="white-space:nowrap"><a class="btn btn-small" href="/sites/{{ site.id }}/preview/{{ p.file[:-5] }}" target="_blank" rel="noopener">Preview</a>
+        <a class="btn btn-small" href="/sites/{{ site.id }}/posts/{{ p.id }}">Edit</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  {% else %}
+  <div class="empty">No posts yet. News, tips, finished jobs: posts help customers and search engines find you.
+    <p><a class="btn btn-primary" href="/sites/{{ site.id }}/posts/new">Write the first post</a></p></div>
+  {% endif %}
+</section>
+{% endblock %}

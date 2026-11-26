@@ -312,3 +312,16 @@ dialog.wide { width: min(1100px, calc(100vw - 24px)); }
 .revs li { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; }
 .revs li span { display: grid; font-size: .85rem; }
 .revs small { color: var(--muted); }
+
+/* ---------- Blog post editor (ui/post_edit.html) ---------- */
+.post-edit { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 18px; align-items: start; }
+@media (max-width: 1000px) { .post-edit { grid-template-columns: 1fr; } }
+.post-title { font-size: 1.4rem; font-weight: 700; }
+.rte-bar { display: flex; flex-wrap: wrap; gap: 4px; padding: 6px; border: 1px solid var(--line); border-bottom: 0; border-radius: var(--radius) var(--radius) 0 0; background: var(--bg); }
+.rte-bar button { min-width: 34px; height: 30px; padding: 0 8px; border: 1px solid transparent; border-radius: 6px; background: none; color: var(--ink); font: inherit; font-size: .85rem; cursor: pointer; }
+.rte-bar button:hover, .rte-bar button[aria-pressed="true"] { background: var(--panel); border-color: var(--line); }
+.rte { min-height: 380px; padding: 14px 18px; border: 1px solid var(--line); border-radius: 0 0 var(--radius) var(--radius); background: var(--panel); color: var(--ink); line-height: 1.7; outline: none; overflow-wrap: anywhere; }
+.rte:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-ring); }
+.rte blockquote { margin: 1em 0; padding-left: 14px; border-left: 3px solid var(--accent); color: var(--text); }
+.rte img { max-width: 100%; }
+#body-html { min-height: 380px; border-radius: 0 0 var(--radius) var(--radius); }

@@ -149,6 +149,16 @@ CREATE TABLE IF NOT EXISTS form_posts (
 );
 CREATE INDEX IF NOT EXISTS form_posts_site ON form_posts (site_id, created_at);
 
+-- Blog posts of a site (posts.py). body is HTML cleaned with nh3 on save. status: draft | published; a published
+-- post appears once published_at (UTC) has passed, on the next Publish. Pages are post-<slug>.html, plus feed.xml.
+CREATE TABLE IF NOT EXISTS posts (
+  id INTEGER PRIMARY KEY, site_id INTEGER NOT NULL, title TEXT NOT NULL, slug TEXT NOT NULL,
+  excerpt TEXT NOT NULL DEFAULT '', body TEXT NOT NULL DEFAULT '', cover_media_id INTEGER, tags TEXT NOT NULL DEFAULT '',
+  author TEXT NOT NULL DEFAULT '', status TEXT NOT NULL DEFAULT 'draft', published_at TEXT NOT NULL DEFAULT '',
+  created_at TEXT NOT NULL, updated_at TEXT NOT NULL, UNIQUE (site_id, slug)
+);
+CREATE INDEX IF NOT EXISTS posts_site ON posts (site_id, status, published_at);
+
 -- What happened, by whom (the Recent Activity list)
 CREATE TABLE IF NOT EXISTS activity (
   id INTEGER PRIMARY KEY, user_id INTEGER, site_id INTEGER, action TEXT NOT NULL, details TEXT NOT NULL DEFAULT '',

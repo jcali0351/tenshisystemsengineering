@@ -24,7 +24,7 @@ from tenshi import profile as prof
 from . import blocks, config, db, media as media_mod, render, templates
 
 RESERVED = {"www", "admin", "api", "app", "cms", "files", "mail", "static", "assets", "tenshi", "localhost", "preview"}
-SITE_TABLES = ["pages", "media_folders", "media", "albums", "portfolio_items"]   # rows that belong to a site
+SITE_TABLES = ["pages", "media_folders", "media", "albums", "portfolio_items", "posts"]   # rows that belong to a site
 
 
 class SiteError(ValueError):
@@ -225,6 +225,10 @@ def _copy_content(from_id, to_id, media_map):
                "album_id, position, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                to_id, p["title"], p["category"], p["tags"], p["summary"], p["body"], media_map.get(p["cover_media_id"]),
                media_map.get(p["before_media_id"]), media_map.get(p["after_media_id"]), album_map.get(p["album_id"]), p["position"], db.now())
+    for p in db.all("SELECT * FROM posts WHERE site_id = ?", from_id):
+        db.run("INSERT INTO posts (site_id, title, slug, excerpt, body, cover_media_id, tags, author, status, published_at, created_at, updated_at) "
+               "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", to_id, p["title"], p["slug"], p["excerpt"], p["body"],
+               media_map.get(p["cover_media_id"]), p["tags"], p["author"], p["status"], p["published_at"], db.now(), db.now())
     for page in db.all("SELECT * FROM pages WHERE site_id = ?", from_id):
         page_blocks = _remap_media_ids(db.j(page["blocks_json"], []), media_map)
         for b in page_blocks:

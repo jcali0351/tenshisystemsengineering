@@ -1,0 +1,27 @@
+/* blog.css: the Blog widget (cms/widgets/blog.py). Uses the site's theme tokens. */
+.tw-blog .intro { margin: -.2em 0 1.4em; opacity: .85; max-width: 60ch; }
+.tw-blog-grid { display: grid; gap: calc(22px * var(--space, 1)); grid-template-columns: repeat(var(--tw-cols, 3), minmax(0, 1fr)); }
+.tw-blog-cols-2 { --tw-cols: 2; } .tw-blog-cols-3 { --tw-cols: 3; }
+.tw-post { display: flex; flex-direction: column; overflow: hidden; background: #fff; color: var(--i, #1f2937); border-radius: var(--radius, 14px);
+  border: 1px solid color-mix(in srgb, var(--i, #1f2937) 10%, transparent); box-shadow: 0 14px 30px -24px rgba(0,0,0,.35); }
+.tw-post-pic { display: block; aspect-ratio: 16 / 10; overflow: hidden; background: color-mix(in srgb, var(--p, #5b21b6) 10%, #fff); }
+.tw-post-pic img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+.tw-post:hover .tw-post-pic img { transform: scale(1.04); }
+.tw-post-body { display: flex; flex-direction: column; gap: 8px; padding: 20px 22px 22px; flex: 1; }
+.tw-post-meta { margin: 0; font-size: .8rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--p, #5b21b6); }
+.tw-post h3 { margin: 0; font-size: 1.2rem; line-height: 1.25; }
+.tw-post h3 a { color: inherit; text-decoration: none; }
+.tw-post h3 a:hover { text-decoration: underline; }
+.tw-post-ex { margin: 0; opacity: .85; }
+.tw-post-more { margin-top: auto; font-weight: 700; text-decoration: none; }
+.tw-blog-feat { display: grid; grid-template-columns: 1.5fr 1fr; gap: calc(22px * var(--space, 1)); align-items: start; }
+.tw-post-big h3 { font-size: 1.7rem; }
+.tw-blog-side { display: grid; gap: 14px; }
+.tw-blog-side .tw-post { flex-direction: row; }
+.tw-blog-side .tw-post-pic { flex: 0 0 38%; aspect-ratio: auto; }
+.tw-blog-side .tw-post-ex { display: none; }
+.tw-blog-side .tw-post-body { padding: 14px 16px; }
+.tw-blog-side h3 { font-size: 1.02rem; }
+@media (max-width: 900px) { .tw-blog-grid { --tw-cols: 2; } .tw-blog-feat { grid-template-columns: 1fr; } }
+@media (max-width: 620px) { .tw-blog-grid { --tw-cols: 1; } }
+@media (prefers-reduced-motion: reduce) { .tw-post-pic img { transition: none; } }

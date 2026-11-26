@@ -128,6 +128,8 @@ class WidgetContext:
     asset: Callable[[str], str]    # asset("store.js") -> the address of a widget file for this mode
     link: Callable[[str], str] = lambda slug: slug   # link("contact") -> the address of a page (or a URL as it is)
     profile: dict = field(default_factory=dict)      # the site's business data (company.address, …)
+    media: Callable = lambda media_id, size=None: ""  # media(id, 800) -> the address of a picture (copied into deployments)
+    media_alt: Callable = lambda media_id: ""
 
 
 @dataclass
@@ -144,6 +146,7 @@ class Widget:
     settings_admin_only: bool = True
     hint: str = ""
     block_csp: Callable[[BaseModel], dict[str, list[str]]] | None = None
+    hidden: bool = False           # not in the builder's list (e.g. "post": the CMS puts it on post pages itself)
 
     # --- the builder ----------------------------------------------------------------------------------------------
     def defaults(self) -> dict:
@@ -190,7 +193,7 @@ def get(name: str) -> Widget | None:
 
 
 def block_types() -> dict:
-    return {name: w.block_type() for name, w in REGISTRY.items()}
+    return {name: w.block_type() for name, w in REGISTRY.items() if not w.hidden}
 
 
 def friendly(error: ValidationError) -> str:
@@ -339,4 +342,4 @@ def block_template_source(name: str) -> str | None:
 
 
 # The widgets. Import order is the order in the builder's "Add block" list (after the built-in blocks).
-from . import booking, faq, map, pricing, store  # noqa: E402,F401
+from . import blog, booking, faq, map, pricing, store  # noqa: E402,F401
