@@ -1,0 +1,10 @@
+/* Review form (cms/widgets/review_form.py) */
+.tw-rv-form { padding: 24px; border: 1px solid var(--m-line); border-radius: var(--m-r); background: var(--m-card); }
+.tw-rv-stars { border: 0; margin: 0; padding: 0; } .tw-rv-stars legend { font-weight: 600; margin-bottom: 4px; }
+.tw-rv-pick { display: inline-flex; flex-direction: row-reverse; gap: 2px; }
+.tw-rv-pick input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.tw-rv-pick label { font-size: 2rem; line-height: 1; cursor: pointer; color: var(--m-line); padding: 2px; }
+.tw-rv-pick label:hover, .tw-rv-pick label:hover ~ label, .tw-rv-pick input:checked ~ label { color: #f59e0b; }
+.tw-rv-pick input:focus-visible + label { outline: 3px solid var(--m-a); outline-offset: 2px; border-radius: 6px; }
+.tw-mod .tw-check { display: flex; gap: 10px; align-items: flex-start; font-weight: 400; }
+.tw-mod .tw-check input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--m-ps); }

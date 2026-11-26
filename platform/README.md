@@ -203,3 +203,17 @@ friendly range control).
   **Bookings**. Deposits: a greyed-out placeholder setting (always off).
 - Inbox kinds (`cms/inbox.py`) list what visitors send at `/sites/<id>/inbox/<kind>` with a status per row.
 
+**Testimonials and trust:**
+- `testimonials` (replaces the template block; old blocks keep their heading): carousel, wall, or one featured quote
+  with the rest below; stars and an average. Sources: Business data, quotes typed in the block, approved reviews, and
+  Google reviews. Google needs the site's own **Places API (New) key + place ID** (block settings, owners/admins
+  only, the key masked); fetched by the server, cached 12 h, last good copy kept; no key means nothing is fetched or
+  shown (the builder shows a hint). The live site adds newly approved reviews without republishing
+  (`GET __w/testimonials/reviews`, approved only, no emails).
+- `review_form`: stars, review, name, role, optional email, permission box; honeypot and rate limits. Reviews wait in
+  **Modules & inbox › Reviews**; only owners and CMS admins can approve (`manage_only`), and nothing shows until then.
+- `trust_badges`: built-in inline-SVG icons (secure, guarantee, licensed, insured, award …) or your own logos; row,
+  cards or a greyscale logo strip.
+- `case_studies`: cards or alternating rows, tag filters, up to 4 metrics (`value | label`), the full story
+  (challenge / what we did / results / quote) opening in place.
+

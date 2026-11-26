@@ -14,9 +14,9 @@
     <tbody>
     {% for r in rows %}
     <tr data-row="{{ r.id }}">
-      {% for key, head in kind.columns %}<td{% if key == 'text' %} style="max-width:460px;white-space:pre-wrap"{% endif %}>{{ r[key] if r[key] is not none else '' }}</td>{% endfor %}
+      {% for key, head in kind.columns %}<td{% if key in ('text', 'quote', 'note') %} style="max-width:460px;white-space:pre-wrap"{% elif key in ('when', 'stars') %} style="white-space:nowrap"{% endif %}>{{ r[key] if r[key] is not none else '' }}</td>{% endfor %}
       <td>{% if kind.manage_only and not can_manage %}<span class="badge">{{ r.status }}</span>{% else %}
-        <select data-status aria-label="Status of {{ r[kind.columns[0][0]] }}">{% for s in kind.statuses %}<option value="{{ s }}" {% if r.status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>{% endif %}</td>
+        <select data-status style="min-width:8.5em" aria-label="Status of {{ r[kind.columns[0][0]] }}">{% for s in kind.statuses %}<option value="{{ s }}" {% if r.status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>{% endif %}</td>
     </tr>
     {% endfor %}
     </tbody>

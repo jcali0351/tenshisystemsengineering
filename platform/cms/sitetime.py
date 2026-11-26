@@ -41,3 +41,13 @@ def save(site_id: int, tz: str) -> str:
            "ON CONFLICT (site_id, key) DO UPDATE SET value_json = excluded.value_json, updated_at = excluded.updated_at",
            site_id, KEY, db.dumps(tz), db.now())
     return tz
+
+
+def local_text(site_id, iso_utc: str) -> str:
+    """A stored UTC time ("2026-11-26T03:12:00Z") as the site's local time, e.g. "Nov 25, 9:12 PM"."""
+    from datetime import timezone as _tz
+    try:
+        t = datetime.strptime((iso_utc or "")[:19], "%Y-%m-%dT%H:%M:%S").replace(tzinfo=_tz.utc).astimezone(zone(site_id))
+    except ValueError:
+        return iso_utc or ""
+    return f"{t:%b} {t.day}, {t.hour % 12 or 12}:{t:%M} {'AM' if t.hour < 12 else 'PM'}"

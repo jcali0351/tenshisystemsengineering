@@ -432,7 +432,7 @@ def render_page(block: dict, ctx: WidgetContext) -> Markup:
 
 
 def _rsvp_rows(site_id):
-    return [{**r, "event": f"{r['event_title']} ({r['event_date']})", "when": (r["created_at"] or "")[:16].replace("T", " ")}
+    return [{**r, "event": f"{r['event_title']} ({r['event_date']})", "when": sitetime.local_text(site_id, r["created_at"])}
             for r in db.all("SELECT * FROM rsvps WHERE site_id = ? ORDER BY event_date DESC, id", site_id)]
 
 

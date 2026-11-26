@@ -104,7 +104,7 @@ def delete_site(site_id, user=None):
     with db.transaction() as conn:
         for table in SITE_TABLES + ["builds", "backups", "leads", "visits", "profile_revisions", "site_settings", "site_members",
                                                                   "page_revisions", "form_posts", "lead_files",
-                                                                  "lead_emails", "site_domains", "widget_cache", "rsvps", "bookings"]:
+                                                                  "lead_emails", "site_domains", "widget_cache", "rsvps", "bookings", "reviews"]:
             conn.execute(f"DELETE FROM {table} WHERE site_id = ?", (site_id,))
         conn.execute("DELETE FROM album_items WHERE album_id NOT IN (SELECT id FROM albums)")
         conn.execute("DELETE FROM sites WHERE id = ?", (site_id,))

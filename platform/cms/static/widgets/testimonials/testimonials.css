@@ -1,0 +1,19 @@
+/* Testimonials (cms/widgets/testimonials.py) */
+.tw-tm-list { list-style: none; margin: 0; padding: 0; }
+.tw-tm figure { margin: 0; height: 100%; display: flex; flex-direction: column; gap: 12px; padding: 22px; border: 1px solid var(--m-line); border-radius: var(--m-r); background: var(--m-card); }
+.tw-tm blockquote { margin: 0; flex: 1; } .tw-tm blockquote p { margin: 0; font-size: 1.02rem; line-height: 1.6; }
+.tw-tm blockquote p::before { content: "“"; } .tw-tm blockquote p::after { content: "”"; }
+.tw-tm figcaption { display: flex; gap: 12px; align-items: center; }
+.tw-tm figcaption > span:last-child { display: grid; }
+.tw-tm-face { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; flex: none; }
+.tw-tm-init { display: grid; place-items: center; background: color-mix(in srgb, var(--m-ps) 18%, var(--m-card)); color: var(--m-i); font-weight: 800; }
+.tw-tm-role { color: var(--m-muted); font-size: .9rem; }
+.tw-tm-src { color: var(--m-muted); font-weight: 400; font-size: .85rem; }
+.tw-tm .tw-stars, .tw-tm-sum .tw-stars { color: #f59e0b; letter-spacing: 2px; font-size: 1.1rem; }
+.tw-tm-sum { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin: 0 0 18px; }
+.tw-tm-wall { columns: 3 280px; column-gap: 20px; }
+.tw-tm-wall > li { break-inside: avoid; margin: 0 0 20px; }
+.tw-tm-grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); margin-top: 20px !important; }
+.tw-tm-big figure { padding: clamp(24px, 4vw, 48px); background: var(--m-soft); border: 0; text-align: center; align-items: center; }
+.tw-tm-big blockquote p { font: 600 clamp(1.25rem, 2.6vw, 1.8rem)/1.4 var(--font-head, inherit); max-width: 38ch; margin: 0 auto; }
+.tw-tm-big figcaption { justify-content: center; text-align: left; }

@@ -199,6 +199,11 @@ CREATE TABLE IF NOT EXISTS bookings (
   note TEXT NOT NULL DEFAULT '', status TEXT NOT NULL DEFAULT 'confirmed', created_at TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS bookings_day ON bookings (site_id, block_key, staff, day);
+CREATE TABLE IF NOT EXISTS reviews (
+  id INTEGER PRIMARY KEY, site_id INTEGER NOT NULL, block_key TEXT NOT NULL, name TEXT NOT NULL, role TEXT NOT NULL DEFAULT '',
+  email TEXT NOT NULL DEFAULT '', rating INTEGER NOT NULL, quote TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'pending', created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS reviews_site ON reviews (site_id, status);
 CREATE TABLE IF NOT EXISTS widget_cache (
   site_id INTEGER NOT NULL, key TEXT NOT NULL, value_json TEXT NOT NULL, fetched_at TEXT NOT NULL, PRIMARY KEY (site_id, key)
 );

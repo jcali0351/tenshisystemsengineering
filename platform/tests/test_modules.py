@@ -343,3 +343,120 @@ def test_appointments_slots_buffers_staff_and_double_booking(cms, monkeypatch):
     r = c.put(f"/api/sites/{sid}/widgets/appointments/settings", json={"deposits_enabled": True, "deposit_percent": 20}, headers=H)
     assert r.status_code == 200 and r.json()["settings"]["deposits_enabled"] is False
     assert "Coming later" in c.get(f"/sites/{sid}/widgets/appointments").text
+
+
+# ---------------------------------------------------------------------------------------------- 3. testimonials and trust
+
+def test_testimonials_layouts_sources_and_no_google_without_key(cms, monkeypatch):
+    from cms import modcache
+    c, sid = cms
+    called = []
+    monkeypatch.setattr(modcache, "http_json", lambda *a, **k: called.append(a) or {})
+    prof = db.j(sites.get(sid)["profile_json"])
+    prof["testimonials"] = [{"quote": "Best croissants in town.", "author": "Rita M.", "rating": 5}, {"quote": "Fine bread.", "author": "Lou", "rating": 3}]
+    sites.save_profile(sid, prof)
+    # an old block (just a heading) keeps working, from Business data
+    assert _put(c, sid, "index", [{"id": "t1", "type": "testimonials", "data": {"heading": "Kind words"}}]).status_code == 200
+    html = c.get(f"/sites/{sid}/preview/index").text
+    assert "Kind words" in html and "Best croissants in town." in html and "data-tw-carousel" in html and "4 out of 5 stars" in html  # average 4.0
+    assert "Places API key" in html                                  # builder hint, preview only
+    assert not called                                                # no key: Google is never asked
+    _put(c, sid, "index", [{"id": "t1", "type": "testimonials", "data": {"layout": "featured", "min_rating": 4, "items": [
+        {"quote": "They made our wedding cake perfect.", "author": "Jo & Sam", "role": "Newlyweds", "rating": 5, "featured": True}]}}])
+    html = c.get(f"/sites/{sid}/preview/index").text
+    assert "tw-tm-big" in html and html.index("wedding cake perfect") < html.index("Best croissants") and "Fine bread." not in html
+    _put(c, sid, "index", [{"id": "t1", "type": "testimonials", "data": {"layout": "wall", "from_google": False}}])
+    html = c.get(f"/sites/{sid}/preview/index").text
+    assert "tw-tm-wall" in html and "Places API key" not in html
+    folder = _deploy(c, sid)
+    live = (folder / "index.html").read_text()
+    assert "Places API key" not in live and "tw-builder-hint" not in live
+
+
+def test_google_reviews_with_a_key_are_cached_and_the_key_stays_private(cms, monkeypatch):
+    from cms import modcache
+    c, sid = cms
+    calls = []
+
+    def fake(url, headers=None, **k):
+        calls.append((url, headers))
+        return {"rating": 4.7, "userRatingCount": 128, "googleMapsUri": "https://maps.google.com/?cid=1",
+                "reviews": [{"rating": 5, "text": {"text": "Lovely staff <b>and</b> coffee"}, "authorAttribution": {"displayName": "G. Reviewer"},
+                             "relativePublishTimeDescription": "a week ago"}]}
+    monkeypatch.setattr(modcache, "http_json", fake)
+    modcache.clear(sid)
+    assert c.put(f"/api/sites/{sid}/widgets/testimonials/settings", json={"places_key": "AIzaSECRET123456", "place_id": "bad id!"}, headers=H).status_code == 400
+    assert c.put(f"/api/sites/{sid}/widgets/testimonials/settings", json={"places_key": "AIzaSECRET123456", "place_id": "ChIJN1t_tDeuEmsRUsoyG83frY4"},
+                 headers=H).status_code == 200
+    _put(c, sid, "index", [{"id": "t1", "type": "testimonials", "data": {"layout": "wall"}}])
+    html = c.get(f"/sites/{sid}/preview/index").text
+    assert "Lovely staff &lt;b&gt;and&lt;/b&gt; coffee" in html and "on Google" in html and "128 Google reviews" in html and "4.7" in html
+    assert "AIzaSECRET" not in html and calls[0][1]["X-Goog-Api-Key"] == "AIzaSECRET123456" and "ChIJN1t_tDeuEmsRUsoyG83frY4" in calls[0][0]
+    c.get(f"/sites/{sid}/preview/index")
+    assert len(calls) == 1                                           # cached
+    db.run("UPDATE widget_cache SET fetched_at = '2000-01-01T00:00:00Z' WHERE site_id = ?", sid)
+    monkeypatch.setattr(modcache, "http_json", lambda *a, **k: (_ for _ in ()).throw(OSError("down")))
+    assert "Lovely staff" in c.get(f"/sites/{sid}/preview/index").text     # Google down: the last good copy
+    c.put(f"/api/sites/{sid}/widgets/testimonials/settings", json={"places_key": "", "place_id": ""}, headers=H)
+    assert "Lovely staff" not in c.get(f"/sites/{sid}/preview/index").text  # key removed: hidden
+
+
+def test_review_form_waits_for_approval_by_an_owner(cms, monkeypatch):
+    from cms import ratelimit
+    c, sid = cms
+    monkeypatch.setattr(ratelimit, "PER_IP", 1000)
+    _put(c, sid, "contact", [{"id": "rv1", "type": "review_form", "data": {}}])
+    _put(c, sid, "index", [{"id": "t1", "type": "testimonials", "data": {"layout": "wall", "from_business": False, "from_google": False}}])
+    html = c.get(f"/sites/{sid}/preview/contact").text
+    assert 'name="rating"' in html and 'name="consent"' in html and "&lt;" not in html.split("tw-rv-form")[1].split("</form>")[0]
+    good = {"_block": "contact/rv1", "rating": "5", "quote": "Wonderful sourdough, friendly team.", "name": "Ola", "role": "Regular", "consent": "yes"}
+    r = c.post(f"/sites/{sid}/preview/__w/review_form/send", data=good)
+    assert r.json()["ok"] and "Preview" in r.json()["message"] and not db.one("SELECT 1 FROM reviews WHERE site_id = ?", sid)
+    _deploy(c, sid)
+    h = _host(sid)
+    send = lambda **d: c.post("/__w/review_form/send", data={**good, **d}, headers=h)
+    assert send(rating="9").json()["field"] == "rating"
+    assert send(quote="ok").json()["field"] == "quote"
+    assert send(consent="").json()["field"] == "consent"
+    assert send(email="nope").json()["field"] == "email"
+    assert send(_hp="bot").json()["ok"] and not db.one("SELECT 1 FROM reviews WHERE site_id = ?", sid)
+    assert send().json()["ok"]
+    row = db.one("SELECT * FROM reviews WHERE site_id = ?", sid)
+    assert row["status"] == "pending"
+    # nothing shows until approved: not in the preview, not from the live endpoint
+    assert "Wonderful sourdough" not in c.get(f"/sites/{sid}/preview/index").text
+    assert c.get("/__w/testimonials/reviews?_block=index/t1", headers=h).json()["reviews"] == []
+    # an editor can't approve
+    _user("mod-editor@example.com", "correct-horse-9")
+    uid = db.one("SELECT id FROM users WHERE email = ?", "mod-editor@example.com")["id"]
+    db.run("INSERT OR IGNORE INTO site_members (site_id, user_id, role, created_at) VALUES (?, ?, 'editor', ?)", sid, uid, db.now())
+    with TestClient(app) as ed:
+        _login(ed, "mod-editor@example.com", "correct-horse-9")
+        assert ed.patch(f"/api/sites/{sid}/inbox/reviews/{row['id']}", json={"status": "approved"}, headers=H).status_code == 403
+    assert "Wonderful sourdough" in c.get(f"/sites/{sid}/inbox/reviews").text
+    assert c.patch(f"/api/sites/{sid}/inbox/reviews/{row['id']}", json={"status": "approved"}, headers=H).status_code == 200
+    got = c.get("/__w/testimonials/reviews?_block=index/t1", headers=h).json()["reviews"]
+    assert got[0]["quote"].startswith("Wonderful") and "email" not in got[0]          # live site picks it up without republishing
+    html = c.get(f"/sites/{sid}/preview/index").text
+    assert "Wonderful sourdough" in html and f'data-review-id="{row["id"]}"' in html
+    c.patch(f"/api/sites/{sid}/inbox/reviews/{row['id']}", json={"status": "hidden"}, headers=H)
+    assert c.get("/__w/testimonials/reviews?_block=index/t1", headers=h).json()["reviews"] == []
+
+
+def test_trust_badges_and_case_studies(cms):
+    c, sid = cms
+    logo = _media(sid, "bbb.webp", alt="Better Business Bureau")
+    assert _put(c, sid, "about", [{"id": "tb1", "type": "trust_badges", "data": {"items": [{"icon": "secure", "link": "javascript:alert(1)"}]}}]).status_code == 400
+    assert _put(c, sid, "about", [
+        {"id": "tb1", "type": "trust_badges", "data": {"heading": "Why bake with us", "style": "cards", "items": [
+            {"icon": "licensed", "detail": "Food licence #4821"}, {"icon": "", "image": logo, "link": "https://www.bbb.org/x"}, {"icon": "", "label": "Nothing"}]}},
+        {"id": "cs1", "type": "case_studies", "data": {"filters": True, "items": [
+            {"title": "Café chain rollout", "client": "Brew & Co", "tags": "Wholesale", "metrics": "+38% | more orders\n2× | faster delivery",
+             "challenge": "Twelve sites, one oven.", "quote": "Never late.", "quote_by": "Ops lead"},
+            {"title": "Wedding season", "tags": "Events", "metrics": "120 | cakes"}]}}]).status_code == 200
+    html = c.get(f"/sites/{sid}/preview/about").text
+    assert "Food licence #4821" in html and "<svg" in html and 'href="https://www.bbb.org/x"' in html and "Nothing</b>" not in html
+    assert "+38%" in html and "more orders" in html and "Read the full story" in html and "Twelve sites, one oven." in html
+    assert 'data-tw-filter="Wholesale"' in html and 'data-tw-filter="Events"' in html
+    bad = {"id": "cs1", "type": "case_studies", "data": {"items": [{"title": "x", "metrics": "just a number"}]}}
+    assert _put(c, sid, "about", [bad]).status_code == 400
