@@ -224,9 +224,9 @@ class SiteRenderer:
         file = "index.html" if page.get("slug") == "index" else f"{page.get('slug')}.html"
         if used:
             self.used_widgets[file] = used
-            sources = widgets.block_sources(ctx["blocks"])
-            if sources:
-                self.page_sources[file] = sources
+        sources = widgets.block_sources(ctx["blocks"], self.site.get("id"))
+        if sources:
+            self.page_sources[file] = sources
         html = theme_mod.inject(html, self.theme)
         if self.mode != "preview" and self.has_posts():
             html = html.replace("</head>", f'<link rel="alternate" type="application/rss+xml" title="{escape(self.site.get("name") or "")}" href="feed.xml">\n</head>', 1)

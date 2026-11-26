@@ -31,6 +31,7 @@ and the CSP pick it up from here.
 
 from __future__ import annotations
 
+import inspect
 import json
 import re
 from dataclasses import dataclass, field
@@ -55,8 +56,8 @@ BASE_CSP = {
     "font-src": ["'self'", "data:"],
     "media-src": ["'self'", "blob:"],
     "connect-src": ["'self'"],
-    "frame-src": ["'self'", "https://www.youtube-nocookie.com", "https://www.youtube.com", "https://player.vimeo.com",
-                  "https://www.google.com", "https://www.openstreetmap.org"],
+    "frame-src": ["'self'", "https://www.youtube-nocookie.com", "https://www.youtube.com", "https://player.vimeo.com"],
+    # Google Maps / OpenStreetMap frames are added only on pages with a Map block or a Custom HTML map (block_sources).
     "form-action": ["'self'"],
     "base-uri": ["'self'"],
     "object-src": ["'none'"],
@@ -289,15 +290,31 @@ def copy_files(names, out_dir: Path) -> None:
                 shutil.copy2(src, target)
 
 
-def block_sources(blocks: list) -> dict[str, list[str]]:
-    """Sources that depend on the settings of the widget blocks on a page (Widget.block_csp)."""
+HTML_MAP_RE = re.compile(r"<iframe[^>]+src=[\"']https://www\.google\.com/maps", re.I)
+
+
+def block_sources(blocks: list, site_id=None) -> dict[str, list[str]]:
+    """Sources that depend on the blocks on a page: each widget's block_csp(config, site settings), and Google for
+    a Google Maps iframe pasted into a Custom HTML block."""
     out: dict[str, list[str]] = {}
+
+    def add(found):
+        for directive, sources in (found or {}).items():
+            have = out.setdefault(directive, [])
+            have.extend(s for s in sources if s not in have)
+
     for b in blocks or []:
-        w = REGISTRY.get((b or {}).get("type"))
+        b = b or {}
+        w = REGISTRY.get(b.get("type"))
         if w and w.block_csp:
-            for directive, sources in (w.block_csp(w.config_for(b.get("data"))) or {}).items():
-                have = out.setdefault(directive, [])
-                have.extend(s for s in sources if s not in have)
+            cfg = w.config_for(b.get("data"))
+            try:
+                params = len(inspect.signature(w.block_csp).parameters)
+            except (TypeError, ValueError):
+                params = 1
+            add(w.block_csp(cfg, load_settings(site_id, w.name) if w.settings else None) if params > 1 else w.block_csp(cfg))
+        elif b.get("type") == "html" and HTML_MAP_RE.search(str((b.get("data") or {}).get("html") or "")):
+            add({"frame-src": ["https://www.google.com"]})
     return out
 
 

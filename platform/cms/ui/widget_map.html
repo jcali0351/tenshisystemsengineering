@@ -1,0 +1,70 @@
+{#- Map: the site's optional Google Maps API key and map style (widget "map", cms/widgets/map.py).
+    Saved per site in site_settings (never in git). Admins and the site's owners (members.py) can change it. -#}
+{% extends "layout.html" %}
+{% block title %}Map settings · {{ site.name }}{% endblock %}
+{% block heading %}Map settings{% endblock %}
+{% block actions %}{% if can_edit %}<button class="btn btn-primary" id="save" form="map-form">Save</button>{% endif %}{% endblock %}
+{% block body %}
+<div class="grid grid-2" style="align-items:start">
+  <section class="card">
+    <h2>Google Maps API key <span class="muted small">(optional)</span></h2>
+    <p class="small muted">Map blocks work without a key: they show Google's standard map with a pin. With a key, maps show all
+      your places as markers in your theme's colour, in the style you choose below.</p>
+    {% if not can_edit %}<p class="error-box" role="note">Only this site's owners and CMS admins can change the map key.</p>{% endif %}
+    <form id="map-form" novalidate>
+      <fieldset style="border:0;padding:0;margin:0" {% if not can_edit %}disabled{% endif %}>
+        <label class="field"><span>API key</span>
+          <input type="text" name="api_key" value="{{ settings.api_key }}" placeholder="AIza…" autocomplete="off" spellcheck="false" maxlength="60"
+            aria-describedby="h-key" style="font-family:var(--mono)">
+          <small id="h-key">Empty = no key (the standard map). Visitors' browsers see this key, as with every Google map, so restrict it (step 4).</small></label>
+        <label class="field"><span>Map style (with a key)</span>
+          <select name="style">
+            {% for v, l in [('theme', 'Tinted with my theme colour'), ('standard', 'Google standard'), ('muted', 'Muted (grey)'), ('dark', 'Dark')] %}
+            <option value="{{ v }}" {% if settings.style == v %}selected{% endif %}>{{ l }}</option>{% endfor %}
+          </select></label>
+      </fieldset>
+      <p class="error-box" id="map-error" role="alert" hidden></p>
+    </form>
+    <h2 style="margin-top:20px">Where it's used</h2>
+    {% if used_on %}
+    <ul class="small">{% for p in used_on %}<li><a href="/sites/{{ site.id }}/builder/{{ p.id }}">{{ p.title }}</a></li>{% endfor %}</ul>
+    {% else %}
+    <p class="small muted">No page has a Map block yet. Open <a href="/sites/{{ site.id }}/pages">Pages &amp; builder</a>, choose a page, then <b>+ Add block › Map</b>.</p>
+    {% endif %}
+    <p class="small muted">Changes show on the live site after you Publish.</p>
+  </section>
+  <section class="card" aria-labelledby="guide-h">
+    <h2 id="guide-h">Get a Google Maps key</h2>
+    <ol class="guide">
+      <li>Open <b>console.cloud.google.com</b>, sign in and create a project (or pick one). Google asks for a billing account; small sites usually stay inside the free monthly credit.</li>
+      <li>APIs &amp; Services › Library: enable <b>Maps JavaScript API</b> and <b>Geocoding API</b> (Geocoding finds places you typed without coordinates).</li>
+      <li>APIs &amp; Services › Credentials › <b>Create credentials › API key</b>.</li>
+      <li><b>Restrict the key.</b> Application restrictions › <b>Websites</b>: add <code>https://{{ site.subdomain }}.{{ sites_domain }}/*</code> and your own domain (for example <code>https://www.example.com/*</code>). API restrictions: the two APIs above.</li>
+      <li>Paste the key here and Save, then Publish.</li>
+    </ol>
+    <p class="small muted">If Google refuses the key (not enabled, wrong address), visitors still see the standard map.</p>
+  </section>
+</div>
+<style>
+  .guide { padding-left: 1.3em; margin: 0 0 12px; display: grid; gap: 10px; font-size: .92rem; line-height: 1.5; }
+  .guide code { font-size: .8rem; word-break: break-all; }
+</style>
+{% endblock %}
+{% block scripts %}
+{% if can_edit %}
+<script>
+(function () {
+  var T = Tenshi, form = document.getElementById("map-form"), err = document.getElementById("map-error");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var body = {};
+    new FormData(form).forEach(function (v, k) { body[k] = String(v).trim(); });
+    err.hidden = true;
+    T.busy(document.getElementById("save"), T.api("PUT", "/api/sites/{{ site.id }}/widgets/map/settings", body).then(function (res) {
+      T.toast(res.settings.api_key ? "Saved: maps use your key. Publish to update the site." : "Saved (no key: standard maps).");
+    }).catch(function (e) { err.textContent = e.message; err.hidden = false; }));
+  });
+})();
+</script>
+{% endif %}
+{% endblock %}

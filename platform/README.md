@@ -131,6 +131,12 @@ templates.json), `year`, `form_action`. They're listed in `PLATFORM_NAMES` in `s
   connections, frames and form posts stay on the site; pictures from any https address). A page with a widget gets that
   widget's extra sources too (the Store adds `*.myshopify.com`, `cdn.shopify.com`, `checkout.shopify.com`), read from
   the deployment's `.tenshi-widgets.json` (never served). No Caddy change needed: client sites are proxied to the CMS.
+  Google Maps and OpenStreetMap frames are allowed only on pages with a Map block (or a Google Maps iframe in Custom
+  HTML); with the site's Maps API key the page also allows `maps.googleapis.com` / `maps.gstatic.com`.
+- **Map widget (`cms/widgets/map.py`):** one or more places, Google Maps without a key (embed iframe) or OpenStreetMap;
+  "Get directions" button; lazy-loaded. Optional per-site Google Maps API key and style at `/sites/<id>/widgets/map`
+  (owners and admins; stored in `site_settings`, never in git). The key is a browser key, so restrict it in Google
+  Cloud to the site's addresses (HTTP referrers) and to the Maps JavaScript + Geocoding APIs.
 - **Store tokens:** only the PUBLIC Storefront token is accepted; anything shaped like a secret Shopify token
   (`shpat_`, `shpca_`, `shppa_`, `shpss_` …) is refused. Settings live in the `site_settings` table, never in git.
 - **API docs:** `/api/docs`, `/redoc` and `/openapi.json` are off. For local development only: `TENSHI_API_DOCS=1`.
