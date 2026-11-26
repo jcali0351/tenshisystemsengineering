@@ -70,6 +70,8 @@ const CONTACT_EMAIL = "admin@tenshisystems.com";
     else if (meta && !fixedTitle) meta.setAttribute("content", t("metaDescription"));
 
     $$("[data-i18n]").forEach((el) => { el.textContent = t(el.dataset.i18n); });
+    // Long-form lines with simple formatting (team, legal): the text is HTML from translations.js (site code, not visitor input).
+    $$("[data-i18n-html]").forEach((el) => { const v = t(el.dataset.i18nHtml); if (v !== undefined && el.innerHTML !== v) el.innerHTML = v; });
     $$("[data-i18n-attr]").forEach((el) => {
       el.dataset.i18nAttr.split(";").forEach((pair) => {
         const [attr, key] = pair.split(":");

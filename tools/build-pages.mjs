@@ -171,6 +171,9 @@ writeFileSync("index.html", index);
    plain-text element with data-i18n and every data-i18n-attr attribute, so text edited in translations.js (or the
    Tenshi Editor) shows up there too. Elements that contain other tags are left alone. */
 function bakeEnglish(html) {
+  // Long-form copy (team, legal): data-i18n-html keys hold simple formatting, so their English goes in as HTML.
+  html = html.replace(/(<([a-z0-9]+)\b[^>]*\sdata-i18n-html="([A-Za-z0-9_]+)"[^>]*>)([\s\S]*?)(<\/\2>)/g,
+    (m, open, tag, key, inner, close) => (EN[key] === undefined ? m : open + EN[key] + close));
   html = html.replace(/(<([a-z0-9]+)\b[^>]*\sdata-i18n="([A-Za-z0-9_]+)"[^>]*>)([^<]*)(<\/\2>)/g,
     (m, open, tag, key, text, close) => (EN[key] === undefined ? m : open + esc(EN[key]) + close));
   return html.replace(/<[a-z0-9]+\b[^>]*\sdata-i18n-attr="([^"]+)"[^>]*>/g, (tagHtml, spec) =>
@@ -877,13 +880,15 @@ ${cta("contact.html")}`,
 writePage("about.html", about);
 
 /* ---------- Team ---------- */
-// The team page's content is the owner's own <main> block, kept word for word in tools/team-main.html (edit it there).
+// The team page's content is the owner's own <main> block, kept in tools/team-main.html. Its words are translations.js
+// keys (team*: data-i18n, or data-i18n-html for lines with bold text), so the Tenshi Editor can change them; the build
+// puts the current English in (bakeEnglish).
 // Its look is in team.css, linked just before it so the header and <head> stay the same as on every other page.
 // (The old generated team cards, TEAM and the staff* translations are no longer shown on this page.)
 const teamPage = frame({
   prefix: "", current: "team", titleKey: "teamTitle", descKey: "teamLead", bodyClass: "page team-page",
   rawMain: `  <link rel="stylesheet" href="team.css">
-${readFileSync("tools/team-main.html", "utf8").replace(/\s+$/, "")}`,
+${bakeEnglish(readFileSync("tools/team-main.html", "utf8").replace(/\s+$/, ""))}`,
 });
 // The owner's <main> is id="main-content", so the skip link points there (only change to this page's header).
 writePage("team.html", teamPage.replace('<a class="skip-link" href="#main"', '<a class="skip-link" href="#main-content"'));
@@ -1080,7 +1085,8 @@ writePage("knowledge-base.html", kbPage);
 /* ---------- Legal & Privacy ---------- */
 // Terms of Service & Privacy Policy. Body lives in tools/legal-main.html. Look: legal.css,
 // linked after neon-pages.css below. LEGAL_EMAIL is the only contact address on this page;
-// it replaces __LEGAL_EMAIL__ in the source (the mailto link also gets data-legal-email).
+// it replaces __LEGAL_EMAIL__ in the source (the mailto link also gets data-legal-email). The words are translations.js
+// keys (legal*: data-i18n / data-i18n-html, editable in the Tenshi Editor); legalS9P2 holds the email address itself.
 const LEGAL_EMAIL = "admin@tenshisystems.com";
 const legalPage = frame({
   prefix: "", current: "legal", titleKey: "legalTitle", descKey: "legalLead", bodyClass: "page legal-page",
@@ -1093,7 +1099,7 @@ const legalPage = frame({
       <div class="page-inner">
         <article class="legal-col" id="legal-doc">
           <h2 id="legal-doc-title" class="sr-only" data-i18n="legalTitle">${tx("legalTitle")}</h2>
-${readFileSync("tools/legal-main.html", "utf8").replace(/\s+$/, "").replaceAll("__LEGAL_EMAIL__", LEGAL_EMAIL)}
+${bakeEnglish(readFileSync("tools/legal-main.html", "utf8").replace(/\s+$/, "").replaceAll("__LEGAL_EMAIL__", LEGAL_EMAIL))}
         </article>
       </div>
     </section>`,

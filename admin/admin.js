@@ -146,7 +146,7 @@
     pend[lang] = pend[lang] || {};
     if (value === ((T[lang] || {})[key] || "")) delete pend[lang][key]; else pend[lang][key] = value;
     if (lang === "en") {
-      if (pend.en && Object.prototype.hasOwnProperty.call(pend.en, key)) { if (autoTr[key] === undefined) autoTr[key] = true; }
+      if (pend.en && Object.prototype.hasOwnProperty.call(pend.en, key)) { if (autoTr[key] === undefined) autoTr[key] = !/</.test(value); }
       else delete autoTr[key];
     }
     updateBar(); paintFrame(key);
@@ -222,7 +222,7 @@
   function loadPageKeys() {
     Promise.all(pages.map(function (p) {
       return fetch(SITE + p, { cache: "no-cache" }).then(function (r) { return r.ok ? r.text() : ""; }).catch(function () { return ""; }).then(function (html) {
-        var s = new Set(), m, re = /data-i18n="([A-Za-z0-9_]+)"/g, re2 = /data-i18n-attr="([^"]+)"/g;
+        var s = new Set(), m, re = /data-i18n(?:-html)?="([A-Za-z0-9_]+)"/g, re2 = /data-i18n-attr="([^"]+)"/g;
         while ((m = re.exec(html))) s.add(m[1]);
         while ((m = re2.exec(html))) m[1].split(";").forEach(function (pair) { var k = pair.split(":")[1]; if (k) s.add(k.trim()); });
         pageKeys[p] = s;
@@ -263,8 +263,8 @@
     if (!doc || !doc.body) return;
     var st = doc.createElement("style");
     st.textContent = [
-      "[data-i18n],[data-i18n-attr]{cursor:text!important}",
-      "[data-i18n]:hover,[data-i18n-attr]:hover{outline:2px dashed #ff2d4f!important;outline-offset:3px}",
+      "[data-i18n],[data-i18n-html],[data-i18n-attr]{cursor:text!important}",
+      "[data-i18n]:hover,[data-i18n-html]:hover,[data-i18n-attr]:hover{outline:2px dashed #ff2d4f!important;outline-offset:3px}",
       "img{cursor:pointer!important}",
       "img:hover{outline:3px solid #ff2d4f!important;outline-offset:-3px}",
       "[data-ed-changed]{outline:2px solid #ffc069!important;outline-offset:3px}",
@@ -275,7 +275,7 @@
       e.preventDefault(); e.stopPropagation();
       var img = e.target.closest && e.target.closest("img");
       if (img) { var p = repoPath(img.getAttribute("src"), doc); if (p) return openImage(p); }
-      var el = e.target.closest && e.target.closest("[data-i18n],[data-i18n-attr]");
+      var el = e.target.closest && e.target.closest("[data-i18n],[data-i18n-html],[data-i18n-attr]");
       if (el) openText(keysOf(el));
     }, true);
     doc.addEventListener("submit", function (e) { e.preventDefault(); }, true);
@@ -284,6 +284,7 @@
   function keysOf(el) {
     var keys = [];
     if (el.dataset.i18n) keys.push(el.dataset.i18n);
+    if (el.dataset.i18nHtml) keys.push(el.dataset.i18nHtml);
     (el.dataset.i18nAttr || "").split(";").forEach(function (pair) { var k = (pair.split(":")[1] || "").trim(); if (k && keys.indexOf(k) < 0) keys.push(k); });
     return keys;
   }
@@ -307,6 +308,10 @@
         el.textContent = cur(lang, key) || cur("en", key);
         if (changed) el.setAttribute("data-ed-changed", ""); else el.removeAttribute("data-ed-changed");
       });
+      $$('[data-i18n-html="' + key + '"]', doc).forEach(function (el) {
+        el.innerHTML = safeHtml(cur(lang, key) || cur("en", key));
+        if (changed) el.setAttribute("data-ed-changed", ""); else el.removeAttribute("data-ed-changed");
+      });
       $$("[data-i18n-attr]", doc).forEach(function (el) {
         el.dataset.i18nAttr.split(";").forEach(function (pair) {
           var a = pair.split(":"); if ((a[1] || "").trim() === key) el.setAttribute(a[0].trim(), cur(lang, key) || cur("en", key));
@@ -317,6 +322,27 @@
       var p = img.dataset.edPath || repoPath(img.getAttribute("src"), doc);
       if (p && imgEdits.has(p)) { img.dataset.edPath = p; img.src = imgEdits.get(p).url; img.setAttribute("data-ed-changed", ""); }
     });
+  }
+
+  /* Long-form texts (data-i18n-html) may hold simple formatting. The preview shows them through this allow-list, so a
+     stray tag typed in the editor can't run script in the editor's own page. */
+  var SAFE_TAGS = { STRONG: 1, B: 1, EM: 1, I: 1, A: 1, CODE: 1, BR: 1, SPAN: 1 };
+  function safeHtml(s) {
+    var doc = new DOMParser().parseFromString("<body>" + String(s || "") + "</body>", "text/html");
+    (function walk(node) {
+      Array.prototype.slice.call(node.childNodes).forEach(function (n) {
+        if (n.nodeType === 1) {
+          if (!SAFE_TAGS[n.tagName]) { node.replaceChild(doc.createTextNode(n.textContent), n); return; }
+          Array.prototype.slice.call(n.attributes).forEach(function (a) {
+            var ok = (n.tagName === "A" && a.name === "href" && /^(https?:|mailto:|\/|#|[a-z0-9])/i.test(a.value) && !/^\s*javascript:/i.test(a.value)) ||
+              a.name === "class" || a.name === "data-legal-email" || (n.tagName === "A" && (a.name === "target" || a.name === "rel"));
+            if (!ok) n.removeAttribute(a.name);
+          });
+          walk(n);
+        } else if (n.nodeType !== 3) node.removeChild(n);
+      });
+    })(doc.body);
+    return doc.body.innerHTML;
   }
 
   /* ================================================================== TEXT DRAWER */
@@ -334,6 +360,7 @@
     var others = LANGS.filter(function (l) { return l !== "en"; });
     return '<div class="ed-entry" data-key="' + esc(key) + '">' +
       '<p class="ed-key">' + esc(key) + "</p>" +
+      (/</.test(cur("en", key)) ? '<p class="ed-note">This text keeps simple formatting: &lt;strong&gt;bold&lt;/strong&gt;, &lt;em&gt;, &lt;a href="…"&gt;link&lt;/a&gt;, &lt;code&gt;. Other tags are removed. It isn\'t translated automatically.</p>' : "") +
       '<label class="ed-lang"><span>English</span><textarea data-lang="en" rows="' + rows(cur("en", key)) + '">' + esc(cur("en", key)) + "</textarea></label>" +
       '<label class="ed-check ed-auto" hidden><input type="checkbox" data-auto> Translate the other languages automatically when I save</label>' +
       '<details class="ed-langs"><summary>Other languages (' + others.length + ")</summary>" +
@@ -593,7 +620,11 @@
     var changes = [], parts = [], textKeys = changedKeys();
     var trJob = textKeys.size ? loadTree().then(function () { return readText("translations.js"); }).then(function (src) {
       var out = src;
-      Object.keys(pend).forEach(function (l) { Object.keys(pend[l]).forEach(function (k) { out = TR.set(out, l, k, pend[l][k]); }); });
+      Object.keys(pend).forEach(function (l) { Object.keys(pend[l]).forEach(function (k) {
+        var v = pend[l][k];
+        if (/</.test((T.en || {})[k] || "")) v = safeHtml(v);   // long-form (data-i18n-html) texts: only the allowed tags are saved
+        out = TR.set(out, l, k, v);
+      }); });
       if (out !== src) { changes.push({ path: "translations.js", text: out }); parts.push(textKeys.size + (textKeys.size === 1 ? " text" : " texts")); }
     }) : Promise.resolve();
     return trJob.then(function () {
