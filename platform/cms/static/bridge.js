@@ -4,6 +4,7 @@
      - Words marked data-edit in the block templates can be clicked and typed over; the new words go to the builder,
        which saves them. Plain fields stay plain text; data-rich fields (the Text block) keep simple formatting.
      - Links and forms don't navigate away while editing.
+     - The Theme panel's unsaved colours, fonts, corners and spacing are shown by swapping <style id="tenshi-tokens">.
    ===================================================================================================================== */
 (function () {
   "use strict";
@@ -38,6 +39,17 @@
     if (block) send({ tenshi: "select", block: block.getAttribute("data-block") });
   }, true);
   document.addEventListener("submit", function (e) { e.preventDefault(); }, true);
+
+  // The builder's Theme panel sends an unsaved theme: swap the tokens style and the shape class, no reload
+  window.addEventListener("message", function (e) {
+    if (e.origin !== location.origin || !e.data || e.data.tenshi !== "tokens") return;
+    var tag = document.getElementById("tenshi-tokens");
+    if (!tag) { tag = document.createElement("style"); tag.id = "tenshi-tokens"; document.head.appendChild(tag); }
+    tag.textContent = String(e.data.css || "");
+    if (/^(clean|bold|elegant)$/.test(e.data.style || "")) {
+      document.body.className = document.body.className.replace(/\bstyle-\w+/g, "").trim() + " style-" + e.data.style;
+    }
+  });
 
   // The builder tells us which block is selected: outline it and bring it into view
   window.addEventListener("message", function (e) {

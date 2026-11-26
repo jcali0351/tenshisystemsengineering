@@ -199,6 +199,8 @@ def theme_for(template_id, site_theme=None):
                                                                     "body": font_keys.get("body", "system")}.items()},
         "font_keys": font_keys,
         "lang": site_theme.get("lang", "en"),
+        "radius": site_theme.get("radius") if isinstance(site_theme.get("radius"), int) else None,
+        "space": site_theme.get("space") or "",
     }
 
 

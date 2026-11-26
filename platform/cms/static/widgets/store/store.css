@@ -1,16 +1,16 @@
 /* =====================================================================================================================
    store.css: the Store widget (cms/widgets/store.py). Linked only on pages with a Store block.
    Colours and fonts come from the site's theme tokens, written by every template's layout:
-     --p primary   --a accent   --s page background   --i text   --font-head / --font-body
+     --p primary   --a accent   --s page background   --i text   --font-head / --font-body   --radius (corners)
    so the shop matches each client's theme. Fallbacks keep it readable in a template without them.
    ===================================================================================================================== */
 .tw-store {
   --tws-p: var(--p, #5b21b6); --tws-a: var(--a, #f97316); --tws-s: var(--s, #fff); --tws-i: var(--i, #1f2937);
   --tws-line: color-mix(in srgb, var(--tws-i) 14%, transparent);
   --tws-soft: color-mix(in srgb, var(--tws-i) 5%, var(--tws-s));
-  --tws-r: 14px;
+  --tws-r: var(--radius, 14px);
 }
-.style-bold .tw-store, .style-bold .tws-drawer, .style-bold .tws-dialog { --tws-r: 0px; }
+.style-bold .tw-store, .style-bold .tws-drawer, .style-bold .tws-dialog { --tws-r: var(--radius, 0px); }
 .tw-store .tws-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 14px 24px; margin-bottom: 24px; }
 .tw-store .tws-head h2 { margin: 0; }
 .tw-store .tws-head .intro { margin: .4em 0 0; }

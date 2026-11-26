@@ -8,6 +8,7 @@
        preview → builder   { tenshi: "select", block }               a block was clicked
                            { tenshi: "edit", block, field, value }   words were typed over in the preview
        builder → preview   { tenshi: "highlight", block }            show which block is selected
+                           { tenshi: "tokens", css, style }          show an unsaved theme (the Theme panel)
 
      1. State and saving      3. The settings panel (block or page)   5. Adding blocks
      2. The block list        4. The preview                          6. Start
@@ -111,8 +112,39 @@
     if (frame) frame.postMessage({ tenshi: "highlight", block: id }, location.origin);
   }
 
+  /* The Theme panel: presets, colours, fonts, corners, spacing and the contrast check, shown live in the preview */
+  var themeOpen = false, themeEditor = null, lastTokens = null;
+  function drawThemePanel(panel) {
+    var data = JSON.parse($("#theme-data").textContent);
+    panel.innerHTML = '<div class="row" style="margin-bottom:6px"><h2 style="margin:0">Theme</h2><span style="flex:1"></span>' +
+      '<button class="btn btn-small" data-back>Page settings</button></div>' +
+      '<p class="small muted">Changes show in the preview straight away. Save to keep them; Publish to put them live.</p><div id="theme-editor"></div>' +
+      (data.can_edit ? '<button class="btn btn-primary" id="theme-save" style="width:100%;margin-top:10px">Save theme</button>' : "");
+    $("[data-back]", panel).onclick = function () { setThemeOpen(false); };
+    themeEditor = TenshiTheme.mount($("#theme-editor", panel), data, { onPreview: function (res) { lastTokens = res; sendTokens(); } });
+    if ($("#theme-save")) $("#theme-save").onclick = function () {
+      var v = themeEditor.value(); v.lang = data.theme.lang;
+      T.busy(this, T.api("POST", "/api/sites/" + siteId + "/settings", { theme: v }).then(function () {
+        data.theme = v; $("#theme-data").textContent = JSON.stringify(data);
+        T.toast("Theme saved. Publish to put it live."); lastTokens = null; reloadPreview();
+      }));
+    };
+  }
+  function sendTokens() {
+    var frame = $("#frame").contentWindow;
+    if (frame && lastTokens) frame.postMessage({ tenshi: "tokens", css: lastTokens.css, style: lastTokens.style }, location.origin);
+  }
+  function setThemeOpen(on) {
+    themeOpen = on; $("#theme-btn").setAttribute("aria-pressed", String(on));
+    if (on) { selected = null; drawList(); drawThemePanel($("#panel")); }
+    else { if (lastTokens) { lastTokens = null; reloadPreview(); } drawPanel(); }
+  }
+  $("#theme-btn").addEventListener("click", function () { setThemeOpen(!themeOpen); });
+
   function drawPanel() {
     var panel = $("#panel");
+    if (themeOpen && !selected) { drawThemePanel(panel); return; }
+    if (themeOpen) { themeOpen = false; $("#theme-btn").setAttribute("aria-pressed", "false"); if (lastTokens) { lastTokens = null; reloadPreview(); } }
     var b = blocks[indexOf(selected)];
     if (!b) { drawPageSettings(panel); return; }
     var type = TYPES[b.type];
@@ -195,6 +227,7 @@
     frame.onload = function () {
       try { frame.contentWindow.scrollTo(0, y); } catch (e) { /* ignore */ }
       if (selected) frame.contentWindow.postMessage({ tenshi: "highlight", block: selected }, location.origin);
+      sendTokens();
     };
     frame.src = "/sites/" + siteId + "/preview/" + page.slug + "?edit=1&t=" + Date.now();
     $("#open-preview").href = "/sites/" + siteId + "/preview/" + page.slug;

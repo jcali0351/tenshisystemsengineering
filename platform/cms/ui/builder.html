@@ -34,6 +34,7 @@
       </div>
       <span class="spacer" style="flex:1"></span>
       <span class="small muted">Tip: click any text in the preview and type.</span>
+      <button class="btn btn-small" id="theme-btn" type="button" aria-pressed="false">Theme</button>
     </div>
     <div class="b-stage" id="stage"><iframe id="frame" title="Page preview" src="/sites/{{ site.id }}/preview/{{ page.slug }}?edit=1"></iframe></div>
   </div>
@@ -46,4 +47,5 @@
   "page": {"id": page.id, "title": page.title, "slug": page.slug, "in_menu": page.in_menu, "seo_title": page.seo_title, "seo_description": page.seo_description}
 } | tojson }}</script>
 {% endblock %}
-{% block scripts %}<script src="/static/builder.js"></script>{% endblock %}
+{% block scripts %}<script id="theme-data" type="application/json">{{ theme_editor | tojson }}</script>
+<script src="/static/theme.js"></script><script src="/static/builder.js"></script>{% endblock %}

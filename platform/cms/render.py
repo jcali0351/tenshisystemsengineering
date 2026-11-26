@@ -24,7 +24,7 @@ from markupsafe import Markup, escape
 
 from tenshi import profile as prof
 
-from . import db, media as media_mod, templates, widgets
+from . import db, media as media_mod, templates, theme as theme_mod, widgets
 
 
 # ---------------------------------------------------------------------------------------------- cleaning HTML
@@ -222,7 +222,7 @@ class SiteRenderer:
             sources = widgets.block_sources(ctx["blocks"])
             if sources:
                 self.page_sources[file] = sources
-        return widgets.inject_assets(html, used, self.mode)
+        return widgets.inject_assets(theme_mod.inject(html, self.theme), used, self.mode)
 
 
 def site_pages(site_id):

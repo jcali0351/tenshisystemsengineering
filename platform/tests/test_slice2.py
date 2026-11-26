@@ -7,6 +7,7 @@ the public form's rate limit. Throw-away data folder, like the other tests.
 import os
 import sys
 import tempfile
+from pathlib import Path
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.dirname(HERE))
@@ -15,7 +16,7 @@ os.environ.setdefault("TENSHI_DATA", tempfile.mkdtemp(prefix="tenshi-test-"))
 import pytest  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402
 
-from cms import auth, db, security, sites, templates  # noqa: E402
+from cms import auth, db, security, sites, templates, theme  # noqa: E402
 from cms.app import app  # noqa: E402
 
 H = {"X-Tenshi": "1"}
@@ -126,3 +127,75 @@ def test_custom_html_cannot_load_outside_scripts(cms):
     assert "evil.example" not in html and "youtube-nocookie.com/embed/abc" in html
     blocked = c.get(f"/api/sites/{sid}/security").json()["blocked_hosts"]
     assert blocked == []
+
+
+# ---------------------------------------------------------------------------------------------- theme tokens
+
+def test_contrast_maths():
+    assert theme.contrast("#000000", "#ffffff") == 21.0
+    assert theme.contrast("#ffffff", "#ffffff") == 1.0
+    assert theme.contrast("#777777", "#ffffff") < 4.5 < theme.contrast("#767676", "#ffffff")     # the classic AA edge
+
+
+@pytest.mark.parametrize("pid", list(theme.PRESETS))
+def test_presets_are_valid_and_pass_aa(pid):
+    p = theme.PRESETS[pid]
+    clean = theme.clean(p)
+    assert clean["radius"] == p["radius"] and clean["space"] == p["space"]
+    assert all(c["ok"] for c in theme.contrast_checks(p["colors"])), theme.contrast_checks(p["colors"])
+    assert 4 <= len(theme.PRESETS) <= 6
+
+
+@pytest.mark.parametrize("bad", [{"colors": {"primary": "red"}}, {"colors": {"ink": "#12345"}}, {"radius": 99},
+                                 {"space": "huge"}, {"fonts": {"heading": "comic"}}, {"style": "grunge"}])
+def test_theme_refuses_bad_values(cms, bad):
+    c, sid, _ = cms
+    r = c.post(f"/api/sites/{sid}/settings", json={"theme": bad}, headers=H)
+    assert r.status_code == 400, r.text
+
+
+def test_tokens_reach_pages_and_store(cms):
+    c, sid, _ = cms
+    assert c.post(f"/api/sites/{sid}/settings", json={"theme": {}}, headers=H).status_code == 200
+    html = c.get(f"/sites/{sid}/preview/index").text
+    assert '<style id="tenshi-tokens">' in html and "--radius" not in html          # template's own corners by default
+    assert html.index('id="tenshi-tokens"') < html.lower().index("</head>")
+    p = theme.PRESETS["forest"]
+    assert c.post(f"/api/sites/{sid}/settings", json={"theme": {**p, "preset": "forest"}}, headers=H).status_code == 200
+    html = c.get(f"/sites/{sid}/preview/index").text
+    assert "--p: #1f5135;" in html and "--radius: 6px;" in html and "--space: 1.25;" in html
+    assert "html:root .card" in html and "Georgia" in html
+    css = (Path(__file__).parents[1] / "cms/static/widgets/store/store.css").read_text()
+    assert "var(--radius, 14px)" in css                                                # the store follows the corners
+    c.post(f"/api/sites/{sid}/settings", json={"theme": {}}, headers=H)
+
+
+def test_live_preview_and_contrast_warning(cms):
+    c, sid, _ = cms
+    res = c.post(f"/api/sites/{sid}/theme/preview", json={"theme": {"colors": {"primary": "#fde68a"}, "radius": 20}}, headers=H).json()
+    assert "--radius: 20px;" in res["css"] and "--p: #fde68a;" in res["css"]
+    bad = {x["pair"] for x in res["checks"] if not x["ok"]}
+    assert "#ffffff/primary" in bad and "primary/surface" in bad and "ink/surface" not in bad
+    # unsaved: the page still has the template's colour
+    assert "#fde68a" not in c.get(f"/sites/{sid}/preview/index").text
+
+
+def test_brand_lock(cms):
+    c, sid, _ = cms
+    owner = _user("s2-brand-owner@example.com", "correct-horse-6")
+    _user("s2-brand-editor@example.com", "correct-horse-5")
+    c.put(f"/api/sites/{sid}/members/{owner}", json={"role": "owner"}, headers=H)
+    with TestClient(app) as ow, TestClient(app) as ed:
+        _login(ow, "s2-brand-owner@example.com", "correct-horse-6")
+        _login(ed, "s2-brand-editor@example.com", "correct-horse-5")
+        assert ed.put(f"/api/sites/{sid}/brand", json={"locked": True}, headers=H).status_code == 403
+        assert ed.post(f"/api/sites/{sid}/settings", json={"theme": {"radius": 4}}, headers=H).status_code == 200   # not locked yet
+        assert ow.put(f"/api/sites/{sid}/brand", json={"locked": True}, headers=H).json() == {"locked": True}
+        r = ed.post(f"/api/sites/{sid}/settings", json={"theme": {"radius": 8}}, headers=H)
+        assert r.status_code == 403 and "locked" in r.text
+        assert ed.post(f"/api/sites/{sid}/settings", json={"theme": {"radius": 4, "lang": "ja"}}, headers=H).status_code == 200  # language isn't brand
+        assert ow.post(f"/api/sites/{sid}/settings", json={"theme": {"radius": 8}}, headers=H).status_code == 200
+        assert c.post(f"/api/sites/{sid}/settings", json={"theme": {}}, headers=H).status_code == 200             # admins too
+        page = ed.get(f"/sites/{sid}/settings").text
+        assert '"locked": true' in page and '"can_edit": false' in page
+    c.put(f"/api/sites/{sid}/brand", json={"locked": False}, headers=H)

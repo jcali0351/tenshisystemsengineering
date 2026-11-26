@@ -29,7 +29,7 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from tenshi import forms as tforms, profile as prof, scanner
 
-from . import auth, blocks, config, db, media, members, render, security, sites, templates, widgets
+from . import auth, blocks, config, db, media, members, render, security, sites, templates, theme as theme_mod, widgets
 
 VERSION = "1.0.0"
 UI_DIR = Path(__file__).parent / "ui"
@@ -161,6 +161,7 @@ def api_user(request: Request, admin=False):
 @app.exception_handler(widgets.WidgetError)
 @app.exception_handler(members.MemberError)
 @app.exception_handler(security.SecurityError)
+@app.exception_handler(theme_mod.ThemeError)
 async def friendly_errors(request, error):
     return JSONResponse({"error": str(error)}, status_code=400)
 
@@ -386,7 +387,11 @@ async def api_site_settings(request: Request, site_id: int):
     site = sites.get(site_id)
     body = await request.json()
     if "theme" in body:
-        db.run("UPDATE sites SET theme_json = ?, updated_at = ? WHERE id = ?", db.dumps(body["theme"]), db.now(), site_id)
+        new_theme = theme_mod.clean(body["theme"])
+        if (theme_mod.brand_part(new_theme) != theme_mod.brand_part(db.j(site["theme_json"]))
+                and not theme_mod.can_change_brand(user, site_id)):
+            raise HTTPException(403, "The brand is locked on this site: only its owners and CMS admins can change colours, fonts and shapes.")
+        db.run("UPDATE sites SET theme_json = ?, updated_at = ? WHERE id = ?", db.dumps(new_theme), db.now(), site_id)
     if body.get("template") and body["template"] != site["template_id"]:
         templates.get(body["template"])
         db.run("UPDATE sites SET template_id = ?, updated_at = ? WHERE id = ?", body["template"], db.now(), site_id)
@@ -398,6 +403,36 @@ async def api_site_settings(request: Request, site_id: int):
         db.run("UPDATE sites SET subdomain = ?, updated_at = ? WHERE id = ?", body["subdomain"], db.now(), site_id)
     db.log("Changed settings", ", ".join(body), user, site_id)
     return {"ok": True}
+
+
+def theme_editor_data(user, site):
+    """What the theme editor (static/theme.js) needs, for the settings page and the builder."""
+    tpl = templates.get(site["template_id"])
+    return {"site": site["id"], "theme": theme_mod.Theme.model_validate(db.j(site["theme_json"]) or {}).model_dump(),
+            "defaults": {"colors": tpl.get("colors", {}), "fonts": tpl.get("fonts", {}), "style": tpl.get("style", "clean")},
+            "fonts": {k: list(v) for k, v in templates.FONTS.items()}, "presets": theme_mod.PRESETS,
+            "spacing": list(theme_mod.SPACING), "radius_max": theme_mod.RADIUS_MAX,
+            "locked": theme_mod.load_brand(site["id"]).locked, "can_manage": members.can_manage(user, site["id"]),
+            "can_edit": theme_mod.can_change_brand(user, site["id"])}
+
+
+@app.post("/api/sites/{site_id}/theme/preview")
+async def api_theme_preview(request: Request, site_id: int):
+    """The tokens CSS and the contrast check for a theme that isn't saved yet (the live preview)."""
+    api_user(request)
+    site = sites.get(site_id)
+    merged = templates.theme_for(site["template_id"], theme_mod.clean((await request.json()).get("theme")))
+    return {"css": theme_mod.tokens_css(merged), "style": merged["style"], "checks": theme_mod.contrast_checks(merged["colors"])}
+
+
+@app.put("/api/sites/{site_id}/brand")
+async def api_site_brand(request: Request, site_id: int):
+    """Lock or unlock the brand (colours, fonts, shapes) for editors. Admins and the site's owners only."""
+    user = api_user(request)
+    sites.get(site_id)
+    if not members.can_manage(user, site_id):
+        raise HTTPException(403, "Only CMS admins and this site's owners can lock or unlock the brand.")
+    return theme_mod.save_brand(site_id, {"locked": bool((await request.json()).get("locked"))}, user).model_dump()
 
 
 # ---------------------------------------------------------------------------------------------- business data
@@ -492,7 +527,7 @@ def builder_page(request: Request, site_id: int, page_id: int):
     albums = db.all("SELECT id, name FROM albums WHERE site_id = ? ORDER BY name", site_id)
     cats = [r["category"] for r in db.all("SELECT DISTINCT category FROM portfolio_items WHERE site_id = ? AND category != ''", site_id)]
     return show("builder.html", request, user, site=site, section="pages", page=page, all_pages=all_pages,
-                block_types=blocks.BLOCKS, albums=albums, categories=cats)
+                block_types=blocks.BLOCKS, albums=albums, categories=cats, theme_editor=theme_editor_data(user, site))
 
 
 @app.get("/sites/{site_id}/preview/{slug}", response_class=HTMLResponse)
@@ -987,6 +1022,7 @@ def settings_page(request: Request, site_id: int):
                 template=templates.get(site["template_id"]), templates_list=templates.all_templates(), fonts=templates.FONTS,
                 members=members.for_site(site_id), member_roles=members.ROLES, my_role=members.role_on(user, site_id),
                 can_manage=members.can_manage(user, site_id), sec=security.load(site_id).model_dump(),
+                theme_editor=theme_editor_data(user, site),
                 all_users=db.all("SELECT id, name, email, role FROM users ORDER BY name") if user["role"] == "admin" else [])
 
 
