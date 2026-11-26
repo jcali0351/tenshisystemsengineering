@@ -59,6 +59,10 @@ const SEO_DEFAULTS = {
     title: "Small Business Web Design, Hosting & AI Blog | Tenshi",
     desc: "Plain-English guides for small business owners on web design, web hosting, SEO, website security, accessibility and using AI in your business.",
   },
+  shopTitle: {
+    title: "Shopify Store Demo | Tenshi Systems",
+    desc: "A live demo of a Shopify-powered online store built, themed and hosted by Tenshi Systems: products, quick view and cart, ready to connect to your own Shopify shop.",
+  },
   portalTitle: {
     title: "Client Portal | Tenshi Systems Engineering",
     desc: "Sign in to manage your Tenshi website, hosting and projects.",

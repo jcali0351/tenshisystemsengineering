@@ -104,6 +104,14 @@
       "canonical": "",
       "noindex": false
     },
+    "shopTitle": {
+      "page": "shop.html",
+      "title": "Shopify Store Demo | Tenshi Systems",
+      "desc": "A live demo of a Shopify-powered online store built, themed and hosted by Tenshi Systems: products, quick view and cart, ready to connect to your own Shopify shop.",
+      "ogImage": "",
+      "canonical": "",
+      "noindex": false
+    },
     "portalTitle": {
       "page": "portal.html",
       "title": "Client Portal | Tenshi Systems Engineering",

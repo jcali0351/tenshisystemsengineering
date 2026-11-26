@@ -33,7 +33,8 @@
 		Permissions-Policy "camera=(), microphone=(), payment=(), usb=(), browsing-topics=(), geolocation=(self), fullscreen=(self)"
 		# Report-only first: the browser console lists anything this policy WOULD block, nothing is blocked yet.
 		# When the console stays clean for a while, rename the header to Content-Security-Policy.
-		Content-Security-Policy-Report-Only "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob:; connect-src 'self' https://*.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net https://www.googletagmanager.com https://*.supabase.co wss://*.supabase.co https://*.workers.dev https://api.github.com; worker-src 'self' blob:; frame-src 'self'; frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
+		# *.myshopify.com: the Shop demo's Storefront/Cart API calls (connect-src) and its checkout hand-off (form-action).
+		Content-Security-Policy-Report-Only "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob:; connect-src 'self' https://*.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net https://www.googletagmanager.com https://*.supabase.co wss://*.supabase.co https://*.workers.dev https://api.github.com https://*.myshopify.com; worker-src 'self' blob:; frame-src 'self'; frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self' https://*.myshopify.com https://checkout.shopify.com"
 	}
 }
 
