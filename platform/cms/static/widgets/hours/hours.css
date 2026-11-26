@@ -1,0 +1,15 @@
+/* Opening hours (cms/widgets/hours.py) */
+.tw-hours-card { max-width: 560px; padding: 24px; border: 1px solid var(--m-line); border-radius: var(--m-r); background: var(--m-card); }
+.tw-hours-t { width: 100%; border-collapse: collapse; }
+.tw-hours-t th, .tw-hours-t td { padding: 9px 4px; border-bottom: 1px solid var(--m-line); text-align: left; font-weight: 400; }
+.tw-hours-t th { font-weight: 600; width: 45%; }
+.tw-hours-t tr.tw-today th, .tw-hours-t tr.tw-today td { font-weight: 800; color: var(--m-p); }
+.tw-open { display: inline-flex; gap: 6px; align-items: center; margin: 0; padding: 6px 12px; border-radius: 999px; font-size: .92rem; }
+.tw-open::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: currentColor; }
+.tw-open-yes { background: #dcfce7; color: #065f46; } .tw-open-no { background: #fee2e2; color: #991b1b; }
+html[data-theme="dark"] .tw-open-yes { background: #064e3b; color: #a7f3d0; } html[data-theme="dark"] .tw-open-no { background: #7f1d1d; color: #fecaca; }
+@media (prefers-color-scheme: dark) { html:not([data-theme="light"]) .tw-open-yes { background: #064e3b; color: #a7f3d0; } html:not([data-theme="light"]) .tw-open-no { background: #7f1d1d; color: #fecaca; } }
+.tw-hours-h { margin: 18px 0 8px; font-size: 1rem; }
+.tw-hours-hol { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.tw-hours-compact .wrap { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.tw-hours-compact details summary { cursor: pointer; font-weight: 600; }

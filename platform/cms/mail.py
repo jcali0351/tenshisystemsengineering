@@ -77,3 +77,18 @@ def send_later(msg: EmailMessage) -> bool:
     else:
         threading.Thread(target=_send, args=(msg,), daemon=True).start()
     return True
+
+
+def simple(site: dict, to: str, subject: str, body: str, reply_to: str = "") -> bool:
+    """A plain message from a site (an RSVP or booking confirmation). Nothing is sent when mail is off: returns False."""
+    if not to or not configured():
+        return False
+    msg = EmailMessage()
+    sender = os.environ.get("CONTACT_FROM") or os.environ.get("SMTP_USER") or "no-reply@localhost"
+    msg["From"] = formataddr((str(site.get("name") or "Website")[:70], sender))
+    msg["To"] = to
+    msg["Subject"] = subject[:150].replace("\n", " ").replace("\r", " ")
+    if reply_to:
+        msg["Reply-To"] = reply_to
+    msg.set_content(body)
+    return send_later(msg)

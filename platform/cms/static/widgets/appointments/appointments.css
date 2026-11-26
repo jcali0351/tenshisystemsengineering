@@ -1,0 +1,14 @@
+/* Appointments (cms/widgets/appointments.py) */
+.tw-appt-cols { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+@media (max-width: 860px) { .tw-appt-cols { grid-template-columns: 1fr; } }
+.tw-appt-form { padding: 24px; border: 1px solid var(--m-line); border-radius: var(--m-r); background: var(--m-card); }
+.tw-appt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px 16px; }
+.tw-appt-times { border: 0; margin: 14px 0; padding: 0; }
+.tw-appt-times legend { font-weight: 600; margin-bottom: 8px; }
+.tw-slots { display: flex; flex-wrap: wrap; gap: 8px; }
+.tw-slot input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.tw-slot span { display: inline-block; padding: 8px 14px; border: 1px solid var(--m-line); border-radius: 999px; cursor: pointer; background: var(--m-card); font-variant-numeric: tabular-nums; }
+.tw-slot input:checked + span { background: var(--m-ps); border-color: var(--m-ps); color: #fff; font-weight: 700; }
+.tw-slot input:focus-visible + span { outline: 3px solid var(--m-a); outline-offset: 2px; }
+.tw-appt-side { padding: 20px; border-radius: var(--m-r); background: var(--m-soft); }
+.tw-appt-side h3 { margin-top: 0; } .tw-appt-side ul { margin: 0; padding-left: 18px; display: grid; gap: 8px; }

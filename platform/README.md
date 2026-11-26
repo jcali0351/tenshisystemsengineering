@@ -189,3 +189,17 @@ or Media Center pictures by tag; masonry, grid or carousel; accessible lightbox 
 (replaces the template block: horizontal/vertical, start position, labels, several pairs, keyboard and screen-reader
 friendly range control).
 
+**Calendars and booking:** each site has a **time zone** (Settings › Address; `cms/sitetime.py`, default
+`TENSHI_TIMEZONE` or America/Chicago).
+- `events`: list / month / week views, past events hidden or shown, a page per event (`event-<title>-<date>.html`,
+  JSON-LD Event) and calendar files (`events.ics`, `event-….ics`). RSVPs with places, guests per RSVP and an optional
+  waitlist; saved in `rsvps` and as leads, rate-limited, honeypot, confirmation via `mail.simple` (nothing sent when mail
+  is off). Inbox: **Modules & inbox › RSVPs** (moving someone to "going" can't overbook).
+- `hours`: week, holidays and special days (they override the week), overnight spans, an "Open now · closes 5 pm" badge
+  worked out in the browser in the *site's* time zone, openingHoursSpecification JSON-LD.
+- `appointments`: services (length, buffer after, price), staff (their services, days, hours), start-time step, buffer
+  before, minimum notice, days ahead, closed dates, optional "I confirm each booking". Free times are computed on the
+  server; booking re-checks under a lock, so a time can't be taken twice. Saved in `bookings` and as a lead; inbox
+  **Bookings**. Deposits: a greyed-out placeholder setting (always off).
+- Inbox kinds (`cms/inbox.py`) list what visitors send at `/sites/<id>/inbox/<kind>` with a status per row.
+

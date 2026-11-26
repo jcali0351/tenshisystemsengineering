@@ -32,6 +32,7 @@ from tenshi import forms as tforms, profile as prof, scanner
 
 from . import actions, auth, blocks, chrome, config, db, domains, forms as lead_forms, mail, media, members, notify, posts, ratelimit, render, revisions, sanitize, security, sites, templates, theme as theme_mod, widgets
 from . import stock, stock_routes
+from . import inbox as inbox_mod, sitetime  # noqa: E402
 
 VERSION = "1.0.0"
 UI_DIR = Path(__file__).parent / "ui"
@@ -471,6 +472,11 @@ async def api_site_settings(request: Request, site_id: int):
         templates.get(body["template"])
         db.run("UPDATE sites SET template_id = ?, updated_at = ? WHERE id = ?", body["template"], db.now(), site_id)
         db.log("Switched template", body["template"], user, site_id)
+    if body.get("timezone"):
+        try:
+            sitetime.save(site_id, str(body["timezone"]))
+        except ValueError as error:
+            raise HTTPException(400, str(error))
     if body.get("subdomain") and body["subdomain"] != site["subdomain"]:
         if user["role"] != "admin":
             raise HTTPException(403, "Only admins can change a site's address.")
@@ -612,6 +618,33 @@ async def preview_action(request: Request, site_id: int, widget: str, action: st
     user = page_user(request)
     site = site_or_404(site_id)
     return await actions.dispatch(request, site, None, widget, action, "preview", client_ip(request))
+
+
+@app.get("/sites/{site_id}/inbox/{kind}", response_class=HTMLResponse)
+def inbox_page(request: Request, site_id: int, kind: str):
+    user = page_user(request)
+    site = site_or_404(site_id)
+    k = inbox_mod.KINDS.get(kind)
+    if not k:
+        raise HTTPException(404, "No such inbox.")
+    return show("inbox.html", request, user, site=site, section="modules", kind=k, rows=k.rows(site_id),
+                can_manage=members.can_manage(user, site_id))
+
+
+@app.patch("/api/sites/{site_id}/inbox/{kind}/{row_id}")
+async def api_inbox_status(request: Request, site_id: int, kind: str, row_id: int):
+    user = api_user(request)
+    site = site_or_404(site_id)
+    body = await request.json()
+    try:
+        row = inbox_mod.set_status(site, kind, row_id, str((body or {}).get("status") or ""), user)
+    except KeyError:
+        raise HTTPException(404, "Not found.")
+    except PermissionError as error:
+        raise HTTPException(403, str(error))
+    except ValueError as error:
+        return JSONResponse({"error": str(error)}, status_code=400)
+    return {"ok": True, "status": row["status"], "message": (row.get("_message") if isinstance(row, dict) else None) or "Updated"}
 
 
 @app.get("/sites/{site_id}/modules", response_class=HTMLResponse)
@@ -1319,6 +1352,7 @@ def settings_page(request: Request, site_id: int):
                 members=members.for_site(site_id), member_roles=members.ROLES, my_role=members.role_on(user, site_id),
                 can_manage=members.can_manage(user, site_id), sec=security.load(site_id).model_dump(),
                 theme_editor=theme_editor_data(user, site), site_domains=domains.for_site(site_id),
+                timezone=sitetime.get(site_id), timezones=sitetime.COMMON,
                 all_users=db.all("SELECT id, name, email, role FROM users ORDER BY name") if user["role"] == "admin" else [])
 
 

@@ -186,6 +186,19 @@ CREATE TABLE IF NOT EXISTS site_domains (
 );
 CREATE INDEX IF NOT EXISTS site_domains_site ON site_domains (site_id);
 -- Modules (cms/widgets/*): outside data cached by the server (modcache.py), and what visitors send.
+CREATE TABLE IF NOT EXISTS rsvps (
+  id INTEGER PRIMARY KEY, site_id INTEGER NOT NULL, block_key TEXT NOT NULL, event_slug TEXT NOT NULL, event_title TEXT NOT NULL,
+  event_date TEXT NOT NULL DEFAULT '', name TEXT NOT NULL, email TEXT NOT NULL, guests INTEGER NOT NULL DEFAULT 1,
+  note TEXT NOT NULL DEFAULT '', status TEXT NOT NULL DEFAULT 'going', created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS rsvps_event ON rsvps (site_id, block_key, event_slug);
+CREATE TABLE IF NOT EXISTS bookings (
+  id INTEGER PRIMARY KEY, site_id INTEGER NOT NULL, block_key TEXT NOT NULL, service TEXT NOT NULL, staff TEXT NOT NULL DEFAULT '',
+  day TEXT NOT NULL, start TEXT NOT NULL, minutes INTEGER NOT NULL, buffer_before INTEGER NOT NULL DEFAULT 0,
+  buffer_after INTEGER NOT NULL DEFAULT 0, name TEXT NOT NULL, email TEXT NOT NULL, phone TEXT NOT NULL DEFAULT '',
+  note TEXT NOT NULL DEFAULT '', status TEXT NOT NULL DEFAULT 'confirmed', created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS bookings_day ON bookings (site_id, block_key, staff, day);
 CREATE TABLE IF NOT EXISTS widget_cache (
   site_id INTEGER NOT NULL, key TEXT NOT NULL, value_json TEXT NOT NULL, fetched_at TEXT NOT NULL, PRIMARY KEY (site_id, key)
 );

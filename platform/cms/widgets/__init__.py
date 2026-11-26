@@ -415,6 +415,7 @@ def block_template_source(name: str) -> str | None:
 # The widgets. Import order is the order in the builder's "Add block" list (after the built-in blocks).
 from . import blog, booking, contact_form, faq, map, pricing, store  # noqa: E402,F401
 from . import modkit, lightbox, gallery, video_gallery, before_after  # noqa: E402,F401  (modules: galleries)
+from . import events, hours, appointments  # noqa: E402,F401  (modules: calendars and booking)
 
 # The global header and footer (cms/chrome.py) bring their CSS like a widget, so it's linked and deployed the same way.
 register(Widget(name="chrome", label="Header and footer", about="The site's own header and footer.", config=BaseModel,

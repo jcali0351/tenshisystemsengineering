@@ -29,6 +29,9 @@
       {% endif %}
       <small id="dom-help">At your domain company, point <b>www</b> at <code>{{ site.subdomain }}.{{ sites_domain }}</code> (a CNAME record) and the bare domain at the same IP address as <code>{{ sites_domain }}</code> (an A record). HTTPS starts by itself on the first visit once the DNS points here. Up to 5 per site.</small>
     </div>
+    <label class="field"><span>Time zone (opening hours, events and bookings)</span><select id="timezone">
+      {% for tz in ([timezone] if timezone not in timezones else []) + timezones %}<option value="{{ tz }}" {% if tz == timezone %}selected{% endif %}>{{ tz.replace('_', ' ') }}</option>{% endfor %}
+    </select></label>
     <label class="field"><span>Site language (for browsers and search engines)</span><select id="lang">
       {% for v, l in [('en', 'English'), ('ja', 'Japanese'), ('ko', 'Korean'), ('zh', 'Chinese'), ('es', 'Spanish'), ('de', 'German'), ('fr', 'French')] %}<option value="{{ v }}" {% if (theme.lang or 'en') == v %}selected{% endif %}>{{ l }}</option>{% endfor %}
     </select></label>
@@ -141,7 +144,8 @@
     var body = {
       theme: editor.value(),
       template: document.getElementById("template").value,
-      subdomain: document.getElementById("subdomain").value
+      subdomain: document.getElementById("subdomain").value,
+      timezone: document.getElementById("timezone").value
     };
     T.busy(this, T.api("POST", "/api/sites/" + siteId + "/settings", body).then(function () { T.toast("Saved. Deploy to put it live."); setTimeout(function () { location.reload(); }, 700); }));
   };
