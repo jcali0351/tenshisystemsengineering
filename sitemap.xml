@@ -533,6 +533,30 @@
       <image:title>Content management system for small business: editing website pages</image:title>
     </image:image>
     <image:image>
+      <image:loc>https://tenshisystems.com/img/demos/demo-cafe.webp</image:loc>
+      <image:title>Home page of the Driftless Bean Coffee House demo site</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/demos/demo-salon.webp</image:loc>
+      <image:title>Home page of the Willow &amp;amp; Stone Salon demo site</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/demos/demo-contractor.webp</image:loc>
+      <image:title>Home page of the Isthmus Roofing demo site</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/demos/demo-retail.webp</image:loc>
+      <image:title>Home page of the Atwood Print &amp;amp; Merch demo shop</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/demos/demo-law.webp</image:loc>
+      <image:title>Home page of the Hartwell &amp;amp; Okafor Law demo site</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/demos/demo-nonprofit.webp</image:loc>
+      <image:title>Home page of the Eastside Table Food Collective demo site</image:title>
+    </image:image>
+    <image:image>
       <image:loc>https://tenshisystems.com/img/services/software.jpg</image:loc>
       <image:title>Custom software development for small business</image:title>
     </image:image>
@@ -888,7 +912,7 @@
   </url>
   <url>
     <loc>https://tenshisystems.com/themes.html</loc>
-    <lastmod>2026-11-26</lastmod>
+    <lastmod>2026-11-25</lastmod>
     <priority>0.8</priority>
     <image:image>
       <image:loc>https://tenshisystems.com/img/photos/madison.webp</image:loc>

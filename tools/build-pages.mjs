@@ -104,6 +104,12 @@ const PHOTO_ALT_KEY = {
   "img/themes/bold-dark.webp": "themesShot_bold_dark",
   "img/themes/elegant-light.webp": "themesShot_elegant_light",
   "img/themes/elegant-dark.webp": "themesShot_elegant_dark",
+  "img/demos/demo-cafe.webp": "demoShot_cafe",
+  "img/demos/demo-salon.webp": "demoShot_salon",
+  "img/demos/demo-contractor.webp": "demoShot_contractor",
+  "img/demos/demo-retail.webp": "demoShot_retail",
+  "img/demos/demo-law.webp": "demoShot_law",
+  "img/demos/demo-nonprofit.webp": "demoShot_nonprofit",
 };
 const photoPath = (src) => String(src || "").replace(/\?.*$/, "").replace(/^(?:\.\.\/)+/, "");
 const photoAltKey = (src) => PHOTO_ALT_KEY[photoPath(src)] || "";
@@ -970,6 +976,7 @@ ${[1, 2, 3, 4, 5].map((n) => `                <li data-i18n="${k(s, "o" + n)}">$
               </ul>
               <a class="btn btn-primary" href="${prefix}services/${s.slug}.html"><span data-i18n="more">${tx("more")}</span><span class="sr-only">: <span data-i18n="${k(s, "title")}">${tx(k(s, "title"))}</span></span></a>
 ${s.id === "cms" ? `              <p class="svc-themes-link"><a href="${prefix}themes.html" data-i18n="themesLink">${tx("themesLink")}</a></p>` : ""}
+${s.id === "cms" ? `              <p class="svc-themes-link"><a href="${prefix}services/content-management.html#try-the-cms" data-i18n="demoTryBtn">${tx("demoTryBtn")}</a></p>` : ""}
             </div>
           </article>`).join("\n")}
         </div>
@@ -1473,6 +1480,45 @@ const BENEFIT_ICON = [
   '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
 ];
 
+/* ---------- DB-39: "Try the CMS" + "Demo sites" (body of services/content-management.html only) ----------
+   Six demo sites built by platform/cms/demo_sites.py at demo-<type>.tenshisystems.com; the sandbox starts at
+   cms.tenshisystems.com/demo/start. Pictures: img/demos/demo-<id>.webp (home pages of the demo sites). Look: demos.css. */
+const DEMO_SITES = [
+  { id: "cafe", name: "Driftless Bean Coffee House" },
+  { id: "salon", name: "Willow & Stone Salon + Spa" },
+  { id: "contractor", name: "Isthmus Roofing & Exteriors" },
+  { id: "retail", name: "Atwood Print & Merch" },
+  { id: "law", name: "Hartwell & Okafor Law" },
+  { id: "nonprofit", name: "Eastside Table Food Collective" },
+];
+const demosSection = (prefix) => `    <section class="demos-section" id="try-the-cms" aria-labelledby="demos-try-title">
+      <div class="svc-wide">
+        <div class="demos-try">
+          <h2 id="demos-try-title" class="section-title" data-i18n="demoTryTitle">${tx("demoTryTitle")}</h2>
+          <p class="demos-try-lead" data-i18n="demoTryLead">${tx("demoTryLead")}</p>
+          <p><a class="btn btn-primary" href="https://cms.tenshisystems.com/demo/start" rel="nofollow" data-i18n="demoTryBtn">${tx("demoTryBtn")}</a></p>
+          <p class="demos-note" data-i18n="demoTryNote">${tx("demoTryNote")}</p>
+        </div>
+        <h2 id="demos-title" class="section-title" data-i18n="demosTitle">${tx("demosTitle")}</h2>
+        <p class="demos-lead" data-i18n="demosLead">${tx("demosLead")}</p>
+        <ul class="demos-grid" aria-labelledby="demos-title">
+${DEMO_SITES.map((d) => `          <li class="demos-card">
+            <a href="https://demo-${d.id}.tenshisystems.com/" target="_blank" rel="noopener">
+              <img src="${prefix}img/demos/demo-${d.id}.webp" alt="${tx(`demoShot_${d.id}`)}" data-i18n-attr="alt:demoShot_${d.id}" width="960" height="600" loading="lazy" decoding="async">
+              <span class="demos-card-body">
+                <span class="demos-type" data-i18n="demoType_${d.id}">${tx(`demoType_${d.id}`)}</span>
+                <span class="demos-name" data-still>${esc(d.name)}</span>
+                <span class="demos-mods"><b data-i18n="demosModules">${tx("demosModules")}</b>: <span data-i18n="demoMods_${d.id}">${tx(`demoMods_${d.id}`)}</span></span>
+                <span class="demos-visit"><span data-i18n="demosVisit">${tx("demosVisit")}</span> <span aria-hidden="true">↗</span></span>
+              </span>
+            </a>
+          </li>`).join("\n")}
+        </ul>
+      </div>
+    </section>
+
+`;
+
 function servicePage(s) {
   const others = SERVICES.filter((o) => o !== s);
   const ask = `../contact.html?topic=${k(s, "title")}`;
@@ -1512,7 +1558,7 @@ ${s.id === "cms" ? `          <p class="svc-themes-link"><a href="../themes.html
       </div>
     </section>
 
-${depthSection(s)}    <section class="svc-offer-section" aria-labelledby="offer-title">
+${s.id === "cms" ? demosSection("../") : ""}${depthSection(s)}    <section class="svc-offer-section" aria-labelledby="offer-title">
       <div class="svc-wide">
         <h2 id="offer-title" class="section-title" data-i18n="offerTitle">${tx("offerTitle")}</h2>
         <ul class="offer-grid">
@@ -2673,6 +2719,17 @@ await import("./neon-pages.mjs");
   }
 }
 
+// DB-39 demo-sites section styles (content-management page only) load after neon-pages.css too.
+{
+  const file = "services/content-management.html";
+  if (existsSync(file)) {
+    let html = readFileSync(file, "utf8");
+    html = html.replace(/\n?[ \t]*<link rel="stylesheet" href="\.\.\/demos\.css[^"]*">/g, "");
+    html = html.replace(/(<link rel="stylesheet" href="\.\.\/sandbox\/neon-pages\.css[^"]*">)/, `$1\n  <link rel="stylesheet" href="../demos.css">`);
+    writeFileSync(file, html);
+  }
+}
+
 // Theme gallery assets must load after neon-pages.css so cards, swatches and the lightbox stay intact.
 {
   const file = "themes.html";
@@ -2808,7 +2865,7 @@ await import("./neon-pages.mjs");
   const pri = (p) => p === "index.html" ? "1.0" : p.startsWith("services/") || p === "services.html" ? "0.9" : p.startsWith("blog/") || p.startsWith("projects/") ? "0.6" : "0.8";
   const locOf = (p) => "https://tenshisystems.com/" + (p === "index.html" ? "" : p);
   const absImg = (src) => "https://tenshisystems.com/" + photoPath(src).replace(/^\/+/, "");
-  const IMAGE_OK = /^(img\/(photos|parallax|art|projects|shop|services|og|themes)\b|sandbox\/art\/)/;
+  const IMAGE_OK = /^(img\/(photos|parallax|art|projects|shop|services|og|themes|demos)\b|sandbox\/art\/)/;
   const pageImages = (file, html) => {
     const seen = new Set();
     const out = [];

@@ -1,0 +1,77 @@
+/* demos.css: DB-39 "Try the CMS" + "Demo sites" section on services/content-management.html.
+   The :root:not(#_)... prefix lifts these rules above sandbox/neon-pages.css, after which
+   tools/build-pages.mjs links this file. */
+:root:not(#_):not(#__):not(#___):not(#____) .demos-section {
+  --dm-pink: #ff2bd6;
+  --dm-orange: #ff8c1a;
+  --dm-ink: #f4ecff;
+  --dm-muted: #cbb8e8;
+  --dm-glass: linear-gradient(160deg, rgba(46, 11, 87, 0.86), rgba(20, 5, 43, 0.9));
+  --dm-edge: rgba(255, 43, 214, 0.4);
+  padding: clamp(40px, 6vw, 80px) 0;
+  color: var(--dm-ink);
+}
+:root:not(#_):not(#__):not(#___):not(#____) .demos-section :is(p, span, b, .demos-name) {
+  -webkit-text-fill-color: currentColor !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .demos-section .demos-try {
+  margin: 0 0 clamp(36px, 5vw, 56px);
+  padding: clamp(22px, 3vw, 34px);
+  border: 1px solid var(--dm-edge);
+  border-radius: 18px;
+  background: var(--dm-glass);
+  box-shadow: 0 0 0 1px rgba(255, 140, 26, 0.12), 0 18px 50px rgba(10, 2, 24, 0.5);
+}
+:root:not(#_):not(#__):not(#___):not(#____) .demos-section .demos-try .section-title { margin-top: 0; }
+:root:not(#_):not(#__):not(#___):not(#____) .demos-section :is(.demos-try-lead, .demos-lead) {
+  max-width: 46rem; margin: 0 0 20px;
+  color: var(--dm-muted) !important;
+  font: 400 1.05rem/1.65 Lato, "Segoe UI", sans-serif !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .demos-section .demos-note {
+  margin: 14px 0 0; max-width: 46rem;
+  color: var(--dm-muted) !important; font-size: 0.92rem !important; opacity: 0.9;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .demos-section .demos-grid {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; gap: clamp(16px, 2vw, 24px);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+}
+:root:not(#_):not(#__):not(#___):not(#____) .demos-section .demos-card a {
+  display: flex; flex-direction: column; height: 100%;
+  border: 1px solid var(--dm-edge); border-radius: 16px; overflow: hidden;
+  background: var(--dm-glass); color: var(--dm-ink) !important; text-decoration: none !important;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .demos-section .demos-card a:is(:hover, :focus-visible) {
+  transform: translateY(-3px); border-color: var(--dm-pink);
+  box-shadow: 0 0 24px rgba(255, 43, 214, 0.35);
+}
+:root:not(#_):not(#__):not(#___):not(#____) .demos-section .demos-card a:focus-visible {
+  outline: 2px solid var(--dm-orange); outline-offset: 3px;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .demos-section .demos-card img {
+  display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top;
+  background: #0a0614; border-bottom: 1px solid var(--dm-edge);
+}
+:root:not(#_):not(#__):not(#___):not(#____) .demos-section .demos-card-body {
+  display: flex; flex-direction: column; gap: 6px; padding: 16px 18px 18px; flex: 1;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .demos-section .demos-type {
+  color: var(--dm-orange) !important; font: 700 0.78rem/1.3 Lato, "Segoe UI", sans-serif !important;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .demos-section .demos-name {
+  color: var(--dm-ink) !important; font: 700 1.2rem/1.3 Lato, "Segoe UI", sans-serif !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .demos-section .demos-mods {
+  color: var(--dm-muted) !important; font: 400 0.95rem/1.5 Lato, "Segoe UI", sans-serif !important; flex: 1;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .demos-section .demos-mods b { color: var(--dm-ink) !important; }
+:root:not(#_):not(#__):not(#___):not(#____) .demos-section .demos-visit {
+  margin-top: 6px; color: var(--dm-pink) !important; font: 700 0.95rem/1.3 Lato, "Segoe UI", sans-serif !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root:not(#_):not(#__):not(#___):not(#____) .demos-section .demos-card a { transition: none; }
+  :root:not(#_):not(#__):not(#___):not(#____) .demos-section .demos-card a:is(:hover, :focus-visible) { transform: none; }
+}
