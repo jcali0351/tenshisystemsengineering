@@ -445,7 +445,8 @@ html[data-theme="light"] .ed-toast { color: var(--text); box-shadow: 0 18px 50px
 @media (prefers-reduced-motion: reduce) { .ed-theme-toggle, .ed-accents button { transition: none; } }
 
 /* SEO tab (data/seo.json) */
-.seo-wrap, .i18n-wrap { display: grid; gap: 14px; max-width: 1100px; padding: 6px 0 40px; overflow-y: auto; align-content: start; }
+.seo-wrap, .i18n-wrap { display: flex; flex-direction: column; gap: 14px; max-width: 1100px; padding: 6px 0 40px; overflow-y: auto; min-height: 0; }
+.seo-wrap > *, .i18n-wrap > * { flex: none; }
 .ed-seo .ed-toolbar { margin: 0; }
 .seo-state { color: var(--accent-text); font-size: .85rem; font-weight: 700; }
 .seo-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; align-items: start; }

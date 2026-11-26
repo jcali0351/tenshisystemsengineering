@@ -754,14 +754,16 @@
   /* ================================================================== TRANSLATIONS (coverage of each language) */
   var cov = { lang: "", show: "missing" };
   function covStats(lang) {
-    var missing = [], same = [];
+    var missing = [], same = [], total = 0;
     order.forEach(function (k) {
       var en = cur("en", k), v = cur(lang, k);
+      if (en === "") return;               // empty in English too (unused or optional): nothing to translate
+      total++;
       var has = (pend[lang] && Object.prototype.hasOwnProperty.call(pend[lang], k)) || (T[lang] && T[lang][k] != null);
       if (!has || v === "") missing.push(k);
       else if (v === en && /[A-Za-z]/.test(en)) same.push(k);
     });
-    return { total: order.length, missing: missing, same: same };
+    return { total: total, missing: missing, same: same };
   }
   function renderCoverage() {
     if (!order.length) return;
@@ -773,7 +775,7 @@
         '<td class="' + (s.missing.length ? "warn" : "ok") + '">' + s.missing.length + "</td>" +
         '<td class="' + (s.same.length > 15 ? "warn" : "") + '">' + s.same.length + "</td>" +
         '<td><span class="i18n-bar"><i style="width:' + pct + '%"></i></span> ' + pct + "%</td></tr>";
-    }).join("") + '<tr class="i18n-en"><th scope="row">English <small>en · source</small></th><td>' + order.length + "</td><td>–</td><td>–</td><td>100%</td></tr>";
+    }).join("") + '<tr class="i18n-en"><th scope="row">English <small>en · source</small></th><td>' + covStats("en").total + "</td><td>–</td><td>–</td><td>100%</td></tr>";
     renderCoverageList();
   }
   function renderCoverageList() {
