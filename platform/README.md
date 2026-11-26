@@ -165,3 +165,27 @@ templates.json), `year`, `form_action`. They're listed in `PLATFORM_NAMES` in `s
 - **Store tokens:** only the PUBLIC Storefront token is accepted; anything shaped like a secret Shopify token
   (`shpat_`, `shpca_`, `shppa_`, `shpss_` …) is refused. Settings live in the `site_settings` table, never in git.
 - **API docs:** `/api/docs`, `/redoc` and `/openapi.json` are off. For local development only: `TENSHI_API_DOCS=1`.
+
+## Client module library (DB-36)
+
+Modules are widgets (`cms/widgets/`) on the shared **module kit** (`widgets/modkit.py`: theme-token CSS, filter chips,
+carousels, forms that post to the site's own `/__w/<widget>/<action>`). Infrastructure:
+
+- **Endpoints (`cms/actions.py`):** `Widget.actions = {"name": handler}`; requests name their block (`_block`), and the
+  handler gets that block's *published* settings (`.tenshi-blocks.json` in the deployment) or, in the CMS preview,
+  the current ones. POSTs share the contact forms' rate limits and honeypot.
+- **Keys (`site_settings`):** settings fields marked `{"secret": True}` are masked (`••••••` + last 4) in every
+  response and kept when the mask is saved back. Owners and admins only. Generic settings page
+  `/sites/<id>/widgets/<name>`; all of them on **Modules & inbox** (`/sites/<id>/modules`).
+- **Outside data (`cms/modcache.py`):** fetched by the server only, cached in `widget_cache`; keys never reach pages.
+- **Extra pages and files:** `Widget.extra_pages` / `extra_files` (event pages, `.ics` calendars) are built with the
+  site and previewable at `/sites/<id>/preview/<name>`.
+- **CSP:** YouTube/Vimeo/Maps frames are no longer in the base policy; a page allows only the frame hosts of its own
+  iframes (`widgets.frame_sources`) and of its blocks (`block_csp`).
+
+**Galleries:** `gallery` (replaces the template block, same settings: one album, several albums with album filters,
+or Media Center pictures by tag; masonry, grid or carousel; accessible lightbox `widgets/lightbox.py`),
+`video_gallery` (YouTube via youtube-nocookie, Vimeo with dnt=1; nothing loads before play), `before_after`
+(replaces the template block: horizontal/vertical, start position, labels, several pairs, keyboard and screen-reader
+friendly range control).
+

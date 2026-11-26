@@ -167,6 +167,7 @@
       input.addEventListener(input.tagName === "SELECT" || input.type === "checkbox" ? "change" : "input", update);
     });
     $$(".media-field", panel).forEach(function (box) {
+      if (box.closest(".items-field")) return;     // pictures inside a list item are wired by itemsField()
       T.mediaField(box, function (value) { b.data[box.dataset.name] = value ? +value : ""; changed(); });
     });
     $$(".items-field", panel).forEach(function (box) {
@@ -193,6 +194,10 @@
           }).join("") + "</div></details>";
       }).join("") || '<p class="small muted">None yet.</p>';
       $("[data-add-item]", box).disabled = list.length >= (f.max || 50);
+      $$(".item .media-field", box).forEach(function (mf) {     // a picture inside an item (team photo, logo …)
+        var i = +mf.closest("[data-i]").dataset.i;
+        T.mediaField(mf, function (value) { list[i][mf.dataset.name] = value ? +value : ""; changed(); });
+      });
     }
     function update(e) {
       var input = e.target.closest("[data-sub]"), item = e.target.closest("[data-i]");

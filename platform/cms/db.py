@@ -185,6 +185,10 @@ CREATE TABLE IF NOT EXISTS site_domains (
   domain TEXT PRIMARY KEY, site_id INTEGER NOT NULL, created_at TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS site_domains_site ON site_domains (site_id);
+-- Modules (cms/widgets/*): outside data cached by the server (modcache.py), and what visitors send.
+CREATE TABLE IF NOT EXISTS widget_cache (
+  site_id INTEGER NOT NULL, key TEXT NOT NULL, value_json TEXT NOT NULL, fetched_at TEXT NOT NULL, PRIMARY KEY (site_id, key)
+);
 """
 
 _local = threading.local()

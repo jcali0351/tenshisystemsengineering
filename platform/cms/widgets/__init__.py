@@ -56,8 +56,9 @@ BASE_CSP = {
     "font-src": ["'self'", "data:"],
     "media-src": ["'self'", "blob:"],
     "connect-src": ["'self'"],
-    "frame-src": ["'self'", "https://www.youtube-nocookie.com", "https://www.youtube.com", "https://player.vimeo.com"],
-    # Google Maps / OpenStreetMap frames are added only on pages with a Map block or a Custom HTML map (block_sources).
+    "frame-src": ["'self'"],
+    # Video (YouTube, Vimeo) and map (Google Maps, OpenStreetMap) frames are added only to pages that have one: an
+    # iframe in the page itself (render.py: frame_sources) or a block that opens one (block_csp, e.g. the video gallery).
     "form-action": ["'self'"],
     "base-uri": ["'self'"],
     "object-src": ["'none'"],
@@ -149,6 +150,14 @@ class Widget:
     block_csp: Callable[[BaseModel], dict[str, list[str]]] | None = None
     hidden: bool = False           # not in the builder's list (e.g. "post": the CMS puts it on post pages itself)
     presets: dict = field(default_factory=dict)   # {field: {value: settings}}: choosing that value in the builder fills them in
+    # Modules (cms/actions.py, render.py): public endpoints <site>/__w/<name>/<action>; pages and files a deployment
+    # gets because of this widget (event pages, calendar files): extra_pages(renderer, pages) -> [page dicts],
+    # extra_files(renderer, pages) -> {file name: text}.
+    actions: dict = field(default_factory=dict)
+    extra_pages: Callable | None = None
+    extra_files: Callable | None = None
+    connected: Callable | None = None      # connected(settings) -> bool: the Modules page's "Connected" badge
+    requires: list = field(default_factory=list)   # other (hidden) widgets whose files this one uses, e.g. ["lightbox"]
 
     # --- the builder ----------------------------------------------------------------------------------------------
     def defaults(self) -> dict:
@@ -172,6 +181,12 @@ class Widget:
         except ValidationError as error:
             raise WidgetError(f"{self.label}: {friendly(error)}") from None
 
+    def clean_config_safe(self, data: dict | None) -> dict:
+        try:
+            return self.clean_config(data)
+        except WidgetError:
+            return self.defaults()
+
     def config_for(self, data: dict | None) -> BaseModel:
         """For drawing: the block's settings, falling back to defaults for anything that no longer validates."""
         try:
@@ -181,6 +196,8 @@ class Widget:
 
 
 REGISTRY: dict[str, Widget] = {}
+# Inboxes on the Modules page: {"label", "about", "path" (under /sites/<id>/), "count": count_new(site_id)}
+INBOX: list[dict] = []
 
 
 def register(widget: Widget) -> Widget:
@@ -221,12 +238,35 @@ def load_settings(site_id, name: str) -> BaseModel | None:
         return widget.settings()
 
 
+MASK = "••••••"
+
+
+def secret_fields(model: type[BaseModel] | None) -> list[str]:
+    """Settings fields marked {"secret": True} (API keys): never sent back to the browser in full."""
+    return [n for n, f in (model.model_fields.items() if model else []) if (f.json_schema_extra or {}).get("secret")]
+
+
+def public_settings(name: str, value: BaseModel | None) -> dict:
+    """Settings for the browser: secrets as a mask plus their last 4 characters ("" when not set)."""
+    data = value.model_dump() if value is not None else {}
+    w = get(name)
+    for k in secret_fields(w.settings if w else None):
+        v = str(data.get(k) or "")
+        data[k] = (MASK + v[-4:]) if v else ""
+    return data
+
+
 def save_settings(site_id: int, name: str, data: dict, user: dict | None = None) -> BaseModel:
     widget = get(name)
     if not widget or not widget.settings:
         raise WidgetError("This widget has no settings.")
     if not can_edit_settings(user, name, site_id):
         raise PermissionError("Only admins and the site's owners can change this.")
+    old = load_settings(site_id, name)
+    data = dict(data or {})
+    for k in secret_fields(widget.settings):          # an untouched (masked) key keeps the saved one
+        if str(data.get(k, MASK)).startswith(MASK):
+            data[k] = getattr(old, k, "") if old is not None else ""
     try:
         value = widget.settings.model_validate(data or {})
     except ValidationError as error:
@@ -256,6 +296,10 @@ def used_in(blocks: list) -> list[str]:
         t = (b or {}).get("type")
         if t in REGISTRY and t not in seen:
             seen.append(t)
+    for t in list(seen):                    # shared files (the lightbox …) come first, so they're loaded before their users
+        for r in REGISTRY[t].requires:
+            if r in REGISTRY and r not in seen:
+                seen.insert(0, r)
     return seen
 
 
@@ -292,6 +336,15 @@ def copy_files(names, out_dir: Path) -> None:
 
 
 HTML_MAP_RE = re.compile(r"<iframe[^>]+src=[\"']https://www\.google\.com/maps", re.I)
+
+
+FRAME_RE = re.compile(r"<iframe\b[^>]*?\ssrc=[\"'](https://(?:www\.youtube-nocookie\.com|www\.youtube\.com|player\.vimeo\.com|www\.google\.com|www\.openstreetmap\.org))[/\"'?]", re.I)
+
+
+def frame_sources(html: str) -> dict[str, list[str]]:
+    """The video and map hosts of the iframes actually on a page (Custom HTML, text, posts, the Video block …)."""
+    hosts = sorted({m.group(1).lower() for m in FRAME_RE.finditer(html or "")})
+    return {"frame-src": hosts} if hosts else {}
 
 
 def block_sources(blocks: list, site_id=None) -> dict[str, list[str]]:
@@ -361,6 +414,7 @@ def block_template_source(name: str) -> str | None:
 
 # The widgets. Import order is the order in the builder's "Add block" list (after the built-in blocks).
 from . import blog, booking, contact_form, faq, map, pricing, store  # noqa: E402,F401
+from . import modkit, lightbox, gallery, video_gallery, before_after  # noqa: E402,F401  (modules: galleries)
 
 # The global header and footer (cms/chrome.py) bring their CSS like a widget, so it's linked and deployed the same way.
 register(Widget(name="chrome", label="Header and footer", about="The site's own header and footer.", config=BaseModel,

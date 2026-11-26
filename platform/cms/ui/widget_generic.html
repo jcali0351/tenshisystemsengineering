@@ -1,0 +1,60 @@
+{#- A module's site settings, drawn from its settings model (cms/widgets/<name>.py). Keys marked secret are never sent
+    back in full: the box shows •••••• and the last 4 characters, and leaving it as it is keeps the saved key. -#}
+{% extends "layout.html" %}
+{% block title %}{{ widget.label }} settings · {{ site.name }}{% endblock %}
+{% block heading %}{{ widget.label }} settings{% endblock %}
+{% block actions %}<a class="btn" href="/sites/{{ site.id }}/modules">All modules</a>{% if can_edit %}<button class="btn btn-primary" id="save" form="w-form">Save</button>{% endif %}{% endblock %}
+{% block body %}
+<div class="grid grid-2" style="align-items:start">
+  <section class="card">
+    <p class="small muted">{{ widget.about }}</p>
+    {% if not can_edit %}<p class="error-box" role="note">Only this site's owners and CMS admins can change these settings.</p>{% endif %}
+    <form id="w-form" novalidate>
+      <fieldset style="border:0;padding:0;margin:0" {% if not can_edit %}disabled{% endif %}>
+      {% for f in fields %}{% set v = settings[f.name] %}
+        {% if f.type == 'checkbox' %}
+        <label class="check field"><input type="checkbox" name="{{ f.name }}" {% if v %}checked{% endif %} {% if f.disabled %}disabled{% endif %}> {{ f.label }}</label>
+        {% if f.help %}<small class="muted" style="display:block;margin:-6px 0 10px 26px">{{ f.help }}</small>{% endif %}
+        {% else %}
+        <label class="field"><span>{{ f.label }}</span>
+          {% if f.type == 'select' %}<select name="{{ f.name }}" {% if f.disabled %}disabled{% endif %}>{% for o in f.options %}<option value="{{ o[0] }}" {% if o[0]|string == v|string %}selected{% endif %}>{{ o[1] }}</option>{% endfor %}</select>
+          {% elif f.type == 'textarea' %}<textarea name="{{ f.name }}" rows="3">{{ v }}</textarea>
+          {% else %}<input type="{{ 'number' if f.type == 'number' else 'text' }}" name="{{ f.name }}" value="{{ v }}" autocomplete="off" spellcheck="false"
+            {% if f.secret %}data-secret style="font-family:var(--mono)"{% endif %} {% if f.disabled %}disabled{% endif %} {% if f.placeholder %}placeholder="{{ f.placeholder }}"{% endif %}>{% endif %}
+          {% if f.help %}<small>{{ f.help }}</small>{% endif %}</label>
+        {% endif %}
+      {% endfor %}
+      </fieldset>
+      <p class="error-box" id="w-error" role="alert" hidden></p>
+    </form>
+  </section>
+  <section class="card">
+    <h2>Where it's used</h2>
+    {% if used_on %}<ul class="small">{% for p in used_on %}<li><a href="/sites/{{ site.id }}/builder/{{ p.id }}">{{ p.title }}</a></li>{% endfor %}</ul>
+    {% else %}<p class="small muted">No page uses it yet. Add the “{{ widget.label }}” block in the page builder.</p>{% endif %}
+    <h2 style="margin-top:18px">Privacy</h2>
+    <p class="small muted">Keys are kept on the CMS server for this site only (never in the published pages or in git), and outside
+      services are asked by the server, not by visitors' browsers. Without a key the block hides itself on the published site.</p>
+  </section>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  var form = document.getElementById("w-form"), err = document.getElementById("w-error");
+  if (!form) return;
+  form.addEventListener("submit", function (e) {
+    e.preventDefault(); err.hidden = true;
+    var body = {};
+    Array.prototype.forEach.call(form.elements, function (el) {
+      if (!el.name || el.disabled) return;
+      body[el.name] = el.type === "checkbox" ? el.checked : el.type === "number" ? (el.value === "" ? null : +el.value) : el.value.trim();
+    });
+    Tenshi.busy(document.getElementById("save"), Tenshi.api("PUT", "/api/sites/{{ site.id }}/widgets/{{ widget.name }}/settings", body).then(function (res) {
+      Object.keys(res.settings).forEach(function (k) { var el = form.elements[k]; if (el && el.type !== "checkbox") el.value = res.settings[k] == null ? "" : res.settings[k]; });
+      Tenshi.toast("Saved");
+    }).catch(function (error) { err.textContent = error.message; err.hidden = false; }));
+  });
+})();
+</script>
+{% endblock %}

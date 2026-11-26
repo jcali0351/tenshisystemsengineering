@@ -30,7 +30,7 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from tenshi import forms as tforms, profile as prof, scanner
 
-from . import auth, blocks, chrome, config, db, domains, forms as lead_forms, mail, media, members, notify, posts, ratelimit, render, revisions, sanitize, security, sites, templates, theme as theme_mod, widgets
+from . import actions, auth, blocks, chrome, config, db, domains, forms as lead_forms, mail, media, members, notify, posts, ratelimit, render, revisions, sanitize, security, sites, templates, theme as theme_mod, widgets
 from . import stock, stock_routes
 
 VERSION = "1.0.0"
@@ -164,6 +164,11 @@ async def serve_site(request: Request, subdomain: str, path: str):
             return JSONResponse({"ok": False}, status_code=400)
         notify.lead_received(site, lead_id, "Contact", {k: str(v)[:4000] for k, v in fields.items() if not k.startswith("_")})
         return JSONResponse({"ok": True})
+    if site and path.startswith("/__w/"):                    # a module's endpoint (actions.py)
+        parts = path.split("/")
+        if len(parts) == 4 and folder:
+            return await actions.dispatch(request, site, folder, parts[2], parts[3], "hosted", client_ip(request))
+        return JSONResponse({"ok": False}, status_code=404)
     if site and path == "/__visit":
         if folder:
             sites.count_visit(site["id"], request.query_params.get("p", "index"))
@@ -601,10 +606,38 @@ def builder_page(request: Request, site_id: int, page_id: int):
                 block_types=blocks.BLOCKS, albums=albums, categories=cats, theme_editor=theme_editor_data(user, site))
 
 
+@app.api_route("/sites/{site_id}/preview/__w/{widget}/{action}", methods=["GET", "POST"])
+async def preview_action(request: Request, site_id: int, widget: str, action: str):
+    """A module's endpoint in the CMS preview (signed in): uses the blocks as they are now, sends nothing outside."""
+    user = page_user(request)
+    site = site_or_404(site_id)
+    return await actions.dispatch(request, site, None, widget, action, "preview", client_ip(request))
+
+
+@app.get("/sites/{site_id}/modules", response_class=HTMLResponse)
+def modules_page(request: Request, site_id: int):
+    user = page_user(request)
+    site = site_or_404(site_id)
+    configurable = []
+    for w in widgets.REGISTRY.values():
+        if w.settings and not w.hidden and w.name not in ("store", "map"):
+            st = widgets.load_settings(site_id, w.name)
+            configurable.append({"name": w.name, "label": w.label, "about": w.about,
+                                 "connected": bool(w.connected and w.connected(st)), "needs_key": bool(w.connected)})
+    inbox = [{"label": i["label"], "about": i["about"], "href": f"/sites/{site_id}/{i['path']}", "count": i["count"](site_id)}
+             for i in widgets.INBOX]
+    return show("modules.html", request, user, site=site, section="modules", configurable=configurable, inbox=inbox)
+
+
 @app.get("/sites/{site_id}/preview/{slug}", response_class=HTMLResponse)
 def site_preview(request: Request, site_id: int, slug: str, edit: int = 0):
     page_user(request)
     site = site_or_404(site_id)
+    if "." in slug:                                  # a module's file (events.ics …)
+        text = render.preview_file(site, slug)
+        if text is None:
+            raise HTTPException(404, "No file with that name.")
+        return Response(text, media_type="text/calendar; charset=utf-8" if slug.endswith(".ics") else "text/plain; charset=utf-8")
     html = render.preview(site, slug, editing=bool(edit))
     if html is None:
         raise HTTPException(404, "No page with that address.")
@@ -1340,16 +1373,20 @@ def widget_settings_page(request: Request, site_id: int, name: str):
     widget = widget_or_404(name)
     used_on = [p for p in db.all("SELECT id, title, slug, blocks_json FROM pages WHERE site_id = ? ORDER BY position, id", site_id)
                if name in widgets.used_in(db.j(p["blocks_json"], []))]
-    return show(f"widget_{name}.html", request, user, site=site, section=f"widget:{name}", widget=widget,
-                settings=widgets.load_settings(site_id, name).model_dump(), can_edit=widgets.can_edit_settings(user, name, site_id),
-                used_on=used_on)
+    if not widget.settings:
+        raise HTTPException(404, "This module has no settings.")
+    page = f"widget_{name}.html" if (UI_DIR / f"widget_{name}.html").exists() else "widget_generic.html"
+    return show(page, request, user, site=site, section=f"widget:{name}" if page != "widget_generic.html" else "modules", widget=widget,
+                settings=widgets.public_settings(name, widgets.load_settings(site_id, name)), can_edit=widgets.can_edit_settings(user, name, site_id),
+                used_on=used_on, fields=widgets.model_fields(widget.settings))
 
 
 @app.get("/api/sites/{site_id}/widgets/{name}/settings")
 def api_widget_settings(request: Request, site_id: int, name: str):
     api_user(request)
     site_or_404(site_id)
-    return {"settings": widgets.load_settings(site_id, widget_or_404(name).name).model_dump()}
+    w = widget_or_404(name)
+    return {"settings": widgets.public_settings(w.name, widgets.load_settings(site_id, w.name))}
 
 
 @app.put("/api/sites/{site_id}/widgets/{name}/settings")
@@ -1361,7 +1398,7 @@ async def api_save_widget_settings(request: Request, site_id: int, name: str):
         raise HTTPException(403, f"Only admins and this site's owners can change the {widget.label} settings.")
     body = await request.json()
     value = widgets.save_settings(site_id, name, body if isinstance(body, dict) else {}, user)
-    return {"ok": True, "settings": value.model_dump()}
+    return {"ok": True, "settings": widgets.public_settings(name, value)}
 
 
 @app.get("/static/widgets/{name}/{path:path}")

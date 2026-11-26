@@ -25,6 +25,7 @@ from markupsafe import Markup, escape
 from tenshi import profile as prof
 
 from . import chrome as chrome_mod, config, db, forms as forms_mod, media as media_mod, posts as posts_mod, templates, theme as theme_mod, widgets
+from . import actions as actions_mod  # noqa: E402 (after widgets: import order matters for blocks.BLOCKS)
 
 
 # ---------------------------------------------------------------------------------------------- cleaning HTML
@@ -131,6 +132,7 @@ class SiteRenderer:
         self.page_sources = {}          # page file -> CSP sources from its blocks' settings (e.g. a booking embed host)
         self._widget_settings = {}
         self.form_specs = {}            # "<page>/<block>" -> what the server checks a form send against (forms.py)
+        self.block_specs = {}           # "<page>/<block>" -> settings of blocks with endpoints (actions.py)
         self.env = make_env(self.template_id)
 
     # --- helpers the templates call -------------------------------------------------------------------------
@@ -222,6 +224,11 @@ class SiteRenderer:
                 b["_page"] = page.get("slug", "")
                 cfg = widgets.get("contact_form").config_for(b.get("data"))
                 self.form_specs[f"{page.get('slug', '')}/{widgets.block_uid(b)}"] = forms_mod.spec(cfg, page.get("slug", ""))
+        for b in ctx["blocks"]:                       # modules with endpoints: the published settings the server uses (actions.py)
+            w = widgets.get(b.get("type")) if isinstance(b, dict) else None
+            if w and (w.actions or w.extra_pages):
+                b.setdefault("_page", page.get("slug", ""))
+                self.block_specs[f"{b['_page']}/{widgets.block_uid(b)}"] = {"type": w.name, "data": w.clean_config_safe(b.get("data"))}
         html = self.env.get_template("page.html.j2").render(ctx)
         used = widgets.used_in(ctx["blocks"])
         if chrome_mod.active(self.chrome):            # the site's own header and footer (Header & footer)
@@ -239,6 +246,9 @@ class SiteRenderer:
         if used:
             self.used_widgets[file] = used
         sources = widgets.block_sources(ctx["blocks"], self.site.get("id"))
+        for directive, hosts in widgets.frame_sources(html).items():   # iframes on the page itself: only these hosts
+            have = sources.setdefault(directive, [])
+            have.extend(h for h in hosts if h not in have)
         if sources:
             self.page_sources[file] = sources
         html = theme_mod.inject(html, self.theme, "/static/fonts/" if self.mode == "preview" else "fonts/")
@@ -260,6 +270,21 @@ class SiteRenderer:
                                                 asset=lambda file: widgets.asset_url("store", file, self.mode), link=self.link, profile=self.profile)
                     self._header_cart = store_widget.header_cart_html(ctx)
         return self._header_cart
+
+    def extra_pages(self, pages):
+        """Pages modules add (an event's own page …): [{slug, title, blocks, …}]."""
+        out = []
+        for w in widgets.REGISTRY.values():
+            if w.extra_pages:
+                out.extend(w.extra_pages(self, pages) or [])
+        return out
+
+    def extra_files(self, pages):
+        out = {}
+        for w in widgets.REGISTRY.values():
+            if w.extra_files:
+                out.update(w.extra_files(self, pages) or {})
+        return out
 
     def has_posts(self):
         if not hasattr(self, "_has_posts"):
@@ -285,8 +310,16 @@ def preview(site, slug, editing=False):
         post = db.one("SELECT * FROM posts WHERE site_id = ? AND slug = ?", site["id"], slug[len(posts_mod.PREFIX):])
         return SiteRenderer(site, "preview", editing).render_post(post, menu) if post else None
     if not page:
-        return None
+        renderer = SiteRenderer(site, "preview", editing)
+        extra = next((p for p in renderer.extra_pages(pages) if p["slug"] == slug), None)
+        return renderer.render_page(extra, menu) if extra else None
     return SiteRenderer(site, "preview", editing).render_page(page, menu)
+
+
+def preview_file(site, name):
+    """A file a module adds to deployments (events.ics …), for the CMS preview. None if there's no such file."""
+    pages, _ = site_pages(site["id"])
+    return SiteRenderer(site, "preview").extra_files(pages).get(name)
 
 
 def build_to(site, out_dir, mode="hosted"):
@@ -302,6 +335,11 @@ def build_to(site, out_dir, mode="hosted"):
     live_posts = posts_mod.published(site["id"]) if site.get("id") else []
     for post in live_posts:
         (out / posts_mod.file_name(post)).write_text(renderer.render_post(post, menu), encoding="utf-8")
+    # Modules: their own pages (events …) and files (calendar .ics …)
+    for extra in renderer.extra_pages(pages):
+        (out / f"{extra['slug']}.html").write_text(renderer.render_page(extra, menu), encoding="utf-8")
+    for name, text in renderer.extra_files(pages).items():
+        (out / name).write_text(text, encoding="utf-8")
     # The template's own files (style.css, site.js, pictures …): everything that isn't a Jinja template
     tpl = templates.current_dir(renderer.template_id)
     for file in tpl.rglob("*"):
@@ -327,6 +365,7 @@ def build_to(site, out_dir, mode="hosted"):
     if mode == "hosted":
         widgets.write_manifest(out, renderer.used_widgets, renderer.page_sources)
         forms_mod.write_specs(out, renderer.form_specs)
+        actions_mod.write_specs(out, renderer.block_specs)
     if renderer.used_files:
         (out / "media").mkdir(exist_ok=True)
         src = media_mod.site_folder(site["id"])

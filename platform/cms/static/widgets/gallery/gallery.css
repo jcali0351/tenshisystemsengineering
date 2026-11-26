@@ -1,0 +1,13 @@
+/* Gallery block (cms/widgets/gallery.py) */
+.tw-gal figure { margin: 0; }
+.tw-gal img { display: block; width: 100%; height: auto; border-radius: calc(var(--m-r) * .7); background: var(--m-soft); }
+.tw-gal-link { display: block; border-radius: calc(var(--m-r) * .7); overflow: hidden; }
+.tw-gal-link img { transition: transform .35s ease; }
+@media (prefers-reduced-motion: no-preference) { .tw-gal-link:hover img { transform: scale(1.03); } }
+.tw-gal figcaption { padding: 6px 2px 0; font-size: .92rem; color: var(--m-muted); }
+.tw-gal-masonry { columns: var(--m-cols, 3) 220px; column-gap: 16px; }
+.tw-gal-masonry > .tw-gal-item { break-inside: avoid; margin: 0 0 16px; }
+.tw-gal-grid { display: grid; gap: 16px; grid-template-columns: repeat(var(--m-cols, 3), minmax(0, 1fr)); }
+.tw-gal-grid img { aspect-ratio: 1 / 1; object-fit: cover; }
+@media (max-width: 800px) { .tw-gal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.tw-gal-car .tw-track img { aspect-ratio: 4 / 3; object-fit: cover; }

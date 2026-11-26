@@ -1,0 +1,28 @@
+{#- Modules: every block that has its own site settings (keys, accounts) and every inbox of things visitors sent. -#}
+{% extends "layout.html" %}
+{% block title %}Modules · {{ site.name }}{% endblock %}
+{% block heading %}Modules & inbox{% endblock %}
+{% block body %}
+<p class="muted">Blocks with their own settings, and what visitors sent through them. Add the blocks themselves in the page builder.</p>
+<div class="grid grid-2" style="align-items:start">
+  <section class="card">
+    <h2>Inbox</h2>
+    <ul class="mod-inbox" style="list-style:none;padding:0;margin:0">
+      {% for item in inbox %}
+      <li class="row" style="gap:10px;padding:8px 0;border-bottom:1px solid var(--line)"><a href="{{ item.href }}"><b>{{ item.label }}</b></a>
+        <span class="small muted">{{ item.about }}</span><span style="flex:1"></span>{% if item.count %}<span class="badge">{{ item.count }} new</span>{% endif %}</li>
+      {% else %}<li class="small muted">Nothing yet.</li>{% endfor %}
+    </ul>
+  </section>
+  <section class="card">
+    <h2>Settings and connections</h2>
+    <ul style="list-style:none;padding:0;margin:0">
+      {% for w in configurable %}
+      <li class="row" style="gap:10px;padding:8px 0;border-bottom:1px solid var(--line)"><a href="/sites/{{ site.id }}/widgets/{{ w.name }}"><b>{{ w.label }}</b></a>
+        <span class="small muted">{{ w.about }}</span><span style="flex:1"></span>
+        {% if w.connected %}<span class="badge">Connected</span>{% elif w.needs_key %}<span class="small muted">No key: hidden on the site</span>{% endif %}</li>
+      {% endfor %}
+    </ul>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+/* Before & after (cms/widgets/before_after.py) */
+.tw-ba { margin: 0; --pos: 50%; }
+.tw-ba-list.tw-ba-many { display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.tw-ba-frame { position: relative; overflow: hidden; border-radius: var(--m-r); background: var(--m-soft); touch-action: pan-y; user-select: none; }
+.tw-ba-v .tw-ba-frame { touch-action: pan-x; }
+.tw-ba-frame img { display: block; width: 100%; height: auto; pointer-events: none; }
+.tw-ba-before { position: absolute; inset: 0; height: 100% !important; object-fit: cover; clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
+.tw-ba-v .tw-ba-before { clip-path: inset(0 0 calc(100% - var(--pos)) 0); }
+.tw-ba-line { position: absolute; top: 0; bottom: 0; left: var(--pos); width: 3px; margin-left: -1.5px; background: #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.25); pointer-events: none; }
+.tw-ba-v .tw-ba-line { left: 0; right: 0; top: var(--pos); bottom: auto; width: auto; height: 3px; margin: -1.5px 0 0; }
+.tw-ba-knob { position: absolute; top: 50%; left: 50%; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 50%; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.35); }
+.tw-ba-knob::before, .tw-ba-knob::after { content: ""; position: absolute; top: 50%; margin-top: -6px; border: 6px solid transparent; }
+.tw-ba-knob::before { left: 7px; border-right-color: #333; } .tw-ba-knob::after { right: 7px; border-left-color: #333; }
+.tw-ba-v .tw-ba-knob { transform: rotate(90deg); }
+.tw-ba-tag { position: absolute; top: 12px; padding: 4px 10px; border-radius: 999px; background: rgba(0,0,0,.62); color: #fff; font: 700 .78rem/1.3 var(--font-body, inherit); pointer-events: none; }
+.tw-ba-tag-b { left: 12px; } .tw-ba-tag-a { right: 12px; }
+.tw-ba-v .tw-ba-tag-a { top: auto; bottom: 12px; left: 12px; right: auto; }
+.tw-ba-range { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; }
+.tw-ba-v .tw-ba-range { cursor: ns-resize; }
+.tw-ba-frame:focus-within { outline: 3px solid var(--m-a); outline-offset: 3px; }
+.tw-ba figcaption { padding: 8px 2px 0; color: var(--m-muted); font-size: .95rem; }

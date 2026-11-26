@@ -1,0 +1,11 @@
+/* Video gallery (cms/widgets/video_gallery.py) */
+.tw-vg-item { margin: 0; }
+.tw-vg-link { display: block; border-radius: calc(var(--m-r) * .8); overflow: hidden; color: inherit; }
+.tw-vg-pic { position: relative; display: block; aspect-ratio: 16 / 9; background: linear-gradient(135deg, var(--m-ps), color-mix(in srgb, var(--m-ps) 55%, #000)); }
+.tw-vg-pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tw-vg-blank { position: absolute; left: 14px; bottom: 10px; color: #fff; font: 700 .8rem/1 var(--font-body, inherit); letter-spacing: .08em; text-transform: uppercase; opacity: .9; }
+.tw-vg-play { position: absolute; inset: 0; margin: auto; width: 68px; height: 68px; border-radius: 50%; background: rgba(0,0,0,.62); border: 2px solid #fff; }
+.tw-vg-play::after { content: ""; position: absolute; left: 27px; top: 21px; border-style: solid; border-width: 13px 0 13px 21px; border-color: transparent transparent transparent #fff; }
+@media (prefers-reduced-motion: no-preference) { .tw-vg-link:hover .tw-vg-play { transform: scale(1.08); transition: transform .2s; } }
+.tw-vg-title { margin: 10px 0 4px; font-size: 1.05rem; }
+.tw-vg-privacy { margin-top: 14px; }

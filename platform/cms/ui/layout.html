@@ -58,6 +58,7 @@
         ('chrome', 'Header & footer', 'chrome', base ~ '/chrome'), ('posts', 'Blog posts', 'posts', base ~ '/posts'),
         ('portfolio', 'Portfolio', 'work', base ~ '/portfolio'), ('galleries', 'Galleries', 'gal', base ~ '/galleries'),
         ('widget:store', 'Online store', 'store', base ~ '/widgets/store'),
+        ('modules', 'Modules & inbox', 'tpl', base ~ '/modules'),
         ('leads', 'Leads', 'leads', base ~ '/leads'), ('deployments', 'Deployments', 'deploy', base ~ '/deployments'),
         ('export', 'Export', 'export', base ~ '/export'), ('settings', 'Settings & theme', 'settings', base ~ '/settings')] %}
       <a href="{{ href }}" {% if section == key %}aria-current="page"{% endif %}><svg class="ico"><use href="#i-{{ icon }}"/></svg>{{ label }}</a>

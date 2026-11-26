@@ -1,0 +1,20 @@
+/* Tenshi lightbox (lightbox.js) */
+.tw-lb { width: 100vw; height: 100vh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: rgba(8, 8, 12, .94); color: #fff; }
+.tw-lb::backdrop { background: rgba(8, 8, 12, .6); }
+.tw-lb[open] { display: grid; grid-template-rows: 1fr auto auto; }
+.tw-lb-stage { display: grid; place-items: center; min-height: 0; padding: 56px 64px 8px; }
+.tw-lb-img { max-width: 100%; max-height: calc(100vh - 140px); object-fit: contain; border-radius: 6px; }
+.tw-lb-video { width: min(1100px, 100%); aspect-ratio: 16 / 9; height: auto; border: 0; border-radius: 8px; background: #000; }
+.tw-lb-cap { margin: 0; padding: 4px 64px; text-align: center; font: 500 1rem/1.4 var(--font-body, system-ui, sans-serif); min-height: 1.4em; }
+.tw-lb-count { margin: 0 0 14px; text-align: center; font: .85rem/1 var(--font-body, system-ui, sans-serif); opacity: .85; }
+.tw-lb-btn { position: fixed; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(255,255,255,.35);
+  background: rgba(0,0,0,.45); color: #fff; font: 400 28px/1 system-ui, sans-serif; cursor: pointer; }
+.tw-lb-btn:hover { background: rgba(255,255,255,.18); }
+.tw-lb-btn:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.tw-lb-close { top: 12px; right: 12px; font-size: 22px; }
+.tw-lb-prev { left: 12px; top: 50%; transform: translateY(-50%); }
+.tw-lb-next { right: 12px; top: 50%; transform: translateY(-50%); }
+.tw-lb-btn[hidden] { display: none; }
+@media (max-width: 640px) { .tw-lb-stage { padding: 56px 8px 8px; } .tw-lb-prev, .tw-lb-next { top: auto; bottom: 10px; transform: none; } }
+@media (prefers-reduced-motion: no-preference) { .tw-lb[open] { animation: tw-lb-in .18s ease-out; } }
+@keyframes tw-lb-in { from { opacity: 0; } to { opacity: 1; } }

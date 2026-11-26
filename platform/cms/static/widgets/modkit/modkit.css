@@ -1,0 +1,60 @@
+/* Module kit: shared by the module blocks (cms/widgets/modkit.py). Colours come from the site's theme tokens. */
+.tw-mod { --m-p: var(--p, #5b21b6); --m-ps: var(--p-solid, var(--m-p)); --m-a: var(--a, #f97316); --m-s: var(--s, #fff); --m-i: var(--i, #1f2937);
+  --m-card: var(--card, #fff); --m-r: var(--radius, 14px);
+  --m-line: color-mix(in srgb, var(--m-i) 14%, transparent); --m-soft: color-mix(in srgb, var(--m-i) 5%, var(--m-s));
+  --m-muted: color-mix(in srgb, var(--m-i) 72%, var(--m-s)); }
+.tw-mod .tw-sr, .tw-sr { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.tw-mod .tw-intro { max-width: 70ch; color: var(--m-muted); margin: -.3em 0 1.2em; }
+.tw-mod .tw-empty { padding: 18px; border: 1px dashed var(--m-line); border-radius: var(--m-r); color: var(--m-muted); }
+.tw-mod .tw-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+.tw-mod .tw-head h2 { margin: 0; }
+/* Buttons */
+.tw-mod .tw-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 20px; border-radius: 999px;
+  border: 2px solid var(--m-ps); background: var(--m-ps); color: #fff; font: 700 1rem/1.1 var(--font-body, inherit); text-decoration: none; cursor: pointer; }
+.tw-mod .tw-btn:hover { filter: brightness(1.08); }
+.tw-mod .tw-btn-ghost { background: transparent; color: var(--m-p); border-color: currentColor; }
+.tw-mod .tw-btn:focus-visible, .tw-mod .tw-chip:focus-visible, .tw-mod .tw-cbtn:focus-visible, .tw-mod a:focus-visible { outline: 3px solid var(--m-a); outline-offset: 2px; }
+.tw-mod .tw-btn[disabled] { opacity: .55; cursor: not-allowed; }
+/* Filter chips and search */
+.tw-mod .tw-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin: 0 0 18px; }
+.tw-mod .tw-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.tw-mod .tw-chip { min-height: 38px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--m-line); background: transparent; color: var(--m-i);
+  font: 600 .92rem/1 var(--font-body, inherit); cursor: pointer; }
+.tw-mod .tw-chip[aria-pressed="true"] { background: var(--m-ps); border-color: var(--m-ps); color: #fff; }
+.tw-mod .tw-search input { min-height: 40px; padding: 8px 14px; min-width: 220px; border-radius: 999px; border: 1px solid var(--m-line); background: var(--m-card); color: var(--m-i); font: inherit; }
+.tw-mod [hidden] { display: none !important; }
+/* Cards */
+.tw-mod .tw-cards { display: grid; gap: 20px; grid-template-columns: repeat(var(--m-cols, 3), minmax(0, 1fr)); }
+.tw-mod .tw-card { background: var(--m-card); border: 1px solid var(--m-line); border-radius: var(--m-r); padding: 20px; color: var(--m-i); }
+@media (max-width: 900px) { .tw-mod .tw-cards { --m-cols: 2 !important; } }
+@media (max-width: 560px) { .tw-mod .tw-cards { --m-cols: 1 !important; } }
+.tw-mod .tw-badge { display: inline-block; padding: 3px 10px; border-radius: 999px; background: var(--m-soft); border: 1px solid var(--m-line); font: 700 .78rem/1.4 var(--font-body, inherit); }
+/* Stars */
+.tw-stars { color: #b45309; letter-spacing: .08em; font-size: 1.05rem; line-height: 1; }
+html[data-theme="dark"] .tw-stars { color: #fbbf24; }
+@media (prefers-color-scheme: dark) { html:not([data-theme="light"]) .tw-stars.tw-auto { color: #fbbf24; } }
+/* Carousels */
+.tw-mod .tw-carousel { position: relative; }
+.tw-mod .tw-track { display: grid; grid-auto-flow: column; grid-auto-columns: var(--m-slide, calc((100% - 40px) / 3)); gap: 20px; overflow-x: auto;
+  scroll-snap-type: x mandatory; scroll-behavior: smooth; padding: 4px 2px 12px; margin: 0; list-style: none; scrollbar-width: thin; }
+.tw-mod .tw-track > * { scroll-snap-align: start; }
+@media (max-width: 900px) { .tw-mod .tw-track { --m-slide: calc((100% - 20px) / 2); } }
+@media (max-width: 560px) { .tw-mod .tw-track { --m-slide: 86%; } }
+@media (prefers-reduced-motion: reduce) { .tw-mod .tw-track { scroll-behavior: auto; } }
+.tw-mod .tw-cnav { display: flex; gap: 8px; }
+.tw-mod .tw-cbtn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--m-line); background: var(--m-card); color: var(--m-i); font: 400 24px/1 system-ui, sans-serif; cursor: pointer; }
+.tw-mod .tw-cbtn[disabled] { opacity: .4; cursor: default; }
+/* Forms */
+.tw-mod .tw-form { display: grid; gap: 14px; max-width: 640px; }
+.tw-mod .tw-row { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.tw-mod .tw-field { display: grid; gap: 6px; font-weight: 600; }
+.tw-mod .tw-field input, .tw-mod .tw-field select, .tw-mod .tw-field textarea { font: inherit; font-weight: 400; padding: 11px 13px; border-radius: calc(var(--m-r) * .6);
+  border: 1px solid color-mix(in srgb, var(--m-i) 35%, transparent); background: var(--m-card); color: var(--m-i); min-height: 44px; }
+.tw-mod .tw-field input:focus-visible, .tw-mod .tw-field select:focus-visible, .tw-mod .tw-field textarea:focus-visible { outline: 3px solid var(--m-a); outline-offset: 1px; }
+.tw-mod .tw-field [aria-invalid="true"] { border-color: #b91c1c; }
+.tw-mod .tw-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.tw-mod .tw-status { margin: 0; min-height: 1.4em; font-weight: 600; }
+.tw-mod .tw-status.tw-ok { color: #047857; } .tw-mod .tw-status.tw-bad { color: #b91c1c; }
+html[data-theme="dark"] .tw-mod .tw-status.tw-ok { color: #6ee7b7; } html[data-theme="dark"] .tw-mod .tw-status.tw-bad { color: #fca5a5; }
+.tw-mod .tw-note { font-size: .88rem; color: var(--m-muted); margin: 0; }
+.tw-mod .tw-builder-hint { padding: 14px 16px; border-radius: var(--m-r); border: 1px dashed var(--m-line); background: var(--m-soft); color: var(--m-i); font-size: .95rem; }
