@@ -19,7 +19,7 @@ import io
 import json
 import mimetypes
 import re
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
@@ -33,6 +33,7 @@ from tenshi import forms as tforms, profile as prof, scanner
 from . import actions, auth, blocks, chrome, config, db, domains, forms as lead_forms, mail, media, members, notify, posts, ratelimit, render, revisions, sanitize, security, sites, templates, theme as theme_mod, widgets
 from . import stock, stock_routes
 from . import inbox as inbox_mod, sitetime  # noqa: E402
+from . import ai_assist  # noqa: E402
 
 VERSION = "1.0.0"
 UI_DIR = Path(__file__).parent / "ui"
@@ -383,7 +384,31 @@ def site_overview(request: Request, site_id: int):
     build = db.one("SELECT * FROM builds WHERE id = ?", site["current_build_id"]) if site["current_build_id"] else None
     activity = db.all("SELECT a.*, u.name AS user_name FROM activity a LEFT JOIN users u ON u.id = a.user_id WHERE a.site_id = ? ORDER BY a.id DESC LIMIT 8", site_id)
     return show("site.html", request, user, site=site, section="overview", numbers=numbers, health=sites.health(site_id),
-                build=build, activity=activity, top_pages=top_pages, template=templates.get(site["template_id"]))
+                build=build, activity=activity, top_pages=top_pages, template=templates.get(site["template_id"]),
+                analytics=site_analytics(site_id))
+
+
+def site_analytics(site_id: int, days: int = 30) -> dict:
+    """The Analytics card: page views counted by the server from the live pages (sites.count_visit), no cookies."""
+    today = date.today()
+    span = [(today - timedelta(days=i)).isoformat() for i in range(days - 1, -1, -1)]
+    before = (today - timedelta(days=2 * days - 1)).isoformat()
+    per_day = {r["day"]: r["n"] for r in db.all("SELECT day, SUM(count) AS n FROM visits WHERE site_id = ? AND day >= ? GROUP BY day", site_id, before)}
+    now_total = sum(per_day.get(d, 0) for d in span)
+    prev_total = sum(n for d, n in per_day.items() if d < span[0])
+    peak = max((per_day.get(d, 0) for d in span), default=0)
+    bars = [{"day": d, "n": per_day.get(d, 0), "h": round(per_day.get(d, 0) / peak * 100) if peak else 0} for d in span]
+    busiest = max(bars, key=lambda b: b["n"]) if now_total else None
+    pages = db.all("SELECT page, SUM(count) AS n FROM visits WHERE site_id = ? AND day >= ? GROUP BY page ORDER BY n DESC LIMIT 6", site_id, span[0])
+    change = None if not prev_total else round((now_total - prev_total) / prev_total * 100)
+    since = (datetime.now(timezone.utc) - timedelta(days=days)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    sent = {"Leads": db.one("SELECT COUNT(*) AS n FROM leads WHERE site_id = ? AND created_at >= ?", site_id, since)["n"]}
+    for label, table in (("RSVPs", "rsvps"), ("Bookings", "bookings"), ("Reviews", "reviews")):
+        n = db.one(f"SELECT COUNT(*) AS n FROM {table} WHERE site_id = ? AND created_at >= ?", site_id, since)["n"]
+        if n:
+            sent[label] = n
+    return {"days": days, "total": now_total, "prev": prev_total, "change": change, "bars": bars, "peak": peak,
+            "busiest": busiest, "pages": pages, "per_visit": round(now_total / days, 1), "sent": sent}
 
 
 @app.post("/api/sites")
@@ -609,7 +634,29 @@ def builder_page(request: Request, site_id: int, page_id: int):
     albums = db.all("SELECT id, name FROM albums WHERE site_id = ? ORDER BY name", site_id)
     cats = [r["category"] for r in db.all("SELECT DISTINCT category FROM portfolio_items WHERE site_id = ? AND category != ''", site_id)]
     return show("builder.html", request, user, site=site, section="pages", page=page, all_pages=all_pages,
-                block_types=blocks.BLOCKS, albums=albums, categories=cats, theme_editor=theme_editor_data(user, site))
+                block_types=blocks.BLOCKS, albums=albums, categories=cats, theme_editor=theme_editor_data(user, site),
+                ai_assist=ai_assist.available(site_id))
+
+
+@app.post("/api/sites/{site_id}/ai/write")
+async def api_ai_write(request: Request, site_id: int):
+    """AI writing assist (ai_assist.py): a suggestion only; the editor decides whether to use it."""
+    user = api_user(request)
+    site = site_or_404(site_id)
+    if not ai_assist.available(site_id):
+        raise HTTPException(404, "AI writing help isn't set up for this site.")
+    if not ai_assist.allow(user["id"], site_id):
+        return JSONResponse({"error": "That's a lot of suggestions for one hour. Try again a little later."}, status_code=429)
+    body = await request.json()
+    try:
+        text = ai_assist.write(site, db.j(site["profile_json"]), str(body.get("text") or ""), str(body.get("action") or ""),
+                               str(body.get("field") or ""), str(body.get("notes") or ""))
+    except (ValueError, LookupError) as error:
+        return JSONResponse({"error": str(error)}, status_code=400)
+    except Exception as error:  # noqa: BLE001 - the outside service failed
+        return JSONResponse({"error": f"The AI service didn't answer ({type(error).__name__}). Try again in a moment."}, status_code=502)
+    db.log("AI writing assist", str(body.get("action") or "")[:20], user, site_id)
+    return {"ok": True, "text": text}
 
 
 @app.api_route("/sites/{site_id}/preview/__w/{widget}/{action}", methods=["GET", "POST"])

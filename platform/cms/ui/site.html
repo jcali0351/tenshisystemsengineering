@@ -12,6 +12,27 @@
   <a class="card stat" href="/sites/{{ site.id }}/leads" style="text-decoration:none"><b>{{ numbers.leads }}</b><span>New leads</span></a>
   <div class="card stat"><b>{{ numbers.visits }}</b><span>Visits in the last 7 days</span></div>
 </div>
+{% set a = analytics %}
+<section class="card analytics" style="margin-bottom:18px" aria-labelledby="an-h">
+  <div class="row" style="justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px">
+    <h2 id="an-h" style="margin:0">Analytics <span class="small muted">last {{ a.days }} days</span></h2>
+    <span class="small muted">Page views counted by our server from your live pages. No cookies, no outside trackers.</span>
+  </div>
+  <div class="grid grid-4" style="margin:14px 0">
+    <div><b class="an-big">{{ a.total }}</b><div class="small muted">page views{% if a.change is not none %} · <span class="{{ 'an-up' if a.change >= 0 else 'an-down' }}">{{ '+' if a.change >= 0 }}{{ a.change }}%</span> vs the {{ a.days }} days before{% endif %}</div></div>
+    <div><b class="an-big">{{ a.per_visit }}</b><div class="small muted">a day on average</div></div>
+    <div><b class="an-big">{% if a.busiest %}{{ a.busiest.n }}{% else %}0{% endif %}</b><div class="small muted">{% if a.busiest %}busiest day ({{ a.busiest.day }}){% else %}busiest day{% endif %}</div></div>
+    <div><b class="an-big">{{ a.sent.values() | sum }}</b><div class="small muted">{% for k, v in a.sent.items() %}{{ v }} {{ k | lower }}{% if not loop.last %} · {% endif %}{% endfor %}</div></div>
+  </div>
+  {% if a.total %}
+  <svg class="an-chart" viewBox="0 0 {{ a.days * 10 }} 60" preserveAspectRatio="none" role="img" aria-label="Page views per day for the last {{ a.days }} days, highest {{ a.peak }}">
+    {% for b in a.bars %}<rect x="{{ loop.index0 * 10 + 1 }}" y="{{ 60 - (b.h * 0.58) }}" width="8" height="{{ b.h * 0.58 + 0.5 }}" rx="1.5"><title>{{ b.day }}: {{ b.n }}</title></rect>{% endfor %}
+  </svg>
+  <div class="row small muted" style="justify-content:space-between"><span>{{ a.bars[0].day }}</span><span>today</span></div>
+  <h3 style="margin:14px 0 6px;font-size:1rem">Top pages</h3>
+  <ul class="feed">{% for p in a.pages %}<li><span>{{ p.page }}</span><time>{{ p.n }}</time></li>{% endfor %}</ul>
+  {% else %}<p class="muted">No page views yet. They appear here once the site is live and people visit it.</p>{% endif %}
+</section>
 <div class="grid grid-3">
   <section class="card">
     <h2>Site health <span class="row">{% set v = health.score %}<span class="score {{ 'low' if v < 50 else 'mid' if v < 80 else '' }}" style="--v:{{ v }}"><span>{{ v }}</span></span></span></h2>

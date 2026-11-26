@@ -1,0 +1,9 @@
+/* Job board (cms/widgets/jobs.py) */
+.tw-jb-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.tw-jb { padding: 20px 22px; border: 1px solid var(--m-line); border-radius: var(--m-r); background: var(--m-card); }
+.tw-jb-top { display: flex; gap: 16px; justify-content: space-between; align-items: start; flex-wrap: wrap; }
+.tw-jb h3 { margin: 0; font-size: 1.25rem; }
+.tw-jb-meta { margin: 4px 0 0; color: var(--m-p); font-weight: 600; }
+.tw-jb-sum { margin: 6px 0 0; color: var(--m-muted); }
+.tw-jb-more { margin-top: 10px; } .tw-jb-more summary { cursor: pointer; font-weight: 700; }
+.tw-jb-empty { padding: 22px; border-radius: var(--m-r); background: var(--m-soft); }

@@ -431,6 +431,7 @@ from . import modkit, lightbox, gallery, video_gallery, before_after  # noqa: E4
 from . import events, hours, appointments  # noqa: E402,F401  (modules: calendars and booking)
 from . import testimonials, review_form, trust_badges, case_studies  # noqa: E402,F401  (modules: testimonials and trust)
 from . import social_feed, share_buttons, link_in_bio, autopost  # noqa: E402,F401  (modules: social)
+from . import popup, newsletter, news, price_list, team, jobs, locations  # noqa: E402,F401  (modules: extras)
 
 # The global header and footer (cms/chrome.py) bring their CSS like a widget, so it's linked and deployed the same way.
 register(Widget(name="chrome", label="Header and footer", about="The site's own header and footer.", config=BaseModel,

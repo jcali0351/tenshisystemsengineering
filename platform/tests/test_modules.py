@@ -593,3 +593,181 @@ def test_signed_webhook_body(monkeypatch):
     monkeypatch.setattr(modcache.urllib.request, "urlopen", fake_open)
     assert modcache.post_webhook("https://hooks.example.com/x", {"text": "hé"}, "s3cret") == 202
     assert seen["sig"] == "sha256=" + hmac.new(b"s3cret", seen["body"], hashlib.sha256).hexdigest() and json.loads(seen["body"])["text"] == "hé"
+
+
+# ---------------------------------------------------------------------------------------------- 5. extras
+
+def test_popup_frequency_and_triggers(cms):
+    c, sid = cms
+    assert _put(c, sid, "about", [{"id": "pp1", "type": "popup", "data": {"button_link": "javascript:alert(1)"}}]).status_code == 400
+    assert _put(c, sid, "about", [{"id": "pp1", "type": "popup", "data": {
+        "heading": "Fresh bread Fridays", "trigger": "scroll", "scroll": 40, "frequency": "days", "days": 3, "version": 2}}]).status_code == 200
+    folder = _deploy(c, sid)
+    html = open(os.path.join(folder, "about.html")).read()
+    assert "<dialog" in html and 'data-trigger="scroll"' in html and 'data-scroll="40"' in html and 'data-days="3"' in html
+    assert 'data-key="tw-pop:about:pp1:2"' in html and "popup.js" in html and "Fresh bread Fridays" in html
+    js = open(os.path.join(folder, "_w", "popup", "popup.js")).read() if os.path.exists(os.path.join(folder, "_w", "popup", "popup.js")) else ""
+    assert not js or "localStorage" in js
+    # newsletter variant shows the sign-up form (posts with no block, so it uses the site's settings)
+    _put(c, sid, "about", [{"id": "pp1", "type": "popup", "data": {"newsletter": True}}])
+    html = c.get(f"/sites/{sid}/preview/about").text
+    assert 'name="email"' in html and "tw-nl-form" in html and "&lt;" not in html.split("tw-pop")[1].split("</form>")[0]
+
+
+FAKE_MC_KEY = "0123456789abcdef" * 2 + "-" + "us21"   # built at runtime: a made-up key, not a real one
+
+
+def test_newsletter_without_key_saves_leads_and_with_key_goes_to_the_provider(cms, monkeypatch):
+    from cms import modcache, ratelimit
+    c, sid = cms
+    monkeypatch.setattr(ratelimit, "PER_IP", 1000)
+    _put(c, sid, "contact", [{"id": "nl1", "type": "newsletter", "data": {"ask_name": True, "consent": "Yes, email me news"}}])
+    _deploy(c, sid)
+    h = _host(sid)
+    send = lambda **d: c.post("/__w/newsletter/subscribe", data={"_block": "contact/nl1", "email": "ola@example.com", "name": "Ola", "consent": "yes", **d}, headers=h)
+    assert send(email="nope").json()["field"] == "email"
+    assert send(consent="").json()["field"] == "consent"
+    before = db.one("SELECT COUNT(*) AS n FROM leads WHERE site_id = ?", sid)["n"]
+    assert send().json()["ok"]
+    lead = db.one("SELECT * FROM leads WHERE site_id = ? ORDER BY id DESC", sid)
+    assert db.one("SELECT COUNT(*) AS n FROM leads WHERE site_id = ?", sid)["n"] == before + 1 and '"Newsletter"' in lead["data_json"]
+    # bad key formats are refused; good ones are masked
+    assert c.put(f"/api/sites/{sid}/widgets/newsletter/settings", json={"provider": "mailchimp", "mailchimp_key": "nodc", "mailchimp_list": "abc123"}, headers=H).status_code == 400
+    assert c.put(f"/api/sites/{sid}/widgets/newsletter/settings", json={"provider": "mailchimp", "mailchimp_key": FAKE_MC_KEY, "mailchimp_list": "abc123"}, headers=H).status_code == 200
+    got = c.get(f"/api/sites/{sid}/widgets/newsletter/settings", headers=H).json()["settings"]
+    assert "0123456789abcdef0123" not in str(got)
+    calls = []
+    monkeypatch.setattr(modcache, "http_json", lambda url, headers=None, data=None, method=None, timeout=10: calls.append((url, headers, data, method)) or {})
+    r = send().json()
+    assert r["ok"] and "confirm" in r["message"]
+    url, headers, data, method = calls[0]
+    assert url.startswith("https://us21.api.mailchimp.com/3.0/lists/abc123/members/") and method == "PUT"
+    assert data["status_if_new"] == "pending" and data["merge_fields"]["FNAME"] == "Ola" and headers["Authorization"].startswith("Basic ")
+    assert db.one("SELECT COUNT(*) AS n FROM leads WHERE site_id = ?", sid)["n"] == before + 1
+    # provider down: the sign-up is kept as a lead
+    monkeypatch.setattr(modcache, "http_json", lambda *a, **k: (_ for _ in ()).throw(OSError("down")))
+    assert send().json()["ok"] and db.one("SELECT COUNT(*) AS n FROM leads WHERE site_id = ?", sid)["n"] == before + 2
+    # Resend
+    c.put(f"/api/sites/{sid}/widgets/newsletter/settings", json={"provider": "resend", "resend_key": "re_test_123", "resend_audience": "aud-1"}, headers=H)
+    calls.clear()
+    monkeypatch.setattr(modcache, "http_json", lambda url, headers=None, data=None, method=None, timeout=10: calls.append((url, headers, data)) or {})
+    assert send().json()["ok"] and calls[0][0] == "https://api.resend.com/audiences/aud-1/contacts" and calls[0][1]["Authorization"] == "Bearer re_test_123"
+    # the popup's compact form posts without a block and uses the same settings
+    assert c.post("/__w/newsletter/subscribe", data={"_block": "", "email": "pop@example.com"}, headers=h).json()["ok"] and calls[-1][2]["email"] == "pop@example.com"
+    # editors can't see or change the keys
+    _user("mod-editor@example.com", "correct-horse-9")
+    with TestClient(app) as ed:
+        _login(ed, "mod-editor@example.com", "correct-horse-9")
+        assert ed.put(f"/api/sites/{sid}/widgets/newsletter/settings", json={"provider": ""}, headers=H).status_code == 403
+    c.put(f"/api/sites/{sid}/widgets/newsletter/settings", json={"provider": "", "mailchimp_key": "", "resend_key": ""}, headers=H)
+
+
+def test_news_price_list_team_and_jobs(cms):
+    from datetime import date, timedelta
+    c, sid = cms
+    db.run("INSERT INTO posts (site_id, title, slug, excerpt, status, published_at, created_at, updated_at) VALUES (?, 'Rye is back', 'rye-is-back', 'Our dark rye returns.', 'published', ?, ?, ?)",
+           sid, db.now(), db.now(), db.now())
+    yesterday, later = (date.today() - timedelta(days=1)).isoformat(), (date.today() + timedelta(days=30)).isoformat()
+    assert _put(c, sid, "index", [
+        {"id": "nw1", "type": "news", "data": {"layout": "headlines"}},
+        {"id": "pl1", "type": "price_list", "data": {"heading": "Menu", "sections": [
+            {"name": "Breads", "items": "Sourdough | $7 | 48-hour ferment | v, popular\nRye | $6"}, {"name": "Cakes", "items": "Carrot cake | $5 | | gf"}]}},
+        {"id": "tm1", "type": "team", "data": {"from_business": False, "search": True, "people": [
+            {"name": "Ana Baker", "role": "Head baker", "department": "Kitchen", "email": "ana@example.com"},
+            {"name": "Ben Till", "role": "Manager", "department": "Front of house"}]}},
+        {"id": "jb1", "type": "jobs", "data": {"jobs": [
+            {"title": "Night baker", "type": "full_time", "pay": "$22/hour", "closes": later, "apply_email": "jobs@example.com", "description": "Bake."},
+            {"title": "Summer helper", "type": "temporary", "closes": yesterday}]}},
+    ]).status_code == 200
+    assert _put(c, sid, "index", [{"id": "jb1", "type": "jobs", "data": {"jobs": [{"title": "X", "closes": "soon"}]}}]).status_code == 400
+    assert _put(c, sid, "index", [{"id": "tm1", "type": "team", "data": {"people": [{"name": "X", "link": "javascript:alert(1)"}]}}]).status_code == 400
+    _put(c, sid, "index", [
+        {"id": "nw1", "type": "news", "data": {"layout": "headlines"}},
+        {"id": "pl1", "type": "price_list", "data": {"sections": [
+            {"name": "Breads", "items": "Sourdough | $7 | 48-hour ferment | v, popular\nRye | $6"}, {"name": "Cakes", "items": "Carrot cake | $5 | | gf"}]}},
+        {"id": "tm1", "type": "team", "data": {"from_business": False, "search": True, "people": [
+            {"name": "Ana Baker", "role": "Head baker", "department": "Kitchen", "email": "ana@example.com"},
+            {"name": "Ben Till", "role": "Manager", "department": "Front of house"}]}},
+        {"id": "jb1", "type": "jobs", "data": {"jobs": [
+            {"title": "Night baker", "type": "full_time", "pay": "$22/hour", "closes": later, "apply_email": "jobs@example.com", "description": "Bake."},
+            {"title": "Summer helper", "type": "temporary", "closes": yesterday}]}},
+    ])
+    folder = _deploy(c, sid)
+    html = open(os.path.join(folder, "index.html")).read()
+    assert "Rye is back" in html and "Our dark rye returns." in html and 'href="feed.xml"' in html
+    assert "Sourdough" in html and "$7" in html and "48-hour ferment" in html and "tw-pl-jump" in html and '"Menu"' in html and "GF" in html
+    assert "Ana Baker" in html and "Kitchen" in html and "Front of house" in html and "mailto:ana@example.com" in html
+    assert "Night baker" in html and "$22/hour" in html and "JobPosting" in html and "mailto:jobs@example.com" in html
+    assert "Summer helper" not in html                                       # closed yesterday
+
+
+def test_locations_reuse_the_map_and_its_csp(cms):
+    c, sid = cms
+    _put(c, sid, "about", [{"id": "lc1", "type": "locations", "data": {"provider": "openstreetmap", "places": [
+        {"name": "Downtown", "address": "1 Main St", "phone": "555-0100", "latitude": "41.88", "longitude": "-87.63", "hours": "Mon–Fri 7–3"},
+        {"name": "Northside", "address": "9 Oak Ave", "latitude": "41.95", "longitude": "-87.65"}]}}])
+    _deploy(c, sid)
+    sub = sites.get(sid)["subdomain"]
+    html = c.get(f"/s/{sub}/about.html").text
+    assert html.count("data-tw-loc=") == 2 and "Downtown" in html and "Northside" in html and "tel:5550100" in html
+    assert "openstreetmap.org" in html and "tw-map-frame" in html and "tw-map-list" not in html
+    assert "https://www.openstreetmap.org" in _csp(c, sub, "about.html")
+    # nothing typed and no address in Business data: nothing on the live page
+    _put(c, sid, "about", [{"id": "lc1", "type": "locations", "data": {}}])
+    _deploy(c, sid)
+    assert "tw-locs" not in c.get(f"/s/{sub}/about.html").text
+
+
+def test_analytics_card_counts_server_side_visits(cms):
+    from datetime import date, timedelta
+    c, sid = cms
+    today = date.today()
+    for i, (page, n) in enumerate([("index", 12), ("about", 5), ("index", 7)]):
+        db.run("INSERT OR REPLACE INTO visits (site_id, page, day, count) VALUES (?, ?, ?, ?)", sid, page, (today - timedelta(days=i)).isoformat(), n)
+    db.run("INSERT OR REPLACE INTO visits (site_id, page, day, count) VALUES (?, 'index', ?, 4)", sid, (today - timedelta(days=40)).isoformat())
+    html = c.get(f"/sites/{sid}").text
+    assert "Analytics" in html and "No cookies" in html and "an-chart" in html
+    from cms.app import site_analytics
+    a = site_analytics(sid)
+    assert a["total"] >= 24 and a["prev"] >= 4 and a["pages"][0]["page"] == "index" and len(a["bars"]) == 30
+
+
+def test_ai_assist_hidden_without_a_key_and_only_suggests_with_one(cms, monkeypatch):
+    from cms import ai_assist, modcache
+    c, sid = cms
+    monkeypatch.delenv("TENSHI_AI_KEY", raising=False)
+    page = db.one("SELECT id FROM pages WHERE site_id = ? AND slug = 'index'", sid)
+    assert "ai-assist.js" not in c.get(f"/sites/{sid}/builder/{page['id']}").text
+    assert c.post(f"/api/sites/{sid}/ai/write", json={"text": "hi", "action": "improve"}, headers=H).status_code == 404
+    assert c.put(f"/api/sites/{sid}/widgets/ai_assist/settings", json={"api_key": "sk-test-secret-1", "base_url": "http://insecure"}, headers=H).status_code == 400
+    assert c.put(f"/api/sites/{sid}/widgets/ai_assist/settings", json={"api_key": "sk-test-secret-1", "model": "small-model"}, headers=H).status_code == 200
+    builder = c.get(f"/sites/{sid}/builder/{page['id']}").text
+    assert "ai-assist.js" in builder and "sk-test-secret-1" not in builder
+    assert "sk-test-secret-1" not in str(c.get(f"/api/sites/{sid}/widgets/ai_assist/settings", headers=H).json())
+    seen = {}
+
+    def fake(url, headers=None, data=None, method=None, timeout=10):
+        seen.update(url=url, headers=headers, data=data)
+        return {"choices": [{"message": {"content": '"Warm, crusty sourdough, baked daily."'}}]}
+    monkeypatch.setattr(modcache, "http_json", fake)
+    monkeypatch.setattr(modcache, "public_https", lambda u: True)
+    r = c.post(f"/api/sites/{sid}/ai/write", json={"text": "we bake bread", "action": "improve", "field": "Text"}, headers=H)
+    assert r.status_code == 200 and r.json()["text"] == "Warm, crusty sourdough, baked daily."
+    assert seen["url"] == "https://api.openai.com/v1/chat/completions" and seen["headers"]["Authorization"] == "Bearer sk-test-secret-1"
+    assert seen["data"]["model"] == "small-model" and "Module Bakery" in seen["data"]["messages"][0]["content"]
+    # nothing was saved to the page
+    assert "Warm, crusty" not in db.one("SELECT blocks_json FROM pages WHERE id = ?", page["id"])["blocks_json"]
+    assert c.post(f"/api/sites/{sid}/ai/write", json={"text": "", "action": "draft"}, headers=H).status_code == 400
+    assert c.post(f"/api/sites/{sid}/ai/write", json={"text": "x", "action": "rm -rf"}, headers=H).status_code == 400
+    assert c.post(f"/api/sites/{sid}/ai/write", json={"text": "x", "action": "improve"}).status_code == 403   # no X-Tenshi header
+    monkeypatch.setattr(modcache, "http_json", lambda *a, **k: (_ for _ in ()).throw(OSError("down")))
+    assert c.post(f"/api/sites/{sid}/ai/write", json={"text": "x", "action": "improve"}, headers=H).status_code == 502
+    # rate limit per person per site
+    monkeypatch.setattr(ai_assist, "LIMIT", 0)
+    assert c.post(f"/api/sites/{sid}/ai/write", json={"text": "x", "action": "improve"}, headers=H).status_code == 429
+    monkeypatch.setattr(ai_assist, "LIMIT", 40)
+    # a server-wide key works when the site has none
+    c.put(f"/api/sites/{sid}/widgets/ai_assist/settings", json={"api_key": ""}, headers=H)
+    assert not ai_assist.available(sid)
+    monkeypatch.setenv("TENSHI_AI_KEY", "env-key")
+    assert ai_assist.available(sid) and ai_assist.config(sid)["key"] == "env-key"

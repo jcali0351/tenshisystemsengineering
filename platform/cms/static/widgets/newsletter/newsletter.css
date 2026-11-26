@@ -1,0 +1,12 @@
+/* Newsletter sign-up (cms/widgets/newsletter.py) */
+.tw-nl-box { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 24px; align-items: center; }
+@media (max-width: 760px) { .tw-nl-box { grid-template-columns: 1fr; } }
+.tw-nl-box h2 { margin: 0 0 6px; }
+section.tw-mod.tw-nl-band, section.tw-mod.tw-nl-band:nth-of-type(n) { background: var(--m-ps); color: #fff; } .tw-nl-band .tw-intro { color: rgba(255,255,255,.9); }
+.tw-nl-band .tw-field span, .tw-nl-band .tw-check, .tw-nl-band h2 { color: #fff; } .tw-nl-band .tw-btn { background: #fff; color: var(--m-p); border-color: #fff; }
+.tw-nl-band .tw-status { color: #fff; }
+.tw-nl-card .tw-nl-box { padding: clamp(20px, 4vw, 36px); border-radius: var(--m-r); background: var(--m-soft); }
+.tw-nl-row { display: flex; gap: 10px; align-items: end; flex-wrap: wrap; }
+.tw-nl-row .tw-field { flex: 1 1 200px; }
+.tw-nl-row .tw-btn { min-height: 46px; }
+.tw-nl-compact { max-width: none; }

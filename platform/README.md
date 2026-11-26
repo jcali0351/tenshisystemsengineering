@@ -234,3 +234,30 @@ friendly range control).
   "approved" only marks it for posting by hand. Hooks: `widgets.ON_PUBLISH` (never breaks a deployment).
 - Business data social links are filtered to http(s) addresses before they reach any template.
 
+**Extras:**
+- `popup`: an offer or the newsletter sign-up in a `<dialog>`; opens after N seconds, at N% scrolled or on exit
+  intent (desktop); frequency once per visit / every N days / once, kept in `localStorage` (no cookies); "Version"
+  shows a changed popup to everyone again. Shown in place, with a note, while editing.
+- `newsletter`: sign-ups go to **Mailchimp** (key + audience ID; double opt-in on by default) or **Resend** (key +
+  audience) with the client's own keys (Modules & inbox › Newsletter sign-up, owners/admins, masked). With no key,
+  or if the provider fails, the sign-up is saved as a **lead** (Form "Newsletter") and the usual lead email goes out.
+  Optional first name and consent checkbox. Only ever at the visitor's request.
+- `news`: the latest blog posts (optionally one tag) as headlines, a one-line strip or small cards, with the
+  "All news" and RSS (`feed.xml`) links. Reuses `cms/posts.py`.
+- `price_list`: food menu or price list; sections of lines `Name | price | description | labels` (v, vg, gf, df,
+  spicy, new, popular…), jump links, dotted leaders, a labels key, small print, schema.org `Menu` for food.
+- `team` (replaces the template block): Business data › Team plus more people, with departments, filter chips,
+  search, email/phone and profile links (http(s) only).
+- `jobs`: openings with type, place/remote, pay, details, Apply by email or link, type filters, schema.org
+  `JobPosting`; an opening past its "Closes" date disappears on the next build.
+- `locations`: all locations on one map (reuses the Map block and its settings, `show_list: false`), cards with
+  address, phone, hours, directions and "Show on map". Empty = Business data. CSP: only that map's frame host.
+- **Analytics card** (site Overview): 30-day page views vs the 30 days before, daily bars, busiest day, top pages
+  and submissions (leads, RSVPs, bookings, reviews). Counted on the server from live page requests (`visits`):
+  no cookies, no outside trackers.
+- **AI writing assist** (`cms/ai_assist.py`, Modules & inbox › AI writing assist): "✨ Help me write" under the
+  builder's text boxes (improve, shorter, longer, friendlier, more professional, fix spelling, write from notes).
+  Hidden unless the site has a key or the server sets `TENSHI_AI_KEY` (optional `TENSHI_AI_BASE_URL`,
+  `TENSHI_AI_MODEL`; any OpenAI-compatible chat API, https only). The server calls the API (the key never reaches
+  the browser), the suggestion is only shown until the editor clicks "Use this", and each person gets 40 requests
+  per site per hour (`POST /api/sites/{id}/ai/write`).

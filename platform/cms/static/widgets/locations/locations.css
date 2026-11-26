@@ -1,0 +1,15 @@
+/* Locations (cms/widgets/locations.py) */
+.tw-locs-grid { display: grid; gap: 22px; }
+.tw-locs-left .tw-locs-grid { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: start; }
+@media (max-width: 860px) { .tw-locs-left .tw-locs-grid { grid-template-columns: 1fr; } }
+.tw-locs-left .tw-locs-map { position: sticky; top: 16px; }
+.tw-locs-map .tw-map-frame { border-radius: var(--m-r); overflow: hidden; }
+.tw-locs-map iframe { width: 100%; height: 100%; border: 0; display: block; }
+.tw-loc-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.tw-locs-top .tw-loc-list { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.tw-loc { padding: 18px; border: 1px solid var(--m-line); border-radius: var(--m-r); background: var(--m-card); }
+.tw-loc h3 { margin: 0 0 6px; font-size: 1.15rem; } .tw-loc p { margin: 4px 0; }
+.tw-loc-addr, .tw-loc-hours { color: var(--m-muted); white-space: pre-line; }
+.tw-loc-act { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px !important; }
+.tw-loc-act .tw-btn { min-height: 40px; padding: 8px 14px; font-size: .95rem; }
+.tw-loc-act [aria-pressed="true"] { background: var(--m-ps); color: #fff; border-color: var(--m-ps); }

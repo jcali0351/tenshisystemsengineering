@@ -48,4 +48,4 @@
 } | tojson }}</script>
 {% endblock %}
 {% block scripts %}<script id="theme-data" type="application/json">{{ theme_editor | tojson }}</script>
-<script src="/static/theme.js"></script><script src="/static/builder.js"></script>{% endblock %}
+<script src="/static/theme.js"></script><script src="/static/builder.js"></script>{% if ai_assist %}<script src="/static/ai-assist.js"></script>{% endif %}{% endblock %}

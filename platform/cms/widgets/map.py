@@ -92,6 +92,7 @@ class MapConfig(BaseModel):
         "label": "Height", "options": [["small", "Small"], ["medium", "Medium"], ["large", "Large"]]})
     directions_button: bool = Field(True, json_schema_extra={"label": "Show a “Get directions” button"})
     directions_link: bool = Field(True, json_schema_extra={"label": "Show an “Open in maps” link"})
+    show_list: bool = Field(True, json_schema_extra={"label": "Several places: list them beside the map"})
 
     @field_validator("latitude")
     @classmethod
@@ -185,7 +186,9 @@ def render(block: dict, ctx: WidgetContext) -> Markup:
             bits.append(f'<a class="tw-map-open" href="{escape(u["open"])}" target="_blank" rel="noopener" data-tw-open>Open in maps ↗</a>')
         return f'<p class="tw-map-actions{extra}">' + "".join(bits) + "</p>" if bits else ""
 
-    if len(places) > 1:
+    if len(places) > 1 and not cfg.show_list:               # e.g. the Locations block draws its own cards (widgets/locations.py)
+        body = frame
+    elif len(places) > 1:
         items = "".join(
             f'<li><button type="button" class="tw-map-place" aria-pressed="{"true" if i == 0 else "false"}" '
             f'data-embed="{escape(u["embed"])}" data-dir="{escape(u["dir"])}" data-open="{escape(u["open"])}" data-i="{i}">'
