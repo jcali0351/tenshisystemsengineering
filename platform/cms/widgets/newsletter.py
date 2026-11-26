@@ -98,7 +98,8 @@ def act_subscribe(req):
     if req.mode != "hosted":
         where = {"mailchimp": "Mailchimp", "resend": "Resend"}.get(req.settings.provider if connected(req.settings) else "", "Leads")
         return 200, {"ok": True, "message": f"Preview: on the live site this sign-up goes to {where}. Nothing was sent here."}
-    s = req.settings
+    from .. import demo_sites
+    s = None if demo_sites.is_demo(req.site) else req.settings     # demo sites: always Leads, never a provider
     if connected(s):
         try:
             to_provider(s, email, name)

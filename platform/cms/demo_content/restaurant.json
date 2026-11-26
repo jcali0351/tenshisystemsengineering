@@ -1,0 +1,576 @@
+{
+  "_readme": "Starter content for one business category in the Tenshi CMS. profile follows platform/schema/business.schema.json; pages and blog_posts follow the page/block shape in platform/cms/blocks.py. See HANDOFF.md.",
+  "format": "tenshi.starter/1",
+  "language": "en",
+  "category": "restaurant",
+  "category_label": "Restaurant, café & food",
+  "new_category": false,
+  "closest_existing_category": null,
+  "templates": [
+    "restaurant"
+  ],
+  "recommended_template": "restaurant",
+  "profile": {
+    "schema": "tenshi.business/1",
+    "company": {
+      "name": "[Your Business Name]",
+      "category": "restaurant",
+      "category_label": "Restaurant, café & food",
+      "type": "storefront",
+      "tagline": "Seasonal plates, made with care",
+      "phone": "[Phone]",
+      "email": "hello@example.com",
+      "address": "[Street Address]",
+      "city": "[City]",
+      "state": "[State]",
+      "service_areas": [],
+      "hours": [
+        {
+          "days": "Tue–Thu",
+          "time": "[11:30 AM]–[9:00 PM]"
+        },
+        {
+          "days": "Fri–Sat",
+          "time": "[11:30 AM]–[10:00 PM]"
+        },
+        {
+          "days": "Sun",
+          "time": "[11:00 AM]–[3:00 PM]"
+        },
+        {
+          "days": "Mon",
+          "time": "Closed"
+        }
+      ],
+      "description": "[Your Business Name] is a neighborhood restaurant in [City] serving fresh, seasonal food in a relaxed, welcoming setting. Join us for lunch, dinner or a quiet coffee.",
+      "logo": null
+    },
+    "site": {
+      "goal": "services",
+      "template": "restaurant",
+      "subdomain": "your-business"
+    },
+    "services": [
+      {
+        "name": "Dine in",
+        "description": "Relaxed seating for lunch and dinner. Walk-ins welcome; bookings recommended at weekends.",
+        "price": ""
+      },
+      {
+        "name": "Takeout",
+        "description": "Order by phone and pick up your favorites to enjoy at home.",
+        "price": ""
+      },
+      {
+        "name": "Private events",
+        "description": "Birthdays, team dinners and celebrations. Ask us about set menus.",
+        "price": "From $[XX] per person"
+      },
+      {
+        "name": "Catering",
+        "description": "Food for your office, party or event, prepared by our kitchen.",
+        "price": "Quote on request"
+      }
+    ],
+    "products": [],
+    "staff": [
+      {
+        "name": "[Owner Name]",
+        "role": "Owner",
+        "bio": "[Owner Name] opened [Your Business Name] to bring good, honest food to the neighborhood. You'll often find them greeting guests at the door."
+      },
+      {
+        "name": "[Chef Name]",
+        "role": "Head chef",
+        "bio": "[Chef Name] leads our kitchen and builds each season's menu around good seasonal ingredients."
+      },
+      {
+        "name": "[Team Member Name]",
+        "role": "Front of house",
+        "bio": "[Team Member Name] looks after our guests and makes sure every visit feels welcoming."
+      }
+    ],
+    "gallery": [],
+    "portfolio": [],
+    "testimonials": [
+      {
+        "quote": "[Sample review — replace with a real customer quote] Lovely food and a warm welcome. We'll definitely be back.",
+        "author": "Sample Customer A"
+      },
+      {
+        "quote": "[Sample review — replace with a real customer quote] The staff were so friendly and the menu had something for everyone in our group.",
+        "author": "Sample Customer B"
+      },
+      {
+        "quote": "[Sample review — replace with a real customer quote] Our favorite place for a relaxed dinner. Everything tastes fresh and homemade.",
+        "author": "Sample Customer C"
+      }
+    ],
+    "social": {},
+    "seo": {
+      "title": "[Your Business Name] | Restaurant in [City]",
+      "description": "Fresh, seasonal food in a relaxed setting in [City]. See our menu, opening hours and book a table at [Your Business Name]."
+    }
+  },
+  "pages": [
+    {
+      "slug": "index",
+      "title": "Home",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "hero",
+          "data": {
+            "kicker": "Now open in [City]",
+            "heading": "Good food, good company, a table waiting for you",
+            "text": "Fresh, seasonal dishes made in our kitchen every day. Come in for a meal, or book a table for a special night out.",
+            "button_text": "Book a table",
+            "button_link": "contact",
+            "call_button": true,
+            "layout": "split"
+          }
+        },
+        {
+          "type": "services",
+          "data": {
+            "heading": "What we do",
+            "intro": "",
+            "columns": "3",
+            "limit": 3,
+            "show_prices": true
+          }
+        },
+        {
+          "type": "testimonials",
+          "data": {
+            "heading": "What customers say"
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "Join us at the table",
+            "text": "Book a table online or call us. We look forward to welcoming you.",
+            "button_text": "Reserve now",
+            "button_link": "contact"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "about",
+      "title": "About",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "About [Your Business Name]",
+            "body": "<p>[Your Business Name] opened its doors in [City] with one simple aim: to cook the kind of food we love to eat, and to share it with our neighbors.</p><p>Our menu changes with the seasons and is built around good ingredients. [Mention where you source ingredients, if you'd like to.] Everything is prepared in our own kitchen.</p><p>Whether you're stopping by for lunch, celebrating with friends or picking up something to take home, we'd love to see you. [Add a sentence about your story or style of cooking.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "team",
+          "data": {
+            "heading": "Meet the team",
+            "intro": "The people you'll talk to and work with. [Add or remove team members under Business data › Team.]"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "services",
+      "title": "Services",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "services",
+          "data": {
+            "heading": "Services",
+            "intro": "[Your Business Name] is a neighborhood restaurant in [City] serving fresh, seasonal food in a relaxed, welcoming setting. Join us for lunch, dinner or a quiet coffee.",
+            "columns": "3",
+            "show_prices": true
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "Join us at the table",
+            "text": "Book a table online or call us. We look forward to welcoming you.",
+            "button_text": "Reserve now",
+            "button_link": "contact"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "menu",
+      "title": "Menu",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Starters",
+            "body": "<ul><li><b>Soup of the day</b> — Made fresh each morning, served with bread. <span class=\"price\">$[XX]</span></li><li><b>Seasonal salad</b> — Fresh greens with a house dressing. (V) <span class=\"price\">$[XX]</span></li><li><b>[Starter Name]</b> — [Short description of the dish.] <span class=\"price\">$[XX]</span></li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Mains",
+            "body": "<ul><li><b>[Main Dish Name]</b> — [Short description: main ingredients and how it's cooked.] <span class=\"price\">$[XX]</span></li><li><b>[Vegetarian Main]</b> — [Short description.] (V) <span class=\"price\">$[XX]</span></li><li><b>Catch of the day</b> — Ask your server for today's dish. <span class=\"price\">Market price</span></li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Desserts",
+            "body": "<ul><li><b>[Dessert Name]</b> — [Short description.] <span class=\"price\">$[XX]</span></li><li><b>Ice cream</b> — Choice of flavors. <span class=\"price\">$[XX]</span></li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Drinks",
+            "body": "<ul><li><b>Coffee and tea</b> — Ask about our selection. <span class=\"price\">From $[XX]</span></li><li><b>Soft drinks</b> <span class=\"price\">$[XX]</span></li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "",
+            "body": "<p><small>(V) = vegetarian. Please tell us about any allergies before ordering. Prices and dishes may change with the seasons.</small></p>",
+            "center": false
+          }
+        }
+      ]
+    },
+    {
+      "slug": "events",
+      "title": "Events",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Upcoming events",
+            "body": "<h3>Seasonal tasting evening</h3><p><b>[Date], [Time]</b></p><p>A set menu celebrating the season's ingredients. Places are limited, so please book ahead.</p><h3>Live music night</h3><p><b>[Date], [Time]</b></p><p>Relaxed acoustic music with dinner. Regular menu available.</p><h3>Holiday set menu</h3><p><b>[Date range]</b></p><p>A festive set menu for groups and celebrations. Ask us for details.</p><p><small>[These are example events. Replace them with your own, or hide this page.]</small></p>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "Want to come along?",
+            "text": "Get in touch to book a place or ask a question.",
+            "button_text": "Contact us",
+            "button_link": "contact"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "gallery",
+      "title": "Gallery",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "gallery",
+          "data": {
+            "heading": "Gallery",
+            "album": null,
+            "layout": "",
+            "lightbox": true
+          }
+        }
+      ]
+    },
+    {
+      "slug": "faq",
+      "title": "FAQ",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "faq",
+          "data": {
+            "heading": "Questions and answers",
+            "intro": "",
+            "items": [
+              {
+                "question": "Do I need a reservation?",
+                "answer": "Walk-ins are always welcome, but we recommend booking for groups and at weekends."
+              },
+              {
+                "question": "Do you cater for dietary needs?",
+                "answer": "Our menu marks vegetarian and vegan options. If you have an allergy or dietary need, please tell your server before ordering so we can advise you. [Add your allergen policy.]"
+              },
+              {
+                "question": "Can I bring a large group?",
+                "answer": "Yes. For groups of [X] or more, please book ahead so we can set up a table for you."
+              },
+              {
+                "question": "Do you offer takeout?",
+                "answer": "Yes. Call us to place an order for pickup. [Add delivery details if you offer delivery.]"
+              },
+              {
+                "question": "Is there parking nearby?",
+                "answer": "[Describe parking and public transport options near your restaurant.]"
+              },
+              {
+                "question": "Do you host private events?",
+                "answer": "Yes. We host birthdays, work dinners and other celebrations. Get in touch to talk about dates and menus."
+              }
+            ],
+            "open_first": false,
+            "structured_data": true
+          }
+        }
+      ]
+    },
+    {
+      "slug": "blog",
+      "title": "News & tips",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "News & tips",
+            "body": "<ul><li><a href=\"blog-behind-the-menu-how-we-plan-each-season.html\">Behind the menu: how we plan each season</a></li><li><a href=\"blog-planning-a-group-dinner-a-few-tips-to-make-it-easy.html\">Planning a group dinner? A few tips to make it easy</a></li></ul>",
+            "center": false
+          }
+        }
+      ]
+    },
+    {
+      "slug": "contact",
+      "title": "Contact",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "contact",
+          "data": {
+            "heading": "Contact us"
+          }
+        },
+        {
+          "type": "form",
+          "data": {
+            "heading": "Send us a message",
+            "intro": "We'll get back to you as soon as we can.",
+            "fields": "name,email,phone,service,message",
+            "button_text": "Send"
+          }
+        }
+      ]
+    }
+  ],
+  "blog_posts": [
+    {
+      "slug": "blog-behind-the-menu-how-we-plan-each-season",
+      "title": "Behind the menu: how we plan each season",
+      "in_menu": false,
+      "seo_title": "Behind the menu: how we plan each season",
+      "seo_description": "Our menu doesn't stay the same all year. Here's a look at how we decide what goes on it.",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Behind the menu: how we plan each season",
+            "body": "<p>Our menu doesn't stay the same all year. Here's a look at how we decide what goes on it.</p><p>It starts with ingredients. As the seasons change, so does what's at its best. We talk to our suppliers about what's coming and build our dishes around that. [Add details about your suppliers, if you'd like.]</p><p>Then we test. The kitchen team tries new ideas, tastes them together and tweaks them until they're right. Some dishes make it to the menu straight away. Others take a few attempts.</p><p>We also listen to our guests. If a dish is especially popular, it may come back each year. If you've got a favorite you'd like to see again, let your server know.</p><p>Finally, we make sure there's something for everyone, with vegetarian options and dishes that can be adapted for common dietary needs.</p><p>The result is a menu that feels fresh each time you visit. We hope you'll come and try the latest one.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "Join us at the table",
+            "text": "Book a table online or call us. We look forward to welcoming you.",
+            "button_text": "Reserve now",
+            "button_link": "contact"
+          }
+        }
+      ],
+      "word_count": 161
+    },
+    {
+      "slug": "blog-planning-a-group-dinner-a-few-tips-to-make-it-easy",
+      "title": "Planning a group dinner? A few tips to make it easy",
+      "in_menu": false,
+      "seo_title": "Planning a group dinner? A few tips to make it easy",
+      "seo_description": "Organizing a meal for a group, whether it's a birthday, a work dinner or a family get-together, can feel like a lot. These tips help it go smoothly.",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Planning a group dinner? A few tips to make it easy",
+            "body": "<p>Organizing a meal for a group, whether it's a birthday, a work dinner or a family get-together, can feel like a lot. These tips help it go smoothly.</p><ul><li>Book early, especially for weekends and holidays. Larger tables fill up fast.</li><li>Ask about set menus. They make ordering quicker and help you plan the cost per person.</li><li>Collect dietary needs in advance and share them when you book.</li><li>Decide how the bill will be split before the night, so no one has to work it out at the table.</li><li>Let the restaurant know if it's a special occasion. A small touch can make the evening.</li></ul><p>If anyone in the group has mobility needs, mention it when you book so the table is easy to reach.</p><p>Most of all, leave time to enjoy it. A relaxed pace makes for a better evening for everyone.</p><p>If you're planning a group meal at [Your Business Name], get in touch and we'll help you put it together.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "Join us at the table",
+            "text": "Book a table online or call us. We look forward to welcoming you.",
+            "button_text": "Reserve now",
+            "button_link": "contact"
+          }
+        }
+      ],
+      "word_count": 162
+    }
+  ],
+  "gallery_captions": [
+    {
+      "caption": "Our dining room in the evening",
+      "alt": "Our dining room in the evening"
+    },
+    {
+      "caption": "A seasonal starter from the current menu",
+      "alt": "A seasonal starter from the current menu"
+    },
+    {
+      "caption": "Fresh bread from our kitchen",
+      "alt": "Fresh bread from our kitchen"
+    },
+    {
+      "caption": "The chef plating a main course",
+      "alt": "The chef plating a main course"
+    },
+    {
+      "caption": "Dessert of the day",
+      "alt": "Dessert of the day"
+    },
+    {
+      "caption": "Our bar and coffee counter",
+      "alt": "Our bar and coffee counter"
+    },
+    {
+      "caption": "A table set for a private dinner",
+      "alt": "A table set for a private dinner"
+    },
+    {
+      "caption": "Morning coffee by the window",
+      "alt": "Morning coffee by the window"
+    }
+  ],
+  "events": [
+    {
+      "title": "Seasonal tasting evening",
+      "when": "[Date], [Time]",
+      "description": "A set menu celebrating the season's ingredients. Places are limited, so please book ahead."
+    },
+    {
+      "title": "Live music night",
+      "when": "[Date], [Time]",
+      "description": "Relaxed acoustic music with dinner. Regular menu available."
+    },
+    {
+      "title": "Holiday set menu",
+      "when": "[Date range]",
+      "description": "A festive set menu for groups and celebrations. Ask us for details."
+    }
+  ],
+  "price_list": [
+    {
+      "heading": "Starters",
+      "items": [
+        {
+          "name": "Soup of the day",
+          "description": "Made fresh each morning, served with bread.",
+          "price": "$[XX]"
+        },
+        {
+          "name": "Seasonal salad",
+          "description": "Fresh greens with a house dressing. (V)",
+          "price": "$[XX]"
+        },
+        {
+          "name": "[Starter Name]",
+          "description": "[Short description of the dish.]",
+          "price": "$[XX]"
+        }
+      ]
+    },
+    {
+      "heading": "Mains",
+      "items": [
+        {
+          "name": "[Main Dish Name]",
+          "description": "[Short description: main ingredients and how it's cooked.]",
+          "price": "$[XX]"
+        },
+        {
+          "name": "[Vegetarian Main]",
+          "description": "[Short description.] (V)",
+          "price": "$[XX]"
+        },
+        {
+          "name": "Catch of the day",
+          "description": "Ask your server for today's dish.",
+          "price": "Market price"
+        }
+      ]
+    },
+    {
+      "heading": "Desserts",
+      "items": [
+        {
+          "name": "[Dessert Name]",
+          "description": "[Short description.]",
+          "price": "$[XX]"
+        },
+        {
+          "name": "Ice cream",
+          "description": "Choice of flavors.",
+          "price": "$[XX]"
+        }
+      ]
+    },
+    {
+      "heading": "Drinks",
+      "items": [
+        {
+          "name": "Coffee and tea",
+          "description": "Ask about our selection.",
+          "price": "From $[XX]"
+        },
+        {
+          "name": "Soft drinks",
+          "description": "",
+          "price": "$[XX]"
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "Everything in square brackets is a placeholder for the client to replace.",
+    "Testimonials are samples and start with a visible marker; replace or delete them before launch. No star ratings are set.",
+    "The gallery block has album=null: create an album from gallery_captions (see HANDOFF.md) and set its id."
+  ]
+}

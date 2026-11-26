@@ -1,0 +1,420 @@
+{
+  "_readme": "Starter content for one business category in the Tenshi CMS. profile follows platform/schema/business.schema.json; pages and blog_posts follow the page/block shape in platform/cms/blocks.py. See HANDOFF.md.",
+  "format": "tenshi.starter/1",
+  "language": "en",
+  "category": "contractor",
+  "category_label": "Construction & contracting",
+  "new_category": false,
+  "closest_existing_category": null,
+  "templates": [
+    "contractor",
+    "roofing",
+    "landscaping"
+  ],
+  "recommended_template": "contractor",
+  "profile": {
+    "schema": "tenshi.business/1",
+    "company": {
+      "name": "[Your Business Name]",
+      "category": "contractor",
+      "category_label": "Construction & contracting",
+      "type": "service-area",
+      "tagline": "Built right. Built to last.",
+      "phone": "[Phone]",
+      "email": "hello@example.com",
+      "address": "[Street Address]",
+      "city": "[City]",
+      "state": "[State]",
+      "service_areas": [
+        "[City]",
+        "[Nearby Town]"
+      ],
+      "hours": [
+        {
+          "days": "Mon–Fri",
+          "time": "[7:00 AM]–[5:00 PM]"
+        },
+        {
+          "days": "Sat",
+          "time": "[By appointment]"
+        },
+        {
+          "days": "Sun",
+          "time": "Closed"
+        }
+      ],
+      "description": "[Your Business Name] is a local building and renovation company serving [City] and nearby towns. We handle kitchens, bathrooms, additions and repairs, and we explain every step in plain words.",
+      "logo": null
+    },
+    "site": {
+      "goal": "leads",
+      "template": "contractor",
+      "subdomain": "your-business"
+    },
+    "services": [
+      {
+        "name": "Kitchen renovation",
+        "description": "New layouts, cabinets, countertops and lighting, from first sketch to final clean-up.",
+        "price": "From $[price]"
+      },
+      {
+        "name": "Bathroom remodel",
+        "description": "Showers, tubs, tiling, vanities and accessible bathroom updates.",
+        "price": "From $[price]"
+      },
+      {
+        "name": "Home additions",
+        "description": "Extra space for a growing household, planned around how you live.",
+        "price": "Quote on request"
+      },
+      {
+        "name": "Decks and patios",
+        "description": "Outdoor spaces built to suit your yard and how you use it.",
+        "price": "From $[price]"
+      },
+      {
+        "name": "Repairs and small jobs",
+        "description": "Doors, floors, drywall, trim and the jobs on your to-do list.",
+        "price": "From $[XX]/hour"
+      }
+    ],
+    "products": [],
+    "staff": [
+      {
+        "name": "[Owner Name]",
+        "role": "Owner and project lead",
+        "bio": "[Owner Name] runs every project from the first visit to the final walkthrough. [Add a sentence about how you got started.]"
+      },
+      {
+        "name": "[Team Member Name]",
+        "role": "Site supervisor",
+        "bio": "[Team Member Name] keeps each job on schedule, tidy and safe, and is the person you'll see on site most days."
+      },
+      {
+        "name": "[Team Member Name]",
+        "role": "Estimates and scheduling",
+        "bio": "[Team Member Name] prepares estimates, books visits and answers your questions along the way."
+      }
+    ],
+    "gallery": [],
+    "portfolio": [],
+    "testimonials": [
+      {
+        "quote": "[Sample review — replace with a real customer quote] They explained every step, kept the site tidy and finished when they said they would.",
+        "author": "Sample Customer A"
+      },
+      {
+        "quote": "[Sample review — replace with a real customer quote] Our estimate was clear and easy to understand. There were no surprises on the final bill.",
+        "author": "Sample Customer B"
+      },
+      {
+        "quote": "[Sample review — replace with a real customer quote] Friendly, careful and easy to reach. We'd happily have them back for the next project.",
+        "author": "Sample Customer C"
+      }
+    ],
+    "social": {},
+    "seo": {
+      "title": "[Your Business Name] | Builders in [City]",
+      "description": "Kitchens, bathrooms, additions and repairs in [City] and nearby. Clear written estimates and tidy, careful work. Request a free estimate."
+    }
+  },
+  "pages": [
+    {
+      "slug": "index",
+      "title": "Home",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "hero",
+          "data": {
+            "kicker": "Building and renovation in [City]",
+            "heading": "Quality building work, done right the first time",
+            "text": "From a small repair to a full renovation, we plan carefully, price clearly and keep you updated until the last tool is packed away.",
+            "button_text": "Get a free estimate",
+            "button_link": "contact",
+            "call_button": true,
+            "layout": "split"
+          }
+        },
+        {
+          "type": "services",
+          "data": {
+            "heading": "What we do",
+            "intro": "",
+            "columns": "3",
+            "limit": 3,
+            "show_prices": true
+          }
+        },
+        {
+          "type": "testimonials",
+          "data": {
+            "heading": "What customers say"
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "Planning a project?",
+            "text": "Tell us what you have in mind. We'll arrange a visit and send you a clear, written estimate.",
+            "button_text": "Request an estimate",
+            "button_link": "contact"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "about",
+      "title": "About",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "About [Your Business Name]",
+            "body": "<p>[Your Business Name] started with a simple idea: treat every home like it's our own. We're a small team based in [City], and we take on projects we can do well rather than as many as we can fit in.</p><p>Every job starts with a visit and a conversation. We listen to what you want, look at what's possible, and give you a written estimate that sets out the work, the timeline and the cost. If something changes along the way, we talk to you before we do anything.</p><p>We keep sites tidy, turn up when we say we will, and stand behind our work. [Add a sentence about what makes your business different.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "team",
+          "data": {
+            "heading": "Meet the team",
+            "intro": "The people you'll talk to and work with. [Add or remove team members under Business data › Team.]"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "services",
+      "title": "Services",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "services",
+          "data": {
+            "heading": "Services",
+            "intro": "[Your Business Name] is a local building and renovation company serving [City] and nearby towns. We handle kitchens, bathrooms, additions and repairs, and we explain every step in plain words.",
+            "columns": "3",
+            "show_prices": true
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "Planning a project?",
+            "text": "Tell us what you have in mind. We'll arrange a visit and send you a clear, written estimate.",
+            "button_text": "Request an estimate",
+            "button_link": "contact"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "gallery",
+      "title": "Gallery",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "gallery",
+          "data": {
+            "heading": "Gallery",
+            "album": null,
+            "layout": "",
+            "lightbox": true
+          }
+        }
+      ]
+    },
+    {
+      "slug": "faq",
+      "title": "FAQ",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "faq",
+          "data": {
+            "heading": "Questions and answers",
+            "intro": "",
+            "items": [
+              {
+                "question": "Do you give free estimates?",
+                "answer": "Yes. We'll visit, talk through what you need and send a written estimate. There's no obligation."
+              },
+              {
+                "question": "How long will my project take?",
+                "answer": "It depends on the size of the job and the materials. Your estimate includes a timeline, and we'll keep you updated if anything changes."
+              },
+              {
+                "question": "Do I need a permit?",
+                "answer": "Some projects need one and some don't. We'll tell you what applies to your project and explain how permits are handled. [Explain how your business handles permits.]"
+              },
+              {
+                "question": "Can I stay in my home during the work?",
+                "answer": "Usually, yes. We'll plan the work to keep disruption low and let you know in advance about any days when water, power or a room will be out of use."
+              },
+              {
+                "question": "How do payments work?",
+                "answer": "[Describe your deposit and payment schedule, e.g. a deposit to book, stage payments and a final payment on completion.]"
+              },
+              {
+                "question": "Which areas do you serve?",
+                "answer": "We work in [City] and the surrounding area, including [Nearby Town] and [Nearby Town]. Ask if you're further out."
+              }
+            ],
+            "open_first": false,
+            "structured_data": true
+          }
+        }
+      ]
+    },
+    {
+      "slug": "blog",
+      "title": "News & tips",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "News & tips",
+            "body": "<ul><li><a href=\"blog-how-to-plan-a-home-renovation-without-the-stress.html\">How to plan a home renovation without the stress</a></li><li><a href=\"blog-questions-to-ask-before-you-hire-a-contractor.html\">Questions to ask before you hire a contractor</a></li></ul>",
+            "center": false
+          }
+        }
+      ]
+    },
+    {
+      "slug": "contact",
+      "title": "Contact",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "contact",
+          "data": {
+            "heading": "Contact us"
+          }
+        },
+        {
+          "type": "form",
+          "data": {
+            "heading": "Send us a message",
+            "intro": "We'll get back to you as soon as we can.",
+            "fields": "name,email,phone,service,message",
+            "button_text": "Send"
+          }
+        }
+      ]
+    }
+  ],
+  "blog_posts": [
+    {
+      "slug": "blog-how-to-plan-a-home-renovation-without-the-stress",
+      "title": "How to plan a home renovation without the stress",
+      "in_menu": false,
+      "seo_title": "How to plan a home renovation without the stress",
+      "seo_description": "A renovation goes much more smoothly when the planning is done before anyone picks up a hammer. Here are a few steps that help.",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "How to plan a home renovation without the stress",
+            "body": "<p>A renovation goes much more smoothly when the planning is done before anyone picks up a hammer. Here are a few steps that help.</p><p>Start with how you use the space. Make a list of what works now, what frustrates you and what you'd like to be able to do. That list is more useful to a builder than a photo of a dream kitchen, because it shows what really matters to you.</p><p>Next, set a budget range and keep some of it aside for surprises. Older homes in particular can hide problems behind walls and under floors. A buffer means a discovery doesn't have to derail the whole project.</p><p>Ask for a written estimate that lists the work, the materials and a rough timeline. Read it carefully and ask questions about anything that isn't clear. A good contractor will be happy to explain.</p><p>Finally, think about daily life during the work. Where will you cook if the kitchen is out of action? Do pets need to be kept away from the work area? Planning for these things early takes a lot of the stress out of the weeks ahead.</p><p>If you'd like help working through your plans, [Your Business Name] is happy to visit and talk it over.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "Planning a project?",
+            "text": "Tell us what you have in mind. We'll arrange a visit and send you a clear, written estimate.",
+            "button_text": "Request an estimate",
+            "button_link": "contact"
+          }
+        }
+      ],
+      "word_count": 209
+    },
+    {
+      "slug": "blog-questions-to-ask-before-you-hire-a-contractor",
+      "title": "Questions to ask before you hire a contractor",
+      "in_menu": false,
+      "seo_title": "Questions to ask before you hire a contractor",
+      "seo_description": "Choosing who works on your home is a big decision. These questions help you compare options and feel confident in your choice.",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Questions to ask before you hire a contractor",
+            "body": "<p>Choosing who works on your home is a big decision. These questions help you compare options and feel confident in your choice.</p><ul><li>Can I see examples of similar projects you've done?</li><li>Are you licensed and insured for this kind of work in [State]? Can I see the documents?</li><li>Will you give me a written estimate with a breakdown of costs?</li><li>Who will be on site each day, and who do I call with questions?</li><li>How do you handle changes or unexpected problems?</li><li>What is your payment schedule?</li></ul><p>Listen to how each contractor answers, not just what they say. Clear, patient answers are a good sign of how the project will be run.</p><p>It's also worth checking how quickly they reply and whether they turn up on time for the first visit. Those small things often reflect how the whole job will go.</p><p>Whoever you choose, get the agreement in writing before work starts. It protects you both and keeps everyone on the same page.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "Planning a project?",
+            "text": "Tell us what you have in mind. We'll arrange a visit and send you a clear, written estimate.",
+            "button_text": "Request an estimate",
+            "button_link": "contact"
+          }
+        }
+      ],
+      "word_count": 164
+    }
+  ],
+  "gallery_captions": [
+    {
+      "caption": "Finished kitchen with new cabinets and lighting",
+      "alt": "Finished kitchen with new cabinets and lighting"
+    },
+    {
+      "caption": "Bathroom remodel with a walk-in shower",
+      "alt": "Bathroom remodel with a walk-in shower"
+    },
+    {
+      "caption": "New deck ready for summer",
+      "alt": "New deck ready for summer"
+    },
+    {
+      "caption": "Before: the original kitchen layout",
+      "alt": "Before: the original kitchen layout"
+    },
+    {
+      "caption": "After: an open, brighter kitchen",
+      "alt": "After: an open, brighter kitchen"
+    },
+    {
+      "caption": "Our team on site",
+      "alt": "Our team on site"
+    },
+    {
+      "caption": "Detail of finished trim work",
+      "alt": "Detail of finished trim work"
+    },
+    {
+      "caption": "Home addition taking shape",
+      "alt": "Home addition taking shape"
+    }
+  ],
+  "events": [],
+  "price_list": [],
+  "notes": [
+    "Everything in square brackets is a placeholder for the client to replace.",
+    "Testimonials are samples and start with a visible marker; replace or delete them before launch. No star ratings are set.",
+    "The gallery block has album=null: create an album from gallery_captions (see HANDOFF.md) and set its id."
+  ]
+}

@@ -35,13 +35,14 @@
   <aside class="side" aria-label="CMS menu">
     <a class="logo" href="/"><span class="logo-mark">天</span> Tenshi CMS</a>
     {% set path = request.url.path %}
-    <nav>
+    {% set demo = user.role == 'demo' %}
+    {% if not demo %}<nav>
       <a href="/" {% if path == '/' %}aria-current="page"{% endif %}><svg class="ico"><use href="#i-home"/></svg>Dashboard</a>
       <a href="/sites" {% if path == '/sites' %}aria-current="page"{% endif %}><svg class="ico"><use href="#i-sites"/></svg>All sites</a>
       <a href="/templates" {% if path.startswith('/templates') %}aria-current="page"{% endif %}><svg class="ico"><use href="#i-tpl"/></svg>Templates</a>
       <a href="/stock" {% if path.startswith('/stock') %}aria-current="page"{% endif %}><svg class="ico"><use href="#i-gal"/></svg>Stock photos</a>
       {% if user.role == 'admin' %}<a href="/users" {% if path == '/users' %}aria-current="page"{% endif %}><svg class="ico"><use href="#i-users"/></svg>Users</a>{% endif %}
-    </nav>
+    </nav>{% else %}<nav><a href="/stock" {% if path.startswith('/stock') %}aria-current="page"{% endif %}><svg class="ico"><use href="#i-gal"/></svg>Stock photos</a></nav>{% endif %}
     <p class="side-label">Website</p>
     <div class="site-switch">
       <select id="site-switch" aria-label="Choose a website">
@@ -61,17 +62,19 @@
         ('modules', 'Modules & inbox', 'tpl', base ~ '/modules'),
         ('leads', 'Leads', 'leads', base ~ '/leads'), ('deployments', 'Deployments', 'deploy', base ~ '/deployments'),
         ('export', 'Export', 'export', base ~ '/export'), ('settings', 'Settings & theme', 'settings', base ~ '/settings')] %}
-      <a href="{{ href }}" {% if section == key %}aria-current="page"{% endif %}><svg class="ico"><use href="#i-{{ icon }}"/></svg>{{ label }}</a>
+      {% if not (demo and key in ('widget:store', 'export', 'settings')) %}<a href="{{ href }}" {% if section == key %}aria-current="page"{% endif %}><svg class="ico"><use href="#i-{{ icon }}"/></svg>{{ label }}</a>{% endif %}
       {% endfor %}
     </nav>
     {% endif %}
     <div class="side-foot">
-      <div>{{ user.name }} · {{ user.role }}</div>
+      <div>{{ user.name }} · {{ 'sandbox' if demo else user.role }}</div>
       <form method="post" action="/logout"><button type="submit">Sign out</button></form>
       <div class="muted" style="margin-top:6px">Tenshi CMS {{ version }}</div>
     </div>
   </aside>
   <div class="main">
+    {% if demo %}<div class="demo-bar" role="note"><b>Sandbox</b> You're trying the Tenshi CMS on a demo copy of a café website. Edit anything and press Publish;
+      it resets every night. Email, posting and site settings are switched off. <a href="https://tenshisystems.com/" target="_blank" rel="noopener">Tenshi Systems</a></div>{% endif %}
     <header class="topbar">
       <button class="btn btn-small menu-toggle" type="button">Menu</button>
       <div>

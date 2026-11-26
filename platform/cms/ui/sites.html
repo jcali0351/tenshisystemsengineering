@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block title %}All sites{% endblock %}
 {% block heading %}All sites{% endblock %}
-{% block actions %}<button class="btn btn-primary" data-new-site>+ New site</button>{% endblock %}
+{% block actions %}{% if user.role == 'admin' %}<button class="btn" data-demo-reset title="Rebuild the demo-*.{{ sites_domain }} sites and the Try-the-CMS sandbox">Reset demo sites</button> {% endif %}<button class="btn btn-primary" data-new-site>+ New site</button>{% endblock %}
 {% block body %}
 <section class="card">
   {% if rows %}

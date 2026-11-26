@@ -61,8 +61,9 @@ def suggest(site: dict, user=None) -> int:
     """Pending items for blog posts newly live. Returns how many were added."""
     from . import load_settings
     from .. import posts
+    from .. import demo_sites
     st = load_settings(site["id"], "autopost")
-    if not st or not st.enabled:
+    if not st or not st.enabled or demo_sites.is_demo(site):     # demo sites never post
         return 0
     since = (datetime.now(timezone.utc) - timedelta(days=WINDOW_DAYS)).strftime("%Y-%m-%dT%H:%M:%SZ")
     added = 0
@@ -92,7 +93,10 @@ def _on_status(site: dict, row: dict, status: str, user):
     if row["status"] == "sent":
         raise ValueError("This one has already been sent.")
     from . import load_settings
+    from .. import demo_sites
     st = load_settings(site["id"], "autopost")
+    if demo_sites.is_demo(site):
+        raise ValueError("Posting is switched off on demo sites.")
     if not st or not st.webhook_url:
         db.run("UPDATE social_posts SET result = ?, approved_by = ? WHERE id = ?",
                "Approved. No webhook is set, so copy the text and post it yourself.", (user or {}).get("id"), row["id"])

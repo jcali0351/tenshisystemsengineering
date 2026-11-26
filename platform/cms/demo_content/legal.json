@@ -1,0 +1,427 @@
+{
+  "_readme": "Starter content for one business category in the Tenshi CMS. profile follows platform/schema/business.schema.json; pages and blog_posts follow the page/block shape in platform/cms/blocks.py. See HANDOFF.md.",
+  "format": "tenshi.starter/1",
+  "language": "en",
+  "category": "legal",
+  "category_label": "Legal & financial",
+  "new_category": false,
+  "closest_existing_category": null,
+  "templates": [
+    "lawfirm"
+  ],
+  "recommended_template": "lawfirm",
+  "profile": {
+    "schema": "tenshi.business/1",
+    "company": {
+      "name": "[Your Business Name]",
+      "category": "legal",
+      "category_label": "Legal & financial",
+      "type": "storefront",
+      "tagline": "Clear advice when it matters most",
+      "phone": "[Phone]",
+      "email": "hello@example.com",
+      "address": "[Street Address]",
+      "city": "[City]",
+      "state": "[State]",
+      "service_areas": [],
+      "hours": [
+        {
+          "days": "Mon–Fri",
+          "time": "[9:00 AM]–[5:00 PM]"
+        },
+        {
+          "days": "Evenings",
+          "time": "By appointment"
+        },
+        {
+          "days": "Sat–Sun",
+          "time": "Closed"
+        }
+      ],
+      "description": "[Your Business Name] is a law firm in [City]. We help individuals and businesses understand their options and take the next step, explaining things in plain language.",
+      "logo": null
+    },
+    "site": {
+      "goal": "leads",
+      "template": "lawfirm",
+      "subdomain": "your-business"
+    },
+    "services": [
+      {
+        "name": "[Practice Area 1]",
+        "description": "[One or two sentences about the kinds of matters you help with in this area.]",
+        "price": "Consultation: $[XX]"
+      },
+      {
+        "name": "[Practice Area 2]",
+        "description": "[One or two sentences about the kinds of matters you help with in this area.]",
+        "price": "Ask about fees"
+      },
+      {
+        "name": "[Practice Area 3]",
+        "description": "[One or two sentences about the kinds of matters you help with in this area.]",
+        "price": "Ask about fees"
+      },
+      {
+        "name": "Document review",
+        "description": "We read and explain contracts and other documents before you sign.",
+        "price": "From $[price]"
+      }
+    ],
+    "products": [],
+    "staff": [
+      {
+        "name": "[Attorney Name]",
+        "role": "Founding attorney",
+        "bio": "[Attorney Name] founded [Your Business Name] and works with clients on [practice areas]. [Add a sentence about your approach. Add admissions and education only if accurate and allowed by your rules.]"
+      },
+      {
+        "name": "[Attorney Name]",
+        "role": "Attorney",
+        "bio": "[Attorney Name] focuses on [practice area] and is known for patient, clear explanations."
+      },
+      {
+        "name": "[Team Member Name]",
+        "role": "Client coordinator",
+        "bio": "[Team Member Name] is your first point of contact and helps keep your matter organized."
+      }
+    ],
+    "gallery": [],
+    "portfolio": [],
+    "testimonials": [
+      {
+        "quote": "[Sample review — replace with a real customer quote] They explained everything clearly and always got back to me quickly.",
+        "author": "Sample Client A"
+      },
+      {
+        "quote": "[Sample review — replace with a real customer quote] I felt listened to from the first meeting, and I always knew what was happening.",
+        "author": "Sample Client B"
+      },
+      {
+        "quote": "[Sample review — replace with a real customer quote] Professional, approachable and easy to talk to.",
+        "author": "Sample Client C"
+      }
+    ],
+    "social": {},
+    "seo": {
+      "title": "[Your Business Name] | Law Firm in [City]",
+      "description": "Clear, approachable legal help in [City] for individuals and businesses. Request a consultation with [Your Business Name]."
+    }
+  },
+  "pages": [
+    {
+      "slug": "index",
+      "title": "Home",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "hero",
+          "data": {
+            "kicker": "Law firm in [City]",
+            "heading": "Straightforward legal help, explained clearly",
+            "text": "We listen first, explain your options in plain language, and keep you informed at every stage.",
+            "button_text": "Request a consultation",
+            "button_link": "contact",
+            "call_button": true,
+            "layout": "split"
+          }
+        },
+        {
+          "type": "services",
+          "data": {
+            "heading": "What we do",
+            "intro": "",
+            "columns": "3",
+            "limit": 3,
+            "show_prices": true
+          }
+        },
+        {
+          "type": "testimonials",
+          "data": {
+            "heading": "What clients say"
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "Have a question about your situation?",
+            "text": "Request a consultation and we'll arrange a time to talk.",
+            "button_text": "Request a consultation",
+            "button_link": "contact"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "about",
+      "title": "About",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "About [Your Business Name]",
+            "body": "<p>[Your Business Name] is a law firm based in [City]. We work with individuals, families and businesses on [list your practice areas].</p><p>Legal questions can be stressful. We aim to make them easier by listening carefully, explaining things without jargon and being clear about the next steps and what they may cost.</p><p>[Add a sentence about your firm's history or approach. Check that any wording follows your professional rules on advertising.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "team",
+          "data": {
+            "heading": "Meet the team",
+            "intro": "The people you'll talk to and work with. [Add or remove team members under Business data › Team.]"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "services",
+      "title": "Services",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "services",
+          "data": {
+            "heading": "Services",
+            "intro": "[Your Business Name] is a law firm in [City]. We help individuals and businesses understand their options and take the next step, explaining things in plain language.",
+            "columns": "3",
+            "show_prices": true
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Please note",
+            "body": "<p>The information on this website is general information only and is not legal advice. Every situation is different. Please speak to a qualified lawyer about your own circumstances. Past outcomes do not guarantee future results.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "Have a question about your situation?",
+            "text": "Request a consultation and we'll arrange a time to talk.",
+            "button_text": "Request a consultation",
+            "button_link": "contact"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "gallery",
+      "title": "Gallery",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "gallery",
+          "data": {
+            "heading": "Gallery",
+            "album": null,
+            "layout": "",
+            "lightbox": true
+          }
+        }
+      ]
+    },
+    {
+      "slug": "faq",
+      "title": "FAQ",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "faq",
+          "data": {
+            "heading": "Questions and answers",
+            "intro": "",
+            "items": [
+              {
+                "question": "How do I get started?",
+                "answer": "Fill in our consultation form or call us. We'll ask a few questions to understand your situation and arrange a time to talk."
+              },
+              {
+                "question": "How much will it cost?",
+                "answer": "[Explain how you charge, e.g. hourly, fixed fees or a consultation fee.] We'll always discuss fees with you before any work begins."
+              },
+              {
+                "question": "Is what I tell you confidential?",
+                "answer": "We treat every enquiry with care. Please don't send sensitive details through the website form. We'll arrange a secure way to share them. [Check this wording with your professional rules.]"
+              },
+              {
+                "question": "Does contacting you make you my lawyer?",
+                "answer": "No. Contacting us or using this website does not create a lawyer–client relationship. That only begins once we've both agreed in writing."
+              },
+              {
+                "question": "What should I bring to the first meeting?",
+                "answer": "Any documents, letters or emails related to your matter, plus a short timeline of what's happened so far."
+              },
+              {
+                "question": "Do you offer meetings online?",
+                "answer": "[Yes/No. Describe whether you meet in person, by phone or by video.]"
+              }
+            ],
+            "open_first": false,
+            "structured_data": true
+          }
+        }
+      ]
+    },
+    {
+      "slug": "blog",
+      "title": "News & tips",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "News & tips",
+            "body": "<ul><li><a href=\"blog-what-to-bring-to-your-first-meeting-with-a-lawyer.html\">What to bring to your first meeting with a lawyer</a></li><li><a href=\"blog-reading-a-contract-before-you-sign-a-few-tips.html\">Reading a contract before you sign: a few tips</a></li></ul>",
+            "center": false
+          }
+        }
+      ]
+    },
+    {
+      "slug": "contact",
+      "title": "Contact",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "contact",
+          "data": {
+            "heading": "Contact us"
+          }
+        },
+        {
+          "type": "form",
+          "data": {
+            "heading": "Send us a message",
+            "intro": "Please don't include sensitive personal details in this form. We'll arrange a safer way to share them.",
+            "fields": "name,email,phone,message",
+            "button_text": "Send"
+          }
+        }
+      ]
+    }
+  ],
+  "blog_posts": [
+    {
+      "slug": "blog-what-to-bring-to-your-first-meeting-with-a-lawyer",
+      "title": "What to bring to your first meeting with a lawyer",
+      "in_menu": false,
+      "seo_title": "What to bring to your first meeting with a lawyer",
+      "seo_description": "A little preparation helps you make the most of a first meeting with a lawyer. Here's what to gather.",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "What to bring to your first meeting with a lawyer",
+            "body": "<p>A little preparation helps you make the most of a first meeting with a lawyer. Here's what to gather.</p><ul><li>Any documents related to your matter: contracts, letters, notices or emails.</li><li>A short timeline of what happened and when.</li><li>Names and contact details of anyone else involved.</li><li>A list of questions you want to ask.</li><li>Notes about any deadlines you're aware of.</li></ul><p>Don't worry if you don't have everything. The first meeting is mainly about understanding your situation and your options.</p><p>It also helps to think about what you'd like to happen. Knowing your goals lets the lawyer explain which routes may be open to you, and the likely costs and timescales involved.</p><p>Finally, ask how fees work and what happens next. A good lawyer will be happy to explain.</p><p>This article is general information, not legal advice. If you need help with your own situation, contact [Your Business Name] to arrange a consultation.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "",
+            "body": "<p><small>The information on this website is general information only and is not legal advice. Every situation is different. Please speak to a qualified lawyer about your own circumstances. Past outcomes do not guarantee future results.</small></p>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "Have a question about your situation?",
+            "text": "Request a consultation and we'll arrange a time to talk.",
+            "button_text": "Request a consultation",
+            "button_link": "contact"
+          }
+        }
+      ],
+      "word_count": 153
+    },
+    {
+      "slug": "blog-reading-a-contract-before-you-sign-a-few-tips",
+      "title": "Reading a contract before you sign: a few tips",
+      "in_menu": false,
+      "seo_title": "Reading a contract before you sign: a few tips",
+      "seo_description": "Contracts can be long and full of unfamiliar words. These general tips can help you understand what you're agreeing to.",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Reading a contract before you sign: a few tips",
+            "body": "<p>Contracts can be long and full of unfamiliar words. These general tips can help you understand what you're agreeing to.</p><p>Read the whole thing, not just the summary. Important details are often in the small print near the end.</p><p>Look for the key points: what each side has to do, how much is paid and when, how long the agreement lasts, and how it can be ended.</p><p>Watch for words like 'automatically renews', 'non-refundable' and 'penalty'. They often signal terms that matter.</p><p>If something is unclear, ask the other party to explain it in writing. If it's important, ask for it to be changed before you sign.</p><p>For larger or more complex agreements, it's often worth having a lawyer review it first.</p><p>Keep a signed copy of every contract somewhere safe, along with any emails that changed or explained its terms.</p><p>This article is general information and is not legal advice. For advice about a specific contract, speak to a qualified lawyer.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "",
+            "body": "<p><small>The information on this website is general information only and is not legal advice. Every situation is different. Please speak to a qualified lawyer about your own circumstances. Past outcomes do not guarantee future results.</small></p>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "Have a question about your situation?",
+            "text": "Request a consultation and we'll arrange a time to talk.",
+            "button_text": "Request a consultation",
+            "button_link": "contact"
+          }
+        }
+      ],
+      "word_count": 162
+    }
+  ],
+  "gallery_captions": [
+    {
+      "caption": "Our office reception",
+      "alt": "Our office reception"
+    },
+    {
+      "caption": "A meeting room ready for a consultation",
+      "alt": "A meeting room ready for a consultation"
+    },
+    {
+      "caption": "Our team",
+      "alt": "Our team"
+    },
+    {
+      "caption": "The building entrance",
+      "alt": "The building entrance"
+    },
+    {
+      "caption": "Our library and workspace",
+      "alt": "Our library and workspace"
+    },
+    {
+      "caption": "The view from our office",
+      "alt": "The view from our office"
+    }
+  ],
+  "events": [],
+  "price_list": [],
+  "notes": [
+    "Everything in square brackets is a placeholder for the client to replace.",
+    "Testimonials are samples and start with a visible marker; replace or delete them before launch. No star ratings are set.",
+    "The gallery block has album=null: create an album from gallery_captions (see HANDOFF.md) and set its id.",
+    "Check your professional rules before publishing client testimonials."
+  ]
+}

@@ -83,6 +83,9 @@ def simple(site: dict, to: str, subject: str, body: str, reply_to: str = "") -> 
     """A plain message from a site (an RSVP or booking confirmation). Nothing is sent when mail is off: returns False."""
     if not to or not configured():
         return False
+    from . import demo_sites
+    if demo_sites.is_demo(site):                       # demo sites never send email
+        return False
     msg = EmailMessage()
     sender = os.environ.get("CONTACT_FROM") or os.environ.get("SMTP_USER") or "no-reply@localhost"
     msg["From"] = formataddr((str(site.get("name") or "Website")[:70], sender))

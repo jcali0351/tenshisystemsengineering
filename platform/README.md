@@ -261,3 +261,21 @@ friendly range control).
   `TENSHI_AI_MODEL`; any OpenAI-compatible chat API, https only). The server calls the API (the key never reaches
   the browser), the suggestion is only shown until the editor clicks "Use this", and each person gets 40 requests
   per site per hour (`POST /api/sites/{id}/ai/write`).
+
+## Demo sites and "Try the CMS" (DB-39)
+
+- **Six public demo sites** (`cms/demo_sites.py`), fictional Madison, WI businesses at `demo-<type>.<SITES_DOMAIN>`:
+  demo-cafe, demo-salon, demo-contractor, demo-retail, demo-law, demo-nonprofit. Each has its own template, theme
+  (preset + accent + fonts, light or dark, visitor dark-mode switch), 5+ pages, Content Bot's starter copy
+  (`cms/demo_content/`, placeholders filled in) and clear-origin stock photos only (CC0, public domain or AI, read from
+  `cms/stock_seed/`). Every page has the "Demo site by Tenshi Systems" ribbon and `noindex`.
+- They're built on start-up when missing (background thread; `TENSHI_DEMO_SITES=0` turns it off), and **rebuilt every
+  night at 3 AM** (Madison time) inside the app, plus admins' **Reset demo sites** button (All sites). No cron.
+- On demo sites nothing leaves the server: no email (`mail.simple`, `notify.lead_received`), no auto-post, newsletter
+  sign-ups always go to Leads, no AI assist. Sample reviews say "Sample review"; the donate page says it isn't live.
+- **Try the CMS:** `GET /demo/start` signs the visitor in (no password, 2 hours, 6 per IP per hour) as the shared
+  `demo` user and opens the builder of **demo-sandbox** (a copy of demo-cafe). `cms/sandbox.py` checks every request:
+  an allow-list of content routes, and every id in the address must belong to the sandbox. No Users, other sites,
+  Settings, module/store settings (keys), export, domains, stock uploads or AI. Writes, uploads (6 MB) and publishes are
+  rate-limited. Publishing works, but the sandbox is never served publicly (its address shows a note), and its uploads
+  need a session. The demo user can't sign in with a password.

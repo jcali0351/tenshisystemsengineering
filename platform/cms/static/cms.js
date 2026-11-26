@@ -156,5 +156,12 @@
     }));
   });
 
+  /* Admins: "Reset demo sites" (sandbox.py) */
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-demo-reset]");
+    if (!b || !confirm("Rebuild all demo sites and the sandbox from scratch? Leads, RSVPs and bookings on them are deleted.")) return;
+    busy(b, api("POST", "/api/demo/reset", {}).then(function (res) { toast(res.message); }));
+  });
+
   window.Tenshi = { api: api, toast: toast, busy: busy, esc: esc, pickMedia: pickMedia, mediaField: mediaField, $: $, $$: $$ };
 })();

@@ -16,7 +16,8 @@ import time
 
 from . import db
 
-ROLES = {"admin": "Admin: everything, including users, deployments, export and deleting",
+ROLES = {"demo": "Demo visitor: the public \u201cTry the CMS\u201d sandbox only (sandbox.py); not for real people",
+         "admin": "Admin: everything, including users, deployments, export and deleting",
          "editor": "Editor: content, media, pages, portfolio and galleries"}
 
 

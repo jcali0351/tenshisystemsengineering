@@ -19,6 +19,7 @@ import io
 import json
 import mimetypes
 import re
+import threading
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
@@ -34,6 +35,7 @@ from . import actions, auth, blocks, chrome, config, db, domains, forms as lead_
 from . import stock, stock_routes
 from . import inbox as inbox_mod, sitetime  # noqa: E402
 from . import ai_assist  # noqa: E402
+from . import demo_sites, sandbox  # noqa: E402
 
 VERSION = "1.0.0"
 UI_DIR = Path(__file__).parent / "ui"
@@ -65,6 +67,7 @@ def startup():
     templates.seed()
     stock.setup()
     stock.start_seed_in_background()       # the Stock Photo Library's seed photos (stock.py), imported once
+    sandbox.start_background()             # the public demo sites + "Try the CMS" sandbox (demo_sites.py), reset nightly
 
 
 # ---------------------------------------------------------------------------------------------- client sites
@@ -139,6 +142,11 @@ def tls_ask(request: Request, domain: str = ""):
 
 async def serve_site(request: Request, subdomain: str, path: str):
     """Answer one request for a client's live website: a page or file of its current deployment, a form, a visit."""
+    if subdomain == demo_sites.SANDBOX:      # the public sandbox is edited by anyone: never served as a public website
+        return HTMLResponse("<!doctype html><meta charset=utf-8><meta name=robots content=noindex><title>CMS sandbox</title>"
+                            "<body style='font:18px/1.5 system-ui;display:grid;place-items:center;min-height:90vh;margin:0 20px'>"
+                            "<div><h1>This is the CMS sandbox</h1><p>Changes made in the “Try the CMS” demo show in its preview, not here.</p>"
+                            f"<p><a href='{escape(config.site_url(demo_sites.SANDBOX_OF))}'>See the finished demo site</a></p></div>", status_code=404)
     folder, site = sites.live_folder(subdomain)
     if site and path == "/__form" and request.method == "POST":
         if not ratelimit.allow_form_post(site["id"], client_ip(request)):
@@ -246,6 +254,9 @@ async def friendly_errors(request, error):
 def show(name, request, user, **ctx):
     """Draw one CMS screen from cms/ui/<name>."""
     all_sites = db.all("SELECT id, name, subdomain, status FROM sites ORDER BY name")
+    if sandbox.is_demo_user(user):         # the demo visitor sees only the sandbox site
+        all_sites = [s for s in all_sites if s["id"] == demo_sites.sandbox_id()]
+        ctx["demo_session"] = True
     ctx.setdefault("site", None)          # the site chosen in the sidebar (None on Dashboard, Templates …)
     html = ui.get_template(name).render(user=user, request=request, sites_menu=all_sites, version=VERSION,
                                         sites_domain=config.SITES_DOMAIN, site_url=config.site_url, **ctx)
@@ -308,6 +319,8 @@ def login_submit(request: Request, email: str = Form(...), password: str = Form(
         return HTMLResponse(ui.get_template("login.html").render(error=msg, next=next), status_code=429,
                             headers={"Retry-After": str(wait)})
     user = auth.sign_in(email, password)
+    if user and sandbox.is_demo_user(user):
+        user = None                        # the demo user only ever signs in through /demo/start
     if not user:
         auth.note_failure(ip, email)
         return HTMLResponse(ui.get_template("login.html").render(error="That email and password don't match.", next=next), status_code=401)
@@ -430,7 +443,10 @@ async def api_deploy(request: Request, site_id: int):
     user = api_user(request)
     body = await request.json() if request.headers.get("content-length", "0") != "0" else {}
     build = sites.deploy(site_id, body.get("note", ""), user)
-    return {"build": build, "url": config.site_url(sites.get(site_id)["subdomain"])}
+    sub = sites.get(site_id)["subdomain"]
+    if sub == demo_sites.SANDBOX:          # the sandbox isn't served publicly: its "live" view is the preview
+        return {"build": build, "url": f"/sites/{site_id}/preview/index"}
+    return {"build": build, "url": config.site_url(sub)}
 
 
 @app.post("/api/sites/{site_id}/rollback/{build_id}")
@@ -1638,13 +1654,15 @@ def users_page(request: Request):
     rows = db.all("SELECT id, email, name, role, created_at FROM users ORDER BY name")
     for r in rows:
         r["sites"] = members.for_user(r["id"])
-    return show("users.html", request, user, rows=rows, roles=auth.ROLES)
+    return show("users.html", request, user, rows=rows, roles={k: v for k, v in auth.ROLES.items() if k != "demo"})
 
 
 @app.post("/api/users")
 async def api_new_user(request: Request):
     user = api_user(request, admin=True)
     body = await request.json()
+    if body.get("role") == "demo":
+        raise sites.SiteError("The demo role is only for the public sandbox's own user.")
     try:
         auth.create_user(body.get("email", ""), body.get("name", ""), body.get("password", ""), body.get("role", "editor"))
     except Exception as error:
@@ -1657,7 +1675,7 @@ async def api_new_user(request: Request):
 async def api_update_user(request: Request, user_id: int):
     user = api_user(request, admin=True)
     body = await request.json()
-    if body.get("role") in auth.ROLES:
+    if body.get("role") in auth.ROLES and body.get("role") != "demo":
         if user_id == user["id"] and body["role"] != "admin":
             raise sites.SiteError("You can't remove your own admin role.")
         db.run("UPDATE users SET role = ? WHERE id = ?", body["role"], user_id)
@@ -1736,5 +1754,33 @@ def static_file(name: str):
 # Signed login cookies (added last so it wraps everything). same_site="lax" stops other sites from using the cookie;
 # https_only (the Secure flag) keeps it off plain http. On by default when TENSHI_PUBLIC_URL is https (the server);
 # local http development and the tests run without it. Force with TENSHI_SECURE_COOKIES=1 or 0.
+# ---------------------------------------------------------------------------------------------- "Try the CMS" (sandbox.py)
+
+@app.get("/demo/start")
+def demo_start(request: Request):
+    """The public "Try the CMS" button: a two-hour demo session in the sandbox site's builder, no password."""
+    return sandbox.start(request, client_ip(request))
+
+
+@app.get("/demo/ended", response_class=HTMLResponse)
+def demo_ended():
+    return sandbox.ended_page()
+
+
+@app.post("/api/demo/reset")
+def api_demo_reset(request: Request):
+    """Admins: rebuild every demo site and the sandbox now (in the background, about a minute)."""
+    api_user(request, admin=True)
+    threading.Thread(target=sandbox.reset_everything, daemon=True).start()
+    return {"ok": True, "message": "Resetting the demo sites now. They'll be back in about a minute."}
+
+
+@app.middleware("http")
+async def demo_guard(request: Request, call_next):
+    """The demo role (sandbox.py) reaches only the sandbox site's content; checked before any route runs."""
+    blocked = sandbox.guard(request, current_user(request), app)
+    return blocked if blocked is not None else await call_next(request)
+
+
 app.add_middleware(SessionMiddleware, secret_key=config.secret_key(), session_cookie="tenshi_cms", same_site="lax",
                    max_age=60 * 60 * 24 * 14, https_only=config.SECURE_COOKIES)

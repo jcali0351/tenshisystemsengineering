@@ -103,6 +103,9 @@ def lead_received(site: dict, lead_id: int, title: str, data: dict, files: list[
     Email a new lead if this site wants it. Returns what happened: "sent", "limited" (over the hourly cap),
     "off" (the site switched lead emails off), "nobody" (no address), "no-mail" (the server has no mail settings).
     """
+    from . import demo_sites
+    if demo_sites.is_demo(site):                       # demo sites never send email (the lead is still saved)
+        return "demo"
     st = load(site["id"])
     if not st.enabled:
         return "off"

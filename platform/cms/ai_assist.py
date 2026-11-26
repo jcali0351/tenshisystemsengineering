@@ -47,6 +47,9 @@ class AISettings(BaseModel):
 
 
 def config(site_id) -> dict | None:
+    from . import demo_sites
+    if site_id and demo_sites.is_demo(site_id):         # never on demo sites or the public sandbox (no spend)
+        return None
     st = widgets.load_settings(site_id, "ai_assist") if site_id else None
     if st and st.api_key:
         return {"key": st.api_key, "base": st.base_url or "https://api.openai.com/v1", "model": st.model or "gpt-4o-mini"}

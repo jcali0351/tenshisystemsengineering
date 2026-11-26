@@ -255,6 +255,12 @@ class SiteRenderer:
         if sources:
             self.page_sources[file] = sources
         html = theme_mod.inject(html, self.theme, "/static/fonts/" if self.mode == "preview" else "fonts/")
+        if self.is_demo():                            # demo sites (demo_sites.py): the ribbon, and kept out of search engines
+            from .widgets.demo_ribbon import HTML as ribbon
+            html = html.replace("</head>", '<meta name="robots" content="noindex">\n</head>', 1)
+            html = html.replace("</body>", ribbon + "\n</body>", 1) if "</body>" in html else html + ribbon
+            used = used + ["demo_ribbon"]
+            self.used_widgets[file] = used
         if self.mode != "preview" and self.has_posts():
             html = html.replace("</head>", f'<link rel="alternate" type="application/rss+xml" title="{escape(self.site.get("name") or "")}" href="feed.xml">\n</head>', 1)
         return widgets.inject_assets(html, used, self.mode)
@@ -288,6 +294,12 @@ class SiteRenderer:
             if w.extra_files:
                 out.update(w.extra_files(self, pages) or {})
         return out
+
+    def is_demo(self):
+        if not hasattr(self, "_is_demo"):
+            from . import demo_sites
+            self._is_demo = bool(self.site.get("id")) and demo_sites.is_demo(self.site["id"])
+        return self._is_demo
 
     def has_posts(self):
         if not hasattr(self, "_has_posts"):

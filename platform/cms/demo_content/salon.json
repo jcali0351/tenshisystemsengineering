@@ -1,0 +1,565 @@
+{
+  "_readme": "Starter content for one business category in the Tenshi CMS. profile follows platform/schema/business.schema.json; pages and blog_posts follow the page/block shape in platform/cms/blocks.py. See HANDOFF.md.",
+  "format": "tenshi.starter/1",
+  "language": "en",
+  "category": "salon",
+  "category_label": "Salon, spa & beauty",
+  "new_category": true,
+  "closest_existing_category": "other",
+  "templates": [
+    "portfolio",
+    "medical"
+  ],
+  "recommended_template": "portfolio",
+  "profile": {
+    "schema": "tenshi.business/1",
+    "company": {
+      "name": "[Your Business Name]",
+      "category": "salon",
+      "category_label": "Salon, spa & beauty",
+      "type": "storefront",
+      "tagline": "Relax. Refresh. Feel like you.",
+      "phone": "[Phone]",
+      "email": "hello@example.com",
+      "address": "[Street Address]",
+      "city": "[City]",
+      "state": "[State]",
+      "service_areas": [],
+      "hours": [
+        {
+          "days": "Tue–Fri",
+          "time": "[9:00 AM]–[7:00 PM]"
+        },
+        {
+          "days": "Sat",
+          "time": "[9:00 AM]–[5:00 PM]"
+        },
+        {
+          "days": "Sun–Mon",
+          "time": "Closed"
+        }
+      ],
+      "description": "[Your Business Name] is a friendly salon and spa in [City] offering hair, nail and beauty treatments in a calm, welcoming space.",
+      "logo": null
+    },
+    "site": {
+      "goal": "portfolio",
+      "template": "portfolio",
+      "subdomain": "your-business"
+    },
+    "services": [
+      {
+        "name": "Haircut and style",
+        "description": "Consultation, wash, cut and finish.",
+        "price": "From $[XX]"
+      },
+      {
+        "name": "Color",
+        "description": "Full color, highlights or a gentle refresh.",
+        "price": "From $[XX]"
+      },
+      {
+        "name": "Manicure and pedicure",
+        "description": "Shape, care and polish for hands and feet.",
+        "price": "From $[XX]"
+      },
+      {
+        "name": "Facials",
+        "description": "Relaxing treatments tailored to your skin.",
+        "price": "From $[XX]"
+      },
+      {
+        "name": "Massage",
+        "description": "Unwind with a relaxing massage.",
+        "price": "From $[XX]"
+      }
+    ],
+    "products": [],
+    "staff": [
+      {
+        "name": "[Owner Name]",
+        "role": "Owner and stylist",
+        "bio": "[Owner Name] opened [Your Business Name] to create a calm, friendly space where everyone feels welcome. [Add a sentence about your specialty.]"
+      },
+      {
+        "name": "[Stylist Name]",
+        "role": "Stylist",
+        "bio": "[Stylist Name] loves color work and helping clients try something new."
+      },
+      {
+        "name": "[Therapist Name]",
+        "role": "Beauty therapist",
+        "bio": "[Therapist Name] looks after our nail and skin treatments and makes every visit relaxing."
+      }
+    ],
+    "gallery": [],
+    "portfolio": [],
+    "testimonials": [
+      {
+        "quote": "[Sample review — replace with a real customer quote] Such a relaxing visit. I left feeling like a new person.",
+        "author": "Sample Customer A"
+      },
+      {
+        "quote": "[Sample review — replace with a real customer quote] My stylist really listened to what I wanted. I love my new cut.",
+        "author": "Sample Customer B"
+      },
+      {
+        "quote": "[Sample review — replace with a real customer quote] Lovely, calm salon and friendly staff. Booking online was easy.",
+        "author": "Sample Customer C"
+      }
+    ],
+    "social": {},
+    "seo": {
+      "title": "[Your Business Name] | Salon & Spa in [City]",
+      "description": "Hair, nails and beauty treatments in a calm, friendly salon in [City]. See our prices and book your appointment online."
+    }
+  },
+  "pages": [
+    {
+      "slug": "index",
+      "title": "Home",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "hero",
+          "data": {
+            "kicker": "Salon and spa in [City]",
+            "heading": "Take a little time for yourself",
+            "text": "Hair, nails and treatments in a calm, friendly space. Book online in a few clicks.",
+            "button_text": "Book an appointment",
+            "button_link": "contact",
+            "call_button": true,
+            "layout": "split"
+          }
+        },
+        {
+          "type": "services",
+          "data": {
+            "heading": "What we do",
+            "intro": "",
+            "columns": "3",
+            "limit": 3,
+            "show_prices": true
+          }
+        },
+        {
+          "type": "testimonials",
+          "data": {
+            "heading": "What customers say"
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "Ready for some time out?",
+            "text": "Book your next appointment online or give us a call.",
+            "button_text": "Book now",
+            "button_link": "contact"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "about",
+      "title": "About",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "About [Your Business Name]",
+            "body": "<p>[Your Business Name] is a salon and spa in [City]. We offer [hair, nail and beauty treatments] in a relaxed space where you can switch off for a while.</p><p>Every appointment starts with a chat about what you'd like, so we can tailor the treatment to you. We'll always be honest about what will work best for your hair, skin or nails.</p><p>[Add a sentence about your story, your style or the products you use.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "team",
+          "data": {
+            "heading": "Meet the team",
+            "intro": "The people you'll talk to and work with. [Add or remove team members under Business data › Team.]"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "services",
+      "title": "Services",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "services",
+          "data": {
+            "heading": "Services",
+            "intro": "[Your Business Name] is a friendly salon and spa in [City] offering hair, nail and beauty treatments in a calm, welcoming space.",
+            "columns": "3",
+            "show_prices": true
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "Ready for some time out?",
+            "text": "Book your next appointment online or give us a call.",
+            "button_text": "Book now",
+            "button_link": "contact"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "prices",
+      "title": "Prices",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Hair",
+            "body": "<ul><li><b>Women's cut and finish</b> <span class=\"price\">From $[XX]</span></li><li><b>Men's cut</b> <span class=\"price\">From $[XX]</span></li><li><b>Blow-dry</b> <span class=\"price\">From $[XX]</span></li><li><b>Full color</b> <span class=\"price\">From $[XX]</span></li><li><b>Highlights</b> <span class=\"price\">From $[XX]</span></li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Nails",
+            "body": "<ul><li><b>Manicure</b> <span class=\"price\">$[XX]</span></li><li><b>Pedicure</b> <span class=\"price\">$[XX]</span></li><li><b>Gel polish</b> <span class=\"price\">$[XX]</span></li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Treatments",
+            "body": "<ul><li><b>Facial ([X] min)</b> <span class=\"price\">$[XX]</span></li><li><b>Massage ([X] min)</b> <span class=\"price\">$[XX]</span></li><li><b>Brow shape</b> <span class=\"price\">$[XX]</span></li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "",
+            "body": "<p><small>Prices may vary with hair length and the time needed. We'll confirm the price before your treatment starts.</small></p>",
+            "center": false
+          }
+        }
+      ]
+    },
+    {
+      "slug": "events",
+      "title": "Events",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Upcoming events",
+            "body": "<h3>Holiday gift card week</h3><p><b>[Date range]</b></p><p>Treat someone special. Buy a gift card in store during this week and receive [add your offer].</p><h3>Open evening</h3><p><b>[Date], [Time]</b></p><p>Meet our team, try products and book your next appointment. Everyone welcome.</p><p><small>[These are example events. Replace them with your own, or hide this page.]</small></p>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "Want to come along?",
+            "text": "Get in touch to book a place or ask a question.",
+            "button_text": "Contact us",
+            "button_link": "contact"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "gallery",
+      "title": "Gallery",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "gallery",
+          "data": {
+            "heading": "Gallery",
+            "album": null,
+            "layout": "",
+            "lightbox": true
+          }
+        }
+      ]
+    },
+    {
+      "slug": "faq",
+      "title": "FAQ",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "faq",
+          "data": {
+            "heading": "Questions and answers",
+            "intro": "",
+            "items": [
+              {
+                "question": "How do I book?",
+                "answer": "Book online any time, or call us during opening hours."
+              },
+              {
+                "question": "What is your cancellation policy?",
+                "answer": "Please give us at least [24] hours' notice if you need to cancel or move your appointment. [Add any fees.]"
+              },
+              {
+                "question": "Do I need a patch test for color?",
+                "answer": "[Describe your patch test policy for color and lash or brow tints.]"
+              },
+              {
+                "question": "Do you sell gift cards?",
+                "answer": "Yes. Gift cards are available in store and [online] in any amount."
+              },
+              {
+                "question": "Should I arrive early?",
+                "answer": "Please arrive about [5–10] minutes early so you can settle in."
+              },
+              {
+                "question": "Can I bring my children?",
+                "answer": "[Describe your policy on children and guests.]"
+              }
+            ],
+            "open_first": false,
+            "structured_data": true
+          }
+        }
+      ]
+    },
+    {
+      "slug": "blog",
+      "title": "News & tips",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "News & tips",
+            "body": "<ul><li><a href=\"blog-how-to-keep-your-hair-color-looking-fresh.html\">How to keep your hair color looking fresh</a></li><li><a href=\"blog-five-ways-to-make-the-most-of-your-salon-visit.html\">Five ways to make the most of your salon visit</a></li></ul>",
+            "center": false
+          }
+        }
+      ]
+    },
+    {
+      "slug": "contact",
+      "title": "Contact",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "contact",
+          "data": {
+            "heading": "Contact us"
+          }
+        },
+        {
+          "type": "form",
+          "data": {
+            "heading": "Send us a message",
+            "intro": "We'll get back to you as soon as we can.",
+            "fields": "name,email,phone,service,message",
+            "button_text": "Send"
+          }
+        }
+      ]
+    }
+  ],
+  "blog_posts": [
+    {
+      "slug": "blog-how-to-keep-your-hair-color-looking-fresh",
+      "title": "How to keep your hair color looking fresh",
+      "in_menu": false,
+      "seo_title": "How to keep your hair color looking fresh",
+      "seo_description": "A new color always looks great when you leave the salon. These general tips can help it last.",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "How to keep your hair color looking fresh",
+            "body": "<p>A new color always looks great when you leave the salon. These general tips can help it last.</p><ul><li>Wait a day or two before washing after a color appointment, unless your stylist says otherwise.</li><li>Use a shampoo and conditioner made for colored hair.</li><li>Wash with lukewarm water rather than hot.</li><li>Protect your hair from strong sun when you can.</li><li>Use heat protection before styling with hot tools.</li></ul><p>Swimming pools and the sea can also affect color, so rinse your hair with fresh water after a swim and use a conditioner.</p><p>Every hair type is different, so ask your stylist what will suit you best. They can recommend products and a care routine for your hair.</p><p>Booking your next appointment before you leave helps you keep your color looking its best, and makes sure you get a time that suits you.</p><p>If your color isn't quite what you expected, let us know. We'd much rather hear from you than have you leave unhappy.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "Ready for some time out?",
+            "text": "Book your next appointment online or give us a call.",
+            "button_text": "Book now",
+            "button_link": "contact"
+          }
+        }
+      ],
+      "word_count": 162
+    },
+    {
+      "slug": "blog-five-ways-to-make-the-most-of-your-salon-visit",
+      "title": "Five ways to make the most of your salon visit",
+      "in_menu": false,
+      "seo_title": "Five ways to make the most of your salon visit",
+      "seo_description": "A salon visit should feel like a treat. These tips help you get exactly what you want.",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Five ways to make the most of your salon visit",
+            "body": "<p>A salon visit should feel like a treat. These tips help you get exactly what you want.</p><p>Bring photos. Pictures of styles you like, and don't like, are the quickest way to explain what you have in mind.</p><p>Be honest about your routine. If you only have five minutes in the morning, tell your stylist so they can suggest a style that works for you.</p><p>Mention anything important, such as sensitive skin or recent treatments elsewhere.</p><p>Ask questions. Your stylist or therapist is happy to share tips for looking after your hair, skin or nails at home.</p><p>After your visit, tell us how it went. If something isn't quite right, we'd rather fix it than have you leave unhappy.</p><p>And if you loved it, booking your next appointment before you leave gives you the best choice of times.</p><p>Finally, relax. Put your phone away, enjoy the moment and let us look after you.</p><p>We look forward to welcoming you to [Your Business Name].</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "Ready for some time out?",
+            "text": "Book your next appointment online or give us a call.",
+            "button_text": "Book now",
+            "button_link": "contact"
+          }
+        }
+      ],
+      "word_count": 163
+    }
+  ],
+  "gallery_captions": [
+    {
+      "caption": "Our calm, bright salon",
+      "alt": "Our calm, bright salon"
+    },
+    {
+      "caption": "A fresh cut and style",
+      "alt": "A fresh cut and style"
+    },
+    {
+      "caption": "Color work in progress",
+      "alt": "Color work in progress"
+    },
+    {
+      "caption": "Manicure station",
+      "alt": "Manicure station"
+    },
+    {
+      "caption": "Our treatment room",
+      "alt": "Our treatment room"
+    },
+    {
+      "caption": "Products we use and sell",
+      "alt": "Products we use and sell"
+    },
+    {
+      "caption": "The reception area",
+      "alt": "The reception area"
+    },
+    {
+      "caption": "A finished look ready to go",
+      "alt": "A finished look ready to go"
+    }
+  ],
+  "events": [
+    {
+      "title": "Holiday gift card week",
+      "when": "[Date range]",
+      "description": "Treat someone special. Buy a gift card in store during this week and receive [add your offer]."
+    },
+    {
+      "title": "Open evening",
+      "when": "[Date], [Time]",
+      "description": "Meet our team, try products and book your next appointment. Everyone welcome."
+    }
+  ],
+  "price_list": [
+    {
+      "heading": "Hair",
+      "items": [
+        {
+          "name": "Women's cut and finish",
+          "description": "",
+          "price": "From $[XX]"
+        },
+        {
+          "name": "Men's cut",
+          "description": "",
+          "price": "From $[XX]"
+        },
+        {
+          "name": "Blow-dry",
+          "description": "",
+          "price": "From $[XX]"
+        },
+        {
+          "name": "Full color",
+          "description": "",
+          "price": "From $[XX]"
+        },
+        {
+          "name": "Highlights",
+          "description": "",
+          "price": "From $[XX]"
+        }
+      ]
+    },
+    {
+      "heading": "Nails",
+      "items": [
+        {
+          "name": "Manicure",
+          "description": "",
+          "price": "$[XX]"
+        },
+        {
+          "name": "Pedicure",
+          "description": "",
+          "price": "$[XX]"
+        },
+        {
+          "name": "Gel polish",
+          "description": "",
+          "price": "$[XX]"
+        }
+      ]
+    },
+    {
+      "heading": "Treatments",
+      "items": [
+        {
+          "name": "Facial ([X] min)",
+          "description": "",
+          "price": "$[XX]"
+        },
+        {
+          "name": "Massage ([X] min)",
+          "description": "",
+          "price": "$[XX]"
+        },
+        {
+          "name": "Brow shape",
+          "description": "",
+          "price": "$[XX]"
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "Everything in square brackets is a placeholder for the client to replace.",
+    "Testimonials are samples and start with a visible marker; replace or delete them before launch. No star ratings are set.",
+    "The gallery block has album=null: create an album from gallery_captions (see HANDOFF.md) and set its id."
+  ]
+}

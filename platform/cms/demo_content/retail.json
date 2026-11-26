@@ -1,0 +1,458 @@
+{
+  "_readme": "Starter content for one business category in the Tenshi CMS. profile follows platform/schema/business.schema.json; pages and blog_posts follow the page/block shape in platform/cms/blocks.py. See HANDOFF.md.",
+  "format": "tenshi.starter/1",
+  "language": "en",
+  "category": "retail",
+  "category_label": "Retail & online shop",
+  "new_category": false,
+  "closest_existing_category": null,
+  "templates": [
+    "ecommerce",
+    "farm-equipment",
+    "classifieds"
+  ],
+  "recommended_template": "ecommerce",
+  "profile": {
+    "schema": "tenshi.business/1",
+    "company": {
+      "name": "[Your Business Name]",
+      "category": "retail",
+      "category_label": "Retail & online shop",
+      "type": "storefront",
+      "tagline": "Small batch. Big heart.",
+      "phone": "[Phone]",
+      "email": "hello@example.com",
+      "address": "[Street Address]",
+      "city": "[City]",
+      "state": "[State]",
+      "service_areas": [],
+      "hours": [
+        {
+          "days": "Mon–Sat",
+          "time": "[10:00 AM]–[6:00 PM]"
+        },
+        {
+          "days": "Sun",
+          "time": "[12:00 PM]–[5:00 PM]"
+        }
+      ],
+      "description": "[Your Business Name] is an independent shop in [City] offering a carefully chosen range of [products]. Visit us in store or browse online.",
+      "logo": null
+    },
+    "site": {
+      "goal": "ecommerce",
+      "template": "ecommerce",
+      "subdomain": "your-business"
+    },
+    "services": [
+      {
+        "name": "Gift wrapping",
+        "description": "We'll wrap your purchase beautifully, ready to give.",
+        "price": "$[X] / free over $[XX]"
+      },
+      {
+        "name": "Local pickup",
+        "description": "Order online and collect in store.",
+        "price": "Free"
+      },
+      {
+        "name": "Shipping",
+        "description": "We ship to [regions]. Rates shown at checkout.",
+        "price": "From $[XX]"
+      }
+    ],
+    "products": [
+      {
+        "name": "[Product Name]",
+        "description": "[Short description: what it is, what it's made of and why people love it.]",
+        "price": "$[XX]"
+      },
+      {
+        "name": "[Product Name]",
+        "description": "[Short description.]",
+        "price": "$[XX]"
+      },
+      {
+        "name": "[Product Name]",
+        "description": "[Short description.]",
+        "price": "$[XX]"
+      },
+      {
+        "name": "Gift card",
+        "description": "Let them choose. Available in any amount.",
+        "price": "From $[XX]"
+      }
+    ],
+    "staff": [
+      {
+        "name": "[Owner Name]",
+        "role": "Owner",
+        "bio": "[Owner Name] opened [Your Business Name] to bring [type of products] to [City]. They choose every item in the shop."
+      },
+      {
+        "name": "[Team Member Name]",
+        "role": "Shop assistant",
+        "bio": "[Team Member Name] knows the range inside out and loves helping people find the perfect gift."
+      }
+    ],
+    "gallery": [],
+    "portfolio": [],
+    "testimonials": [
+      {
+        "quote": "[Sample review — replace with a real customer quote] Such a lovely shop. The staff helped me find the perfect gift.",
+        "author": "Sample Customer A"
+      },
+      {
+        "quote": "[Sample review — replace with a real customer quote] My order arrived quickly and beautifully packed.",
+        "author": "Sample Customer B"
+      },
+      {
+        "quote": "[Sample review — replace with a real customer quote] Great selection and a really friendly welcome every time.",
+        "author": "Sample Customer C"
+      }
+    ],
+    "social": {},
+    "seo": {
+      "title": "[Your Business Name] | Independent Shop in [City]",
+      "description": "Thoughtfully chosen [products] from an independent shop in [City]. Shop in store or online, with local pickup and gift wrapping."
+    }
+  },
+  "pages": [
+    {
+      "slug": "index",
+      "title": "Home",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "hero",
+          "data": {
+            "kicker": "Independent shop in [City]",
+            "heading": "Thoughtfully chosen [products] you'll love",
+            "text": "Browse our latest arrivals in store or online. Friendly advice, gift wrapping and local pickup available.",
+            "button_text": "Shop now",
+            "button_link": "contact",
+            "call_button": true,
+            "layout": "split"
+          }
+        },
+        {
+          "type": "services",
+          "data": {
+            "heading": "What we do",
+            "intro": "",
+            "columns": "3",
+            "limit": 3,
+            "show_prices": true
+          }
+        },
+        {
+          "type": "testimonials",
+          "data": {
+            "heading": "What customers say"
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "Find something you'll love",
+            "text": "Visit us in [City] or browse our shop online.",
+            "button_text": "Browse the shop",
+            "button_link": "contact"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "about",
+      "title": "About",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "About [Your Business Name]",
+            "body": "<p>[Your Business Name] is an independent shop based in [City]. We stock [describe your range], chosen because we love them and think you will too.</p><p>We're a small team, so we know our products well and we're always happy to help you find the right thing, whether it's a gift or a treat for yourself.</p><p>[Add a sentence about how the shop started or what makes your range special.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "team",
+          "data": {
+            "heading": "Meet the team",
+            "intro": "The people you'll talk to and work with. [Add or remove team members under Business data › Team.]"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "services",
+      "title": "Services",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "services",
+          "data": {
+            "heading": "Services",
+            "intro": "[Your Business Name] is an independent shop in [City] offering a carefully chosen range of [products]. Visit us in store or browse online.",
+            "columns": "3",
+            "show_prices": true
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "Find something you'll love",
+            "text": "Visit us in [City] or browse our shop online.",
+            "button_text": "Browse the shop",
+            "button_link": "contact"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "events",
+      "title": "Events",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Upcoming events",
+            "body": "<h3>Late-night holiday shopping</h3><p><b>[Date], [Time]</b></p><p>Extended hours, festive treats and free gift wrapping on the night.</p><h3>New collection launch</h3><p><b>[Date], [Time]</b></p><p>Be the first to see our new [season] range. Everyone welcome.</p><h3>Maker's afternoon</h3><p><b>[Date], [Time]</b></p><p>Meet the maker behind one of our favorite ranges and see how their products are made.</p><p><small>[These are example events. Replace them with your own, or hide this page.]</small></p>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "Want to come along?",
+            "text": "Get in touch to book a place or ask a question.",
+            "button_text": "Contact us",
+            "button_link": "contact"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "gallery",
+      "title": "Gallery",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "gallery",
+          "data": {
+            "heading": "Gallery",
+            "album": null,
+            "layout": "",
+            "lightbox": true
+          }
+        }
+      ]
+    },
+    {
+      "slug": "faq",
+      "title": "FAQ",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "faq",
+          "data": {
+            "heading": "Questions and answers",
+            "intro": "",
+            "items": [
+              {
+                "question": "Do you ship?",
+                "answer": "Yes, we ship to [regions]. Shipping costs and estimated delivery times are shown at checkout."
+              },
+              {
+                "question": "What is your returns policy?",
+                "answer": "[Describe your returns and exchange policy clearly, including time limits and condition of items.]"
+              },
+              {
+                "question": "Can I pick up my order in store?",
+                "answer": "Yes. Choose local pickup at checkout and we'll let you know when it's ready."
+              },
+              {
+                "question": "Do you offer gift wrapping?",
+                "answer": "Yes. Add gift wrapping at checkout or ask in store."
+              },
+              {
+                "question": "Do you sell gift cards?",
+                "answer": "Yes, in store and online, in any amount."
+              },
+              {
+                "question": "Can you order in an item for me?",
+                "answer": "Often, yes. Ask us and we'll see what we can do."
+              }
+            ],
+            "open_first": false,
+            "structured_data": true
+          }
+        }
+      ]
+    },
+    {
+      "slug": "blog",
+      "title": "News & tips",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "News & tips",
+            "body": "<ul><li><a href=\"blog-how-to-choose-a-gift-they-ll-actually-use.html\">How to choose a gift they'll actually use</a></li><li><a href=\"blog-why-shopping-local-matters.html\">Why shopping local matters</a></li></ul>",
+            "center": false
+          }
+        }
+      ]
+    },
+    {
+      "slug": "contact",
+      "title": "Contact",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "contact",
+          "data": {
+            "heading": "Contact us"
+          }
+        },
+        {
+          "type": "form",
+          "data": {
+            "heading": "Send us a message",
+            "intro": "We'll get back to you as soon as we can.",
+            "fields": "name,email,phone,service,message",
+            "button_text": "Send"
+          }
+        }
+      ]
+    }
+  ],
+  "blog_posts": [
+    {
+      "slug": "blog-how-to-choose-a-gift-they-ll-actually-use",
+      "title": "How to choose a gift they'll actually use",
+      "in_menu": false,
+      "seo_title": "How to choose a gift they'll actually use",
+      "seo_description": "Finding the right gift can be tricky. A few simple questions make it easier.",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "How to choose a gift they'll actually use",
+            "body": "<p>Finding the right gift can be tricky. A few simple questions make it easier.</p><ul><li>What do they enjoy doing in their free time?</li><li>Is there something they use every day that could be a little nicer?</li><li>Do they prefer practical things or a little luxury?</li><li>Have they mentioned anything they've had their eye on?</li></ul><p>Think about the person, not the price. A small, thoughtful gift that fits their life often means more than something expensive that sits in a drawer.</p><p>If you're still unsure, a gift card is a good choice. It lets them pick something they love, and many people enjoy the browsing as much as the gift.</p><p>Don't forget the finishing touch. A handwritten note or nice wrapping makes any gift feel special.</p><p>Our team is always happy to help you choose. Pop into [Your Business Name] or send us a message with a few details about who you're shopping for.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "Find something you'll love",
+            "text": "Visit us in [City] or browse our shop online.",
+            "button_text": "Browse the shop",
+            "button_link": "contact"
+          }
+        }
+      ],
+      "word_count": 153
+    },
+    {
+      "slug": "blog-why-shopping-local-matters",
+      "title": "Why shopping local matters",
+      "in_menu": false,
+      "seo_title": "Why shopping local matters",
+      "seo_description": "When you shop at an independent business, you're doing more than buying something. You're supporting people in your community.",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Why shopping local matters",
+            "body": "<p>When you shop at an independent business, you're doing more than buying something. You're supporting people in your community.</p><p>Local shops often stock products you won't find elsewhere, from small makers and independent brands. That variety is part of what makes a town or neighborhood special.</p><p>Shopping local is also personal. You can ask questions, get advice from people who know the products and build a relationship with the people behind the counter.</p><p>Many independent shops also take part in local events, support local causes and work with other nearby businesses.</p><p>You don't have to buy everything locally to make a difference. Choosing a local shop for a gift, a treat or an everyday item now and then all adds up.</p><p>Leaving a kind review or recommending a shop to a friend helps too, and it costs nothing.</p><p>Thank you for supporting [Your Business Name] and the other independent businesses in [City]. We couldn't do it without you.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "Find something you'll love",
+            "text": "Visit us in [City] or browse our shop online.",
+            "button_text": "Browse the shop",
+            "button_link": "contact"
+          }
+        }
+      ],
+      "word_count": 158
+    }
+  ],
+  "gallery_captions": [
+    {
+      "caption": "Our shop window",
+      "alt": "Our shop window"
+    },
+    {
+      "caption": "New arrivals on the shelf",
+      "alt": "New arrivals on the shelf"
+    },
+    {
+      "caption": "A gift wrapped and ready to go",
+      "alt": "A gift wrapped and ready to go"
+    },
+    {
+      "caption": "Inside the shop",
+      "alt": "Inside the shop"
+    },
+    {
+      "caption": "Close-up of a favorite product",
+      "alt": "Close-up of a favorite product"
+    },
+    {
+      "caption": "Our counter and gift card display",
+      "alt": "Our counter and gift card display"
+    },
+    {
+      "caption": "Orders packed for shipping",
+      "alt": "Orders packed for shipping"
+    }
+  ],
+  "events": [
+    {
+      "title": "Late-night holiday shopping",
+      "when": "[Date], [Time]",
+      "description": "Extended hours, festive treats and free gift wrapping on the night."
+    },
+    {
+      "title": "New collection launch",
+      "when": "[Date], [Time]",
+      "description": "Be the first to see our new [season] range. Everyone welcome."
+    },
+    {
+      "title": "Maker's afternoon",
+      "when": "[Date], [Time]",
+      "description": "Meet the maker behind one of our favorite ranges and see how their products are made."
+    }
+  ],
+  "price_list": [],
+  "notes": [
+    "Everything in square brackets is a placeholder for the client to replace.",
+    "Testimonials are samples and start with a visible marker; replace or delete them before launch. No star ratings are set.",
+    "The gallery block has album=null: create an album from gallery_captions (see HANDOFF.md) and set its id.",
+    "products[] has no built-in block yet; it is kept in the profile for designs and the Store widget."
+  ]
+}
