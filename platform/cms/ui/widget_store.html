@@ -1,0 +1,93 @@
+{#- Online store: the site's Shopify connection (widget "store", cms/widgets/store.py) and the how-to guide.
+    Saved per site in the site_settings table (never in git). Only admins can change it. -#}
+{% extends "layout.html" %}
+{% block title %}Online store · {{ site.name }}{% endblock %}
+{% block heading %}Online store{% endblock %}
+{% block actions %}{% if can_edit %}<button class="btn btn-primary" id="save" form="store-form">Save</button>{% endif %}{% endblock %}
+{% block body %}
+<div class="grid grid-2" style="align-items:start">
+  <section class="card">
+    <h2>Shopify connection</h2>
+    <p class="small muted">Store blocks in the page builder show products from this store. Visitors pay on Shopify's own checkout.
+      With no store connected (or on Demo) they show six sample products and checkout is switched off.</p>
+    {% if not can_edit %}<p class="error-box" role="note">Only admins can change the store connection. Ask an admin of this CMS.</p>{% endif %}
+    <form id="store-form" novalidate>
+      <fieldset class="field" style="border:0;padding:0;margin:0 0 14px" {% if not can_edit %}disabled{% endif %}>
+        <legend class="small" style="font-weight:700;margin-bottom:6px">Mode</legend>
+        <span class="row">
+          <label class="check"><input type="radio" name="mode" value="demo" {% if settings.mode != 'live' %}checked{% endif %}> Demo (sample products)</label>
+          <label class="check"><input type="radio" name="mode" value="live" {% if settings.mode == 'live' %}checked{% endif %}> Live (my Shopify store)</label>
+        </span>
+      </fieldset>
+      <fieldset style="border:0;padding:0;margin:0" {% if not can_edit %}disabled{% endif %}>
+        <label class="field"><span>Store address</span>
+          <input type="text" name="store_domain" value="{{ settings.store_domain }}" placeholder="your-store.myshopify.com" autocomplete="off" spellcheck="false" inputmode="url" aria-describedby="h-domain">
+          <small id="h-domain">The <b>.myshopify.com</b> address, even if the store also has its own domain. Shopify admin › Settings › Domains.</small></label>
+        <label class="field"><span>Public Storefront access token</span>
+          <input type="text" name="storefront_token" value="{{ settings.storefront_token }}" autocomplete="off" spellcheck="false" aria-describedby="h-token" style="font-family:var(--mono)">
+          <small id="h-token">The <b>public</b> token from Headless › your storefront › Storefront API. Never an Admin API token (starts with <code>shpat_</code>) or the private token: those are refused.</small></label>
+        <label class="field"><span>Default collection handle <span class="muted">(optional)</span></span>
+          <input type="text" name="collection_handle" value="{{ settings.collection_handle }}" placeholder="e.g. frontpage" autocomplete="off" spellcheck="false" aria-describedby="h-coll">
+          <small id="h-coll">Product grids show this collection unless a block chooses another. Empty: best sellers.</small></label>
+        <label class="field"><span>Button text</span>
+          <input type="text" name="button_text" value="{{ settings.button_text }}" maxlength="40"></label>
+      </fieldset>
+      <p class="error-box" id="store-error" role="alert" hidden></p>
+    </form>
+    <h2 style="margin-top:20px">Where it's used</h2>
+    {% if used_on %}
+    <ul class="small">{% for p in used_on %}<li><a href="/sites/{{ site.id }}/builder/{{ p.id }}">{{ p.title }}</a></li>{% endfor %}</ul>
+    {% else %}
+    <p class="small muted">No page has a Store block yet. Open <a href="/sites/{{ site.id }}/pages">Pages &amp; builder</a>, choose a page, then <b>+ Add block › Store (Shopify)</b>.</p>
+    {% endif %}
+    <p class="small muted">Changes show in the builder straight away and on the live site after you Publish.</p>
+  </section>
+
+  <section class="card" aria-labelledby="guide-h">
+    <h2 id="guide-h">Connect your Shopify store</h2>
+    <p class="small muted">About ten minutes, in your Shopify admin. You need a Shopify plan that can sell (development stores only take test orders).</p>
+    <ol class="guide">
+      <li><b>Install the Headless channel.</b> Shopify admin › Sales channels › <b>+</b> (or the Shopify App Store) › search <b>Headless</b> › Add sales channel. It's free and made by Shopify.</li>
+      <li><b>Create a storefront.</b> Headless › <b>Create storefront</b>.</li>
+      <li><b>Set its permissions.</b> The storefront › Storefront API › <b>Manage</b> next to permissions: tick
+        <code>unauthenticated_read_product_listings</code>, <code>unauthenticated_write_checkouts</code> and
+        <code>unauthenticated_read_checkouts</code> (optional: <code>unauthenticated_read_product_inventory</code>). Save.</li>
+      <li><b>Copy the PUBLIC access token</b> from the same page and paste it here.
+        <span class="guide-warn">Never the private access token or an Admin API token (<code>shpat_…</code>): those are passwords to your store and this form refuses them.</span></li>
+      <li><b>Find your .myshopify.com address.</b> Settings › Domains shows it (like <code>your-store.myshopify.com</code>). Paste it under Store address.</li>
+      <li><b>Publish products to Headless.</b> Products › select them › More actions › <b>Include in sales channels › Headless</b>. Products not on the channel don't show.</li>
+      <li>Optional: make a collection and put its handle (the end of its address, like <code>summer-sale</code>) above or in a Store block.</li>
+      <li>Choose <b>Live</b>, Save, and Publish the site.</li>
+    </ol>
+    <p class="small muted">Payments, taxes, shipping and order emails stay in Shopify. Your site only shows products and hands the cart to Shopify's checkout.</p>
+  </section>
+</div>
+<style>
+  .guide { padding-left: 1.3em; margin: 0 0 12px; display: grid; gap: 10px; font-size: .92rem; line-height: 1.5; }
+  .guide code { font-size: .8rem; word-break: break-all; }
+  .guide-warn { display: block; margin-top: 4px; padding: 6px 10px; border-radius: 8px; background: var(--red-soft); color: var(--red); font-size: .85rem; }
+</style>
+{% endblock %}
+{% block scripts %}
+{% if can_edit %}
+<script>
+(function () {
+  var T = Tenshi, form = document.getElementById("store-form"), err = document.getElementById("store-error");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var body = {};
+    new FormData(form).forEach(function (v, k) { body[k] = String(v).trim(); });
+    err.hidden = true;
+    if (/^shp[a-z]{1,4}_/i.test(body.storefront_token || "")) {           // the server refuses it too; this just says so sooner
+      err.textContent = "That is a secret Shopify token (Admin API or private app). Use the PUBLIC Storefront access token instead.";
+      err.hidden = false; form.storefront_token.focus(); return;
+    }
+    T.busy(document.getElementById("save"), T.api("PUT", "/api/sites/{{ site.id }}/widgets/store/settings", body).then(function (res) {
+      form.store_domain.value = res.settings.store_domain;
+      T.toast(res.settings.mode === "live" ? "Saved: the store is live. Publish to put it on the site." : "Saved (Demo store).");
+    }).catch(function (e) { err.textContent = e.message; err.hidden = false; }));
+  });
+})();
+</script>
+{% endif %}
+{% endblock %}

@@ -11,6 +11,9 @@ Each block type has:
 
 The look of each block lives in the template: designs/starter/blocks/<type>.html.j2.
 To add a block type: add it here AND add blocks/<type>.html.j2 to the starter design (and existing templates).
+
+Widgets (cms/widgets/: Store …) are blocks that draw themselves and work in every template without template files.
+They are added to BLOCKS at the bottom of this file from the widget registry.
 """
 
 import secrets
@@ -122,6 +125,12 @@ BLOCKS = {
         "data": {"size": "medium"},
     },
 }
+
+
+# Widgets from the registry (cms/widgets/), after the built-in blocks
+from . import widgets  # noqa: E402
+
+BLOCKS.update(widgets.block_types())
 
 
 def new_block(kind, **data):

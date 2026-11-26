@@ -18,13 +18,13 @@ from datetime import date
 from html.parser import HTMLParser
 from pathlib import Path
 
-from jinja2 import FileSystemLoader, select_autoescape
+from jinja2 import ChoiceLoader, FileSystemLoader, FunctionLoader, select_autoescape
 from jinja2.sandbox import SandboxedEnvironment
 from markupsafe import Markup, escape
 
 from tenshi import profile as prof
 
-from . import db, media as media_mod, templates
+from . import db, media as media_mod, templates, widgets
 
 
 # ---------------------------------------------------------------------------------------------- cleaning HTML
@@ -103,7 +103,9 @@ def youtube_id(url):
 # ---------------------------------------------------------------------------------------------- drawing pages
 
 def make_env(template_id):
-    env = SandboxedEnvironment(loader=FileSystemLoader(str(templates.current_dir(template_id))),
+    # Widgets first: blocks/<widget>.html.j2 is answered by the widget registry for every template (cms/widgets/)
+    loader = ChoiceLoader([FunctionLoader(widgets.block_template_source), FileSystemLoader(str(templates.current_dir(template_id)))])
+    env = SandboxedEnvironment(loader=loader,
                                autoescape=select_autoescape(["html", "j2"]), trim_blocks=True, lstrip_blocks=True)
     env.filters["tel"] = lambda phone: re.sub(r"[^\d+]", "", str(phone or ""))
     env.filters["clean_html"] = clean_html
@@ -124,6 +126,8 @@ class SiteRenderer:
         self.theme = templates.theme_for(self.template_id, theme if theme is not None else db.j(site["theme_json"]))
         self.media_rows = {m["id"]: m for m in db.all("SELECT * FROM media WHERE site_id = ?", site["id"])} if site.get("id") else {}
         self.used_files = set()
+        self.used_widgets = {}          # page file -> [widget names], for the deployment's CSP manifest
+        self._widget_settings = {}
         self.env = make_env(self.template_id)
 
     # --- helpers the templates call -------------------------------------------------------------------------
@@ -179,6 +183,17 @@ class SiteRenderer:
             return f"/t/{self.template_id}/{name}"
         return name
 
+    def widget(self, block):
+        """Draw a widget block (called from the template loader's blocks/<widget>.html.j2)."""
+        w = widgets.get((block or {}).get("type"))
+        if not w:
+            return ""
+        if w.name not in self._widget_settings:
+            self._widget_settings[w.name] = widgets.load_settings(self.site.get("id"), w.name)
+        ctx = widgets.WidgetContext(site=self.site, mode=self.mode, editing=self.editing, settings=self._widget_settings[w.name],
+                                    asset=lambda file, n=w.name: widgets.asset_url(n, file, self.mode))
+        return w.render(block, ctx)
+
     # --- pages ------------------------------------------------------------------------------------------------
     def context(self, page, menu_pages):
         p = self.profile
@@ -193,11 +208,16 @@ class SiteRenderer:
             "editing": self.editing, "year": date.today().year, "form_action": form_action,
             "form_is_mail": form_action.startswith("mailto:"), "tracking": tracking,
             "media": self.media, "media_alt": self.media_alt, "album": self.album, "album_layout": self.album_layout,
-            "portfolio": self.portfolio, "link": self.link, "asset": self.asset,
+            "portfolio": self.portfolio, "link": self.link, "asset": self.asset, "widget": self.widget,
         }
 
     def render_page(self, page, menu_pages):
-        return self.env.get_template("page.html.j2").render(self.context(page, menu_pages))
+        ctx = self.context(page, menu_pages)
+        html = self.env.get_template("page.html.j2").render(ctx)
+        used = widgets.used_in(ctx["blocks"])
+        if used:
+            self.used_widgets["index.html" if page.get("slug") == "index" else f"{page.get('slug')}.html"] = used
+        return widgets.inject_assets(html, used, self.mode)
 
 
 def site_pages(site_id):
@@ -231,6 +251,11 @@ def build_to(site, out_dir, mode="hosted"):
             target = out / file.relative_to(tpl)
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(file, target)
+    # Widgets: their own files (only the widgets this site uses), and which page uses which (for the CSP when served)
+    used = sorted({n for names in renderer.used_widgets.values() for n in names})
+    widgets.copy_files(used, out)
+    if mode == "hosted":
+        widgets.write_manifest(out, renderer.used_widgets)
     if renderer.used_files:
         (out / "media").mkdir(exist_ok=True)
         src = media_mod.site_folder(site["id"])

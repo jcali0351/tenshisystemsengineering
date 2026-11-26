@@ -159,6 +159,9 @@
     }).join("") + "</select>";
   }
   function hintFor(type) {
+    if (TYPES[type] && TYPES[type].hint) {     // widgets (cms/widgets/) bring their own line; {settings} = their settings page
+      return '<p class="small muted" style="margin-top:14px">' + TYPES[type].hint.replace(/\{settings\}/g, "/sites/" + siteId + "/widgets/" + type) + "</p>";
+    }
     var where = { services: "business", team: "business", testimonials: "business", contact: "business", portfolio: "portfolio", gallery: "galleries" }[type];
     if (!where) return "";
     var names = { business: "Business data", portfolio: "Portfolio", galleries: "Galleries" };

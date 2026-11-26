@@ -54,3 +54,25 @@ Notes:
   a paid Shopify plan.
 - Prices and currency come from Shopify in live mode. Shopify "Title / Default Title" options are hidden.
 - To change the sample products, edit `data/shop-demo.json` (and `tools/make-shop-art.mjs` for pictures), then rebuild.
+
+## The Store widget in the Tenshi CMS (for clients)
+
+The same storefront, as a block clients add to their own pages in the Tenshi CMS (platform/cms, cms.tenshisystems.com).
+shop.html / shop.js above stay as the public showcase; the widget is a separate copy for client sites.
+
+| File | What |
+|---|---|
+| `platform/cms/widgets/__init__.py` | The widget registry: name, Pydantic config, server-side render, own CSS/JS loaded only where used, per-site settings, CSP sources |
+| `platform/cms/widgets/store.py` | The Store widget: `StoreConfig` (block: grid / single product / collection / cart button, handles, limit, columns, prices, button text) and `StoreSettings` (site: domain, PUBLIC token, default collection, demo/live, button text) |
+| `platform/cms/static/widgets/store/` | `store.js` (from shop.js: Storefront API 2026-10, plain fetch, cartCreate then cartLinesAdd, checkoutUrl), `store.css` (theme tokens --p --a --s --i), `demo.json` + `img/` (copied from data/shop-demo.json and img/shop/) |
+| `platform/cms/ui/widget_store.html` | Online store screen: the connection form and the "Connect your Shopify store" guide |
+
+- Clients: sidebar **Online store** > paste the `.myshopify.com` address and the PUBLIC token > Live > Save; then in
+  **Pages & builder** > **+ Add block** > **Store (Shopify)**; Publish.
+- Settings are per site in the CMS database (`site_settings`, key `widget:store`), never in git; only admins can change them.
+- Demo mode (no store or Demo chosen): the six sample products, checkout off; a "Demo store" badge shows only in the CMS preview.
+- Per-page CSP: pages with a Store block add `https://*.myshopify.com`, `https://cdn.shopify.com` and
+  `https://checkout.shopify.com`; other pages don't.
+- Subscription-only products (requiresSellingPlan) show as "Subscription only" and can't be added.
+- Tested 2026-11-25 in live mode against `hydrogen-preview.myshopify.com`: products load lazily, cartCreate then
+  cartLinesAdd succeed and a checkoutUrl comes back.

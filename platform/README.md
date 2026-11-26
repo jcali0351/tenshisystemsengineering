@@ -33,11 +33,12 @@ What's in the CMS (left menu):
 | Templates | The Template Gallery: preview, deploy in one click, create, clone, delete, edit the source, save and restore versions |
 | Users | Admins and editors (editors can't delete, export, clone, manage users or edit template code) |
 | Overview | One site's numbers, health score and checklist, live version, most visited pages |
-| Pages & builder | Visual page builder: blocks (hero, text, services, gallery, portfolio, before/after, team, testimonials, call to action, form, contact, image, video, custom HTML, spacer), drag to reorder, click text in the preview and type, desktop/tablet/phone preview, page SEO |
+| Pages & builder | Visual page builder: blocks (hero, text, services, gallery, portfolio, before/after, team, testimonials, call to action, form, contact, image, video, custom HTML, spacer) and widgets (Store), drag to reorder, click text in the preview and type, desktop/tablet/phone preview, page SEO |
 | Business data | The business profile, as a form built automatically from the template's fields plus the standard schema; earlier versions can be restored |
 | Media Center | Folders, categories, tags, search, bulk upload by drag and drop, compression and resized copies, crop/resize/rotate, video, PDF, SVG (cleaned), alt text, "used on", bulk move/tag/delete |
 | Portfolio | Projects with categories, tags, cover, before/after pictures and an album |
 | Galleries | Albums of pictures (masonry, grid or carousel) with captions, drag to reorder |
+| Online store | The site's Shopify connection for Store blocks (store address, PUBLIC Storefront token, default collection, demo/live, button text) and a "Connect your Shopify store" guide. Admins only |
 | Leads | Messages from the sites' forms, with status and CSV download |
 | Deployments | Deploy, history with "make live" (rollback), pause, health, clone website, backups with restore and download |
 | Export | One ZIP with any of: website, media, database (JSON + SQLite), theme, configuration |
@@ -49,7 +50,7 @@ The public website's Launch page can create sites here too: set `LAUNCH_ENDPOINT
 Run the tests (they use a throw-away data folder):
 
 ```powershell
-platform\.venv\Scripts\python platform\tests\test_cms.py
+platform\.venv\Scripts\python -m pytest platform\tests -q
 ```
 
 ### Where things are
@@ -61,6 +62,7 @@ platform\.venv\Scripts\python platform\tests\test_cms.py
 | `cms/media.py` | Upload checks, compression, resizing, cropping, SVG cleaning |
 | `cms/render.py` | Turns business data + pages + template into HTML (preview, hosted and export versions) |
 | `cms/blocks.py` | The page builder's block types and their settings |
+| `cms/widgets/` | The widget registry (`__init__.py`: blocks that draw themselves, with a Pydantic settings model, their own CSS/JS loaded only where used, per-site settings and per-page CSP sources) and the widgets: `store.py` (Shopify). Their files: `cms/static/widgets/<name>/` |
 | `cms/templates.py` | The Template Gallery store (versions, clone, restore) and font choices |
 | `cms/db.py`, `cms/auth.py`, `cms/config.py` | Database tables, passwords, settings |
 | `cms/ui/`, `cms/static/` | The CMS screens (Jinja2) and their CSS/JavaScript (`builder.js` is the page builder, `media.js` the Media Center) |
@@ -125,4 +127,10 @@ templates.json), `year`, `form_action`. They're listed in `PLATFORM_NAMES` in `s
   `TENSHI_LOGIN_IP_MAX_FAILS` (seconds for the time ones).
 - **Login cookie:** `Secure` (https only) whenever `TENSHI_PUBLIC_URL` starts with `https://` (the server). Local http
   development and the tests run without it; force it with `TENSHI_SECURE_COOKIES=1` or `0`.
+- **Client pages' Content-Security-Policy:** set by the CMS on every published page (`widgets.BASE_CSP`: scripts,
+  connections, frames and form posts stay on the site; pictures from any https address). A page with a widget gets that
+  widget's extra sources too (the Store adds `*.myshopify.com`, `cdn.shopify.com`, `checkout.shopify.com`), read from
+  the deployment's `.tenshi-widgets.json` (never served). No Caddy change needed: client sites are proxied to the CMS.
+- **Store tokens:** only the PUBLIC Storefront token is accepted; anything shaped like a secret Shopify token
+  (`shpat_`, `shpca_`, `shppa_`, `shpss_` …) is refused. Settings live in the `site_settings` table, never in git.
 - **API docs:** `/api/docs`, `/redoc` and `/openapi.json` are off. For local development only: `TENSHI_API_DOCS=1`.

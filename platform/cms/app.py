@@ -29,7 +29,7 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from tenshi import forms as tforms, profile as prof, scanner
 
-from . import auth, blocks, config, db, media, render, sites, templates
+from . import auth, blocks, config, db, media, render, sites, templates, widgets
 
 VERSION = "1.0.0"
 UI_DIR = Path(__file__).parent / "ui"
@@ -38,7 +38,7 @@ STATIC_DIR = Path(__file__).parent / "static"
 # Names the site templates use that are not business data (so the Business form never shows boxes for them)
 # (Loop variables like `service` are understood by the scanner itself, so they don't belong here.)
 scanner.PLATFORM_NAMES |= {"media", "media_alt", "album", "album_layout", "portfolio", "link", "asset", "editing", "tracking",
-                           "form_is_mail", "theme", "page", "blocks", "block", "site"}
+                           "form_is_mail", "theme", "page", "blocks", "block", "site", "widget"}
 
 # The automatic API docs (/api/docs, /redoc, /openapi.json) are off: they listed every endpoint to anyone.
 # Turn them on for local development only with TENSHI_API_DOCS=1.
@@ -113,10 +113,15 @@ async def serve_site(request: Request, subdomain: str, path: str):
     file = (folder / rel).resolve()
     if not file.suffix and (folder / f"{rel}.html").exists():
         file = (folder / f"{rel}.html").resolve()
-    if folder.resolve() not in file.parents or not file.is_file():
+    if folder.resolve() not in file.parents or not file.is_file() or any(part.startswith(".") for part in file.relative_to(folder.resolve()).parts):
         not_found = folder / "404.html"
         return FileResponse(not_found) if not_found.exists() else HTMLResponse("<h1>Page not found</h1>", status_code=404)
-    return FileResponse(file, headers={"Cache-Control": "public, max-age=60"})
+    headers = {"Cache-Control": "public, max-age=60"}
+    if file.suffix == ".html":
+        # Each page's own policy: the base policy plus what the widgets on that page need (e.g. the Store widget adds
+        # Shopify's hosts), read from the deployment's manifest (widgets.write_manifest). Pages without widgets get the base.
+        headers["Content-Security-Policy"] = widgets.csp_for_file(folder, file.relative_to(folder.resolve()).as_posix())
+    return FileResponse(file, headers=headers)
 
 
 # ---------------------------------------------------------------------------------------------- sign-in helpers
@@ -151,6 +156,7 @@ def api_user(request: Request, admin=False):
 @app.exception_handler(sites.SiteError)
 @app.exception_handler(media.MediaError)
 @app.exception_handler(templates.TemplateError)
+@app.exception_handler(widgets.WidgetError)
 async def friendly_errors(request, error):
     return JSONResponse({"error": str(error)}, status_code=400)
 
@@ -533,7 +539,11 @@ async def api_save_page(request: Request, page_id: int):
         clean = []
         for b in body["blocks"]:
             if b.get("type") in blocks.BLOCKS:
-                clean.append({"id": str(b.get("id") or blocks.new_block(b["type"])["id"])[:16], "type": b["type"], "data": b.get("data") or {}})
+                data = b.get("data") or {}
+                widget = widgets.get(b["type"])
+                if widget:                      # widgets check their settings against their Pydantic model
+                    data = widget.clean_config(data if isinstance(data, dict) else {})
+                clean.append({"id": str(b.get("id") or blocks.new_block(b["type"])["id"])[:16], "type": b["type"], "data": data})
         changes["blocks_json"] = db.dumps(clean)
     for key in ("title", "seo_title", "seo_description"):
         if key in body:
@@ -971,6 +981,59 @@ def settings_page(request: Request, site_id: int):
     site = site_or_404(site_id)
     return show("settings.html", request, user, site=site, section="settings", theme=db.j(site["theme_json"]),
                 template=templates.get(site["template_id"]), templates_list=templates.all_templates(), fonts=templates.FONTS)
+
+
+# ---------------------------------------------------------------------------------------------- widget settings (per site)
+
+def widget_or_404(name):
+    widget = widgets.get(name)
+    if not widget or not widget.settings:
+        raise HTTPException(404, "No such widget.")
+    return widget
+
+
+@app.get("/sites/{site_id}/widgets/{name}", response_class=HTMLResponse)
+def widget_settings_page(request: Request, site_id: int, name: str):
+    """A widget's site settings, e.g. /sites/1/widgets/store: the site's Shopify connection and the how-to guide."""
+    user = page_user(request)
+    site = site_or_404(site_id)
+    widget = widget_or_404(name)
+    used_on = [p for p in db.all("SELECT id, title, slug, blocks_json FROM pages WHERE site_id = ? ORDER BY position, id", site_id)
+               if name in widgets.used_in(db.j(p["blocks_json"], []))]
+    return show(f"widget_{name}.html", request, user, site=site, section=f"widget:{name}", widget=widget,
+                settings=widgets.load_settings(site_id, name).model_dump(), can_edit=widgets.can_edit_settings(user, name),
+                used_on=used_on)
+
+
+@app.get("/api/sites/{site_id}/widgets/{name}/settings")
+def api_widget_settings(request: Request, site_id: int, name: str):
+    api_user(request)
+    site_or_404(site_id)
+    return {"settings": widgets.load_settings(site_id, widget_or_404(name).name).model_dump()}
+
+
+@app.put("/api/sites/{site_id}/widgets/{name}/settings")
+async def api_save_widget_settings(request: Request, site_id: int, name: str):
+    user = api_user(request)
+    site_or_404(site_id)
+    widget = widget_or_404(name)
+    if not widgets.can_edit_settings(user, name):
+        raise HTTPException(403, f"Only admins can change the {widget.label} settings.")
+    body = await request.json()
+    value = widgets.save_settings(site_id, name, body if isinstance(body, dict) else {}, user)
+    return {"ok": True, "settings": value.model_dump()}
+
+
+@app.get("/static/widgets/{name}/{path:path}")
+def widget_asset(name: str, path: str):
+    """A widget's CSS, JavaScript and pictures, for the CMS preview (deployments get their own copies)."""
+    if name not in widgets.REGISTRY or not re.fullmatch(r"[a-z0-9_./-]+", path) or ".." in path:
+        raise HTTPException(404)
+    base = (widgets.STATIC_DIR / name).resolve()
+    file = (base / path).resolve()
+    if base not in file.parents or not file.is_file():
+        raise HTTPException(404)
+    return FileResponse(file, media_type=mimetypes.guess_type(file.name)[0], headers={"Cache-Control": "no-cache"})
 
 
 # ---------------------------------------------------------------------------------------------- templates

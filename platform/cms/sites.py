@@ -102,7 +102,7 @@ def save_profile(site_id, profile, user=None):
 def delete_site(site_id, user=None):
     site = get(site_id)
     with db.transaction() as conn:
-        for table in SITE_TABLES + ["builds", "backups", "leads", "visits", "profile_revisions"]:
+        for table in SITE_TABLES + ["builds", "backups", "leads", "visits", "profile_revisions", "site_settings"]:
             conn.execute(f"DELETE FROM {table} WHERE site_id = ?", (site_id,))
         conn.execute("DELETE FROM album_items WHERE album_id NOT IN (SELECT id FROM albums)")
         conn.execute("DELETE FROM sites WHERE id = ?", (site_id,))

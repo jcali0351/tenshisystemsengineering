@@ -1,0 +1,120 @@
+/* =====================================================================================================================
+   store.css: the Store widget (cms/widgets/store.py). Linked only on pages with a Store block.
+   Colours and fonts come from the site's theme tokens, written by every template's layout:
+     --p primary   --a accent   --s page background   --i text   --font-head / --font-body
+   so the shop matches each client's theme. Fallbacks keep it readable in a template without them.
+   ===================================================================================================================== */
+.tw-store {
+  --tws-p: var(--p, #5b21b6); --tws-a: var(--a, #f97316); --tws-s: var(--s, #fff); --tws-i: var(--i, #1f2937);
+  --tws-line: color-mix(in srgb, var(--tws-i) 14%, transparent);
+  --tws-soft: color-mix(in srgb, var(--tws-i) 5%, var(--tws-s));
+  --tws-r: 14px;
+}
+.style-bold .tw-store, .style-bold .tws-drawer, .style-bold .tws-dialog { --tws-r: 0px; }
+.tw-store .tws-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 14px 24px; margin-bottom: 24px; }
+.tw-store .tws-head h2 { margin: 0; }
+.tw-store .tws-head .intro { margin: .4em 0 0; }
+.tw-store .tws-tools { display: flex; align-items: center; gap: 10px; }
+.tws-badge { margin: 0; padding: 4px 10px; border-radius: 999px; font: 700 .72rem/1.4 var(--font-body, system-ui, sans-serif); letter-spacing: .06em; text-transform: uppercase;
+  color: var(--tws-a); background: color-mix(in srgb, var(--tws-a) 14%, transparent); border: 1px dashed color-mix(in srgb, var(--tws-a) 60%, transparent); }
+.tws-note { font-size: .9rem; color: color-mix(in srgb, var(--tws-i) 70%, transparent); }
+.tws-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; margin: 0; }
+
+/* Cart button */
+.tws-cart-btn { position: relative; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 16px; border-radius: 999px; cursor: pointer;
+  border: 2px solid var(--tws-p); background: transparent; color: var(--tws-p); font: 700 .95rem/1 var(--font-body, inherit); }
+.tws-cart-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.tws-cart-btn:hover { background: color-mix(in srgb, var(--tws-p) 10%, transparent); }
+.tws-count { min-width: 22px; height: 22px; padding: 0 6px; display: inline-grid; place-items: center; border-radius: 999px; background: var(--tws-a); color: #fff; font-size: .75rem; }
+.tws-count[hidden] { display: none; }
+.tws-cart-only { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+.tws-v-cart.band { padding: 18px 0; }
+
+/* Grid */
+.tws-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(14px, 2.4vw, 24px); grid-template-columns: repeat(var(--tws-cols, 3), minmax(0, 1fr)); }
+.tws-cols-2 { --tws-cols: 2; } .tws-cols-3 { --tws-cols: 3; } .tws-cols-4 { --tws-cols: 4; }
+@media (max-width: 900px) { .tws-grid { --tws-cols: 2 !important; } }
+@media (max-width: 520px) { .tws-grid { --tws-cols: 1 !important; } }
+.tws-tile { height: 100%; display: flex; flex-direction: column; background: var(--tws-s); border: 1px solid var(--tws-line); border-radius: var(--tws-r); overflow: hidden;
+  transition: transform .2s, box-shadow .2s; }
+.tws-tile:hover { transform: translateY(-3px); box-shadow: 0 18px 36px -22px color-mix(in srgb, var(--tws-p) 60%, transparent); }
+.tws-media { display: block; padding: 0; border: 0; background: var(--tws-soft); cursor: zoom-in; aspect-ratio: 1; overflow: hidden; }
+.tws-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s; }
+.tws-tile:hover .tws-media img { transform: scale(1.04); }
+.tws-info { padding: 14px 16px 6px; flex: 1; }
+.tws-type { display: block; font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--tws-a); }
+.tws-name { margin: .25em 0 .2em; font-size: 1.08rem; }
+.tws-price { margin: 0; font-weight: 700; color: var(--tws-i); }
+.tw-store .tws-add, .tws-pd-add, .tws-checkout { justify-content: center; }
+.tw-store .tws-add { margin: 10px 16px 16px; padding: 11px 16px; }
+.tw-store .btn[disabled], .tws-drawer .btn[disabled], .tws-dialog .btn[disabled] { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
+.tws-skel .tws-tile { min-height: 320px; background: linear-gradient(100deg, var(--tws-soft) 30%, color-mix(in srgb, var(--tws-i) 9%, var(--tws-s)) 50%, var(--tws-soft) 70%) 0 0 / 300% 100%;
+  animation: tws-shimmer 1.4s linear infinite; }
+@keyframes tws-shimmer { to { background-position: -150% 0; } }
+
+/* Single product (block and quick view) */
+.tws-pd { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(20px, 4vw, 48px); align-items: start; }
+@media (max-width: 760px) { .tws-pd { grid-template-columns: 1fr; } }
+.tws-pd-media { border-radius: var(--tws-r); overflow: hidden; background: var(--tws-soft); aspect-ratio: 1; }
+.tws-pd-media img { width: 100%; height: 100%; object-fit: cover; }
+.tws-pd-title { font-size: clamp(1.4rem, 2.6vw, 2rem); margin: .2em 0 .3em; }
+.tws-pd-price { font-size: 1.3rem; font-weight: 800; margin: 0 0 .6em; }
+.tws-pd-price s { opacity: .55; font-weight: 400; margin-left: 8px; }
+.tws-pd-desc { color: color-mix(in srgb, var(--tws-i) 80%, transparent); }
+.tws-opt { border: 0; margin: 0 0 14px; padding: 0; }
+.tws-opt legend { font-weight: 700; font-size: .9rem; margin-bottom: 6px; }
+.tws-opt-vals { display: flex; flex-wrap: wrap; gap: 8px; }
+.tws-pill input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.tws-pill span { display: inline-block; min-width: 44px; padding: 9px 14px; text-align: center; border: 2px solid var(--tws-line); border-radius: 999px; cursor: pointer; font-weight: 600; }
+.tws-pill input:checked + span { border-color: var(--tws-p); background: color-mix(in srgb, var(--tws-p) 10%, transparent); color: var(--tws-p); }
+.tws-pill input:focus-visible + span { outline: 3px solid var(--tws-a); outline-offset: 2px; }
+.tws-pd-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 8px; }
+.tws-qty { display: inline-flex; align-items: center; border: 2px solid var(--tws-line); border-radius: 999px; overflow: hidden; }
+.tws-qty button { width: 44px; height: 44px; border: 0; background: transparent; color: var(--tws-i); font-size: 1.2rem; cursor: pointer; }
+.tws-qty button:hover { background: var(--tws-soft); }
+.tws-qty output { min-width: 28px; text-align: center; font-weight: 700; }
+.tws-qty-sm button { width: 34px; height: 34px; font-size: 1rem; }
+
+/* Quick view dialog */
+.tws-dialog { width: min(920px, 100% - 24px); max-height: calc(100% - 24px); padding: 0; border: 0; border-radius: var(--tws-r, 14px); background: var(--s, #fff); color: var(--i, #1f2937);
+  --tws-p: var(--p, #5b21b6); --tws-a: var(--a, #f97316); --tws-s: var(--s, #fff); --tws-i: var(--i, #1f2937); --tws-line: color-mix(in srgb, var(--tws-i) 14%, transparent);
+  --tws-soft: color-mix(in srgb, var(--tws-i) 5%, var(--tws-s)); --tws-r: 14px; font-family: var(--font-body, system-ui, sans-serif); }
+.tws-dialog::backdrop { background: rgba(10, 8, 20, .55); backdrop-filter: blur(3px); }
+.tws-dlg-box { position: relative; padding: clamp(18px, 3vw, 30px); }
+.tws-dlg-box .tws-x { position: absolute; top: 10px; right: 10px; z-index: 1; }
+
+/* Drawer */
+.tws-scrim { position: fixed; inset: 0; z-index: 90; background: rgba(10, 8, 20, .5); opacity: 0; transition: opacity .25s; }
+.tws-scrim.is-open { opacity: 1; }
+.tws-drawer { position: fixed; top: 0; right: 0; bottom: 0; z-index: 91; width: min(420px, 100%); display: flex; flex-direction: column;
+  --tws-p: var(--p, #5b21b6); --tws-a: var(--a, #f97316); --tws-s: var(--s, #fff); --tws-i: var(--i, #1f2937); --tws-line: color-mix(in srgb, var(--tws-i) 14%, transparent);
+  --tws-soft: color-mix(in srgb, var(--tws-i) 5%, var(--tws-s)); --tws-r: 14px;
+  background: var(--tws-s); color: var(--tws-i); font-family: var(--font-body, system-ui, sans-serif); box-shadow: -20px 0 50px -20px rgba(0, 0, 0, .45);
+  transform: translateX(100%); transition: transform .26s ease; }
+.tws-drawer.is-open { transform: none; }
+.tws-drawer-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid var(--tws-line); }
+.tws-drawer-title { margin: 0; font: 800 1.25rem/1.2 var(--font-head, inherit); color: var(--tws-i); }
+.tws-x { width: 44px; height: 44px; display: grid; place-items: center; border: 0; border-radius: 999px; background: var(--tws-soft, #f3f4f6); color: inherit; cursor: pointer; }
+.tws-x svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.tws-lines { list-style: none; margin: 0; padding: 8px 20px; overflow-y: auto; flex: 1; }
+.tws-line { display: grid; grid-template-columns: 72px 1fr auto; gap: 12px; align-items: start; padding: 14px 0; border-bottom: 1px solid var(--tws-line); }
+.tws-line img { width: 72px; height: 72px; object-fit: cover; border-radius: 10px; background: var(--tws-soft); }
+.tws-line p { margin: 0 0 4px; }
+.tws-line-name { font-weight: 700; }
+.tws-line-var { font-size: .85rem; opacity: .7; }
+.tws-line-end { text-align: right; }
+.tws-line-price { font-weight: 700; }
+.tws-rm { border: 0; background: none; padding: 4px 0; color: var(--tws-p); text-decoration: underline; cursor: pointer; font: inherit; font-size: .85rem; }
+.tws-empty { padding: 30px 20px; text-align: center; opacity: .7; }
+.tws-drawer-foot { padding: 16px 20px 22px; border-top: 1px solid var(--tws-line); }
+.tws-drawer-foot[hidden], .tws-empty[hidden], .tws-notice[hidden] { display: none; }
+.tws-sub { display: flex; justify-content: space-between; margin: 0 0 4px; font-size: 1.05rem; }
+.tws-fine { margin: 0 0 14px; font-size: .85rem; opacity: .7; }
+.tws-checkout { width: 100%; }
+.tws-notice { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; font-size: .9rem; background: color-mix(in srgb, var(--tws-a) 14%, var(--tws-s)); }
+html.tws-lock { overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tws-tile, .tws-media img, .tws-drawer, .tws-scrim { transition: none; }
+  .tws-skel .tws-tile { animation: none; }
+}

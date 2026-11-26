@@ -117,6 +117,14 @@ CREATE TABLE IF NOT EXISTS visits (
   PRIMARY KEY (site_id, page, day)
 );
 
+-- Per-site settings that aren't business data, one row per key. Widgets keep their site settings here under
+-- "widget:<name>" (e.g. widget:store = the site's Shopify connection: domain, PUBLIC Storefront token, mode …).
+-- Created automatically at start-up (db.setup), so existing databases get it without a manual migration.
+CREATE TABLE IF NOT EXISTS site_settings (
+  site_id INTEGER NOT NULL, key TEXT NOT NULL, value_json TEXT NOT NULL DEFAULT '{}', updated_at TEXT NOT NULL,
+  PRIMARY KEY (site_id, key)
+);
+
 -- What happened, by whom (the Recent Activity list)
 CREATE TABLE IF NOT EXISTS activity (
   id INTEGER PRIMARY KEY, user_id INTEGER, site_id INTEGER, action TEXT NOT NULL, details TEXT NOT NULL DEFAULT '',
