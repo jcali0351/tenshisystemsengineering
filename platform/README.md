@@ -157,6 +157,11 @@ templates.json), `year`, `form_action`. They're listed in `PLATFORM_NAMES` in `s
   stops every lead email for the site, even a form's own recipient), up to 3 addresses for the classic contact forms
   and Form blocks without a recipient, and a cap of 1–60 emails per site per rolling hour (default 10). Leads over the
   cap are still saved; the next email says how many were held. Every send/hold is logged in the `lead_emails` table.
+- **Custom domains (`cms/domains.py`, Settings › Address › Custom domains, owners and admins):** up to 5 per site
+  (`site_domains` table); the CMS serves the site for those names. **`GET /__tls/ask?domain=`** is Caddy's on-demand
+  TLS question: 200 only for `<subdomain>.<SITES_DOMAIN>` of an existing site or a custom domain attached to an
+  existing site, otherwise 404; only answered for direct loopback requests (anything through Caddy's proxy gets a
+  plain 404). Switch Caddy over with `tools/server/tenshi-tls-ask.sh` (validate, backup, rollback, `--rollback`).
 - **Store tokens:** only the PUBLIC Storefront token is accepted; anything shaped like a secret Shopify token
   (`shpat_`, `shpca_`, `shppa_`, `shpss_` …) is refused. Settings live in the `site_settings` table, never in git.
 - **API docs:** `/api/docs`, `/redoc` and `/openapi.json` are off. For local development only: `TENSHI_API_DOCS=1`.

@@ -180,6 +180,11 @@ CREATE TABLE IF NOT EXISTS lead_emails (
   created_at TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS lead_emails_site ON lead_emails (site_id, created_at);
+-- A site's own domains (www.example.com), besides <subdomain>.<SITES_DOMAIN>. domains.py; Caddy's /__tls/ask.
+CREATE TABLE IF NOT EXISTS site_domains (
+  domain TEXT PRIMARY KEY, site_id INTEGER NOT NULL, created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS site_domains_site ON site_domains (site_id);
 """
 
 _local = threading.local()

@@ -15,7 +15,20 @@
 
     <h2 style="margin-top:20px">Address</h2>
     <label class="field"><span>Web address</span><span class="row" style="flex-wrap:nowrap"><input type="text" id="subdomain" value="{{ site.subdomain }}" {% if user.role != 'admin' %}disabled{% endif %}><span class="muted">.{{ sites_domain }}</span></span>
-      <small>Changing it moves the live site to the new address straight away. A custom domain (www.example.com) comes with the production server.</small></label>
+      <small>Changing it moves the live site to the new address straight away.</small></label>
+    <div class="field" id="domains" aria-labelledby="dom-h">
+      <span id="dom-h">Custom domains</span>
+      <ul class="dom-list" id="dom-list" style="list-style:none;padding:0;margin:6px 0">
+        {% for d in site_domains %}<li class="row" data-domain="{{ d.domain }}" style="gap:10px;padding:6px 0;border-bottom:1px solid var(--line)"><a href="https://{{ d.domain }}/" rel="noopener" target="_blank">{{ d.domain }}</a><span style="flex:1"></span>{% if can_manage %}<button type="button" class="btn btn-small btn-danger" data-dom-remove aria-label="Remove {{ d.domain }}">Remove</button>{% endif %}</li>{% endfor %}
+      </ul>
+      {% if can_manage %}
+      <form class="row" id="dom-form" style="gap:8px;flex-wrap:nowrap" novalidate>
+        <input type="text" name="domain" placeholder="www.example.com" autocomplete="off" spellcheck="false" inputmode="url" aria-label="Domain to add" aria-describedby="dom-help">
+        <button class="btn" id="dom-add">Add domain</button>
+      </form>
+      {% endif %}
+      <small id="dom-help">At your domain company, point <b>www</b> at <code>{{ site.subdomain }}.{{ sites_domain }}</code> (a CNAME record) and the bare domain at the same IP address as <code>{{ sites_domain }}</code> (an A record). HTTPS starts by itself on the first visit once the DNS points here. Up to 5 per site.</small>
+    </div>
     <label class="field"><span>Site language (for browsers and search engines)</span><select id="lang">
       {% for v, l in [('en', 'English'), ('ja', 'Japanese'), ('ko', 'Korean'), ('zh', 'Chinese'), ('es', 'Spanish'), ('de', 'German'), ('fr', 'French')] %}<option value="{{ v }}" {% if (theme.lang or 'en') == v %}selected{% endif %}>{{ l }}</option>{% endfor %}
     </select></label>
@@ -85,6 +98,37 @@
 </section>
 {% endblock %}
 {% block scripts %}
+<script>
+(function () {
+  var list = document.getElementById("dom-list"), form = document.getElementById("dom-form");
+  if (!list) return;
+  function draw(items) {
+    list.innerHTML = "";
+    items.forEach(function (d) {
+      var li = document.createElement("li"); li.className = "row"; li.dataset.domain = d.domain;
+      li.style.cssText = "gap:10px;padding:6px 0;border-bottom:1px solid var(--line)";
+      var a = document.createElement("a"); a.href = "https://" + d.domain + "/"; a.target = "_blank"; a.rel = "noopener"; a.textContent = d.domain;
+      var sp = document.createElement("span"); sp.style.flex = "1";
+      li.append(a, sp);
+      if (form) { var b = document.createElement("button"); b.type = "button"; b.className = "btn btn-small btn-danger"; b.dataset.domRemove = ""; b.textContent = "Remove"; b.setAttribute("aria-label", "Remove " + d.domain); li.append(b); }
+      list.append(li);
+    });
+  }
+  if (form) form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    Tenshi.busy(document.getElementById("dom-add"), Tenshi.api("POST", "/api/sites/{{ site.id }}/domains", { domain: form.domain.value }).then(function (res) {
+      form.domain.value = ""; draw(res.domains); Tenshi.toast("Added " + res.domain);
+    }).catch(function () { form.domain.focus(); /* the message is already shown */ }));
+  });
+  list.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-dom-remove]");
+    if (!b) return;
+    var name = b.closest("li").dataset.domain;
+    if (!confirm("Remove " + name + "? The site stops answering there.")) return;
+    Tenshi.api("DELETE", "/api/sites/{{ site.id }}/domains/" + encodeURIComponent(name)).then(function (res) { draw(res.domains); Tenshi.toast("Removed"); });
+  });
+})();
+</script>
 <script src="/static/theme.js"></script>
 <script id="theme-data" type="application/json">{{ theme_editor | tojson }}</script>
 <script>

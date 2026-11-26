@@ -86,6 +86,22 @@ template). Only a bcrypt hash is kept, in `/etc/caddy/tenshi-editor.auth` (made 
 bash /srv/tenshi/app/tools/server/caddy-update.sh --editor-password
 ```
 
+## Client sites on their own domains (certificate guard)
+
+`tenshi-tls-ask` (port 9123) says yes to any `<word>.tenshisystems.com`, real or not, and no to every custom domain.
+The CMS now answers the same question itself (`/__tls/ask`, `platform/cms/domains.py`): yes only for existing sites and
+for custom domains attached under a site's **Settings › Custom domains**. To switch Caddy over (once):
+
+```
+bash /srv/tenshi/app/tools/server/tenshi-tls-ask.sh                       # checks the CMS, shows the diff, asks, backs up, validates, reloads, checks
+bash /srv/tenshi/app/tools/server/tenshi-tls-ask.sh --disable-old-guard   # same, then stops the old :9123 service
+bash /srv/tenshi/app/tools/server/tenshi-tls-ask.sh --rollback            # undo: the newest Caddyfile backup back in place
+```
+
+`Caddyfile.template` already has the new ask line, so `caddy-update.sh` keeps it. A client then points their domain's
+DNS at this server (`www` CNAME to `<name>.tenshisystems.com`, the bare domain A/AAAA to the server) and HTTPS starts on
+the first visit.
+
 ## Lead emails from the CMS
 
 Form blocks on client sites can email each new message to the form's recipient. The CMS uses the same SMTP mailbox

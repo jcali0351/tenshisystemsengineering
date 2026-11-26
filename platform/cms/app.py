@@ -30,7 +30,7 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from tenshi import forms as tforms, profile as prof, scanner
 
-from . import auth, blocks, chrome, config, db, forms as lead_forms, mail, media, members, notify, posts, ratelimit, render, revisions, sanitize, security, sites, templates, theme as theme_mod, widgets
+from . import auth, blocks, chrome, config, db, domains, forms as lead_forms, mail, media, members, notify, posts, ratelimit, render, revisions, sanitize, security, sites, templates, theme as theme_mod, widgets
 
 VERSION = "1.0.0"
 UI_DIR = Path(__file__).parent / "ui"
@@ -115,7 +115,21 @@ async def serve_client_sites(request: Request, call_next):
         if under.group(2) is None:                            # /s/name  →  /s/name/ so relative links work
             return RedirectResponse(request.url.path + "/", 301)
         return await serve_site(request, under.group(1), under.group(2))
+    if not match and request.url.path != "/__tls/ask":
+        own = domains.subdomain_for_host(request.headers.get("host", ""))   # a site's own domain (domains.py)
+        if own:
+            return await serve_site(request, own, request.url.path)
     return await call_next(request)
+
+
+@app.get("/__tls/ask")
+def tls_ask(request: Request, domain: str = ""):
+    """Caddy's on-demand TLS question (domains.py, tools/server/tenshi-tls-ask.sh): 200 = get a certificate for it."""
+    if not domains.from_caddy(request.client.host if request.client else None, request.headers):
+        return Response("Not found", status_code=404, media_type="text/plain")
+    ok = domains.allowed_for_tls(domain)
+    return Response("yes" if ok else "no", status_code=200 if ok else 404, media_type="text/plain",
+                    headers={"X-Tenshi-Ask": "1", "Cache-Control": "no-store"})
 
 
 async def serve_site(request: Request, subdomain: str, path: str):
@@ -1268,8 +1282,42 @@ def settings_page(request: Request, site_id: int):
                 template=templates.get(site["template_id"]), templates_list=templates.all_templates(), fonts=templates.FONTS,
                 members=members.for_site(site_id), member_roles=members.ROLES, my_role=members.role_on(user, site_id),
                 can_manage=members.can_manage(user, site_id), sec=security.load(site_id).model_dump(),
-                theme_editor=theme_editor_data(user, site),
+                theme_editor=theme_editor_data(user, site), site_domains=domains.for_site(site_id),
                 all_users=db.all("SELECT id, name, email, role FROM users ORDER BY name") if user["role"] == "admin" else [])
+
+
+@app.get("/api/sites/{site_id}/domains")
+def api_domains(request: Request, site_id: int):
+    api_user(request)
+    site_or_404(site_id)
+    return {"domains": domains.for_site(site_id)}
+
+
+@app.post("/api/sites/{site_id}/domains")
+async def api_add_domain(request: Request, site_id: int):
+    user = api_user(request)
+    site_or_404(site_id)
+    body = await request.json()
+    try:
+        name = domains.add(site_id, str(body.get("domain") or ""), user)
+    except PermissionError as error:
+        return JSONResponse({"error": str(error)}, status_code=403)
+    except domains.DomainError as error:
+        return JSONResponse({"error": str(error)}, status_code=400)
+    return {"domain": name, "domains": domains.for_site(site_id)}
+
+
+@app.delete("/api/sites/{site_id}/domains/{name}")
+def api_remove_domain(request: Request, site_id: int, name: str):
+    user = api_user(request)
+    site_or_404(site_id)
+    try:
+        domains.remove(site_id, name, user)
+    except PermissionError as error:
+        return JSONResponse({"error": str(error)}, status_code=403)
+    except domains.DomainError as error:
+        return JSONResponse({"error": str(error)}, status_code=404)
+    return {"domains": domains.for_site(site_id)}
 
 
 # ---------------------------------------------------------------------------------------------- widget settings (per site)

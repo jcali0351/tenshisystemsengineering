@@ -365,3 +365,57 @@ def test_backups_keep_files_attached_to_leads(cms):
     sites.restore(b["id"])
     assert (folder / "abc123.pdf").read_bytes() == b"%PDF-1.4 quote"
     assert db.one("SELECT id FROM leads WHERE id = ?", lead_id)
+
+
+# ---------------------------------------------------------------------------------------------- 6. custom domains and the TLS ask
+
+def test_custom_domains_attach_validate_and_serve(cms):
+    from cms import domains
+    c, sid = cms
+    r = c.post(f"/api/sites/{sid}/domains", json={"domain": "HTTPS://Www.VeeTwo-Plumbing.com/contact"}, headers=H)
+    assert r.status_code == 200 and r.json()["domain"] == "www.veetwo-plumbing.com"
+    for bad, why in [("not a domain", "isn't a domain"), ("localhost", "isn't a domain"), ("10.0.0.1", "isn't a domain"),
+                     (f"x.{config.SITES_DOMAIN}", ""), ("shop.tenshisystems.com", "our own"), ("*.example.com", ""),
+                     ("www.veetwo-plumbing.com", "already has")]:
+        r = c.post(f"/api/sites/{sid}/domains", json={"domain": bad}, headers=H)
+        assert r.status_code == 400 and why in r.json()["error"], (bad, r.text)
+    assert domains.normalize("bücher.example") == "xn--bcher-kva.example"
+    other = c.post("/api/sites", json={"name": "Other Co", "template": templates.all_templates()[0]["id"]}, headers=H).json()["site"]["id"]
+    assert "Another site" in c.post(f"/api/sites/{other}/domains", json={"domain": "www.veetwo-plumbing.com"}, headers=H).json()["error"]
+    editor = {"id": _user("v2-editor@example.com", "correct-horse-8"), "role": "editor"}
+    with pytest.raises(PermissionError):
+        domains.add(sid, "evil.example.com", editor)
+    # the CMS serves the live site for its own domain
+    _deploy(c, sid)
+    home = c.get("/", headers={"host": "www.veetwo-plumbing.com"})
+    assert home.status_code == 200 and "Vee Two Plumbing" in home.text
+    assert "www.veetwo-plumbing.com" in c.get(f"/sites/{sid}/settings").text
+    assert c.delete(f"/api/sites/{sid}/domains/www.veetwo-plumbing.com", headers=H).json()["domains"] == []
+    assert "Tenshi CMS" in c.get("/", headers={"host": "www.veetwo-plumbing.com"}).text   # the CMS again, not the site
+    c.delete(f"/api/sites/{other}", headers=H)
+
+
+def test_tls_ask_only_for_real_sites_and_only_from_caddy(cms):
+    c, sid = cms
+    sub = sites.get(sid)["subdomain"]
+    other = c.post("/api/sites", json={"name": "Ask Co", "template": templates.all_templates()[0]["id"]}, headers=H).json()["site"]["id"]
+    assert c.post(f"/api/sites/{other}/domains", json={"domain": "askco.example"}, headers=H).status_code == 200
+    with TestClient(app, client=("127.0.0.1", 40000)) as caddy:
+        def ask(name, **headers):
+            return caddy.get("/__tls/ask", params={"domain": name}, headers=headers)
+        yes = ask(f"{sub}.{config.SITES_DOMAIN}")
+        assert yes.status_code == 200 and yes.headers["x-tenshi-ask"] == "1"
+        assert ask("askco.example").status_code == 200
+        assert ask("ASKCO.example.").status_code == 200
+        for name in [f"nosuchsite.{config.SITES_DOMAIN}", f"cms.{config.SITES_DOMAIN}", f"a.{sub}.{config.SITES_DOMAIN}",
+                     "random.example", "", "127.0.0.1", "tenshisystems.com"]:
+            r = ask(name)
+            assert r.status_code == 404 and r.headers.get("x-tenshi-ask") == "1", name
+        # through Caddy's proxy (a visitor asking cms.tenshisystems.com/__tls/ask): a plain 404, no answer
+        proxied = ask("askco.example", **{"X-Forwarded-For": "203.0.113.9"})
+        assert proxied.status_code == 404 and "x-tenshi-ask" not in proxied.headers
+    assert c.get("/__tls/ask", params={"domain": "askco.example"}).status_code == 404     # not loopback
+    # a deleted site's domain stops getting certificates
+    c.delete(f"/api/sites/{other}", headers=H)
+    with TestClient(app, client=("127.0.0.1", 40000)) as caddy:
+        assert caddy.get("/__tls/ask", params={"domain": "askco.example"}).status_code == 404

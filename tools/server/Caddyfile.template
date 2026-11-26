@@ -2,7 +2,7 @@
 # __DOMAIN__ and __APP__ are filled in by those scripts (tenshisystems.com, /srv/tenshi/app).
 {
 	on_demand_tls {
-		ask http://127.0.0.1:9123/check
+		ask http://127.0.0.1:8000/__tls/ask
 	}
 	# HTTP/3 (QUIC over UDP) is off: some visitors' networks stalled on images / large files over h3.
 	# HTTP/1.1 and HTTP/2 serve everyone. To turn h3 back on, delete this "servers" block and reload.
