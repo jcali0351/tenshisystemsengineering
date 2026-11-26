@@ -1,0 +1,174 @@
+/* themes.css: the CMS theme gallery (themes.html, themes.js). Scoped to body.themes-page.
+   The :root:not(#_)... prefix lifts these rules above sandbox/neon-pages.css, after which
+   tools/build-pages.mjs links this file. Content uses the site box (--site-inner, under the logo). */
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page {
+  --th-pink: #ff2bd6;
+  --th-orange: #ff8c1a;
+  --th-ink: #f4ecff;
+  --th-muted: #cbb8e8;
+  --th-glass: linear-gradient(160deg, rgba(46, 11, 87, 0.86), rgba(20, 5, 43, 0.9));
+  --th-edge: rgba(255, 43, 214, 0.4);
+}
+
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page :is(.themes-intro, .themes-card h2, .themes-about, .themes-meta, .themes-swatch-name, .themes-font, .themes-shots figcaption, .themes-toolbar button, .themes-lightbox-cap, .themes-close) {
+  -webkit-text-fill-color: currentColor !important;
+}
+
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-body.page-section {
+  padding-top: clamp(36px, 5vw, 64px);
+}
+
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-intro {
+  margin: 0 0 28px; max-width: 46rem;
+  color: var(--th-muted) !important;
+  font: 400 1.05rem/1.65 Lato, "Segoe UI", sans-serif !important;
+}
+
+/* Light / dark / both */
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-toolbar {
+  display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 28px;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-toolbar button {
+  padding: 8px 16px; border-radius: 999px; cursor: pointer;
+  background: rgba(18, 10, 42, 0.55); border: 1px solid rgba(255, 255, 255, 0.22);
+  color: var(--th-ink) !important;
+  font: 600 0.78rem/1 Oswald, sans-serif !important; letter-spacing: 0.16em; text-transform: uppercase;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-toolbar button:hover { border-color: var(--th-pink); }
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-toolbar button[aria-pressed="true"] {
+  background: rgba(255, 43, 214, 0.28); border-color: var(--th-pink);
+  box-shadow: 0 0 18px rgba(255, 43, 214, 0.45); color: #fff !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-toolbar button:focus-visible {
+  outline: 2px solid var(--th-orange); outline-offset: 3px;
+}
+
+/* Five preset cards, aligned to the site box */
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-grid {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: 1fr; gap: clamp(22px, 3vw, 36px);
+}
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-card {
+  margin: 0; padding: clamp(18px, 2.2vw, 26px);
+  background: var(--th-glass); border: 1px solid var(--th-edge); border-radius: 20px;
+  box-shadow: 0 16px 40px rgba(10, 0, 24, 0.35);
+  overflow: visible;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-card h3 {
+  margin: 0 0 8px; color: #fff !important; text-align: start !important;
+  font: 700 clamp(1.35rem, 2.2vw, 1.8rem)/1.2 Oswald, sans-serif !important;
+  letter-spacing: 0.04em; text-transform: uppercase;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-about {
+  margin: 0 0 16px; color: var(--th-muted) !important;
+  font: 400 0.98rem/1.55 Lato, "Segoe UI", sans-serif !important;
+}
+
+/* Colour swatches + fonts */
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-meta {
+  display: flex; flex-wrap: wrap; gap: 18px 28px; margin: 0 0 16px;
+  color: var(--th-muted) !important; font: 400 0.88rem/1.45 Lato, "Segoe UI", sans-serif !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-swatches,
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-fonts {
+  margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-meta-label {
+  display: block; margin: 0 0 6px;
+  color: #ffd19a !important;
+  font: 700 0.72rem/1 Oswald, sans-serif !important; letter-spacing: 0.18em; text-transform: uppercase;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-swatch {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--th-ink) !important; font: 500 0.8rem/1 Lato, "Segoe UI", sans-serif !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-chip {
+  width: 22px; height: 22px; border-radius: 999px; flex: none;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+}
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-font {
+  color: var(--th-ink) !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-font b {
+  font-weight: 700; color: #fff !important;
+}
+
+/* Paired light / dark screenshots */
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-shots {
+  display: grid; grid-template-columns: 1fr; gap: 12px;
+}
+@media (min-width: 640px) {
+  :root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-grid[data-mode="both"] .themes-shots {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-grid[data-mode="light"] .themes-shot[data-mode="dark"],
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-grid[data-mode="dark"] .themes-shot[data-mode="light"] {
+  display: none;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-shot {
+  margin: 0;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-shot button {
+  display: block; width: 100%; padding: 0; margin: 0; cursor: zoom-in;
+  background: #0a0614; border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 12px;
+  overflow: hidden; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-shot button:hover,
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-shot button:focus-visible {
+  border-color: var(--th-pink); box-shadow: 0 0 22px rgba(255, 43, 214, 0.35);
+}
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-shot button:focus-visible {
+  outline: 2px solid var(--th-orange); outline-offset: 3px;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-shot img {
+  display: block; width: 100%; height: auto; vertical-align: top;
+  aspect-ratio: 1440 / 900; object-fit: cover; object-position: top center;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-shot figcaption {
+  margin: 8px 2px 0; color: var(--th-muted) !important;
+  font: 600 0.72rem/1 Oswald, sans-serif !important; letter-spacing: 0.16em; text-transform: uppercase;
+}
+
+/* Lightbox */
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page dialog.themes-lightbox {
+  width: min(1200px, calc(100vw - 2 * var(--gutter, 20px)));
+  max-width: 100%; max-height: calc(100vh - 48px);
+  padding: 16px 16px 20px; border: 1px solid var(--th-edge); border-radius: 16px;
+  background: #140824; color: var(--th-ink);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+}
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page dialog.themes-lightbox::backdrop {
+  background: rgba(8, 2, 18, 0.78);
+}
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-lightbox-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 12px;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-lightbox-cap {
+  margin: 0; color: var(--th-ink) !important;
+  font: 600 0.85rem/1.3 Lato, "Segoe UI", sans-serif !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-close {
+  flex: none; min-width: 44px; min-height: 44px; padding: 8px 14px; cursor: pointer;
+  border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(18, 10, 42, 0.7); color: #fff !important;
+  font: 700 0.78rem/1 Oswald, sans-serif !important; letter-spacing: 0.12em; text-transform: uppercase;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-close:hover { border-color: var(--th-pink); }
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page .themes-close:focus-visible {
+  outline: 2px solid var(--th-orange); outline-offset: 3px;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .themes-page dialog.themes-lightbox img {
+  display: block; width: 100%; height: auto; border-radius: 10px; background: #0a0614;
+}
+
+/* Link on the CMS service pages */
+:root:not(#_):not(#__):not(#___):not(#____) .svc-themes-link {
+  margin: 16px 0 0;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .svc-themes-link a {
+  color: inherit; text-decoration: underline; text-underline-offset: 3px;
+  font-weight: 650;
+}

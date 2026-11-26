@@ -148,7 +148,7 @@
   </url>
   <url>
     <loc>https://tenshisystems.com/blog/php-wordpress-python.html</loc>
-    <lastmod>2026-11-26</lastmod>
+    <lastmod>2026-11-25</lastmod>
     <priority>0.6</priority>
     <image:image>
       <image:loc>https://tenshisystems.com/img/photos/kyoto.jpg</image:loc>
@@ -884,6 +884,55 @@
     <image:image>
       <image:loc>https://tenshisystems.com/img/photos/tech-hero.webp</image:loc>
       <image:title>Engineer in a neon workshop soldering at a bench, with holographic screens and a night city outside</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/themes.html</loc>
+    <lastmod>2026-11-26</lastmod>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/madison.webp</image:loc>
+      <image:title>Madison, Wisconsin skyline and State Capitol at dusk over Lake Monona</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/themes/tenshi-light.webp</image:loc>
+      <image:title>Sample client homepage in the Tenshi violet theme, light mode, with a violet banner and a warm orange accent</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/themes/tenshi-dark.webp</image:loc>
+      <image:title>Sample client homepage in the Tenshi violet theme, dark mode, with a violet banner on a dark page</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/themes/ocean-light.webp</image:loc>
+      <image:title>Sample client homepage in the Ocean calm theme, light mode, with deep blue and teal colours</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/themes/ocean-dark.webp</image:loc>
+      <image:title>Sample client homepage in the Ocean calm theme, dark mode, with deep blue and teal colours on a dark page</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/themes/forest-light.webp</image:loc>
+      <image:title>Sample client homepage in the Forest classic theme, light mode, with green and brass colours and serif headings</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/themes/forest-dark.webp</image:loc>
+      <image:title>Sample client homepage in the Forest classic theme, dark mode, with green and brass colours on a dark page</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/themes/bold-light.webp</image:loc>
+      <image:title>Sample client homepage in the Bold contrast theme, light mode, with black and red colours and tight, square corners</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/themes/bold-dark.webp</image:loc>
+      <image:title>Sample client homepage in the Bold contrast theme, dark mode, with black and red colours on a dark page</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/themes/elegant-light.webp</image:loc>
+      <image:title>Sample client homepage in the Elegant plum theme, light mode, with plum and gold colours and serif type</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/themes/elegant-dark.webp</image:loc>
+      <image:title>Sample client homepage in the Elegant plum theme, dark mode, with plum and gold colours on a dark page</image:title>
     </image:image>
   </url>
   <url>

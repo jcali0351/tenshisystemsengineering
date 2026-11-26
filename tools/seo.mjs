@@ -63,6 +63,10 @@ const SEO_DEFAULTS = {
     title: "Shopify Store Demo | Tenshi Systems",
     desc: "A live demo of a Shopify-powered online store built, themed and hosted by Tenshi Systems: products, quick view and cart, ready to connect to your own Shopify shop.",
   },
+  themesTitle: {
+    title: "CMS Theme Gallery | Light and Dark Presets | Tenshi",
+    desc: "See the five starting themes for a Tenshi client website, shown side by side in light and dark, with colours and fonts.",
+  },
   portalTitle: {
     title: "Client Portal | Tenshi Systems Engineering",
     desc: "Sign in to manage your Tenshi website, hosting and projects.",

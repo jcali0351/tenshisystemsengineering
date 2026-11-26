@@ -6,6 +6,7 @@
 //   - about.html, team.html, knowledge-base.html, legal.html, services.html, contact.html, news.html, blog.html
 //   - portfolio.html (designs from data/templates.json + our own software) and launch.html (the Launch Sequence)
 //   - services/<slug>.html, one full page per service
+//   - themes.html (the five CMS theme presets in light and dark)
 //   - blog/<slug>.html, one page per long-form post that has a slug in data/blog.json
 //   - data/search/<lang>.json, the footer search's index of every page and blog post in all ten languages (search.js)
 //   - fx-data.js (image effects: shimmer, sparkles, sprites) from data/fx.json (Tenshi Editor › Image effects; fx.js, fx.css)
@@ -93,6 +94,16 @@ const PHOTO_ALT_KEY = {
   "sandbox/art/station-defense-small.webp": "photoStationDefenseAlt",
   "sandbox/art/undercity-small.webp": "photoUndercityAlt",
   "img/photos/arcade-poster.webp": "photoSynthwaveAlt",
+  "img/themes/tenshi-light.webp": "themesShot_tenshi_light",
+  "img/themes/tenshi-dark.webp": "themesShot_tenshi_dark",
+  "img/themes/ocean-light.webp": "themesShot_ocean_light",
+  "img/themes/ocean-dark.webp": "themesShot_ocean_dark",
+  "img/themes/forest-light.webp": "themesShot_forest_light",
+  "img/themes/forest-dark.webp": "themesShot_forest_dark",
+  "img/themes/bold-light.webp": "themesShot_bold_light",
+  "img/themes/bold-dark.webp": "themesShot_bold_dark",
+  "img/themes/elegant-light.webp": "themesShot_elegant_light",
+  "img/themes/elegant-dark.webp": "themesShot_elegant_dark",
 };
 const photoPath = (src) => String(src || "").replace(/\?.*$/, "").replace(/^(?:\.\.\/)+/, "");
 const photoAltKey = (src) => PHOTO_ALT_KEY[photoPath(src)] || "";
@@ -958,6 +969,7 @@ ${SERVICES.map((s) => `          <article class="svc-detail" id="${s.slug}">
 ${[1, 2, 3, 4, 5].map((n) => `                <li data-i18n="${k(s, "o" + n)}">${tx(k(s, "o" + n))}</li>`).join("\n")}
               </ul>
               <a class="btn btn-primary" href="${prefix}services/${s.slug}.html"><span data-i18n="more">${tx("more")}</span><span class="sr-only">: <span data-i18n="${k(s, "title")}">${tx(k(s, "title"))}</span></span></a>
+${s.id === "cms" ? `              <p class="svc-themes-link"><a href="${prefix}themes.html" data-i18n="themesLink">${tx("themesLink")}</a></p>` : ""}
             </div>
           </article>`).join("\n")}
         </div>
@@ -986,6 +998,7 @@ const servicesPage = frame({
 `,
   main: `${banner("", [{ key: "navServices" }], "servicesTitle", "servicesLead")}
     <p class="page-inner wi-note"><a href="wisconsin.html">Web design, hosting and AI services for Wisconsin small businesses →</a></p>
+    <p class="page-inner wi-note"><a href="themes.html" data-i18n="themesNote">${tx("themesNote")}</a></p>
 
     <section class="page-section red-section" aria-labelledby="all-title">
       <div class="page-inner">
@@ -1221,6 +1234,90 @@ ${[["brush", 1], ["lock", 2], ["bolt", 3]].map(([ic, n]) => `            <li cla
 });
 writePage("shop.html", shopPage);
 
+/* ---------- CMS theme gallery (themes.html): the five presets in light and dark ---------- */
+// Screenshots are real renders of the same sample CMS homepage (tools/capture-theme-presets.py),
+// one per preset from platform/cms/theme.py PRESETS, in light and dark (dark variants from a3e9133).
+// Look: themes.css / themes.js, linked after neon-pages.css below. Pictures: img/themes/<id>-{light,dark}.webp.
+const THEME_PRESETS = [
+  { id: "tenshi", colors: { primary: "#5b21b6", accent: "#c2410c", surface: "#ffffff", ink: "#1f2937" }, fonts: { heading: "system", body: "system" } },
+  { id: "ocean", colors: { primary: "#0b5a8a", accent: "#0f766e", surface: "#f6fafc", ink: "#14232e" }, fonts: { heading: "humanist", body: "humanist" } },
+  { id: "forest", colors: { primary: "#1f5135", accent: "#8a5a12", surface: "#fbf8f1", ink: "#1d2a21" }, fonts: { heading: "serif", body: "humanist" } },
+  { id: "bold", colors: { primary: "#111111", accent: "#be123c", surface: "#ffffff", ink: "#111111" }, fonts: { heading: "condensed", body: "system" } },
+  { id: "elegant", colors: { primary: "#6d2843", accent: "#8a6d12", surface: "#fdf8f6", ink: "#2b1d22" }, fonts: { heading: "elegant", body: "elegant" } },
+];
+const THEME_SWATCH = [["primary", "themesSwatchPrimary"], ["accent", "themesSwatchAccent"], ["surface", "themesSwatchSurface"], ["ink", "themesSwatchInk"]];
+const themeCard = (p) => {
+  const shots = ["light", "dark"].map((mode) => {
+    const src = `img/themes/${p.id}-${mode}.webp`;
+    const altKey = `themesShot_${p.id}_${mode}`;
+    const capKey = mode === "light" ? "themesLight" : "themesDark";
+    return `          <figure class="themes-shot" data-mode="${mode}">
+            <button type="button" data-themes-open aria-label="${tx("themesOpen")}: ${tx(`themesPreset_${p.id}`)}, ${tx(capKey)}">
+              <img src="${src}" alt="${tx(altKey)}" data-i18n-attr="alt:${altKey}" width="1440" height="900" loading="lazy" decoding="async">
+            </button>
+            <figcaption data-i18n="${capKey}">${tx(capKey)}</figcaption>
+          </figure>`;
+  }).join("\n");
+  const swatches = THEME_SWATCH.map(([c, label]) => `              <li class="themes-swatch" title="${p.colors[c]}">
+                <span class="themes-chip" style="background:${p.colors[c]}" aria-hidden="true"></span>
+                <span class="themes-swatch-name"><span data-i18n="${label}">${tx(label)}</span> ${p.colors[c]}</span>
+              </li>`).join("\n");
+  return `        <li class="themes-card" id="theme-${p.id}">
+          <h3 data-still data-i18n="themesPreset_${p.id}">${tx(`themesPreset_${p.id}`)}</h3>
+          <p class="themes-about" data-i18n="themesAbout_${p.id}">${tx(`themesAbout_${p.id}`)}</p>
+          <div class="themes-meta">
+            <div>
+              <span class="themes-meta-label" data-i18n="themesColors">${tx("themesColors")}</span>
+              <ul class="themes-swatches" aria-label="${tx("themesColors")}" data-i18n-attr="aria-label:themesColors">
+${swatches}
+              </ul>
+            </div>
+            <div>
+              <span class="themes-meta-label" data-i18n="themesFonts">${tx("themesFonts")}</span>
+              <ul class="themes-fonts">
+                <li class="themes-font"><b data-i18n="themesHeadingFont">${tx("themesHeadingFont")}</b>: <span data-i18n="themesFont_${p.fonts.heading}">${tx(`themesFont_${p.fonts.heading}`)}</span></li>
+                <li class="themes-font"><b data-i18n="themesBodyFont">${tx("themesBodyFont")}</b>: <span data-i18n="themesFont_${p.fonts.body}">${tx(`themesFont_${p.fonts.body}`)}</span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="themes-shots">
+${shots}
+          </div>
+        </li>`;
+};
+const themesPage = frame({
+  prefix: "", current: "services", titleKey: "themesTitle", descKey: "themesLead", bodyClass: "page themes-page",
+  main: `${banner("", [{ key: "navServices", href: "services.html" }, { key: "themesTitle" }], "themesTitle", "themesLead")}
+
+    <section class="page-section themes-body" aria-labelledby="themes-grid-title">
+      <div class="page-inner">
+        <h2 id="themes-grid-title" class="sr-only" data-i18n="themesTitle">${tx("themesTitle")}</h2>
+        ${t("p", "themesIntro", 'class="themes-intro"')}
+        <div class="themes-toolbar" role="group" aria-label="${tx("themesModeLabel")}" data-i18n-attr="aria-label:themesModeLabel">
+          <button type="button" data-themes-mode="light" aria-pressed="false" data-i18n="themesShowLight">${tx("themesShowLight")}</button>
+          <button type="button" data-themes-mode="dark" aria-pressed="false" data-i18n="themesShowDark">${tx("themesShowDark")}</button>
+          <button type="button" data-themes-mode="both" aria-pressed="true" data-i18n="themesShowBoth">${tx("themesShowBoth")}</button>
+        </div>
+        <ul class="themes-grid" data-mode="both">
+${THEME_PRESETS.map(themeCard).join("\n")}
+        </ul>
+        <dialog class="themes-lightbox" aria-labelledby="themes-lightbox-cap">
+          <div class="themes-lightbox-bar">
+            <p class="themes-lightbox-cap" id="themes-lightbox-cap"></p>
+            <button type="button" class="themes-close" data-themes-close data-i18n="themesClose">${tx("themesClose")}</button>
+          </div>
+          <img src="img/themes/tenshi-light.webp" alt="" width="1440" height="900">
+        </dialog>
+      </div>
+    </section>
+
+${cta("contact.html")}`,
+  extraScripts: `  <script src="themes.js" defer></script>
+`,
+});
+writePage("themes.html", themesPage);
+
+
 /* ---------- Contact ---------- */
 const contactPage = frame({
   prefix: "", current: "contact", titleKey: "contactPageTitle", descKey: "contactPageLead", bodyClass: "page contact-page",
@@ -1407,6 +1504,7 @@ function servicePage(s) {
             <p data-i18n="${k(s, "for")}">${tx(k(s, "for"))}</p>
           </div>
           <a class="btn btn-primary" href="${ask}" data-i18n="cta">${tx("cta")}</a>
+${s.id === "cms" ? `          <p class="svc-themes-link"><a href="../themes.html" data-i18n="themesLink">${tx("themesLink")}</a></p>` : ""}
         </div>
         <figure class="svc-figure">
           <img src="../img/services/${s.img}" alt="${tx(k(s, "alt"))}" data-i18n-attr="alt:${k(s, "alt")}" width="${s.w}" height="${s.h}">
@@ -2575,6 +2673,23 @@ await import("./neon-pages.mjs");
   }
 }
 
+// Theme gallery assets must load after neon-pages.css so cards, swatches and the lightbox stay intact.
+{
+  const file = "themes.html";
+  if (existsSync(file)) {
+    let html = readFileSync(file, "utf8");
+    html = html.replace(/\n?[ \t]*<link rel="stylesheet" href="themes\.css[^"]*">/g, "");
+    if (!html.includes('href="themes.css')) {
+      if (/<link rel="stylesheet" href="sandbox\/neon-pages\.css[^"]*">/.test(html)) {
+        html = html.replace(/(<link rel="stylesheet" href="sandbox\/neon-pages\.css[^"]*">)/, `$1\n  <link rel="stylesheet" href="themes.css">`);
+      } else {
+        html = html.replace(/(<link rel="stylesheet" href="[^"]+">)(?![\s\S]*<link rel="stylesheet")/, `$1\n  <link rel="stylesheet" href="themes.css">`);
+      }
+    }
+    writeFileSync(file, html);
+  }
+}
+
 // Legal page assets must load after neon-pages.css so the prose column and callout aren't restyled by the neon skin.
 {
   const file = "legal.html";
@@ -2693,7 +2808,7 @@ await import("./neon-pages.mjs");
   const pri = (p) => p === "index.html" ? "1.0" : p.startsWith("services/") || p === "services.html" ? "0.9" : p.startsWith("blog/") || p.startsWith("projects/") ? "0.6" : "0.8";
   const locOf = (p) => "https://tenshisystems.com/" + (p === "index.html" ? "" : p);
   const absImg = (src) => "https://tenshisystems.com/" + photoPath(src).replace(/^\/+/, "");
-  const IMAGE_OK = /^(img\/(photos|parallax|art|projects|shop|services|og)\b|sandbox\/art\/)/;
+  const IMAGE_OK = /^(img\/(photos|parallax|art|projects|shop|services|og|themes)\b|sandbox\/art\/)/;
   const pageImages = (file, html) => {
     const seen = new Set();
     const out = [];

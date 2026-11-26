@@ -199,6 +199,14 @@
       "ogImage": "",
       "canonical": "",
       "noindex": false
+    },
+    "themesTitle": {
+      "page": "themes.html",
+      "title": "CMS Theme Gallery | Light and Dark Presets | Tenshi",
+      "desc": "See the five starting themes for a Tenshi client website, shown side by side in light and dark, with colours and fonts.",
+      "ogImage": "",
+      "canonical": "",
+      "noindex": false
     }
   }
 }
