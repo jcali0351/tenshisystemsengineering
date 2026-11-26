@@ -1,0 +1,19 @@
+/* Link in bio (cms/widgets/link_in_bio.py) */
+body:has([data-tw-solo]) header.top, body:has([data-tw-solo]) footer.bottom, body:has([data-tw-solo]) .tc-header, body:has([data-tw-solo]) .tc-footer { display: none; }
+body:has([data-tw-solo]) { background: var(--m-soft, #f6f6f6); }
+.tw-lib { min-height: 100vh; display: grid; align-items: start; padding-block: clamp(32px, 8vh, 80px); }
+.tw-lib-col { width: min(520px, 100% - 32px); margin: 0 auto; display: grid; justify-items: center; gap: 14px; text-align: center; }
+.tw-lib-pic { width: 112px; height: 112px; border-radius: 50%; object-fit: cover; box-shadow: 0 6px 24px rgba(0,0,0,.12); }
+.tw-lib-init { display: grid; place-items: center; background: var(--m-ps); color: #fff; font: 800 2.6rem/1 var(--font-head, inherit); }
+.tw-lib-name { margin: 6px 0 0; font-size: clamp(1.6rem, 5vw, 2.2rem); }
+.tw-lib-bio { margin: 0; color: var(--m-muted); max-width: 40ch; }
+.tw-lib-links { list-style: none; margin: 10px 0 0; padding: 0; width: 100%; display: grid; gap: 12px; }
+.tw-lib-a { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 60px; padding: 12px 20px; border-radius: var(--m-r);
+  border: 2px solid var(--m-i); background: var(--m-card); color: var(--m-i); text-decoration: none; transition: transform .15s; }
+.tw-lib-a span { display: grid; } .tw-lib-a small { color: var(--m-muted); font-weight: 400; }
+.tw-lib-a:hover { transform: translateY(-2px); } .tw-lib-a:focus-visible { outline: 3px solid var(--m-a); outline-offset: 3px; }
+.tw-lib-hi { background: var(--m-ps); border-color: var(--m-ps); color: #fff; } .tw-lib-hi small { color: rgba(255,255,255,.85); }
+.tw-lib-e { font-size: 1.3rem; }
+.tw-lib-social { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 16px; }
+.tw-lib-social a { color: var(--m-i); font-weight: 600; }
+@media (prefers-reduced-motion: reduce) { .tw-lib-a { transition: none; } .tw-lib-a:hover { transform: none; } }

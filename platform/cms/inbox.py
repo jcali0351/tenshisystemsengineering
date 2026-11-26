@@ -4,7 +4,8 @@ listed on /sites/<id>/inbox/<kind> with a status each. Modules register a kind:
 
     register("rsvps", label=..., about=..., table=..., columns=[(key, heading)], statuses=[...],
              rows=fn(site_id) -> [dict with id, status, and the columns], count_new=fn(site_id) -> int,
-             manage_only=False, on_status=fn(site, row_id, status, user) (optional; may raise ValueError))
+             manage_only=False, on_status=fn(site, row, status, user) (optional; may raise ValueError, or return the status to store),
+             extra={"confirm": {status: "Question asked before choosing it"}})
 
 Statuses are changed with PATCH /api/sites/<id>/inbox/<kind>/<row id> {"status": ...}. manage_only kinds (approving
 reviews, social posts) need the site's owners or admins (members.can_manage).
@@ -57,7 +58,8 @@ def set_status(site: dict, kind: str, row_id: int, status: str, user) -> dict:
     if not row:
         raise KeyError(row_id)
     if k.on_status:
-        k.on_status(site, row, status, user)
+        final = k.on_status(site, row, status, user)          # may return the status to store instead (e.g. "sent")
+        status = final if isinstance(final, str) and final else status
     db.run(f"UPDATE {k.table} SET status = ? WHERE id = ? AND site_id = ?", status, row_id, site["id"])
     db.log(f"{k.label}: {status}", str(row_id), user, site["id"])
     return db.one(f"SELECT * FROM {k.table} WHERE id = ?", row_id)

@@ -104,7 +104,7 @@ def delete_site(site_id, user=None):
     with db.transaction() as conn:
         for table in SITE_TABLES + ["builds", "backups", "leads", "visits", "profile_revisions", "site_settings", "site_members",
                                                                   "page_revisions", "form_posts", "lead_files",
-                                                                  "lead_emails", "site_domains", "widget_cache", "rsvps", "bookings", "reviews"]:
+                                                                  "lead_emails", "site_domains", "widget_cache", "rsvps", "bookings", "reviews", "social_posts"]:
             conn.execute(f"DELETE FROM {table} WHERE site_id = ?", (site_id,))
         conn.execute("DELETE FROM album_items WHERE album_id NOT IN (SELECT id FROM albums)")
         conn.execute("DELETE FROM sites WHERE id = ?", (site_id,))
@@ -144,6 +144,8 @@ def deploy(site_id, note="", user=None):
     db.run("UPDATE sites SET current_build_id = ?, status = 'live' WHERE id = ?", build_id, site_id)
     db.log("Deployed", f"{site['subdomain']}: {pages} pages in {seconds:.2f} s", user, site_id)
     _keep_recent_builds(site_id)
+    from . import widgets
+    widgets.after_publish(get(site_id), user)                     # e.g. social posts waiting for approval (widgets/autopost.py)
     return db.one("SELECT * FROM builds WHERE id = ?", build_id)
 
 

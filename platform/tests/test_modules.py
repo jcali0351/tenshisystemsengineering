@@ -460,3 +460,136 @@ def test_trust_badges_and_case_studies(cms):
     assert 'data-tw-filter="Wholesale"' in html and 'data-tw-filter="Events"' in html
     bad = {"id": "cs1", "type": "case_studies", "data": {"items": [{"title": "x", "metrics": "just a number"}]}}
     assert _put(c, sid, "about", [bad]).status_code == 400
+
+
+# ---------------------------------------------------------------------------------------------- 4. social
+
+def test_social_feed_hidden_without_key_and_cached_with_one(cms, monkeypatch):
+    from cms import modcache
+    c, sid = cms
+    calls = []
+    monkeypatch.setattr(modcache, "http_json", lambda url, headers=None, **k: calls.append((url, headers)) or {})
+    assert _put(c, sid, "services", [{"id": "sf1", "type": "social_feed", "data": {"network": "x", "heading": "On X"}}]).status_code == 200
+    html = c.get(f"/sites/{sid}/preview/services").text
+    assert "tw-builder-hint" in html and "hidden on the published site" in html and not calls
+    folder = _deploy(c, sid)
+    assert "tw-sfs" not in (folder / "services.html").read_text()            # nothing on the live page
+    assert "pbs.twimg.com" not in _csp(c, sites.get(sid)["subdomain"], "services.html")
+
+    def fake(url, headers=None, **k):
+        calls.append((url, headers))
+        if "/users/by/username/" in url:
+            return {"data": {"id": "42"}}
+        return {"data": [{"id": "1001", "text": "Fresh <bread> today", "created_at": "2026-11-20T10:00:00Z", "attachments": {"media_keys": ["m1"]}},
+                         {"id": "1002", "text": "Closed Monday", "created_at": "2026-11-18T10:00:00Z"}],
+                "includes": {"media": [{"media_key": "m1", "type": "photo", "url": "https://pbs.twimg.com/media/a.jpg"}]}}
+    monkeypatch.setattr(modcache, "http_json", fake)
+    assert c.put(f"/api/sites/{sid}/widgets/social_feed/settings", json={"x_bearer": "BEARER-SECRET-1", "x_username": "bad name!"}, headers=H).status_code == 400
+    assert c.put(f"/api/sites/{sid}/widgets/social_feed/settings", json={"x_bearer": "BEARER-SECRET-1", "x_username": "@modbakery"}, headers=H).status_code == 200
+    calls.clear()
+    html = c.get(f"/sites/{sid}/preview/services").text
+    assert "Fresh &lt;bread&gt; today" in html and "https://x.com/modbakery/status/1001" in html and "pbs.twimg.com/media/a.jpg" in html
+    assert "BEARER-SECRET" not in html and calls[0][1]["Authorization"] == "Bearer BEARER-SECRET-1" and 'href="https://x.com/modbakery"' in html
+    c.get(f"/sites/{sid}/preview/services")
+    assert len(calls) == 2                                                   # user + posts once; then cached
+    folder = _deploy(c, sid)
+    sub = sites.get(sid)["subdomain"]
+    assert "Fresh &lt;bread&gt;" in (folder / "services.html").read_text() and "https://pbs.twimg.com" in _csp(c, sub, "services.html")
+    assert "pbs.twimg.com" not in _csp(c, sub, "index.html")
+    items = c.get("/__w/social_feed/items?_block=services/sf1", headers=_host(sid)).json()["items"]
+    assert items[0]["url"] == "https://x.com/modbakery/status/1001" and "BEARER" not in str(items)
+    c.put(f"/api/sites/{sid}/widgets/social_feed/settings", json={"x_bearer": "", "x_username": ""}, headers=H)
+
+
+def test_share_buttons_and_click_to_post_are_plain_links(cms):
+    c, sid = cms
+    assert _put(c, sid, "about", [{"id": "sh1", "type": "share_buttons", "data": {"networks": "x, myspace"}}]).status_code == 400
+    assert _put(c, sid, "about", [{"id": "sh1", "type": "share_buttons", "data": {"networks": "x, linkedin, email", "text": "Fresh bread & more"}},
+                                  {"id": "ct1", "type": "click_to_tweet", "data": {"quote": "Bread is love.", "via": "@modbakery", "hashtags": "bread, #sourdough"}}]).status_code == 200
+    html = c.get(f"/sites/{sid}/preview/about").text
+    sub = sites.get(sid)["subdomain"]
+    assert "https://x.com/intent/post?text=Fresh%20bread%20%26%20more&amp;url=http" in html and f"{sub}.{config.SITES_DOMAIN}" in html and "about.html" in html
+    assert "https://www.linkedin.com/sharing/share-offsite/?url=" in html and "mailto:?subject=" in html and "facebook" not in html.split("tw-shs")[1].split("</section>")[0]
+    assert "via=modbakery" in html and "hashtags=bread%2Csourdough" in html and "Bread is love." in html
+    assert "<script src=\"https://" not in html and "platform.twitter.com" not in html and "connect.facebook.net" not in html
+    assert _put(c, sid, "about", [{"id": "ct1", "type": "click_to_tweet", "data": {"quote": "x" * 241}}]).status_code == 400
+
+
+def test_link_in_bio_page(cms):
+    c, sid = cms
+    prof = db.j(sites.get(sid)["profile_json"])
+    prof["social"] = {"instagram": "https://instagram.com/modbakery", "tiktok": "javascript:alert(1)"}
+    sites.save_profile(sid, prof)
+    assert _put(c, sid, "about", [{"id": "lb1", "type": "link_in_bio", "data": {"links": [{"label": "Bad", "url": "javascript:alert(1)"}]}}]).status_code == 400
+    assert _put(c, sid, "about", [{"id": "lb1", "type": "link_in_bio", "data": {"bio": "Sourdough every morning.", "links": [
+        {"label": "Order a cake", "url": "contact", "highlight": True, "emoji": "🎂"}, {"label": "Our Etsy", "url": "https://etsy.com/shop/x", "note": "Gift boxes"}]}}]).status_code == 200
+    html = c.get(f"/sites/{sid}/preview/about").text
+    assert "data-tw-solo" in html and "Order a cake" in html and "tw-lib-hi" in html and 'href="https://etsy.com/shop/x"' in html
+    assert 'href="https://instagram.com/modbakery"' in html and "javascript:" not in html and "link_in_bio.css" in html
+
+
+def test_autopost_only_suggests_and_posts_after_approval(cms, monkeypatch):
+    from cms import modcache
+    c, sid = cms
+    sent = []
+    monkeypatch.setattr(modcache, "post_webhook", lambda url, payload, secret="", timeout=10: sent.append((url, payload, secret)) or 200)
+    pid = db.run("INSERT INTO posts (site_id, title, slug, excerpt, body, status, published_at, created_at, updated_at) "
+                 "VALUES (?, 'Winter menu', 'winter-menu', 'Soups and stollen.', 'Body', 'published', ?, ?, ?)", sid, db.now(), db.now(), db.now())
+    _deploy(c, sid)
+    assert not db.one("SELECT 1 FROM social_posts WHERE site_id = ?", sid)       # off by default: nothing suggested
+    assert "Suggestions are off" in c.get(f"/sites/{sid}/inbox/social").text
+    assert c.put(f"/api/sites/{sid}/widgets/autopost/settings", json={"enabled": True, "webhook_url": "http://127.0.0.1/hook"}, headers=H).status_code == 400
+    assert c.put(f"/api/sites/{sid}/widgets/autopost/settings", json={"enabled": True}, headers=H).status_code == 200
+    assert "Auto-post on publish" in c.get(f"/sites/{sid}/modules").text
+    _deploy(c, sid)
+    _deploy(c, sid)                                                               # publishing again doesn't duplicate
+    rows = db.all("SELECT * FROM social_posts WHERE site_id = ?", sid)
+    assert len(rows) == 1 and rows[0]["status"] == "pending" and "Winter menu" in rows[0]["text"] and "post-winter-menu.html" in rows[0]["text"]
+    assert sent == []                                                             # nothing posts by itself
+    # an editor can't approve
+    with TestClient(app) as ed:
+        _login(ed, "mod-editor@example.com", "correct-horse-9")
+        assert ed.patch(f"/api/sites/{sid}/inbox/social/{rows[0]['id']}", json={"status": "approved"}, headers=H).status_code == 403
+    # no webhook: approved, nothing sent
+    r = c.patch(f"/api/sites/{sid}/inbox/social/{rows[0]['id']}", json={"status": "approved"}, headers=H).json()
+    assert r["status"] == "approved" and "post it yourself" in r["message"] and sent == []
+    # with a webhook: approving sends once, signed, and marks it sent
+    c.put(f"/api/sites/{sid}/widgets/autopost/settings", json={"enabled": True, "webhook_url": "https://postiz.example.com/hook/abc",
+                                                               "webhook_secret": "whsec-1", "channels": "x, linkedin"}, headers=H)
+    assert "postiz.example.com" not in c.get(f"/api/sites/{sid}/widgets/autopost/settings").text
+    c.patch(f"/api/sites/{sid}/inbox/social/{rows[0]['id']}", json={"status": "pending"}, headers=H)
+    r = c.patch(f"/api/sites/{sid}/inbox/social/{rows[0]['id']}", json={"status": "approved"}, headers=H).json()
+    assert r["status"] == "sent" and r["reload"] and len(sent) == 1
+    url, payload, secret = sent[0]
+    assert url == "https://postiz.example.com/hook/abc" and secret == "whsec-1" and payload["channels"] == ["x", "linkedin"] and payload["text"] == rows[0]["text"]
+    assert c.patch(f"/api/sites/{sid}/inbox/social/{rows[0]['id']}", json={"status": "approved"}, headers=H).status_code == 400   # already sent
+    # a failing webhook is reported, not retried by itself
+    db.run("INSERT INTO posts (site_id, title, slug, status, published_at, created_at, updated_at) VALUES (?, 'Stollen', 'stollen', 'published', ?, ?, ?)",
+           sid, db.now(), db.now(), db.now())
+    _deploy(c, sid)
+    row = db.one("SELECT * FROM social_posts WHERE site_id = ? AND title = 'Stollen'", sid)
+    monkeypatch.setattr(modcache, "post_webhook", lambda *a, **k: (_ for _ in ()).throw(OSError("down")))
+    r = c.patch(f"/api/sites/{sid}/inbox/social/{row['id']}", json={"status": "approved"}, headers=H).json()
+    assert r["status"] == "failed" and "couldn't be reached" in r["message"]
+    c.put(f"/api/sites/{sid}/widgets/autopost/settings", json={"enabled": False, "webhook_url": "", "webhook_secret": ""}, headers=H)
+
+
+def test_signed_webhook_body(monkeypatch):
+    import hashlib
+    import hmac
+    import json
+    from cms import modcache
+    seen = {}
+
+    class Res:
+        status = 202
+        def __enter__(self): return self
+        def __exit__(self, *a): return False
+
+    def fake_open(req, timeout=10):
+        seen["body"], seen["sig"], seen["url"] = req.data, req.headers.get("X-tenshi-signature"), req.full_url
+        return Res()
+    monkeypatch.setattr(modcache, "public_https", lambda u: True)
+    monkeypatch.setattr(modcache.urllib.request, "urlopen", fake_open)
+    assert modcache.post_webhook("https://hooks.example.com/x", {"text": "hé"}, "s3cret") == 202
+    assert seen["sig"] == "sha256=" + hmac.new(b"s3cret", seen["body"], hashlib.sha256).hexdigest() and json.loads(seen["body"])["text"] == "hé"

@@ -217,3 +217,20 @@ friendly range control).
 - `case_studies`: cards or alternating rows, tag filters, up to 4 metrics (`value | label`), the full story
   (challenge / what we did / results / quote) opening in place.
 
+**Social:** no third-party scripts anywhere.
+- `social_feed`: the latest Instagram, X, YouTube or Bluesky posts, fetched by the server with the site's own accounts
+  and keys (Modules & inbox › Social feed, owners/admins, keys masked), cached 1 h, last good copy kept. Without an
+  account/key for the chosen network the block is **not drawn on the published site**, and the builder shows a
+  hint. The network's image host is added to `img-src` only on pages with a connected feed. Live pages refresh from
+  `GET __w/social_feed/items`. (X's API needs a paid X plan; Bluesky needs only a handle.)
+- `share_buttons` (X, Facebook, LinkedIn, WhatsApp, Bluesky, Reddit, email, copy link) and `click_to_tweet`
+  ("Click to post"): plain links to each network's share page; on the live site the visitor's real address
+  (custom domains) is swapped in.
+- `link_in_bio`: picture, name, line, big buttons, social profiles; "Just this block" hides the header and footer.
+- `autopost` (Modules & inbox › Auto-post on publish, off by default): after a deployment, each blog post that went
+  live in the last 14 days becomes a **pending** item in **Social posts**. Nothing posts until an owner or admin
+  approves it (confirmed in a dialog); only then is it POSTed to the site's webhook (e.g. Postiz), JSON signed with
+  `X-Tenshi-Signature: sha256=<HMAC>` if a secret is set; it becomes "sent" or "failed". Without a webhook,
+  "approved" only marks it for posting by hand. Hooks: `widgets.ON_PUBLISH` (never breaks a deployment).
+- Business data social links are filtered to http(s) addresses before they reach any template.
+

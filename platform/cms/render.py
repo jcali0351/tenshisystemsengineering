@@ -210,6 +210,8 @@ class SiteRenderer:
         tracking = Markup(f'<img src="__visit?p={escape(page["slug"])}" alt="" width="1" height="1" style="position:absolute;left:-9999px">') if hosted else ""
         return {
             **p, "site": {"name": self.site.get("name"), "subdomain": self.site.get("subdomain")},
+            # social links are typed in Business data: only real web addresses reach a page (no javascript: links)
+            "social": {k: v for k, v in (p.get("social") or {}).items() if isinstance(v, str) and re.match(r"^https?://[^\s\"'<>]+$", v)},
             "theme": self.theme, "page": page, "pages": menu_pages, "blocks": db.j(page.get("blocks_json"), []) if "blocks_json" in page else page.get("blocks", []),
             "editing": self.editing, "year": date.today().year, "form_action": form_action,
             "form_is_mail": form_action.startswith("mailto:"), "tracking": tracking,
@@ -226,8 +228,9 @@ class SiteRenderer:
                 self.form_specs[f"{page.get('slug', '')}/{widgets.block_uid(b)}"] = forms_mod.spec(cfg, page.get("slug", ""))
         for b in ctx["blocks"]:                       # modules with endpoints: the published settings the server uses (actions.py)
             w = widgets.get(b.get("type")) if isinstance(b, dict) else None
+            if w:
+                b.setdefault("_page", page.get("slug", ""))    # e.g. share buttons need the page's address
             if w and (w.actions or w.extra_pages):
-                b.setdefault("_page", page.get("slug", ""))
                 self.block_specs[f"{b['_page']}/{widgets.block_uid(b)}"] = {"type": w.name, "data": w.clean_config_safe(b.get("data"))}
         html = self.env.get_template("page.html.j2").render(ctx)
         used = widgets.used_in(ctx["blocks"])

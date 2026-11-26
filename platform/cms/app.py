@@ -627,8 +627,9 @@ def inbox_page(request: Request, site_id: int, kind: str):
     k = inbox_mod.KINDS.get(kind)
     if not k:
         raise HTTPException(404, "No such inbox.")
+    note = k.extra.get("note")
     return show("inbox.html", request, user, site=site, section="modules", kind=k, rows=k.rows(site_id),
-                can_manage=members.can_manage(user, site_id))
+                can_manage=members.can_manage(user, site_id), note=note(site_id) if callable(note) else (note or ""))
 
 
 @app.patch("/api/sites/{site_id}/inbox/{kind}/{row_id}")
@@ -636,15 +637,16 @@ async def api_inbox_status(request: Request, site_id: int, kind: str, row_id: in
     user = api_user(request)
     site = site_or_404(site_id)
     body = await request.json()
+    wanted = str((body or {}).get("status") or "")
     try:
-        row = inbox_mod.set_status(site, kind, row_id, str((body or {}).get("status") or ""), user)
+        row = inbox_mod.set_status(site, kind, row_id, wanted, user)
     except KeyError:
         raise HTTPException(404, "Not found.")
     except PermissionError as error:
         raise HTTPException(403, str(error))
     except ValueError as error:
         return JSONResponse({"error": str(error)}, status_code=400)
-    return {"ok": True, "status": row["status"], "message": (row.get("_message") if isinstance(row, dict) else None) or "Updated"}
+    return {"ok": True, "status": row["status"], "message": row.get("result") or "Updated", "reload": row["status"] != wanted}
 
 
 @app.get("/sites/{site_id}/modules", response_class=HTMLResponse)
@@ -653,7 +655,7 @@ def modules_page(request: Request, site_id: int):
     site = site_or_404(site_id)
     configurable = []
     for w in widgets.REGISTRY.values():
-        if w.settings and not w.hidden and w.name not in ("store", "map"):
+        if w.settings and (not w.hidden or w.settings_page) and w.name not in ("store", "map"):
             st = widgets.load_settings(site_id, w.name)
             configurable.append({"name": w.name, "label": w.label, "about": w.about,
                                  "connected": bool(w.connected and w.connected(st)), "needs_key": bool(w.connected)})

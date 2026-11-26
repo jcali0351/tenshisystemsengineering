@@ -204,6 +204,11 @@ CREATE TABLE IF NOT EXISTS reviews (
   email TEXT NOT NULL DEFAULT '', rating INTEGER NOT NULL, quote TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'pending', created_at TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS reviews_site ON reviews (site_id, status);
+CREATE TABLE IF NOT EXISTS social_posts (
+  id INTEGER PRIMARY KEY, site_id INTEGER NOT NULL, ref TEXT NOT NULL, title TEXT NOT NULL DEFAULT '', url TEXT NOT NULL DEFAULT '',
+  text TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'pending', result TEXT NOT NULL DEFAULT '', approved_by INTEGER, created_at TEXT NOT NULL,
+  UNIQUE (site_id, ref)
+);
 CREATE TABLE IF NOT EXISTS widget_cache (
   site_id INTEGER NOT NULL, key TEXT NOT NULL, value_json TEXT NOT NULL, fetched_at TEXT NOT NULL, PRIMARY KEY (site_id, key)
 );

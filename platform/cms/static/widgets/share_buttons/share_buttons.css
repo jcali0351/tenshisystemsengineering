@@ -1,0 +1,14 @@
+/* Share buttons / click to post (cms/widgets/share_buttons.py) */
+.tw-shs { padding-block: 20px; }
+.tw-shs-center .wrap { text-align: center; } .tw-shs-center .tw-sh-list { justify-content: center; }
+.tw-sh-label { margin: 0 0 10px; font-weight: 700; }
+.tw-sh-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.tw-sh { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--m-line);
+  background: var(--m-card); color: var(--m-i); font: inherit; font-weight: 600; text-decoration: none; cursor: pointer; }
+.tw-sh:hover { border-color: var(--m-ps); color: var(--m-p); }
+.tw-sh:focus-visible { outline: 3px solid var(--m-a); outline-offset: 2px; }
+.tw-sh-g { display: inline-grid; place-items: center; min-width: 1.4em; font-weight: 800; }
+.tw-shs-icons .tw-sh { width: 44px; height: 44px; padding: 0; justify-content: center; }
+.tw-ctt-box { margin: 0; padding: clamp(22px, 4vw, 40px); border-radius: var(--m-r); background: var(--m-soft); border-left: 6px solid var(--m-ps); display: grid; gap: 14px; justify-items: start; }
+.tw-ctt-box blockquote { margin: 0; } .tw-ctt-box blockquote p { margin: 0; font: 700 clamp(1.2rem, 2.4vw, 1.7rem)/1.4 var(--font-head, inherit); }
+.tw-ctt-box figcaption { color: var(--m-muted); font-weight: 600; }

@@ -5,9 +5,10 @@
 {% block actions %}<a class="btn" href="/sites/{{ site.id }}/modules">Modules & inbox</a>{% endblock %}
 {% block body %}
 <p class="muted">{{ kind.about }}</p>
+{% if note %}<p class="notice-box small" role="note">{{ note }}</p>{% endif %}
 {% if kind.actions_note %}<p class="notice-box small" role="note">{{ kind.actions_note }}</p>{% endif %}
 {% if kind.manage_only and not can_manage %}<p class="error-box" role="note">Only this site's owners and CMS admins can change these.</p>{% endif %}
-<section class="card">
+<section class="card" data-confirm='{{ (kind.extra.get("confirm") or {}) | tojson }}'>
   {% if rows %}
   <div class="table-wrap"><table class="table">
     <thead><tr>{% for key, head in kind.columns %}<th>{{ head }}</th>{% endfor %}<th>Status</th></tr></thead>
@@ -28,7 +29,8 @@
 <script>
 document.addEventListener("change", function (e) {
   if (!e.target.matches("[data-status]")) return;
-  var row = e.target.closest("tr"), old = e.target.dataset.old || null;
+  var row = e.target.closest("tr"), ask = JSON.parse(e.target.closest("[data-confirm]").dataset.confirm || "{}")[e.target.value];
+  if (ask && !confirm(ask)) { location.reload(); return; }
   Tenshi.api("PATCH", "/api/sites/{{ site.id }}/inbox/{{ kind.name }}/" + row.dataset.row, { status: e.target.value })
     .then(function (res) { Tenshi.toast(res.message || "Updated"); if (res.reload) setTimeout(function () { location.reload(); }, 600); })
     .catch(function () { location.reload(); });

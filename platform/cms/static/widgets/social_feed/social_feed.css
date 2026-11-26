@@ -1,0 +1,11 @@
+/* Social feed (cms/widgets/social_feed.py) */
+.tw-sf-actions { display: flex; gap: 10px; align-items: center; }
+.tw-sf-list { list-style: none; margin: 0; padding: 0; }
+.tw-sf-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.tw-sf a { display: flex; flex-direction: column; height: 100%; border: 1px solid var(--m-line); border-radius: var(--m-r); background: var(--m-card); color: var(--m-i); text-decoration: none; overflow: hidden; }
+.tw-sf a:hover .tw-sf-text { text-decoration: underline; }
+.tw-sf-pic { position: relative; display: block; aspect-ratio: 1; background: var(--m-soft); }
+.tw-sf-pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tw-sf-play { position: absolute; inset: 0; margin: auto; width: 52px; height: 52px; display: grid; place-items: center; border-radius: 50%; background: rgba(0,0,0,.6); color: #fff; font-size: 20px; }
+.tw-sf-text { padding: 12px 14px 0; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.5; }
+.tw-sf-date { padding: 8px 14px 12px; margin-top: auto; color: var(--m-muted); font-size: .85rem; }

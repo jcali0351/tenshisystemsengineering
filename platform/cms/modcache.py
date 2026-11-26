@@ -80,3 +80,19 @@ def http_json(url: str, headers: dict | None = None, data=None, method: str | No
     with urllib.request.urlopen(req, timeout=timeout) as res:  # noqa: S310 - https only, checked above
         raw = res.read(2_000_000)
     return json.loads(raw or b"null")
+
+
+def post_webhook(url: str, payload: dict, secret: str = "", timeout: int = 10) -> int:
+    """POST JSON to a client's webhook (e.g. Postiz). https and public addresses only. With a secret, the body is
+    signed: X-Tenshi-Signature: sha256=<hex HMAC of the exact body>. Returns the HTTP status; raises on failure."""
+    import hashlib
+    import hmac
+    if not public_https(url):
+        raise ValueError("The webhook must be a public https:// address.")
+    body = json.dumps(payload, separators=(",", ":"), ensure_ascii=False).encode()
+    headers = {"User-Agent": "TenshiCMS/1.0", "Content-Type": "application/json"}
+    if secret:
+        headers["X-Tenshi-Signature"] = "sha256=" + hmac.new(secret.encode(), body, hashlib.sha256).hexdigest()
+    req = urllib.request.Request(url, data=body, method="POST", headers=headers)
+    with urllib.request.urlopen(req, timeout=timeout) as res:  # noqa: S310 - https + public, checked above
+        return res.status

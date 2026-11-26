@@ -158,6 +158,7 @@ class Widget:
     extra_files: Callable | None = None
     connected: Callable | None = None      # connected(settings) -> bool: the Modules page's "Connected" badge
     requires: list = field(default_factory=list)   # other (hidden) widgets whose files this one uses, e.g. ["lightbox"]
+    settings_page: bool = False            # a hidden widget that is only settings (e.g. autopost): still listed on Modules
 
     # --- the builder ----------------------------------------------------------------------------------------------
     def defaults(self) -> dict:
@@ -198,6 +199,18 @@ class Widget:
 REGISTRY: dict[str, Widget] = {}
 # Inboxes on the Modules page: {"label", "about", "path" (under /sites/<id>/), "count": count_new(site_id)}
 INBOX: list[dict] = []
+
+
+ON_PUBLISH: list[Callable] = []           # fn(site, user) after a successful deployment (sites.deploy); must not raise
+
+
+def after_publish(site: dict, user=None) -> None:
+    import logging
+    for fn in ON_PUBLISH:
+        try:
+            fn(site, user)
+        except Exception:  # noqa: BLE001 - a module's hook never breaks a deployment
+            logging.getLogger("tenshi.widgets").exception("after_publish hook %s failed", getattr(fn, "__name__", fn))
 
 
 def register(widget: Widget) -> Widget:
@@ -417,6 +430,7 @@ from . import blog, booking, contact_form, faq, map, pricing, store  # noqa: E40
 from . import modkit, lightbox, gallery, video_gallery, before_after  # noqa: E402,F401  (modules: galleries)
 from . import events, hours, appointments  # noqa: E402,F401  (modules: calendars and booking)
 from . import testimonials, review_form, trust_badges, case_studies  # noqa: E402,F401  (modules: testimonials and trust)
+from . import social_feed, share_buttons, link_in_bio, autopost  # noqa: E402,F401  (modules: social)
 
 # The global header and footer (cms/chrome.py) bring their CSS like a widget, so it's linked and deployed the same way.
 register(Widget(name="chrome", label="Header and footer", about="The site's own header and footer.", config=BaseModel,
