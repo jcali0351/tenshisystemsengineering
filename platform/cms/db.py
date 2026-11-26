@@ -133,6 +133,22 @@ CREATE TABLE IF NOT EXISTS site_members (
 );
 CREATE INDEX IF NOT EXISTS site_members_user ON site_members (user_id);
 
+-- Earlier versions of a page (the builder's Page settings › Earlier versions). A snapshot of the page as it was is
+-- taken before a save when the last one is over 5 minutes old, and before a restore; the newest 50 are kept per page.
+CREATE TABLE IF NOT EXISTS page_revisions (
+  id INTEGER PRIMARY KEY, page_id INTEGER NOT NULL, site_id INTEGER NOT NULL, title TEXT NOT NULL DEFAULT '',
+  blocks_json TEXT NOT NULL DEFAULT '[]', seo_title TEXT NOT NULL DEFAULT '', seo_description TEXT NOT NULL DEFAULT '',
+  user_id INTEGER, created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS page_revisions_page ON page_revisions (page_id, id);
+
+-- Posts to a live site's contact form, for the rate limit (app.serve_site). ip_hash, not the address itself.
+-- Rows older than a day are removed as new ones arrive.
+CREATE TABLE IF NOT EXISTS form_posts (
+  id INTEGER PRIMARY KEY, site_id INTEGER NOT NULL, ip_hash TEXT NOT NULL, ok INTEGER NOT NULL DEFAULT 1, created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS form_posts_site ON form_posts (site_id, created_at);
+
 -- What happened, by whom (the Recent Activity list)
 CREATE TABLE IF NOT EXISTS activity (
   id INTEGER PRIMARY KEY, user_id INTEGER, site_id INTEGER, action TEXT NOT NULL, details TEXT NOT NULL DEFAULT '',

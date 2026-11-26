@@ -291,3 +291,86 @@ def test_booking_host_only_on_its_page(cms, tmp_path):
     assert "calendly.com" not in widgets.csp_for_file(out2, "about.html")
     assert 'class="btn" href="https://calendly.com/neon/30min"' in (out2 / "about.html").read_text()
     _put_blocks(c, sid, "about", [])
+
+
+# ---------------------------------------------------------------------------------------------- cleaning, revisions, form limit
+
+NASTY = ('<p onclick="steal()">Hi <script>alert(1)</script><b>there</b></p><a href="javascript:alert(1)">x</a>'
+         '<a href="https://ok.example/" target="_blank" rel="noopener">ok</a><iframe src="https://evil.example/f"></iframe>'
+         '<iframe src="https://www.youtube-nocookie.com/embed/abc"></iframe><style>body{display:none}</style>'
+         '<div style="color:red">red</div><form action="https://evil.example/"><input name="pw"></form><!-- note -->')
+
+
+def _saved(sid, slug="about"):
+    return db.j(db.one("SELECT blocks_json FROM pages WHERE site_id = ? AND slug = ?", sid, slug)["blocks_json"])
+
+
+@pytest.mark.parametrize("engine", ["nh3", "built-in"])
+def test_html_cleaned_on_save(cms, monkeypatch, engine):
+    from cms import sanitize
+    if engine == "built-in":
+        monkeypatch.setattr(sanitize, "nh3", None)
+    else:
+        assert sanitize.nh3 is not None, "pip install nh3"
+    assert sanitize.engine() == engine
+    c, sid, _ = cms
+    r = _put_blocks(c, sid, "about", [{"id": "h1", "type": "html", "data": {"html": NASTY}},
+                                      {"id": "t1", "type": "text", "data": {"heading": "<b>kept as text</b>", "body": NASTY}},
+                                      {"id": "t2", "type": "text", "data": {"body": "Prices: a < b, and <3 for you"}}])
+    assert r.status_code == 200
+    html, rich, plain = (b["data"] for b in _saved(sid))
+    for stored in (html["html"], rich["body"]):
+        for bad in ("<script", "onclick", "javascript:", "evil.example", "<style", "<form", "<input", "<!--"):
+            assert bad not in stored, (engine, bad, stored)
+        assert "<b>there</b>" in stored and 'href="https://ok.example/"' in stored
+    assert "youtube-nocookie.com/embed/abc" in html["html"] and 'style="color:red"' in html["html"]   # Custom HTML keeps more
+    assert "<iframe" not in rich["body"] and "style=" not in rich["body"]                            # rich text keeps less
+    assert rich["heading"] == "<b>kept as text</b>"                                                  # plain fields aren't HTML
+    assert plain["body"] == "Prices: a < b, and <3 for you"                                          # not HTML: left as typed
+    _put_blocks(c, sid, "about", [])
+
+
+def test_page_revisions_and_restore(cms):
+    c, sid, _ = cms
+    page = db.one("SELECT * FROM pages WHERE site_id = ? AND slug = 'services'", sid)
+    pid = page["id"]
+    db.run("DELETE FROM page_revisions WHERE page_id = ?", pid)
+    original = page["blocks_json"]
+    _put_blocks(c, sid, "services", [{"id": "a", "type": "text", "data": {"heading": "Version two"}}])
+    _put_blocks(c, sid, "services", [{"id": "a", "type": "text", "data": {"heading": "Version two, edited"}}])
+    revs = c.get(f"/api/pages/{pid}/revisions").json()["revisions"]
+    assert len(revs) == 1                                               # one checkpoint per editing session
+    db.run("UPDATE page_revisions SET created_at = '2020-01-01T00:00:00Z' WHERE page_id = ?", pid)
+    _put_blocks(c, sid, "services", [{"id": "a", "type": "text", "data": {"heading": "Version three"}}])
+    revs = c.get(f"/api/pages/{pid}/revisions").json()["revisions"]
+    assert len(revs) == 2 and revs[0]["blocks"] == 1 and revs[0]["user_name"]
+    first = revs[-1]["id"]                                                # the page as it was before any edit
+    res = c.post(f"/api/pages/{pid}/revisions/{first}/restore", headers=H).json()
+    assert res["ok"] and db.one("SELECT blocks_json FROM pages WHERE id = ?", pid)["blocks_json"] == original
+    revs = c.get(f"/api/pages/{pid}/revisions").json()["revisions"]
+    assert len(revs) == 3                                                 # "Version three" was kept before the restore
+    assert c.post(f"/api/pages/{pid}/revisions/999999/restore", headers=H).status_code == 404
+    # at most KEEP per page
+    from cms import revisions
+    for _ in range(revisions.KEEP + 5):
+        revisions.snapshot(db.one("SELECT * FROM pages WHERE id = ?", pid), force=True)
+    assert len(revisions.for_page(pid)) == revisions.KEEP
+
+
+def test_form_rate_limit(cms):
+    from cms import config, ratelimit
+    c, sid, _ = cms
+    sub = sites.get(sid)["subdomain"]
+    assert c.post(f"/api/sites/{sid}/deploy", json={"note": "rate limit test"}, headers=H).json()["build"]["status"] == "ready"
+    host = {"host": f"{sub}.{config.SITES_DOMAIN}"}
+    db.run("DELETE FROM form_posts WHERE site_id = ?", sid)
+    codes = [c.post("/__form", data={"name": f"Visitor {i}", "message": "Hello"}, headers=host).status_code for i in range(ratelimit.PER_IP + 2)]
+    assert codes == [200] * ratelimit.PER_IP + [429, 429]
+    r = c.post("/__form", data={"name": "x", "message": "y"}, headers=host)
+    assert r.status_code == 429 and r.headers["retry-after"] == "600" and "Too many" in r.json()["error"]
+    assert db.one("SELECT COUNT(*) AS n FROM leads WHERE site_id = ?", sid)["n"] == ratelimit.PER_IP
+    stored = db.one("SELECT ip_hash FROM form_posts WHERE site_id = ? LIMIT 1", sid)["ip_hash"]
+    assert "testclient" not in stored and len(stored) == 32                 # addresses aren't stored
+    # an hour later the visitor may post again
+    db.run("UPDATE form_posts SET created_at = '2020-01-01T00:00:00Z' WHERE site_id = ?", sid)
+    assert c.post("/__form", data={"name": "Later", "message": "Hi"}, headers=host).status_code == 200

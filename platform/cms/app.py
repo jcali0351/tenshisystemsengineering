@@ -29,7 +29,7 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from tenshi import forms as tforms, profile as prof, scanner
 
-from . import auth, blocks, config, db, media, members, render, security, sites, templates, theme as theme_mod, widgets
+from . import auth, blocks, config, db, media, members, ratelimit, render, revisions, sanitize, security, sites, templates, theme as theme_mod, widgets
 
 VERSION = "1.0.0"
 UI_DIR = Path(__file__).parent / "ui"
@@ -90,6 +90,9 @@ async def serve_site(request: Request, subdomain: str, path: str):
     """Answer one request for a client's live website: a page or file of its current deployment, a form, a visit."""
     folder, site = sites.live_folder(subdomain)
     if site and path == "/__form" and request.method == "POST":
+        if not ratelimit.allow_form_post(site["id"], client_ip(request)):
+            return JSONResponse({"ok": False, "error": "Too many messages from here. Please try again in a few minutes, or call us."},
+                                status_code=429, headers={"Retry-After": "600"})
         form = await request.form()
         if form.get("_hp"):                                   # the hidden box only robots fill in
             return JSONResponse({"ok": True})
@@ -582,6 +585,8 @@ async def api_save_page(request: Request, page_id: int):
                 widget = widgets.get(b["type"])
                 if widget:                      # widgets check their settings against their Pydantic model
                     data = widget.clean_config(data if isinstance(data, dict) else {})
+                elif isinstance(data, dict):    # Custom HTML and rich text: cleaned through the allowlist (sanitize.py)
+                    data = sanitize.clean_block_data(b["type"], data)
                 clean.append({"id": str(b.get("id") or blocks.new_block(b["type"])["id"])[:16], "type": b["type"], "data": data})
         changes["blocks_json"] = db.dumps(clean)
     for key in ("title", "seo_title", "seo_description"):
@@ -595,12 +600,37 @@ async def api_save_page(request: Request, page_id: int):
             raise sites.SiteError("That page address is empty or already used.")
         changes["slug"] = slug
     if changes:
+        revisions.snapshot(page, user)          # the page as it was, once per editing session (revisions.py)
         changes["updated_at"] = db.now()
         db.run(f"UPDATE pages SET {', '.join(k + ' = ?' for k in changes)} WHERE id = ?", *changes.values(), page_id)
         db.run("UPDATE sites SET updated_at = ? WHERE id = ?", db.now(), page["site_id"])
         if "blocks_json" not in changes or len(changes) > 2:
             db.log("Edited page", page["title"], user, page["site_id"])
     return {"ok": True, "slug": changes.get("slug", page["slug"])}
+
+
+@app.get("/api/pages/{page_id}/revisions")
+def api_page_revisions(request: Request, page_id: int):
+    """Earlier versions of a page, newest first."""
+    api_user(request)
+    if not db.one("SELECT id FROM pages WHERE id = ?", page_id):
+        raise HTTPException(404)
+    return {"revisions": revisions.for_page(page_id)}
+
+
+@app.post("/api/pages/{page_id}/revisions/{revision_id}/restore")
+def api_restore_page_revision(request: Request, page_id: int, revision_id: int):
+    """Put an earlier version back. The current version is kept as a revision first, so this can be undone."""
+    user = api_user(request)
+    page = db.one("SELECT * FROM pages WHERE id = ?", page_id)
+    if not page:
+        raise HTTPException(404)
+    rev = revisions.restore(page, revision_id, user)
+    if not rev:
+        raise HTTPException(404, "That version isn't there any more.")
+    fresh = db.one("SELECT * FROM pages WHERE id = ?", page_id)
+    return {"ok": True, "blocks": db.j(fresh["blocks_json"], []), "title": fresh["title"],
+            "seo_title": fresh["seo_title"], "seo_description": fresh["seo_description"]}
 
 
 @app.post("/api/sites/{site_id}/pages/order")
@@ -619,6 +649,7 @@ def api_delete_page(request: Request, page_id: int):
         raise sites.SiteError("The home page can't be deleted.")
     if page:
         db.run("DELETE FROM pages WHERE id = ?", page_id)
+        db.run("DELETE FROM page_revisions WHERE page_id = ?", page_id)
         db.log("Deleted page", page["title"], user, page["site_id"])
     return {"ok": True}
 

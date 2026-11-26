@@ -263,13 +263,40 @@
       '<h2 style="margin-top:16px">Search engines</h2>' +
       '<label class="field"><span>Title in Google</span><input type="text" id="p-seo-title" value="' + esc(page.seo_title) + '" placeholder="' + esc(page.title) + '"></label>' +
       '<label class="field"><span>Description in Google</span><textarea id="p-seo-desc" rows="3" maxlength="300">' + esc(page.seo_description) + '</textarea><small id="p-seo-n"></small></label>' +
-      '<button class="btn btn-primary" id="p-save">Save page settings</button>';
+      '<button class="btn btn-primary" id="p-save">Save page settings</button>' +
+      '<h2 style="margin-top:22px">Earlier versions</h2><p class="small muted">A copy is kept each time you start editing (at most every 5 minutes; the newest 50).</p>' +
+      '<div id="p-revs"><button class="btn btn-small" id="p-revs-load" type="button">Show earlier versions</button></div>';
     var count = function () { var n = $("#p-seo-desc").value.length; $("#p-seo-n").textContent = n + " characters" + (n > 160 ? " (Google shows about 155)" : ""); };
     $("#p-seo-desc").addEventListener("input", count); count();
+    $("#p-revs-load").onclick = function () { loadRevisions(); };
     $("#p-save").onclick = function () {
       var changes = { title: $("#p-title").value, in_menu: $("#p-menu").checked, seo_title: $("#p-seo-title").value, seo_description: $("#p-seo-desc").value };
       if ($("#p-slug")) changes.slug = $("#p-slug").value;
       T.busy(this, savePage(changes));
+    };
+  }
+
+  function loadRevisions() {
+    var box = $("#p-revs");
+    if (!box) return;
+    T.api("GET", "/api/pages/" + pageId + "/revisions").then(function (res) {
+      box.innerHTML = res.revisions.length ? '<ul class="revs">' + res.revisions.map(function (r) {
+        var when = new Date(r.created_at).toLocaleString([], { dateStyle: "medium", timeStyle: "short" });
+        return '<li><span><b>' + esc(when) + "</b><small>" + esc(r.user_name || "someone") + " · " + r.blocks + " block" + (r.blocks === 1 ? "" : "s") + "</small></span>" +
+          '<button class="btn btn-small" type="button" data-restore="' + r.id + '">Restore</button></li>';
+      }).join("") + "</ul>" : '<p class="small muted">No earlier versions yet. One is kept when you next change this page.</p>';
+    });
+    box.onclick = function (e) {
+      var btn = e.target.closest("[data-restore]"); if (!btn) return;
+      if (!confirm("Put this version back? The page as it is now is kept as a version too, so you can undo this.")) return;
+      clearTimeout(saveTimer);
+      T.busy(btn, saving.then(function () { return T.api("POST", "/api/pages/" + pageId + "/revisions/" + btn.dataset.restore + "/restore"); }).then(function (res) {
+        blocks.length = 0; Array.prototype.push.apply(blocks, res.blocks);
+        page.title = res.title; page.seo_title = res.seo_title; page.seo_description = res.seo_description;
+        selected = null; drawList(); drawPanel(); reloadPreview(); loadRevisions();
+        $("#save-state").textContent = "All changes saved";
+        T.toast("Earlier version restored. Publish to put it live.");
+      }));
     };
   }
 
