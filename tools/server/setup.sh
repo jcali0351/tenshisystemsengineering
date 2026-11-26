@@ -217,76 +217,8 @@ WantedBy=multi-user.target
 EOF
 
 echo "== 9. Web server (Caddy): the website, the CMS and client sites, all on HTTPS"
-cat > /etc/caddy/Caddyfile <<EOF
-{
-	on_demand_tls {
-		ask http://127.0.0.1:9123/check
-	}
-	# enable this if browsers stall on images/large files over HTTP/3 (h3), which turns HTTP/3 off.
-	# servers { protocols h1 h2 }
-}
-
-$DOMAIN {
-	root * $APP
-	@private path /platform* /tools* /.git* /.github* /docs* /node_modules* /marketing* /src* /.claude* /package.json /package-lock.json /*.md /*.patch /.gitignore /*.mjs *.py
-	respond @private 404
-	encode zstd gzip
-	header {
-		Strict-Transport-Security "max-age=31536000"
-		X-Content-Type-Options "nosniff"
-		Referrer-Policy "strict-origin-when-cross-origin"
-		-Server
-	}
-	@pages path / *.html
-	header @pages Cache-Control "no-cache"
-	handle /api/contact* {
-		request_body {
-			max_size 64KB
-		}
-		reverse_proxy 127.0.0.1:9124
-	}
-	handle /api/scores* {
-		request_body {
-			max_size 8KB
-		}
-		reverse_proxy 127.0.0.1:9126
-	}
-	file_server
-}
-
-www.$DOMAIN {
-	redir https://$DOMAIN{uri} permanent
-}
-
-cms.$DOMAIN {
-	encode zstd gzip
-	request_body {
-		max_size 210MB
-	}
-	reverse_proxy 127.0.0.1:8000
-}
-
-files.$DOMAIN {
-	encode zstd gzip
-	request_body {
-		max_size 512MB
-	}
-	header {
-		Strict-Transport-Security "max-age=31536000"
-		X-Robots-Tag "noindex, nofollow"
-		-Server
-	}
-	reverse_proxy 127.0.0.1:9125
-}
-
-https:// {
-	tls {
-		on_demand
-	}
-	encode zstd gzip
-	reverse_proxy 127.0.0.1:8000
-}
-EOF
+# The config lives in tools/server/Caddyfile.template (also used by caddy-update.sh to change a running server).
+sed -e "s#__DOMAIN__#$DOMAIN#g" -e "s#__APP__#$APP#g" "$APP/tools/server/Caddyfile.template" > /etc/caddy/Caddyfile
 caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile 2>&1 | tail -1
 
 echo "== 10. Nightly backup of the CMS data (keeps 14 days)"

@@ -1,0 +1,101 @@
+# Caddy config for the Tenshi server. Single source for setup.sh (step 9) and caddy-update.sh.
+# __DOMAIN__ and __APP__ are filled in by those scripts (tenshisystems.com, /srv/tenshi/app).
+{
+	on_demand_tls {
+		ask http://127.0.0.1:9123/check
+	}
+	# HTTP/3 (QUIC over UDP) is off: some visitors' networks stalled on images / large files over h3.
+	# HTTP/1.1 and HTTP/2 serve everyone. To turn h3 back on, delete this "servers" block and reload.
+	servers {
+		protocols h1 h2
+	}
+}
+
+# Shared security headers (every site served from the main domain block).
+(security_headers) {
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		X-Frame-Options "SAMEORIGIN"
+		Permissions-Policy "camera=(), microphone=(), payment=(), usb=(), browsing-topics=(), geolocation=(self), fullscreen=(self)"
+		# Report-only first: the browser console lists anything this policy WOULD block, nothing is blocked yet.
+		# When the console stays clean for a while, rename the header to Content-Security-Policy.
+		Content-Security-Policy-Report-Only "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob:; connect-src 'self' https://*.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net https://www.googletagmanager.com https://*.supabase.co wss://*.supabase.co https://*.workers.dev https://api.github.com; worker-src 'self' blob:; frame-src 'self'; frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
+		-Server
+	}
+}
+
+__DOMAIN__ {
+	root * __APP__
+	@private path /platform* /tools* /.git* /.github* /docs* /node_modules* /marketing* /src* /.claude* /package.json /package-lock.json /*.md /*.patch /.gitignore /*.mjs *.py
+	respond @private 404
+	# zstd and gzip (this Caddy build has no Brotli encoder; zstd is as good or better for browsers that support it).
+	encode zstd gzip
+	import security_headers
+
+	# Browser caching. The four groups never overlap.
+	# 1. Pages and data: always check for a new copy (cheap: an unchanged file answers 304).
+	@fresh path / *.html *.json *.xml *.txt
+	header @fresh Cache-Control "no-cache"
+	# 2. Files linked with a version tag (styles.css?v=1a2b3c4d) or a date in the name (models/uploads/<slot>-<date>.glb):
+	#    the address changes when the file does, so browsers keep them for a year without asking.
+	@versioned {
+		expression `{query.v} != "" || {path}.matches("^/models/uploads/[^/]+-[0-9]{12}\\.glb$")`
+		not path / *.html *.json *.xml *.txt
+	}
+	header @versioned Cache-Control "public, max-age=31536000, immutable"
+	# 3. Other pictures, fonts, scripts, styles and models (no version tag): a day, then re-checked in the background.
+	@static {
+		path *.css *.js *.mjs *.webp *.avif *.png *.jpg *.jpeg *.gif *.svg *.ico *.woff2 *.woff *.ttf *.glb *.mp3 *.ogg *.wav *.mp4 *.webm
+		not expression `{query.v} != "" || {path}.matches("^/models/uploads/[^/]+-[0-9]{12}\\.glb$")`
+	}
+	header @static Cache-Control "public, max-age=86400, stale-while-revalidate=604800"
+
+	handle /api/contact* {
+		request_body {
+			max_size 64KB
+		}
+		reverse_proxy 127.0.0.1:9124
+	}
+	handle /api/scores* {
+		request_body {
+			max_size 8KB
+		}
+		reverse_proxy 127.0.0.1:9126
+	}
+	file_server
+}
+
+www.__DOMAIN__ {
+	redir https://__DOMAIN__{uri} permanent
+}
+
+cms.__DOMAIN__ {
+	encode zstd gzip
+	request_body {
+		max_size 210MB
+	}
+	reverse_proxy 127.0.0.1:8000
+}
+
+files.__DOMAIN__ {
+	encode zstd gzip
+	request_body {
+		max_size 512MB
+	}
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Robots-Tag "noindex, nofollow"
+		-Server
+	}
+	reverse_proxy 127.0.0.1:9125
+}
+
+https:// {
+	tls {
+		on_demand
+	}
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:8000
+}

@@ -59,3 +59,19 @@ Get-Content tools\server\setup.sh | ssh -i $HOME\.ssh\tenshi_vps root@<server-ip
 
 It's safe to run again on the live server: it updates packages and settings and leaves the CMS data and the existing admin
 account alone. Restore CMS data from a backup into `/srv/tenshi/data` before starting the service on a new server.
+
+## Changing the web server config (Caddy)
+
+The config is `tools/server/Caddyfile.template` (setup.sh writes it on a new server). To apply a change to the
+running server after it has been pushed and deployed:
+
+```bash
+ssh -i ~/.ssh/tenshi_vps root@189.31.38.230
+/usr/local/bin/tenshi-deploy                          # get the newest template now
+bash /srv/tenshi/app/tools/server/caddy-update.sh     # shows the diff, asks, backs up, validates, reloads, checks
+```
+
+It keeps a backup next to the live file (`/etc/caddy/Caddyfile.bak-<date>`) and puts it back by itself if the reload
+or the check fails. What the template sets: HTTP/3 off (h1 + h2), zstd/gzip compression, one-year caching for files
+with a `?v=` tag or a dated model file name, a day for other static files, `no-cache` for pages and JSON, and security
+headers (HSTS with subdomains, X-Frame-Options SAMEORIGIN, Permissions-Policy, and a report-only CSP).
