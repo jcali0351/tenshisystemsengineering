@@ -1,6 +1,6 @@
 /* Tenshi Editor (admin.html): a small CMS for the Tenshi Systems Engineering site.
    The site is served from the tenshi-cms branch (tenshisystems.com pulls it every 5 minutes), so saving means committing changed files to that branch through the GitHub
-   API, with the editor's own fine-grained key (Contents: read and write). The key stays in this browser.
+   API, with the editor's own fine-grained key (Contents: read and write). The key stays in this browser tab (sessionStorage) only.
 
    - Text: every word on the site lives in translations.js in ten languages. The editor changes single entries there
      (admin/tr.js) and, when the English changes, fills the other languages with Chrome's built-in translator on Save.
@@ -24,13 +24,15 @@
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
 
-  /* ------------------------------------------------------------------ key storage */
+  /* ------------------------------------------------------------------ key storage
+     The GitHub key is kept for this browser tab only (sessionStorage): closing the tab signs you out. Older versions
+     could keep it in localStorage ("Keep me signed in"); any such copy is deleted on load so it doesn't linger on disk.
+     TODO: replace the personal key with a server-held GitHub App token (short-lived installation tokens minted behind
+     the /admin basic-auth login), so no long-lived GitHub key is ever pasted into or held by the browser. */
   function store(kind) { try { return window[kind]; } catch (e) { return null; } }
-  function getToken() { try { return (store("sessionStorage") || {}).getItem(KEY) || (store("localStorage") || {}).getItem(KEY) || ""; } catch (e) { return ""; } }
-  function setToken(t, remember) {
-    try { store("sessionStorage").setItem(KEY, t); } catch (e) {}
-    try { if (remember) store("localStorage").setItem(KEY, t); else store("localStorage").removeItem(KEY); } catch (e) {}
-  }
+  try { (store("localStorage") || { removeItem: function () {} }).removeItem(KEY); } catch (e) {}
+  function getToken() { try { return (store("sessionStorage") || {}).getItem(KEY) || ""; } catch (e) { return ""; } }
+  function setToken(t) { try { store("sessionStorage").setItem(KEY, t); } catch (e) {} }
   function clearToken() {
     try { store("sessionStorage").removeItem(KEY); } catch (e) {}
     try { store("localStorage").removeItem(KEY); } catch (e) {}
@@ -183,7 +185,7 @@
     var t = $("#ed-token").value.trim(), m = $("#ed-login-msg"), btn = e.target.querySelector("button");
     if (!t) return;
     token = t; m.textContent = "Checking the key…"; m.className = "ed-msg"; busy(btn, true, "Checking…");
-    signIn().then(function () { setToken(t, $("#ed-remember").checked); $("#ed-token").value = ""; })
+    signIn().then(function () { setToken(t); $("#ed-token").value = ""; })
       .catch(function (err) {
         token = "";
         m.textContent = err.status === 404 ? "That key can't see the tenshisystemsengineering repository. When you make it, choose Only select repositories › tenshisystemsengineering." : err.message;

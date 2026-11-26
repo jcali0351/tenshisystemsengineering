@@ -11,18 +11,37 @@
 	}
 }
 
-# Shared security headers (every site served from the main domain block).
-(security_headers) {
+# Security headers, in three snippets:
+#   (security_headers_common)  every site this server answers for (main site, cms., files., client sites)
+#   (security_headers)         the main site: common + HSTS for all subdomains + Permissions-Policy + report-only CSP
+#   (security_headers_app)     cms. and files.: common + HSTS for all subdomains + a strict Permissions-Policy
+# Client sites (the catch-all block) get common + HSTS without includeSubDomains: a client's own domain may run other
+# subdomains elsewhere over plain http, and includeSubDomains would break those for a year.
+(security_headers_common) {
 	header {
-		Strict-Transport-Security "max-age=31536000; includeSubDomains"
 		X-Content-Type-Options "nosniff"
 		Referrer-Policy "strict-origin-when-cross-origin"
 		X-Frame-Options "SAMEORIGIN"
+		-Server
+	}
+}
+
+(security_headers) {
+	import security_headers_common
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
 		Permissions-Policy "camera=(), microphone=(), payment=(), usb=(), browsing-topics=(), geolocation=(self), fullscreen=(self)"
 		# Report-only first: the browser console lists anything this policy WOULD block, nothing is blocked yet.
 		# When the console stays clean for a while, rename the header to Content-Security-Policy.
 		Content-Security-Policy-Report-Only "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob:; connect-src 'self' https://*.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net https://www.googletagmanager.com https://*.supabase.co wss://*.supabase.co https://*.workers.dev https://api.github.com; worker-src 'self' blob:; frame-src 'self'; frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
-		-Server
+	}
+}
+
+(security_headers_app) {
+	import security_headers_common
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		Permissions-Policy "camera=(), microphone=(), payment=(), usb=(), browsing-topics=(), geolocation=()"
 	}
 }
 
@@ -33,6 +52,14 @@ __DOMAIN__ {
 	# zstd and gzip (this Caddy build has no Brotli encoder; zstd is as good or better for browsers that support it).
 	encode zstd gzip
 	import security_headers
+
+	# The Tenshi Editor (admin.html and admin/) needs a password before the browser gets a single byte of it.
+	# The user name and bcrypt hash live on the server only, in /etc/caddy/tenshi-editor.auth (one line:
+	# "<user> <hash>", written by caddy-update.sh with `caddy hash-password`). Never put a password in this file.
+	@editor path /admin.html /admin /admin/*
+	basic_auth @editor {
+		import /etc/caddy/tenshi-editor.auth
+	}
 
 	# Browser caching. The four groups never overlap.
 	# 1. Pages and data: always check for a new copy (cheap: an unchanged file answers 304).
@@ -73,6 +100,7 @@ www.__DOMAIN__ {
 
 cms.__DOMAIN__ {
 	encode zstd gzip
+	import security_headers_app
 	request_body {
 		max_size 210MB
 	}
@@ -84,11 +112,8 @@ files.__DOMAIN__ {
 	request_body {
 		max_size 512MB
 	}
-	header {
-		Strict-Transport-Security "max-age=31536000; includeSubDomains"
-		X-Robots-Tag "noindex, nofollow"
-		-Server
-	}
+	import security_headers_app
+	header X-Robots-Tag "noindex, nofollow"
 	reverse_proxy 127.0.0.1:9125
 }
 
@@ -97,5 +122,7 @@ https:// {
 		on_demand
 	}
 	encode zstd gzip
+	import security_headers_common
+	header Strict-Transport-Security "max-age=31536000"
 	reverse_proxy 127.0.0.1:8000
 }

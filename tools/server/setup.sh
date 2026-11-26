@@ -218,6 +218,8 @@ EOF
 
 echo "== 9. Web server (Caddy): the website, the CMS and client sites, all on HTTPS"
 # The config lives in tools/server/Caddyfile.template (also used by caddy-update.sh to change a running server).
+# The Tenshi Editor (admin.html) is behind a login: make it first, the Caddyfile imports its bcrypt hash.
+[ -s /etc/caddy/tenshi-editor.auth ] || bash "$APP/tools/server/editor-password.sh"
 sed -e "s#__DOMAIN__#$DOMAIN#g" -e "s#__APP__#$APP#g" "$APP/tools/server/Caddyfile.template" > /etc/caddy/Caddyfile
 caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile 2>&1 | tail -1
 

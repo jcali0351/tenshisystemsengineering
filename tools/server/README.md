@@ -75,3 +75,13 @@ It keeps a backup next to the live file (`/etc/caddy/Caddyfile.bak-<date>`) and 
 or the check fails. What the template sets: HTTP/3 off (h1 + h2), zstd/gzip compression, one-year caching for files
 with a `?v=` tag or a dated model file name, a day for other static files, `no-cache` for pages and JSON, and security
 headers (HSTS with subdomains, X-Frame-Options SAMEORIGIN, Permissions-Policy, and a report-only CSP).
+
+### The Tenshi Editor login
+
+Caddy asks for a user name and password before it serves `admin.html` or anything in `admin/` (`basic_auth` in the
+template). Only a bcrypt hash is kept, in `/etc/caddy/tenshi-editor.auth` (made by `editor-password.sh` with
+`caddy hash-password`; never commit a password). `caddy-update.sh` asks for the login the first time; to change it later:
+
+```
+bash /srv/tenshi/app/tools/server/caddy-update.sh --editor-password
+```

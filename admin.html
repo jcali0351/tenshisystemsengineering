@@ -1,14 +1,6 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <!-- Google Analytics (Google tag G-E671CJ03R4) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-E671CJ03R4"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-E671CJ03R4');
-  </script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
@@ -53,7 +45,6 @@
       <form id="ed-login-form" autocomplete="off">
         <label class="ed-field"><span>GitHub key</span>
           <input type="password" id="ed-token" placeholder="github_pat_…" autocomplete="off" spellcheck="false" required></label>
-        <label class="ed-check"><input type="checkbox" id="ed-remember"> Keep me signed in on this device <small>(only on your own computer)</small></label>
         <button class="ed-btn" type="submit">Sign in</button>
         <p class="ed-msg" id="ed-login-msg" role="status"></p>
       </form>
@@ -66,7 +57,7 @@
           <li>Permissions › Repository permissions › <b>Contents</b>: <b>Read and write</b>. Nothing else is needed.</li>
           <li>Generate the token, copy it and paste it above. GitHub shows it only once.</li>
         </ol>
-        <p>The key stays in this browser. It's never saved in the website's files.</p>
+        <p>The key is kept only in this browser tab and is forgotten when you close it. It's never saved in the website's files.</p>
       </details>
     </section>
   </main>
