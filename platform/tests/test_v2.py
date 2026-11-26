@@ -292,3 +292,58 @@ def test_store_header_cart_on_every_page(cms):
         assert "tws-hcart" in (folder / "about.html").read_text()
     _put_blocks(c, sid, "index", [])                                    # no store anywhere: no cart either
     assert "tws-hcart" not in c.get(f"/sites/{sid}/preview/about").text
+
+
+# ---------------------------------------------------------------------------------------------- 5. lead emails per site
+
+def test_lead_email_settings_validate_and_need_an_owner(cms):
+    from cms import notify
+    c, sid = cms
+    st = c.get(f"/api/sites/{sid}/lead-email").json()
+    assert st["settings"] == {"enabled": True, "to": "", "per_hour": 10}
+    ok = c.put(f"/api/sites/{sid}/lead-email", json={"enabled": True, "to": "a@example.com; B@example.com a@example.com", "per_hour": 3}, headers=H)
+    assert ok.status_code == 200 and ok.json()["settings"]["to"] == "a@example.com, B@example.com"
+    for bad in ({"to": "not-an-email"}, {"to": "a@x.io, b@x.io, c@x.io, d@x.io"}, {"per_hour": 0}, {"per_hour": 500}):
+        assert c.put(f"/api/sites/{sid}/lead-email", json=bad, headers=H).status_code == 400, bad
+    editor = {"id": _user("v2-editor@example.com", "correct-horse-8"), "role": "editor"}
+    with pytest.raises(PermissionError):
+        notify.save(sid, {"to": "evil@example.com"}, editor)
+    assert notify.load(sid).to == "a@example.com, B@example.com"
+    assert "Lead emails" in c.get(f"/sites/{sid}/leads").text and 'name="per_hour"' in c.get(f"/sites/{sid}/leads").text
+
+
+def test_lead_emails_go_to_the_site_address_with_a_limit(cms, monkeypatch):
+    from cms import mail, notify
+    c, sid = cms
+    monkeypatch.setenv("TENSHI_MAIL_TEST", "1")
+    mail.sent.clear()
+    db.run("DELETE FROM lead_emails WHERE site_id = ?", sid)
+    db.run("DELETE FROM form_posts WHERE site_id = ?", sid)
+    assert c.put(f"/api/sites/{sid}/lead-email", json={"enabled": True, "to": "owner@example.com", "per_hour": 2}, headers=H).status_code == 200
+    _deploy(c, sid)
+    sub = sites.get(sid)["subdomain"]
+    # a classic contact form (no recipient of its own) now emails the site's address
+    r = c.post(f"/s/{sub}/__form", data={"name": "Ana", "email": "ana@example.com", "message": "Leaky tap", "_page": "contact"})
+    assert r.status_code == 200 and r.json()["ok"]
+    assert len(mail.sent) == 1 and mail.sent[0]["To"] == "owner@example.com" and mail.sent[0]["Reply-To"] == "ana@example.com"
+    assert "Leaky tap" in mail.sent[0].get_content()
+    site = sites.get(sid)
+    # a form's own recipient wins for that form
+    assert notify.lead_received(site, 1, "Quote", {"name": "Bo"}, [], "quotes@example.com") == "sent"
+    assert mail.sent[-1]["To"] == "quotes@example.com"
+    # over the hourly limit: saved, not emailed; the next email that goes out says how many were held
+    assert notify.lead_received(site, 2, "Contact", {"name": "Cy"}) == "limited"
+    assert notify.lead_received(site, 3, "Contact", {"name": "Di"}) == "limited"
+    assert len(mail.sent) == 2
+    assert notify.status(sid)["limited_last_hour"] == 2
+    db.run("UPDATE lead_emails SET created_at = '2000-01-01T00:00:00Z' WHERE site_id = ? AND status = 'sent'", sid)
+    assert notify.lead_received(site, 4, "Contact", {"name": "Ed"}) == "sent"
+    assert "2 more messages arrived without an email" in mail.sent[-1].get_content()
+    # the switch turns every lead email off, even a form's own recipient
+    c.put(f"/api/sites/{sid}/lead-email", json={"enabled": False, "to": "owner@example.com"}, headers=H)
+    assert notify.lead_received(site, 5, "Quote", {"name": "Fi"}, [], "quotes@example.com") == "off"
+    monkeypatch.delenv("TENSHI_MAIL_TEST")
+    c.put(f"/api/sites/{sid}/lead-email", json={"enabled": True, "to": "owner@example.com"}, headers=H)
+    assert notify.lead_received(site, 6, "Contact", {"name": "Gus"}) == "no-mail"
+    assert len(mail.sent) == 3
+

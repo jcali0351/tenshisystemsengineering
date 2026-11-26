@@ -175,6 +175,11 @@ CREATE TABLE IF NOT EXISTS lead_files (
 );
 CREATE INDEX IF NOT EXISTS lead_files_lead ON lead_files (lead_id);
 CREATE INDEX IF NOT EXISTS activity_time ON activity (created_at);
+CREATE TABLE IF NOT EXISTS lead_emails (
+  id INTEGER PRIMARY KEY, site_id INTEGER NOT NULL, lead_id INTEGER, status TEXT NOT NULL, sent_to TEXT NOT NULL DEFAULT '',
+  created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS lead_emails_site ON lead_emails (site_id, created_at);
 """
 
 _local = threading.local()

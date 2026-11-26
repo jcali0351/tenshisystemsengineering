@@ -153,6 +153,10 @@ templates.json), `year`, `form_action`. They're listed in `PLATFORM_NAMES` in `s
 - **Lead emails (`cms/mail.py`):** SMTP_HOST, SMTP_PORT (465 SSL / 587 STARTTLS), SMTP_USER, SMTP_PASS and optional
   CONTACT_FROM in `/etc/tenshi-cms.env` (`tools/server/cms-mail-setup.sh` copies them from the contact form's
   `/etc/tenshi-contact.env`). Without them nothing is sent and the Leads screen says email is off.
+- **Per-site lead emails (`cms/notify.py`, Leads screen › Lead emails, owners and admins):** an on/off switch (off
+  stops every lead email for the site, even a form's own recipient), up to 3 addresses for the classic contact forms
+  and Form blocks without a recipient, and a cap of 1–60 emails per site per rolling hour (default 10). Leads over the
+  cap are still saved; the next email says how many were held. Every send/hold is logged in the `lead_emails` table.
 - **Store tokens:** only the PUBLIC Storefront token is accepted; anything shaped like a secret Shopify token
   (`shpat_`, `shpca_`, `shppa_`, `shpss_` …) is refused. Settings live in the `site_settings` table, never in git.
 - **API docs:** `/api/docs`, `/redoc` and `/openapi.json` are off. For local development only: `TENSHI_API_DOCS=1`.

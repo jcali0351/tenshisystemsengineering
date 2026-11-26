@@ -434,8 +434,9 @@ def save_lead(site_id, fields):
     if not any(data.values()):
         raise SiteError("Empty message")
     page = str(fields.get("_page", ""))[:60]
-    db.run("INSERT INTO leads (site_id, page, data_json, created_at) VALUES (?, ?, ?, ?)", site_id, page, db.dumps(data), db.now())
+    lead_id = db.run("INSERT INTO leads (site_id, page, data_json, created_at) VALUES (?, ?, ?, ?)", site_id, page, db.dumps(data), db.now())
     db.log("New lead", data.get("name") or data.get("email") or "", None, site_id)
+    return lead_id
 
 
 def import_launch_profile(launch_profile):

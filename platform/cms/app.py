@@ -30,7 +30,7 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from tenshi import forms as tforms, profile as prof, scanner
 
-from . import auth, blocks, chrome, config, db, forms as lead_forms, mail, media, members, posts, ratelimit, render, revisions, sanitize, security, sites, templates, theme as theme_mod, widgets
+from . import auth, blocks, chrome, config, db, forms as lead_forms, mail, media, members, notify, posts, ratelimit, render, revisions, sanitize, security, sites, templates, theme as theme_mod, widgets
 
 VERSION = "1.0.0"
 UI_DIR = Path(__file__).parent / "ui"
@@ -86,12 +86,8 @@ async def _form_builder_send(request: Request, site: dict, spec: dict, form):
             return JSONResponse({"ok": False, "error": str(problem), "field": problem.field}, status_code=400)
         return HTMLResponse(_form_page("That didn't send", str(problem), "./", "Back to the website"), status_code=400)
     lead_id = lead_forms.save(site["id"], spec, data, files)
-    if spec.get("recipient"):
-        summary = lead_forms.summary(data)
-        reply = summary["email"] if lead_forms.EMAIL_RE.match(summary["email"] or "") else ""
-        mail.send_later(mail.lead_notification(site, spec.get("title", "Form"), data, spec["recipient"],
-                                               f"{config.PUBLIC_URL.rstrip('/')}/sites/{site['id']}/leads/{lead_id}",
-                                               [name for _, _, _, name in files], reply))
+    # the form's own recipient, else the site's lead email address; the site's on/off switch and hourly limit (notify.py)
+    notify.lead_received(site, lead_id, spec.get("title", "Form"), data, [name for _, _, _, name in files], spec.get("recipient") or "")
     if _wants_json(request):
         return JSONResponse({"ok": True})
     return HTMLResponse(_form_page("Thank you", spec.get("success") or "Your message is on its way.", "./", "Back to the website"))
@@ -144,10 +140,12 @@ async def serve_site(request: Request, subdomain: str, path: str):
         spec = lead_forms.load_spec(folder, f"{form.get('_page', '')}/{form.get('_form', '')}") if form.get("_form") else None
         if spec:                                              # a Form builder form (forms.py)
             return await _form_builder_send(request, site, spec, form)
+        fields = {k: v for k, v in form.items() if isinstance(v, str)}
         try:
-            sites.save_lead(site["id"], {k: v for k, v in form.items() if isinstance(v, str)})
+            lead_id = sites.save_lead(site["id"], fields)
         except sites.SiteError:
             return JSONResponse({"ok": False}, status_code=400)
+        notify.lead_received(site, lead_id, "Contact", {k: str(v)[:4000] for k, v in fields.items() if not k.startswith("_")})
         return JSONResponse({"ok": True})
     if site and path == "/__visit":
         if folder:
@@ -1127,7 +1125,28 @@ def leads_page(request: Request, site_id: int):
     for r in rows:
         r["summary"] = lead_forms.summary(db.j(r["data_json"]) or {})
         r["files"] = counts.get(r["id"], 0)
-    return show("leads.html", request, user, site=site, section="leads", rows=rows, mail_on=mail.configured())
+    return show("leads.html", request, user, site=site, section="leads", rows=rows, mail_on=mail.configured(),
+                notify=notify.status(site_id), can_manage=members.can_manage(user, site_id))
+
+
+@app.get("/api/sites/{site_id}/lead-email")
+def lead_email_get(request: Request, site_id: int):
+    api_user(request)
+    site_or_404(site_id)
+    return notify.status(site_id)
+
+
+@app.put("/api/sites/{site_id}/lead-email")
+async def lead_email_put(request: Request, site_id: int):
+    user = api_user(request)
+    site_or_404(site_id)
+    try:
+        value = notify.save(site_id, await request.json(), user)
+    except PermissionError as error:
+        return JSONResponse({"error": str(error)}, status_code=403)
+    except (notify.NotifyError, ValueError) as error:
+        return JSONResponse({"error": str(error)}, status_code=400)
+    return {"settings": value.model_dump(), **{k: v for k, v in notify.status(site_id).items() if k != "settings"}}
 
 
 def lead_or_404(site_id, lead_id):

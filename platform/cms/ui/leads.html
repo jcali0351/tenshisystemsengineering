@@ -6,6 +6,29 @@
 <p class="muted">Messages sent through the forms on this site. Open one to see every answer and attached file; mark each one as you follow it up.</p>
 {% if not mail_on %}<p class="notice-box small" role="note"><b>Email notifications are off.</b> The server has no mail settings yet, so new messages only arrive here.
   {% if user.role == 'admin' %}To turn them on, run <code>tools/server/cms-mail-setup.sh</code> on the server (it reuses the website contact form's SMTP settings).{% else %}Ask a CMS admin to turn them on.{% endif %}</p>{% endif %}
+{% set ns = notify.settings %}
+<section class="card" id="lead-email" aria-labelledby="le-h">
+  <h2 id="le-h" style="margin-top:0">Lead emails</h2>
+  {% if can_manage %}
+  <form id="le-form" novalidate>
+    <label class="check"><input type="checkbox" name="enabled" {% if ns.enabled %}checked{% endif %}> Email new messages from this site's forms</label>
+    <div class="grid-2" style="display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-top:10px">
+      <label class="field"><span>Send them to</span>
+        <input type="text" name="to" value="{{ ns.to }}" placeholder="you@yourbusiness.com" autocomplete="email" spellcheck="false" aria-describedby="le-to-h">
+        <small id="le-to-h">Up to 3 addresses, separated by commas. Used by the contact forms and by any Form block without its own recipient (a form's own recipient wins for that form).</small></label>
+      <label class="field"><span>At most, per hour</span>
+        <input type="number" name="per_hour" value="{{ ns.per_hour }}" min="1" max="60" step="1" aria-describedby="le-cap-h">
+        <small id="le-cap-h">Messages over the limit still arrive here; the next email says how many.</small></label>
+    </div>
+    <p class="error-box" id="le-error" role="alert" hidden></p>
+    <p style="display:flex;gap:12px;align-items:center;margin:8px 0 0"><button class="btn btn-primary" id="le-save">Save</button>
+      <span class="small muted" id="le-status">{{ notify.sent_last_hour }} sent in the last hour{% if notify.limited_last_hour %}, {{ notify.limited_last_hour }} held back by the limit{% endif %}.</span></p>
+  </form>
+  {% else %}
+  <p class="small">{% if ns.enabled and ns.to %}New messages are emailed to <b>{{ ns.to }}</b> (at most {{ ns.per_hour }} an hour).{% elif ns.enabled %}No address is set; only forms with their own recipient send emails.{% else %}Lead emails are switched off for this site.{% endif %}
+    The site's owners can change this.</p>
+  {% endif %}
+</section>
 <section class="card">
   {% if rows %}
   <div class="table-wrap"><table class="table">
@@ -32,6 +55,17 @@
 {% endblock %}
 {% block scripts %}
 <script>
+var leForm = document.getElementById("le-form");
+if (leForm) leForm.addEventListener("submit", function (e) {
+  e.preventDefault();
+  var err = document.getElementById("le-error"); err.hidden = true;
+  var body = { enabled: leForm.enabled.checked, to: leForm.to.value.trim(), per_hour: parseInt(leForm.per_hour.value, 10) || 10 };
+  Tenshi.busy(document.getElementById("le-save"), Tenshi.api("PUT", "/api/sites/{{ site.id }}/lead-email", body).then(function (res) {
+    leForm.to.value = res.settings.to;
+    document.getElementById("le-status").textContent = res.sent_last_hour + " sent in the last hour.";
+    Tenshi.toast("Saved");
+  }).catch(function (error) { err.textContent = error.message || "That didn't save."; err.hidden = false; }));
+});
 document.addEventListener("change", function (e) {
   if (e.target.matches("[data-status]")) Tenshi.api("PATCH", "/api/leads/" + e.target.closest("tr").dataset.lead, { status: e.target.value }).then(function () { Tenshi.toast("Updated"); });
 });
