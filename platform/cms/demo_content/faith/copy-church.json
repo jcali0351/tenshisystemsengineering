@@ -1,0 +1,586 @@
+{
+  "_readme": "DRAFT starter content for one fictional congregation (Tenshi CMS, faith niche). Same shape as the main category files: profile follows business.schema.json; pages and blog_posts follow cms/blocks.py. See faith/HANDOFF.md.",
+  "format": "tenshi.starter/1",
+  "status": "draft",
+  "language": "en",
+  "category": "faith",
+  "category_label": "Place of worship",
+  "variant": "church",
+  "tradition": "Christian (non-denominational)",
+  "new_category": true,
+  "closest_existing_category": "nonprofit",
+  "templates": [
+    "nonprofit",
+    "community"
+  ],
+  "recommended_template": "nonprofit",
+  "page_roles": {
+    "home": "index",
+    "about": "about",
+    "times": "worship-times",
+    "events": "events",
+    "talks": "sermons",
+    "get_involved": "get-involved",
+    "give": "give",
+    "contact": "contact"
+  },
+  "profile": {
+    "schema": "tenshi.business/1",
+    "company": {
+      "name": "[Church Name]",
+      "category": "faith",
+      "category_label": "Place of worship",
+      "type": "organization",
+      "tagline": "All are welcome here",
+      "phone": "[Phone, e.g. (608) XXX-XXXX]",
+      "email": "info@example.org",
+      "address": "[Street Address], Madison, WI [ZIP Code]",
+      "city": "Madison",
+      "state": "WI",
+      "service_areas": [],
+      "hours": [
+        {
+          "days": "Sunday worship",
+          "time": "[Time]"
+        },
+        {
+          "days": "Midweek groups",
+          "time": "[Day], [Time]"
+        },
+        {
+          "days": "Church office",
+          "time": "[Days], [Time]–[Time]"
+        }
+      ],
+      "description": "[Church Name] is a welcoming, non-denominational Christian church in Madison, Wisconsin. Join us for worship, friendship and service. Everyone is welcome, wherever you are on your journey.",
+      "logo": null
+    },
+    "site": {
+      "goal": "community",
+      "template": "nonprofit",
+      "subdomain": "your-congregation"
+    },
+    "services": [
+      {
+        "name": "Sunday worship",
+        "description": "Music, prayer, a Bible reading and a sermon. [Edit to match your service.]",
+        "price": ""
+      },
+      {
+        "name": "Small groups",
+        "description": "Midweek groups to talk, pray and support one another.",
+        "price": ""
+      },
+      {
+        "name": "Children and youth",
+        "description": "Programs for children and young people. [Add ages.]",
+        "price": ""
+      },
+      {
+        "name": "Community outreach",
+        "description": "[Describe how the church serves Madison.]",
+        "price": ""
+      }
+    ],
+    "products": [],
+    "staff": [
+      {
+        "name": "[Pastor Name]",
+        "role": "Pastor",
+        "bio": "[Pastor Name] leads our church family and enjoys getting to know newcomers. [Add a short personal note.]"
+      },
+      {
+        "name": "[Name]",
+        "role": "Children and youth leader",
+        "bio": "[Name] runs our children's and youth programs."
+      },
+      {
+        "name": "[Name]",
+        "role": "Church administrator",
+        "bio": "[Name] looks after the office and is happy to help with any question."
+      }
+    ],
+    "gallery": [],
+    "portfolio": [],
+    "testimonials": [],
+    "social": {},
+    "seo": {
+      "title": "[Church Name] | Church in Madison, WI",
+      "description": "[Church Name] is a welcoming, non-denominational church in Madison, WI. Find worship times, events and ways to get involved."
+    }
+  },
+  "pages": [
+    {
+      "slug": "index",
+      "title": "Home",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "hero",
+          "data": {
+            "kicker": "[Church Name] · Madison, WI",
+            "heading": "A warm welcome, whoever you are",
+            "text": "Join us for Sunday worship at [Time], followed by coffee and conversation. Come as you are.",
+            "button_text": "Plan your visit",
+            "button_link": "worship-times",
+            "call_button": true,
+            "layout": "split"
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Welcome",
+            "body": "<p>Whether you've been part of a church all your life or you're simply curious, you'll find a friendly welcome at [Church Name]. We'd love to meet you.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "This week",
+            "body": "<ul><li>Sunday worship: [Day], [Time]</li><li>Kids' program: during the [Time] service</li><li>Midweek small groups: [Day], [Time]</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "We'd love to meet you",
+            "text": "Send us a message or come and visit. Everyone is welcome.",
+            "button_text": "Contact us",
+            "button_link": "contact"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "about",
+      "title": "About",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "About us",
+            "body": "<p>[Church Name] is a non-denominational Christian church in Madison. We gather to worship together, to grow in faith and to care for our neighbors.</p><p>[Add a sentence or two about how your church started and what a Sunday is like.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "What we believe",
+            "body": "<p>[Add a short, plain-language summary of your church's beliefs, written by your leadership. Link to a fuller statement of faith if you have one.]</p><p>We know people come with different backgrounds and questions. You're welcome to visit, ask questions and take your time.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "team",
+          "data": {
+            "heading": "Our leaders and volunteers",
+            "intro": "[Add, remove or rename people under Business data › Team.]"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "worship-times",
+      "title": "Worship times",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Sunday worship",
+            "body": "<p>Our main worship service is on [Sunday] at [Time] and lasts about [X] minutes. [Describe the style: music, prayer, a Bible reading and a sermon.]</p><ul><li>[Service name]: [Day], [Time]</li><li>[Second service, if any]: [Day], [Time]</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "During the week",
+            "body": "<ul><li>Prayer meeting: [Day], [Time]</li><li>Small groups: [Day], [Time], [Location]</li><li>Youth group: [Day], [Time]</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Special services",
+            "body": "<p>Times for holiday services, such as Christmas and Easter, are posted on our events page. [Edit as needed.]</p>",
+            "center": false
+          }
+        }
+      ]
+    },
+    {
+      "slug": "events",
+      "title": "Events",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Upcoming events",
+            "center": false,
+            "body": "<h3>Community meal</h3><p><b>[Date], [Time]</b></p><p>A free meal for anyone in the neighborhood. All welcome; no need to book.</p><h3>Christmas Eve service</h3><p><b>[Date], [Time]</b></p><p>A family-friendly service with carols and candlelight. Bring family and friends.</p><h3>Easter Sunday</h3><p><b>[Date], [Time]</b></p><p>Join us to celebrate Easter. [Add details of any breakfast or children's activities.]</p><h3>Newcomers' lunch</h3><p><b>[Date], [Time]</b></p><p>New to [Church Name]? Join us for a relaxed lunch and meet the team.</p><p><small>[These are example events with placeholder dates. Replace them with your own.]</small></p>"
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "We'd love to meet you",
+            "text": "Send us a message or come and visit. Everyone is welcome.",
+            "button_text": "Contact us",
+            "button_link": "contact"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "sermons",
+      "title": "Sermons",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Sermons",
+            "body": "<p>Missed a Sunday? You can catch up on recent sermons here. [Explain where recordings are posted, e.g. this page, a podcast or a video channel.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Recent sermons",
+            "body": "<ul><li>[Sermon title], [Speaker Name], [Date]</li><li>[Sermon title], [Speaker Name], [Date]</li><li>[Sermon title], [Speaker Name], [Date]</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Current series",
+            "body": "<p>[Series title]: [one or two sentences describing the series.]</p>",
+            "center": false
+          }
+        }
+      ]
+    },
+    {
+      "slug": "get-involved",
+      "title": "Get involved",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Get involved",
+            "body": "<p>Church is more than a Sunday service. There are lots of ways to connect, serve and grow.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Ways to serve",
+            "body": "<ul><li>Welcome team: greet people at the door and help newcomers find their way.</li><li>Kids and youth: help with our children's and youth programs. [Add your safeguarding and background-check steps.]</li><li>Music and tech: sound, slides, livestream or music.</li><li>Hospitality: coffee, meals and events.</li><li>Community outreach: [describe your local service projects].</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Small groups",
+            "body": "<p>Small groups meet during the week to talk, pray and support one another. Fill in the form below and we'll help you find one.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "form",
+          "data": {
+            "heading": "I'd like to help",
+            "intro": "Tell us a little about yourself and how you'd like to help.",
+            "fields": "name,email,phone,message",
+            "button_text": "Send"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "give",
+      "title": "Give",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Give",
+            "body": "<p>Thank you for thinking about giving to [Church Name]. Your offerings support our worship, our ministries and our care for the community.</p><p>Giving is always voluntary. Please only give what you feel able to.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "How to give",
+            "body": "<ul><li>In person: [describe how offerings are collected during services].</li><li>Online: [ADD YOUR SECURE GIVING LINK HERE. Use your giving provider's page; never publish bank details on this site.]</li><li>By mail: [describe how to give by check, if you accept it].</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Questions about giving",
+            "body": "<p>[Add a contact for giving questions and any statement about receipts or tax status. Check the wording with your treasurer or advisor.]</p>",
+            "center": false
+          }
+        }
+      ]
+    },
+    {
+      "slug": "gallery",
+      "title": "Gallery",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "gallery",
+          "data": {
+            "heading": "Gallery",
+            "album": null,
+            "layout": "",
+            "lightbox": true
+          }
+        }
+      ]
+    },
+    {
+      "slug": "faq",
+      "title": "FAQ",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "faq",
+          "data": {
+            "heading": "Questions and answers",
+            "intro": "",
+            "items": [
+              {
+                "question": "What should I expect on my first visit?",
+                "answer": "A friendly welcome, a service of about [X] minutes, and coffee afterwards. Come as you are."
+              },
+              {
+                "question": "What should I wear?",
+                "answer": "Whatever you're comfortable in. There's no dress code."
+              },
+              {
+                "question": "Is there something for children?",
+                "answer": "Yes. [Describe your children's program and check-in process.]"
+              },
+              {
+                "question": "Is the building accessible?",
+                "answer": "[Describe step-free access, parking, restrooms and any hearing support.]"
+              },
+              {
+                "question": "Do I have to be a member to take part?",
+                "answer": "No. Everyone is welcome to attend, join a group or help out. [Add how membership works, if you have it.]"
+              },
+              {
+                "question": "Can I talk to someone privately?",
+                "answer": "Yes. Contact [Pastor Name] to arrange a time."
+              }
+            ],
+            "open_first": false,
+            "structured_data": true
+          }
+        }
+      ]
+    },
+    {
+      "slug": "blog",
+      "title": "News",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "News",
+            "center": false,
+            "body": "<ul><li><a href=\"blog-what-to-expect-on-your-first-sunday.html\">What to expect on your first Sunday</a></li><li><a href=\"blog-finding-your-place-small-groups-and-serving.html\">Finding your place: small groups and serving</a></li></ul>"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "contact",
+      "title": "Contact",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "contact",
+          "data": {
+            "heading": "Visit or contact us"
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Finding us",
+            "body": "<p><b>[PLACEHOLDER CONTACT DETAILS — replace before publishing]</b></p><ul><li>Address: [Street Address], Madison, WI [ZIP Code]</li><li>Phone: [Phone, e.g. (608) XXX-XXXX]</li><li>Email: [Email address] (the profile holds info@example.org as a stand-in)</li><li>Parking and access: [Describe parking, bus routes and accessible entrances.]</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "form",
+          "data": {
+            "heading": "Send us a message",
+            "intro": "We'll get back to you as soon as we can.",
+            "fields": "name,email,phone,message",
+            "button_text": "Send"
+          }
+        }
+      ]
+    }
+  ],
+  "blog_posts": [
+    {
+      "slug": "blog-what-to-expect-on-your-first-sunday",
+      "title": "What to expect on your first Sunday",
+      "in_menu": false,
+      "seo_title": "What to expect on your first Sunday",
+      "seo_description": "Visiting a church for the first time can feel a little daunting. Here's what to expect when you visit [Church Name].",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "What to expect on your first Sunday",
+            "body": "<p>Visiting a church for the first time can feel a little daunting. Here's what to expect when you visit [Church Name].</p><p>When you arrive, someone from our welcome team will say hello. They can show you where to sit, where the restrooms are and where the children's program meets.</p><p>The service lasts about [X] minutes. [Describe the main parts, such as songs, prayer, a reading and a sermon.] You're welcome to join in as much or as little as you like. Nobody will put you on the spot.</p><p>Come as you are. There's no dress code, and nobody expects you to know what to do or when to stand.</p><p>If you have children, they're welcome to stay with you or join our children's program, where trained volunteers will look after them. [Edit to match your program.]</p><p>Afterwards, stay for coffee if you can. It's a good time to meet people and ask questions.</p><p>If you'd like to know more before you visit, send us a message. We'd be glad to hear from you.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "We'd love to meet you",
+            "text": "Send us a message or come and visit. Everyone is welcome.",
+            "button_text": "Contact us",
+            "button_link": "contact"
+          }
+        }
+      ],
+      "word_count": 173
+    },
+    {
+      "slug": "blog-finding-your-place-small-groups-and-serving",
+      "title": "Finding your place: small groups and serving",
+      "in_menu": false,
+      "seo_title": "Finding your place: small groups and serving",
+      "seo_description": "Sunday worship is just one part of church life. Many people find that the friendships really grow during the week.",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Finding your place: small groups and serving",
+            "body": "<p>Sunday worship is just one part of church life. Many people find that the friendships really grow during the week.</p><p>Small groups are a simple way to start. A handful of people meet in a home or at church to talk, pray and support each other. Groups are relaxed, and you don't need to know anything in advance.</p><p>Serving is another way to connect. Helping on the welcome team, at a community meal or with the children's program lets you meet people while doing something useful.</p><p>There's no pressure to do everything. Start with one thing that interests you and see how it goes. If it isn't the right fit, we'll help you find something else.</p><p>Not sure where to begin? Fill in the form on our Get involved page or talk to anyone on the welcome team after the service. We'd love to help you find your place at [Church Name].</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "We'd love to meet you",
+            "text": "Send us a message or come and visit. Everyone is welcome.",
+            "button_text": "Contact us",
+            "button_link": "contact"
+          }
+        }
+      ],
+      "word_count": 152
+    }
+  ],
+  "gallery_captions": [
+    {
+      "caption": "Sunday morning worship",
+      "alt": "Sunday morning worship"
+    },
+    {
+      "caption": "Coffee and conversation after the service",
+      "alt": "Coffee and conversation after the service"
+    },
+    {
+      "caption": "Children's program",
+      "alt": "Children's program"
+    },
+    {
+      "caption": "Volunteers serving at our community meal",
+      "alt": "Volunteers serving at our community meal"
+    },
+    {
+      "caption": "Our church building",
+      "alt": "Our church building"
+    },
+    {
+      "caption": "A small group meeting",
+      "alt": "A small group meeting"
+    },
+    {
+      "caption": "Christmas Eve candlelight",
+      "alt": "Christmas Eve candlelight"
+    }
+  ],
+  "events": [
+    {
+      "title": "Community meal",
+      "when": "[Date], [Time]",
+      "description": "A free meal for anyone in the neighborhood. All welcome; no need to book."
+    },
+    {
+      "title": "Christmas Eve service",
+      "when": "[Date], [Time]",
+      "description": "A family-friendly service with carols and candlelight. Bring family and friends."
+    },
+    {
+      "title": "Easter Sunday",
+      "when": "[Date], [Time]",
+      "description": "Join us to celebrate Easter. [Add details of any breakfast or children's activities.]"
+    },
+    {
+      "title": "Newcomers' lunch",
+      "when": "[Date], [Time]",
+      "description": "New to [Church Name]? Join us for a relaxed lunch and meet the team."
+    }
+  ],
+  "price_list": [],
+  "notes": [
+    "DRAFT. Fictional congregation; every name, time, address and contact detail is a placeholder.",
+    "No testimonials by design (none invented). The testimonials list is empty and no testimonials block is placed.",
+    "Give page has no payment details or links, only a [placeholder] for the congregation's own secure giving page.",
+    "The gallery block has album=null: create an album from gallery_captions (see ../HANDOFF.md).",
+    "Statement of beliefs is left for church leaders to write. Nothing doctrinal is asserted beyond 'Christian'."
+  ]
+}

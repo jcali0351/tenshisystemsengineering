@@ -1,9 +1,9 @@
 """
 demo_sites.py: the public demo sites (demo-<type>.<SITES_DOMAIN>) and the "Try the CMS" sandbox.
 
-Six fictional Madison, WI businesses, each on its own template and theme, built from Content Bot's starter copy
-(cms/demo_content/, used here with the owner's go-ahead) and clear-origin stock photos only (CC0, public domain or
-AI-generated for Tenshi, read straight from cms/stock_seed/ and its manifest). Every demo site:
+Five fictional Madison, WI businesses and four faith communities (demo_faith.py), each on its own template and theme,
+built from Content Bot's starter copy (cms/demo_content/, used here with the owner's go-ahead) and clear-origin pictures
+only (CC0, public domain or AI-generated for Tenshi: cms/stock_seed/ and demo_content/faith/images/). Every demo site:
   * carries a "Demo site by Tenshi Systems" ribbon and noindex (render.py);
   * sends no email and posts nothing (mail.py, notify.py, autopost, newsletter, AI assist check is_demo());
   * is created on start-up when missing (seed_all, idempotent) and rebuilt from scratch every night (reset_all).
@@ -60,8 +60,20 @@ def _manifest() -> list[dict]:
         return []
 
 
+FAITH_DIR = CONTENT_DIR / "faith"
+
+
+def _faith_manifest() -> list[dict]:
+    try:
+        items = json.loads((FAITH_DIR / "images" / "manifest.json").read_text(encoding="utf-8"))["images"]
+    except (OSError, ValueError, KeyError):
+        return []
+    return [{**m, "_dir": str(FAITH_DIR)} for m in items]
+
+
 def clear_images(category: str) -> list[dict]:
-    return [m for m in _manifest() if m["category"] == category and m.get("license", "").startswith(CLEAR_LICENCES)]
+    pool = _faith_manifest() if category == "faith" else _manifest()
+    return [m for m in pool if m["category"] == category and m.get("license", "").startswith(CLEAR_LICENCES)]
 
 
 class Pics:
@@ -79,13 +91,19 @@ class Pics:
         if not m:
             return ""
         if m["key"] not in self.ids:
-            data = (STOCK_DIR / m["file"]).read_bytes()
+            data = (Path(m.get("_dir") or STOCK_DIR) / m["file"]).read_bytes()
             item = media.save_upload(self.site_id, Path(m["file"]).name, data, self.folder)
             alt = (m.get("alt") or m.get("title") or "").strip()
             db.run("UPDATE media SET alt = ?, tags = ? WHERE id = ?", alt[:300] if len(alt) > 3 else "Sample photo",
                    "demo, stock", item["id"])
             self.ids[m["key"]] = str(item["id"])
         return self.ids[m["key"]]
+
+    def file(self, path: Path, title: str = "") -> str:
+        """Copy one of our own placeholder files (video/audio) into the site's Media Center; its media id as text."""
+        item = media.save_upload(self.site_id, path.name, path.read_bytes(), self.folder)
+        db.run("UPDATE media SET alt = ?, tags = ? WHERE id = ?", title[:300], "demo, placeholder", item["id"])
+        return str(item["id"])
 
     def album(self, name: str, parts: list[str], layout="masonry") -> str:
         album = db.run("INSERT INTO albums (site_id, name, layout, created_at) VALUES (?, ?, ?, ?)", self.site_id, name, layout, db.now())
@@ -103,17 +121,37 @@ COMMON = {"[City]": "Madison", "[State]": "WI", "[Nearby Town]": "Middleton", "[
           "[Add or remove team members under Business data › Team.]": ""}
 
 
-def adapt(obj, fills: dict, prices=("12", "18", "24", "9", "15", "30")):
-    """Swap the starter's [placeholders] for this demo's details; drop instructions meant for the owner."""
+PH_TITLE = "Placeholder: the congregation fills this in (edit it in the CMS)"
+DROP = re.compile(r"\s*\[(?:Add|Describe|Explain|Check|Mention|Edit|Replace|These are|List|ADD|PLACEHOLDER|describe|explain|list|remove if|placeholder)[^\]\"]*\]")
+
+
+def _mark(obj):
+    """⟦token⟧ (a placeholder kept on purpose) → a visible highlighted placeholder in HTML, or [token] in plain text."""
+    if isinstance(obj, dict):
+        return {k: _mark(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_mark(v) for v in obj]
+    if isinstance(obj, str) and "⟦" in obj:
+        html = "<" in obj
+        return re.sub(r"⟦([^⟧]*)⟧", (lambda m: f'<span class="demo-ph" title="{PH_TITLE}">{m.group(1)}</span>') if html
+                      else (lambda m: f"[{m.group(1)}]"), obj)
+    return obj
+
+
+def adapt(obj, fills: dict, prices=("12", "18", "24", "9", "15", "30"), keep=()):
+    """Swap the starter's [placeholders] for this demo's details; drop instructions meant for the owner.
+    Placeholders listed in keep (e.g. the mosque's prayer times) stay, visibly marked as placeholders."""
     text = json.dumps(obj, ensure_ascii=False)
-    for k, v in {**COMMON, **fills}.items():
+    for k in keep:
+        text = text.replace(k, "⟦" + k.strip("[]") + "⟧")
+    for k, v in [*fills.items(), *COMMON.items()]:          # this demo's own (more specific) fills first
         text = text.replace(k, json.dumps(v, ensure_ascii=False)[1:-1])
     text = text.replace("[Sample review — replace with a real customer quote] ", "Sample review: ")
-    text = re.sub(r"\s*\[(?:Add|Describe|Explain|Check|Mention)[^\]\"]*\]", "", text)
+    text = DROP.sub("", text)
     n = iter(range(10_000))
     text = re.sub(r"\[XX\]", lambda m: prices[next(n) % len(prices)], text)
     text = re.sub(r"\[([^\]\"]{1,60})\]", r"\1", text)          # anything left: keep the words, lose the brackets
-    return json.loads(text)
+    return _mark(json.loads(text))
 
 
 def starter(category: str) -> dict:
@@ -324,46 +362,6 @@ def _law(p: Pics, name: str) -> dict:
             }
 
 
-def _nonprofit(p: Pics, name: str) -> dict:
-    return {"category": "nonprofit", "template": "nonprofit",
-            "theme": {"preset": "forest", "colors": {"primary": "#0f5d4e", "accent": "#c2410c", "surface": "#f8faf7", "ink": "#16241f"},
-                      "fonts": {"heading": "bitter", "body": "humanist"}, "style": "clean", "radius": 10, "space": "airy", "mode": "light", "toggle": True},
-            "fills": {"[Your Organization Name]": name, "[Street Address]": "1009 E Washington Ave", "[Phone]": "(608) 555-0128", "[Name]": "Denise Carter",
-                      "[9:00 AM]": "9:00 AM", "[5:00 PM]": "5:00 PM", "[Location]": "our pantry", "[Meeting point]": "the front desk", "[Venue]": "the community room",
-                      "[Program 1]": "Weekly pantry", "[Program 2]": "Kids' snack packs", "[Program 3]": "Community garden",
-                      "[community / cause]": "neighbors facing food insecurity", "[mission]": "make sure no neighbor goes hungry",
-                      "[describe your mission]": "make sure no neighbor on Madison's east side goes hungry", "[describe what you do]": "run a free weekly pantry, kids' snack packs and a community garden",
-                      "[describe your main programs]": "a weekly pantry, kids' snack packs and a community garden", "[describe the need you saw and why you started]": "neighbors skipping meals to pay rent",
-                      "[program]": "pantry", "[location]": "Madison's east side", "[See program pages for times]": "Pantry: Tue 4–7 PM, Sat 9 AM–noon"},
-            "company": {"tagline": "Food, friendship and a garden on the east side", "email": "hello@example.com",
-                        "description": f"{name} is a fictional volunteer-run food pantry and community garden on Madison's east side (a demo site by Tenshi Systems)."},
-            "hero": p.get("nonprofit-hero-1"), "about_img": p.get("nonprofit-about"),
-            "album": p.album("Volunteers at work", ["nonprofit-gallery-1", "nonprofit-gallery-2", "nonprofit-service-1", "nonprofit-gallery-4", "community-gallery-4", "nonprofit-service-3"]),
-            "keep": ["index", "about", "services", "faq", "contact"],
-            "pages": {
-                "index": ("Home", None, [B("newsletter", heading="Get the pantry newsletter", text="Volunteer shifts, garden days and what we need on the shelves. (Demo: sign-ups are saved to Leads, nothing is sent.)",
-                                           ask_name=True, look="card")]),
-                "events": ("Events", [B("events", heading="Volunteer days and events", view="list", items=[
-                    {"title": "Saturday pantry shift", "date": _next(5), "start": "08:30", "end": "12:00", "location": "1009 E Washington Ave", "category": "Volunteer",
-                     "description": "Sort, stock and greet. No experience needed; wear closed-toe shoes.", "capacity": 12, "image": p.get("nonprofit-service-1")},
-                    {"title": "Winter coat drive", "date": _next(2, 1), "start": "16:00", "end": "19:00", "location": "Community room", "category": "Drive",
-                     "description": "Bring clean coats, hats and mittens for all ages.", "rsvp": False, "image": p.get("nonprofit-gallery-2")},
-                    {"title": "Garden planning night", "date": _next(3, 2), "start": "18:30", "end": "20:00", "location": "Community room", "category": "Garden",
-                     "description": "Pick next year's beds and seeds. Soup provided.", "capacity": 25},
-                    {"title": "Community supper", "date": _next(6, 3), "start": "17:00", "end": "19:00", "location": "Community room", "category": "Community",
-                     "description": "A free hot meal for everyone. Volunteers welcome.", "capacity": 80, "max_guests": 6}])], None),
-                "donate": ("Donate", [B("text", heading="Donate (demo: online giving is not live)",
-                                        body="<p><strong>This is a demo site. The donate button below does not take payments and no money changes hands.</strong></p>"
-                                             "<p>On a real site this page would connect to the organization's own giving platform (for example Stripe, PayPal or Givebutter) once they set it up.</p>"
-                                             "<ul><li>$25 stocks a family's shelf for a week</li><li>$60 buys a month of kids' snack packs</li><li>$150 sponsors a garden bed for a season</li></ul>"),
-                                      B("cta", heading="Online giving is switched off on this demo", text="Nothing will be charged. On a live site this button opens the organization's giving page.",
-                                        button_text="Donate (demo, not live)", button_link="donate")], None),
-                "gallery": ("Gallery", [B("gallery", heading="Volunteers at work", layout="masonry", lightbox=True)], None),
-                "contact": ("Contact", [B("map", heading="Visit the pantry", address="1009 E Washington Ave, Madison, WI 53703", latitude="43.0841", longitude="-89.3698"),
-                                         B("contact_form", heading="Volunteer or ask a question", preset="contact")], "replace")},
-            }
-
-
 DEMOS = {
     "demo-cafe": ("Driftless Bean Coffee House", "Café & restaurant", _cafe, ["restaurant", "madison"],
                   ["Gallery", "Menu", "Booking", "Events + RSVP", "Hours", "Google map", "Contact form", "Newsletter", "Dark mode"]),
@@ -375,14 +373,18 @@ DEMOS = {
                     ["Store (demo mode)", "Cart", "Buy buttons", "Gallery", "Hours", "Map"]),
     "demo-law": ("Hartwell & Okafor Law", "Law firm", _law, ["lawfirm"],
                  ["Team directory", "FAQ", "Contact form", "Multi-location map", "Trust badges"]),
-    "demo-nonprofit": ("Eastside Table Food Collective", "Nonprofit", _nonprofit, ["nonprofit", "community"],
-                       ["Events + RSVP", "Newsletter (leads only)", "Donations placeholder", "Gallery", "Map"]),
 }
+
+
+BUSINESS = list(DEMOS)
+from .demo_faith import FAITH, FAITH_TEMPLATE  # noqa: E402  (demo_faith uses the helpers above)
+DEMOS.update(FAITH)
 
 
 def catalog() -> list[dict]:
     from . import config
-    return [{"subdomain": sub, "name": n, "type": t, "modules": mods, "url": config.site_url(sub)} for sub, (n, t, _f, _c, mods) in DEMOS.items()]
+    return [{"subdomain": sub, "name": n, "type": t, "modules": mods, "url": config.site_url(sub), "group": "faith" if sub in FAITH else "business"}
+            for sub, (n, t, _f, _c, mods) in DEMOS.items()]
 
 
 # ---------------------------------------------------------------------------------------------- build one site
@@ -405,7 +407,10 @@ def _fill(sid, subdomain, base, name, label, fn, cats) -> int:
     pics = Pics(sid, cats)
     spec = fn(pics, name)
     st = starter(spec["category"])
-    profile = adapt(st["profile"], spec["fills"])
+    keep = spec.get("keep_ph", ())
+    profile = adapt(st["profile"], spec["fills"], keep=keep)
+    if spec.get("staff"):
+        profile["staff"] = spec["staff"]
     profile["company"].update({k: v for k, v in spec["company"].items() if v})
     profile["company"].update({"name": name, "city": "Madison", "state": "WI", "logo": None})
     profile["company"]["address"] = spec["fills"].get("[Street Address]", "") + ", Madison, WI"
@@ -419,7 +424,9 @@ def _fill(sid, subdomain, base, name, label, fn, cats) -> int:
         if pg["slug"] not in spec["keep"]:
             continue
         bl = []
-        for b in adapt(pg["blocks"], spec["fills"]):
+        for b in adapt(pg["blocks"], {**spec["fills"], **spec.get("page_fills", {}).get(pg["slug"], {})}, keep=keep):
+            if b["type"] in spec.get("drop_blocks", {}).get(pg["slug"], ()) or (b["data"].get("heading") or "") in spec.get("drop_headings", ()):
+                continue
             data = dict(b["data"])
             if b["type"] == "hero" and spec.get("hero"):
                 data["image"] = spec["hero"]
@@ -442,6 +449,8 @@ def _fill(sid, subdomain, base, name, label, fn, cats) -> int:
             found[1], found[2] = title_, page_blocks
         else:
             pages.insert(len(pages) - 1 if pages and pages[-1][0] == "contact" else len(pages), [slug, title_, page_blocks or [], {}])
+    if spec.get("order"):
+        pages.sort(key=lambda x: spec["order"].index(x[0]) if x[0] in spec["order"] else len(spec["order"]))
     for b in [b for p_ in pages for b in p_[2]]:
         if b["type"] == "gallery" and not b["data"].get("album") and spec.get("album"):
             b["data"]["album"] = spec["album"]
@@ -456,7 +465,7 @@ def _fill(sid, subdomain, base, name, label, fn, cats) -> int:
                db.dumps(page_blocks), now)
     # two blog posts from the starter, so News/blog widgets have something
     for i, post in enumerate(st.get("blog_posts", [])[:2]):
-        post = adapt(post, spec["fills"])
+        post = adapt(post, spec["fills"], keep=keep)
         body = "".join(b["data"].get("body", "") for b in post["blocks"] if b["type"] == "text")
         when = (datetime.utcnow() - timedelta(days=4 + i * 9)).strftime("%Y-%m-%dT%H:%M:%SZ")
         db.run("INSERT INTO posts (site_id, title, slug, excerpt, body, status, published_at, created_at, updated_at) VALUES (?, ?, ?, ?, ?, 'published', ?, ?, ?)",
@@ -471,7 +480,7 @@ def _fill(sid, subdomain, base, name, label, fn, cats) -> int:
 
 SANDBOX_OF = "demo-cafe"
 DEMOS_TEMPLATE = {"demo-cafe": "restaurant", "demo-salon": "portfolio", "demo-contractor": "roofing", "demo-retail": "ecommerce",
-                  "demo-law": "lawfirm", "demo-nonprofit": "nonprofit"}
+                  "demo-law": "lawfirm", **FAITH_TEMPLATE}
 
 
 def seed_all(only: list[str] | None = None) -> list[str]:
@@ -479,6 +488,11 @@ def seed_all(only: list[str] | None = None) -> list[str]:
     made = []
     with _lock:
         templates.seed()
+        if not only:                                    # demos we no longer offer (e.g. demo-nonprofit) go away
+            for row in db.all("SELECT s.id, s.subdomain FROM sites s JOIN site_settings ss ON ss.site_id = s.id AND ss.key = ?", SETTING):
+                if row["subdomain"] not in DEMOS and row["subdomain"] != SANDBOX:
+                    sites.delete_site(row["id"])
+                    db.log("Removed old demo site", row["subdomain"])
         for sub in (only or list(DEMOS) + [SANDBOX]):
             if db.one("SELECT 1 FROM sites WHERE subdomain = ?", sub):
                 continue

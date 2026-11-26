@@ -52,7 +52,9 @@ def _host(sub):
 
 def test_six_demo_sites_are_full_varied_and_labelled(demo):
     c, _ = demo
-    clear = {m["file"].split("/")[-1].rsplit(".", 1)[0] for m in demo_sites._manifest() if m["license"].startswith(demo_sites.CLEAR_LICENCES)}
+    clear = {m["file"].split("/")[-1].rsplit(".", 1)[0] for m in demo_sites._manifest() + demo_sites._faith_manifest()
+             if m["license"].startswith(demo_sites.CLEAR_LICENCES)}
+    placeholders = {p.stem for p in (demo_sites.FAITH_DIR / "media").iterdir()}          # our own placeholder video/audio
     themes = set()
     for sub in demo_sites.DEMOS:
         sid = _sid(sub)
@@ -71,8 +73,8 @@ def test_six_demo_sites_are_full_varied_and_labelled(demo):
             assert not re.findall(r"\[[A-Za-z][^\]<>\"]{0,50}\]", text), (sub, p["slug"])     # no starter placeholders left
             assert "tw-demo-ribbon" in html
         for m in db.all("SELECT filename FROM media WHERE site_id = ?", sid):           # only clear-origin stock photos
-            assert m["filename"].rsplit(".", 1)[0] in clear, (sub, m["filename"])
-    assert len(themes) == 6
+            assert m["filename"].rsplit(".", 1)[0] in clear | placeholders, (sub, m["filename"])
+    assert len(themes) == len(demo_sites.DEMOS) == 9
     modes = {json.loads(sites.get(_sid(s))["theme_json"])["mode"] for s in demo_sites.DEMOS}
     assert modes == {"light", "dark"}
 
@@ -84,13 +86,19 @@ def test_each_demo_shows_its_modules(demo):
             "demo-contractor": ["before_after", "contact_form", "case_studies"],
             "demo-retail": ["store"],
             "demo-law": ["team", "faq", "contact_form", "locations"],
-            "demo-nonprofit": ["events", "newsletter"]}
+            **{f: ["hours", "events", "video", "newsletter", "contact_form", "gallery", "map"] for f in demo_sites.FAITH}}
     for sub, kinds in want.items():
         used = {b["type"] for p in db.all("SELECT blocks_json FROM pages WHERE site_id = ?", _sid(sub)) for b in json.loads(p["blocks_json"])}
         assert set(kinds) <= used, (sub, set(kinds) - used)
     assert widgets.load_settings(_sid("demo-retail"), "store") is None or widgets.load_settings(_sid("demo-retail"), "store").mode == "demo"
-    donate = c.get("/donate.html", headers=_host("demo-nonprofit")).text
-    assert "not live" in donate and "no money" in donate.lower()
+    for sub, give in {"demo-church": "give", "demo-mosque": "give", "demo-temple": "dana", "demo-mandir": "donate"}.items():
+        page = c.get(f"/{give}.html", headers=_host(sub)).text
+        assert "not live" in page and "no money" in page.lower(), sub
+    prayer = c.get("/prayer-times.html", headers=_host("demo-mosque")).text        # prayer times stay visible placeholders
+    assert prayer.count('class="demo-ph"') >= 5 and "Fajr" in prayer and "Jumu" in prayer
+    assert 'class="demo-ph"' in c.get("/about.html", headers=_host("demo-temple")).text or 'class="demo-ph"' in c.get("/", headers=_host("demo-temple")).text
+    talks = c.get("/khutbahs.html", headers=_host("demo-mosque")).text
+    assert "<video" in talks and "<audio" in talks
     assert "Sample review" in c.get("/", headers=_host("demo-salon")).text
 
 

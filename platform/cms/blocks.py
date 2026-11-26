@@ -110,8 +110,8 @@ BLOCKS = {
         "data": {"width": "wide"},
     },
     "video": {
-        "label": "Video", "about": "An uploaded video or a YouTube link.",
-        "fields": [{"name": "heading", "label": "Heading", "type": "text"}, {"name": "video", "label": "Video from the Media Center", "type": "video"},
+        "label": "Video", "about": "An uploaded video or audio file, or a YouTube link.",
+        "fields": [{"name": "heading", "label": "Heading", "type": "text"}, {"name": "video", "label": "Video or audio from the Media Center", "type": "video"},
                    {"name": "youtube", "label": "…or a YouTube link", "type": "text"}, {"name": "caption", "label": "Caption", "type": "text"}],
         "data": {},
     },

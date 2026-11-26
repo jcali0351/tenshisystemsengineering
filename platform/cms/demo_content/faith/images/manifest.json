@@ -1,0 +1,88 @@
+{
+ "images": [
+  {
+   "key": "faith-church-exterior",
+   "file": "images/church-exterior.webp",
+   "category": "faith",
+   "license": "AI-generated for Tenshi Systems demo sites",
+   "alt": "Red-brick neighborhood church with a white steeple among autumn maples"
+  },
+  {
+   "key": "faith-church-potluck",
+   "file": "images/church-potluck.webp",
+   "category": "faith",
+   "license": "AI-generated for Tenshi Systems demo sites",
+   "alt": "Potluck table with casseroles, salads, rolls and pies in a fellowship hall"
+  },
+  {
+   "key": "faith-volunteer-boxes",
+   "file": "images/volunteer-boxes.webp",
+   "category": "faith",
+   "license": "AI-generated for Tenshi Systems demo sites",
+   "alt": "Volunteers' hands packing food boxes with apples, cans and bread"
+  },
+  {
+   "key": "faith-mosque-exterior",
+   "file": "images/mosque-exterior.webp",
+   "category": "faith",
+   "license": "AI-generated for Tenshi Systems demo sites",
+   "alt": "Stone and glass community center with a dome and minaret in winter snow"
+  },
+  {
+   "key": "faith-mosque-geometric",
+   "file": "images/mosque-geometric.webp",
+   "category": "faith",
+   "license": "AI-generated for Tenshi Systems demo sites",
+   "alt": "Teal, white and gold geometric star tile pattern"
+  },
+  {
+   "key": "faith-mosque-dinner",
+   "file": "images/mosque-dinner.webp",
+   "category": "faith",
+   "license": "AI-generated for Tenshi Systems demo sites",
+   "alt": "Shared dinner table with dates, lentil soup, rice, flatbread and salads"
+  },
+  {
+   "key": "faith-temple-exterior",
+   "file": "images/temple-exterior.webp",
+   "category": "faith",
+   "license": "AI-generated for Tenshi Systems demo sites",
+   "alt": "Simple wooden meditation hall with a veranda in a misty garden"
+  },
+  {
+   "key": "faith-temple-lake",
+   "file": "images/temple-lake.webp",
+   "category": "faith",
+   "license": "AI-generated for Tenshi Systems demo sites",
+   "alt": "Misty Wisconsin lake at dawn with reeds and a wooded shore"
+  },
+  {
+   "key": "faith-temple-lunch",
+   "file": "images/temple-lunch.webp",
+   "category": "faith",
+   "license": "AI-generated for Tenshi Systems demo sites",
+   "alt": "Simple vegetarian lunch of rice, miso soup, vegetables and green tea"
+  },
+  {
+   "key": "faith-mandir-exterior",
+   "file": "images/mandir-exterior.webp",
+   "category": "faith",
+   "license": "AI-generated for Tenshi Systems demo sites",
+   "alt": "White and sandstone mandir with a carved tower and a pillared porch on an autumn day"
+  },
+  {
+   "key": "faith-mandir-diyas",
+   "file": "images/mandir-diyas.webp",
+   "category": "faith",
+   "license": "AI-generated for Tenshi Systems demo sites",
+   "alt": "Flower-petal rangoli surrounded by lit clay diya lamps at a Diwali evening"
+  },
+  {
+   "key": "faith-mandir-meal",
+   "file": "images/mandir-meal.webp",
+   "category": "faith",
+   "license": "AI-generated for Tenshi Systems demo sites",
+   "alt": "Steel thali plates with rice, dal, curry and chapati on a long community-hall table"
+  }
+ ]
+}

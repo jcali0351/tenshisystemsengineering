@@ -264,8 +264,15 @@ friendly range control).
 
 ## Demo sites and "Try the CMS" (DB-39)
 
-- **Six public demo sites** (`cms/demo_sites.py`), fictional Madison, WI businesses at `demo-<type>.<SITES_DOMAIN>`:
-  demo-cafe, demo-salon, demo-contractor, demo-retail, demo-law, demo-nonprofit. Each has its own template, theme
+- **Nine public demo sites**, fictional Madison, WI organisations at `demo-<type>.<SITES_DOMAIN>`: five businesses
+  (`cms/demo_sites.py`: demo-cafe, demo-salon, demo-contractor, demo-retail, demo-law) and four faith communities
+  (`cms/demo_faith.py`: demo-church, demo-mosque, demo-temple, demo-mandir, from Content Bot's faith copy in
+  `cms/demo_content/faith/`, used for these demos only; times with an open-now badge, events + RSVP, talks as placeholder
+  video + audio, newsletter, volunteer sign-up, a not-live donations page, gallery, map). Placeholders the congregation
+  must supply (mosque prayer times, the temple's tradition, the mandir's deity) stay visible, highlighted (`.demo-ph`).
+  Faith pictures are AI-generated buildings, landscapes, food and festival lamps: no worship scenes or sacred figures,
+  and no human or animal figures on the mosque site. A retired demo (e.g. demo-nonprofit) is deleted on start-up.
+  Each has its own template, theme
   (preset + accent + fonts, light or dark, visitor dark-mode switch), 5+ pages, Content Bot's starter copy
   (`cms/demo_content/`, placeholders filled in) and clear-origin stock photos only (CC0, public domain or AI, read from
   `cms/stock_seed/`). Every page has the "Demo site by Tenshi Systems" ribbon and `noindex`.

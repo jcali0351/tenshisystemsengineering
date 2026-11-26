@@ -1,0 +1,603 @@
+{
+  "_readme": "DRAFT starter content for one fictional congregation (Tenshi CMS, faith niche). Same shape as the main category files: profile follows business.schema.json; pages and blog_posts follow cms/blocks.py. See faith/HANDOFF.md.",
+  "format": "tenshi.starter/1",
+  "status": "draft",
+  "language": "en",
+  "category": "faith",
+  "category_label": "Place of worship",
+  "variant": "mosque",
+  "tradition": "Islam (mosque / Islamic center)",
+  "new_category": true,
+  "closest_existing_category": "nonprofit",
+  "templates": [
+    "nonprofit",
+    "community"
+  ],
+  "recommended_template": "nonprofit",
+  "page_roles": {
+    "home": "index",
+    "about": "about",
+    "times": "prayer-times",
+    "events": "events",
+    "talks": "khutbahs",
+    "get_involved": "get-involved",
+    "give": "give",
+    "contact": "contact"
+  },
+  "profile": {
+    "schema": "tenshi.business/1",
+    "company": {
+      "name": "[Islamic Center Name]",
+      "category": "faith",
+      "category_label": "Place of worship",
+      "type": "organization",
+      "tagline": "A place of prayer, learning and community",
+      "phone": "[Phone, e.g. (608) XXX-XXXX]",
+      "email": "info@example.org",
+      "address": "[Street Address], Madison, WI [ZIP Code]",
+      "city": "Madison",
+      "state": "WI",
+      "service_areas": [],
+      "hours": [
+        {
+          "days": "Daily prayers",
+          "time": "See current timetable"
+        },
+        {
+          "days": "Jumu'ah",
+          "time": "Friday, [Time]"
+        },
+        {
+          "days": "Office",
+          "time": "[Days], [Time]–[Time]"
+        }
+      ],
+      "description": "[Islamic Center Name] is a mosque and Islamic center in Madison, Wisconsin. We welcome Muslims and neighbors of every background for prayer, learning and community.",
+      "logo": null
+    },
+    "site": {
+      "goal": "community",
+      "template": "nonprofit",
+      "subdomain": "your-congregation"
+    },
+    "services": [
+      {
+        "name": "Daily prayers",
+        "description": "The five daily prayers, held in congregation. See the current timetable.",
+        "price": ""
+      },
+      {
+        "name": "Jumu'ah",
+        "description": "Friday congregational prayer with khutbah.",
+        "price": ""
+      },
+      {
+        "name": "Weekend school",
+        "description": "Islamic studies and Qur'an classes for children. [Add ages.]",
+        "price": ""
+      },
+      {
+        "name": "Community services",
+        "description": "[Describe services such as counseling, marriage, funeral support or food pantry.]",
+        "price": ""
+      }
+    ],
+    "products": [],
+    "staff": [
+      {
+        "name": "[Imam Name]",
+        "role": "Imam",
+        "bio": "[Imam Name] leads prayers, gives the khutbah and is available to the community for guidance. [Add a short note.]"
+      },
+      {
+        "name": "[Name]",
+        "role": "Board president",
+        "bio": "[Name] chairs the center's volunteer board."
+      },
+      {
+        "name": "[Name]",
+        "role": "Education coordinator",
+        "bio": "[Name] runs weekend school and adult classes."
+      }
+    ],
+    "gallery": [],
+    "portfolio": [],
+    "testimonials": [],
+    "social": {},
+    "seo": {
+      "title": "[Islamic Center Name] | Mosque in Madison, WI",
+      "description": "[Islamic Center Name] is a mosque and Islamic center in Madison, WI. See prayer times, Jumu'ah, events, classes and how to visit."
+    }
+  },
+  "pages": [
+    {
+      "slug": "index",
+      "title": "Home",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "hero",
+          "data": {
+            "kicker": "[Islamic Center Name] · Madison, WI",
+            "heading": "A place of prayer, learning and community",
+            "text": "Join us for the daily prayers and Jumu'ah on Fridays. Neighbors and visitors are always welcome.",
+            "button_text": "See prayer times",
+            "button_link": "prayer-times",
+            "call_button": true,
+            "layout": "split"
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Welcome",
+            "body": "<p>Assalamu alaikum, and welcome. [Islamic Center Name] serves Muslims in Madison and the surrounding area, and we warmly welcome neighbors who'd like to visit or learn more.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "This week",
+            "body": "<ul><li>Jumu'ah (Friday prayer): khutbah at [Time], prayer at [Time]</li><li>Weekend school: [Day], [Time]</li><li>Halaqa (study circle): [Day], [Time]</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "We'd love to meet you",
+            "text": "Send us a message or come and visit. Everyone is welcome.",
+            "button_text": "Contact us",
+            "button_link": "contact"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "about",
+      "title": "About",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "About us",
+            "body": "<p>[Islamic Center Name] is a mosque and community center in Madison. We offer a place for the daily prayers, Jumu'ah, religious education and community events.</p><p>[Add a sentence or two about when the center was founded and the community it serves.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Our faith",
+            "body": "<p>We are a Muslim community. [Add a short, plain-language description of your community and its approach, written or approved by your imam and board.]</p><p>Visitors of every background are welcome to visit, ask questions and learn more. Just get in touch and we'll arrange a time.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "team",
+          "data": {
+            "heading": "Our leaders and volunteers",
+            "intro": "[Add, remove or rename people under Business data › Team.]"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "prayer-times",
+      "title": "Prayer times",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "The five daily prayers",
+            "body": "<p>The five daily prayers (salah) are Fajr, Dhuhr, Asr, Maghrib and Isha. Their times follow the position of the sun, so they change every day through the year.</p><p>Please check the current timetable before you come. [Add or link your monthly prayer timetable here and say which calculation method your mosque uses.]</p><ul><li>Fajr: adhan [time from timetable], iqamah [Time]</li><li>Dhuhr: adhan [time from timetable], iqamah [Time]</li><li>Asr: adhan [time from timetable], iqamah [Time]</li><li>Maghrib: adhan [time from timetable], iqamah [shortly after adhan]</li><li>Isha: adhan [time from timetable], iqamah [Time]</li></ul><p>[These are placeholders. Replace them with your mosque's current times and update them regularly.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Jumu'ah (Friday prayer)",
+            "body": "<p>Jumu'ah is held every Friday. The khutbah (sermon) begins at [Time] and the prayer follows at [Time]. [Add a second Jumu'ah time if you hold one.]</p><p>Please arrive early, as parking and space can be limited. [Add parking guidance.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Ramadan and Eid",
+            "body": "<p>During Ramadan we hold [taraweeh prayers / community iftars]. Eid prayer times are announced on our events page and by email. [Edit as needed.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Facilities",
+            "body": "<p>[Describe the prayer halls, the sisters' prayer area, wudu (ablution) facilities and accessibility.]</p>",
+            "center": false
+          }
+        }
+      ]
+    },
+    {
+      "slug": "events",
+      "title": "Events",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Upcoming events",
+            "center": false,
+            "body": "<h3>Ramadan community iftar</h3><p><b>[Date(s)], at Maghrib</b></p><p>Break the fast together with a shared meal. Everyone is welcome. [Add whether booking is needed.]</p><h3>Eid prayer and celebration</h3><p><b>[Date], prayer at [Time]</b></p><p>Eid prayer followed by a community gathering. [Add location if held off-site.]</p><h3>Open mosque day</h3><p><b>[Date], [Time]</b></p><p>Neighbors are invited to visit, take a tour, see a prayer and ask questions over refreshments.</p><h3>Weekly halaqa</h3><p><b>[Day], [Time]</b></p><p>A friendly study circle for adults. [Describe the topic or the language.]</p><p><small>[These are example events with placeholder dates. Replace them with your own.]</small></p>"
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "We'd love to meet you",
+            "text": "Send us a message or come and visit. Everyone is welcome.",
+            "button_text": "Contact us",
+            "button_link": "contact"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "khutbahs",
+      "title": "Khutbahs and talks",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Khutbahs",
+            "body": "<p>Each Friday's khutbah is given at Jumu'ah. [Explain whether khutbahs are recorded and where they are posted.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Recent khutbahs and talks",
+            "body": "<ul><li>[Khutbah title], [Imam Name / Speaker Name], [Date]</li><li>[Talk title], [Speaker Name], [Date]</li><li>[Talk title], [Speaker Name], [Date]</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Classes",
+            "body": "<p>[Describe Qur'an classes, weekend school or new Muslim classes, with ages, days and times.]</p>",
+            "center": false
+          }
+        }
+      ]
+    },
+    {
+      "slug": "get-involved",
+      "title": "Get involved",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Get involved",
+            "body": "<p>The center runs on the time and care of volunteers. Whatever your skills, there's a way to help.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Ways to volunteer",
+            "body": "<ul><li>Hospitality: help with iftars, Eid events and community meals.</li><li>Education: support weekend school or adult classes. [Add your safeguarding and background-check steps.]</li><li>Facilities: keep the prayer halls and building clean and welcoming.</li><li>Outreach: help with open days, interfaith events and community service.</li><li>Youth: mentor and support our young people.</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Join a program",
+            "body": "<p>Fill in the form below and a member of our volunteer team will be in touch.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "form",
+          "data": {
+            "heading": "I'd like to help",
+            "intro": "Tell us a little about yourself and how you'd like to help.",
+            "fields": "name,email,phone,message",
+            "button_text": "Send"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "give",
+      "title": "Give: sadaqah and zakat",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Support the center",
+            "body": "<p>Thank you for considering a gift to [Islamic Center Name]. Your sadaqah (voluntary charity) supports the running of the center, our programs and our community services.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Zakat",
+            "body": "<p>[Explain how your center collects and distributes zakat and zakat al-fitr, and who to contact with questions. Have this wording approved by your imam and board.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "How to give",
+            "body": "<ul><li>In person: [describe donation boxes or the office].</li><li>Online: [ADD YOUR SECURE DONATION LINK HERE. Use your donation provider's page; never publish bank details on this site.]</li><li>Other: [describe any other way to give].</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Questions",
+            "body": "<p>[Add a contact for donation questions and any statement about receipts or tax status. Check the wording with your treasurer or advisor.]</p>",
+            "center": false
+          }
+        }
+      ]
+    },
+    {
+      "slug": "gallery",
+      "title": "Gallery",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "gallery",
+          "data": {
+            "heading": "Gallery",
+            "album": null,
+            "layout": "",
+            "lightbox": true
+          }
+        }
+      ]
+    },
+    {
+      "slug": "faq",
+      "title": "FAQ",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "faq",
+          "data": {
+            "heading": "Questions and answers",
+            "intro": "",
+            "items": [
+              {
+                "question": "Can non-Muslims visit the mosque?",
+                "answer": "Yes, visitors are welcome. Please contact us first so we can arrange a time and someone to show you around."
+              },
+              {
+                "question": "What should I wear when I visit?",
+                "answer": "[Describe your dress guidance, e.g. loose, modest clothing, and whether women visitors are asked to cover their hair.] Shoes are removed before entering the prayer hall."
+              },
+              {
+                "question": "When are the prayer times?",
+                "answer": "The five daily prayer times change through the year. Please check our current timetable on the prayer times page."
+              },
+              {
+                "question": "Is there a space for sisters?",
+                "answer": "[Describe the sisters' prayer area and entrance.]"
+              },
+              {
+                "question": "Do you offer classes for children?",
+                "answer": "Yes. [Describe weekend school: ages, days and how to register.]"
+              },
+              {
+                "question": "Is the building accessible?",
+                "answer": "[Describe step-free access, parking and accessible wudu facilities.]"
+              }
+            ],
+            "open_first": false,
+            "structured_data": true
+          }
+        }
+      ]
+    },
+    {
+      "slug": "blog",
+      "title": "News",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "News",
+            "center": false,
+            "body": "<ul><li><a href=\"blog-visiting-a-mosque-a-guide-for-neighbors.html\">Visiting a mosque: a guide for neighbors</a></li><li><a href=\"blog-ramadan-at-the-center.html\">Ramadan at the center</a></li></ul>"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "contact",
+      "title": "Contact",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "contact",
+          "data": {
+            "heading": "Visit or contact us"
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Finding us",
+            "body": "<p><b>[PLACEHOLDER CONTACT DETAILS — replace before publishing]</b></p><ul><li>Address: [Street Address], Madison, WI [ZIP Code]</li><li>Phone: [Phone, e.g. (608) XXX-XXXX]</li><li>Email: [Email address] (the profile holds info@example.org as a stand-in)</li><li>Parking and access: [Describe parking, bus routes and accessible entrances.]</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "form",
+          "data": {
+            "heading": "Send us a message",
+            "intro": "We'll get back to you as soon as we can.",
+            "fields": "name,email,phone,message",
+            "button_text": "Send"
+          }
+        }
+      ]
+    }
+  ],
+  "blog_posts": [
+    {
+      "slug": "blog-visiting-a-mosque-a-guide-for-neighbors",
+      "title": "Visiting a mosque: a guide for neighbors",
+      "in_menu": false,
+      "seo_title": "Visiting a mosque: a guide for neighbors",
+      "seo_description": "If you've never been inside a mosque, you're very welcome to visit [Islamic Center Name]. Here's what to expect.",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Visiting a mosque: a guide for neighbors",
+            "body": "<p>If you've never been inside a mosque, you're very welcome to visit [Islamic Center Name]. Here's what to expect.</p><p>It's best to contact us first. We can arrange a time that doesn't clash with prayers and ask someone to show you around and answer questions.</p><p>When you arrive, you'll be asked to remove your shoes before entering the prayer hall. There are shelves near the entrance. [Describe your dress guidance for visitors here.]</p><p>If you visit at prayer time, you're welcome to sit quietly at the back and watch. The prayer includes standing, bowing and prostrating together in rows, and it lasts a few minutes.</p><p>Please ask before taking photos, and avoid walking directly in front of someone who is praying.</p><p>After your visit, there's usually time for tea and questions. No question is too simple. Many visitors ask about the prayers, the building and daily life in our community.</p><p>We also hold open days during the year, which are a relaxed way to visit with others. Check our events page or send us a message to arrange a visit.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "We'd love to meet you",
+            "text": "Send us a message or come and visit. Everyone is welcome.",
+            "button_text": "Contact us",
+            "button_link": "contact"
+          }
+        }
+      ],
+      "word_count": 180
+    },
+    {
+      "slug": "blog-ramadan-at-the-center",
+      "title": "Ramadan at the center",
+      "in_menu": false,
+      "seo_title": "Ramadan at the center",
+      "seo_description": "Ramadan is the month in which Muslims fast from dawn until sunset. It's a special time at [Islamic Center Name], and the center is busier than at any other…",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Ramadan at the center",
+            "body": "<p>Ramadan is the month in which Muslims fast from dawn until sunset. It's a special time at [Islamic Center Name], and the center is busier than at any other time of year.</p><p>Each evening, the fast is broken at Maghrib with iftar. We hold community iftars on [days], and everyone is welcome. [Add whether people should book.]</p><p>After Isha, we hold taraweeh prayers. [Add the time, and any details about the sisters' area or children.]</p><p>Because the start of Ramadan and Eid depends on the moon, exact dates are confirmed close to the time. We share them by [email / social media / this website].</p><p>If you'd like to help, we always need volunteers to set up, serve food and clean up after iftar. It's a wonderful way to meet people.</p><p>Neighbors who aren't Muslim are very welcome to join an iftar and learn more. Just let us know you're coming.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "We'd love to meet you",
+            "text": "Send us a message or come and visit. Everyone is welcome.",
+            "button_text": "Contact us",
+            "button_link": "contact"
+          }
+        }
+      ],
+      "word_count": 151
+    }
+  ],
+  "gallery_captions": [
+    {
+      "caption": "The main prayer hall",
+      "alt": "The main prayer hall"
+    },
+    {
+      "caption": "Community iftar during Ramadan",
+      "alt": "Community iftar during Ramadan"
+    },
+    {
+      "caption": "Weekend school class",
+      "alt": "Weekend school class"
+    },
+    {
+      "caption": "Eid celebration",
+      "alt": "Eid celebration"
+    },
+    {
+      "caption": "Open mosque day visitors",
+      "alt": "Open mosque day visitors"
+    },
+    {
+      "caption": "The center's entrance",
+      "alt": "The center's entrance"
+    },
+    {
+      "caption": "Volunteers preparing a community meal",
+      "alt": "Volunteers preparing a community meal"
+    }
+  ],
+  "events": [
+    {
+      "title": "Ramadan community iftar",
+      "when": "[Date(s)], at Maghrib",
+      "description": "Break the fast together with a shared meal. Everyone is welcome. [Add whether booking is needed.]"
+    },
+    {
+      "title": "Eid prayer and celebration",
+      "when": "[Date], prayer at [Time]",
+      "description": "Eid prayer followed by a community gathering. [Add location if held off-site.]"
+    },
+    {
+      "title": "Open mosque day",
+      "when": "[Date], [Time]",
+      "description": "Neighbors are invited to visit, take a tour, see a prayer and ask questions over refreshments."
+    },
+    {
+      "title": "Weekly halaqa",
+      "when": "[Day], [Time]",
+      "description": "A friendly study circle for adults. [Describe the topic or the language.]"
+    }
+  ],
+  "price_list": [],
+  "notes": [
+    "DRAFT. Fictional congregation; every name, time, address and contact detail is a placeholder.",
+    "No testimonials by design (none invented). The testimonials list is empty and no testimonials block is placed.",
+    "Give page has no payment details or links, only a [placeholder] for the congregation's own secure giving page.",
+    "The gallery block has album=null: create an album from gallery_captions (see ../HANDOFF.md).",
+    "Daily prayer times are never fixed: the page asks the mosque to add its own timetable and calculation method.",
+    "Ramadan and Eid dates depend on the moon; they're placeholders."
+  ]
+}

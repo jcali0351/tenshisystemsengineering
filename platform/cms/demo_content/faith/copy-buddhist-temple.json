@@ -1,0 +1,589 @@
+{
+  "_readme": "DRAFT starter content for one fictional congregation (Tenshi CMS, faith niche). Same shape as the main category files: profile follows business.schema.json; pages and blog_posts follow cms/blocks.py. See faith/HANDOFF.md.",
+  "format": "tenshi.starter/1",
+  "status": "draft",
+  "language": "en",
+  "category": "faith",
+  "category_label": "Place of worship",
+  "variant": "buddhist-temple",
+  "tradition": "Buddhism (temple / meditation center)",
+  "new_category": true,
+  "closest_existing_category": "nonprofit",
+  "templates": [
+    "nonprofit",
+    "community"
+  ],
+  "recommended_template": "nonprofit",
+  "page_roles": {
+    "home": "index",
+    "about": "about",
+    "times": "meditation-schedule",
+    "events": "events",
+    "talks": "dharma-talks",
+    "get_involved": "get-involved",
+    "give": "dana",
+    "contact": "contact"
+  },
+  "profile": {
+    "schema": "tenshi.business/1",
+    "company": {
+      "name": "[Temple Name]",
+      "category": "faith",
+      "category_label": "Place of worship",
+      "type": "organization",
+      "tagline": "A quiet place to practice together",
+      "phone": "[Phone, e.g. (608) XXX-XXXX]",
+      "email": "info@example.org",
+      "address": "[Street Address], Madison, WI [ZIP Code]",
+      "city": "Madison",
+      "state": "WI",
+      "service_areas": [],
+      "hours": [
+        {
+          "days": "Meditation",
+          "time": "[Days], [Time]"
+        },
+        {
+          "days": "Dharma talk",
+          "time": "[Day], [Time]"
+        },
+        {
+          "days": "Temple open",
+          "time": "[Days], [Time]–[Time]"
+        }
+      ],
+      "description": "[Temple Name] is a [Tradition, e.g. Theravada / Zen / Tibetan / Pure Land] Buddhist temple in Madison, Wisconsin. Everyone is welcome to meditate, learn and practice with our sangha.",
+      "logo": null
+    },
+    "site": {
+      "goal": "community",
+      "template": "nonprofit",
+      "subdomain": "your-congregation"
+    },
+    "services": [
+      {
+        "name": "Meditation",
+        "description": "Group sitting and walking meditation, open to all.",
+        "price": ""
+      },
+      {
+        "name": "Dharma talks",
+        "description": "Teachings on practice and daily life.",
+        "price": ""
+      },
+      {
+        "name": "Beginners' introduction",
+        "description": "A gentle introduction to meditation for newcomers.",
+        "price": ""
+      },
+      {
+        "name": "Retreats",
+        "description": "Days of practice and longer retreats. [Add details.]",
+        "price": ""
+      }
+    ],
+    "products": [],
+    "staff": [
+      {
+        "name": "[Teacher Name / Venerable Name]",
+        "role": "[Resident teacher / Abbot / Abbess]",
+        "bio": "[Name] guides the temple's practice and gives dharma talks. [Add a short note, approved by them.]"
+      },
+      {
+        "name": "[Name]",
+        "role": "Temple coordinator",
+        "bio": "[Name] looks after the schedule, newcomers and day-to-day running of the temple."
+      },
+      {
+        "name": "[Name]",
+        "role": "Volunteer coordinator",
+        "bio": "[Name] helps volunteers find a way to support the temple."
+      }
+    ],
+    "gallery": [],
+    "portfolio": [],
+    "testimonials": [],
+    "social": {},
+    "seo": {
+      "title": "[Temple Name] | Buddhist Temple in Madison, WI",
+      "description": "[Temple Name] is a Buddhist temple in Madison, WI. Meditation, dharma talks and community. Beginners always welcome."
+    }
+  },
+  "pages": [
+    {
+      "slug": "index",
+      "title": "Home",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "hero",
+          "data": {
+            "kicker": "[Temple Name] · Madison, WI",
+            "heading": "A quiet place to sit, learn and practice together",
+            "text": "Join us for meditation and dharma talks. Beginners are always welcome, and no experience is needed.",
+            "button_text": "See the schedule",
+            "button_link": "meditation-schedule",
+            "call_button": true,
+            "layout": "split"
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Welcome",
+            "body": "<p>Whether you're new to meditation or have practiced for years, you're welcome at [Temple Name]. Come as you are, and sit with us.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "This week",
+            "body": "<ul><li>Meditation: [Day], [Time]</li><li>Dharma talk: [Day], [Time]</li><li>Introduction to meditation: [Day], [Time]</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "We'd love to meet you",
+            "text": "Send us a message or come and visit. Everyone is welcome.",
+            "button_text": "Contact us",
+            "button_link": "contact"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "about",
+      "title": "About",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "About us",
+            "body": "<p>[Temple Name] is a Buddhist temple and community (sangha) in Madison, in the [Tradition] tradition.</p><p>[Add a sentence or two about how the temple began, your teachers or monastic community, and what happens here.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Our practice",
+            "body": "<p>[Add a short, plain-language description of your practice and tradition, written or approved by your teacher or monastic community.]</p><p>You don't need to call yourself a Buddhist to take part. Many people come simply to learn meditation, and they're very welcome.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "team",
+          "data": {
+            "heading": "Our leaders and volunteers",
+            "intro": "[Add, remove or rename people under Business data › Team.]"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "meditation-schedule",
+      "title": "Meditation and talks",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Weekly schedule",
+            "body": "<ul><li>Morning meditation: [Day(s)], [Time]–[Time]</li><li>Evening meditation and dharma talk: [Day], [Time]–[Time]</li><li>Chanting service: [Day], [Time] [remove if not part of your practice]</li><li>Introduction to meditation (for beginners): [Day], [Time]</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "What a session looks like",
+            "body": "<p>[Describe a typical session, e.g. a short welcome, a period of sitting meditation, walking meditation and a dharma talk, followed by tea and discussion.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Retreats and special days",
+            "body": "<p>Retreats, days of practice and festival celebrations are posted on our events page.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Please note",
+            "body": "<p>All times are placeholders. [Replace them with your temple's schedule.]</p>",
+            "center": false
+          }
+        }
+      ]
+    },
+    {
+      "slug": "events",
+      "title": "Events",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Upcoming events",
+            "center": false,
+            "body": "<h3>[Vesak / Buddha Day celebration]</h3><p><b>[Date], [Time]</b></p><p>A celebration of the Buddha's birth, awakening and passing, as observed in our tradition. [Edit the name and details for your tradition.] Everyone welcome.</p><h3>Day of practice</h3><p><b>[Date], [Time]–[Time]</b></p><p>A day of sitting and walking meditation, a dharma talk and a shared meal. [Add booking details.]</p><h3>Introduction to meditation course</h3><p><b>[Dates], [Time]</b></p><p>A [X]-week course for beginners covering how to sit, how to work with the breath and how to bring practice into daily life.</p><p><small>[These are example events with placeholder dates. Replace them with your own.]</small></p>"
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "We'd love to meet you",
+            "text": "Send us a message or come and visit. Everyone is welcome.",
+            "button_text": "Contact us",
+            "button_link": "contact"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "dharma-talks",
+      "title": "Dharma talks",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Dharma talks",
+            "body": "<p>Dharma talks are given at our [Day] evening sessions. [Explain whether talks are recorded and where they are posted.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Recent talks",
+            "body": "<ul><li>[Talk title], [Teacher Name / Venerable Name], [Date]</li><li>[Talk title], [Teacher Name], [Date]</li><li>[Talk title], [Teacher Name], [Date]</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Study groups",
+            "body": "<p>[Describe any study groups or reading circles, with days and times.]</p>",
+            "center": false
+          }
+        }
+      ]
+    },
+    {
+      "slug": "get-involved",
+      "title": "Get involved",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Get involved",
+            "body": "<p>The temple is cared for by its community. Offering your time is a valued part of practice here.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Ways to help",
+            "body": "<ul><li>Hosting: welcome newcomers and help set up the meditation hall.</li><li>Kitchen: help prepare meals and tea for retreats and festivals.</li><li>Grounds and building: cleaning, gardening and small repairs.</li><li>Events: help organize festivals, courses and open days.</li><li>[Add any other roles.]</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Join us",
+            "body": "<p>Fill in the form below and someone will be in touch.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "form",
+          "data": {
+            "heading": "I'd like to help",
+            "intro": "Tell us a little about yourself and how you'd like to help.",
+            "fields": "name,email,phone,message",
+            "button_text": "Send"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "dana",
+      "title": "Dana (generosity)",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Dana",
+            "body": "<p>Dana means generosity. [Temple Name] is supported by the freely given gifts of its community, which keep the temple open and our teachings available to all. [Edit to match how your tradition describes dana.]</p><p>Teachings and meditation sessions are offered [freely / by donation]. Please give only what you feel able to.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Ways to offer dana",
+            "body": "<ul><li>In person: [describe the dana box or how offerings are made].</li><li>Food and supplies: [describe what the temple or monastic community welcomes, and how to arrange it].</li><li>Online: [ADD YOUR SECURE DONATION LINK HERE. Never publish bank details on this site.]</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Questions",
+            "body": "<p>[Add a contact for questions about dana, receipts or tax status.]</p>",
+            "center": false
+          }
+        }
+      ]
+    },
+    {
+      "slug": "gallery",
+      "title": "Gallery",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "gallery",
+          "data": {
+            "heading": "Gallery",
+            "album": null,
+            "layout": "",
+            "lightbox": true
+          }
+        }
+      ]
+    },
+    {
+      "slug": "faq",
+      "title": "FAQ",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "faq",
+          "data": {
+            "heading": "Questions and answers",
+            "intro": "",
+            "items": [
+              {
+                "question": "I've never meditated. Can I come?",
+                "answer": "Yes. Our introduction sessions are for complete beginners, and someone will show you what to do."
+              },
+              {
+                "question": "Do I need to be a Buddhist?",
+                "answer": "No. Everyone is welcome to meditate and attend talks."
+              },
+              {
+                "question": "What should I wear?",
+                "answer": "Loose, comfortable clothing. [Add any guidance, e.g. modest dress.] Shoes are removed before entering the meditation hall."
+              },
+              {
+                "question": "Do I need to bring anything?",
+                "answer": "No. Cushions and chairs are provided. [Edit as needed.]"
+              },
+              {
+                "question": "Is there a cost?",
+                "answer": "Sessions are offered [freely / by donation]. Dana is welcome but never required."
+              },
+              {
+                "question": "Is the building accessible?",
+                "answer": "[Describe step-free access, seating options and parking.]"
+              }
+            ],
+            "open_first": false,
+            "structured_data": true
+          }
+        }
+      ]
+    },
+    {
+      "slug": "blog",
+      "title": "News",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "News",
+            "center": false,
+            "body": "<ul><li><a href=\"blog-trying-meditation-for-the-first-time.html\">Trying meditation for the first time</a></li><li><a href=\"blog-what-happens-at-a-dharma-talk.html\">What happens at a dharma talk</a></li></ul>"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "contact",
+      "title": "Contact",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "contact",
+          "data": {
+            "heading": "Visit or contact us"
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Finding us",
+            "body": "<p><b>[PLACEHOLDER CONTACT DETAILS — replace before publishing]</b></p><ul><li>Address: [Street Address], Madison, WI [ZIP Code]</li><li>Phone: [Phone, e.g. (608) XXX-XXXX]</li><li>Email: [Email address] (the profile holds info@example.org as a stand-in)</li><li>Parking and access: [Describe parking, bus routes and accessible entrances.]</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "form",
+          "data": {
+            "heading": "Send us a message",
+            "intro": "We'll get back to you as soon as we can.",
+            "fields": "name,email,phone,message",
+            "button_text": "Send"
+          }
+        }
+      ]
+    }
+  ],
+  "blog_posts": [
+    {
+      "slug": "blog-trying-meditation-for-the-first-time",
+      "title": "Trying meditation for the first time",
+      "in_menu": false,
+      "seo_title": "Trying meditation for the first time",
+      "seo_description": "Many people come to [Temple Name] curious about meditation but unsure where to start. Here's what to expect at your first session.",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Trying meditation for the first time",
+            "body": "<p>Many people come to [Temple Name] curious about meditation but unsure where to start. Here's what to expect at your first session.</p><p>When you arrive, someone will welcome you and show you where to leave your shoes. You can sit on a cushion or a chair, whichever is more comfortable. There's no right way to look.</p><p>The session usually begins with a short introduction. Then we sit quietly together for a period of meditation. [Describe the length and the instructions given in your tradition.]</p><p>Your mind will wander. That's completely normal, and it happens to everyone. When you notice it, gently come back. That noticing is part of the practice.</p><p>Some sessions include walking meditation or chanting. If you're not sure what to do, simply follow along or sit quietly.</p><p>Afterwards, there's often tea and a chance to ask questions. Teachers and regular members are happy to help.</p><p>There's no need to sign up or bring anything. Just come along to one of our beginner sessions.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "We'd love to meet you",
+            "text": "Send us a message or come and visit. Everyone is welcome.",
+            "button_text": "Contact us",
+            "button_link": "contact"
+          }
+        }
+      ],
+      "word_count": 166
+    },
+    {
+      "slug": "blog-what-happens-at-a-dharma-talk",
+      "title": "What happens at a dharma talk",
+      "in_menu": false,
+      "seo_title": "What happens at a dharma talk",
+      "seo_description": "A dharma talk is a teaching on Buddhist practice and how it relates to everyday life. At [Temple Name], talks are given by [Teacher Name / our teachers] at…",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "What happens at a dharma talk",
+            "body": "<p>A dharma talk is a teaching on Buddhist practice and how it relates to everyday life. At [Temple Name], talks are given by [Teacher Name / our teachers] at our [Day] evening sessions.</p><p>Talks usually follow a period of meditation. The speaker may explore a teaching from our tradition, share reflections on practice, or talk about how to meet daily challenges with more awareness and kindness.</p><p>You don't need any background to listen. Talks are given in plain language, and newcomers are always welcome.</p><p>There is often time for questions or discussion afterwards. It's fine to simply listen.</p><p>Talks are offered freely. If a talk raises questions for you, you're welcome to speak with [Teacher Name] after the session or at another time.</p><p>If you can't join in person, [explain whether talks are recorded or streamed and where to find them].</p><p>We hope you'll come and listen. Check the schedule for upcoming talks.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "We'd love to meet you",
+            "text": "Send us a message or come and visit. Everyone is welcome.",
+            "button_text": "Contact us",
+            "button_link": "contact"
+          }
+        }
+      ],
+      "word_count": 153
+    }
+  ],
+  "gallery_captions": [
+    {
+      "caption": "The meditation hall in the morning",
+      "alt": "The meditation hall in the morning"
+    },
+    {
+      "caption": "Walking meditation in the garden",
+      "alt": "Walking meditation in the garden"
+    },
+    {
+      "caption": "A dharma talk",
+      "alt": "A dharma talk"
+    },
+    {
+      "caption": "Offerings at the shrine",
+      "alt": "Offerings at the shrine"
+    },
+    {
+      "caption": "A shared meal after a day of practice",
+      "alt": "A shared meal after a day of practice"
+    },
+    {
+      "caption": "The temple entrance",
+      "alt": "The temple entrance"
+    },
+    {
+      "caption": "Festival decorations",
+      "alt": "Festival decorations"
+    }
+  ],
+  "events": [
+    {
+      "title": "[Vesak / Buddha Day celebration]",
+      "when": "[Date], [Time]",
+      "description": "A celebration of the Buddha's birth, awakening and passing, as observed in our tradition. [Edit the name and details for your tradition.] Everyone welcome."
+    },
+    {
+      "title": "Day of practice",
+      "when": "[Date], [Time]–[Time]",
+      "description": "A day of sitting and walking meditation, a dharma talk and a shared meal. [Add booking details.]"
+    },
+    {
+      "title": "Introduction to meditation course",
+      "when": "[Dates], [Time]",
+      "description": "A [X]-week course for beginners covering how to sit, how to work with the breath and how to bring practice into daily life."
+    }
+  ],
+  "price_list": [],
+  "notes": [
+    "DRAFT. Fictional congregation; every name, time, address and contact detail is a placeholder.",
+    "No testimonials by design (none invented). The testimonials list is empty and no testimonials block is placed.",
+    "Give page has no payment details or links, only a [placeholder] for the congregation's own secure giving page.",
+    "The gallery block has album=null: create an album from gallery_captions (see ../HANDOFF.md).",
+    "Tradition is a placeholder; terms like chanting, monastics, Vesak or Hanamatsuri vary by school, so check them."
+  ]
+}

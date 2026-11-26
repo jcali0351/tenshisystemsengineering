@@ -1,10 +1,14 @@
-{#- VIDEO: an uploaded video from the Media Center, or a YouTube link. -#}
+{#- VIDEO: an uploaded video (or audio file) from the Media Center, or a YouTube link. -#}
 {% set b = block.data %}
 <section class="band video-block">
   <div class="wrap narrow">
     {% if b.heading %}<h2 data-edit="heading">{{ b.heading }}</h2>{% endif %}
-    {% if b.video %}
-    <video src="{{ media(b.video) }}" controls preload="metadata" playsinline></video>
+    {% if b.video %}{% set src = media(b.video) %}
+    {% if src.split('?')[0].lower().endswith(('.mp3', '.m4a', '.ogg', '.wav')) %}
+    <audio src="{{ src }}" controls preload="metadata" style="width:100%"></audio>
+    {% else %}
+    <video src="{{ src }}" controls preload="metadata" playsinline></video>
+    {% endif %}
     {% elif b.youtube | youtube_id %}
     <div class="embed"><iframe src="https://www.youtube-nocookie.com/embed/{{ b.youtube | youtube_id }}" title="{{ b.heading or 'Video' }}" loading="lazy" allowfullscreen></iframe></div>
     {% else %}

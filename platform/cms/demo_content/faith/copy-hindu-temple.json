@@ -1,0 +1,595 @@
+{
+  "_readme": "DRAFT starter content for one fictional congregation (Tenshi CMS, faith niche). Same shape as the main category files: profile follows business.schema.json; pages and blog_posts follow cms/blocks.py. See faith/HANDOFF.md.",
+  "format": "tenshi.starter/1",
+  "status": "draft",
+  "language": "en",
+  "category": "faith",
+  "category_label": "Place of worship",
+  "variant": "hindu-temple",
+  "tradition": "Hinduism (mandir)",
+  "new_category": true,
+  "closest_existing_category": "nonprofit",
+  "templates": [
+    "nonprofit",
+    "community"
+  ],
+  "recommended_template": "nonprofit",
+  "page_roles": {
+    "home": "index",
+    "about": "about",
+    "times": "puja-schedule",
+    "events": "events",
+    "talks": "satsang",
+    "get_involved": "get-involved",
+    "give": "donate",
+    "contact": "contact"
+  },
+  "profile": {
+    "schema": "tenshi.business/1",
+    "company": {
+      "name": "[Mandir Name]",
+      "category": "faith",
+      "category_label": "Place of worship",
+      "type": "organization",
+      "tagline": "Come for darshan. Stay for community.",
+      "phone": "[Phone, e.g. (608) XXX-XXXX]",
+      "email": "info@example.org",
+      "address": "[Street Address], Madison, WI [ZIP Code]",
+      "city": "Madison",
+      "state": "WI",
+      "service_areas": [],
+      "hours": [
+        {
+          "days": "Darshan",
+          "time": "[Time]–[Time], [Time]–[Time]"
+        },
+        {
+          "days": "Morning aarti",
+          "time": "[Time]"
+        },
+        {
+          "days": "Evening aarti",
+          "time": "[Time]"
+        }
+      ],
+      "description": "[Mandir Name] is a Hindu temple (mandir) in Madison, Wisconsin, dedicated to [Presiding Deity / Deities]. Devotees, families and visitors of every background are welcome.",
+      "logo": null
+    },
+    "site": {
+      "goal": "community",
+      "template": "nonprofit",
+      "subdomain": "your-congregation"
+    },
+    "services": [
+      {
+        "name": "Daily darshan and aarti",
+        "description": "The mandir is open for darshan, with morning and evening aarti.",
+        "price": ""
+      },
+      {
+        "name": "Special pujas",
+        "description": "Pujas and ceremonies for families, by request. [List what your priests perform.]",
+        "price": ""
+      },
+      {
+        "name": "Satsang",
+        "description": "Bhajans, discussion and reflection together.",
+        "price": ""
+      },
+      {
+        "name": "Classes",
+        "description": "[Describe Bal Vihar, language, music or dance classes.]",
+        "price": ""
+      }
+    ],
+    "products": [],
+    "staff": [
+      {
+        "name": "[Priest Name]",
+        "role": "Priest (pujari)",
+        "bio": "[Priest Name] performs the daily pujas and special ceremonies at the mandir. [Add a short note, approved by them.]"
+      },
+      {
+        "name": "[Name]",
+        "role": "Board of trustees, chair",
+        "bio": "[Name] chairs the mandir's board of trustees."
+      },
+      {
+        "name": "[Name]",
+        "role": "Volunteer coordinator",
+        "bio": "[Name] organizes seva and welcomes new volunteers."
+      }
+    ],
+    "gallery": [],
+    "portfolio": [],
+    "testimonials": [],
+    "social": {},
+    "seo": {
+      "title": "[Mandir Name] | Hindu Temple in Madison, WI",
+      "description": "[Mandir Name] is a Hindu temple (mandir) in Madison, WI. See puja and aarti times, festivals, satsang and ways to do seva."
+    }
+  },
+  "pages": [
+    {
+      "slug": "index",
+      "title": "Home",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "hero",
+          "data": {
+            "kicker": "[Mandir Name] · Madison, WI",
+            "heading": "A place of worship, festivals and community",
+            "text": "Join us for daily darshan, aarti and puja, and celebrate the festivals together.",
+            "button_text": "See puja times",
+            "button_link": "puja-schedule",
+            "call_button": true,
+            "layout": "split"
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Welcome",
+            "body": "<p>Namaste, and welcome to [Mandir Name]. The mandir is open to devotees and visitors alike. We'd be glad to welcome you.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "This week",
+            "body": "<ul><li>Morning aarti: [Time]</li><li>Evening aarti: [Time]</li><li>Satsang and bhajans: [Day], [Time]</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "We'd love to meet you",
+            "text": "Send us a message or come and visit. Everyone is welcome.",
+            "button_text": "Contact us",
+            "button_link": "contact"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "about",
+      "title": "About",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "About the mandir",
+            "body": "<p>[Mandir Name] is a Hindu temple in Madison, dedicated to [Presiding Deity / Deities]. It is a place for worship, festivals, learning and community.</p><p>[Add a sentence or two about the history of the mandir and the community it serves.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Our traditions",
+            "body": "<p>[Add a short, plain-language description of the traditions followed at the mandir, written or approved by your priests and trustees.]</p><p>Visitors of every background are welcome to come for darshan, attend an aarti or join a festival.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "team",
+          "data": {
+            "heading": "Our leaders and volunteers",
+            "intro": "[Add, remove or rename people under Business data › Team.]"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "puja-schedule",
+      "title": "Puja and aarti times",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Daily schedule",
+            "body": "<ul><li>Mandir opens: [Time]</li><li>Morning aarti: [Time]</li><li>Darshan: [Time]–[Time] and [Time]–[Time]</li><li>Evening aarti: [Time]</li><li>Mandir closes: [Time]</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Weekly programs",
+            "body": "<ul><li>[Weekly puja, e.g. abhishekam]: [Day], [Time]</li><li>Satsang and bhajans: [Day], [Time]</li><li>[Language / Bal Vihar classes for children]: [Day], [Time]</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Special pujas",
+            "body": "<p>Families can request special pujas and ceremonies, such as [list the ceremonies your priests perform]. Please contact the office to book. [Add any guidance on booking ahead.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Please note",
+            "body": "<p>All times are placeholders. Festival times follow the Hindu calendar and are posted on our events page. [Replace with your mandir's schedule.]</p>",
+            "center": false
+          }
+        }
+      ]
+    },
+    {
+      "slug": "events",
+      "title": "Events",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Upcoming events",
+            "center": false,
+            "body": "<h3>Diwali celebration</h3><p><b>[Date], [Time]</b></p><p>Celebrate the festival of lights with puja, aarti and a community gathering. [Add details of food, programs or fireworks rules.]</p><h3>Navaratri</h3><p><b>[Dates], [Time]</b></p><p>Nine nights of worship and celebration. [Add the programs your community holds, e.g. garba or dandiya evenings.]</p><h3>Janmashtami</h3><p><b>[Date], [Time]</b></p><p>Celebrating the birth of Lord Krishna, with bhajans and a midnight aarti. [Edit as needed.]</p><h3>Mandir open house</h3><p><b>[Date], [Time]</b></p><p>Neighbors are invited to tour the mandir, see an aarti and ask questions.</p><p><small>[These are example events with placeholder dates. Replace them with your own.]</small></p>"
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "We'd love to meet you",
+            "text": "Send us a message or come and visit. Everyone is welcome.",
+            "button_text": "Contact us",
+            "button_link": "contact"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "satsang",
+      "title": "Satsang and discourses",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Satsang",
+            "body": "<p>Satsang brings the community together for bhajans, discussion and reflection. It's held on [Day] at [Time], and everyone is welcome.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Discourses",
+            "body": "<p>From time to time, the mandir hosts discourses (pravachan) on [topics, e.g. scriptures or festivals]. [Explain whether these are recorded and where they're posted.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Recent and upcoming",
+            "body": "<ul><li>[Discourse title], [Speaker Name], [Date]</li><li>[Discourse title], [Speaker Name], [Date]</li><li>[Satsang theme], [Date]</li></ul>",
+            "center": false
+          }
+        }
+      ]
+    },
+    {
+      "slug": "get-involved",
+      "title": "Get involved",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Seva (volunteering)",
+            "body": "<p>Seva, selfless service, is at the heart of mandir life. Volunteers help with everything from daily care of the mandir to the biggest festivals.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Ways to do seva",
+            "body": "<ul><li>Kitchen: help prepare and serve prasad and community meals.</li><li>Festivals: set-up, decorations, parking and clean-up.</li><li>Education: support Bal Vihar or language classes. [Add your safeguarding and background-check steps.]</li><li>Mandir care: cleaning, flowers and garden.</li><li>Welcome: greet visitors and help them feel at home.</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Sign up",
+            "body": "<p>Fill in the form below and a volunteer coordinator will be in touch.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "form",
+          "data": {
+            "heading": "I'd like to help",
+            "intro": "Tell us a little about yourself and how you'd like to help.",
+            "fields": "name,email,phone,message",
+            "button_text": "Send"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "donate",
+      "title": "Donate and sponsor",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Support the mandir",
+            "body": "<p>Thank you for considering a donation to [Mandir Name]. Your gifts support daily worship, festivals, classes and the care of the mandir.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Ways to give",
+            "body": "<ul><li>Donations: [describe the donation box (hundi) or the office].</li><li>Sponsor a puja or festival: [describe how to sponsor a puja, archana or festival program].</li><li>Offerings in kind: [describe whether flowers, fruit or other items are welcome, and how to arrange them].</li><li>Online: [ADD YOUR SECURE DONATION LINK HERE. Never publish bank details on this site.]</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Questions",
+            "body": "<p>[Add a contact for donation questions and any statement about receipts or tax status. Check the wording with your treasurer or advisor.]</p>",
+            "center": false
+          }
+        }
+      ]
+    },
+    {
+      "slug": "gallery",
+      "title": "Gallery",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "gallery",
+          "data": {
+            "heading": "Gallery",
+            "album": null,
+            "layout": "",
+            "lightbox": true
+          }
+        }
+      ]
+    },
+    {
+      "slug": "faq",
+      "title": "FAQ",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "faq",
+          "data": {
+            "heading": "Questions and answers",
+            "intro": "",
+            "items": [
+              {
+                "question": "Can visitors who aren't Hindu come to the mandir?",
+                "answer": "Yes, everyone is welcome. Aarti and festivals are a lovely way to visit for the first time."
+              },
+              {
+                "question": "What should I wear?",
+                "answer": "[Describe your guidance, e.g. modest clothing that covers shoulders and knees.] Shoes are removed before entering the mandir."
+              },
+              {
+                "question": "Can I take photos?",
+                "answer": "[Describe your photo policy, e.g. whether photos of the deities are allowed.]"
+              },
+              {
+                "question": "How do I book a special puja?",
+                "answer": "Contact the office or speak to [Priest Name]. Please book [X] days ahead where possible."
+              },
+              {
+                "question": "Do you offer classes for children?",
+                "answer": "Yes. [Describe Bal Vihar, language or music classes, with ages and times.]"
+              },
+              {
+                "question": "Is the mandir accessible?",
+                "answer": "[Describe step-free access, seating and parking.]"
+              }
+            ],
+            "open_first": false,
+            "structured_data": true
+          }
+        }
+      ]
+    },
+    {
+      "slug": "blog",
+      "title": "News",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "News",
+            "center": false,
+            "body": "<ul><li><a href=\"blog-visiting-the-mandir-what-to-expect.html\">Visiting the mandir: what to expect</a></li><li><a href=\"blog-celebrating-festivals-at-the-mandir.html\">Celebrating festivals at the mandir</a></li></ul>"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "contact",
+      "title": "Contact",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "contact",
+          "data": {
+            "heading": "Visit or contact us"
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Finding us",
+            "body": "<p><b>[PLACEHOLDER CONTACT DETAILS — replace before publishing]</b></p><ul><li>Address: [Street Address], Madison, WI [ZIP Code]</li><li>Phone: [Phone, e.g. (608) XXX-XXXX]</li><li>Email: [Email address] (the profile holds info@example.org as a stand-in)</li><li>Parking and access: [Describe parking, bus routes and accessible entrances.]</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "form",
+          "data": {
+            "heading": "Send us a message",
+            "intro": "We'll get back to you as soon as we can.",
+            "fields": "name,email,phone,message",
+            "button_text": "Send"
+          }
+        }
+      ]
+    }
+  ],
+  "blog_posts": [
+    {
+      "slug": "blog-visiting-the-mandir-what-to-expect",
+      "title": "Visiting the mandir: what to expect",
+      "in_menu": false,
+      "seo_title": "Visiting the mandir: what to expect",
+      "seo_description": "If you've never visited a Hindu temple, you're very welcome at [Mandir Name]. Here's what to expect.",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Visiting the mandir: what to expect",
+            "body": "<p>If you've never visited a Hindu temple, you're very welcome at [Mandir Name]. Here's what to expect.</p><p>When you arrive, you'll be asked to remove your shoes before entering. There are racks near the entrance. [Add your dress guidance here.]</p><p>Inside, you'll see the shrine or shrines of [Presiding Deity / Deities]. Devotees come for darshan, which means seeing and being seen by the deity. You're welcome to stand quietly and observe.</p><p>Aarti is a good time to visit. Lamps are waved before the deities while prayers and songs are sung. At the end, the flame is often brought around and people pass their hands over it. You can join in or simply watch.</p><p>After aarti, prasad is often shared. It's a blessed offering of food, and visitors are welcome to accept it.</p><p>Please ask before taking photos. [Add your photo policy.]</p><p>If you'd like a guided visit, contact the office and we'll be happy to arrange one.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "We'd love to meet you",
+            "text": "Send us a message or come and visit. Everyone is welcome.",
+            "button_text": "Contact us",
+            "button_link": "contact"
+          }
+        }
+      ],
+      "word_count": 158
+    },
+    {
+      "slug": "blog-celebrating-festivals-at-the-mandir",
+      "title": "Celebrating festivals at the mandir",
+      "in_menu": false,
+      "seo_title": "Celebrating festivals at the mandir",
+      "seo_description": "Festivals are among the most joyful times at [Mandir Name]. The mandir fills with families, music, color and food.",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Celebrating festivals at the mandir",
+            "body": "<p>Festivals are among the most joyful times at [Mandir Name]. The mandir fills with families, music, color and food.</p><p>Hindu festivals follow a lunar calendar, so their dates change each year. We post confirmed dates and times on our events page and share them by [email / social media].</p><p>Diwali, the festival of lights, is one of the busiest times of the year. Navaratri brings nine nights of worship and celebration. [Add other festivals your community celebrates.]</p><p>Each festival usually includes special pujas and aarti, and often bhajans, cultural programs and a community meal. [Describe what your mandir typically holds.]</p><p>Festivals rely on many volunteers. If you'd like to help with decorations, the kitchen or parking, sign up on our Seva page.</p><p>If you're coming for the first time during a festival, arrive early. The mandir can be very busy, and parking may be limited. [Add parking guidance.]</p><p>Everyone is welcome, including friends and neighbors who aren't Hindu. Come and celebrate with us.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "We'd love to meet you",
+            "text": "Send us a message or come and visit. Everyone is welcome.",
+            "button_text": "Contact us",
+            "button_link": "contact"
+          }
+        }
+      ],
+      "word_count": 163
+    }
+  ],
+  "gallery_captions": [
+    {
+      "caption": "The main shrine during aarti",
+      "alt": "The main shrine during aarti"
+    },
+    {
+      "caption": "Diwali lamps at the entrance",
+      "alt": "Diwali lamps at the entrance"
+    },
+    {
+      "caption": "Devotees at a festival celebration",
+      "alt": "Devotees at a festival celebration"
+    },
+    {
+      "caption": "Bhajans at satsang",
+      "alt": "Bhajans at satsang"
+    },
+    {
+      "caption": "Prasad being served",
+      "alt": "Prasad being served"
+    },
+    {
+      "caption": "Bal Vihar class",
+      "alt": "Bal Vihar class"
+    },
+    {
+      "caption": "The mandir building",
+      "alt": "The mandir building"
+    }
+  ],
+  "events": [
+    {
+      "title": "Diwali celebration",
+      "when": "[Date], [Time]",
+      "description": "Celebrate the festival of lights with puja, aarti and a community gathering. [Add details of food, programs or fireworks rules.]"
+    },
+    {
+      "title": "Navaratri",
+      "when": "[Dates], [Time]",
+      "description": "Nine nights of worship and celebration. [Add the programs your community holds, e.g. garba or dandiya evenings.]"
+    },
+    {
+      "title": "Janmashtami",
+      "when": "[Date], [Time]",
+      "description": "Celebrating the birth of Lord Krishna, with bhajans and a midnight aarti. [Edit as needed.]"
+    },
+    {
+      "title": "Mandir open house",
+      "when": "[Date], [Time]",
+      "description": "Neighbors are invited to tour the mandir, see an aarti and ask questions."
+    }
+  ],
+  "price_list": [],
+  "notes": [
+    "DRAFT. Fictional congregation; every name, time, address and contact detail is a placeholder.",
+    "No testimonials by design (none invented). The testimonials list is empty and no testimonials block is placed.",
+    "Give page has no payment details or links, only a [placeholder] for the congregation's own secure giving page.",
+    "The gallery block has album=null: create an album from gallery_captions (see ../HANDOFF.md).",
+    "Presiding deity, sampradaya and festival list are placeholders; Diwali, Navaratri and Janmashtami are common examples, not a claim about this mandir.",
+    "Festival dates follow the Hindu lunar calendar and change every year."
+  ]
+}
