@@ -1,6 +1,188 @@
 {
-  "generatedAt": "2026-11-17T05:02:08.000Z",
+  "generatedAt": "2026-11-26T01:10:49.000Z",
   "posts": [
+    {
+      "id": "20261125-bash-commands-server-management",
+      "date": "2026-11-25",
+      "cat": "Web development",
+      "slug": "a-practical-guide-to-common-bash-commands-for-web-development",
+      "title": "A Practical Guide to Common Bash Commands for Server Management and Web Development",
+      "intro": "If you build or maintain websites, you will spend time in a terminal. This practical toolkit covers the everyday Bash commands that keep a server and a deploy running.",
+      "min": 5,
+      "body": [
+        "Bash is the default shell on most Linux servers, and a small set of commands covers most daily work: moving around the filesystem, checking a process, shipping a deploy, or reading a log when a site misbehaves. Each command below includes a short explanation and an example you can adapt.",
+        {
+          "h2": "Navigation and files"
+        },
+        "**pwd** prints the current directory, which helps after you have jumped between project, backup, and system paths.",
+        {
+          "pre": "pwd",
+          "lang": "bash"
+        },
+        "**cd** changes directory. Use `-` to return to the previous path, and `~` for your home directory.",
+        {
+          "pre": "cd /var/www/mysite\ncd -",
+          "lang": "bash"
+        },
+        "**ls** lists files. These flags show hidden files, permissions, owners, and human-readable sizes.",
+        {
+          "pre": "ls -lah",
+          "lang": "bash"
+        },
+        "**mkdir -p** creates a directory and any missing parent folders in one step.",
+        {
+          "pre": "mkdir -p /var/www/mysite/storage/logs",
+          "lang": "bash"
+        },
+        "**cp** copies files. `-r` copies a directory recursively. **mv** renames or moves a file or folder.",
+        {
+          "pre": "cp -r /var/www/mysite /var/backups/mysite-copy\nmv draft.env .env",
+          "lang": "bash"
+        },
+        "**cat** prints a file. For longer files, **less** lets you scroll and search without flooding the screen. Press `q` to quit.",
+        {
+          "pre": "cat /etc/nginx/sites-available/mysite\nless /var/log/nginx/error.log",
+          "lang": "bash"
+        },
+        {
+          "h2": "Permissions and ownership"
+        },
+        "Web servers often fail when a file has the wrong owner or permissions.",
+        "**ls -l** shows permissions, owner, and group.",
+        {
+          "pre": "ls -l /var/www/mysite",
+          "lang": "bash"
+        },
+        "**chmod** changes permissions. `755` is common for directories and scripts: the owner can read, write, and enter or execute; others can read and enter or execute. `644` is common for ordinary files: the owner can edit, and others can only read.",
+        {
+          "pre": "chmod 755 deploy.sh\nchmod 644 index.html",
+          "lang": "bash"
+        },
+        "**chown** changes owner and group. On Ubuntu and Debian, the web server often runs as `www-data`. `-R` applies the change to a directory and its contents.",
+        {
+          "pre": "sudo chown -R www-data:www-data /var/www/mysite/storage",
+          "lang": "bash"
+        },
+        "Avoid `chmod 777`. It makes a path world-writable and is almost never the right fix.",
+        {
+          "h2": "Processes and system resources"
+        },
+        "When a site is slow or a deploy appears stuck, check the machine before you change application code.",
+        "**ps** lists processes. Pipe it to **grep** to find one service.",
+        {
+          "pre": "ps aux | grep nginx",
+          "lang": "bash"
+        },
+        "**top** shows a live view of CPU and memory use. Press `q` to quit.",
+        {
+          "pre": "top",
+          "lang": "bash"
+        },
+        "**kill** asks a process to exit. Use the PID from `ps` or `top`. The default signal is `SIGTERM` (`-15`), which lets the program clean up. `kill -9` sends `SIGKILL` and should be a last resort, because the process cannot shut down gracefully.",
+        {
+          "pre": "kill 2148\nkill -9 2148",
+          "lang": "bash"
+        },
+        "**df -h** reports disk space in a readable form. **free -h** shows memory, including swap.",
+        {
+          "pre": "df -h\nfree -h",
+          "lang": "bash"
+        },
+        {
+          "h2": "Networking and remote work"
+        },
+        "Most server work happens over SSH.",
+        "**ssh** opens a remote shell. Add `-p` if the server does not use the default port 22.",
+        {
+          "pre": "ssh deploy@203.0.113.10\nssh -p 2222 deploy@203.0.113.10",
+          "lang": "bash"
+        },
+        "**scp** copies files over SSH. `-r` copies a directory.",
+        {
+          "pre": "scp -r dist deploy@203.0.113.10:/var/www/mysite/",
+          "lang": "bash"
+        },
+        "**rsync** is usually better for deploys and backups, because it copies only what changed. `-a` preserves permissions and timestamps, `-v` is verbose, and `-z` compresses data in transit. A trailing slash on the source matters: `public/` copies the contents, not the folder itself. `--dry-run` previews the transfer without writing files.",
+        {
+          "pre": "rsync -avz --dry-run ./public/ deploy@203.0.113.10:/var/www/mysite/public/\nrsync -avz ./public/ deploy@203.0.113.10:/var/www/mysite/public/",
+          "lang": "bash"
+        },
+        "**curl** makes HTTP requests. `-I` fetches headers only, useful for checking a status code or redirect. `-o` saves the body to a file.",
+        {
+          "pre": "curl -I https://example.com\ncurl -o page.html https://example.com",
+          "lang": "bash"
+        },
+        {
+          "h2": "Logs and searching"
+        },
+        "When something breaks, logs are usually faster than guesswork.",
+        "**tail -f** follows a file as new lines arrive. `-n` sets how much history to show first.",
+        {
+          "pre": "tail -n 100 -f /var/log/nginx/error.log",
+          "lang": "bash"
+        },
+        "**grep** searches for a pattern. `-i` ignores case, `-r` walks a directory, and `-n` prints line numbers.",
+        {
+          "pre": "grep -i \"error\" /var/log/nginx/error.log\ngrep -rn \"TODO\" /var/www/mysite",
+          "lang": "bash"
+        },
+        "**journalctl** reads systemd logs. `-u` selects a service, `-f` follows new entries, `-n` limits the line count, and `--since` limits the time window.",
+        {
+          "pre": "journalctl -u nginx -n 100 --since \"1 hour ago\"\njournalctl -u nginx -f",
+          "lang": "bash"
+        },
+        {
+          "h2": "Package and service management"
+        },
+        "On Debian and Ubuntu, **apt** installs software and **systemctl** controls services. Update the package index before you install anything.",
+        {
+          "pre": "sudo apt update\nsudo apt install nginx",
+          "lang": "bash"
+        },
+        "**systemctl status** shows whether a service is running and prints recent log lines. **reload** picks up a new configuration without a full restart when the service supports it, which is often preferable for Nginx. **restart** stops and starts it. **enable** makes it start on boot.",
+        {
+          "pre": "systemctl status nginx\nsudo systemctl reload nginx\nsudo systemctl restart nginx\nsudo systemctl enable nginx",
+          "lang": "bash"
+        },
+        "If a restart fails, check `journalctl -u nginx` before you change more settings.",
+        {
+          "h2": "Web development helpers"
+        },
+        "These commands show up constantly in deploys and project work.",
+        "**git** is how most teams move code. `status` shows what changed, `pull` fetches and merges from the remote, and `log --oneline` gives a compact history. Run `git status` on a server before you pull, so you do not overwrite uncommitted fixes.",
+        {
+          "pre": "git status\ngit pull\ngit log --oneline -n 10",
+          "lang": "bash"
+        },
+        "**find** locates files by name, type, or age. `-mtime +30` means last modified more than 30 days ago.",
+        {
+          "pre": "find /var/www/mysite -name \"*.log\"\nfind /var/www/mysite -type f -mtime +30",
+          "lang": "bash"
+        },
+        "**tar** packs and unpacks archives. `-c` creates, `-x` extracts, `-z` uses gzip, `-v` is verbose, and `-f` names the file. Put the archive name immediately after `-f`.",
+        {
+          "pre": "tar -czvf mysite-backup.tar.gz /var/www/mysite\ntar -xzvf mysite-backup.tar.gz",
+          "lang": "bash"
+        },
+        "After a deploy, set permissions deliberately. This pattern makes directories enterable (`755`) and ordinary files readable but not executable (`644`). Then add execute permission only on scripts that need it.",
+        {
+          "pre": "find /var/www/mysite -type d -exec chmod 755 {} \\;\nfind /var/www/mysite -type f -exec chmod 644 {} \\;\nchmod u+x /var/www/mysite/deploy.sh",
+          "lang": "bash"
+        },
+        {
+          "h2": "Safety tips"
+        },
+        "A terminal does exactly what you type, including mistakes.",
+        "Be careful with **rm -rf**. It deletes recursively and without confirmation, and there is no undo. Never run it against `/`, against a path you have not checked with `pwd` and `ls`, or against a variable that might be empty. If `$DIR` is unset, `rm -rf \"$DIR/\"` can expand into a path you did not intend. Prefer a specific, fully written path, and consider moving a directory aside with `mv` before you delete anything on production.",
+        "Treat **sudo** as a multiplier. It can edit system files, restart services, and destroy data. Read the full command before you enter your password. If you use a shared deploy account, confirm you are on the right server with `hostname` and `pwd`.",
+        "Other habits that help: run `rsync --dry-run` before a real sync, avoid `chmod 777` and `chmod -R 777`, quote your variables, and do not paste a long command into production until you understand every flag.",
+        {
+          "h2": "Conclusion"
+        },
+        "You do not need hundreds of commands to manage a server well. You need a reliable handful for the filesystem, permissions, processes, SSH, logs, and deploys. Practice them on a development machine or a disposable VPS, then use them the same way in production: look first, change second, and keep a backup you can restore.",
+        "At Tenshi Systems Engineering, we build websites and software, and these are the kinds of commands we use when we ship, debug, and keep a site healthy after launch."
+      ]
+    },
     {
       "id": "20261121-ai-for-small-business-wisconsin",
       "date": "2026-11-21",

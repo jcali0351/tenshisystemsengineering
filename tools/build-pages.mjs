@@ -2035,6 +2035,12 @@ function renderPostBody(body, prefix, indent = "        ") {
       if (Array.isArray(block.ul)) return renderList("ul", block.ul, prefix, indent);
       if (Array.isArray(block.ol)) return renderList("ol", block.ol, prefix, indent);
       if (block.table) return renderTable(block.table, prefix, indent);
+      if (typeof block.pre === "string" || typeof block.code === "string") {
+        const code = esc(block.pre ?? block.code);
+        const lang = String(block.lang || "").replace(/[^a-z0-9+-]/gi, "");
+        const cls = lang ? ` class="language-${lang}"` : "";
+        return `${indent}<pre><code${cls}>${code}\n</code></pre>`;
+      }
     }
     return `${indent}<p>${inlineFmt(String(block ?? ""), prefix)}</p>`;
   }).join("\n");
