@@ -199,3 +199,95 @@ def test_brand_lock(cms):
         page = ed.get(f"/sites/{sid}/settings").text
         assert '"locked": true' in page and '"can_edit": false' in page
     c.put(f"/api/sites/{sid}/brand", json={"locked": False}, headers=H)
+
+
+# ---------------------------------------------------------------------------------------------- faq, pricing, map, booking
+
+def _put_blocks(c, sid, slug, blocks):
+    page = db.one("SELECT * FROM pages WHERE site_id = ? AND slug = ?", sid, slug)
+    return c.patch(f"/api/pages/{page['id']}", json={"blocks": blocks}, headers=H)
+
+
+def test_new_widgets_in_builder():
+    from cms import widgets
+    types = widgets.block_types()
+    for name in ("faq", "pricing", "map", "booking"):
+        assert name in types and types[name]["widget"]
+    tiers = next(f for f in types["pricing"]["fields"] if f["name"] == "tiers")
+    assert tiers["type"] == "items" and tiers["max"] == 6 and tiers["item_label"] == "Tier"
+    assert [f["name"] for f in tiers["fields"]][:3] == ["name", "price", "period"]
+    assert next(f for f in tiers["fields"] if f["name"] == "button_link")["type"] == "link"
+    faq_items = next(f for f in types["faq"]["fields"] if f["name"] == "items")
+    assert faq_items["type"] == "items" and {"question", "answer"} == set(faq_items["item"])
+
+
+def test_faq_accordion_and_json_ld(cms):
+    import json as _json
+    import re as _re
+    c, sid, _ = cms
+    r = _put_blocks(c, sid, "about", [{"id": "f1", "type": "faq", "data": {"heading": "FAQ", "items": [
+        {"question": "Do you work weekends?", "answer": "Yes.\n\nSaturdays 9-1."},
+        {"question": "Is </script><b>x</b> safe?", "answer": "It is & stays text."}]}}])
+    assert r.status_code == 200, r.text
+    html = c.get(f"/sites/{sid}/preview/about").text
+    assert html.count('<details class="tw-faq-item"') == 2 and "<p>Saturdays 9-1.</p>" in html
+    assert "<b>x</b>" not in html and "&lt;/script&gt;&lt;b&gt;x&lt;/b&gt;" in html
+    ld = _re.search(r'<script type="application/ld\+json">(.*?)</script>', html, _re.S).group(1)
+    data = _json.loads(ld)
+    assert data["@type"] == "FAQPage" and data["mainEntity"][1]["name"] == "Is </script><b>x</b> safe?"
+    assert "faq/faq.css" in html
+
+
+def test_pricing_tiers_and_links(cms):
+    c, sid, _ = cms
+    r = _put_blocks(c, sid, "about", [{"id": "p1", "type": "pricing", "data": {"tiers": [
+        {"name": "Basic", "price": "$10", "features": "- One\n- Two", "button_link": "contact"},
+        {"name": "Pro", "price": "$20", "highlight": True, "button_link": "https://example.com/buy"}]}}])
+    assert r.status_code == 200, r.text
+    html = c.get(f"/sites/{sid}/preview/about").text
+    assert html.count('<li class="tw-tier') == 2 and "tw-tier-hot" in html and "Most popular" in html
+    assert "<li>One</li><li>Two</li>" in html and f"/sites/{sid}/preview/contact" in html and "https://example.com/buy" in html
+    bad = _put_blocks(c, sid, "about", [{"id": "p1", "type": "pricing", "data": {"tiers": [{"button_link": "javascript:alert(1)"}]}}])
+    assert bad.status_code == 400
+    too_many = _put_blocks(c, sid, "about", [{"id": "p1", "type": "pricing", "data": {"tiers": [{}] * 7}}])
+    assert too_many.status_code == 400
+
+
+def test_map_google_osm_and_business_address(cms):
+    c, sid, _ = cms
+    _put_blocks(c, sid, "about", [{"id": "m1", "type": "map", "data": {"address": "10 Downing St, London"}}])
+    html = c.get(f"/sites/{sid}/preview/about").text
+    assert "https://www.google.com/maps?q=10+Downing+St%2C+London&amp;z=15&amp;output=embed" in html
+    _put_blocks(c, sid, "about", [{"id": "m1", "type": "map", "data": {"provider": "openstreetmap", "latitude": "51.5034", "longitude": "-0.1276", "zoom": 16}}])
+    html = c.get(f"/sites/{sid}/preview/about").text
+    assert "https://www.openstreetmap.org/export/embed.html?bbox=" in html and "marker=51.5034,-0.1276" in html
+    assert _put_blocks(c, sid, "about", [{"id": "m1", "type": "map", "data": {"latitude": "123"}}]).status_code == 400
+    # no address typed: the business address
+    prof = db.j(sites.get(sid)["profile_json"]) or {}
+    prof.setdefault("company", {})["address"] = "1 Baker Street, Springfield"
+    db.run("UPDATE sites SET profile_json = ? WHERE id = ?", db.dumps(prof), sid)
+    _put_blocks(c, sid, "about", [{"id": "m1", "type": "map", "data": {}}])
+    assert "q=1+Baker+Street%2C+Springfield" in c.get(f"/sites/{sid}/preview/about").text
+
+
+def test_booking_host_only_on_its_page(cms, tmp_path):
+    from cms import render, widgets
+    c, sid, _ = cms
+    assert _put_blocks(c, sid, "about", [{"id": "b1", "type": "booking", "data": {"url": "http://calendly.com/x"}}]).status_code == 400
+    assert _put_blocks(c, sid, "about", [{"id": "b1", "type": "booking", "data": {"url": "javascript:alert(1)"}}]).status_code == 400
+    assert _put_blocks(c, sid, "about", [{"id": "b1", "type": "booking", "data": {
+        "url": "https://calendly.com/neon/30min", "display": "embed"}}]).status_code == 200
+    html = c.get(f"/sites/{sid}/preview/about").text
+    assert '<iframe src="https://calendly.com/neon/30min"' in html
+    render.build_to(sites.get(sid), tmp_path)
+    about = widgets.csp_for_file(tmp_path, "about.html")
+    home = widgets.csp_for_file(tmp_path, "index.html")
+    assert "https://calendly.com" in about.split("frame-src")[1].split(";")[0]
+    assert "calendly.com" not in home
+    # a button needs no policy change
+    _put_blocks(c, sid, "about", [{"id": "b1", "type": "booking", "data": {"url": "https://calendly.com/neon/30min"}}])
+    out2 = tmp_path / "again"
+    render.build_to(sites.get(sid), out2)
+    assert "calendly.com" not in widgets.csp_for_file(out2, "about.html")
+    assert 'class="btn" href="https://calendly.com/neon/30min"' in (out2 / "about.html").read_text()
+    _put_blocks(c, sid, "about", [])

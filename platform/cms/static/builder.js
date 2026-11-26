@@ -163,6 +163,58 @@
     $$(".media-field", panel).forEach(function (box) {
       T.mediaField(box, function (value) { b.data[box.dataset.name] = value ? +value : ""; changed(); });
     });
+    $$(".items-field", panel).forEach(function (box) {
+      var f = type.fields.filter(function (x) { return x.name === box.dataset.items; })[0];
+      if (f) itemsField(box, b, f);
+    });
+  }
+
+  /* An "items" field: a list of small forms (FAQ questions, pricing tiers) to add, remove and reorder.
+     Each item is a <details>; its fields use data-sub (not data-f) and write into b.data[field][i]. */
+  function itemsField(box, b, f) {
+    b.data = b.data || {};
+    if (!Array.isArray(b.data[f.name])) b.data[f.name] = [];
+    var list = b.data[f.name], label = f.item_label || "Item";
+    function sum(item) { var first = f.fields[0] && item[f.fields[0].name]; return first ? String(first).slice(0, 48) : ""; }
+    function draw(openIndex) {
+      $(".items", box).innerHTML = list.map(function (item, i) {
+        return '<details class="item" data-i="' + i + '"' + (i === openIndex ? " open" : "") + "><summary><b>" + esc(label) + " " + (i + 1) + '</b><span class="item-sum">' + esc(sum(item)) + "</span>" +
+          '<span class="tools"><button type="button" class="icon-btn" data-item="up" aria-label="Move up"' + (i === 0 ? " disabled" : "") + ">↑</button>" +
+          '<button type="button" class="icon-btn" data-item="down" aria-label="Move down"' + (i === list.length - 1 ? " disabled" : "") + ">↓</button>" +
+          '<button type="button" class="icon-btn" data-item="del" aria-label="Remove">✕</button></span></summary><div class="item-body">' +
+          f.fields.map(function (sf) {
+            return fieldHtml(sf, item[sf.name]).replace(/data-f="/g, 'data-sub="').replace(/id="f-/g, 'id="f-' + f.name + i + "-");
+          }).join("") + "</div></details>";
+      }).join("") || '<p class="small muted">None yet.</p>';
+      $("[data-add-item]", box).disabled = list.length >= (f.max || 50);
+    }
+    function update(e) {
+      var input = e.target.closest("[data-sub]"), item = e.target.closest("[data-i]");
+      if (!input || !item) return;
+      var i = +item.dataset.i;
+      list[i][input.dataset.sub] = input.type === "checkbox" ? input.checked : input.value;
+      $(".item-sum", item).textContent = sum(list[i]);
+      changed();
+    }
+    box.addEventListener("input", update);
+    box.addEventListener("change", function (e) { if (e.target.tagName === "SELECT" || e.target.type === "checkbox") update(e); });
+    box.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-item]");
+      if (btn) {
+        e.preventDefault();
+        var i = +btn.closest("[data-i]").dataset.i, act = btn.dataset.item;
+        if (act === "up" && i > 0) { list.splice(i - 1, 0, list.splice(i, 1)[0]); draw(i - 1); }
+        else if (act === "down" && i < list.length - 1) { list.splice(i + 1, 0, list.splice(i, 1)[0]); draw(i + 1); }
+        else if (act === "del" && confirm("Remove " + label.toLowerCase() + " " + (i + 1) + "?")) { list.splice(i, 1); draw(-1); }
+        else return;
+        changed(); return;
+      }
+      if (e.target.closest("[data-add-item]")) {
+        list.push(JSON.parse(JSON.stringify(f.item || {}))); draw(list.length - 1); changed();
+        var last = $(".item:last-child input, .item:last-child textarea", box); if (last) last.focus();
+      }
+    });
+    draw(-1);
   }
 
   function fieldHtml(f, value) {
@@ -179,6 +231,8 @@
       case "album": return wrap(f, select_(id, f.name, [["", "Choose an album…"]].concat(DATA.albums.map(function (a) { return [String(a.id), a.name]; })), String(v)) +
                                 '<small><a href="/sites/' + siteId + '/galleries" target="_blank">Make or fill albums under Galleries</a></small>');
       case "category": return wrap(f, select_(id, f.name, [["", "All categories"]].concat(DATA.categories.map(function (c) { return [c, c]; })), v));
+      case "items": return '<div class="field items-field" data-items="' + f.name + '"><span>' + esc(f.label) + '</span><div class="items"></div>' +
+                             '<button type="button" class="btn btn-small" data-add-item>+ Add ' + esc((f.item_label || "item").toLowerCase()) + "</button></div>";
       case "media": case "video":
         return '<div class="field"><span>' + esc(f.label) + '</span><div class="media-field" data-site="' + siteId + '" data-kind="' + (f.type === "video" ? "video" : "image") + '" data-name="' + f.name + '"><input type="hidden" value="' + esc(v) + '"></div></div>';
       default: return wrap(f, '<input type="text" id="' + id + '" data-f="' + f.name + '" value="' + esc(v) + '">');

@@ -192,7 +192,8 @@ class SiteRenderer:
         if w.name not in self._widget_settings:
             self._widget_settings[w.name] = widgets.load_settings(self.site.get("id"), w.name)
         ctx = widgets.WidgetContext(site=self.site, mode=self.mode, editing=self.editing, settings=self._widget_settings[w.name],
-                                    asset=lambda file, n=w.name: widgets.asset_url(n, file, self.mode))
+                                    asset=lambda file, n=w.name: widgets.asset_url(n, file, self.mode),
+                                    link=self.link, profile=self.profile)
         return w.render(block, ctx)
 
     # --- pages ------------------------------------------------------------------------------------------------

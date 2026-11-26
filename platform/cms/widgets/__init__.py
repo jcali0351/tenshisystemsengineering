@@ -64,6 +64,57 @@ BASE_CSP = {
 }
 
 
+def model_fields(model: type[BaseModel]) -> list[dict]:
+    """A Pydantic model as builder fields. list[SubModel] becomes an "items" field: a list of small forms the builder
+    lets people add, remove and reorder (FAQ questions, pricing tiers), with the sub-model's own fields."""
+    out = []
+    for name, f in model.model_fields.items():
+        extra = dict(f.json_schema_extra or {})
+        spec = {"name": name, "label": extra.pop("label", f.title or name.replace("_", " ").capitalize())}
+        ann = f.annotation
+        args = get_args(ann)
+        if extra.get("type"):
+            spec["type"] = extra.pop("type")
+        elif get_origin(ann) is list and args and isinstance(args[0], type) and issubclass(args[0], BaseModel):
+            spec.update(type="items", fields=model_fields(args[0]), item=args[0]().model_dump(),
+                        max=next((m.max_length for m in f.metadata if hasattr(m, "max_length")), 50))
+        elif get_origin(ann) is Literal:
+            spec["type"] = "select"
+        elif ann is bool:
+            spec["type"] = "checkbox"
+        elif ann is int:
+            spec["type"] = "number"
+        else:
+            spec["type"] = "text"
+        if spec["type"] == "select" and "options" not in extra and get_origin(ann) is Literal:
+            spec["options"] = [[v, str(v)] for v in get_args(ann)]
+        spec.update(extra)
+        out.append(spec)
+    return out
+
+
+LINK_RE = re.compile(r"^(?:[a-z0-9][a-z0-9-]{0,80}|https?://[^\s\"'<>]{1,500}|mailto:[^\s\"'<>]{1,200}|tel:[0-9+() .-]{3,30}|#[A-Za-z0-9_-]{0,80})$")
+
+
+def clean_link(value: str) -> str:
+    """A page (its address, like contact), an https:// or http:// address, mailto:, tel: or #anchor. Nothing else."""
+    value = (value or "").strip()
+    if value and not LINK_RE.fullmatch(value):
+        raise ValueError("a link is one of your pages, or an address starting with https://, mailto: or tel:")
+    return value
+
+
+def paragraphs(text: str) -> Markup:
+    """Plain text as HTML: blank lines make paragraphs, single line breaks stay. Everything is escaped."""
+    from markupsafe import escape
+    parts = [p.strip() for p in re.split(r"\n\s*\n", str(text or "").replace("\r", "")) if p.strip()]
+    return Markup("".join(f"<p>{Markup('<br>').join(escape(line) for line in part.splitlines())}</p>" for part in parts))
+
+
+def block_uid(block: dict) -> str:
+    return re.sub(r"[^a-z0-9]", "", str((block or {}).get("id") or "x").lower())[:16] or "x"
+
+
 class WidgetError(ValueError):
     """A setting a person typed is not acceptable. The message is shown to them as it is."""
 
@@ -75,6 +126,8 @@ class WidgetContext:
     editing: bool
     settings: BaseModel | None     # the site's saved settings for this widget (validated), or None
     asset: Callable[[str], str]    # asset("store.js") -> the address of a widget file for this mode
+    link: Callable[[str], str] = lambda slug: slug   # link("contact") -> the address of a page (or a URL as it is)
+    profile: dict = field(default_factory=dict)      # the site's business data (company.address, …)
 
 
 @dataclass
@@ -98,26 +151,7 @@ class Widget:
 
     def fields(self) -> list[dict]:
         """The builder's settings form, from the config model. A field's json_schema_extra may give label/type/options."""
-        out = []
-        for name, f in self.config.model_fields.items():
-            extra = dict(f.json_schema_extra or {})
-            spec = {"name": name, "label": extra.pop("label", f.title or name.replace("_", " ").capitalize())}
-            ann = f.annotation
-            if extra.get("type"):
-                spec["type"] = extra.pop("type")
-            elif get_origin(ann) is Literal:
-                spec["type"] = "select"
-            elif ann is bool:
-                spec["type"] = "checkbox"
-            elif ann is int:
-                spec["type"] = "number"
-            else:
-                spec["type"] = "text"
-            if spec["type"] == "select" and "options" not in extra and get_origin(ann) is Literal:
-                spec["options"] = [[v, str(v)] for v in get_args(ann)]
-            spec.update(extra)
-            out.append(spec)
-        return out
+        return model_fields(self.config)
 
     def block_type(self) -> dict:
         """This widget in the shape blocks.BLOCKS uses, so the builder lists and edits it like any block."""
@@ -305,4 +339,4 @@ def block_template_source(name: str) -> str | None:
 
 
 # The widgets. Import order is the order in the builder's "Add block" list (after the built-in blocks).
-from . import store  # noqa: E402,F401
+from . import booking, faq, map, pricing, store  # noqa: E402,F401

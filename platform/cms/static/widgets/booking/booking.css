@@ -1,0 +1,6 @@
+/* booking.css: the Booking widget (cms/widgets/booking.py). */
+.tw-booking .intro { margin: -.2em 0 1.2em; opacity: .85; max-width: 60ch; }
+.tw-booking-frame { overflow: hidden; border-radius: var(--radius, 14px); background: #fff; border: 1px solid color-mix(in srgb, var(--i, #1f2937) 12%, transparent); }
+.tw-booking-frame iframe { display: block; width: 100%; border: 0; }
+.tw-booking-alt { margin: 10px 0 0; font-size: .9rem; }
+.tw-note { font-size: .9rem; padding: 8px 12px; border-radius: 8px; background: color-mix(in srgb, var(--a, #f97316) 14%, var(--s, #fff)); }

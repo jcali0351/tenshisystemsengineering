@@ -294,3 +294,15 @@ dialog.wide { width: min(1100px, calc(100vw - 24px)); }
 .th-chip { display: inline-grid; place-items: center; height: 26px; border-radius: 6px; font-weight: 800; border: 1px solid var(--line); }
 .note { padding: 10px 12px; border-radius: var(--radius); background: var(--accent-wash); color: var(--ink); font-size: .88rem; }
 .note-warn { background: var(--warn-soft); }
+
+/* ---------- Builder: "items" fields (FAQ questions, pricing tiers) ---------- */
+.items-field > span { display: block; margin-bottom: 6px; }
+.items { display: grid; gap: 6px; margin-bottom: 8px; }
+.item { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+.item summary { display: flex; align-items: center; gap: 8px; padding: 6px 8px; cursor: pointer; list-style: none; font-size: .88rem; }
+.item summary::-webkit-details-marker { display: none; }
+.item summary::before { content: "▸"; color: var(--muted); transition: transform .15s; }
+.item[open] summary::before { transform: rotate(90deg); }
+.item-sum { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); }
+.item .tools { display: flex; gap: 2px; }
+.item-body { padding: 4px 10px 8px; border-top: 1px solid var(--line); }
