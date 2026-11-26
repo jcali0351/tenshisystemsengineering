@@ -137,6 +137,10 @@ img, svg { display: block; }
   filter: saturate(.75) brightness(1.1) contrast(.9);
   transform-origin: 50% 70%;
 }
+/* Madison dusk skyline: the Capitol dome sits right of centre; keep it in frame on narrow screens. */
+.slide[data-src*="madison"] {
+  background-position: 70% 60%;
+}
 .slide.is-active { opacity: 1; animation: drift 9s ease-out both; }
 @keyframes drift { from { transform: scale(1.09); } to { transform: scale(1); } }
 

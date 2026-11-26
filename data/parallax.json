@@ -380,7 +380,7 @@
   },
   "pageHeader": {
     "enabled": true,
-    "image": "img/photos/osaka.jpg",
+    "image": "img/photos/madison.webp",
     "speed": 0.3,
     "height": 0,
     "position": "center center",
@@ -500,7 +500,8 @@
         "image": "img/photos/kyoto.jpg"
       },
       "contact": {
-        "image": "img/photos/osaka.jpg"
+        "image": "img/photos/madison.webp",
+        "position": "70% 60%"
       },
       "portal": {
         "image": "img/photos/yokohama.jpg"
@@ -545,6 +546,24 @@
         "grayFade": {
           "enabled": false
         }
+      },
+      "wisconsin": {
+        "position": "70% 60%"
+      },
+      "games": {
+        "position": "70% 60%"
+      },
+      "portfolio": {
+        "position": "70% 60%"
+      },
+      "leaderboard-arcade": {
+        "position": "70% 60%"
+      },
+      "leaderboard-station-defense": {
+        "position": "70% 60%"
+      },
+      "leaderboard-undercity": {
+        "position": "70% 60%"
       }
     }
   }

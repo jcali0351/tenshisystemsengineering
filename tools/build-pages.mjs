@@ -426,7 +426,7 @@ ${rain}${copy}
    "height" is a minimum height in vh; 0 lets the text decide. "enabled": false on a page or group keeps the plain
    light-gray header there. A data file without "pageHeader" gets the built-in defaults. */
 const PH_BASE = {
-  enabled: true, image: "img/photos/osaka.jpg", speed: 0.3, height: 0, position: "center center",
+  enabled: true, image: "img/photos/madison.webp", speed: 0.3, height: 0, position: "center center",
   overlayMode: "gradient", overlay: "#12050a", overlayOpacity: 0.6,
   gradient: { type: "linear", angle: 180, from: "#12050a", fromOpacity: 0.55, to: "#12050a", toOpacity: 0.8, stop: 55 },
   letters: { enabled: true, style: "rise", stagger: 30, duration: 0.8, delay: 0.1 },
@@ -861,7 +861,7 @@ ${aboutJourney()}    <section class="page-section" aria-labelledby="what-title">
     </section>
 
 ${aboutFind()}
-    <p class="page-inner about-credits">Skyline photos used on this site, from Wikimedia Commons: <a href="https://commons.wikimedia.org/wiki/File:Osaka,_Japan_-_Umeda_district_-_city_view_of_Osaka,_Japan.jpg">Marek Ślusarczyk (Tupungato)</a>, <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Minato_City,_Tokyo,_Japan.jpg">David Kernan</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:View_of_Kyoto_skyline_from_Kiyomizu-dera.jpg">Henrysz</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Minato_Mirai_21_From_Osambashi_202403.jpg">Sunwater</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Kobe_skyline_and_Harbor_Highway.jpg">Dudva</a>, <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a></p>
+    <p class="page-inner about-credits">Skyline photos used on this site, from Wikimedia Commons: <a href="https://commons.wikimedia.org/wiki/File:Gfp-wisconsin-madison-dusk-over-the-skyline.jpg">Yinan Chen (Good Free Photos)</a>, Public Domain · <a href="https://commons.wikimedia.org/wiki/File:Minato_City,_Tokyo,_Japan.jpg">David Kernan</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:View_of_Kyoto_skyline_from_Kiyomizu-dera.jpg">Henrysz</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Minato_Mirai_21_From_Osambashi_202403.jpg">Sunwater</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Kobe_skyline_and_Harbor_Highway.jpg">Dudva</a>, <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a></p>
     <section class="page-section team-teaser" aria-labelledby="meet-title">
       <div class="page-inner teaser-inner">
         <figure class="teaser-photo-card">
@@ -2287,7 +2287,7 @@ ${b.how.map((h) => `            <li>${esc(h)}</li>`).join("\n")}
   // Deferred, so they run after game-settings.js, which tools/neon-pages.mjs adds at the end of every page.
   const crumbs = (name) => `<nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li><a href="games.html">Games</a></li><li aria-current="page">${esc(name)}</li></ol></nav>`;
   const GAMES = [
-    { id: "arcade", file: "game-arcade.html", board: "leaderboard-arcade.html", name: "Neon Arcade", art: "img/photos/osaka.jpg",
+    { id: "arcade", file: "game-arcade.html", board: "leaderboard-arcade.html", name: "Neon Arcade", art: "img/photos/madison.webp",
       kicker: "Arcade shooter", short: "Shoot drones, saucers and bosses over a neon city, smash the headline and stop the kaiju.",
       about: "Defend the neon city. Click (or tap) anywhere in the sky to fire: drones, saucers, cubes and shooting stars are worth points, combos multiply them, and every so often a mothership, a kaiju or a giant robot turns up to eat the skyline. Keep your shields up as long as you can.",
       controls: ["Click or tap the sky to shoot; hold for rapid fire when you have it", "Weapons: the bar on the left, or keys 1 to 6", "Power-ups: R rapid fire, S spread shot, T slow time, N nuke", "Shoot the falling bombs before they reach the city", "Secret: the Konami code turns on INSANE MODE"] },

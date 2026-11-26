@@ -1295,7 +1295,7 @@
       letters: { enabled: true, style: "rise", stagger: 40, duration: 0.8, delay: 0.1 },
       grayFade: { enabled: true, trigger: "enter", duration: 1.8, delay: 0.25, amount: 1 },
       rain: { enabled: false, style: "streaks", density: 18, speed: 1, angle: 10, color: "#d6dde8", opacity: 0.45 } },
-    { id: "px2", enabled: true, image: "img/photos/osaka.jpg", altKey: "px2Alt", titleKey: "px2Title", textKey: "px2Text", speed: 0.4, height: 70, overlayMode: "gradient", overlay: "#12050a", overlayOpacity: 0.4,
+    { id: "px2", enabled: true, image: "img/photos/madison.webp", altKey: "px2Alt", titleKey: "px2Title", textKey: "px2Text", speed: 0.4, height: 70, overlayMode: "gradient", overlay: "#12050a", overlayOpacity: 0.4,
       gradient: { type: "linear", angle: 180, from: "#12050a", fromOpacity: 0.1, to: "#12050a", toOpacity: 0.85, stop: 55 }, position: "center 40%",
       letters: { enabled: true, style: "blur", stagger: 45, duration: 0.9, delay: 0.1 },
       grayFade: { enabled: false, trigger: "enter", duration: 1.8, delay: 0.25, amount: 1 },
@@ -1559,7 +1559,7 @@
      "Customise" for a group of pages (services/*, projects/*, blog/*) or one page (its path without .html); the rest
      follows the defaults. Saved with the main Save button, together with the homepage bands. */
   var PH_BASE = {
-    enabled: true, image: "img/photos/osaka.jpg", speed: 0.3, height: 0, position: "center center",
+    enabled: true, image: "img/photos/madison.webp", speed: 0.3, height: 0, position: "center center",
     overlayMode: "gradient", overlay: "#12050a", overlayOpacity: 0.6,
     gradient: { type: "linear", angle: 180, from: "#12050a", fromOpacity: 0.55, to: "#12050a", toOpacity: 0.8, stop: 55 },
     letters: { enabled: true, style: "rise", stagger: 30, duration: 0.8, delay: 0.1 },
