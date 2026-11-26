@@ -1,0 +1,385 @@
+/* shop.css: the Shop demo (shop.html, shop.js). Scoped to body.shop-page; the cart drawer and quick view are added to
+   <body> by shop.js. The :root:not(#_)... prefix lifts these rules above sandbox/neon-pages.css, after which
+   tools/build-pages.mjs links this file. Look: neon glass cards, Oswald headings, Lato body, PLAY NOW-style buttons. */
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page {
+  --shp-pink: #ff2bd6;
+  --shp-pink-soft: #ff6ec7;
+  --shp-blue: #4da3ff;
+  --shp-orange: #ff8c1a;
+  --shp-violet: #a855f7;
+  --shp-ink: #f4ecff;
+  --shp-muted: #cbb8e8;
+  --shp-glass: linear-gradient(160deg, rgba(46, 11, 87, 0.86), rgba(20, 5, 43, 0.9));
+  --shp-edge: rgba(255, 43, 214, 0.4);
+}
+html.shp-lock { overflow: hidden; }
+
+/* Text resets: neon-pages paints every p/span/h3 in main white; set our own colours. */
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page :is(.shp-type, .shp-name, .shp-price, .shp-qv, .shp-badge, .shp-demo p, .shp-bar-title, .shp-point h3, .shp-point p, .shp-pitch-lead, .shp-count) {
+  -webkit-text-fill-color: currentColor !important;
+}
+
+/* ---------- Demo notice ---------- */
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-demo {
+  display: flex; align-items: center; gap: 14px 18px; flex-wrap: wrap;
+  margin: 0 0 28px; padding: 14px 18px;
+  background: rgba(18, 6, 36, 0.72); border: 1px solid rgba(255, 140, 26, 0.45); border-left: 4px solid var(--shp-orange);
+  border-radius: 0 14px 14px 0; box-shadow: 0 10px 30px rgba(10, 0, 24, 0.35);
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-demo[hidden] { display: none; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-badge {
+  flex: none; padding: 6px 12px; border-radius: 999px; background: rgba(255, 140, 26, 0.16); border: 1px solid var(--shp-orange);
+  color: #ffd19a !important; font: 700 0.75rem/1 Oswald, sans-serif !important; letter-spacing: 0.2em !important; text-transform: uppercase;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-demo p { flex: 1 1 320px; margin: 0; color: var(--shp-muted) !important; font: 400 0.98rem/1.6 Lato, "Segoe UI", sans-serif !important; }
+
+/* ---------- Toolbar: title, filters, cart ---------- */
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-bar {
+  display: flex; align-items: center; gap: 14px 20px; flex-wrap: wrap;
+  margin: 0 0 22px; padding: 10px 0;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-bar-title {
+  margin: 0 auto 0 0 !important; font-size: clamp(1.3rem, 2.4vw, 1.8rem) !important; color: #fff !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-filters[hidden] { display: none; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-chip {
+  padding: 8px 16px; border-radius: 999px; cursor: pointer;
+  background: rgba(18, 10, 42, 0.55); border: 1px solid rgba(255, 255, 255, 0.22); color: var(--shp-ink);
+  font: 600 0.78rem/1 Oswald, sans-serif; letter-spacing: 0.16em; text-transform: uppercase;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-chip:hover { border-color: var(--shp-pink); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-chip[aria-pressed="true"] { background: rgba(255, 43, 214, 0.28); border-color: var(--shp-pink); box-shadow: 0 0 18px rgba(255, 43, 214, 0.45); color: #fff; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-cart-btn {
+  position: relative; display: inline-flex; align-items: center; gap: 10px; min-height: 46px; padding: 10px 20px; cursor: pointer;
+  color: #fff; background: rgba(18, 10, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 12px;
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  box-shadow: 0 0 22px rgba(176, 77, 255, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  font: 700 0.9rem/1 Oswald, sans-serif; letter-spacing: 0.18em; text-transform: uppercase; text-shadow: 0 0 10px var(--shp-pink);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-cart-btn:hover { background: rgba(255, 43, 214, 0.3); box-shadow: 0 0 30px rgba(255, 43, 214, 0.55); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-cart-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 5px var(--shp-pink)); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-count {
+  display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px;
+  background: var(--shp-pink); color: #fff !important; font: 700 0.75rem/1 Lato, sans-serif !important; letter-spacing: 0 !important; text-shadow: none !important;
+  box-shadow: 0 0 12px var(--shp-pink);
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-count[hidden] { display: none; }
+
+/* ---------- Product grid ---------- */
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-grid {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2vw, 26px);
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-item { margin: 0; padding: 0 !important; border: 0 !important; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-item[hidden] { display: none; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-tile {
+  height: 100%; display: flex; flex-direction: column; overflow: hidden;
+  background: var(--shp-glass); border: 1px solid var(--shp-edge); border-radius: 20px;
+  box-shadow: 0 0 0 1px rgba(255, 43, 214, 0.14), 0 0 34px rgba(176, 77, 255, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-tile:hover { transform: translateY(-4px); border-color: rgba(255, 43, 214, 0.75); box-shadow: 0 0 0 1px rgba(255, 43, 214, 0.5), 0 0 50px rgba(255, 43, 214, 0.42); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-media {
+  position: relative; display: block; width: 100%; aspect-ratio: 1; padding: 0; border: 0; cursor: zoom-in; overflow: hidden; background: #0c041e;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-media img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-tile:hover .shp-media img { transform: scale(1.04); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-qv {
+  position: absolute; left: 50%; bottom: 14px; transform: translate(-50%, 8px); opacity: 0;
+  padding: 8px 16px; border-radius: 999px; background: rgba(12, 4, 30, 0.8); border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #fff !important; font: 600 0.72rem/1 Oswald, sans-serif !important; letter-spacing: 0.2em !important; text-transform: uppercase; white-space: nowrap;
+  transition: opacity 0.2s, transform 0.2s;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-media:is(:hover, :focus-visible) .shp-qv { opacity: 1; transform: translate(-50%, 0); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-media:focus-visible { outline: 2px solid var(--shp-pink); outline-offset: -4px; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-info { flex: 1; display: flex; flex-direction: column; gap: 6px; padding: 18px 20px 6px; align-items: center; text-align: center !important; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-type { color: var(--shp-pink-soft) !important; font: 600 0.72rem/1.2 Oswald, sans-serif !important; letter-spacing: 0.22em !important; text-transform: uppercase; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-name {
+  margin: 0 !important; text-align: center !important; color: #fff !important; font: 700 1.15rem/1.25 Oswald, sans-serif !important; letter-spacing: 0.04em !important;
+  text-transform: uppercase; text-shadow: 0 0 12px rgba(255, 43, 214, 0.5) !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-price { margin: 2px 0 0 !important; color: #ffd19a !important; font: 700 1.05rem/1.3 Lato, sans-serif !important; letter-spacing: 0.02em !important; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-add {
+  margin: 12px 20px 20px; min-height: 44px; padding: 10px 16px; cursor: pointer; border-radius: 12px;
+  color: #fff; background: rgba(18, 10, 42, 0.55); border: 1px solid rgba(255, 255, 255, 0.35);
+  font: 700 0.85rem/1 Oswald, sans-serif; letter-spacing: 0.18em; text-transform: uppercase; text-shadow: 0 0 10px var(--shp-pink);
+  box-shadow: 0 0 18px rgba(176, 77, 255, 0.3); transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-add:hover:not([disabled]) { background: rgba(255, 43, 214, 0.35); box-shadow: 0 0 30px rgba(255, 43, 214, 0.6); transform: translateY(-1px); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-add[disabled] { opacity: 0.55; cursor: not-allowed; text-shadow: none; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page :is(.shp-add, .shp-chip, .shp-cart-btn):focus-visible { outline: 2px solid var(--shp-pink); outline-offset: 3px; }
+
+/* ---------- PLAY NOW-style button (pitch CTA, quick view, checkout) ---------- */
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-play {
+  display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+  min-width: 220px; min-height: 52px; padding: 14px 30px 14px 26px; cursor: pointer; text-decoration: none !important;
+  font: 700 1.02rem/1 Oswald, "Arial Narrow", sans-serif !important; letter-spacing: 0.2em !important; text-transform: uppercase;
+  color: #fff !important; -webkit-text-fill-color: #fff !important;
+  background: rgba(18, 10, 42, 0.55) !important; border: 1px solid rgba(255, 255, 255, 0.35) !important; border-radius: 12px !important;
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  box-shadow: 0 0 22px rgba(176, 77, 255, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.06) !important;
+  text-shadow: 0 0 10px var(--shp-pink); transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-play:hover:not([disabled]) { background: rgba(255, 43, 214, 0.35) !important; box-shadow: 0 0 34px rgba(255, 43, 214, 0.6) !important; transform: translateY(-1px); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-play:focus-visible { outline: 2px solid var(--shp-pink); outline-offset: 4px; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-play[disabled] { opacity: 0.55; cursor: not-allowed; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-play-icon { width: 0; height: 0; border-style: solid; border-width: 7px 0 7px 11px; border-color: transparent transparent transparent #fff; filter: drop-shadow(0 0 6px var(--shp-pink)); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-play span:not(.shp-play-icon) { color: #fff !important; -webkit-text-fill-color: #fff !important; padding-left: 0.2em; }
+
+/* ---------- Pitch: "Tenshi can host your Shopify store" ---------- */
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shop-pitch { padding-top: clamp(40px, 6vw, 80px); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-pitch {
+  text-align: center; padding: clamp(28px, 4vw, 52px) clamp(20px, 4vw, 56px);
+  background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(255, 43, 214, 0.16), transparent 70%), var(--shp-glass);
+  border: 1px solid var(--shp-edge); border-radius: 24px;
+  box-shadow: 0 0 0 1px rgba(255, 43, 214, 0.14), 0 0 46px rgba(176, 77, 255, 0.3);
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-pitch h2 { margin: 0 0 14px !important; font-size: clamp(1.6rem, 3.4vw, 2.5rem) !important; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-pitch-lead { max-width: 46rem; margin: 0 auto 30px !important; color: var(--shp-muted) !important; font: 400 1.08rem/1.7 Lato, "Segoe UI", sans-serif !important; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-points { list-style: none; margin: 0 0 34px; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 18px; text-align: left; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-point {
+  margin: 0; padding: 22px !important; border: 1px solid rgba(255, 255, 255, 0.12) !important; border-radius: 16px;
+  background: rgba(12, 4, 30, 0.55);
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-point svg { width: 34px; height: 34px; margin-bottom: 10px; fill: none; stroke: var(--shp-blue); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 8px rgba(77, 163, 255, 0.8)); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-point:nth-child(2) svg { stroke: var(--shp-pink); filter: drop-shadow(0 0 8px rgba(255, 43, 214, 0.8)); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-point:nth-child(3) svg { stroke: var(--shp-orange); filter: drop-shadow(0 0 8px rgba(255, 140, 26, 0.8)); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-point h3 { margin: 0 0 6px !important; color: #fff !important; font-size: 1.05rem !important; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-point p { margin: 0 !important; color: var(--shp-muted) !important; font: 400 0.98rem/1.6 Lato, "Segoe UI", sans-serif !important; }
+
+/* ---------- Shared: close button, quantity stepper ---------- */
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-x {
+  display: grid; place-items: center; width: 40px; height: 40px; padding: 0; cursor: pointer; border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.25); color: #fff;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-x:hover { border-color: var(--shp-pink); box-shadow: 0 0 16px rgba(255, 43, 214, 0.5); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-x svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-qty { display: inline-flex; align-items: center; border: 1px solid rgba(255, 255, 255, 0.28); border-radius: 12px; overflow: hidden; background: rgba(12, 4, 30, 0.6); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-qty button { width: 42px; height: 46px; padding: 0; border: 0; cursor: pointer; background: transparent; color: #fff; font: 700 1.2rem/1 Lato, sans-serif; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-qty button:hover { background: rgba(255, 43, 214, 0.25); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-qty output { min-width: 34px; text-align: center; color: #fff; font: 700 1rem/1 Lato, sans-serif; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-qty-sm button { width: 32px; height: 32px; font-size: 1rem; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-qty-sm output { min-width: 26px; font-size: 0.92rem; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page :is(.shp-x, .shp-qty button, .shp-rm):focus-visible { outline: 2px solid var(--shp-pink); outline-offset: 2px; }
+
+/* ---------- Quick view dialog ---------- */
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-dialog {
+  width: min(920px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); padding: 0; overflow: auto;
+  color: var(--shp-ink); background: linear-gradient(160deg, #2a0a52, #12052a); border: 1px solid rgba(255, 43, 214, 0.55); border-radius: 22px;
+  box-shadow: 0 0 0 1px rgba(255, 43, 214, 0.2), 0 0 70px rgba(176, 77, 255, 0.45), 0 30px 80px rgba(0, 0, 0, 0.6);
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-dialog::backdrop { background: rgba(6, 2, 16, 0.72); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-dialog[open] { animation: shp-pop 0.22s ease-out; }
+@keyframes shp-pop { from { opacity: 0; transform: translateY(12px) scale(0.98); } }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-dlg-box { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-dlg-box > .shp-x { position: absolute; top: 14px; right: 14px; z-index: 2; background: rgba(12, 4, 30, 0.7); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-dlg-media { background: #0c041e; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-dlg-media img { display: block; width: 100%; height: 100%; aspect-ratio: 1; object-fit: cover; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-dlg-body { display: flex; flex-direction: column; gap: 12px; padding: 34px 30px 30px; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-dlg-body .shp-type { color: var(--shp-pink-soft); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-dlg-title { margin: 0; padding-right: 36px; color: #fff; font: 700 clamp(1.4rem, 2.6vw, 1.9rem)/1.15 Oswald, sans-serif; letter-spacing: 0.04em; text-transform: uppercase; text-shadow: 0 0 22px var(--shp-pink), 0 0 2px rgba(255, 255, 255, 0.6); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-dlg-price { margin: 0; color: #ffd19a; font: 700 1.3rem/1.2 Lato, sans-serif; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-dlg-price s { margin-left: 8px; color: var(--shp-muted); font-weight: 400; font-size: 1rem; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-dlg-desc { margin: 0; color: var(--shp-muted); font: 400 1rem/1.65 Lato, "Segoe UI", sans-serif; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-opt { margin: 4px 0 0; padding: 0; border: 0; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-opt legend { margin-bottom: 8px; color: #fff; font: 600 0.78rem/1 Oswald, sans-serif; letter-spacing: 0.2em; text-transform: uppercase; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-opt-vals { display: flex; flex-wrap: wrap; gap: 8px; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-pill { position: relative; cursor: pointer; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-pill input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-pill span {
+  display: inline-block; padding: 9px 15px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.25); background: rgba(12, 4, 30, 0.55);
+  color: var(--shp-ink); font: 700 0.88rem/1 Lato, sans-serif; transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-pill:hover span { border-color: var(--shp-pink); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-pill input:checked + span { border-color: var(--shp-pink); background: rgba(255, 43, 214, 0.24); box-shadow: 0 0 16px rgba(255, 43, 214, 0.45); color: #fff; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-pill input:focus-visible + span { outline: 2px solid var(--shp-pink); outline-offset: 2px; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-dlg-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: auto; padding-top: 12px; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-dlg-add { flex: 1 1 200px; min-width: 0; }
+@media (max-width: 720px) {
+  :root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-dlg-box { grid-template-columns: 1fr; }
+  :root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-dlg-media img { aspect-ratio: 4 / 3; }
+  :root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-dlg-body { padding: 22px 20px 22px; }
+}
+
+/* ---------- Cart drawer ---------- */
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-scrim { position: fixed; inset: 0; z-index: 9990; background: rgba(6, 2, 16, 0.66); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); opacity: 0; transition: opacity 0.25s; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-scrim.is-open { opacity: 1; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; z-index: 9991; width: min(430px, 100vw);
+  display: flex; flex-direction: column; color: var(--shp-ink);
+  background: linear-gradient(170deg, rgba(42, 10, 82, 0.97), rgba(14, 4, 32, 0.98));
+  border-left: 1px solid rgba(255, 43, 214, 0.5); box-shadow: -10px 0 60px rgba(176, 77, 255, 0.35);
+  transform: translateX(100%); transition: transform 0.26s ease;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-drawer.is-open { transform: none; }
+[dir="rtl"] .shop-page .shp-drawer:not(#_) { right: auto; left: 0; border-left: 0; border-right: 1px solid rgba(255, 43, 214, 0.5); transform: translateX(-100%); }
+[dir="rtl"] .shop-page .shp-drawer.is-open:not(#_) { transform: none; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-drawer-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 20px 22px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-drawer-title { margin: 0; color: #fff; font: 700 1.4rem/1 Oswald, sans-serif; letter-spacing: 0.12em; text-transform: uppercase; text-shadow: 0 0 18px var(--shp-pink); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-lines { list-style: none; margin: 0; padding: 8px 22px; flex: 1; overflow-y: auto; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-line { display: grid; grid-template-columns: 72px 1fr auto; gap: 14px; align-items: start; padding: 16px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-line img { width: 72px; height: 72px; border-radius: 12px; object-fit: cover; border: 1px solid rgba(255, 43, 214, 0.35); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-line-info { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-line-name { margin: 0; color: #fff; font: 700 0.98rem/1.25 Oswald, sans-serif; letter-spacing: 0.04em; text-transform: uppercase; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-line-var { margin: 0; color: var(--shp-muted); font: 400 0.88rem/1.3 Lato, sans-serif; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-line-end { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-line-price { margin: 0; color: #ffd19a; font: 700 0.98rem/1.2 Lato, sans-serif; white-space: nowrap; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-rm { padding: 2px 0; border: 0; background: none; cursor: pointer; color: var(--shp-muted); font: 400 0.82rem/1.2 Lato, sans-serif; text-decoration: underline; text-underline-offset: 3px; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-rm:hover { color: var(--shp-pink-soft); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-empty { margin: 0; padding: 40px 22px; text-align: center; color: var(--shp-muted); font: 400 1rem/1.6 Lato, sans-serif; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-empty[hidden], :root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-drawer-foot[hidden], :root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-notice[hidden] { display: none; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-drawer-foot { padding: 18px 22px 24px; border-top: 1px solid rgba(255, 255, 255, 0.1); background: rgba(12, 4, 30, 0.5); }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-sub { display: flex; justify-content: space-between; align-items: baseline; margin: 0 0 4px; color: #fff; font: 600 0.9rem/1.2 Oswald, sans-serif; letter-spacing: 0.18em; text-transform: uppercase; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-sub-total { color: #ffd19a; font: 700 1.3rem/1 Lato, sans-serif; letter-spacing: 0; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-fine { margin: 0 0 16px; color: var(--shp-muted); font: 400 0.85rem/1.5 Lato, sans-serif; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-checkout { width: 100%; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-notice {
+  margin: 14px 0 0; padding: 12px 14px; border-radius: 0 12px 12px 0; border-left: 4px solid var(--shp-orange);
+  background: rgba(255, 140, 26, 0.12); color: var(--shp-ink); font: 400 0.92rem/1.55 Lato, sans-serif;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-notice strong { display: block; color: #ffd19a; font: 700 0.95rem/1.4 Oswald, sans-serif; letter-spacing: 0.08em; text-transform: uppercase; }
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-notice a { color: var(--shp-orange); text-decoration: underline; text-underline-offset: 3px; }
+
+@media (max-width: 900px) {
+  :root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  :root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-bar-title { flex: 1 1 auto; order: 1; }
+  :root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-cart-btn { order: 2; min-height: 42px; padding: 8px 14px; }
+  :root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-filters { order: 3; flex: 1 1 100%; }
+  :root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  :root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-info { padding: 12px 12px 4px; }
+  :root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-name { font-size: 0.98rem !important; }
+  :root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-price { font-size: 0.95rem !important; }
+  :root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-add { margin: 10px 12px 12px; padding: 10px 8px; font-size: 0.74rem; letter-spacing: 0.12em; }
+  :root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-drawer { width: 100vw; }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root:not(#_):not(#__):not(#___):not(#____) .shop-page :is(.shp-tile, .shp-media img, .shp-drawer, .shp-scrim, .shp-qv) { transition: none !important; }
+  :root:not(#_):not(#__):not(#___):not(#____) .shop-page .shp-dialog[open] { animation: none; }
+}
+
+/* Shop hero (the synthwave street from the homepage): fill the 7:3 artwork edge to edge (cover inside a matching
+   aspect-ratio box) with the title centred in the image. A light scrim sits
+   only behind the type so the neon colour stays vivid. */
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .svc-hero.px-hero {
+  --px-pos: center center !important;
+  --px-grad: none !important;
+  box-sizing: border-box;
+  width: 100%;
+  aspect-ratio: 2352 / 1008;
+  min-height: 280px;
+  height: auto;
+  overflow: visible;
+  padding-top: clamp(28px, 3vw, 48px) !important;
+  padding-bottom: clamp(24px, 2.6vw, 40px) !important;
+  padding-inline: var(--site-gutter, var(--gutter));
+  background: #12050a !important;
+  text-align: center !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .svc-hero.px-hero[data-overlay="gradient"] .parallax-overlay,
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .svc-hero.px-hero[data-overlay="none"] .parallax-overlay,
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .svc-hero.px-hero .parallax-overlay {
+  background: none !important;
+  opacity: 0 !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .svc-hero.px-hero .svc-hero-inner {
+  position: relative;
+  z-index: 1;
+  width: 100% !important;
+  max-width: var(--site-inner, 1150px) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .svc-hero.px-hero .svc-hero-text {
+  width: 100%;
+  max-width: 52rem;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
+  position: relative;
+  z-index: 1;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .svc-hero.px-hero .svc-hero-text::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  inset: -1.25rem -2.5rem;
+  background: radial-gradient(ellipse at center,
+    rgba(10, 4, 16, 0.48) 0%,
+    rgba(10, 4, 16, 0.2) 48%,
+    rgba(10, 4, 16, 0) 76%);
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .svc-hero.px-hero h1,
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .svc-hero.px-hero h1 * {
+  text-align: center !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .svc-hero.px-hero h1 {
+  margin-bottom: 0.28em !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .svc-hero.px-hero .crumbs ol {
+  margin-bottom: 12px !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .svc-hero.px-hero .crumbs,
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .svc-hero.px-hero .crumbs ol,
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .svc-hero.px-hero .crumbs li {
+  text-align: center !important;
+  justify-content: center !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .svc-hero.px-hero .svc-hero-lead {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
+}
+/* Keep the shared 160% cover layer from zooming: the layer matches the 7:3
+   (or mobile-crop) box, and cover fills it with almost no crop. */
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .svc-hero.px-hero .parallax-layer {
+  top: 0 !important;
+  height: 100% !important;
+  transform: none !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .svc-hero.px-hero .parallax-layer picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+:root:not(#_):not(#__):not(#___):not(#____) .shop-page .svc-hero.px-hero .parallax-layer img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
+}
+/* Below the width where a 7:3 box is too short for the title, use the
+   storefront crop (img/photos/shop-hero-mobile.webp) and its 1200/707 aspect. */
+@media (max-width: 900px) {
+  :root:not(#_):not(#__):not(#___):not(#____) .shop-page .svc-hero.px-hero {
+    --px-pos: center center !important;
+    aspect-ratio: auto;
+    min-height: max(280px, calc(100vw * 707 / 1200));
+  }
+  :root:not(#_):not(#__):not(#___):not(#____) .shop-page .svc-hero.px-hero .svc-hero-text {
+    max-width: 100%;
+  }
+  :root:not(#_):not(#__):not(#___):not(#____) .shop-page .svc-hero.px-hero .svc-hero-text::before {
+    inset: -1rem -1.25rem;
+  }
+}

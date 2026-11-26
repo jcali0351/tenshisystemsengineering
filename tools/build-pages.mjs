@@ -555,7 +555,7 @@ const FORM = index.match(/        <form class="contact-form"[\s\S]*?<\/form>/)[0
 
 // The header menu's dropdowns: a page in a dropdown also marks its top-level item (on Team, About shows as current).
 // The footer menu is flat, so only the page itself is marked there. Project pages pass ["portfolio", "p-<slug>"] already.
-const NAV_PARENT = { team: "about", technology: "about", "knowledge-base": "about", legal: "about", blog: "news", portal: "contact", "p-storycaster": "portfolio", "p-master-baiter-pro": "portfolio" };
+const NAV_PARENT = { team: "about", technology: "about", "knowledge-base": "about", legal: "about", shop: "services", blog: "news", portal: "contact", "p-storycaster": "portfolio", "p-master-baiter-pro": "portfolio" };
 const navCurrent = (current) => [].concat(current).flatMap((c) => NAV_PARENT[c] ? [c, NAV_PARENT[c]] : [c]);
 // Point the copied links at the right folder and mark the current menu item.
 function chrome(html, prefix, current) {
@@ -563,7 +563,7 @@ function chrome(html, prefix, current) {
     .replace('href="#top"', `href="${prefix}index.html"`)
     .replace(/src="((?:brand|img)\/[\w.\/-]+(?:\?[^"]*)?)"/g, `src="${prefix}$1"`)
     .replace(/href="((?:news|blog)\.html#[^"]*)"/g, `href="${prefix}$1"`)
-    .replace(/href="((?:index|about|services|contact|team|technology|knowledge-base|legal|projects|portfolio|launch|news|blog|portal|wisconsin)\.html|projects\/[a-z-]+\.html|blog\/[a-z-]+\.html)"/g, `href="${prefix}$1"`)
+    .replace(/href="((?:index|about|services|contact|team|technology|knowledge-base|legal|shop|projects|portfolio|launch|news|blog|portal|wisconsin)\.html|projects\/[a-z-]+\.html|blog\/[a-z-]+\.html)"/g, `href="${prefix}$1"`)
     // The Games menu and leaderboards: root-absolute on pages in services/, projects/ and blog/ (relative links there
     // pointed at e.g. /services/games.html, a 404). Pages in the main folder keep the header exactly as in index.html.
     .replace(/href="((?:games|game-[a-z-]+|leaderboard-[a-z-]+)\.html)"/g, (m, f) => (prefix ? `href="/${f}"` : m));
@@ -1099,6 +1099,88 @@ ${readFileSync("tools/legal-main.html", "utf8").replace(/\s+$/, "").replaceAll("
     </section>`,
 });
 writePage("legal.html", legalPage);
+
+/* ---------- Shop demo (Shopify) ---------- */
+// A Shopify-ready storefront to show clients we can host their store. shop.js does the work (demo products from
+// data/shop-demo.json, or live ones from the Shopify Storefront API when data/shop-config.json says so; see
+// docs/SHOP.md). The demo products are also written into the page here so search engines and no-JS visitors see them.
+// Look: shop.css, linked after neon-pages.css below. Product pictures: tools/make-shop-art.mjs.
+const SHOP_DEMO = JSON.parse(readFileSync("data/shop-demo.json", "utf8"));
+const SHOP_V = (await import("node:crypto")).createHash("sha256").update(readFileSync("data/shop-demo.json") + "\n" + readFileSync("data/shop-config.json")).digest("hex").slice(0, 8);
+const shopMoney = (n) => "$" + Number(n).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const shopTile = (p) => {
+  const prices = p.variants.map((v) => +v.price), lo = Math.min(...prices);
+  const price = Math.max(...prices) > lo ? EN.shopFrom.replace("{price}", shopMoney(lo)) : shopMoney(lo);
+  const sold = !p.variants.some((v) => v.available);
+  return `          <li class="shp-item" data-type="${esc(p.type)}">
+            <article class="shp-tile">
+              <button class="shp-media" type="button" data-shop-quick="${esc(p.handle)}" aria-label="${esc(EN.shopQuickView + ": " + p.title)}">
+                <img src="${esc(p.image)}" alt="${esc(p.imageAlt)}" width="800" height="800" loading="lazy" decoding="async">
+                <span class="shp-qv" aria-hidden="true">${tx("shopQuickView")}</span>
+              </button>
+              <div class="shp-info">
+                <span class="shp-type">${esc(p.type)}</span>
+                <h3 class="shp-name">${esc(p.title)}</h3>
+                <p class="shp-price">${esc(price)}</p>
+              </div>
+              <button class="shp-add" type="button" data-shop-add="${esc(p.handle)}"${sold ? " disabled" : ""}>${tx(sold ? "shopSoldOut" : p.options.length ? "shopChoose" : "shopAddToCart")}</button>
+            </article>
+          </li>`;
+};
+const SHOP_ICON = {
+  brush: '<path d="M14.5 3.5 20.5 9.5 11 19H5v-6z"/><path d="M12.5 5.5l6 6"/>',
+  lock: '<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><path d="M12 15v2"/>',
+  bolt: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+};
+const shopPage = frame({
+  prefix: "", current: "shop", titleKey: "shopTitle", descKey: "shopLead", bodyClass: "page shop-page",
+  extraHead: `  <link rel="preload" as="image" href="img/photos/shop-hero-mobile.webp" media="(max-width: 900px)" fetchpriority="high">
+  <link rel="preload" as="image" href="img/photos/hero-synthwave.webp" media="(min-width: 901px)" fetchpriority="high">
+`,
+  main: `${banner("", [{ key: "navServices", href: "services.html" }, { key: "navShop" }], "shopTitle", "shopLead")}
+
+    <section class="page-section shop-body" aria-labelledby="shop-grid-title">
+      <div class="page-inner">
+        <div class="shp-demo" role="note" data-shop-demo-only>
+          <span class="shp-badge" data-i18n="shopDemoBadge">${tx("shopDemoBadge")}</span>
+          <p data-i18n="shopDemoText">${tx("shopDemoText")}</p>
+        </div>
+        <div class="shp-bar">
+          <h2 id="shop-grid-title" class="shp-bar-title" data-i18n="shopGridTitle">${tx("shopGridTitle")}</h2>
+          <div class="shp-filters" role="group" aria-label="${tx("shopFilterLabel")}" data-i18n-attr="aria-label:shopFilterLabel" data-shop-filters hidden></div>
+          <button class="shp-cart-btn" type="button" data-shop-cart aria-controls="shp-drawer" aria-expanded="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 10.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 1.9-1.5L21 8H6.2"/><circle cx="10" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/></svg>
+            <span data-i18n="shopCart">${tx("shopCart")}</span>
+            <span class="shp-count" data-shop-count hidden>0</span>
+          </button>
+        </div>
+        <p class="sr-only" aria-live="polite" data-shop-status></p>
+        <ul class="shp-grid" id="shop-grid" data-shop-v="${SHOP_V}" aria-busy="true">
+${SHOP_DEMO.products.map(shopTile).join("\n")}
+        </ul>
+      </div>
+    </section>
+
+    <section class="page-section shop-pitch" aria-labelledby="shop-pitch-title">
+      <div class="page-inner">
+        <div class="shp-pitch">
+          <h2 id="shop-pitch-title" data-i18n="shopPitchTitle">${tx("shopPitchTitle")}</h2>
+          <p class="shp-pitch-lead" data-i18n="shopPitchText">${tx("shopPitchText")}</p>
+          <ul class="shp-points">
+${[["brush", 1], ["lock", 2], ["bolt", 3]].map(([ic, n]) => `            <li class="shp-point">
+              <svg viewBox="0 0 24 24" aria-hidden="true">${SHOP_ICON[ic]}</svg>
+              <h3 data-i18n="shopPitch${n}Title">${tx(`shopPitch${n}Title`)}</h3>
+              <p data-i18n="shopPitch${n}Text">${tx(`shopPitch${n}Text`)}</p>
+            </li>`).join("\n")}
+          </ul>
+          <a class="shp-play" href="contact.html"><span class="shp-play-icon" aria-hidden="true"></span><span data-i18n="shopPitchCta">${tx("shopPitchCta")}</span></a>
+        </div>
+      </div>
+    </section>`,
+  extraScripts: `  <script src="shop.js" defer></script>
+`,
+});
+writePage("shop.html", shopPage);
 
 /* ---------- Contact ---------- */
 const contactPage = frame({
@@ -2413,6 +2495,25 @@ await import("./neon-pages.mjs");
     html = html.replace(
       /(<div class="px-hero-bg"[^>]*>[\s\S]*?)<img src="img\/photos\/services-hero\.webp" alt="" width="1920" height="1080" decoding="async" fetchpriority="high" data-still data-still-color>/,
       `$1<picture>\n          <source media="(max-width: 900px)" srcset="img/photos/services-hero-mobile.webp" width="1200" height="912">\n          <img src="img/photos/services-hero.webp" alt="" width="2736" height="912" decoding="async" fetchpriority="high" data-still data-still-color>\n        </picture>`
+    );
+    writeFileSync(file, html);
+  }
+}
+
+// Shop page assets must load after neon-pages.css (like legal.css); the hero gets a phone crop.
+{
+  const file = "shop.html";
+  if (existsSync(file)) {
+    let html = readFileSync(file, "utf8");
+    html = html.replace(/\n?[ \t]*<link rel="stylesheet" href="shop\.css[^"]*">/g, "");
+    if (/<link rel="stylesheet" href="sandbox\/neon-pages\.css[^"]*">/.test(html)) {
+      html = html.replace(/(<link rel="stylesheet" href="sandbox\/neon-pages\.css[^"]*">)/, `$1\n  <link rel="stylesheet" href="shop.css">`);
+    } else {
+      html = html.replace(/(<link rel="stylesheet" href="[^"]+">)(?![\s\S]*<link rel="stylesheet")/, `$1\n  <link rel="stylesheet" href="shop.css">`);
+    }
+    html = html.replace(
+      /(<div class="px-hero-bg"[^>]*>[\s\S]*?)<img src="img\/photos\/hero-synthwave\.webp" alt="" width="1920" height="1080" decoding="async" fetchpriority="high" data-still data-still-color>/,
+      `$1<picture>\n          <source media="(max-width: 900px)" srcset="img/photos/shop-hero-mobile.webp" width="1200" height="707">\n          <img src="img/photos/hero-synthwave.webp" alt="" width="2352" height="1008" decoding="async" fetchpriority="high" data-still data-still-color>\n        </picture>`
     );
     writeFileSync(file, html);
   }

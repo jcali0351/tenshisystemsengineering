@@ -534,6 +534,17 @@
         "grayFade": {
           "enabled": false
         }
+      },
+      "shop": {
+        "image": "img/photos/hero-synthwave.webp",
+        "position": "center center",
+        "speed": 0,
+        "overlayMode": "none",
+        "overlay": "#1a0b2e",
+        "overlayOpacity": 0,
+        "grayFade": {
+          "enabled": false
+        }
       }
     }
   }

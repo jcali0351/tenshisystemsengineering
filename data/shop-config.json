@@ -1,0 +1,10 @@
+{
+  "_readme": "Shop demo settings (shop.html / shop.js). mode 'demo' shows data/shop-demo.json and disables checkout. To go live: set mode to 'live', storeDomain to your-store.myshopify.com and storefrontAccessToken to the PUBLIC Storefront API token from Shopify admin > Sales channels > Headless (never an Admin API token or the Headless PRIVATE token). See docs/SHOP.md.",
+  "mode": "demo",
+  "storeDomain": "",
+  "storefrontAccessToken": "",
+  "apiVersion": "2026-10",
+  "collectionHandle": "",
+  "productCount": 12,
+  "currency": "USD"
+}

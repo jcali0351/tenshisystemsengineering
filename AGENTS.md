@@ -147,6 +147,15 @@ Server facts: Hostinger KVM 2 VPS, Ubuntu 24.04, Caddy (HTML sent with `Cache-Co
 - **Caching** (once `tools/server/caddy-update.sh` is applied): anything linked with `?v=` is cached for a year, so a
   changed file MUST get a new `?v=` tag (hash stamps do it automatically; hand-set tags in index.html must be bumped).
 
+## Shop demo (Shopify)
+- `shop.html` (Services > Shop demo, also in the footer) shows clients we can host a Shopify store: hero, product grid,
+  quick view, cart drawer, "Tenshi can host your Shopify store" pitch. Code `shop.js` / `shop.css`; data
+  `data/shop-demo.json`; switch `data/shop-config.json` (`"mode": "demo"` or `"live"`). Full guide: `docs/SHOP.md`.
+- Demo mode: sample products, cart in the browser, checkout shows "Demo store: checkout is disabled".
+- Live mode: products from the Storefront API of `storeDomain`, Checkout = Cart API `cartCreate` -> Shopify's
+  `checkoutUrl`. Only the PUBLIC Storefront token (Headless channel) may go in shop-config.json; never an Admin API
+  token or the Headless private token.
+
 ## Pitfalls that already bit us (check every time)
 - **Half-built pages**: OneDrive can lock a file mid-build; build-pages then leaves pages without the neon theme and
   they ship as the old white site. Re-run until it exits cleanly, then check

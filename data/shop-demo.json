@@ -1,0 +1,90 @@
+{
+  "_readme": "Sample products for the Shop demo (shop.html) while data/shop-config.json is in demo mode. Same shape shop.js builds from the Shopify Storefront API, so the page looks identical in live mode. Pictures: img/shop/*.webp, drawn by tools/make-shop-art.mjs.",
+  "currency": "USD",
+  "products": [
+    {
+      "id": "demo-neon-angel-tee",
+      "handle": "neon-angel-tee",
+      "title": "Neon Angel Tee",
+      "type": "Merch",
+      "description": "Heavyweight black cotton tee with the glowing 天 mark on the chest and TENSHI underneath. Soft-washed, unisex fit.",
+      "image": "img/shop/neon-angel-tee.webp",
+      "imageAlt": "Black T-shirt with a glowing pink Tenshi 天 logo and the word TENSHI",
+      "options": [{ "name": "Size", "values": ["S", "M", "L", "XL"] }],
+      "variants": [
+        { "id": "demo-neon-angel-tee-s", "title": "S", "price": "28.00", "available": true, "options": { "Size": "S" } },
+        { "id": "demo-neon-angel-tee-m", "title": "M", "price": "28.00", "available": true, "options": { "Size": "M" } },
+        { "id": "demo-neon-angel-tee-l", "title": "L", "price": "28.00", "available": true, "options": { "Size": "L" } },
+        { "id": "demo-neon-angel-tee-xl", "title": "XL", "price": "30.00", "available": false, "options": { "Size": "XL" } }
+      ]
+    },
+    {
+      "id": "demo-undercity-art-print",
+      "handle": "undercity-art-print",
+      "title": "Undercity Art Print",
+      "type": "Print",
+      "description": "Museum-grade giclée print of the Undercity cover art: a neon city carved into the depths. Ships rolled in a tube; frame not included.",
+      "image": "img/shop/undercity-art-print.webp",
+      "imageAlt": "Framed print of the Undercity neon cavern city artwork",
+      "options": [{ "name": "Size", "values": ["12 × 18 in", "24 × 36 in"] }],
+      "variants": [
+        { "id": "demo-undercity-art-print-s", "title": "12 × 18 in", "price": "24.00", "compareAt": "29.00", "available": true, "options": { "Size": "12 × 18 in" } },
+        { "id": "demo-undercity-art-print-l", "title": "24 × 36 in", "price": "38.00", "available": true, "options": { "Size": "24 × 36 in" } }
+      ]
+    },
+    {
+      "id": "demo-synthwave-desk-mat",
+      "handle": "synthwave-desk-mat",
+      "title": "Synthwave Desk Mat",
+      "type": "Merch",
+      "description": "Extra-large 900 × 400 mm desk mat with the synthwave skyline from our homepage, stitched glowing-pink edges and a non-slip base.",
+      "image": "img/shop/synthwave-desk-mat.webp",
+      "imageAlt": "Large desk mat printed with a neon synthwave city at sunset, pink stitched edge",
+      "options": [],
+      "variants": [
+        { "id": "demo-synthwave-desk-mat", "title": "Default", "price": "32.00", "available": true, "options": {} }
+      ]
+    },
+    {
+      "id": "demo-angel-pin-set",
+      "handle": "angel-pin-set",
+      "title": "Arcade Enamel Pin Set",
+      "type": "Merch",
+      "description": "Three hard-enamel pins with gold plating: the 天 mark, a PLAY button and a GG badge. Rubber backs, gift box included.",
+      "image": "img/shop/angel-pin-set.webp",
+      "imageAlt": "Three enamel pins: a red Tenshi logo pin, a purple play button pin and an orange GG pin",
+      "options": [],
+      "variants": [
+        { "id": "demo-angel-pin-set", "title": "Default", "price": "14.00", "available": true, "options": {} }
+      ]
+    },
+    {
+      "id": "demo-launch-pack",
+      "handle": "launch-pack",
+      "title": "Launch Pack: 5-Page Website",
+      "type": "Service",
+      "description": "A fast, mobile-first five-page website designed and built by Tenshi, with hosting set up, basic SEO and a contact form. Live in about two weeks.",
+      "image": "img/shop/launch-pack.webp",
+      "imageAlt": "Glowing card showing a website mock-up, a rocket and the words Launch Pack",
+      "options": [{ "name": "Package", "values": ["Starter", "Plus (with blog)"] }],
+      "variants": [
+        { "id": "demo-launch-pack-starter", "title": "Starter", "price": "1499.00", "available": true, "options": { "Package": "Starter" } },
+        { "id": "demo-launch-pack-plus", "title": "Plus (with blog)", "price": "1899.00", "available": true, "options": { "Package": "Plus (with blog)" } }
+      ]
+    },
+    {
+      "id": "demo-care-plan",
+      "handle": "care-plan",
+      "title": "Care Plan: Hosting & Updates",
+      "type": "Service",
+      "description": "Managed hosting on our servers, security and plugin updates, nightly backups and small content changes each month.",
+      "image": "img/shop/care-plan.webp",
+      "imageAlt": "Glowing card with a shield and heartbeat icon and the words Care Plan",
+      "options": [{ "name": "Term", "values": ["1 month", "12 months"] }],
+      "variants": [
+        { "id": "demo-care-plan-1", "title": "1 month", "price": "49.00", "available": true, "options": { "Term": "1 month" } },
+        { "id": "demo-care-plan-12", "title": "12 months", "price": "490.00", "compareAt": "588.00", "available": true, "options": { "Term": "12 months" } }
+      ]
+    }
+  ]
+}
