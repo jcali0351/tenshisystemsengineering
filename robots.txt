@@ -4,6 +4,12 @@ Disallow: /admin.html
 Disallow: /admin/
 Disallow: /portal.html
 Disallow: /client-portal.html
+Disallow: /classic.html
+Disallow: /arcade-embed.html
+Disallow: /tools/
 Disallow: /platform/
+Disallow: /data/
+Disallow: /sandbox/
+Disallow: /*.mjs$
 
 Sitemap: https://tenshisystems.com/sitemap.xml

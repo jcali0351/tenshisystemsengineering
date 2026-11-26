@@ -253,7 +253,7 @@
     $(".shp-lines", drawer).innerHTML = lines.map(({ l, m }) => {
       const img = /^https?:/.test(m.p.image) ? m.p.image : BASE + m.p.image;
       return `<li class="shp-line" data-line="${esc(l.variantId)}">
-        <img src="${esc(img)}" alt="" width="72" height="72" loading="lazy" decoding="async">
+        <img src="${esc(img)}" alt="" width="72" height="72" loading="lazy" decoding="async" aria-hidden="true">
         <div class="shp-line-info">
           <p class="shp-line-name">${esc(m.p.title)}</p>
           ${m.p.options.length ? `<p class="shp-line-var">${esc(m.v.title)}</p>` : ""}

@@ -1,53 +1,898 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://tenshisystems.com/</loc><lastmod>2026-11-26</lastmod><priority>1.0</priority></url>
-  <url><loc>https://tenshisystems.com/about.html</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
-  <url><loc>https://tenshisystems.com/blog.html</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
-  <url><loc>https://tenshisystems.com/blog/a-practical-guide-to-common-bash-commands-for-web-development.html</loc><lastmod>2026-11-26</lastmod><priority>0.6</priority></url>
-  <url><loc>https://tenshisystems.com/blog/ai-chatbots-for-small-business-what-they-can-and-cannot-do.html</loc><lastmod>2026-11-26</lastmod><priority>0.6</priority></url>
-  <url><loc>https://tenshisystems.com/blog/ai-for-small-business-in-wisconsin-practical-uses-that-save-time.html</loc><lastmod>2026-11-26</lastmod><priority>0.6</priority></url>
-  <url><loc>https://tenshisystems.com/blog/choosing-web-hosting-for-your-business-a-plain-english-guide.html</loc><lastmod>2026-11-26</lastmod><priority>0.6</priority></url>
-  <url><loc>https://tenshisystems.com/blog/cms-or-static-site-how-to-choose-the-right-foundation-for-your-website.html</loc><lastmod>2026-11-26</lastmod><priority>0.6</priority></url>
-  <url><loc>https://tenshisystems.com/blog/core-web-vitals-explained-a-plain-english-guide-for-business-owners.html</loc><lastmod>2026-11-26</lastmod><priority>0.6</priority></url>
-  <url><loc>https://tenshisystems.com/blog/design-development-optimization-ai.html</loc><lastmod>2026-11-26</lastmod><priority>0.6</priority></url>
-  <url><loc>https://tenshisystems.com/blog/domain-names-and-business-email-getting-your-online-foundations-right.html</loc><lastmod>2026-11-26</lastmod><priority>0.6</priority></url>
-  <url><loc>https://tenshisystems.com/blog/local-seo-for-wisconsin-small-businesses-a-plain-english-guide.html</loc><lastmod>2026-11-26</lastmod><priority>0.6</priority></url>
-  <url><loc>https://tenshisystems.com/blog/mobile-first-design-why-your-website-should-start-on-the-smallest-screen.html</loc><lastmod>2026-11-26</lastmod><priority>0.6</priority></url>
-  <url><loc>https://tenshisystems.com/blog/php-wordpress-python.html</loc><lastmod>2026-11-26</lastmod><priority>0.6</priority></url>
-  <url><loc>https://tenshisystems.com/blog/planning-a-website-redesign-a-step-by-step-roadmap.html</loc><lastmod>2026-11-26</lastmod><priority>0.6</priority></url>
-  <url><loc>https://tenshisystems.com/blog/seo-friendly-site-structure-how-to-organize-your-website-for-people-and-search-engines.html</loc><lastmod>2026-11-26</lastmod><priority>0.6</priority></url>
-  <url><loc>https://tenshisystems.com/blog/typography-and-color-the-quiet-design-choices-that-shape-how-customers-see-you.html</loc><lastmod>2026-11-26</lastmod><priority>0.6</priority></url>
-  <url><loc>https://tenshisystems.com/blog/web-accessibility-basics-what-wcag-means-for-your-business-website.html</loc><lastmod>2026-11-26</lastmod><priority>0.6</priority></url>
-  <url><loc>https://tenshisystems.com/blog/web-forms-that-convert-designing-inquiry-and-signup-forms-people-actually-finish.html</loc><lastmod>2026-11-26</lastmod><priority>0.6</priority></url>
-  <url><loc>https://tenshisystems.com/blog/website-analytics-in-plain-english-for-business-owners.html</loc><lastmod>2026-11-26</lastmod><priority>0.6</priority></url>
-  <url><loc>https://tenshisystems.com/blog/website-security-essentials-a-practical-checklist-for-small-businesses.html</loc><lastmod>2026-11-26</lastmod><priority>0.6</priority></url>
-  <url><loc>https://tenshisystems.com/contact.html</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
-  <url><loc>https://tenshisystems.com/game-arcade.html</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
-  <url><loc>https://tenshisystems.com/game-station-defense.html</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
-  <url><loc>https://tenshisystems.com/game-undercity.html</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
-  <url><loc>https://tenshisystems.com/games.html</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
-  <url><loc>https://tenshisystems.com/knowledge-base.html</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
-  <url><loc>https://tenshisystems.com/launch.html</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
-  <url><loc>https://tenshisystems.com/leaderboard-arcade.html</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
-  <url><loc>https://tenshisystems.com/leaderboard-station-defense.html</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
-  <url><loc>https://tenshisystems.com/leaderboard-undercity.html</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
-  <url><loc>https://tenshisystems.com/legal.html</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
-  <url><loc>https://tenshisystems.com/news.html</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
-  <url><loc>https://tenshisystems.com/portfolio.html</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
-  <url><loc>https://tenshisystems.com/projects/master-baiter-pro.html</loc><lastmod>2026-11-26</lastmod><priority>0.6</priority></url>
-  <url><loc>https://tenshisystems.com/projects/storycaster.html</loc><lastmod>2026-11-26</lastmod><priority>0.6</priority></url>
-  <url><loc>https://tenshisystems.com/services.html</loc><lastmod>2026-11-26</lastmod><priority>0.9</priority></url>
-  <url><loc>https://tenshisystems.com/services/ai-services.html</loc><lastmod>2026-11-26</lastmod><priority>0.9</priority></url>
-  <url><loc>https://tenshisystems.com/services/branding.html</loc><lastmod>2026-11-26</lastmod><priority>0.9</priority></url>
-  <url><loc>https://tenshisystems.com/services/content-management.html</loc><lastmod>2026-11-26</lastmod><priority>0.9</priority></url>
-  <url><loc>https://tenshisystems.com/services/hosting.html</loc><lastmod>2026-11-26</lastmod><priority>0.9</priority></url>
-  <url><loc>https://tenshisystems.com/services/media-design.html</loc><lastmod>2026-11-26</lastmod><priority>0.9</priority></url>
-  <url><loc>https://tenshisystems.com/services/software-development.html</loc><lastmod>2026-11-26</lastmod><priority>0.9</priority></url>
-  <url><loc>https://tenshisystems.com/services/technology-consulting.html</loc><lastmod>2026-11-26</lastmod><priority>0.9</priority></url>
-  <url><loc>https://tenshisystems.com/services/web-design.html</loc><lastmod>2026-11-26</lastmod><priority>0.9</priority></url>
-  <url><loc>https://tenshisystems.com/services/web-development.html</loc><lastmod>2026-11-26</lastmod><priority>0.9</priority></url>
-  <url><loc>https://tenshisystems.com/shop.html</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
-  <url><loc>https://tenshisystems.com/team.html</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
-  <url><loc>https://tenshisystems.com/technology.html</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
-  <url><loc>https://tenshisystems.com/wisconsin.html</loc><lastmod>2026-11-26</lastmod><priority>0.8</priority></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://tenshisystems.com/</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/design-section.webp</image:loc>
+      <image:title>A designer at a neon-lit desk sketching on a tablet, surrounded by floating website mockups and a color palette: Tenshi's web and graphic design work</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/parallax/px1.jpg</image:loc>
+      <image:title>Snow-capped Mount Fuji at sunrise above a sea of clouds</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/development-section.webp</image:loc>
+      <image:title>Glowing panels of Python deployment code and a pip install terminal beside a neon city of server towers and drones at sunset: Tenshi's software and web development work</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/parallax/px2.jpg</image:loc>
+      <image:title>Twilight cityscape of mid-rise buildings and lit towers, with a mountain on the horizon</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/optimization-section.webp</image:loc>
+      <image:title>Neon city highways at night beside glowing performance gauges for speed, load time, bandwidth and response time: Tenshi's website speed and performance optimization</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/art/neon-city.jpg</image:loc>
+      <image:title>Stylized neon city skyline at night, with lit windows, a pale sun, and a glowing grid floor</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/hero-synthwave.webp</image:loc>
+      <image:title>Synthwave city at sunset: a striped orange sun between neon server-rack buildings and palm trees, over a glowing road grid</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/about.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/kyoto.jpg</image:loc>
+      <image:title>Neon illustration of a futuristic Neo-Kyoto canal city at night, with a glowing dragon above pagoda rooftops</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/team.webp</image:loc>
+      <image:title>The Tenshi Systems team: our founder with the office dog</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/blog.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/kyoto.jpg</image:loc>
+      <image:title>Neon illustration of a futuristic Neo-Kyoto canal city at night, with a glowing dragon above pagoda rooftops</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/blog/a-practical-guide-to-common-bash-commands-for-web-development.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/kyoto.jpg</image:loc>
+      <image:title>Neon illustration of a futuristic Neo-Kyoto canal city at night, with a glowing dragon above pagoda rooftops</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/blog/ai-chatbots-for-small-business-what-they-can-and-cannot-do.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/kyoto.jpg</image:loc>
+      <image:title>Neon illustration of a futuristic Neo-Kyoto canal city at night, with a glowing dragon above pagoda rooftops</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/blog/ai-for-small-business-in-wisconsin-practical-uses-that-save-time.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/kyoto.jpg</image:loc>
+      <image:title>Neon illustration of a futuristic Neo-Kyoto canal city at night, with a glowing dragon above pagoda rooftops</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/blog/choosing-web-hosting-for-your-business-a-plain-english-guide.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/kyoto.jpg</image:loc>
+      <image:title>Neon illustration of a futuristic Neo-Kyoto canal city at night, with a glowing dragon above pagoda rooftops</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/blog/cms-or-static-site-how-to-choose-the-right-foundation-for-your-website.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/kyoto.jpg</image:loc>
+      <image:title>Neon illustration of a futuristic Neo-Kyoto canal city at night, with a glowing dragon above pagoda rooftops</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/blog/core-web-vitals-explained-a-plain-english-guide-for-business-owners.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/kyoto.jpg</image:loc>
+      <image:title>Neon illustration of a futuristic Neo-Kyoto canal city at night, with a glowing dragon above pagoda rooftops</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/blog/design-development-optimization-ai.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/kyoto.jpg</image:loc>
+      <image:title>Neon illustration of a futuristic Neo-Kyoto canal city at night, with a glowing dragon above pagoda rooftops</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/blog/domain-names-and-business-email-getting-your-online-foundations-right.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/kyoto.jpg</image:loc>
+      <image:title>Neon illustration of a futuristic Neo-Kyoto canal city at night, with a glowing dragon above pagoda rooftops</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/blog/local-seo-for-wisconsin-small-businesses-a-plain-english-guide.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/kyoto.jpg</image:loc>
+      <image:title>Neon illustration of a futuristic Neo-Kyoto canal city at night, with a glowing dragon above pagoda rooftops</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/blog/mobile-first-design-why-your-website-should-start-on-the-smallest-screen.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/kyoto.jpg</image:loc>
+      <image:title>Neon illustration of a futuristic Neo-Kyoto canal city at night, with a glowing dragon above pagoda rooftops</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/blog/php-wordpress-python.html</loc>
+    <lastmod>2026-11-26</lastmod>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/kyoto.jpg</image:loc>
+      <image:title>Neon illustration of a futuristic Neo-Kyoto canal city at night, with a glowing dragon above pagoda rooftops</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/blog/planning-a-website-redesign-a-step-by-step-roadmap.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/kyoto.jpg</image:loc>
+      <image:title>Neon illustration of a futuristic Neo-Kyoto canal city at night, with a glowing dragon above pagoda rooftops</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/blog/seo-friendly-site-structure-how-to-organize-your-website-for-people-and-search-engines.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/kyoto.jpg</image:loc>
+      <image:title>Neon illustration of a futuristic Neo-Kyoto canal city at night, with a glowing dragon above pagoda rooftops</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/blog/typography-and-color-the-quiet-design-choices-that-shape-how-customers-see-you.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/kyoto.jpg</image:loc>
+      <image:title>Neon illustration of a futuristic Neo-Kyoto canal city at night, with a glowing dragon above pagoda rooftops</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/blog/web-accessibility-basics-what-wcag-means-for-your-business-website.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/kyoto.jpg</image:loc>
+      <image:title>Neon illustration of a futuristic Neo-Kyoto canal city at night, with a glowing dragon above pagoda rooftops</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/blog/web-forms-that-convert-designing-inquiry-and-signup-forms-people-actually-finish.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/kyoto.jpg</image:loc>
+      <image:title>Neon illustration of a futuristic Neo-Kyoto canal city at night, with a glowing dragon above pagoda rooftops</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/blog/website-analytics-in-plain-english-for-business-owners.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/kyoto.jpg</image:loc>
+      <image:title>Neon illustration of a futuristic Neo-Kyoto canal city at night, with a glowing dragon above pagoda rooftops</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/blog/website-security-essentials-a-practical-checklist-for-small-businesses.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/kyoto.jpg</image:loc>
+      <image:title>Neon illustration of a futuristic Neo-Kyoto canal city at night, with a glowing dragon above pagoda rooftops</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/contact.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/game-arcade.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/game-station-defense.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/game-undercity.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/games.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/madison.webp</image:loc>
+      <image:title>Madison, Wisconsin skyline and State Capitol at dusk over Lake Monona</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/sandbox/art/station-defense-small.webp</image:loc>
+      <image:title>Station Defense artwork: a purple neon space fortress with turrets, shields, and incoming alien ships</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/sandbox/art/undercity-small.webp</image:loc>
+      <image:title>Undercity artwork: a cavern harbor city with neon docks, boats, and purple mushroom cliffs</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/knowledge-base.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/kb-hero.webp</image:loc>
+      <image:title>Mechanical owl in a neon library, with books floating toward a sunset city window</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/launch.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/leaderboard-arcade.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/madison.webp</image:loc>
+      <image:title>Madison, Wisconsin skyline and State Capitol at dusk over Lake Monona</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/leaderboard-station-defense.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/madison.webp</image:loc>
+      <image:title>Madison, Wisconsin skyline and State Capitol at dusk over Lake Monona</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/leaderboard-undercity.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/madison.webp</image:loc>
+      <image:title>Madison, Wisconsin skyline and State Capitol at dusk over Lake Monona</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/legal.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/legal-hero.webp</image:loc>
+      <image:title>Giant neon gavel standing in front of a futuristic courthouse at sunset</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/news.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/tokyo.jpg</image:loc>
+      <image:title>Crowded Tokyo street at night, lined with tall neon signs for karaoke and restaurants</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/portfolio.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/madison.webp</image:loc>
+      <image:title>Madison, Wisconsin skyline and State Capitol at dusk over Lake Monona</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/projects/storycaster-logo.png</image:loc>
+      <image:title>StoryCaster logo: a glowing open hand reaching out of violet smoke</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/projects/master-baiter-pro-logo.png</image:loc>
+      <image:title>Master Baiter Pro logo: a grinning one-eyed worm beside a golden fish hook</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/projects/master-baiter-pro.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/kobe.jpg</image:loc>
+      <image:title>Kobe harbor on a clear day, with a pilot boat, elevated highways, and the city skyline</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/projects/master-baiter-pro-logo.png</image:loc>
+      <image:title>Master Baiter Pro logo: a grinning one-eyed worm beside a golden fish hook</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/projects/master-baiter-pro-panel.jpg</image:loc>
+      <image:title>The Master Baiter Pro panel beside a bobber in the water, showing the session haul, gold per hour and top catches</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/projects/storycaster-logo.png</image:loc>
+      <image:title>StoryCaster logo: a glowing open hand reaching out of violet smoke</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/projects/storycaster.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/kobe.jpg</image:loc>
+      <image:title>Kobe harbor on a clear day, with a pilot boat, elevated highways, and the city skyline</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/projects/storycaster-logo.png</image:loc>
+      <image:title>StoryCaster logo: a glowing open hand reaching out of violet smoke</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/projects/storycaster-console.jpg</image:loc>
+      <image:title>The StoryCaster console performing a hunter script, with the Studio, Library and Stage panels open</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/projects/storycaster-lore.jpg</image:loc>
+      <image:title>The Lore Library, with ready-made scripts for every class, race and occasion</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/projects/storycaster-pirate.jpg</image:loc>
+      <image:title>The Pirate theme panel with its categories of lines</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/projects/storycaster-ideas.jpg</image:loc>
+      <image:title>The Ideas tab suggesting openers from another player's profile</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/projects/master-baiter-pro-logo.png</image:loc>
+      <image:title>Master Baiter Pro logo: a grinning one-eyed worm beside a golden fish hook</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/services.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/services-hero.webp</image:loc>
+      <image:title>Glowing outline of Wisconsin over a dark field of purple and orange website wireframes</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/software.jpg</image:loc>
+      <image:title>Custom software development for small business: program code on screen</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/consulting.jpg</image:loc>
+      <image:title>Technology consulting for small business: planning AI, cloud and web projects</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/design.jpg</image:loc>
+      <image:title>Graphic and digital media design for small business websites and marketing</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/webdesign.jpg</image:loc>
+      <image:title>Small business web design: a responsive website taking shape</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/webdev.jpg</image:loc>
+      <image:title>Web development for small business: building a fast, secure website</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/hosting.jpg</image:loc>
+      <image:title>Managed web hosting for small business: secure servers kept online</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/ai.jpg</image:loc>
+      <image:title>AI services for small business: a digital head representing AI assistants and automation</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/cms.jpg</image:loc>
+      <image:title>Content management system for small business: editing website pages</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/branding.jpg</image:loc>
+      <image:title>Small business branding and logo design sketches on a desk</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/services/ai-services.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/tokyo.jpg</image:loc>
+      <image:title>Crowded Tokyo street at night, lined with tall neon signs for karaoke and restaurants</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/ai.jpg</image:loc>
+      <image:title>AI services for small business: a digital head representing AI assistants and automation</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/software.jpg</image:loc>
+      <image:title>Custom software development for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/consulting.jpg</image:loc>
+      <image:title>Technology consulting for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/design.jpg</image:loc>
+      <image:title>Digital media design for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/webdesign.jpg</image:loc>
+      <image:title>Web design for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/webdev.jpg</image:loc>
+      <image:title>Web development for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/hosting.jpg</image:loc>
+      <image:title>Web hosting for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/cms.jpg</image:loc>
+      <image:title>Content management systems for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/branding.jpg</image:loc>
+      <image:title>Branding and logo design for small business</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/services/branding.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/tokyo.jpg</image:loc>
+      <image:title>Crowded Tokyo street at night, lined with tall neon signs for karaoke and restaurants</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/branding.jpg</image:loc>
+      <image:title>Small business branding and logo design sketches on a desk</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/software.jpg</image:loc>
+      <image:title>Custom software development for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/consulting.jpg</image:loc>
+      <image:title>Technology consulting for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/design.jpg</image:loc>
+      <image:title>Digital media design for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/webdesign.jpg</image:loc>
+      <image:title>Web design for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/webdev.jpg</image:loc>
+      <image:title>Web development for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/hosting.jpg</image:loc>
+      <image:title>Web hosting for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/ai.jpg</image:loc>
+      <image:title>AI services for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/cms.jpg</image:loc>
+      <image:title>Content management systems for small business</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/services/content-management.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/tokyo.jpg</image:loc>
+      <image:title>Crowded Tokyo street at night, lined with tall neon signs for karaoke and restaurants</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/cms.jpg</image:loc>
+      <image:title>Content management system for small business: editing website pages</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/software.jpg</image:loc>
+      <image:title>Custom software development for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/consulting.jpg</image:loc>
+      <image:title>Technology consulting for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/design.jpg</image:loc>
+      <image:title>Digital media design for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/webdesign.jpg</image:loc>
+      <image:title>Web design for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/webdev.jpg</image:loc>
+      <image:title>Web development for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/hosting.jpg</image:loc>
+      <image:title>Web hosting for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/ai.jpg</image:loc>
+      <image:title>AI services for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/branding.jpg</image:loc>
+      <image:title>Branding and logo design for small business</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/services/hosting.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/tokyo.jpg</image:loc>
+      <image:title>Crowded Tokyo street at night, lined with tall neon signs for karaoke and restaurants</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/hosting.jpg</image:loc>
+      <image:title>Managed web hosting for small business: secure servers kept online</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/software.jpg</image:loc>
+      <image:title>Custom software development for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/consulting.jpg</image:loc>
+      <image:title>Technology consulting for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/design.jpg</image:loc>
+      <image:title>Digital media design for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/webdesign.jpg</image:loc>
+      <image:title>Web design for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/webdev.jpg</image:loc>
+      <image:title>Web development for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/ai.jpg</image:loc>
+      <image:title>AI services for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/cms.jpg</image:loc>
+      <image:title>Content management systems for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/branding.jpg</image:loc>
+      <image:title>Branding and logo design for small business</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/services/media-design.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/tokyo.jpg</image:loc>
+      <image:title>Crowded Tokyo street at night, lined with tall neon signs for karaoke and restaurants</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/design.jpg</image:loc>
+      <image:title>Graphic and digital media design for small business websites and marketing</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/software.jpg</image:loc>
+      <image:title>Custom software development for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/consulting.jpg</image:loc>
+      <image:title>Technology consulting for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/webdesign.jpg</image:loc>
+      <image:title>Web design for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/webdev.jpg</image:loc>
+      <image:title>Web development for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/hosting.jpg</image:loc>
+      <image:title>Web hosting for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/ai.jpg</image:loc>
+      <image:title>AI services for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/cms.jpg</image:loc>
+      <image:title>Content management systems for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/branding.jpg</image:loc>
+      <image:title>Branding and logo design for small business</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/services/software-development.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/tokyo.jpg</image:loc>
+      <image:title>Crowded Tokyo street at night, lined with tall neon signs for karaoke and restaurants</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/software.jpg</image:loc>
+      <image:title>Custom software development for small business: program code on screen</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/consulting.jpg</image:loc>
+      <image:title>Technology consulting for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/design.jpg</image:loc>
+      <image:title>Digital media design for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/webdesign.jpg</image:loc>
+      <image:title>Web design for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/webdev.jpg</image:loc>
+      <image:title>Web development for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/hosting.jpg</image:loc>
+      <image:title>Web hosting for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/ai.jpg</image:loc>
+      <image:title>AI services for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/cms.jpg</image:loc>
+      <image:title>Content management systems for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/branding.jpg</image:loc>
+      <image:title>Branding and logo design for small business</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/services/technology-consulting.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/tokyo.jpg</image:loc>
+      <image:title>Crowded Tokyo street at night, lined with tall neon signs for karaoke and restaurants</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/consulting.jpg</image:loc>
+      <image:title>Technology consulting for small business: planning AI, cloud and web projects</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/software.jpg</image:loc>
+      <image:title>Custom software development for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/design.jpg</image:loc>
+      <image:title>Digital media design for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/webdesign.jpg</image:loc>
+      <image:title>Web design for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/webdev.jpg</image:loc>
+      <image:title>Web development for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/hosting.jpg</image:loc>
+      <image:title>Web hosting for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/ai.jpg</image:loc>
+      <image:title>AI services for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/cms.jpg</image:loc>
+      <image:title>Content management systems for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/branding.jpg</image:loc>
+      <image:title>Branding and logo design for small business</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/services/web-design.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/tokyo.jpg</image:loc>
+      <image:title>Crowded Tokyo street at night, lined with tall neon signs for karaoke and restaurants</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/webdesign.jpg</image:loc>
+      <image:title>Small business web design: a responsive website taking shape</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/software.jpg</image:loc>
+      <image:title>Custom software development for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/consulting.jpg</image:loc>
+      <image:title>Technology consulting for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/design.jpg</image:loc>
+      <image:title>Digital media design for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/webdev.jpg</image:loc>
+      <image:title>Web development for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/hosting.jpg</image:loc>
+      <image:title>Web hosting for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/ai.jpg</image:loc>
+      <image:title>AI services for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/cms.jpg</image:loc>
+      <image:title>Content management systems for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/branding.jpg</image:loc>
+      <image:title>Branding and logo design for small business</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/services/web-development.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/tokyo.jpg</image:loc>
+      <image:title>Crowded Tokyo street at night, lined with tall neon signs for karaoke and restaurants</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/webdev.jpg</image:loc>
+      <image:title>Web development for small business: building a fast, secure website</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/software.jpg</image:loc>
+      <image:title>Custom software development for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/consulting.jpg</image:loc>
+      <image:title>Technology consulting for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/design.jpg</image:loc>
+      <image:title>Digital media design for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/webdesign.jpg</image:loc>
+      <image:title>Web design for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/hosting.jpg</image:loc>
+      <image:title>Web hosting for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/ai.jpg</image:loc>
+      <image:title>AI services for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/cms.jpg</image:loc>
+      <image:title>Content management systems for small business</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/services/branding.jpg</image:loc>
+      <image:title>Branding and logo design for small business</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/shop.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/hero-synthwave.webp</image:loc>
+      <image:title>Synthwave city at sunset: a striped orange sun between neon server-rack buildings and palm trees, over a glowing road grid</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/shop/neon-angel-tee.webp</image:loc>
+      <image:title>Black T-shirt with a glowing pink Tenshi 天 logo and the word TENSHI</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/shop/undercity-art-print.webp</image:loc>
+      <image:title>Framed print of the Undercity neon cavern city artwork</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/shop/synthwave-desk-mat.webp</image:loc>
+      <image:title>Large desk mat printed with a neon synthwave city at sunset, pink stitched edge</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/shop/angel-pin-set.webp</image:loc>
+      <image:title>Three enamel pins: a red Tenshi logo pin, a purple play button pin and an orange GG pin</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/shop/launch-pack.webp</image:loc>
+      <image:title>Glowing card showing a website mock-up, a rocket and the words Launch Pack</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/shop/care-plan.webp</image:loc>
+      <image:title>Glowing card with a shield and heartbeat icon and the words Care Plan</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/team.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/team.webp</image:loc>
+      <image:title>The Tenshi Systems team: our founder with the office dog</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/technology.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/tech-hero.webp</image:loc>
+      <image:title>Engineer in a neon workshop soldering at a bench, with holographic screens and a night city outside</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tenshisystems.com/wisconsin.html</loc>
+    <lastmod>2026-11-25</lastmod>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://tenshisystems.com/img/photos/madison.webp</image:loc>
+      <image:title>Madison, Wisconsin skyline and State Capitol at dusk over Lake Monona</image:title>
+    </image:image>
+  </url>
 </urlset>

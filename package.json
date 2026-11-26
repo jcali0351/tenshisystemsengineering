@@ -5,7 +5,8 @@
   "scripts": {
     "css": "tailwindcss -i ./src/tailwind.css -o ./tailwind.css --minify",
     "css:watch": "tailwindcss -i ./src/tailwind.css -o ./tailwind.css --watch",
-    "build": "node tools/build-pages.mjs && npm run css && node tools/stamp-assets.mjs"
+    "build": "node tools/build-pages.mjs && npm run css && node tools/stamp-assets.mjs && node tools/check-alts.mjs",
+    "check:alts": "node tools/check-alts.mjs"
   },
   "devDependencies": {
     "@tailwindcss/cli": "4.3.3",

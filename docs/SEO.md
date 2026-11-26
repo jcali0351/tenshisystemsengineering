@@ -14,3 +14,9 @@
 - To swap it: replace the file with the same name and size (Images tab or a commit), or upload a new picture and enter
   its path in the SEO tab's "Site-wide social preview picture"; then untick "still a placeholder".
 - JPG or PNG, not WebP: LinkedIn and some messengers don't show WebP link previews.
+
+## Sitemap and robots.txt
+
+- **`sitemap.xml`** is generated at the end of `tools/build-pages.mjs` from the public HTML that was just written. Each URL is an absolute `https://tenshisystems.com/...` address. `lastmod` is the file's latest git commit date (`git log --format=%cs`). Pages marked `noindex` in `data/seo.json` or in a robots meta tag, plus redirects, admin, portal, drafts and tools, are left out. Main photographs are listed as `image:image` entries (`loc` + `title`). Adding a public page and rebuilding updates the sitemap automatically.
+- There are **no hreflang tags**. The site is client-side i18n: one URL per page, and the visitor picks a language in the menu. There are no separate language addresses to advertise.
+- **`robots.txt`** allows all crawlers, points them at the sitemap, and disallows `/admin.html`, `/admin/`, `/portal.html`, `/client-portal.html`, `/classic.html`, `/arcade-embed.html`, `/tools/`, `/platform/`, `/data/`, `/sandbox/` and `/*.mjs$`. The IndexNow key file at the site root (a 32-character hex `.txt`) stays allowed.

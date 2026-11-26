@@ -17,6 +17,7 @@
 // Run from the repository folder after changing text, services, the header or the footer, then stamp the versions:
 //   node tools/build-pages.mjs && node tools/stamp-assets.mjs
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import vm from "node:vm";
 import { createRequire } from "node:module";
 import { SEO, seoHead } from "./seo.mjs";
@@ -67,6 +68,38 @@ vm.runInNewContext(readFileSync("translations.js", "utf8"), sandbox);
 const EN = sandbox.window.TRANSLATIONS.en;
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const tx = (key) => { if (EN[key] === undefined) throw new Error("Missing translation: " + key); return esc(EN[key]); };
+// Descriptive alt text keys for the site's main photographs and illustrations (translations.js).
+// Paths are from the site root, without a cache-busting query string.
+const PHOTO_ALT_KEY = {
+  "img/photos/madison.webp": "aboutPhotoAlt",
+  "img/photos/madison.jpg": "aboutPhotoAlt",
+  "img/photos/madison-wide.jpg": "aboutPhotoAlt",
+  "img/photos/madison-wide.webp": "aboutPhotoAlt",
+  "img/photos/kyoto.jpg": "photoKyotoAlt",
+  "img/photos/tokyo.jpg": "photoTokyoAlt",
+  "img/photos/yokohama.jpg": "photoOsakaCanalAlt",
+  "img/photos/kobe.jpg": "photoKobeAlt",
+  "img/photos/services-hero.webp": "photoServicesHeroAlt",
+  "img/photos/tech-hero.webp": "photoTechHeroAlt",
+  "img/photos/kb-hero.webp": "photoKbHeroAlt",
+  "img/photos/legal-hero.webp": "photoLegalHeroAlt",
+  "img/photos/hero-synthwave.webp": "photoSynthwaveAlt",
+  "img/photos/design-section.webp": "feat1Alt",
+  "img/photos/development-section.webp": "feat2Alt",
+  "img/photos/optimization-section.webp": "feat3Alt",
+  "img/parallax/px1.jpg": "px1Alt",
+  "img/parallax/px2.jpg": "px2Alt",
+  "img/art/neon-city.jpg": "px3Alt",
+  "sandbox/art/station-defense-small.webp": "photoStationDefenseAlt",
+  "sandbox/art/undercity-small.webp": "photoUndercityAlt",
+  "img/photos/arcade-poster.webp": "photoSynthwaveAlt",
+};
+const photoPath = (src) => String(src || "").replace(/\?.*$/, "").replace(/^(?:\.\.\/)+/, "");
+const photoAltKey = (src) => PHOTO_ALT_KEY[photoPath(src)] || "";
+const photoAltAttrs = (src) => {
+  const key = photoAltKey(src);
+  return key ? `alt="${tx(key)}" data-i18n-attr="alt:${key}"` : `alt=""`;
+};
 const k = (s, f) => `svc_${s.id}_${f}`;
 const t = (tag, key, attrs = "") => `<${tag}${attrs ? " " + attrs : ""} data-i18n="${key}">${tx(key)}</${tag}>`;
 
@@ -242,7 +275,7 @@ ${items.join("\n")}
         <a class="fw-more" href="${href}"><span data-i18n="${moreKey}">${tx(moreKey)}</span></a>
       </section>`;
   const newsItems = news.map(({ c, s }) => `          <li class="fw-item">
-            <img class="fw-thumb" src="${esc(CV(ICONONLY(newsIcon(s, c.id))))}" alt="" width="52" height="40" loading="lazy" decoding="async">
+            <img class="fw-thumb" src="${esc(CV(ICONONLY(newsIcon(s, c.id))))}" alt="" width="52" height="40" loading="lazy" decoding="async" aria-hidden="true">
             <div class="fw-text">
               <p class="fw-meta"><span data-i18n="${c.key}">${tx(c.key)}</span> · <time datetime="${wIso(s.date)}">${wDate(s.date)}</time></p>
               <a class="fw-link" href="${wUrl(s.url)}" target="_blank" rel="noopener">${esc(s.title)}<span class="sr-only"> <span data-i18n="techNewTab">${tx("techNewTab")}</span></span></a>
@@ -250,7 +283,7 @@ ${items.join("\n")}
             </div>
           </li>`);
   const blogItems = posts.map((b) => `          <li class="fw-item">
-            <img class="fw-thumb" src="${esc(postImg(b).generated ? CV(ICONONLY(postImg(b).src)) : wSrc(postImg(b), "blog"))}" alt="" width="52" height="40" loading="lazy" decoding="async">
+            <img class="fw-thumb" src="${esc(postImg(b).generated ? CV(ICONONLY(postImg(b).src)) : wSrc(postImg(b), "blog"))}" alt="" width="52" height="40" loading="lazy" decoding="async" aria-hidden="true">
             <div class="fw-text">
               <p class="fw-meta">${esc(b.cat)} · <time datetime="${wIso(b.date)}">${wDate(b.date)}</time></p>
               <a class="fw-link" href="${postPermalink(b)}">${esc(b.title)}</a>
@@ -471,7 +504,7 @@ function heroPx(html, key) {
     return `<section class="svc-hero${cls} px-hero" data-parallax data-speed="${speed}"${ov.attr}${fx.attrs} style="${style}">
       <div class="px-hero-bg" aria-hidden="true">
         <div class="parallax-layer">
-          <img src="${pre}${image}" alt="" width="1920" height="1080" decoding="async" fetchpriority="high" data-still data-still-color>
+          <img src="${pre}${image}" ${photoAltAttrs(image)} width="1920" height="1080" decoding="async" fetchpriority="high" data-still data-still-color>
         </div>
         <div class="parallax-overlay"></div>
 ${rain}      </div>
@@ -1942,8 +1975,19 @@ function featureImage(img, cat, cls, prefix = "") {
   const src = prefix + CV(img && img.src && !/^https?:/.test(img.src) ? img.src : COVER(cat));
   const credit = img && !img.generated && img.src ? `
               <figcaption class="img-credit"><span data-i18n="photoLabel">${tx("photoLabel")}</span>: ${img.creatorUrl ? ext(img.creatorUrl, esc(img.creator)) : esc(img.creator || "Unknown")}${img.license ? " · " + (img.licenseUrl ? ext(img.licenseUrl, esc(img.license)) : esc(img.license)) : ""}${img.page ? " · " + ext(img.page, esc(img.provider || "Source")) : ""}</figcaption>` : "";
+  // Generated category covers sit next to the story title, so they stay decorative.
+  // Real photographs use img.alt when the data file has one, otherwise a short credit-based fallback.
+  const rawSrc = (img && img.src && !/^https?:/.test(img.src) ? img.src : COVER(cat));
+  let alt = `alt=""`;
+  let hide = ' aria-hidden="true"';
+  if (img && !img.generated && img.src) {
+    const text = (img.alt && String(img.alt).trim()) || (img.creator ? `Photo by ${img.creator}` : "");
+    const key = photoAltKey(rawSrc);
+    if (key) { alt = photoAltAttrs(rawSrc); hide = ""; }
+    else if (text) { alt = `alt="${esc(text)}"`; hide = ""; }
+  }
   return `<figure class="${cls}">
-              <img src="${esc(src)}" alt="" width="800" height="450" loading="lazy" decoding="async">${credit}
+              <img src="${esc(src)}" ${alt}${hide} width="800" height="450" loading="lazy" decoding="async">${credit}
             </figure>`;
 }
 
@@ -2369,7 +2413,7 @@ ${about(g)}`,
       <div class="page-inner">
         <ul class="games-grid">
 ${GAMES.map((g) => `          <li class="game-card">
-            <a class="game-card-art" href="${g.file}" tabindex="-1" aria-hidden="true"><img src="${g.art}" alt="" width="640" height="360" loading="lazy"></a>
+            <a class="game-card-art" href="${g.file}" tabindex="-1" aria-hidden="true"><img src="${g.art}" ${photoAltAttrs(g.art)} width="640" height="360" loading="lazy"></a>
             <div class="game-card-body">
               <p class="game-kicker">${esc(g.kicker)}</p>
               <h2><a href="${g.file}">${esc(g.name)}</a></h2>
@@ -2610,24 +2654,78 @@ await import("./neon-pages.mjs");
   console.log(`search index written: data/search/<lang>.json for ${LANGS.length} languages, ${src.length} pages each`);
 }
 
-/* ---------- sitemap.xml and robots.txt (search engines) ---------- */
+/* ---------- sitemap.xml and robots.txt (search engines) ----------
+   Built from the real public HTML after the pages above are written. lastmod comes from
+   git (the file's latest commit date). Pages marked noindex in data/seo.json or in a
+   robots meta tag, plus redirects, drafts and private tools, are left out.
+   Image entries (image:image with loc + title) are added for the main photographs.
+   No hreflang: the site is client-side i18n (one URL per page, language picked in the
+   menu), so there are no separate language addresses to list. */
 {
-  const SKIP = new Set(["admin.html", "portal.html", "client-portal.html", "classic.html", "404.html"]);
+  const SKIP = new Set([
+    "admin.html", "portal.html", "client-portal.html", "classic.html", "404.html",
+    "arcade-embed.html", "projects.html",
+  ]);
+  const noindexPages = new Set();
+  try {
+    const seoData = JSON.parse(readFileSync("data/seo.json", "utf8"));
+    for (const row of Object.values(seoData.pages || {})) {
+      if (row && row.noindex && row.page) noindexPages.add(String(row.page).replace(/^\//, ""));
+    }
+  } catch { /* data/seo.json is optional; HTML meta tags still apply */ }
+  const gitLastmod = (file) => {
+    try {
+      const d = execFileSync("git", ["log", "-1", "--format=%cs", "--", file], { encoding: "utf8" }).trim();
+      return /^\d{4}-\d{2}-\d{2}$/.test(d) ? d : "";
+    } catch { return ""; }
+  };
+  const today = new Date().toISOString().slice(0, 10);
   const pages = [];
   for (const dir of ["", "services/", "projects/", "blog/"]) {
     if (dir && !existsSync(dir)) continue;
     for (const n of readdirSync(dir || ".")) {
-      if (!n.endsWith(".html") || SKIP.has(dir + n)) continue;
+      if (!n.endsWith(".html") || SKIP.has(dir + n) || noindexPages.has(dir + n)) continue;
       const html = readFileSync(dir + n, "utf8");
       if (/<meta name="robots" content="noindex/i.test(html) || /http-equiv="refresh"/i.test(html)) continue;
       pages.push(dir + n);
     }
   }
   const pri = (p) => p === "index.html" ? "1.0" : p.startsWith("services/") || p === "services.html" ? "0.9" : p.startsWith("blog/") || p.startsWith("projects/") ? "0.6" : "0.8";
-  const today = new Date().toISOString().slice(0, 10);
-  const urls = pages.sort((a, b) => (a === "index.html" ? -1 : b === "index.html" ? 1 : a.localeCompare(b))).map((p) =>
-    `  <url><loc>https://tenshisystems.com/${p === "index.html" ? "" : p}</loc><lastmod>${today}</lastmod><priority>${pri(p)}</priority></url>`);
-  writeFileSync("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`);
-  writeFileSync("robots.txt", `User-agent: *\nAllow: /\nDisallow: /admin.html\nDisallow: /admin/\nDisallow: /portal.html\nDisallow: /client-portal.html\nDisallow: /platform/\n\nSitemap: https://tenshisystems.com/sitemap.xml\n`);
-  console.log(`sitemap.xml written: ${pages.length} pages`);
+  const locOf = (p) => "https://tenshisystems.com/" + (p === "index.html" ? "" : p);
+  const absImg = (src) => "https://tenshisystems.com/" + photoPath(src).replace(/^\/+/, "");
+  const IMAGE_OK = /^(img\/(photos|parallax|art|projects|shop|services|og)\b|sandbox\/art\/)/;
+  const pageImages = (file, html) => {
+    const seen = new Set();
+    const out = [];
+    const add = (src, title) => {
+      const path = photoPath(src);
+      if (!path || !IMAGE_OK.test(path) || seen.has(path)) return;
+      seen.add(path);
+      const titleText = (title && String(title).trim()) || (photoAltKey(path) ? EN[photoAltKey(path)] : "");
+      if (!titleText) return;
+      out.push({ src: path, title: titleText });
+    };
+    for (const tag of html.match(/<img\b[^>]*>/gi) || []) {
+      const src = (tag.match(/\bsrc="([^"]+)"/i) || [])[1];
+      const alt = (tag.match(/\balt="([^"]*)"/i) || [])[1];
+      if (src && alt) add(src, alt);
+    }
+    // Homepage hero is a CSS background (role=img), so it never appears as an <img>.
+    if (file === "index.html") add("img/photos/hero-synthwave.webp", EN.photoSynthwaveAlt);
+    return out;
+  };
+  const xmlEsc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const urls = pages.sort((a, b) => (a === "index.html" ? -1 : b === "index.html" ? 1 : a.localeCompare(b))).map((p) => {
+    const html = readFileSync(p, "utf8");
+    const last = gitLastmod(p) || today;
+    const images = pageImages(p, html).map((im) =>
+      `    <image:image>\n      <image:loc>${xmlEsc(absImg(im.src))}</image:loc>\n      <image:title>${xmlEsc(im.title)}</image:title>\n    </image:image>`).join("\n");
+    return `  <url>\n    <loc>${xmlEsc(locOf(p))}</loc>\n    <lastmod>${last}</lastmod>\n    <priority>${pri(p)}</priority>${images ? "\n" + images : ""}\n  </url>`;
+  });
+  writeFileSync("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls.join("\n")}\n</urlset>\n`);
+  // The IndexNow key file is a 32-character hex name at the site root (e.g. <key>.txt).
+  // Allow: / keeps it crawlable; do not add a Disallow for *.txt.
+  writeFileSync("robots.txt", `User-agent: *\nAllow: /\nDisallow: /admin.html\nDisallow: /admin/\nDisallow: /portal.html\nDisallow: /client-portal.html\nDisallow: /classic.html\nDisallow: /arcade-embed.html\nDisallow: /tools/\nDisallow: /platform/\nDisallow: /data/\nDisallow: /sandbox/\nDisallow: /*.mjs$\n\nSitemap: https://tenshisystems.com/sitemap.xml\n`);
+  const imgCount = urls.reduce((n, u) => n + (u.match(/<image:loc>/g) || []).length, 0);
+  console.log(`sitemap.xml written: ${pages.length} pages, ${imgCount} images`);
 }
