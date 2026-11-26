@@ -133,6 +133,11 @@ templates.json), `year`, `form_action`. They're listed in `PLATFORM_NAMES` in `s
   the deployment's `.tenshi-widgets.json` (never served). No Caddy change needed: client sites are proxied to the CMS.
   Google Maps and OpenStreetMap frames are allowed only on pages with a Map block (or a Google Maps iframe in Custom
   HTML); with the site's Maps API key the page also allows `maps.googleapis.com` / `maps.gstatic.com`.
+- **Dark mode and fonts (`cms/theme.py`, `cms/templates.py`):** Settings & theme / builder Theme panel: colour mode
+  light, dark or auto (`prefers-color-scheme`), an optional light/dark/auto switch on the site (remembered per visitor,
+  applied before paint), dark colours worked out from the light ones so they pass AA (each can be overridden), and AA
+  checks for both modes. Ten self-hosted fonts (`cms/static/fonts/`, SIL OFL, Latin subset WOFF2, built by
+  `tools/fonts/build_fonts.py`) are copied into deployments that use them; no page requests Google Fonts.
 - **Map widget (`cms/widgets/map.py`):** one or more places, Google Maps without a key (embed iframe) or OpenStreetMap;
   "Get directions" button; lazy-loaded. Optional per-site Google Maps API key and style at `/sites/<id>/widgets/map`
   (owners and admins; stored in `site_settings`, never in git). The key is a browser key, so restrict it in Google

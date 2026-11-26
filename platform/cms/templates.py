@@ -14,10 +14,13 @@ Templates are presentation only: they never hold business data, so a site can sw
 import json
 import re
 import shutil
+from pathlib import Path
 
 from . import config, db
 
-# Font choices for templates and sites. System fonts only, so sites load fast and exports work offline.
+# Font choices for templates and sites: (label, CSS stack[, self-hosted file, weight range]).
+# System fonts load instantly. The self-hosted ones (cms/static/fonts/, SIL Open Font License, Latin subset, woff2,
+# about 20-50 KB each) are copied into each deployment that uses them: no request ever goes to Google Fonts.
 FONTS = {
     "system": ("Modern (system)", 'system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'),
     "humanist": ("Friendly", '"Segoe UI", "Trebuchet MS", "Gill Sans", Candara, sans-serif'),
@@ -26,7 +29,30 @@ FONTS = {
     "geometric": ("Geometric", 'Avenir, "Century Gothic", Futura, "Segoe UI", sans-serif'),
     "condensed": ("Strong", '"Arial Narrow", "Roboto Condensed", Impact, "Segoe UI", sans-serif'),
     "mono": ("Typewriter", 'ui-monospace, Consolas, "Courier New", monospace'),
+    "inter": ("Inter (clean sans)", '"Inter", system-ui, "Segoe UI", Roboto, Arial, sans-serif', "inter.woff2", "400 800"),
+    "dm-sans": ("DM Sans (soft geometric)", '"DM Sans", system-ui, "Segoe UI", Arial, sans-serif', "dm-sans.woff2", "400 800"),
+    "figtree": ("Figtree (friendly sans)", '"Figtree", system-ui, "Segoe UI", Arial, sans-serif', "figtree.woff2", "400 800"),
+    "montserrat": ("Montserrat (bold geometric)", '"Montserrat", "Century Gothic", system-ui, Arial, sans-serif', "montserrat.woff2", "400 800"),
+    "nunito": ("Nunito (rounded)", '"Nunito", system-ui, "Segoe UI", Arial, sans-serif', "nunito.woff2", "400 800"),
+    "oswald": ("Oswald (condensed)", '"Oswald", "Arial Narrow", Impact, system-ui, sans-serif', "oswald.woff2", "400 700"),
+    "fraunces": ("Fraunces (display serif)", '"Fraunces", Georgia, "Times New Roman", serif', "fraunces.woff2", "400 800"),
+    "newsreader": ("Newsreader (reading serif)", '"Newsreader", Georgia, "Times New Roman", serif', "newsreader.woff2", "400 700"),
+    "bitter": ("Bitter (slab serif)", '"Bitter", Rockwell, Georgia, serif', "bitter.woff2", "400 800"),
+    "eb-garamond": ("EB Garamond (classic serif)", '"EB Garamond", Garamond, "Palatino Linotype", Georgia, serif', "eb-garamond.woff2", "400 700"),
 }
+FONTS_DIR = Path(__file__).resolve().parent / "static" / "fonts"
+
+
+def font_files(font_keys) -> list[tuple[str, str, str]]:
+    """(family, file, weights) for the self-hosted fonts among these font keys."""
+    out = []
+    for key in dict.fromkeys(font_keys or []):
+        f = FONTS.get(key)
+        if f and len(f) > 2:
+            out.append((f[1].split(",")[0].strip().strip('"'), f[2], f[3]))
+    return out
+
+
 STYLE_FONTS = {"clean": ("system", "system"), "bold": ("condensed", "system"), "elegant": ("elegant", "humanist")}
 EDITABLE = (".j2", ".css", ".js", ".json", ".html", ".svg", ".txt")
 
@@ -201,6 +227,9 @@ def theme_for(template_id, site_theme=None):
         "lang": site_theme.get("lang", "en"),
         "radius": site_theme.get("radius") if isinstance(site_theme.get("radius"), int) else None,
         "space": site_theme.get("space") or "",
+        "mode": site_theme.get("mode") or "light",
+        "toggle": bool(site_theme.get("toggle")),
+        "dark_colors": site_theme.get("dark_colors") or {},
     }
 
 

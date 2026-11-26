@@ -466,7 +466,7 @@ def theme_editor_data(user, site):
     return {"site": site["id"], "theme": theme_mod.Theme.model_validate(db.j(site["theme_json"]) or {}).model_dump(),
             "defaults": {"colors": tpl.get("colors", {}), "fonts": tpl.get("fonts", {}), "style": tpl.get("style", "clean")},
             "fonts": {k: list(v) for k, v in templates.FONTS.items()}, "presets": theme_mod.PRESETS,
-            "spacing": list(theme_mod.SPACING), "radius_max": theme_mod.RADIUS_MAX,
+            "spacing": list(theme_mod.SPACING), "radius_max": theme_mod.RADIUS_MAX, "modes": list(theme_mod.MODES),
             "locked": theme_mod.load_brand(site["id"]).locked, "can_manage": members.can_manage(user, site["id"]),
             "can_edit": theme_mod.can_change_brand(user, site["id"])}
 
@@ -477,7 +477,8 @@ async def api_theme_preview(request: Request, site_id: int):
     api_user(request)
     site = sites.get(site_id)
     merged = templates.theme_for(site["template_id"], theme_mod.clean((await request.json()).get("theme")))
-    return {"css": theme_mod.tokens_css(merged), "style": merged["style"], "checks": theme_mod.contrast_checks(merged["colors"])}
+    return {"css": theme_mod.tokens_css(merged), "style": merged["style"], "checks": theme_mod.all_checks(merged),
+            "dark": theme_mod.dark_palette(merged["colors"], merged.get("dark_colors"))}
 
 
 @app.put("/api/sites/{site_id}/brand")
@@ -1519,6 +1520,15 @@ def _cors(request):
 
 
 # ---------------------------------------------------------------------------------------------- static files
+
+@app.get("/static/fonts/{name}")
+def font_file(name: str):
+    """The self-hosted fonts (templates.FONTS) for the CMS preview; deployments get their own copies."""
+    path = templates.FONTS_DIR / name
+    if not re.fullmatch(r"[a-z0-9-]+\.woff2", name) or not path.is_file():
+        raise HTTPException(404)
+    return FileResponse(path, media_type="font/woff2", headers={"Cache-Control": "public, max-age=604800"})
+
 
 @app.get("/static/{name}")
 def static_file(name: str):

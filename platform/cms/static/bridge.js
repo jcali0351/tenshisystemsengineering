@@ -51,6 +51,13 @@
     }
   });
 
+  // The Theme panel's "Preview in" buttons: show the page in light or dark (as the site's toggle would)
+  window.addEventListener("message", function (e) {
+    if (e.origin !== location.origin || !e.data || e.data.tenshi !== "scheme") return;
+    if (e.data.value === "light" || e.data.value === "dark") document.documentElement.setAttribute("data-theme", e.data.value);
+    else document.documentElement.removeAttribute("data-theme");
+  });
+
   // The builder tells us which block is selected: outline it and bring it into view
   window.addEventListener("message", function (e) {
     if (e.origin !== location.origin || !e.data || e.data.tenshi !== "highlight") return;

@@ -233,7 +233,7 @@ class SiteRenderer:
         sources = widgets.block_sources(ctx["blocks"], self.site.get("id"))
         if sources:
             self.page_sources[file] = sources
-        html = theme_mod.inject(html, self.theme)
+        html = theme_mod.inject(html, self.theme, "/static/fonts/" if self.mode == "preview" else "fonts/")
         if self.mode != "preview" and self.has_posts():
             html = html.replace("</head>", f'<link rel="alternate" type="application/rss+xml" title="{escape(self.site.get("name") or "")}" href="feed.xml">\n</head>', 1)
         return widgets.inject_assets(html, used, self.mode)
@@ -296,6 +296,11 @@ def build_to(site, out_dir, mode="hosted"):
         (out / "sitemap.xml").write_text(posts_mod.sitemap_xml(site, base_url, pages), encoding="utf-8")
         if not (out / "robots.txt").exists():
             (out / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {base_url}sitemap.xml\n", encoding="utf-8")
+    # Self-hosted fonts the theme uses (templates.FONTS): copied in, so no page asks Google Fonts for anything
+    keys = [(renderer.theme.get("font_keys") or {}).get(k) for k in ("heading", "body")]
+    for _family, file, _weights in templates.font_files(keys):
+        (out / "fonts").mkdir(exist_ok=True)
+        shutil.copy2(templates.FONTS_DIR / file, out / "fonts" / file)
     if mode == "hosted":
         widgets.write_manifest(out, renderer.used_widgets, renderer.page_sources)
         forms_mod.write_specs(out, renderer.form_specs)

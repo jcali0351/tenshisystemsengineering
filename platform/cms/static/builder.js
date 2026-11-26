@@ -121,7 +121,8 @@
       '<p class="small muted">Changes show in the preview straight away. Save to keep them; Publish to put them live.</p><div id="theme-editor"></div>' +
       (data.can_edit ? '<button class="btn btn-primary" id="theme-save" style="width:100%;margin-top:10px">Save theme</button>' : "");
     $("[data-back]", panel).onclick = function () { setThemeOpen(false); };
-    themeEditor = TenshiTheme.mount($("#theme-editor", panel), data, { onPreview: function (res) { lastTokens = res; sendTokens(); } });
+    themeEditor = TenshiTheme.mount($("#theme-editor", panel), data, { onPreview: function (res) { lastTokens = res; sendTokens(); },
+      onScheme: function (v) { var f = $("#frame").contentWindow; if (f) f.postMessage({ tenshi: "scheme", value: v }, location.origin); } });
     if ($("#theme-save")) $("#theme-save").onclick = function () {
       var v = themeEditor.value(); v.lang = data.theme.lang;
       T.busy(this, T.api("POST", "/api/sites/" + siteId + "/settings", { theme: v }).then(function () {

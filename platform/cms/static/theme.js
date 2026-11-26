@@ -18,7 +18,9 @@
   function mount(el, data, opts) {
     opts = opts || {};
     var state = JSON.parse(JSON.stringify(data.theme || {}));
-    state.colors = state.colors || {}; state.fonts = state.fonts || {};
+    state.colors = state.colors || {}; state.fonts = state.fonts || {}; state.dark_colors = state.dark_colors || {};
+    state.mode = state.mode || "light";
+    var lastDark = {};
     var dis = data.can_edit ? "" : " disabled";
     function colour(k) { return state.colors[k] || data.defaults.colors[k] || "#000000"; }
     function fontOptions(which) {
@@ -41,6 +43,17 @@
       '<div class="grid grid-2 th-colors">' + COLOR_LABELS.map(function (c) {
         return '<label class="field"><span>' + c[1] + '</span><span class="row"><input type="color" data-color="' + c[0] + '" value="' + colour(c[0]) + '"' + dis + "><code>" + colour(c[0]) + "</code></span></label>";
       }).join("") + "</div>" +
+      '<h3 class="th-h">Dark mode</h3><div class="grid grid-2">' +
+      '<label class="field"><span>Colour mode</span><select data-mode' + dis + '>' +
+      [["light", "Light only"], ["auto", "Auto: follows the visitor's device"], ["dark", "Dark only"]].map(function (m) {
+        return '<option value="' + m[0] + '"' + (state.mode === m[0] ? " selected" : "") + ">" + m[1] + "</option>"; }).join("") + "</select></label>" +
+      '<label class="check field" style="align-self:end"><input type="checkbox" data-toggle' + (state.toggle ? " checked" : "") + dis + "> Show a light/dark switch on the site</label></div>" +
+      '<div data-dark-box><p class="small muted">Dark colours are worked out from yours so they pass AA. Change any of them here.</p>' +
+      '<div class="grid grid-2 th-colors">' + COLOR_LABELS.map(function (c) {
+        return '<label class="field"><span>Dark: ' + c[1].replace(/ \(.*\)/, "") + '</span><span class="row"><input type="color" data-dark="' + c[0] + '" value="#000000"' + dis +
+          '><code></code><button type="button" class="btn btn-small" data-dark-auto="' + c[0] + '"' + dis + '>Auto</button></span></label>';
+      }).join("") + "</div>" +
+      '<p class="row small"><span>Preview in:</span><button type="button" class="btn btn-small" data-scheme="light">Light</button><button type="button" class="btn btn-small" data-scheme="dark">Dark</button></p></div>' +
       '<div id="th-contrast" class="th-contrast" aria-live="polite"></div>' +
       '<h3 class="th-h">Fonts and shape</h3><div class="grid grid-2">' +
       '<label class="field"><span>Headings</span><select data-font="heading"' + dis + ">" + fontOptions("heading") + "</select></label>" +
@@ -75,13 +88,22 @@
       clearTimeout(timer);
       timer = setTimeout(function () {
         T.api("POST", "/api/sites/" + data.site + "/theme/preview", { theme: value() }).then(function (res) {
-          drawChecks(res.checks);
+          drawChecks(res.checks); drawDark(res.dark);
           if (opts.onPreview) opts.onPreview(res);
         }).catch(function () { /* the toast says why */ });
       }, 150);
     }
+    function drawDark(pal) {
+      if (pal) lastDark = pal;
+      q("[data-dark-box]").hidden = state.mode === "light" && !state.toggle;
+      qa("[data-dark]").forEach(function (c) {
+        var k = c.dataset.dark, v = state.dark_colors[k] || lastDark[k] || "#000000";
+        c.value = v; c.nextElementSibling.textContent = state.dark_colors[k] ? v : v + " (auto)";
+      });
+    }
     function value() {
       var v = { colors: state.colors, fonts: state.fonts, style: state.style || "", space: state.space || "",
+                mode: state.mode || "light", toggle: !!state.toggle, dark_colors: state.dark_colors,
                 radius: q("[data-radius-auto]").checked ? null : +q("[data-radius]").value, preset: state.preset || "" };
       if (state.lang) v.lang = state.lang;
       return v;
@@ -102,6 +124,17 @@
     q("[data-space]").addEventListener("change", function () { state.space = this.value; changed(); });
     q("[data-radius]").addEventListener("input", function () { state.radius = +this.value; drawRadius(); changed(); });
     q("[data-radius-auto]").addEventListener("change", function () { state.radius = this.checked ? null : +q("[data-radius]").value; drawRadius(); changed(); });
+    q("[data-mode]").addEventListener("change", function () { state.mode = this.value; drawDark(); changed(); });
+    q("[data-toggle]").addEventListener("change", function () { state.toggle = this.checked; drawDark(); changed(); });
+    qa("[data-dark]").forEach(function (c) {
+      c.addEventListener("input", function () { state.dark_colors[c.dataset.dark] = c.value; drawDark(); changed(); });
+    });
+    qa("[data-dark-auto]").forEach(function (b) {
+      b.addEventListener("click", function () { delete state.dark_colors[b.dataset.darkAuto]; drawDark(); changed(); });
+    });
+    qa("[data-scheme]").forEach(function (b) {
+      b.addEventListener("click", function () { if (opts.onScheme) opts.onScheme(b.dataset.scheme); });
+    });
     q("[data-reset]").addEventListener("click", function () { state.colors = {}; setControls(); changed(); });
     qa("[data-preset]").forEach(function (b) {
       b.addEventListener("click", function () {
@@ -118,6 +151,8 @@
       }).catch(function () { lock.checked = !lock.checked; });
     });
     drawRadius();
+    drawDark();
+    if (!opts.onScheme) qa("[data-scheme]").forEach(function (b) { b.parentNode.hidden = true; });
     changed(true);
     return { value: value, setLang: function (l) { state.lang = l; } };
   }

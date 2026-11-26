@@ -180,3 +180,72 @@ def test_header_footer_respects_brand_lock(cms):
         assert "The brand is locked" in ed.get(f"/sites/{sid}/chrome").text
     c.put(f"/api/sites/{sid}/brand", json={"locked": False}, headers=H)
     assert 'id="hdr"' in c.get(f"/sites/{sid}/chrome").text
+
+
+# ---------------------------------------------------------------------------------------------- 3. dark mode and fonts
+
+def _theme(c, sid, theme):
+    return c.post(f"/api/sites/{sid}/settings", json={"theme": theme}, headers=H)
+
+
+def test_dark_modes_and_toggle(cms):
+    from cms import theme as theme_mod
+    c, sid = cms
+    assert _theme(c, sid, {"mode": "sepia"}).status_code == 400
+    assert _theme(c, sid, {"dark_colors": {"surface": "black"}}).status_code == 400
+    assert _theme(c, sid, {"mode": "light"}).status_code == 200
+    html = c.get(f"/sites/{sid}/preview/index").text
+    assert "data-theme" not in html and "prefers-color-scheme" not in html          # light only: nothing extra
+    _theme(c, sid, {"mode": "auto"})
+    html = c.get(f"/sites/{sid}/preview/index").text
+    assert "@media (prefers-color-scheme: dark)" in html and 'html:not([data-theme="light"]) .card' in html
+    assert "tenshi-scheme" not in html                                              # no switch unless asked
+    _theme(c, sid, {"mode": "dark", "toggle": True, "dark_colors": {"surface": "#000000"}})
+    html = c.get(f"/sites/{sid}/preview/index").text
+    assert "prefers-color-scheme" not in html and '--s: #000000' in html
+    assert 'class="tenshi-scheme"' in html and "localStorage" in html
+    assert html.index("tenshi-scheme\")") < html.index("</head>")                  # the choice applies before paint
+    _theme(c, sid, {"mode": "light", "toggle": True})
+    assert 'html[data-theme="dark"] .btn' in c.get(f"/sites/{sid}/preview/index").text
+
+
+def test_dark_palette_passes_aa_for_every_preset():
+    from cms import theme as theme_mod
+    for name, p in theme_mod.PRESETS.items():
+        checks = theme_mod.contrast_checks(theme_mod.dark_palette(p["colors"]), theme_mod.DARK_PAIRS)
+        assert checks and all(ch["ok"] for ch in checks), (name, [ch for ch in checks if not ch["ok"]])
+    # hard cases: a very light and a very dark primary
+    for colors in ({"primary": "#ffee00", "accent": "#ffffff"}, {"primary": "#000033", "accent": "#000000"}):
+        assert all(ch["ok"] for ch in theme_mod.contrast_checks(theme_mod.dark_palette(colors), theme_mod.DARK_PAIRS)), colors
+
+
+def test_theme_preview_reports_both_modes(cms):
+    c, sid = cms
+    res = c.post(f"/api/sites/{sid}/theme/preview", json={"theme": {"mode": "auto"}}, headers=H).json()
+    whats = [ch["what"] for ch in res["checks"]]
+    assert any(w.startswith("Dark mode") for w in whats) and any(not w.startswith("Dark mode") for w in whats)
+    assert res["dark"]["surface"].startswith("#")
+    res = c.post(f"/api/sites/{sid}/theme/preview", json={"theme": {"mode": "light"}}, headers=H).json()
+    assert not any(ch["what"].startswith("Dark mode") for ch in res["checks"])
+
+
+def test_self_hosted_fonts_no_google(cms, tmp_path):
+    from cms import templates
+    c, sid = cms
+    assert _theme(c, sid, {"fonts": {"heading": "comic-sans"}}).status_code == 400
+    assert _theme(c, sid, {"mode": "light", "toggle": False, "fonts": {"heading": "fraunces", "body": "inter"}}).status_code == 200
+    html = c.get(f"/sites/{sid}/preview/index").text
+    assert 'url("/static/fonts/fraunces.woff2")' in html and 'url("/static/fonts/inter.woff2")' in html
+    assert "fonts.googleapis.com" not in html and "fonts.gstatic.com" not in html
+    r = c.get("/static/fonts/inter.woff2")
+    assert r.status_code == 200 and r.content[:4] == b"wOF2"
+    assert c.get("/static/fonts/../app.py").status_code == 404
+    render.build_to(sites.get(sid), tmp_path)
+    assert sorted(p.name for p in (tmp_path / "fonts").iterdir()) == ["fraunces.woff2", "inter.woff2"]
+    assert 'url("fonts/fraunces.woff2")' in (tmp_path / "index.html").read_text()
+    for key, f in templates.FONTS.items():                        # every self-hosted font file exists and is small
+        if len(f) > 2:
+            path = templates.FONTS_DIR / f[2]
+            assert path.is_file() and path.stat().st_size < 80_000, key
+    assert (templates.FONTS_DIR / "OFL.txt").is_file()
+    _theme(c, sid, {"fonts": {}})
