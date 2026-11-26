@@ -150,6 +150,63 @@ def test_everything():
         assert c.get(f"/sites/{sid}/pages").status_code == 200
 
 
+def test_security():
+    from cms import auth, sites
+    with TestClient(app) as c:
+        if auth.needs_setup():
+            c.post("/setup", data={"name": "Admin", "email": "admin@example.com", "password": "correct-horse"})
+        c.post("/logout")
+
+        # The automatic API docs aren't public
+        for path in ["/api/docs", "/redoc", "/openapi.json"]:
+            assert c.get(path).status_code == 404, path
+
+        # The login cookie: Secure only when the CMS runs on https (local http and these tests run without it)
+        assert config.SECURE_COOKIES is False
+        r = c.post("/login", data={"email": "admin@example.com", "password": "correct-horse"}, follow_redirects=False)
+        assert r.status_code == 303 and "httponly" in r.headers["set-cookie"].lower() and "samesite=lax" in r.headers["set-cookie"].lower()
+        c.post("/logout")
+
+        # Rate limiting: 5 wrong passwords from one IP for one email -> locked out, even with the right password
+        bad = {"email": "admin@example.com", "password": "wrong-password"}
+        for i in range(auth.MAX_FAILS):
+            assert c.post("/login", data=bad).status_code == 401, i
+        r = c.post("/login", data={"email": "admin@example.com", "password": "correct-horse"}, follow_redirects=False)
+        assert r.status_code == 429 and int(r.headers["retry-after"]) > 0 and "Too many" in r.text
+        # ...but another visitor (Caddy's X-Forwarded-For, peer = this machine) is not affected
+        assert auth.locked_for("203.0.113.9", "admin@example.com") == 0
+        # the lock ends LOCK seconds after the last failure
+        import time
+        assert auth.locked_for("testclient", "admin@example.com", now=time.time() + auth.LOCK + 1) == 0
+        assert auth.locked_for("testclient", "admin@example.com") > auth.LOCK - 60
+        # a success clears that IP + email
+        db.run("DELETE FROM login_failures")
+        for i in range(auth.MAX_FAILS - 1):
+            c.post("/login", data=bad)
+        assert c.post("/login", data={"email": "admin@example.com", "password": "correct-horse"}, follow_redirects=False).status_code == 303
+        assert db.one("SELECT COUNT(*) AS n FROM login_failures")["n"] == 0
+        c.post("/logout")
+        # one IP spraying many emails is stopped too
+        for i in range(auth.IP_MAX_FAILS):
+            c.post("/login", data={"email": f"user{i}@example.com", "password": "x"})
+        assert c.post("/login", data={"email": "someone-new@example.com", "password": "x"}).status_code == 429
+        db.run("DELETE FROM login_failures")
+
+        # Behind Caddy the IP comes from X-Forwarded-For only when the peer is this machine
+        from cms.app import client_ip
+
+        class Req:
+            def __init__(self, peer, xff):
+                self.client = type("C", (), {"host": peer})()
+                self.headers = {"x-forwarded-for": xff} if xff else {}
+        assert client_ip(Req("127.0.0.1", "198.51.100.7")) == "198.51.100.7"
+        assert client_ip(Req("198.51.100.8", "1.2.3.4")) == "198.51.100.8"
+
+        # files.<domain> is the file manager, never a client site name
+        assert "files" in sites.RESERVED
+
+
 if __name__ == "__main__":
     test_everything()
+    test_security()
     print("All CMS checks passed.")

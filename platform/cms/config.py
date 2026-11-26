@@ -44,6 +44,12 @@ PUBLIC_URL = os.environ.get("TENSHI_PUBLIC_URL", f"http://{HOST if HOST != '127.
 LAUNCH_ORIGINS = [o for o in os.environ.get("TENSHI_LAUNCH_ORIGINS",
                   "https://jcali0351.github.io,http://localhost:8770,http://127.0.0.1:8770").split(",") if o]
 
+# Login cookie only over https (Secure flag): on when the CMS's public address is https, off for local http.
+SECURE_COOKIES = os.environ.get("TENSHI_SECURE_COOKIES", "1" if PUBLIC_URL.startswith("https://") else "0") == "1"
+
+# FastAPI's automatic API docs (/api/docs, /openapi.json): off unless TENSHI_API_DOCS=1 (local development only).
+API_DOCS = os.environ.get("TENSHI_API_DOCS", "0") == "1"
+
 MAX_UPLOAD_MB = int(os.environ.get("TENSHI_MAX_UPLOAD_MB", "200"))
 IMAGE_SIZES = [320, 800, 1600]          # every uploaded photo is also saved at these widths (WebP)
 IMAGE_QUALITY = 82                       # WebP quality for those copies (0-100)

@@ -27,6 +27,12 @@ CREATE TABLE IF NOT EXISTS users (
   password_hash TEXT NOT NULL, created_at TEXT NOT NULL
 );
 
+-- Failed sign-ins, for rate limiting (auth.py): who (IP + email) and when (unix seconds). Old rows are pruned.
+CREATE TABLE IF NOT EXISTS login_failures (
+  id INTEGER PRIMARY KEY, ip TEXT NOT NULL, email TEXT NOT NULL, at REAL NOT NULL
+);
+CREATE INDEX IF NOT EXISTS login_failures_ip ON login_failures (ip, at);
+
 -- Client websites. profile_json is the Business Data Engine profile (company, services, staff …).
 -- theme_json holds the site's own colour/font choices on top of its template.
 CREATE TABLE IF NOT EXISTS sites (

@@ -40,7 +40,11 @@ STATIC_DIR = Path(__file__).parent / "static"
 scanner.PLATFORM_NAMES |= {"media", "media_alt", "album", "album_layout", "portfolio", "link", "asset", "editing", "tracking",
                            "form_is_mail", "theme", "page", "blocks", "block", "site"}
 
-app = FastAPI(title="Tenshi CMS", docs_url="/api/docs", redoc_url=None)
+# The automatic API docs (/api/docs, /redoc, /openapi.json) are off: they listed every endpoint to anyone.
+# Turn them on for local development only with TENSHI_API_DOCS=1.
+_DOCS = config.API_DOCS
+app = FastAPI(title="Tenshi CMS", docs_url="/api/docs" if _DOCS else None, redoc_url=None,
+              openapi_url="/openapi.json" if _DOCS else None)
 ui = Environment(loader=FileSystemLoader(str(UI_DIR)), autoescape=select_autoescape(["html"]))
 ui.filters["size"] = media.human_size
 ui.filters["when"] = lambda t: (t or "")[:16].replace("T", " ")
@@ -196,11 +200,30 @@ def login_page(request: Request, next: str = "/"):
     return HTMLResponse(ui.get_template("login.html").render(error=None, next=next))
 
 
+def client_ip(request: Request):
+    """The visitor's IP. Behind Caddy (the peer is this machine) it's the last X-Forwarded-For entry, which Caddy sets
+    itself; a visitor can't fake it because Caddy doesn't trust incoming X-Forwarded-For headers by default."""
+    peer = request.client.host if request.client else ""
+    forwarded = request.headers.get("x-forwarded-for", "")
+    if peer in ("127.0.0.1", "::1") and forwarded:
+        return forwarded.split(",")[-1].strip()
+    return peer or "unknown"
+
+
 @app.post("/login")
 def login_submit(request: Request, email: str = Form(...), password: str = Form(...), next: str = Form("/")):
+    ip = client_ip(request)
+    wait = auth.locked_for(ip, email)
+    if wait:
+        minutes = max(1, (wait + 59) // 60)
+        msg = f"Too many wrong passwords. Try again in {minutes} minute{'s' if minutes != 1 else ''}."
+        return HTMLResponse(ui.get_template("login.html").render(error=msg, next=next), status_code=429,
+                            headers={"Retry-After": str(wait)})
     user = auth.sign_in(email, password)
     if not user:
+        auth.note_failure(ip, email)
         return HTMLResponse(ui.get_template("login.html").render(error="That email and password don't match.", next=next), status_code=401)
+    auth.clear_failures(ip, email)
     request.session["uid"] = user["id"]
     return RedirectResponse(next if next.startswith("/") and not next.startswith("//") else "/", 303)
 
@@ -1124,5 +1147,8 @@ def static_file(name: str):
     return FileResponse(path, media_type=mimetypes.guess_type(name)[0], headers={"Cache-Control": "no-cache"})
 
 
-# Signed login cookies (added last so it wraps everything). same_site="lax" stops other sites from using the cookie.
-app.add_middleware(SessionMiddleware, secret_key=config.secret_key(), session_cookie="tenshi_cms", same_site="lax", max_age=60 * 60 * 24 * 14)
+# Signed login cookies (added last so it wraps everything). same_site="lax" stops other sites from using the cookie;
+# https_only (the Secure flag) keeps it off plain http. On by default when TENSHI_PUBLIC_URL is https (the server);
+# local http development and the tests run without it. Force with TENSHI_SECURE_COOKIES=1 or 0.
+app.add_middleware(SessionMiddleware, secret_key=config.secret_key(), session_cookie="tenshi_cms", same_site="lax",
+                   max_age=60 * 60 * 24 * 14, https_only=config.SECURE_COOKIES)

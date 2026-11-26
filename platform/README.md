@@ -116,3 +116,13 @@ py -m venv .venv
 
 Names the platform provides (not business data, so they never become CMS boxes): `design` (colours from
 templates.json), `year`, `form_action`. They're listed in `PLATFORM_NAMES` in `scanner.py`.
+
+## Security settings
+
+- **Sign-in rate limiting:** 5 wrong passwords for one email from one IP within 15 minutes locks that IP out of that
+  email for 15 minutes (HTTP 429); 20 failures from one IP across any emails does the same. Behind Caddy the IP is the
+  `X-Forwarded-For` Caddy sets. Tune with `TENSHI_LOGIN_MAX_FAILS`, `TENSHI_LOGIN_WINDOW`, `TENSHI_LOGIN_LOCK`,
+  `TENSHI_LOGIN_IP_MAX_FAILS` (seconds for the time ones).
+- **Login cookie:** `Secure` (https only) whenever `TENSHI_PUBLIC_URL` starts with `https://` (the server). Local http
+  development and the tests run without it; force it with `TENSHI_SECURE_COOKIES=1` or `0`.
+- **API docs:** `/api/docs`, `/redoc` and `/openapi.json` are off. For local development only: `TENSHI_API_DOCS=1`.

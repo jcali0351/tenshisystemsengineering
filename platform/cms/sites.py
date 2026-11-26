@@ -23,7 +23,7 @@ from tenshi import profile as prof
 
 from . import blocks, config, db, media as media_mod, render, templates
 
-RESERVED = {"www", "admin", "api", "app", "cms", "mail", "static", "assets", "tenshi", "localhost", "preview"}
+RESERVED = {"www", "admin", "api", "app", "cms", "files", "mail", "static", "assets", "tenshi", "localhost", "preview"}
 SITE_TABLES = ["pages", "media_folders", "media", "albums", "portfolio_items"]   # rows that belong to a site
 
 
