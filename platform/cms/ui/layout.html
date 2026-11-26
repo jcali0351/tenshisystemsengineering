@@ -9,6 +9,7 @@
   <title>{% block title %}Tenshi CMS{% endblock %} · Tenshi</title>
   <script>/* display mode + accent before the first paint (static/theme-switch.js wires the buttons) */(function(d,k,K,A,D){var t,a;try{t=localStorage.getItem(k);a=localStorage.getItem(K)}catch(e){}if(t!=="light"&&t!=="dark")t=window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";d.setAttribute("data-theme",t);d.setAttribute("data-accent",A.indexOf(a)>=0?a:D);d.setAttribute("data-theme-key",k);d.setAttribute("data-accent-key",K)})(document.documentElement,"tenshi-cms-theme","tenshi-cms-accent",["orange","lime"],"orange")</script>
   <link rel="stylesheet" href="/static/cms.css">
+  <link rel="stylesheet" href="/static/stock.css">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -38,6 +39,7 @@
       <a href="/" {% if path == '/' %}aria-current="page"{% endif %}><svg class="ico"><use href="#i-home"/></svg>Dashboard</a>
       <a href="/sites" {% if path == '/sites' %}aria-current="page"{% endif %}><svg class="ico"><use href="#i-sites"/></svg>All sites</a>
       <a href="/templates" {% if path.startswith('/templates') %}aria-current="page"{% endif %}><svg class="ico"><use href="#i-tpl"/></svg>Templates</a>
+      <a href="/stock" {% if path.startswith('/stock') %}aria-current="page"{% endif %}><svg class="ico"><use href="#i-gal"/></svg>Stock photos</a>
       {% if user.role == 'admin' %}<a href="/users" {% if path == '/users' %}aria-current="page"{% endif %}><svg class="ico"><use href="#i-users"/></svg>Users</a>{% endif %}
     </nav>
     <p class="side-label">Website</p>
@@ -92,6 +94,7 @@
   </div>
 </div>
 <script src="/static/cms.js"></script>
+<script src="/static/stock-picker.js"></script>
 <script src="/static/theme-switch.js"></script>
 {% block scripts %}{% endblock %}
 </body>

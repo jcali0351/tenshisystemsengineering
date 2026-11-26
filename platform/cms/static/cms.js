@@ -2,7 +2,7 @@
    cms.js: helpers every CMS screen uses. Loaded on every page as window.Tenshi.
      Tenshi.api(method, url, body)   talk to the CMS API (adds the X-Tenshi safety header; shows errors)
      Tenshi.toast(text, isError)     a short message in the corner
-     Tenshi.pickMedia(siteId, opts)  the Media Picker: choose (or upload) pictures from the Media Center
+     Tenshi.pickMedia(siteId, opts)  the Media Picker: choose (or upload) pictures from the Media Center, or from stock
      Tenshi.esc(text)                make text safe to put in HTML
    ===================================================================================================================== */
 (function () {
@@ -51,6 +51,7 @@
       dlg.innerHTML =
         '<div class="dlg"><div class="row" style="margin-bottom:12px"><h2 style="margin:0">Choose ' + (opts.multiple ? "files" : "a file") + '</h2>' +
         '<input type="search" placeholder="Search" style="max-width:240px;margin-left:auto">' +
+        (opts.kind === "image" || !opts.kind ? '<button type="button" class="btn" data-stock>Choose from stock</button>' : "") +
         '<label class="btn btn-primary">Upload<input type="file" multiple hidden></label></div>' +
         '<div class="mgrid" style="max-height:60vh;overflow:auto"></div></div>' +
         '<div class="dlg-foot"><span class="muted small picked"></span><span style="flex:1"></span>' +
@@ -89,6 +90,15 @@
         });
       });
       function finish(result) { dlg.close(); dlg.remove(); resolve(result); }
+      var stockBtn = $("[data-stock]", dlg);          /* the shared Stock Photo Library (static/stock-picker.js) */
+      if (stockBtn) stockBtn.onclick = function () {
+        if (!window.TenshiStock) return;
+        window.TenshiStock.pick(siteId).then(function (m) {
+          if (!m) return;
+          if (!opts.multiple) { finish([m]); return; }
+          chosen.push(m.id); $("[data-ok]", dlg).disabled = false; load();
+        });
+      };
       $("[data-close]", dlg).onclick = function () { finish([]); };
       $("[data-ok]", dlg).onclick = function () { finish(items.filter(function (m) { return chosen.indexOf(m.id) >= 0; })); };
       dlg.addEventListener("cancel", function (e) { e.preventDefault(); finish([]); });
@@ -104,12 +114,20 @@
       $$(".mf-ui", box).forEach(function (x) { x.remove(); });
       var ui = document.createElement("span"); ui.className = "mf-ui row";
       ui.innerHTML = (url ? '<img src="' + esc(url) + '" alt="">' : '<span class="none">' + (input.value ? "File #" + esc(input.value) : "None") + "</span>") +
-        '<button type="button" class="btn btn-small" data-choose>Choose</button>' + (input.value ? '<button type="button" class="btn btn-small" data-clear>Remove</button>' : "");
+        '<button type="button" class="btn btn-small" data-choose>Choose</button>' +
+        (kind === "image" && window.TenshiStock ? '<button type="button" class="btn btn-small" data-stock>From stock</button>' : "") + (input.value ? '<button type="button" class="btn btn-small" data-clear>Remove</button>' : "");
       box.appendChild(ui);
       $("[data-choose]", ui).onclick = function () {
         pickMedia(siteId, { kind: kind }).then(function (items) {
           if (!items.length) return;
           input.value = items[0].id; draw(items[0].kind === "image" || items[0].kind === "svg" ? items[0].thumb : ""); if (onChange) onChange(input.value);
+        });
+      };
+      var stock = $("[data-stock]", ui);
+      if (stock) stock.onclick = function () {
+        window.TenshiStock.pick(siteId).then(function (m) {
+          if (!m) return;
+          input.value = m.id; draw(m.thumb); if (onChange) onChange(input.value);
         });
       };
       var clear = $("[data-clear]", ui);

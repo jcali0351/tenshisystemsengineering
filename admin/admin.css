@@ -486,3 +486,10 @@ html[data-theme="light"] .ed-toast { color: var(--text); box-shadow: 0 18px 50px
 .i18n-h { margin: 0; font-size: 1.1rem; }
 .i18n-switch { margin: 0; border-bottom: 0; }
 .i18n-detail .ed-textlist { overflow: visible; }
+
+/* Stock photos tab: a link to the CMS's shared library (admin.html, data-panel="stock") */
+.ed-stock { overflow: auto; }
+.ed-stock-card { max-width: 680px; margin: 24px auto; padding: 22px 26px; border: 1px solid var(--line-2); border-radius: 12px; background: var(--tint); }
+.ed-stock-card h2 { margin: 0 0 10px; }
+.ed-stock-card p { margin: 0 0 14px; line-height: 1.55; }
+.ed-stock-card .ed-btn { display: inline-block; text-decoration: none; }

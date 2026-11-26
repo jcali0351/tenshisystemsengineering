@@ -31,6 +31,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from tenshi import forms as tforms, profile as prof, scanner
 
 from . import auth, blocks, chrome, config, db, domains, forms as lead_forms, mail, media, members, notify, posts, ratelimit, render, revisions, sanitize, security, sites, templates, theme as theme_mod, widgets
+from . import stock, stock_routes
 
 VERSION = "1.0.0"
 UI_DIR = Path(__file__).parent / "ui"
@@ -60,6 +61,8 @@ def startup():
     config.ensure_folders()
     db.setup()
     templates.seed()
+    stock.setup()
+    stock.start_seed_in_background()       # the Stock Photo Library's seed photos (stock.py), imported once
 
 
 # ---------------------------------------------------------------------------------------------- client sites
@@ -1584,6 +1587,11 @@ def _cors(request):
         return {}
     return {"Access-Control-Allow-Origin": origin, "Access-Control-Allow-Methods": "POST, OPTIONS",
             "Access-Control-Allow-Headers": "Content-Type", "Vary": "Origin"}
+
+
+# ---------------------------------------------------------------------------------------------- stock photo library
+
+stock_routes.install(app, page_user=page_user, api_user=api_user, show=show, current_user=current_user, media_json=media_json)
 
 
 # ---------------------------------------------------------------------------------------------- static files

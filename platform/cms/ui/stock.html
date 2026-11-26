@@ -1,0 +1,128 @@
+{#- The Stock Photo Library (stock.py, stock_routes.py, static/stock.js). Everyone signed in browses it and copies
+    photos into their sites; admins also upload, edit, bulk-tag and delete. -#}
+{% extends "layout.html" %}
+{% block title %}Stock photos{% endblock %}
+{% block heading %}Stock photos{% endblock %}
+{% block actions %}
+<span class="muted small" id="sk-total"></span>
+{% if can_manage %}<button class="btn btn-primary" id="sk-upload-open" type="button">Upload photos</button>{% endif %}
+{% endblock %}
+{% block body %}
+<div class="sk-layout" id="stock-app" data-manage="{{ 1 if can_manage else 0 }}" data-max="{{ max_mb }}">
+  <aside class="card sk-side" aria-label="Filters">
+    <h2>Categories</h2>
+    <div class="sk-cats" id="sk-cats" role="list">
+      <a href="#" data-cat="" class="on" role="listitem">All photos <span></span></a>
+      {% for c in categories %}<a href="#" data-cat="{{ c.category }}" role="listitem">{{ c.category or 'Uncategorised' }} <span>{{ c.n }}</span></a>{% endfor %}
+    </div>
+    <h2 style="margin-top:18px">Licence</h2>
+    <select id="sk-license" aria-label="Licence">
+      <option value="">Any licence</option>
+      <option value="free">No credit needed (CC0, public domain…)</option>
+      <option value="credit">Credit required (CC BY / BY-SA)</option>
+      {% if can_manage %}<option value="missing">Licence not set</option>{% endif %}
+    </select>
+    <p class="muted small" style="margin-top:14px">Photos marked <b>Credit</b> need the credit line shown near them. It's added to the photo's caption when you put it on a site.</p>
+  </aside>
+
+  <section class="sk-main">
+    <div class="row sk-searchrow">
+      <input type="search" id="sk-q" placeholder="Search photos: tractor, sunset, office…" aria-label="Search photos">
+      <span class="muted small" id="sk-count" aria-live="polite"></span>
+      <span style="flex:1"></span>
+      {% if can_manage %}<button class="btn btn-small" id="sk-select" type="button" aria-pressed="false">Select</button>{% endif %}
+    </div>
+    <div class="sk-chips" id="sk-chips" aria-label="Tags"></div>
+    {% if can_manage %}
+    <div class="bulkbar" id="sk-bulk" hidden>
+      <b id="sk-bulk-n"></b>
+      <input type="text" id="sk-bulk-tag" placeholder="Tags (comma separated)" aria-label="Tags to add or remove">
+      <button class="btn btn-small" data-bulk="tag" type="button">Add tags</button>
+      <button class="btn btn-small" data-bulk="untag" type="button">Remove tags</button>
+      <input type="text" id="sk-bulk-cat" placeholder="Category" aria-label="Category" list="sk-cat-list">
+      <button class="btn btn-small" data-bulk="category" type="button">Set category</button>
+      <input type="text" id="sk-bulk-lic" placeholder="Licence" aria-label="Licence" list="sk-lic-list">
+      <button class="btn btn-small" data-bulk="license" type="button">Set licence</button>
+      <span style="flex:1"></span>
+      <button class="btn btn-small" id="sk-all" type="button">Select page</button>
+      <button class="btn btn-small btn-danger" data-bulk="delete" type="button">Delete</button>
+      <button class="btn btn-small" id="sk-bulk-done" type="button">Done</button>
+    </div>
+    {% endif %}
+    <p class="sk-seed muted small" id="sk-seed" hidden></p>
+    <div class="sk-grid" id="sk-grid"></div>
+    <div class="sk-more"><button class="btn" id="sk-more" type="button" hidden>Show more</button></div>
+  </section>
+</div>
+
+<datalist id="sk-cat-list">{% for c in categories %}<option value="{{ c.category }}">{% endfor %}</datalist>
+<datalist id="sk-lic-list">{% for l in licenses %}<option value="{{ l }}">{% endfor %}</datalist>
+
+{# The lightbox: big photo, its details, and (for admins) the edit form #}
+<dialog id="sk-box" class="sk-box" aria-labelledby="sk-box-title">
+  <div class="sk-box-in">
+    <div class="sk-stage">
+      <button class="sk-nav sk-prev" type="button" aria-label="Previous photo">‹</button>
+      <img id="sk-box-img" alt="">
+      <button class="sk-nav sk-next" type="button" aria-label="Next photo">›</button>
+    </div>
+    <div class="sk-info">
+      <div class="row"><h2 id="sk-box-title" style="margin:0;flex:1"></h2><button class="btn btn-small" data-close type="button" aria-label="Close">✕</button></div>
+      <dl class="sk-meta" id="sk-meta"></dl>
+      <div class="sk-credit" id="sk-credit" hidden><span></span> <button class="btn btn-small" id="sk-copy-credit" type="button">Copy credit</button></div>
+      <div class="sk-use">
+        <div class="field"><span>Add to a site</span>
+          <div class="row"><select id="sk-site" aria-label="Site">{% for s in my_sites %}<option value="{{ s.id }}">{{ s.name }}</option>{% else %}<option value="">No sites yet</option>{% endfor %}</select>
+          <button class="btn btn-primary" id="sk-use" type="button" {% if not my_sites %}disabled{% endif %}>Add to Media Center</button></div>
+        </div>
+        <a class="btn" id="sk-download" href="#" download>Download</a>
+      </div>
+      {% if can_manage %}
+      <form class="sk-edit" id="sk-edit" autocomplete="off">
+        <h3>Edit details</h3>
+        <label class="field"><span>Title</span><input type="text" name="title" maxlength="200"></label>
+        <label class="field"><span>Alt text</span><textarea name="alt" rows="2" maxlength="300"></textarea><small>Describes the photo for people who can't see it.</small></label>
+        <div class="grid grid-2">
+          <label class="field"><span>Category</span><input type="text" name="category" list="sk-cat-list" maxlength="60"></label>
+          <label class="field"><span>Licence</span><input type="text" name="license" list="sk-lic-list" maxlength="120"></label>
+        </div>
+        <label class="field"><span>Tags</span><input type="text" name="tags" placeholder="comma separated"></label>
+        <div class="grid grid-2">
+          <label class="field"><span>Creator</span><input type="text" name="creator" maxlength="200"></label>
+          <label class="field"><span>Source</span><input type="text" name="source" maxlength="200"></label>
+        </div>
+        <label class="field"><span>Source page</span><input type="text" name="source_url" type="url" placeholder="https://…"></label>
+        <label class="field"><span>Licence link</span><input type="text" name="license_url" type="url" placeholder="https://…"></label>
+        <div class="row"><button class="btn btn-primary" type="submit">Save</button><span style="flex:1"></span><button class="btn btn-danger" id="sk-delete" type="button">Delete photo</button></div>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</dialog>
+
+{% if can_manage %}
+<dialog id="sk-up" class="wide" aria-labelledby="sk-up-title">
+  <div class="dlg">
+    <h2 id="sk-up-title" style="margin-top:0">Upload photos</h2>
+    <label class="sk-drop" id="sk-drop">
+      <input type="file" id="sk-files" multiple accept="image/jpeg,image/png,image/webp,image/gif" hidden>
+      <b>Drop photos here</b> or click to choose them<br>
+      <span class="muted small">JPG, PNG, WebP or GIF, up to {{ max_mb }} MB each. Every file's contents are checked, then it's converted to WebP (at most 2400 px) with a preview. Duplicates are spotted and skipped.</span>
+    </label>
+    <p class="muted small" style="margin:14px 0 6px">These details are applied to every photo in this upload (you can change each one later):</p>
+    <div class="grid grid-2">
+      <label class="field"><span>Category</span><input type="text" id="up-category" list="sk-cat-list" maxlength="60"></label>
+      <label class="field"><span>Tags</span><input type="text" id="up-tags" placeholder="comma separated"></label>
+      <label class="field"><span>Licence</span><input type="text" id="up-license" list="sk-lic-list" maxlength="120" placeholder="e.g. CC0 1.0"></label>
+      <label class="field"><span>Creator</span><input type="text" id="up-creator" maxlength="200"></label>
+      <label class="field"><span>Source</span><input type="text" id="up-source" maxlength="200" placeholder="e.g. Wikimedia Commons"></label>
+      <label class="field"><span>Source page</span><input type="text" id="up-source-url" type="url" placeholder="https://…"></label>
+    </div>
+    <ul class="upload-list" id="sk-up-list" aria-live="polite"></ul>
+  </div>
+  <div class="dlg-foot"><span class="muted small" id="sk-up-status" style="margin-right:auto"></span><button class="btn" data-close type="button">Close</button><button class="btn btn-primary" id="sk-up-go" type="button" disabled>Upload</button></div>
+</dialog>
+<div class="dropzone" id="sk-dropzone" hidden>Drop photos to add them to the library</div>
+{% endif %}
+{% endblock %}
+{% block scripts %}<script src="/static/stock.js"></script>{% endblock %}
