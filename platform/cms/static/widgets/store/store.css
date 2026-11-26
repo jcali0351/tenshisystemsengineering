@@ -118,3 +118,39 @@ html.tws-lock { overflow: hidden; }
   .tws-tile, .tws-media img, .tws-drawer, .tws-scrim { transition: none; }
   .tws-skel .tws-tile { animation: none; }
 }
+
+/* Filters and sorting */
+.tws-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin: 0 0 18px; }
+.tws-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.tws-chip { min-height: 36px; padding: 6px 14px; border-radius: 999px; cursor: pointer; font: 600 .9rem/1 var(--font-body, inherit);
+  color: var(--tws-i); background: transparent; border: 1px solid var(--tws-line); }
+.tws-chip[aria-pressed="true"] { color: #fff; background: var(--p-solid, var(--tws-p)); border-color: var(--p-solid, var(--tws-p)); }
+.tws-chip:focus-visible, .tws-sort select:focus-visible { outline: 3px solid var(--tws-a); outline-offset: 2px; }
+.tws-instock { display: inline-flex; align-items: center; gap: 6px; font-size: .9rem; }
+.tws-instock input { accent-color: var(--tws-p); width: 17px; height: 17px; }
+.tws-sort { display: inline-flex; align-items: center; gap: 8px; margin-left: auto; font-size: .9rem; }
+.tws-sort select { font: inherit; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--tws-line); background: var(--card, var(--tws-s)); color: var(--tws-i); }
+.tws-shown { flex-basis: 100%; margin: 0; font-size: .85rem; color: color-mix(in srgb, var(--tws-i) 70%, transparent); }
+.tws-item[hidden] { display: none; }
+.tws-name a { color: inherit; text-decoration: none; }
+.tws-name a:hover, .tws-name a:focus-visible { text-decoration: underline; }
+
+/* Options that can't be bought with the other choices */
+.tws-pill.tws-off span { opacity: .45; text-decoration: line-through; }
+
+/* Buy button block */
+.tws-v-buy .tws-buy-h { margin: 0 0 .4em; }
+.tws-buy { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; max-width: 640px; padding: 12px; border-radius: var(--tws-r);
+  border: 1px solid var(--tws-line); background: var(--card, var(--tws-s)); }
+.tws-buy img { width: 64px; height: 64px; object-fit: cover; border-radius: calc(var(--tws-r) * .6); background: var(--tws-soft); }
+.tws-buy-text { display: grid; gap: 2px; flex: 1; min-width: 140px; }
+.tws-buy-name { font-weight: 800; color: var(--tws-i); text-decoration: none; }
+.tws-buy-name:hover { text-decoration: underline; }
+.tws-buy-price { font-weight: 700; color: var(--tws-p); }
+.tws-buy.tws-skel { min-height: 90px; }
+
+/* The header cart (every page, when the site sells) */
+.tws-hcart { display: inline-flex; align-items: center; margin-left: 6px; }
+.tws-cart-sm { min-height: 38px; padding: 6px 12px; border-width: 1.5px; font-size: .9rem; }
+@media (max-width: 760px) { .tws-hcart { margin: 8px 0 0; } }
+.tws-v-buy .tws-badge, .tws-v-product .tws-badge { display: inline-block; margin: 0 0 8px; }

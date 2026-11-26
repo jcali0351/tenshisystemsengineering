@@ -31,6 +31,7 @@
           <small id="h-coll">Product grids show this collection unless a block chooses another. Empty: best sellers.</small></label>
         <label class="field"><span>Button text</span>
           <input type="text" name="button_text" value="{{ settings.button_text }}" maxlength="40"></label>
+        <label class="check"><input type="checkbox" name="header_cart" value="1" {% if settings.header_cart %}checked{% endif %}> Show a cart button with the item count in the site's header, on every page</label>
       </fieldset>
       <p class="error-box" id="store-error" role="alert" hidden></p>
     </form>
@@ -77,6 +78,7 @@
     e.preventDefault();
     var body = {};
     new FormData(form).forEach(function (v, k) { body[k] = String(v).trim(); });
+    body.header_cart = form.header_cart.checked;
     err.hidden = true;
     if (/^shp[a-z]{1,4}_/i.test(body.storefront_token || "")) {           // the server refuses it too; this just says so sooner
       err.textContent = "That is a secret Shopify token (Admin API or private app). Use the PUBLIC Storefront access token instead.";

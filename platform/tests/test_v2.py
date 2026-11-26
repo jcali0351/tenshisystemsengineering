@@ -249,3 +249,46 @@ def test_self_hosted_fonts_no_google(cms, tmp_path):
             assert path.is_file() and path.stat().st_size < 80_000, key
     assert (templates.FONTS_DIR / "OFL.txt").is_file()
     _theme(c, sid, {"fonts": {}})
+
+
+# ---------------------------------------------------------------------------------------------- 4. more of the Shopify store
+
+def test_store_filters_sort_and_buy_button(cms):
+    import re
+    c, sid = cms
+    r = _put_blocks(c, sid, "index", [
+        {"id": "g1", "type": "store", "data": {"variant": "grid", "limit": "8", "filters": True, "sort": "price-asc"}},
+        {"id": "b1", "type": "store", "data": {"variant": "buy", "product_handle": "neon-angel-tee", "heading": "Get the tee"}},
+    ])
+    assert r.status_code == 200, r.text
+    html = c.get(f"/sites/{sid}/preview/index").text
+    assert "data-tws-bar" in html and 'data-tws-filter=""' in html and "data-tws-instock" in html
+    assert re.search(r'<option value="price-asc" selected', html)
+    prices = [float(p) for p in re.findall(r'class="tws-item" data-type="[^"]*" data-price="([\d.]+)"', html)]
+    assert len(prices) >= 4 and prices == sorted(prices)
+    assert 'class="tws-buy"' in html and 'data-tws-add="neon-angel-tee"' in html and "Get the tee" in html
+    assert 'href="#product-neon-angel-tee"' in html                     # titles are shareable deep links to the quick view
+    # by name
+    _put_blocks(c, sid, "index", [{"id": "g1", "type": "store", "data": {"variant": "grid", "limit": "8", "filters": True, "sort": "title"}}])
+    titles = re.findall(r'data-title="([^"]*)"', c.get(f"/sites/{sid}/preview/index").text)
+    assert titles == sorted(titles)
+    # a made-up sort is refused
+    bad = _put_blocks(c, sid, "index", [{"id": "g1", "type": "store", "data": {"variant": "grid", "sort": "random"}}])
+    assert bad.status_code == 400
+
+
+def test_store_header_cart_on_every_page(cms):
+    c, sid = cms
+    _put_blocks(c, sid, "index", [{"id": "g1", "type": "store", "data": {"variant": "grid"}}])
+    about = c.get(f"/sites/{sid}/preview/about").text
+    if "<header" in about:                                              # templates with a header get the cart in it
+        head = about[about.index("<header"):about.index("</header>")]
+        assert "tws-hcart" in head and "data-tws-count" in head and "widgets/store/store.js" in about
+    assert c.put(f"/api/sites/{sid}/widgets/store/settings", json={"header_cart": False}, headers=H).status_code == 200
+    assert "tws-hcart" not in c.get(f"/sites/{sid}/preview/about").text
+    assert c.put(f"/api/sites/{sid}/widgets/store/settings", json={"header_cart": True}, headers=H).status_code == 200
+    folder = _deploy(c, sid)
+    if "<header" in (folder / "about.html").read_text():
+        assert "tws-hcart" in (folder / "about.html").read_text()
+    _put_blocks(c, sid, "index", [])                                    # no store anywhere: no cart either
+    assert "tws-hcart" not in c.get(f"/sites/{sid}/preview/about").text

@@ -227,6 +227,14 @@ class SiteRenderer:
         if chrome_mod.active(self.chrome):            # the site's own header and footer (Header & footer)
             html = chrome_mod.apply(html, self.chrome, self, page, menu_pages)
             used = used + ["chrome"]
+        cart = self.header_cart()
+        if cart:                                      # the Store's cart button with its count, in the header of every page
+            m = re.search(r"<header\b.*?</header>", html, re.S)
+            nav_end = html.rfind("</nav>", m.start(), m.end()) if m else -1
+            if nav_end >= 0:
+                html = html[:nav_end] + cart + html[nav_end:]
+                if "store" not in used:
+                    used = used + ["store"]
         file = "index.html" if page.get("slug") == "index" else f"{page.get('slug')}.html"
         if used:
             self.used_widgets[file] = used
@@ -237,6 +245,21 @@ class SiteRenderer:
         if self.mode != "preview" and self.has_posts():
             html = html.replace("</head>", f'<link rel="alternate" type="application/rss+xml" title="{escape(self.site.get("name") or "")}" href="feed.xml">\n</head>', 1)
         return widgets.inject_assets(html, used, self.mode)
+
+    def header_cart(self) -> str:
+        """The header cart button, when the site sells (a Store block on any page) and the store says so."""
+        if not hasattr(self, "_header_cart"):
+            self._header_cart = ""
+            sid = self.site.get("id")
+            if sid and db.one("SELECT 1 FROM pages WHERE site_id = ? AND blocks_json LIKE '%\"type\": \"store\"%' LIMIT 1", sid):
+                w = widgets.get("store")
+                st = widgets.load_settings(sid, "store")
+                if w and st and st.header_cart:
+                    from .widgets import store as store_widget
+                    ctx = widgets.WidgetContext(site=self.site, mode=self.mode, editing=self.editing, settings=st,
+                                                asset=lambda file: widgets.asset_url("store", file, self.mode), link=self.link, profile=self.profile)
+                    self._header_cart = store_widget.header_cart_html(ctx)
+        return self._header_cart
 
     def has_posts(self):
         if not hasattr(self, "_has_posts"):

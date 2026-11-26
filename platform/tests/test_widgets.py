@@ -35,7 +35,7 @@ def test_registry_has_store_as_a_block():
     for name in ("variant", "product_handle", "collection_handle", "limit", "show_prices", "button_text"):
         assert name in names
     variant = next(f for f in bt["fields"] if f["name"] == "variant")
-    assert variant["type"] == "select" and [o[0] for o in variant["options"]] == ["grid", "product", "collection", "cart"]
+    assert variant["type"] == "select" and [o[0] for o in variant["options"]] == ["grid", "product", "collection", "buy", "cart"]
     assert next(f for f in bt["fields"] if f["name"] == "show_prices")["type"] == "checkbox"
     assert next(f for f in bt["fields"] if f["name"] == "limit")["type"] == "number"
     assert bt["data"]["variant"] == "grid" and bt["data"]["limit"] == 8
@@ -164,7 +164,7 @@ def test_builder_and_demo_render(setup_cms):
         {"id": "k1", "type": "store", "data": {"variant": "cart"}},
     ])
     html = c.get(f"/sites/{sid}/preview/index?edit=1").text
-    assert html.count("data-tw-store") == 4
+    assert html.count("data-tw-store") == 5                             # the 4 blocks and the header cart
     assert html.count('class="tws-item"') == 4 + 2                     # 4 in the grid, 2 "service" products in the collection
     assert "Undercity Art Print" in html and "Our shop" in html
     assert "Demo store" in html                                         # badge only in the CMS preview
@@ -174,13 +174,16 @@ def test_builder_and_demo_render(setup_cms):
     assert c.get("/static/widgets/store/img/neon-angel-tee.webp").status_code == 200
     assert c.get("/static/widgets/store/%2e%2e/%2e%2e/cms.css").status_code == 404
     assert c.get("/static/widgets/nope/store.js").status_code == 404
-    # pages without the widget don't load its files
+    # other pages get only the header cart; with that off, pages without the widget don't load its files
+    assert "tws-hcart" in c.get(f"/sites/{sid}/preview/about").text
+    assert c.put(f"/api/sites/{sid}/widgets/store/settings", json={"header_cart": False}, headers=H).status_code == 200
     assert "widgets/store" not in c.get(f"/sites/{sid}/preview/about").text
 
 
 def test_deploy_assets_and_csp_only_with_widget(setup_cms):
     c, sid = setup_cms
     _set_blocks(c, sid, "index", [{"id": "g1", "type": "store", "data": {"variant": "grid"}}])
+    assert c.put(f"/api/sites/{sid}/widgets/store/settings", json={"header_cart": False}, headers=H).status_code == 200
     r = c.post(f"/api/sites/{sid}/deploy", headers=H)
     assert r.status_code == 200, r.text
     sub = sites.get(sid)["subdomain"]

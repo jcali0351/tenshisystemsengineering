@@ -53,6 +53,7 @@ class StoreSettings(BaseModel):
     storefront_token: str = Field("", max_length=200)
     collection_handle: str = Field("", max_length=255)
     button_text: str = Field("Add to cart", max_length=40)
+    header_cart: bool = True        # a cart button with the item count in the site's header, on every page
 
     @field_validator("store_domain")
     @classmethod
@@ -98,14 +99,16 @@ class StoreSettings(BaseModel):
 
 # ---------------------------------------------------------------------------------------------- one block's settings
 
-VARIANTS = [["grid", "Product grid"], ["product", "Single product"], ["collection", "Collection"], ["cart", "Cart button (opens the cart drawer)"]]
+VARIANTS = [["grid", "Product grid"], ["product", "Single product"], ["collection", "Collection"], ["buy", "Buy button (one product, compact)"],
+            ["cart", "Cart button (opens the cart drawer)"]]
+SORTS = [["featured", "Featured"], ["price-asc", "Price: low to high"], ["price-desc", "Price: high to low"], ["title", "Name: A to Z"]]
 
 
 class StoreConfig(BaseModel):
     """One Store block in the page builder."""
     model_config = ConfigDict(extra="ignore", str_strip_whitespace=True)
 
-    variant: Literal["grid", "product", "collection", "cart"] = Field("grid", json_schema_extra={"label": "Show", "options": VARIANTS})
+    variant: Literal["grid", "product", "collection", "buy", "cart"] = Field("grid", json_schema_extra={"label": "Show", "options": VARIANTS})
     heading: str = Field("Shop", max_length=120, json_schema_extra={"label": "Heading"})
     intro: str = Field("", max_length=400, json_schema_extra={"label": "Intro", "type": "textarea"})
     product_handle: str = Field("", max_length=255, json_schema_extra={"label": "Product handle (Single product)"})
@@ -114,6 +117,8 @@ class StoreConfig(BaseModel):
     columns: Literal["2", "3", "4"] = Field("3", json_schema_extra={"label": "Columns", "options": [["2", "2"], ["3", "3"], ["4", "4"]]})
     show_prices: bool = Field(True, json_schema_extra={"label": "Show prices"})
     button_text: str = Field("", max_length=40, json_schema_extra={"label": "Button text (empty = the store's setting)"})
+    filters: bool = Field(False, json_schema_extra={"label": "Show filters and sorting (grid and collection)"})
+    sort: Literal["featured", "price-asc", "price-desc", "title"] = Field("featured", json_schema_extra={"label": "Sort products by", "options": SORTS})
 
     @field_validator("product_handle")
     @classmethod
@@ -140,13 +145,27 @@ def _slug(text: str) -> str:
 def demo_products(cfg: StoreConfig, collection: str = "") -> list[dict]:
     """Sample products for one block. Collections in demo mode are the product types (merch, print, service)."""
     items = list(demo_data()["products"])
-    if cfg.variant == "product":
+    if cfg.variant in ("product", "buy"):
         one = next((p for p in items if p["handle"] == cfg.product_handle), None)
         return [one or items[0]]
     if cfg.variant == "collection" and collection:
         picked = [p for p in items if _slug(p.get("type")) == collection]
         items = picked or items
-    return items[: cfg.limit]
+    return sort_products(items, cfg.sort)[: cfg.limit]
+
+
+def _low(p) -> float:
+    return min(float(v["price"]) for v in p["variants"])
+
+
+def sort_products(items: list[dict], how: str) -> list[dict]:
+    if how == "price-asc":
+        return sorted(items, key=_low)
+    if how == "price-desc":
+        return sorted(items, key=_low, reverse=True)
+    if how == "title":
+        return sorted(items, key=lambda p: p["title"].lower())
+    return list(items)
 
 
 def _money(amount, currency="USD") -> str:
@@ -170,10 +189,11 @@ def _tile(p: dict, cfg: StoreConfig, ctx: WidgetContext, button: str, currency: 
     sold = not any(v.get("available") for v in p["variants"])
     label = "Sold out" if sold else ("Choose options" if p.get("options") else button)
     price = f'<p class="tws-price">{escape(_price_label(p, currency))}</p>' if cfg.show_prices else ""
-    return (f'<li class="tws-item"><article class="tws-tile">'
+    return (f'<li class="tws-item" data-type="{escape(p.get("type", ""))}" data-price="{_low(p):.2f}" data-title="{escape(p["title"].lower())}" '
+            f'data-avail="{0 if sold else 1}"><article class="tws-tile">'
             f'<button class="tws-media" type="button" data-tws-quick="{escape(p["handle"])}" aria-label="Quick view: {escape(p["title"])}">'
             f'<img src="{escape(_img(p, ctx))}" alt="{escape(p.get("imageAlt") or p["title"])}" width="800" height="800" loading="lazy" decoding="async"></button>'
-            f'<div class="tws-info"><span class="tws-type">{escape(p.get("type", ""))}</span><h3 class="tws-name">{escape(p["title"])}</h3>{price}</div>'
+            f'<div class="tws-info"><span class="tws-type">{escape(p.get("type", ""))}</span><h3 class="tws-name"><a href="#product-{escape(p["handle"])}" data-tws-quick="{escape(p["handle"])}">{escape(p["title"])}</a></h3>{price}</div>'
             f'<button class="btn tws-add" type="button" data-tws-add="{escape(p["handle"])}"{" disabled" if sold else ""}>{escape(label)}</button>'
             f'</article></li>')
 
@@ -196,6 +216,45 @@ def _product_detail(p: dict, cfg: StoreConfig, ctx: WidgetContext, button: str, 
             f'</div></div>')
 
 
+def toolbar_html(products: list[dict], cfg: StoreConfig, uid: str) -> str:
+    """Filter chips (product types), in-stock only, and sorting, for a grid or collection (store.js does the work)."""
+    types = list(dict.fromkeys(p.get("type") for p in products if p.get("type")))
+    chips = "".join(f'<button type="button" class="tws-chip" data-tws-filter="{escape(t)}" aria-pressed="false">{escape(t)}</button>' for t in types)
+    sorts = "".join(f'<option value="{v}"{" selected" if v == cfg.sort else ""}>{escape(label)}</option>' for v, label in SORTS)
+    return (f'<div class="tws-bar" data-tws-bar role="group" aria-label="Filter and sort products">'
+            f'<div class="tws-chips"><button type="button" class="tws-chip" data-tws-filter="" aria-pressed="true">All</button>{chips}</div>'
+            f'<label class="tws-instock"><input type="checkbox" data-tws-instock> In stock only</label>'
+            f'<label class="tws-sort"><span>Sort</span><select data-tws-sort id="tws-{uid}-sort">{sorts}</select></label>'
+            f'<p class="tws-shown" data-tws-shown aria-live="polite"></p></div>')
+
+
+def buy_html(p: dict, cfg: StoreConfig, ctx: WidgetContext, button: str, currency: str) -> str:
+    """The compact Buy button: picture, name, price and one button (options open the quick view)."""
+    sold = not any(v.get("available") for v in p["variants"])
+    label = "Sold out" if sold else (f"{button}" if not p.get("options") else "Choose options")
+    price = f'<span class="tws-buy-price">{escape(_price_label(p, currency))}</span>' if cfg.show_prices else ""
+    return (f'<div class="tws-buy" data-tws-buy="{escape(p["handle"])}"><img src="{escape(_img(p, ctx))}" alt="" width="64" height="64" loading="lazy" decoding="async">'
+            f'<span class="tws-buy-text"><a class="tws-buy-name" href="#product-{escape(p["handle"])}" data-tws-quick="{escape(p["handle"])}">{escape(p["title"])}</a>{price}</span>'
+            f'<button class="btn tws-add" type="button" data-tws-add="{escape(p["handle"])}"{" disabled" if sold else ""}>{escape(label)}</button></div>')
+
+
+def header_cart_html(ctx: WidgetContext) -> str:
+    """The cart button with its item count for the site's header (render.py puts it in on every page)."""
+    st: StoreSettings = ctx.settings or StoreSettings()
+    config = {"variant": "header", "live": st.live, "apiVersion": API_VERSION, "buttonText": st.button_text or "Add to cart",
+              "site": (ctx.site or {}).get("subdomain") or "preview", "preview": ctx.mode == "preview", "currency": demo_data().get("currency", "USD"),
+              "showPrices": True, "limit": 1}
+    if st.live:
+        config.update(domain=st.store_domain, token=st.storefront_token)
+    else:
+        config["products"] = [{**p, "image": _img(p, ctx)} for p in demo_data()["products"]]
+    data = json.dumps(config, ensure_ascii=False).replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
+    return ('<span class="tw-store tws-hcart" data-tw-store><button class="tws-cart-btn tws-cart-sm" type="button" data-tws-cart aria-haspopup="dialog" aria-expanded="false">'
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6.2"/><circle cx="10" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/></svg>'
+            '<span class="tws-cart-word">Cart</span><span class="tws-count" data-tws-count hidden>0</span></button>'
+            f'<script type="application/json" data-tws-config>{data}</script></span>')
+
+
 def render(block: dict, ctx: WidgetContext) -> Markup:
     from . import get
     widget = get("store")
@@ -212,6 +271,7 @@ def render(block: dict, ctx: WidgetContext) -> Markup:
         "variant": cfg.variant, "limit": cfg.limit, "showPrices": cfg.show_prices, "buttonText": button,
         "product": cfg.product_handle, "collection": collection, "live": live, "apiVersion": API_VERSION,
         "site": (ctx.site or {}).get("subdomain") or "preview", "preview": in_preview, "currency": currency,
+        "filters": cfg.filters and cfg.variant in ("grid", "collection"), "sort": cfg.sort,
     }
     if live:
         config.update(domain=st.store_domain, token=st.storefront_token)
@@ -221,7 +281,7 @@ def render(block: dict, ctx: WidgetContext) -> Markup:
         config["products"] = [{**p, "image": _img(p, ctx)} for p in all_demo]    # quick view and the cart need them all
 
     head = ""
-    if cfg.variant != "cart":
+    if cfg.variant not in ("cart", "buy"):
         head = (f'<div class="tws-head"><div><h2 id="tws-{uid}-h" data-edit="heading">{escape(cfg.heading)}</h2>'
                 + (f'<p class="intro">{escape(cfg.intro)}</p>' if cfg.intro else "") + "</div>")
     cart_btn = ('<button class="tws-cart-btn" type="button" data-tws-cart aria-haspopup="dialog" aria-expanded="false">'
@@ -233,6 +293,11 @@ def render(block: dict, ctx: WidgetContext) -> Markup:
     if cfg.variant == "cart":
         body = f'<div class="tws-cart-only">{cart_btn}{badge}</div>'
         inner = body
+    elif cfg.variant == "buy":
+        content = (f'<div data-tws-grid aria-busy="true"><div class="tws-buy tws-skel" aria-hidden="true"></div></div>' if live
+                   else f'<div data-tws-grid>{buy_html(products[0], cfg, ctx, button, currency)}</div>')
+        heading = f'<h2 id="tws-{uid}-h" class="tws-buy-h" data-edit="heading">{escape(cfg.heading)}</h2>' if cfg.heading else ""
+        inner = heading + (f'<p class="intro">{escape(cfg.intro)}</p>' if cfg.intro else "") + badge + content
     else:
         if live:
             n = 1 if cfg.variant == "product" else cfg.limit
@@ -243,13 +308,15 @@ def render(block: dict, ctx: WidgetContext) -> Markup:
             content = f'<div data-tws-grid>{_product_detail(products[0], cfg, ctx, button, currency, uid)}</div>'
         else:
             tiles = "".join(_tile(p, cfg, ctx, button, currency) for p in products)
-            content = f'<div data-tws-grid><ul class="tws-grid tws-cols-{cfg.columns}">{tiles}</ul></div>'
+            bar = toolbar_html(products, cfg, uid) if config["filters"] else ""
+            content = f'{bar}<div data-tws-grid><ul class="tws-grid tws-cols-{cfg.columns}">{tiles}</ul></div>'
         note = ""
-        if in_preview and not live and cfg.variant == "product" and cfg.product_handle and products[0]["handle"] != cfg.product_handle:
+        if in_preview and not live and cfg.variant in ("product", "buy") and cfg.product_handle and products[0]["handle"] != cfg.product_handle:
             note = '<p class="tws-note">Demo: no sample product has that handle, so the first one is shown.</p>'
         inner = head + f'<div class="tws-tools">{badge}{cart_btn}</div></div>' + note + content
     data = json.dumps(config, ensure_ascii=False).replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
-    label = 'aria-label="Cart"' if cfg.variant == "cart" else f'aria-labelledby="tws-{uid}-h"'
+    label = ('aria-label="Cart"' if cfg.variant == "cart" else
+             (f'aria-label="Buy {escape(products[0]["title"]) if not live else ""}"' if cfg.variant == "buy" and not cfg.heading else f'aria-labelledby="tws-{uid}-h"'))
     return Markup(
         f'<section class="band tw-store tws-v-{cfg.variant}" data-tw-store {label}><div class="wrap">'
         f'{inner}<p class="tws-sr" role="status" aria-live="polite" data-tws-status></p></div>'

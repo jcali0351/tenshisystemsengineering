@@ -82,7 +82,7 @@
   }
   function loadLive(cfg) {
     var n = Math.max(1, Math.min(+cfg.limit || 8, 50));
-    if (cfg.variant === "product") {
+    if (cfg.variant === "product" || cfg.variant === "buy") {
       if (!cfg.product) return storefront("query($n: Int!) { products(first: 1, sortKey: BEST_SELLING) { nodes { " + FIELDS + " } } }", { n: 1 }).then(function (d) { return d.products.nodes.map(shape); });
       return storefront("query($h: String!) { product(handle: $h) { " + FIELDS + " } }", { h: cfg.product }).then(function (d) { return d.product ? [shape(d.product)] : []; });
     }
@@ -97,10 +97,11 @@
   function tileHtml(p, cfg) {
     var sold = !p.variants.some(function (v) { return v.available; });
     var label = sold ? (p.subscription ? "Subscription only" : "Sold out") : (p.options.length ? "Choose options" : cfg.buttonText);
-    return '<li class="tws-item"><article class="tws-tile">' +
+    var lo = Math.min.apply(null, p.variants.map(function (v) { return +v.price; }));
+    return '<li class="tws-item" data-type="' + esc(p.type) + '" data-price="' + lo.toFixed(2) + '" data-title="' + esc(p.title.toLowerCase()) + '" data-avail="' + (sold ? 0 : 1) + '"><article class="tws-tile">' +
       '<button class="tws-media" type="button" data-tws-quick="' + esc(p.handle) + '" aria-label="Quick view: ' + esc(p.title) + '">' +
       '<img src="' + esc(p.image) + '" alt="' + esc(p.imageAlt || p.title) + '" width="800" height="800" loading="lazy" decoding="async"></button>' +
-      '<div class="tws-info"><span class="tws-type">' + esc(p.type) + '</span><h3 class="tws-name">' + esc(p.title) + "</h3>" +
+      '<div class="tws-info"><span class="tws-type">' + esc(p.type) + '</span><h3 class="tws-name"><a href="#product-' + esc(p.handle) + '" data-tws-quick="' + esc(p.handle) + '">' + esc(p.title) + "</a></h3>" +
       (cfg.showPrices ? '<p class="tws-price">' + esc(priceLabel(p)) + "</p>" : "") + "</div>" +
       '<button class="btn tws-add" type="button" data-tws-add="' + esc(p.handle) + '"' + (sold ? " disabled" : "") + ">" + esc(label) + "</button></article></li>";
   }
@@ -112,6 +113,65 @@
       }).join("") + "</div></fieldset>";
     }).join("");
   }
+  function buyHtml(p, cfg) {
+    var sold = !p.variants.some(function (v) { return v.available; });
+    var label = sold ? "Sold out" : (p.options.length ? "Choose options" : cfg.buttonText);
+    return '<div class="tws-buy" data-tws-buy="' + esc(p.handle) + '"><img src="' + esc(p.image) + '" alt="" width="64" height="64" loading="lazy" decoding="async">' +
+      '<span class="tws-buy-text"><a class="tws-buy-name" href="#product-' + esc(p.handle) + '" data-tws-quick="' + esc(p.handle) + '">' + esc(p.title) + "</a>" +
+      (cfg.showPrices ? '<span class="tws-buy-price">' + esc(priceLabel(p)) + "</span>" : "") + "</span>" +
+      '<button class="btn tws-add" type="button" data-tws-add="' + esc(p.handle) + '"' + (sold ? " disabled" : "") + ">" + esc(label) + "</button></div>";
+  }
+
+  /* ---------- Filters and sorting (grid and collection blocks with "Show filters and sorting") ---------- */
+  function barHtml(list, cfg) {
+    var types = [];
+    list.forEach(function (p) { if (p.type && types.indexOf(p.type) < 0) types.push(p.type); });
+    var sorts = [["featured", "Featured"], ["price-asc", "Price: low to high"], ["price-desc", "Price: high to low"], ["title", "Name: A to Z"]];
+    return '<div class="tws-bar" data-tws-bar role="group" aria-label="Filter and sort products"><div class="tws-chips">' +
+      '<button type="button" class="tws-chip" data-tws-filter="" aria-pressed="true">All</button>' +
+      types.map(function (t) { return '<button type="button" class="tws-chip" data-tws-filter="' + esc(t) + '" aria-pressed="false">' + esc(t) + "</button>"; }).join("") +
+      '</div><label class="tws-instock"><input type="checkbox" data-tws-instock> In stock only</label><label class="tws-sort"><span>Sort</span><select data-tws-sort>' +
+      sorts.map(function (o) { return '<option value="' + o[0] + '"' + (o[0] === cfg.sort ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") +
+      '</select></label><p class="tws-shown" data-tws-shown aria-live="polite"></p></div>';
+  }
+  function wireBar(root, cfg) {
+    var bar = $("[data-tws-bar]", root);
+    if (!bar || bar._wired) return;
+    bar._wired = true;
+    var type = "", instock = false;
+    $$(".tws-item", root).forEach(function (li, i) { li.dataset.i = i; });
+    var apply = function (announce) {
+      var grid = $(".tws-grid", root);
+      if (!grid) return;
+      var items = $$(".tws-item", grid), how = $("[data-tws-sort]", bar).value, shown = 0;
+      items.sort(function (a, b) {
+        if (how === "price-asc") return a.dataset.price - b.dataset.price;
+        if (how === "price-desc") return b.dataset.price - a.dataset.price;
+        if (how === "title") return a.dataset.title < b.dataset.title ? -1 : a.dataset.title > b.dataset.title ? 1 : 0;
+        return a.dataset.i - b.dataset.i;
+      }).forEach(function (li) {
+        var ok = (!type || li.dataset.type === type) && (!instock || li.dataset.avail === "1");
+        li.hidden = !ok; if (ok) shown++;
+        grid.appendChild(li);
+      });
+      var text = shown === items.length ? items.length + " products" : "Showing " + shown + " of " + items.length;
+      $("[data-tws-shown]", bar).textContent = shown ? text : "No products match. Try another filter.";
+      if (announce) say(text);
+    };
+    bar.addEventListener("click", function (e) {
+      var chip = e.target.closest("[data-tws-filter]");
+      if (!chip) return;
+      type = chip.dataset.twsFilter;
+      $$("[data-tws-filter]", bar).forEach(function (c) { c.setAttribute("aria-pressed", String(c === chip)); });
+      apply(true);
+    });
+    bar.addEventListener("change", function (e) {
+      if (e.target.matches("[data-tws-instock]")) instock = e.target.checked;
+      apply(true);
+    });
+    apply(false);
+  }
+
   function detailHtml(p, cfg, uid) {
     var v = firstAvailable(p);
     return '<div class="tws-pd" data-tws-product="' + esc(p.handle) + '"><div class="tws-pd-media"><img src="' + esc(p.image) + '" alt="' + esc(p.imageAlt || p.title) +
@@ -131,6 +191,13 @@
       v = p.variants.filter(function (x) { return p.options.every(function (o) { return x.options[o.name] === chosen[o.name]; }); })[0] || v;
       var pr = $("[data-tws-price]", box);
       if (pr) pr.innerHTML = esc(money(v.price)) + (v.compareAt && +v.compareAt > +v.price ? " <s>" + esc(money(v.compareAt)) + "</s>" : "");
+      // Mark the choices that can't be bought with the other options picked (sold out or no such combination)
+      $$("input[data-opt]", box).forEach(function (r) {
+        var want = {}; Object.keys(chosen).forEach(function (k) { want[k] = chosen[k]; }); want[r.dataset.opt] = r.value;
+        var can = p.variants.some(function (x) { return x.available && p.options.every(function (o) { return !want[o.name] || x.options[o.name] === want[o.name]; }); });
+        r.closest(".tws-pill").classList.toggle("tws-off", !can);
+        r.setAttribute("aria-description", can ? "" : "Not available");
+      });
       var add = $("[data-tws-pd-add]", box);
       add.disabled = !v.available;
       add.textContent = v.available ? cfg.buttonText : "Sold out";
@@ -158,15 +225,22 @@
         holder.removeAttribute("aria-busy"); return;
       }
       if (cfg.variant === "product") { holder.innerHTML = detailHtml(list[0], cfg, "b" + i); wireDetail($(".tws-pd", holder), list[0], cfg); }
+      else if (cfg.variant === "buy") holder.innerHTML = buyHtml(list[0], cfg);
       else holder.innerHTML = '<ul class="tws-grid tws-cols-' + esc(($(".tws-grid", holder) || { className: "" }).className.replace(/.*tws-cols-(\d).*/, "$1") || "3") + '">' + list.map(function (p) { return tileHtml(p, cfg); }).join("") + "</ul>";
       holder.removeAttribute("aria-busy");
+      if (cfg.filters && cfg.variant !== "product" && cfg.variant !== "buy") {
+        if (!$("[data-tws-bar]", root)) holder.insertAdjacentHTML("beforebegin", barHtml(list, cfg));
+        wireBar(root, cfg);
+      }
+      checkHash();
     };
-    if (!live) {                                // demo: the server drew it; just wire the single product
+    if (!live) {                                // demo: the server drew it; wire the single product and the filters
       var pd = $(".tws-pd", root);
       if (pd && products[pd.dataset.twsProduct]) wireDetail(pd, products[pd.dataset.twsProduct], cfg);
+      if (cfg.filters) wireBar(root, cfg);
       return;
     }
-    if (cfg.variant === "cart" || !holder) return;
+    if (cfg.variant === "cart" || cfg.variant === "header" || !holder) return;
     var go = function () {
       loadLive(cfg).then(draw).catch(function (err) {
         console.warn("[store]", err);
@@ -193,14 +267,34 @@
       dlg.setAttribute("aria-labelledby", "tws-dlg-title");
       document.body.appendChild(dlg);
       dlg.addEventListener("click", function (e) { if (e.target === dlg || e.target.closest("[data-tws-close]")) dlg.close(); });
-      dlg.addEventListener("close", function () { if (dlg._opener && dlg._opener.isConnected) dlg._opener.focus(); });
+      dlg.addEventListener("close", function () {
+        if (location.hash === "#product-" + dlg._handle) { try { history.replaceState(null, "", location.pathname + location.search); } catch (e) { /* ignore */ } }
+        if (dlg._opener && dlg._opener.isConnected) dlg._opener.focus();
+      });
     }
     dlg._opener = opener;
+    dlg._handle = handle;
+    try { history.replaceState(null, "", "#product-" + handle); } catch (e) { /* file:// or sandboxed */ }
     dlg.innerHTML = '<div class="tws-dlg-box"><button type="button" class="tws-x" data-tws-close aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>' +
       detailHtml(p, { showPrices: true, buttonText: cfg.buttonText }, "dlg").replace('class="tws-pd-title"', 'class="tws-pd-title" id="tws-dlg-title"') + "</div>";
     wireDetail($(".tws-pd", dlg), p, { buttonText: cfg.buttonText }, function () { dlg.close(); });
     if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
   }
+
+  // A shared link like page.html#product-neon-angel-tee opens that product's details (live: fetched by its handle)
+  var hashDone = false;
+  function checkHash() {
+    var m = /^#product-([a-z0-9-]{1,255})$/.exec(location.hash || "");
+    if (!m || hashDone) return;
+    if (products[m[1]]) { hashDone = true; quickView(m[1], null, S); return; }
+    if (live && !checkHash.fetching) {
+      checkHash.fetching = true;
+      storefront("query($h: String!) { product(handle: $h) { " + FIELDS + " } }", { h: m[1] }).then(function (d) {
+        if (d.product) { shape(d.product); hashDone = true; quickView(m[1], null, S); }
+      }).catch(function () { /* no such product */ });
+    }
+  }
+  window.addEventListener("hashchange", function () { hashDone = false; checkHash(); });
 
   /* ---------- Cart (this browser + the Shopify cart in live mode) and the drawer ---------- */
   var drawer, scrim, lastFocus;
@@ -334,7 +428,7 @@
   var cfgOf = function (el) { var r = el.closest("[data-tw-store]"); var b = blocks.filter(function (x) { return x.root === r; })[0]; return b ? b.cfg : S; };
   document.addEventListener("click", function (e) {
     var q = e.target.closest("[data-tws-quick]");
-    if (q) return quickView(q.dataset.twsQuick, q, cfgOf(q));
+    if (q) { e.preventDefault(); return quickView(q.dataset.twsQuick, q, cfgOf(q)); }
     var a = e.target.closest("[data-tws-add]");
     if (a) {
       var p = products[a.dataset.twsAdd];
@@ -348,4 +442,5 @@
   });
   blocks.forEach(start);
   renderCart();
+  checkHash();
 })();
