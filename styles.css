@@ -2630,6 +2630,8 @@ main section#services + section.feature:not(#_):not(#__) { padding-top: clamp(72
   object-fit: cover !important; object-position: center 45% !important; border-radius: 14px !important; margin: 0 0 clamp(16px, 1.6vw, 22px) !important;
   mix-blend-mode: darken;   /* a picture with a near-white backdrop (the AI head) melts into the gray card instead of showing a pale box */
 }
+/* The line-art service icons (img/icons/services/*.svg) are drawn on transparency: no blending, or darken hides them on dark cards. */
+#services .service-card:not(#_):not(#__) > .service-pic.service-icon { mix-blend-mode: normal; }
 #services .service-card:not(#_):not(#__) > p { margin: 0 0 18px !important; }
 #services .service-card:not(#_):not(#__) > .btn-more { margin-top: auto !important; }
 @media (max-width: 719px) {

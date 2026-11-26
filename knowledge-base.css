@@ -597,3 +597,8 @@
 /* The glossary now spans the site's content box (left edge under the header logo); keep each definition's lines
    at a readable length on wide screens. */
 :root:not(#_):not(#__):not(#___):not(#____) .kb-page .kb-term p { max-width: 56rem; }
+
+/* 434 terms on one page: the browser only lays out and paints the ones near the screen (all the text stays in the
+   HTML for search engines and Ctrl+F). knowledge-base.js adds .kb-render-all before jumping to a term. */
+.kb-term { content-visibility: auto; contain-intrinsic-size: auto 240px; }
+.kb-render-all .kb-term { content-visibility: visible; }

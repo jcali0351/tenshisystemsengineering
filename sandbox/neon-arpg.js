@@ -1019,7 +1019,7 @@
     }
     return MODEL_CACHE[slot];
   }
-  if (window.TenshiModels) window.TenshiModels.whenReady(() => { for (const k in MODEL_CACHE) delete MODEL_CACHE[k]; });
+  if (window.TenshiModels) (window.TenshiModels.onLoad || window.TenshiModels.whenReady)(() => { for (const k in MODEL_CACHE) delete MODEL_CACHE[k]; });
   const VIEW = (() => { const v = [-1, -1, 1.25], l = Math.hypot(...v); return v.map(c => c / l); })();
   const KEY = (() => { const v = [-0.4, -0.9, 1.4], l = Math.hypot(...v); return v.map(c => c / l); })();
   const RIM = [170, 120, 255];   // rim-light colour on the 3D models
@@ -1698,6 +1698,7 @@ button.arpg-cell:hover{transform:scale(1.08);box-shadow:0 0 12px var(--c)}
       : `<button type="button" class="arpg-play" data-go="new">▶ PLAY UNDERCITY</button>`;
   }
   function start(mode) {
+    if (window.TenshiModels && window.TenshiModels.need) window.TenshiModels.need("arpg.");   // download this game's models now, not on page load
     if (!artGone) { clearTimeout(artTimer); fadeArt(); }
     intro.classList.remove("arpg-intro-cover", "arpg-intro-ascend");
     enterWindow(); resize();

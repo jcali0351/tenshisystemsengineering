@@ -18,8 +18,38 @@ const CONTACT_EMAIL = "admin@tenshisystems.com";
   let lang = "en";
   const t = (key) => (T[lang] && T[lang][key] !== undefined ? T[lang][key] : T.en[key]);
 
+  /* ---------- Language files ---------- */
+  // Pages load only English (i18n/en.js, the fallback for every key). Another language's file (i18n/<code>.js, made
+  // from translations.js by tools/split-translations.mjs) is fetched the first time it's needed, then applied.
+  const I18N = window.TSE_I18N || { langs: Object.keys(T), v: {} };
+  const I18N_BASE = SCRIPT_BASE.replace(/app\.js(\?.*)?$/, "") + "i18n/";
+  const langFiles = {};
+  let wanted = null;
+  function loadLanguage(code) {
+    if (T[code]) return Promise.resolve();
+    if (!langFiles[code]) langFiles[code] = new Promise((resolve, reject) => {
+      const s = document.createElement("script");
+      s.src = I18N_BASE + code + ".js?v=" + (I18N.v[code] || "");
+      s.onload = () => (T[code] ? resolve() : reject(new Error("no " + code)));
+      s.onerror = () => { delete langFiles[code]; reject(new Error("couldn't load " + code)); };
+      document.head.appendChild(s);
+    });
+    return langFiles[code];
+  }
+
   /* ---------- Language switch ---------- */
   function setLanguage(next) {
+    wanted = next;
+    if (next && !T[next] && I18N.langs.includes(next)) {
+      // Not downloaded yet: show it as soon as it arrives (unless another language was picked meanwhile).
+      loadLanguage(next).then(() => { if (wanted === next) setLanguage(next); }, () => { /* offline: stay as is */ });
+      if (!document.documentElement.hasAttribute("data-lang-ready")) applyLanguage("en", false);   // first paint: English
+      return;
+    }
+    applyLanguage(next, true);
+  }
+  function applyLanguage(next, keep) {
+    document.documentElement.setAttribute("data-lang-ready", "");
     lang = T[next] ? next : "en";
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === "ar" || lang === "fa" ? "rtl" : "ltr";   // Arabic and Farsi read right to left
@@ -54,7 +84,7 @@ const CONTACT_EMAIL = "admin@tenshisystems.com";
     }
     onLanguage.forEach((fn) => fn());
     document.dispatchEvent(new CustomEvent("tse:lang", { detail: lang }));   // chat.js listens
-    store.set("tse-lang", lang);
+    if (keep) store.set("tse-lang", lang);
   }
 
   /* ---------- Language picker: a flag button that opens the list of languages ---------- */

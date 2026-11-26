@@ -786,7 +786,8 @@
     }
     return BLENDER[slot];
   }
-  if (window.TenshiModels) window.TenshiModels.whenReady(() => { for (const k in BLENDER) delete BLENDER[k]; });
+  if (window.TenshiModels) (window.TenshiModels.onLoad || window.TenshiModels.whenReady)(() => { for (const k in BLENDER) delete BLENDER[k]; });
+  if (window.TenshiModels && window.TenshiModels.need) window.TenshiModels.need("arcade.");   // this game only runs after PLAY NOW
   const targetAxes = () => ([x, y, z]) => [z, -y, x];          // glTF (x left, y up, z forward) -> the targets' axes (y down)
 
   function drawModel(o, model, s, alpha, now) {

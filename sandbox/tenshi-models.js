@@ -191,29 +191,48 @@
   }
 
   // ---------------------------------------------------------------- loading what models.json asks for
-  async function load() {
-    try {
-      const r = await fetch(DIR + "models.json", { cache: "no-cache" });
-      manifest = r.ok ? await r.json() : {};
-    } catch (e) { manifest = {}; }
-    const jobs = Object.entries(manifest).filter(([k, file]) => !k.startsWith("_") && typeof file === "string" && file.trim()).map(async ([slot, file]) => {
-      try {
-        const res = await fetch(DIR + file.trim(), { cache: "no-cache" });
-        if (!res.ok) throw new Error("file not found: models/" + file);
-        meshes[slot] = await toMesh(await res.arrayBuffer());
-        if (meshes[slot].original > meshes[slot].tris) console.info(`[models] ${slot}: simplified from ${meshes[slot].original} to ${meshes[slot].tris} triangles to keep the game smooth.`);
-      } catch (e) { console.warn(`[models] ${slot} (${file}) couldn't be loaded: ${e.message}. Using the built-in look.`); }
-    });
-    await Promise.all(jobs);
-    done = true;
-    waiting.splice(0).forEach(fn => { try { fn(); } catch (e) { console.error(e); } });
+  // Nothing is downloaded when the page opens. A game asks for its own models when someone presses PLAY:
+  //   TenshiModels.need("arpg.")  -> fetch every slot starting with "arpg." (Undercity), once.
+  // Until then (and if a file fails) every character keeps its built-in look. Model files have a date in their name,
+  // so the browser may keep them in its cache; only models.json is always re-checked.
+  let manifestP = null;
+  const asked = {};           // prefix -> promise
+  const listeners = [];       // run after every batch of models arrives
+  const files = {};           // file -> promise of its mesh (the same file used by two slots is fetched and parsed once)
+  function getManifest() {
+    if (!manifestP) manifestP = fetch(DIR + "models.json", { cache: "no-cache" })
+      .then(r => (r.ok ? r.json() : {})).catch(() => ({})).then(m => (manifest = m || {}));
+    return manifestP;
   }
+  function need(prefix = "") {
+    if (asked[prefix]) return asked[prefix];
+    return (asked[prefix] = getManifest().then(async () => {
+      const jobs = Object.entries(manifest).filter(([k, file]) => !k.startsWith("_") && k.startsWith(prefix) && !meshes[k] && typeof file === "string" && file.trim()).map(async ([slot, file]) => {
+        try {
+          const f = file.trim();
+          if (!files[f]) files[f] = fetch(DIR + f).then(res => { if (!res.ok) throw new Error("file not found: models/" + f); return res.arrayBuffer(); }).then(toMesh);
+          meshes[slot] = await files[f];
+          if (meshes[slot].original > meshes[slot].tris) console.info(`[models] ${slot}: simplified from ${meshes[slot].original} to ${meshes[slot].tris} triangles to keep the game smooth.`);
+        } catch (e) { console.warn(`[models] ${slot} (${file}) couldn't be loaded: ${e.message}. Using the built-in look.`); }
+      });
+      await Promise.all(jobs);
+      done = true;
+      waiting.splice(0).forEach(fn => { try { fn(); } catch (e) { console.error(e); } });
+      listeners.forEach(fn => { try { fn(); } catch (e) { console.error(e); } });
+    }));
+  }
+  const load = () => need("");   // everything (the model checker page and old callers)
 
   window.TenshiModels = {
     /** The mesh for a slot (or null when that character has no Blender model). */
     get: slot => meshes[slot] || null,
     /** Run fn once loading has finished (straight away if it already has). */
     whenReady(fn) { if (done) fn(); else waiting.push(fn); },
+    /** Run fn every time a batch of models arrives (games clear their cached meshes with it). */
+    onLoad(fn) { listeners.push(fn); if (done) fn(); },
+    /** Download the models whose slot starts with prefix ("arpg.", "rts.", "arcade."). Returns a promise. */
+    need,
+    load,
     /** A copy of a mesh with its corners moved into a game's own axes: fn([x, y, z]) -> [x', y', z']. */
     axes(mesh, fn, scale = 1) {
       const v = mesh.v.map(p => fn(p).map(c => c * scale));
@@ -235,5 +254,5 @@
     loaded: () => Object.keys(meshes),
     parse: toMesh,     // used by the model checker page
   };
-  load();
+  // No load() here on purpose: the games call need() when they start (it used to fetch ~45 MB on every page view).
 })();

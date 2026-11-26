@@ -134,6 +134,19 @@ Server facts: Hostinger KVM 2 VPS, Ubuntu 24.04, Caddy (HTML sent with `Cache-Co
 `/platform*`, `/tools*`, `/docs*`, `*.md`, `*.py` answer 404), CMS service `tenshi-cms`, contact form service
 `tenshi-contact` (`/api/contact`), nightly backups, DNS managed through the Hostinger connector.
 
+## Page weight (audit fixes, 2026-11-25)
+- **Languages**: pages load only `i18n/en.js`; `app.js` fetches `i18n/<code>.js` when another language is picked.
+  `i18n/` is generated from `translations.js` by `tools/split-translations.mjs` (run by `stamp-assets.mjs`, so by
+  `npm run build` and the rebuild Action). Keep editing `translations.js`; never edit `i18n/` by hand. The Editor
+  still reads and writes `translations.js`.
+- **Homepage games**: Station Defense and Undercity scripts are loaded by `sandbox/game-loader.js` when their strip nears
+  the screen (versions on its `data-px1` / `data-px2` attributes in index.html). 3D models download only on PLAY:
+  each game calls `TenshiModels.need("rts." | "arpg." | "arcade.")`; `tenshi-models.js` no longer loads anything by itself.
+- **Big .glb uploads**: shrink them before use (base colour texture only, 512 px JPEG; see
+  `models/uploads/originals/README.md`). The site's parser reads no normal maps, skins or animations.
+- **Caching** (once `tools/server/caddy-update.sh` is applied): anything linked with `?v=` is cached for a year, so a
+  changed file MUST get a new `?v=` tag (hash stamps do it automatically; hand-set tags in index.html must be bumped).
+
 ## Pitfalls that already bit us (check every time)
 - **Half-built pages**: OneDrive can lock a file mid-build; build-pages then leaves pages without the neon theme and
   they ship as the old white site. Re-run until it exits cleanly, then check

@@ -7,7 +7,7 @@ run-name: Rebuild pages (${{ github.event.head_commit.message }})
 on:
   push:
     branches: [tenshi-cms]
-    paths: ["data/slogan.json", "data/parallax.json", "data/buttons.json", "data/share.json", "data/fx.json", "fx-data.js", "fx.js", "fx.css", "buttons.css", "custom.css", "admin/**", "fonts/fonts.json", "*.html", "services/*.html", "projects/*.html", "translations.js", "img/**", "brand/**", "tools/build-pages.mjs", "src/tailwind.css", "package.json", "package-lock.json", "styles.css", "design.css", "site-theme.css", "share.css", "vendor/shareon/**", "app.js", "design.js", "chat.js", "chat.css", "rain.js", "search.css", "search.js"]
+    paths: ["data/slogan.json", "data/parallax.json", "data/buttons.json", "data/share.json", "data/fx.json", "fx-data.js", "fx.js", "fx.css", "buttons.css", "custom.css", "admin/**", "fonts/fonts.json", "*.html", "services/*.html", "projects/*.html", "translations.js", "img/**", "brand/**", "tools/build-pages.mjs", "tools/stamp-assets.mjs", "tools/split-translations.mjs", "src/tailwind.css", "package.json", "package-lock.json", "styles.css", "design.css", "site-theme.css", "share.css", "vendor/shareon/**", "app.js", "design.js", "chat.js", "chat.css", "rain.js", "search.css", "search.js"]
   workflow_dispatch:
 
 permissions:
@@ -34,7 +34,7 @@ jobs:
         run: |
           git config user.name "tenshi-editor-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A -- '*.html' tailwind.css slogan.css buttons.css custom.css fx-data.js data/search
+          git add -A -- '*.html' tailwind.css slogan.css buttons.css custom.css fx-data.js data/search i18n
           if git diff --cached --quiet; then echo "Nothing changed."; exit 0; fi
           git commit -m "Rebuild pages and asset stamps after a site edit"
           for i in 1 2 3 4; do

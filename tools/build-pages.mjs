@@ -563,7 +563,10 @@ function chrome(html, prefix, current) {
     .replace('href="#top"', `href="${prefix}index.html"`)
     .replace(/src="((?:brand|img)\/[\w.\/-]+(?:\?[^"]*)?)"/g, `src="${prefix}$1"`)
     .replace(/href="((?:news|blog)\.html#[^"]*)"/g, `href="${prefix}$1"`)
-    .replace(/href="((?:index|about|services|contact|team|technology|knowledge-base|legal|projects|portfolio|launch|news|blog|portal|wisconsin)\.html|projects\/[a-z-]+\.html|blog\/[a-z-]+\.html)"/g, `href="${prefix}$1"`);
+    .replace(/href="((?:index|about|services|contact|team|technology|knowledge-base|legal|projects|portfolio|launch|news|blog|portal|wisconsin)\.html|projects\/[a-z-]+\.html|blog\/[a-z-]+\.html)"/g, `href="${prefix}$1"`)
+    // The Games menu and leaderboards: root-absolute on pages in services/, projects/ and blog/ (relative links there
+    // pointed at e.g. /services/games.html, a 404). Pages in the main folder keep the header exactly as in index.html.
+    .replace(/href="((?:games|game-[a-z-]+|leaderboard-[a-z-]+)\.html)"/g, (m, f) => (prefix ? `href="/${f}"` : m));
 }
 
 function frame({ prefix, current, titleKey, descKey, title, description, bodyClass, main, rawMain = "", photoCredits = "", extraHead = "", extraScripts = "" }) {
@@ -616,7 +619,7 @@ ${main}
 
 ${chrome(FOOTER, prefix, current).replace("    </div>\n  </footer>", photoCredits + "    </div>\n  </footer>")}
 
-  <script src="${prefix}translations.js"></script>
+  <script src="${prefix}i18n/en.js"></script>
   <script src="${prefix}app.js"></script>
   <script src="${prefix}nav.js"></script>
   <script src="${prefix}fx-data.js"></script>
@@ -882,7 +885,8 @@ const teamPage = frame({
   rawMain: `  <link rel="stylesheet" href="team.css">
 ${readFileSync("tools/team-main.html", "utf8").replace(/\s+$/, "")}`,
 });
-writePage("team.html", teamPage);
+// The owner's <main> is id="main-content", so the skip link points there (only change to this page's header).
+writePage("team.html", teamPage.replace('<a class="skip-link" href="#main"', '<a class="skip-link" href="#main-content"'));
 
 // A drawn line icon for each service (24 x 24, stroke), used in the detailed descriptions.
 const SVC_ICON = {
@@ -2184,7 +2188,7 @@ ${b.how.map((h) => `            <li>${esc(h)}</li>`).join("\n")}
 
 /* ---------- the Games menu: a hub (games.html) and a page per game where it fills the screen ---------- */
 {
-  const V = "20261123k";   // cache tag for the game scripts on these pages (bump with the homepage's when they change)
+  const V = "20261125au";   // cache tag for the game scripts on these pages (bump with the homepage's when they change)
   const js = (files) => files.map((f) => `  <script src="sandbox/${f}.js?v=${V}" defer></script>`).join("\n") + "\n";
   // Deferred, so they run after game-settings.js, which tools/neon-pages.mjs adds at the end of every page.
   const crumbs = (name) => `<nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li><a href="games.html">Games</a></li><li aria-current="page">${esc(name)}</li></ol></nav>`;

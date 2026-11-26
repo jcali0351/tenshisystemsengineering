@@ -735,7 +735,7 @@
     }
     return BLENDER[slot];
   }
-  if (window.TenshiModels) window.TenshiModels.whenReady(() => { for (const k in BLENDER) delete BLENDER[k]; });
+  if (window.TenshiModels) (window.TenshiModels.onLoad || window.TenshiModels.whenReady)(() => { for (const k in BLENDER) delete BLENDER[k]; });
 
   // Draw one model at map position (x, y), height z, facing `yaw`, banked by `roll`, `size` = unit radius.
   function drawModel(m, x, y, z, yaw, roll, size, paint, flash = 0, alpha = 1) {
@@ -1203,6 +1203,7 @@
     setTimeout(resize, 80);
   });
   function start() {
+    if (window.TenshiModels && window.TenshiModels.need) window.TenshiModels.need("rts.");   // download this game's models now, not on page load
     if (!artGone) { clearTimeout(artTimer); fadeArt(); }
     intro.classList.remove("rts-intro-cover");
     enterWindow();

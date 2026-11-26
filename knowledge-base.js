@@ -81,6 +81,9 @@
       setChip("all");
       apply();
     }
+    // Terms off screen skip rendering (content-visibility in knowledge-base.css); render them all before a jump so
+    // the browser knows the real distance and lands on the term.
+    root.classList.add("kb-render-all");
     terms.forEach((t) => t.classList.remove("kb-is-target"));
     el.classList.add("kb-is-target");
     el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" });
