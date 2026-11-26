@@ -1,6 +1,172 @@
 {
-  "generatedAt": "2026-11-26T01:10:49.000Z",
+  "generatedAt": "2026-11-26T01:59:47.000Z",
   "posts": [
+    {
+      "id": "20261125-php-wordpress-python",
+      "date": "2026-11-25",
+      "cat": "Security",
+      "slug": "php-wordpress-python",
+      "title": "PHP's Security Hangover Is Still WordPress's Crisis. Python Is the Way Out.",
+      "intro": "WordPress still runs more than a third of the web, on a language whose early design choices keep showing up in production. Here is a look at real PHP and WordPress vulnerabilities, and why Python frameworks are a safer default.",
+      "min": 6,
+      "body": [
+        "According to [W3Techs](https://w3techs.com/technologies/details/cm-wordpress) as of November 26, 2026, WordPress runs 38.4% of all websites, and 57.3% of sites whose content management system is known. The usual defense is that WordPress core is fairly well maintained, and that modern PHP 8 is a different language from the PHP of 2005. Both points are partly true, and both dodge the real problem: unsupported PHP versions, a plugin economy that produces thousands of new vulnerabilities a year, and a language that still makes the dangerous thing too easy unless you opt into discipline.",
+        {
+          "h2": "PHP spent years teaching developers the wrong defaults"
+        },
+        "The official [PHP 5.4.0 release announcement](https://www.php.net/releases/5_4_0.php) listed what finally had to be ripped out: register globals, magic quotes, and safe mode. Register globals promoted request data into variables, making it easy to confuse attacker input with trusted state. Magic quotes escaped data automatically, and inconsistently. PHP's [manual](https://www.php.net/manual/en/security.variables.php) still cites both as convenience settings that obscured the origin and integrity of input and contributed to injection risks, removed only in PHP 5.4.0.",
+        "The [PHP 8.0 release announcement](https://www.php.net/releases/8.0/en.php) notes that in PHP 7, `0 == 'foobar'` evaluated to true — the kind of loose type juggling that has underpinned authentication bypasses for years. PHP 8 made that comparison false, and `match` uses strict comparisons, but those improvements arrived after a generation of WordPress plugin code had been written against the old rules. Strict types exist, yet as the [PHP manual](https://www.php.net/manual/en/security.variables.php) notes, you enable them with `declare(strict_types=1)`. Safety is still an opt-in.",
+        "The [docs for `unserialize()`](https://www.php.net/manual/en/function.unserialize.php) warn not to pass it untrusted input, because unserialization can load and execute code through object instantiation and autoloading. With [`allow_url_include`](https://www.php.net/manual/en/features.remote-files.php) enabled, `include` and `require` can pull code from HTTP or FTP URLs.",
+        "In June 2024 came CVE-2024-4577, a critical PHP-CGI argument injection bug on Windows, scored 9.8 in the [official CVE record](https://www.cve.org/CVERecord?id=CVE-2024-4577). The PHP Group's [CVE description](https://www.cve.org/CVERecord?id=CVE-2024-4577) says that on Windows systems using certain code pages, \"Best-Fit\" character conversion can cause the PHP CGI module to treat attacker input as PHP options, revealing source code or running arbitrary PHP. [DEVCORE](https://devco.re/blog/2024/06/06/security-alert-cve-2024-4577-php-cgi-argument-injection-vulnerability-en/), which reported the issue, said it lets unauthenticated attackers bypass protections for CVE-2012-1823, a decade-old CGI flaw, and confirmed the attack on locales including Japanese (code page 932). [Akamai's Security Intelligence Response Team](https://www.akamai.com/blog/security-research/2024-php-exploit-cve-one-day-after-disclosure) later reported exploit attempts as early as one day after disclosure, including campaigns distributing Gh0st RAT, RedTail cryptominers, and XMRig.",
+        {
+          "h2": "WordPress turns language risk into a planetary attack surface"
+        },
+        "WordPress core, to be fair, is not the main source of the bleeding. According to [Patchstack's State of WordPress Security in 2025 report](https://patchstack.com/whitepaper/state-of-wordpress-security-in-2025/), researchers found 7,966 new vulnerabilities in the WordPress ecosystem in 2024 — about 22 a day, and a 34% increase over 2023. Ninety-six percent were in plugins, 4% in themes, and only seven in WordPress core, none of which Patchstack described as a widespread threat. The core team deserves credit for that relative discipline. The ecosystem does not.",
+        "The same report found that 43% of the 2024 vulnerabilities required no authentication, and that 33% were not fixed in time for public disclosure, often in abandoned plugins that still had active installations. [Patchstack's 2024 vulnerability statistics](https://patchstack.com/database/statistics/wordpress/2024) put cross-site scripting at 47.69% of disclosed issues. Popularity was no shield: 1,018 vulnerabilities showed up in components with at least 100,000 installs.",
+        "In August 2024, Patchstack published an [advisory](https://patchstack.com/articles/critical-privilege-escalation-in-litespeed-cache-plugin-affecting-5-million-sites/) on CVE-2024-28000, an unauthenticated privilege-escalation flaw in LiteSpeed Cache, a plugin it described as having over five million active installations. A weak security hash in a user-simulation feature could let an unauthenticated visitor obtain administrator access; the vendor patched it in version 6.4. A year earlier, [CVE-2023-32243](https://patchstack.com/articles/critical-privilege-escalation-in-essential-addons-for-elementor-plugin-affecting-1-million-sites/) in Essential Addons for Elementor — over a million active installations, according to Patchstack — allowed any unauthenticated user to reset an administrator password. [Sucuri](https://blog.sucuri.net/2023/05/vulnerability-in-essential-addons-for-elementor-leads-to-mass-infection.html) later documented a mass-infection campaign: attackers tied to the Balada malware operation moved within 24 hours, and Sucuri's SiteCheck had already recorded over 6,000 detections.",
+        "That is the WordPress bargain. Plugins are cheap to ship and easy to stack, with no common security standard and no guarantee the author is still around. The attacker only needs one.",
+        {
+          "h2": "The installed base will not move just because PHP got better"
+        },
+        "PHP 8 really did improve the language, with union types, saner string-to-number comparisons, consistent type errors, and tighter error handling. New PHP is a more serious language than the one that earned the old jokes. The web is not running it.",
+        "[WordPress.org's public PHP version statistics](https://wordpress.org/about/stats/), retrieved on November 25, 2026, show that just over 31% of WordPress sites are on a version that has already reached end of life, according to official dates published by [php.net](https://www.php.net/eol.php). PHP 8.1 reached end of life on December 31, 2025, and PHP 8.0 on November 26, 2023. PHP 7.4, unsupported since November 28, 2022, still accounts for about 14% of WordPress sites — nearly four years after official security support ended. [W3Techs](https://w3techs.com/technologies/details/pl-php) paints a similar picture for PHP as a whole: as of November 26, 2026, PHP is used by 67.9% of websites whose server-side language is known, and among those PHP sites, 23.7% are still on PHP 7, 7.1% on PHP 5, and 0.1% on PHP 4, all past end of life. When a bug like CVE-2024-4577 lands, sites on abandoned branches are already out of the official fix window.",
+        {
+          "h2": "Python is not immune. Its defaults are simply less reckless."
+        },
+        "Python will not save a careless team. The Python Package Index has been a target for supply-chain attacks, and [PyPI's own documentation](https://docs.pypi.org/about/security-and-internals/) is honest about it: in March 2024, a large typo-squatting campaign was serious enough that PyPI temporarily halted new user and project registrations.",
+        "The difference is what a modern Python framework gives you by default. [Django's official security documentation](https://docs.djangoproject.com/en/stable/topics/security/) describes protections that are on from the start. Querysets are protected from SQL injection because queries are constructed with parameterization — the SQL and its parameters travel separately, and the database driver escapes the values. Templates automatically escape characters that would otherwise become cross-site scripting. CSRF protection is built into the framework, with middleware and template support, rather than a plugin you install after the first incident. Flask and FastAPI can be equally disciplined in smaller or API-first applications. If you need a CMS, Wagtail sits on Django and inherits those same defaults instead of asking you to assemble security from a directory of plugins.",
+        "You still have dependencies to update. What you do not have is a culture of installing someone else's PHP into production and hoping they patch faster than the scanners do. You write the application. You keep the surface area you chose.",
+        {
+          "h2": "Choose the stack that does not fight you"
+        },
+        "None of this requires pretending that every WordPress site is doomed, or that PHP 8 programmers are careless. The evidence is plain: insecure defaults, a CMS that spread them across more than a third of the web, thousands of new plugin holes in a single year, and an installed base still stuck on unsupported runtimes.",
+        "If you are starting a site, or tired of plugin alerts, Python is the more grown-up choice. Django, Flask, FastAPI, and Wagtail will not eliminate risk, but they will stop asking you to earn security the hard way.",
+        "Tenshi Systems Engineering builds secure websites and software, including Python-based stacks, for teams that want their public web presence to be something they can actually defend.",
+        {
+          "h2": "Sources"
+        },
+        {
+          "ul": [
+            "[Usage statistics of WordPress, November 2026](https://w3techs.com/technologies/details/cm-wordpress) — W3Techs",
+            "[Usage statistics of PHP, November 2026](https://w3techs.com/technologies/details/pl-php) — W3Techs",
+            "[CVE-2024-4577](https://www.cve.org/CVERecord?id=CVE-2024-4577) — CVE Program / PHP Group",
+            "[Security Alert: CVE-2024-4577](https://devco.re/blog/2024/06/06/security-alert-cve-2024-4577-php-cgi-argument-injection-vulnerability-en/) — DEVCORE",
+            "[CVE-2024-4577 Exploits in the Wild One Day After Disclosure](https://www.akamai.com/blog/security-research/2024-php-exploit-cve-one-day-after-disclosure) — Akamai",
+            "[State of WordPress Security in 2025](https://patchstack.com/whitepaper/state-of-wordpress-security-in-2025/) — Patchstack",
+            "[WordPress vulnerability statistics, 2024](https://patchstack.com/database/statistics/wordpress/2024) — Patchstack",
+            "[Critical Privilege Escalation in LiteSpeed Cache Plugin](https://patchstack.com/articles/critical-privilege-escalation-in-litespeed-cache-plugin-affecting-5-million-sites/) — Patchstack",
+            "[Critical Privilege Escalation in Essential Addons for Elementor](https://patchstack.com/articles/critical-privilege-escalation-in-essential-addons-for-elementor-plugin-affecting-1-million-sites/) — Patchstack",
+            "[Vulnerability in Essential Addons for Elementor Leads to Mass Infection](https://blog.sucuri.net/2023/05/vulnerability-in-essential-addons-for-elementor-leads-to-mass-infection.html) — Sucuri",
+            "[WordPress.org PHP version statistics](https://wordpress.org/about/stats/) — WordPress.org",
+            "[Unsupported PHP branches](https://www.php.net/eol.php) — php.net",
+            "[PHP 5.4.0 Release Announcement](https://www.php.net/releases/5_4_0.php) — php.net",
+            "[PHP 8.0 Release Announcement](https://www.php.net/releases/8.0/en.php) — php.net",
+            "[User Submitted Data](https://www.php.net/manual/en/security.variables.php) — PHP manual",
+            "[unserialize](https://www.php.net/manual/en/function.unserialize.php) — PHP manual",
+            "[Using remote files](https://www.php.net/manual/en/features.remote-files.php) — PHP manual",
+            "[Security in Django](https://docs.djangoproject.com/en/stable/topics/security/) — Django documentation",
+            "[Security and Internals](https://docs.pypi.org/about/security-and-internals/) — PyPI"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://w3techs.com/technologies/details/cm-wordpress",
+          "title": "Usage statistics of WordPress, November 2026",
+          "source": "W3Techs"
+        },
+        {
+          "url": "https://w3techs.com/technologies/details/pl-php",
+          "title": "Usage statistics of PHP, November 2026",
+          "source": "W3Techs"
+        },
+        {
+          "url": "https://www.cve.org/CVERecord?id=CVE-2024-4577",
+          "title": "CVE-2024-4577",
+          "source": "CVE Program / PHP Group"
+        },
+        {
+          "url": "https://devco.re/blog/2024/06/06/security-alert-cve-2024-4577-php-cgi-argument-injection-vulnerability-en/",
+          "title": "Security Alert: CVE-2024-4577 — PHP CGI Argument Injection Vulnerability",
+          "source": "DEVCORE"
+        },
+        {
+          "url": "https://www.akamai.com/blog/security-research/2024-php-exploit-cve-one-day-after-disclosure",
+          "title": "CVE-2024-4577 Exploits in the Wild One Day After Disclosure",
+          "source": "Akamai"
+        },
+        {
+          "url": "https://patchstack.com/whitepaper/state-of-wordpress-security-in-2025/",
+          "title": "State of WordPress Security in 2025",
+          "source": "Patchstack"
+        },
+        {
+          "url": "https://patchstack.com/database/statistics/wordpress/2024",
+          "title": "WordPress vulnerability statistics, 2024",
+          "source": "Patchstack"
+        },
+        {
+          "url": "https://patchstack.com/articles/critical-privilege-escalation-in-litespeed-cache-plugin-affecting-5-million-sites/",
+          "title": "Critical Privilege Escalation in LiteSpeed Cache Plugin Affecting 5+ Million Sites",
+          "source": "Patchstack"
+        },
+        {
+          "url": "https://patchstack.com/articles/critical-privilege-escalation-in-essential-addons-for-elementor-plugin-affecting-1-million-sites/",
+          "title": "Critical Privilege Escalation in Essential Addons for Elementor",
+          "source": "Patchstack"
+        },
+        {
+          "url": "https://blog.sucuri.net/2023/05/vulnerability-in-essential-addons-for-elementor-leads-to-mass-infection.html",
+          "title": "Vulnerability in Essential Addons for Elementor Leads to Mass Infection",
+          "source": "Sucuri"
+        },
+        {
+          "url": "https://wordpress.org/about/stats/",
+          "title": "WordPress.org PHP version statistics",
+          "source": "WordPress.org"
+        },
+        {
+          "url": "https://www.php.net/eol.php",
+          "title": "Unsupported Branches",
+          "source": "php.net"
+        },
+        {
+          "url": "https://www.php.net/releases/5_4_0.php",
+          "title": "PHP 5.4.0 Release Announcement",
+          "source": "php.net"
+        },
+        {
+          "url": "https://www.php.net/releases/8.0/en.php",
+          "title": "PHP 8.0 Release Announcement",
+          "source": "php.net"
+        },
+        {
+          "url": "https://www.php.net/manual/en/security.variables.php",
+          "title": "User Submitted Data",
+          "source": "PHP manual"
+        },
+        {
+          "url": "https://www.php.net/manual/en/function.unserialize.php",
+          "title": "unserialize",
+          "source": "PHP manual"
+        },
+        {
+          "url": "https://www.php.net/manual/en/features.remote-files.php",
+          "title": "Using remote files",
+          "source": "PHP manual"
+        },
+        {
+          "url": "https://docs.djangoproject.com/en/stable/topics/security/",
+          "title": "Security in Django",
+          "source": "Django documentation"
+        },
+        {
+          "url": "https://docs.pypi.org/about/security-and-internals/",
+          "title": "Security and Internals",
+          "source": "PyPI"
+        }
+      ]
+    },
     {
       "id": "20261125-bash-commands-server-management",
       "date": "2026-11-25",
