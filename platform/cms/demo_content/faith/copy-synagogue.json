@@ -1,0 +1,671 @@
+{
+  "_readme": "DRAFT starter content for one fictional congregation (Tenshi CMS, faith niche). Same shape as the main category files: profile follows business.schema.json; pages and blog_posts follow cms/blocks.py. See faith/HANDOFF.md.",
+  "format": "tenshi.starter/1",
+  "status": "draft",
+  "language": "en",
+  "category": "faith",
+  "category_label": "Place of worship",
+  "variant": "synagogue",
+  "tradition": "Judaism (synagogue / temple; movement [Reform / Conservative / Orthodox / Reconstructionist])",
+  "new_category": true,
+  "closest_existing_category": "nonprofit",
+  "templates": [
+    "nonprofit",
+    "community"
+  ],
+  "recommended_template": "nonprofit",
+  "page_roles": {
+    "home": "index",
+    "about": "about",
+    "times": "shabbat-services",
+    "events": "events",
+    "talks": "torah-study",
+    "get_involved": "get-involved",
+    "give": "give",
+    "contact": "contact",
+    "religious_school": "religious-school"
+  },
+  "profile": {
+    "schema": "tenshi.business/1",
+    "company": {
+      "name": "[Synagogue Name]",
+      "category": "faith",
+      "category_label": "Place of worship",
+      "type": "organization",
+      "tagline": "A warm Jewish community in Madison",
+      "phone": "[Phone, e.g. (608) XXX-XXXX]",
+      "email": "info@example.org",
+      "address": "[Street Address], Madison, WI [ZIP Code]",
+      "city": "Madison",
+      "state": "WI",
+      "service_areas": [],
+      "hours": [
+        {
+          "days": "Kabbalat Shabbat",
+          "time": "Friday, [Time]"
+        },
+        {
+          "days": "Shabbat morning",
+          "time": "Saturday, [Time]"
+        },
+        {
+          "days": "Office",
+          "time": "[Days], [Time]–[Time]"
+        }
+      ],
+      "description": "[Synagogue Name] is a [Reform / Conservative / Orthodox / Reconstructionist] Jewish congregation in Madison, Wisconsin. We gather for Shabbat, holidays, learning and community, and we welcome members, guests and neighbors.",
+      "logo": null
+    },
+    "site": {
+      "goal": "community",
+      "template": "nonprofit",
+      "subdomain": "your-congregation"
+    },
+    "services": [
+      {
+        "name": "Shabbat services",
+        "description": "Friday evening and Shabbat morning services. See the schedule for times.",
+        "price": ""
+      },
+      {
+        "name": "Holidays",
+        "description": "Services and celebrations through the Jewish year, from the High Holy Days to Passover.",
+        "price": ""
+      },
+      {
+        "name": "Learning",
+        "description": "Torah study, adult learning and religious school for children.",
+        "price": ""
+      },
+      {
+        "name": "Life-cycle events",
+        "description": "[Describe support for b'nai mitzvah, weddings, baby namings, funerals and mourning.]",
+        "price": ""
+      }
+    ],
+    "products": [],
+    "staff": [
+      {
+        "name": "[Rabbi Name]",
+        "role": "Rabbi",
+        "bio": "[Rabbi Name] leads services, teaches and is available to the community for pastoral care. [Add a short note, approved by them.]"
+      },
+      {
+        "name": "[Cantor Name]",
+        "role": "[Cantor / Cantorial soloist / Prayer leader]",
+        "bio": "[Cantor Name] leads music and prayer and helps prepare b'nai mitzvah students. [Edit or remove.]"
+      },
+      {
+        "name": "[Education Director Name]",
+        "role": "Education director",
+        "bio": "[Education Director Name] runs our religious school and adult learning programs."
+      }
+    ],
+    "gallery": [],
+    "portfolio": [],
+    "testimonials": [],
+    "social": {},
+    "seo": {
+      "title": "[Synagogue Name] | Synagogue in Madison, WI",
+      "description": "[Synagogue Name] is a welcoming Jewish congregation in Madison, WI. Shabbat times, holidays, Torah study and religious school."
+    }
+  },
+  "pages": [
+    {
+      "slug": "index",
+      "title": "Home",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "hero",
+          "data": {
+            "kicker": "[Synagogue Name] · Madison, WI",
+            "heading": "A place to pray, learn and celebrate together",
+            "text": "Join us for Shabbat, the holidays and learning through the year. Guests are always welcome.",
+            "button_text": "See service times",
+            "button_link": "shabbat-services",
+            "call_button": true,
+            "layout": "split"
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Welcome",
+            "body": "<p>Shalom, and welcome to [Synagogue Name]. Whether you're looking for a spiritual home, visiting Madison or simply curious, we'd be glad to meet you.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "This week",
+            "body": "<ul><li>Friday evening / Kabbalat Shabbat: [Time]</li><li>Shabbat morning service: [Time]</li><li>Torah study: [Day], [Time]</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "We'd love to meet you",
+            "text": "Send us a message or come and visit. Everyone is welcome.",
+            "button_text": "Contact us",
+            "button_link": "contact"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "about",
+      "title": "About",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "About our community",
+            "body": "<p>[Synagogue Name] is a [Reform / Conservative / Orthodox / Reconstructionist] congregation in Madison. We are a community of [individuals and families] who come together for prayer, learning, celebration and caring for one another.</p><p>[Add a sentence or two about the congregation's history and what makes your community feel like home.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Our approach",
+            "body": "<p>[Add a short, plain-language description of your congregation's practice and values, written or approved by your rabbi and board.]</p><p>Guests, interfaith families and people exploring Judaism are welcome to visit and ask questions. [Edit for your community.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "team",
+          "data": {
+            "heading": "Our leaders and volunteers",
+            "intro": "[Add, remove or rename people under Business data › Team.]"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "shabbat-services",
+      "title": "Shabbat and service times",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Shabbat",
+            "body": "<ul><li>Friday evening / Kabbalat Shabbat: [Time]</li><li>Shabbat morning service: [Time]</li><li>Kiddush after the morning service: [edit for your community]</li><li>Havdalah: [Saturday evening, Time, if held]</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Candle-lighting times",
+            "body": "<p>Shabbat begins at sundown on Friday, so candle-lighting times change every week through the year. [Add or link your weekly candle-lighting and havdalah times for Madison.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Weekday minyan",
+            "body": "<p>[If your community holds a weekday minyan, list the days and times here. Otherwise remove this section.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Holidays",
+            "body": "<p>Service times for the High Holy Days and festivals are posted on our holidays and events page.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Please note",
+            "body": "<p>All times are placeholders. [Replace them with your congregation's schedule.]</p>",
+            "center": false
+          }
+        }
+      ]
+    },
+    {
+      "slug": "events",
+      "title": "Events",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Upcoming events",
+            "center": false,
+            "body": "<h3>Rosh Hashanah and Yom Kippur (High Holy Days)</h3><p><b>[Dates], [Times]</b></p><p>Services for the New Year and the Day of Atonement. [Explain tickets or registration for members and guests, and who to contact.]</p><h3>Sukkot in the sukkah</h3><p><b>[Date], [Time]</b></p><p>Gather in our sukkah for a meal and celebration. [Edit for your community.]</p><h3>Hanukkah candle lighting</h3><p><b>[Date], [Time]</b></p><p>Light the menorah together, with songs and treats for all ages.</p><h3>Purim celebration</h3><p><b>[Date], [Time]</b></p><p>Megillah reading, costumes and a festive gathering for families. [Edit for your community.]</p><h3>Community Passover seder</h3><p><b>[Date], [Time]</b></p><p>A community seder for members and guests. [Add booking details and cost, if any.]</p><p><small>[These are example events with placeholder dates. Replace them with your own.]</small></p>"
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "We'd love to meet you",
+            "text": "Send us a message or come and visit. Everyone is welcome.",
+            "button_text": "Contact us",
+            "button_link": "contact"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "torah-study",
+      "title": "Torah study and talks",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Torah study",
+            "body": "<p>Join our Torah study group on [Day] at [Time], led by [Rabbi Name]. No experience or Hebrew is needed. [Edit for your community.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Divrei Torah",
+            "body": "<p>A d'var Torah (a short talk on the week's Torah portion) is given at [service]. [Explain whether talks are written up or recorded, and where they're posted.]</p><ul><li>[Talk title], [Rabbi Name], [Date]</li><li>[Talk title], [Cantor Name], [Date]</li><li>[Talk title], [Speaker Name], [Date]</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Adult learning",
+            "body": "<p>[Describe adult learning: classes, Hebrew for adults, introduction to Judaism, book groups, with days and times.]</p>",
+            "center": false
+          }
+        }
+      ]
+    },
+    {
+      "slug": "get-involved",
+      "title": "Get involved",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Get involved",
+            "body": "<p>Our community is built by its members and volunteers. There are many ways to take part, whatever your background.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Ways to volunteer",
+            "body": "<ul><li>Welcome and greeting: help guests feel at home at services and events.</li><li>Holidays: help prepare for High Holy Days, Sukkot, Purim and the community seder.</li><li>Caring community: meals and visits for members who are ill, new parents or mourning. [Edit for your community.]</li><li>Social action: [describe tzedakah and community service projects in Madison].</li><li>Committees: [list the committees members can join].</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Religious school",
+            "body": "<p>Our religious school offers Jewish learning for children. See the Religious school page for details and b'nai mitzvah preparation.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Join us",
+            "body": "<p>Fill in the form below and someone will be in touch. [Add how to become a member.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "form",
+          "data": {
+            "heading": "I'd like to help",
+            "intro": "Tell us a little about yourself and how you'd like to help.",
+            "fields": "name,email,phone,message",
+            "button_text": "Send"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "religious-school",
+      "title": "Religious school",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Religious school",
+            "body": "<p>[Synagogue Name]'s religious school helps children learn about Jewish holidays, values, history and Hebrew in a warm, friendly setting. [Edit for your program.]</p><ul><li>Ages / grades: [Ages or grades]</li><li>When: [Day(s)], [Time]–[Time]</li><li>Where: [Location]</li><li>Cost and registration: [Describe enrollment and any fees.]</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Hebrew school",
+            "body": "<p>[Describe Hebrew classes: levels, days and times.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "B'nai mitzvah preparation",
+            "body": "<p>[Describe how students prepare for becoming a bar, bat or b'nai mitzvah: age, timeline, tutoring and family meetings. Edit the terms for your community.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Questions",
+            "body": "<p>Contact [Education Director Name] to arrange a visit or ask about enrollment. [Add your safeguarding and background-check steps for volunteers.]</p>",
+            "center": false
+          }
+        }
+      ]
+    },
+    {
+      "slug": "give",
+      "title": "Give: tzedakah and membership",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Support our community",
+            "body": "<p>Thank you for considering a gift to [Synagogue Name]. Your tzedakah supports services, learning, the religious school and our care for one another and for Madison.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Membership",
+            "body": "<p>[Describe how membership works, e.g. dues, a voluntary commitment model or another approach, and who to contact. If your community welcomes people whatever they are able to pay, say so here.]</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Ways to give",
+            "body": "<ul><li>Donations and tributes: [describe how to give in honor or in memory of someone].</li><li>Online: [ADD YOUR SECURE DONATION LINK HERE. Never publish bank details on this site.]</li><li>Other: [describe any other way to give].</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Questions",
+            "body": "<p>[Add a contact for giving and membership questions and any statement about receipts or tax status. Check the wording with your treasurer or advisor.]</p>",
+            "center": false
+          }
+        }
+      ]
+    },
+    {
+      "slug": "gallery",
+      "title": "Gallery",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "gallery",
+          "data": {
+            "heading": "Gallery",
+            "album": null,
+            "layout": "",
+            "lightbox": true
+          }
+        }
+      ]
+    },
+    {
+      "slug": "faq",
+      "title": "FAQ",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "faq",
+          "data": {
+            "heading": "Questions and answers",
+            "intro": "",
+            "items": [
+              {
+                "question": "Can I attend a service if I'm not Jewish or not a member?",
+                "answer": "Yes, guests are welcome. [Add whether visitors should let you know in advance.]"
+              },
+              {
+                "question": "What should I wear?",
+                "answer": "[Describe your dress guidance.] Kippot (head coverings) are available at the entrance. [Edit for your community, e.g. tallit customs.]"
+              },
+              {
+                "question": "Is there a security check-in?",
+                "answer": "[Describe any security procedures, or remove this question.]"
+              },
+              {
+                "question": "Do I need to read Hebrew?",
+                "answer": "No. [Describe your prayer books and whether they include English translation or transliteration.]"
+              },
+              {
+                "question": "How do I get High Holy Days tickets?",
+                "answer": "[Explain registration or tickets for members and guests, and who to contact.]"
+              },
+              {
+                "question": "Is the building accessible?",
+                "answer": "[Describe step-free access, parking, large-print prayer books and hearing support.]"
+              }
+            ],
+            "open_first": false,
+            "structured_data": true
+          }
+        }
+      ]
+    },
+    {
+      "slug": "blog",
+      "title": "News",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "News",
+            "center": false,
+            "body": "<ul><li><a href=\"blog-visiting-a-synagogue-for-the-first-time.html\">Visiting a synagogue for the first time</a></li><li><a href=\"blog-the-jewish-holidays-through-the-year.html\">The Jewish holidays through the year</a></li></ul>"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "contact",
+      "title": "Contact",
+      "in_menu": true,
+      "seo_title": "",
+      "seo_description": "",
+      "blocks": [
+        {
+          "type": "contact",
+          "data": {
+            "heading": "Visit or contact us"
+          }
+        },
+        {
+          "type": "text",
+          "data": {
+            "heading": "Finding us",
+            "body": "<p><b>[PLACEHOLDER CONTACT DETAILS — replace before publishing]</b></p><ul><li>Address: [Street Address], Madison, WI [ZIP Code]</li><li>Phone: [Phone, e.g. (608) XXX-XXXX]</li><li>Email: [Email address] (the profile holds info@example.org as a stand-in)</li><li>Parking and access: [Describe parking, bus routes and accessible entrances.]</li></ul>",
+            "center": false
+          }
+        },
+        {
+          "type": "form",
+          "data": {
+            "heading": "Send us a message",
+            "intro": "We'll get back to you as soon as we can.",
+            "fields": "name,email,phone,message",
+            "button_text": "Send"
+          }
+        }
+      ]
+    }
+  ],
+  "blog_posts": [
+    {
+      "slug": "blog-visiting-a-synagogue-for-the-first-time",
+      "title": "Visiting a synagogue for the first time",
+      "in_menu": false,
+      "seo_title": "Visiting a synagogue for the first time",
+      "seo_description": "If you've never been to a synagogue service, you're very welcome at [Synagogue Name]. Here's what to expect.",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "Visiting a synagogue for the first time",
+            "body": "<p>If you've never been to a synagogue service, you're very welcome at [Synagogue Name]. Here's what to expect.</p><p>It's helpful to contact us before your first visit. [Describe any security check-in or entry procedures here.]</p><p>When you arrive, a greeter will welcome you and offer a prayer book. Kippot (head coverings) are available at the entrance. [Edit for your community's customs.]</p><p>Services include prayers, songs and readings, some in Hebrew and some in English. [Describe your prayer book and whether it has transliteration.] It's fine to follow along quietly, stand and sit with everyone else, or simply listen.</p><p>On Shabbat morning, the Torah scroll is taken out and read. It's a special moment in the service, and many people stand as it's carried through the room.</p><p>After services there's often a kiddush or oneg, a time for blessings over wine or grape juice and bread, food and conversation. [Edit for your community.] It's a great chance to meet people.</p><p>Please ask before taking photos or using your phone. [Add your community's guidance for Shabbat.]</p><p>We look forward to welcoming you.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "We'd love to meet you",
+            "text": "Send us a message or come and visit. Everyone is welcome.",
+            "button_text": "Contact us",
+            "button_link": "contact"
+          }
+        }
+      ],
+      "word_count": 180
+    },
+    {
+      "slug": "blog-the-jewish-holidays-through-the-year",
+      "title": "The Jewish holidays through the year",
+      "in_menu": false,
+      "seo_title": "The Jewish holidays through the year",
+      "seo_description": "The Jewish calendar is full of holidays, each with its own customs, foods and stories. Here's a short guide to the ones we celebrate together at [Synagogue…",
+      "blocks": [
+        {
+          "type": "text",
+          "data": {
+            "heading": "The Jewish holidays through the year",
+            "body": "<p>The Jewish calendar is full of holidays, each with its own customs, foods and stories. Here's a short guide to the ones we celebrate together at [Synagogue Name].</p><p>The year begins with the High Holy Days: Rosh Hashanah, the Jewish New Year, and Yom Kippur, the Day of Atonement, a day of fasting and reflection. [Add how to register for services.]</p><p>Soon after comes Sukkot, when people eat and gather in a sukkah, a temporary outdoor hut. In winter, Hanukkah, the festival of lights, is celebrated by lighting the menorah for eight nights.</p><p>Purim, in early spring, is a joyful festival with costumes and the reading of the Megillah. Then comes Passover, when families and friends gather for a seder to retell the story of the Exodus.</p><p>Because the Jewish calendar follows the moon, holiday dates move each year on the everyday calendar. We post dates and times on our events page.</p><p>Everyone is welcome to join our holiday celebrations. Check the events page for this year's dates.</p>",
+            "center": false
+          }
+        },
+        {
+          "type": "cta",
+          "data": {
+            "heading": "We'd love to meet you",
+            "text": "Send us a message or come and visit. Everyone is welcome.",
+            "button_text": "Contact us",
+            "button_link": "contact"
+          }
+        }
+      ],
+      "word_count": 168
+    }
+  ],
+  "gallery_captions": [
+    {
+      "caption": "The sanctuary before Shabbat services",
+      "alt": "The sanctuary before Shabbat services"
+    },
+    {
+      "caption": "Shabbat candles and challah",
+      "alt": "Shabbat candles and challah"
+    },
+    {
+      "caption": "Our sukkah decorated for Sukkot",
+      "alt": "Our sukkah decorated for Sukkot"
+    },
+    {
+      "caption": "Hanukkah candle lighting",
+      "alt": "Hanukkah candle lighting"
+    },
+    {
+      "caption": "Purim costumes and celebration",
+      "alt": "Purim costumes and celebration"
+    },
+    {
+      "caption": "Religious school class",
+      "alt": "Religious school class"
+    },
+    {
+      "caption": "Community seder table",
+      "alt": "Community seder table"
+    },
+    {
+      "caption": "Torah study group",
+      "alt": "Torah study group"
+    }
+  ],
+  "events": [
+    {
+      "title": "Rosh Hashanah and Yom Kippur (High Holy Days)",
+      "when": "[Dates], [Times]",
+      "description": "Services for the New Year and the Day of Atonement. [Explain tickets or registration for members and guests, and who to contact.]"
+    },
+    {
+      "title": "Sukkot in the sukkah",
+      "when": "[Date], [Time]",
+      "description": "Gather in our sukkah for a meal and celebration. [Edit for your community.]"
+    },
+    {
+      "title": "Hanukkah candle lighting",
+      "when": "[Date], [Time]",
+      "description": "Light the menorah together, with songs and treats for all ages."
+    },
+    {
+      "title": "Purim celebration",
+      "when": "[Date], [Time]",
+      "description": "Megillah reading, costumes and a festive gathering for families. [Edit for your community.]"
+    },
+    {
+      "title": "Community Passover seder",
+      "when": "[Date], [Time]",
+      "description": "A community seder for members and guests. [Add booking details and cost, if any.]"
+    }
+  ],
+  "price_list": [],
+  "notes": [
+    "DRAFT. Fictional congregation; every name, time, address and contact detail is a placeholder.",
+    "No testimonials by design (none invented). The testimonials list is empty and no testimonials block is placed.",
+    "Give page has no payment details or links, only a [placeholder] for the congregation's own secure giving page.",
+    "The gallery block has album=null: create an album from gallery_captions (see ../HANDOFF.md).",
+    "Movement is a placeholder; wording avoids movement-specific practice (instruments, seating, livestreams). Items marked [edit for your community] differ by movement.",
+    "Candle-lighting and havdalah times change weekly; holiday dates follow the Hebrew calendar. All are placeholders.",
+    "Adds a ninth page, religious-school (page role religious_school), alongside the 8 core pages."
+  ]
+}

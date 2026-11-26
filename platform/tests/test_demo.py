@@ -74,7 +74,7 @@ def test_six_demo_sites_are_full_varied_and_labelled(demo):
             assert "tw-demo-ribbon" in html
         for m in db.all("SELECT filename FROM media WHERE site_id = ?", sid):           # only clear-origin stock photos
             assert m["filename"].rsplit(".", 1)[0] in clear | placeholders, (sub, m["filename"])
-    assert len(themes) == len(demo_sites.DEMOS) == 9
+    assert len(themes) == len(demo_sites.DEMOS) == 10
     modes = {json.loads(sites.get(_sid(s))["theme_json"])["mode"] for s in demo_sites.DEMOS}
     assert modes == {"light", "dark"}
 
@@ -91,12 +91,16 @@ def test_each_demo_shows_its_modules(demo):
         used = {b["type"] for p in db.all("SELECT blocks_json FROM pages WHERE site_id = ?", _sid(sub)) for b in json.loads(p["blocks_json"])}
         assert set(kinds) <= used, (sub, set(kinds) - used)
     assert widgets.load_settings(_sid("demo-retail"), "store") is None or widgets.load_settings(_sid("demo-retail"), "store").mode == "demo"
-    for sub, give in {"demo-church": "give", "demo-mosque": "give", "demo-temple": "dana", "demo-mandir": "donate"}.items():
+    for sub, give in {"demo-church": "give", "demo-mosque": "give", "demo-temple": "dana", "demo-mandir": "donate", "demo-synagogue": "give"}.items():
         page = c.get(f"/{give}.html", headers=_host(sub)).text
         assert "not live" in page and "no money" in page.lower(), sub
     prayer = c.get("/prayer-times.html", headers=_host("demo-mosque")).text        # prayer times stay visible placeholders
     assert prayer.count('class="demo-ph"') >= 5 and "Fajr" in prayer and "Jumu" in prayer
     assert 'class="demo-ph"' in c.get("/about.html", headers=_host("demo-temple")).text or 'class="demo-ph"' in c.get("/", headers=_host("demo-temple")).text
+    shabbat = c.get("/shabbat-services.html", headers=_host("demo-synagogue")).text      # candle lighting / Havdalah stay placeholders
+    assert shabbat.count('class="demo-ph"') >= 2 and "Havdalah" in shabbat
+    assert "Hebrew school" in c.get("/religious-school.html", headers=_host("demo-synagogue")).text
+    assert "Yom Kippur" in c.get("/events.html", headers=_host("demo-synagogue")).text
     talks = c.get("/khutbahs.html", headers=_host("demo-mosque")).text
     assert "<video" in talks and "<audio" in talks
     assert "Sample review" in c.get("/", headers=_host("demo-salon")).text

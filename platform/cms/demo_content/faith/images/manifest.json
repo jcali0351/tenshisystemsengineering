@@ -83,6 +83,27 @@
    "category": "faith",
    "license": "AI-generated for Tenshi Systems demo sites",
    "alt": "Steel thali plates with rice, dal, curry and chapati on a long community-hall table"
+  },
+  {
+   "key": "faith-synagogue-exterior",
+   "file": "images/synagogue-exterior.webp",
+   "category": "faith",
+   "license": "AI-generated for Tenshi Systems demo sites",
+   "alt": "Brick and pale-stone community building with tall windows on an autumn street"
+  },
+  {
+   "key": "faith-synagogue-challah",
+   "file": "images/synagogue-challah.webp",
+   "category": "faith",
+   "license": "AI-generated for Tenshi Systems demo sites",
+   "alt": "Braided challah loaves on a wooden table beside apples and honey"
+  },
+  {
+   "key": "faith-synagogue-classroom",
+   "file": "images/synagogue-classroom.webp",
+   "category": "faith",
+   "license": "AI-generated for Tenshi Systems demo sites",
+   "alt": "Bright children's classroom with small wooden tables, books and paper crafts"
   }
  ]
 }

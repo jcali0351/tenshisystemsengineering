@@ -1,4 +1,4 @@
-Faith demo sites (demo-church, demo-mosque, demo-temple, demo-mandir) only.
+Faith demo sites (demo-church, demo-mosque, demo-temple, demo-mandir, demo-synagogue) only.
 
 - copy-*.json: Content Bot's faith starter copy (/workspace/cms-starter-content/faith/), copied as-is for the demos.
   It is NOT client starter content: the CMS's "church" category, seed_reference.py and faith/index.json are untouched

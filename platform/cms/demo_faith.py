@@ -1,5 +1,5 @@
 """
-demo_faith.py: the four faith-community demo sites (demo-church, demo-mosque, demo-temple, demo-mandir).
+demo_faith.py: the five faith-community demo sites (demo-church, demo-mosque, demo-temple, demo-mandir, demo-synagogue).
 
 Built like the business demos in demo_sites.py, from Content Bot's faith copy (demo_content/faith/copy-*.json, used for
 these demos only: the CMS's own starter categories are untouched) and pictures made for them (demo_content/faith/images:
@@ -9,19 +9,20 @@ human or animal figure on the mosque site). Each has times with an open-now badg
 clearly not live, a gallery and a map.
 
 Placeholders the congregation must supply stay visible on purpose, highlighted (.demo-ph) and editable as normal text:
-the mosque's prayer times (they change daily and depend on the mosque's own timetable), the temple's Buddhist school
-and the mandir's presiding deity.
+the mosque's prayer times (they change daily and depend on the mosque's own timetable), the temple's Buddhist school,
+the mandir's presiding deity, and the synagogue's candle-lighting / Havdalah times and movement. All five use Content Bot's
+faith copy (copy-*.json).
 """
 
 from __future__ import annotations
 
 from datetime import date
 
-from .demo_sites import FAITH_DIR, WEEK, B, Pics, _next
+from .demo_sites import FAITH_DIR, PH_TITLE as PH, WEEK, B, Pics, _next
 
 MEDIA = FAITH_DIR / "media"
-ORDER = ["index", "about", "worship-times", "prayer-times", "meditation-schedule", "puja-schedule", "events", "sermons", "khutbahs",
-         "dharma-talks", "satsang", "get-involved", "give", "dana", "donate", "gallery", "contact"]
+ORDER = ["index", "about", "worship-times", "prayer-times", "meditation-schedule", "puja-schedule", "shabbat-services", "events", "religious-school", "sermons", "khutbahs",
+         "dharma-talks", "satsang", "torah-study", "get-involved", "give", "dana", "donate", "gallery", "contact"]
 TIMES = "⟦Time⟧"
 
 
@@ -250,6 +251,64 @@ def _mandir(p: Pics, name: str) -> dict:
             }
 
 
+# ---------------------------------------------------------------------------------------------- synagogue
+
+def _synagogue(p: Pics, name: str) -> dict:
+    hours = _hours("Shabbat services", WEEK({"fri": "18:30", "sat": "09:30"}, {"fri": "19:45", "sat": "12:00"}, ("mon", "tue", "wed", "thu", "sun")),
+                   "Kabbalat Shabbat on Friday at 6:30 PM; Shabbat morning service on Saturday at 9:30 AM, followed by kiddush.")
+    holiday = lambda title, d, desc, start="18:00", end="20:00": {"title": title, "date": d, "start": start, "end": end, "location": name,   # noqa: E731
+                                                                  "category": "Holiday", "description": desc, "rsvp": False}
+    return {"category": "faith/copy-synagogue", "template": "lawfirm",
+            "theme": {"preset": "ocean", "colors": {"primary": "#1f3a5f", "accent": "#8a6a2f", "surface": "#f7f8fa", "ink": "#16202c"},
+                      "fonts": {"heading": "bitter", "body": "figtree"}, "style": "clean", "radius": 8, "space": "airy", "mode": "light", "toggle": True},
+            "keep_ph": ["[Reform / Conservative / Orthodox / Reconstructionist]"],
+            "fills": {"[Synagogue Name]": name, "[Street Address]": "1110 Vilas Ave", "[ZIP Code]": "53715", "[Phone, e.g. (608) XXX-XXXX]": "(608) 555-0115",
+                      "[Email address]": "office@example.org", "[Rabbi Name]": "Rabbi Miriam Adler", "[Cantor Name]": "Cantor Ari Levin",
+                      "[Education Director Name]": "Daniel Weiss", "[Speaker Name]": "Rabbi Miriam Adler", "[individuals and families]": "individuals and families",
+                      "[Name]": "our team", "[Day]": "Saturday", "[Time]": "9:30 AM"},
+            "staff": [{"name": "Rabbi Miriam Adler", "role": "Rabbi", "bio": "Leads services and Torah study, and meets with families for life-cycle events."},
+                      {"name": "Cantor Ari Levin", "role": "Cantor", "bio": "Leads music at services and teaches b'nai mitzvah students."},
+                      {"name": "Daniel Weiss", "role": "Education director", "bio": "Runs the Hebrew school and family learning."}],
+            "company": {"tagline": "A warm, welcoming Jewish community", "email": "office@example.org",
+                        "hours": [{"days": "Friday", "time": "Kabbalat Shabbat, 6:30 PM"}, {"days": "Saturday", "time": "Shabbat morning, 9:30 AM"}, {"days": "Office", "time": "Mon–Thu, 9:00 AM–3:00 PM"}],
+                        "description": f"{name} is a fictional synagogue in Madison, WI (a demo site by Tenshi Systems)."},
+            "hero": p.get("synagogue-exterior"), "about_img": p.get("synagogue-challah"),
+            "album": p.album("Our community", ["synagogue-exterior", "synagogue-challah", "synagogue-classroom", "madison/a-wikideas1", "temple-lake"]),
+            "keep": ["index", "about", "get-involved", "faq", "contact"], "drop_headings": ("This week", "Religious school", "Join us"),
+            "drop_blocks": {"get-involved": ("form",)}, "order": ORDER,
+            "pages": {
+                "index": ("Home", None, [hours, _newsletter("Shabbat times, holiday plans and Hebrew school news, once a week.")]),
+                "shabbat-services": ("Shabbat", [hours, B("text", heading="Shabbat this week",
+                    body=f'<ul><li>Candle lighting: Friday, <span class="demo-ph" title="{PH}">candle-lighting time</span></li>'
+                         f'<li>Havdalah: Saturday, <span class="demo-ph" title="{PH}">Havdalah time</span></li>'
+                         '<li>Torah study: Saturday, 8:30 AM, before the morning service</li></ul>'
+                         '<p>Candle-lighting and Havdalah times change every week with sunset, so the congregation fills them in each week.</p>')], None),
+                "events": ("Holidays and events", [_events("Holidays and events", [
+                    {"title": "Community Shabbat dinner", "date": _next(4, 1), "start": "18:00", "end": "20:00", "location": "Social hall", "category": "Shabbat",
+                     "description": "A relaxed Friday-night dinner after services. Newcomers especially welcome.", "capacity": 80, "max_guests": 6, "image": p.get("synagogue-challah")},
+                    {"title": "Hanukkah party", "date": _when(2026, 12, 6), "start": "16:00", "end": "18:00", "location": "Social hall", "category": "Holiday",
+                     "description": "Latkes, songs and games for all ages.", "capacity": 120, "max_guests": 8},
+                    holiday("Hanukkah begins", _when(2026, 12, 4), "Eight nights of Hanukkah begin at sundown."),
+                    holiday("Purim", _when(2027, 3, 23), "Megillah reading and a festive, family-friendly celebration."),
+                    holiday("Passover community seder", _when(2027, 4, 22), "Second-night community seder (sign-up opens in the spring)."),
+                    holiday("Shavuot", _when(2027, 6, 11), "Evening study and a dairy potluck."),
+                    holiday("Rosh Hashanah", _when(2027, 10, 2), "Services for the Jewish New Year.", "09:30", "12:30"),
+                    holiday("Yom Kippur", _when(2027, 10, 11), "Services throughout the day.", "09:30", "18:30")]),
+                                                  B("text", heading="About these dates", body="<p>Jewish holidays begin at sundown the evening before. These dates are for the demo; a congregation would publish its own calendar and times.</p>")], None),
+                "religious-school": ("Hebrew school", [B("image", image=p.get("synagogue-classroom"), caption="Our Hebrew school classroom", width="wide"),
+                                                          B("text", heading="Classes", body="<ul><li>Kindergarten–2nd grade: Sunday, 9:30–11:30 AM</li><li>3rd–7th grade: Sunday 9:30 AM–noon and Wednesday 4:30–6:00 PM</li><li>B'nai mitzvah preparation: by arrangement</li></ul><p>New families are always welcome to visit a class.</p>"),
+                                                         B("text", heading="B'nai mitzvah preparation", body="<p>Students usually begin about a year ahead, with tutoring from the cantor and family meetings with the rabbi.</p>")], None),
+                "torah-study": ("Torah study", _talks(p, "Torah study", "Recent talks and study sessions", [("Welcoming the stranger", "Rabbi Miriam Adler", "last Shabbat"),
+                                                                                                   ("Rest and renewal", "Rabbi Miriam Adler", "two weeks ago"),
+                                                                                                   ("Questions at the seder table", "Daniel Weiss", "three weeks ago")], "synagogue"), None),
+                "get-involved": ("Volunteer", None, [_vol_form("Welcome table, Kiddush team, Hebrew school helper, Social action, Holiday events, Something else")]),
+                "give": ("Give", _give("Give", "Donate online", ["Gifts support services and the Hebrew school", "Tribute gifts can honor a simcha or a loved one's memory"]), None),
+                "gallery": ("Gallery", [B("gallery", heading="Our community", layout="masonry", lightbox=True)], None),
+                "contact": ("Contact", [_map("Find us", "1110 Vilas Ave, Madison, WI 53715", "43.0621", "-89.4052"),
+                                         B("contact_form", heading="Send us a message", preset="contact")], "replace")},
+            }
+
+
 FAITH = {
     "demo-church": ("Lakeview Commons Church", "Church", _church, ["faith", "madison"],
                     ["Worship times + open-now badge", "Events + RSVP", "Sermons (video + audio)", "Newsletter", "Volunteer sign-up", "Giving (demo)", "Gallery", "Map"]),
@@ -257,7 +316,9 @@ FAITH = {
                     ["Prayer times + Jumu'ah", "Open-now badge", "Events + RSVP", "Khutbahs (video + audio)", "Newsletter", "Volunteer sign-up", "Sadaqah (demo)", "Gallery", "Map"]),
     "demo-temple": ("Monona Bay Meditation Temple", "Buddhist temple", _temple, ["faith", "madison", "landscaping"],
                     ["Meditation times + open-now badge", "Events + RSVP", "Dharma talks (video + audio)", "Newsletter", "Volunteer sign-up", "Dana (demo)", "Gallery", "Map"]),
+    "demo-synagogue": ("Beth Shalom of the Isthmus", "Synagogue", _synagogue, ["faith", "madison"],
+                       ["Shabbat times + open-now badge", "Holiday calendar", "Hebrew school", "Torah study (video + audio)", "Events + RSVP", "Newsletter", "Giving (demo)", "Gallery", "Map"]),
     "demo-mandir": ("Prairie Shanti Mandir", "Hindu mandir", _mandir, ["faith", "madison", "community"],
                     ["Darshan + aarti times", "Open-now badge", "Festivals + RSVP", "Satsang (video + audio)", "Newsletter", "Seva sign-up", "Donations (demo)", "Gallery", "Map"]),
 }
-FAITH_TEMPLATE = {"demo-church": "nonprofit", "demo-mosque": "corporate", "demo-temple": "portfolio", "demo-mandir": "community"}
+FAITH_TEMPLATE = {"demo-church": "nonprofit", "demo-mosque": "corporate", "demo-temple": "portfolio", "demo-mandir": "community", "demo-synagogue": "lawfirm"}
