@@ -45,6 +45,33 @@
     {% endif %}
   </section>
 </div>
+
+<section class="card" id="people" style="margin-top:18px">
+  <h2>People</h2>
+  <p class="small muted">Owners can connect this site's store and change its security and brand settings. Editors change content. CMS admins can do everything.
+    Your role here: <b>{{ my_role or 'editor (not a member)' }}</b>.</p>
+  <table class="table" id="members">
+    <thead><tr><th>Name</th><th>Email</th><th>Role on this site</th><th></th></tr></thead>
+    <tbody>
+    {% for m in members %}
+    <tr data-member="{{ m.user_id }}"><td><b>{{ m.name }}</b></td><td>{{ m.email }}</td>
+      <td>{% if user.role == 'admin' %}<select data-member-role aria-label="Role of {{ m.name }}">{% for r in member_roles %}<option value="{{ r }}" {% if m.role == r %}selected{% endif %}>{{ r }}</option>{% endfor %}</select>{% else %}{{ m.role }}{% endif %}</td>
+      <td>{% if user.role == 'admin' %}<button class="btn btn-small btn-danger" type="button" data-member-remove>Remove</button>{% endif %}</td></tr>
+    {% else %}
+    <tr><td colspan="4" class="muted">No members yet{% if user.role == 'admin' %}: add the client below as the owner{% endif %}.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% if user.role == 'admin' %}
+  <form class="row" id="add-member" style="margin-top:12px">
+    <select name="user" aria-label="Person" required style="width:auto;min-width:260px"><option value="">Choose a person…</option>
+      {% for u in all_users if u.role != 'admin' %}<option value="{{ u.id }}">{{ u.name }} ({{ u.email }})</option>{% endfor %}</select>
+    <select name="role" aria-label="Role" style="width:auto">{% for r in member_roles %}<option value="{{ r }}">{{ r }}</option>{% endfor %}</select>
+    <button class="btn" type="submit">Add to this site</button>
+    <a class="small" href="/users">Make a new user</a>
+  </form>
+  {% endif %}
+</section>
 {% endblock %}
 {% block scripts %}
 <script>
@@ -70,6 +97,23 @@
     };
     T.busy(this, T.api("POST", "/api/sites/" + siteId + "/settings", body).then(function () { T.toast("Saved. Deploy to put it live."); setTimeout(function () { location.reload(); }, 700); }));
   };
+  var addMember = document.getElementById("add-member");
+  if (addMember) {
+    addMember.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!addMember.user.value) return;
+      T.api("PUT", "/api/sites/" + siteId + "/members/" + addMember.user.value, { role: addMember.role.value }).then(function () { location.hash = "people"; location.reload(); });
+    });
+    document.getElementById("members").addEventListener("change", function (e) {
+      if (!e.target.matches("[data-member-role]")) return;
+      T.api("PUT", "/api/sites/" + siteId + "/members/" + e.target.closest("tr").dataset.member, { role: e.target.value }).then(function () { T.toast("Role changed"); });
+    });
+    document.getElementById("members").addEventListener("click", function (e) {
+      if (!e.target.matches("[data-member-remove]") || !confirm("Remove this person from the site?")) return;
+      var row = e.target.closest("tr");
+      T.api("DELETE", "/api/sites/" + siteId + "/members/" + row.dataset.member).then(function () { row.remove(); });
+    });
+  }
   var del = document.getElementById("delete-site");
   if (del) del.onclick = function () {
     var typed = prompt("This can't be undone. Type the site's address ({{ site.subdomain }}) to delete it:");

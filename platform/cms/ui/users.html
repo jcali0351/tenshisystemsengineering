@@ -5,18 +5,20 @@
 <div class="grid split" style="--cols: minmax(0, 1.5fr) minmax(0, 1fr)">
   <section class="card">
     <table class="table">
-      <thead><tr><th>Name</th><th>Email</th><th>Role</th><th></th></tr></thead>
+      <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Sites</th><th></th></tr></thead>
       <tbody>
       {% for u in rows %}
       <tr data-user="{{ u.id }}">
         <td><b>{{ u.name }}</b>{% if u.id == user.id %} <span class="badge">you</span>{% endif %}</td><td>{{ u.email }}</td>
         <td><select data-role>{% for r in roles %}<option {% if u.role == r %}selected{% endif %}>{{ r }}</option>{% endfor %}</select></td>
+        <td class="small">{% if u.role == 'admin' %}<span class="muted">all (admin)</span>{% else %}{% for m in u.sites %}<a href="/sites/{{ m.site_id }}/settings#people">{{ m.name }}</a> <span class="badge">{{ m.role }}</span>{% if not loop.last %}<br>{% endif %}{% else %}<span class="muted">none</span>{% endfor %}{% endif %}</td>
         <td><div class="row" style="justify-content:flex-end"><button class="btn btn-small" data-password>New password</button>{% if u.id != user.id %}<button class="btn btn-small btn-danger" data-remove>Remove</button>{% endif %}</div></td>
       </tr>
       {% endfor %}
       </tbody>
     </table>
-    <ul class="small muted" style="margin-top:14px">{% for r, text in roles.items() %}<li>{{ text }}</li>{% endfor %}</ul>
+    <ul class="small muted" style="margin-top:14px">{% for r, text in roles.items() %}<li>{{ text }}</li>{% endfor %}
+      <li>Site owners and editors: add people to a site under that site's <b>Settings &amp; theme › People</b>. A site's owners can connect its store and change its security and brand settings.</li></ul>
   </section>
   <section class="card">
     <h2>Add someone</h2>

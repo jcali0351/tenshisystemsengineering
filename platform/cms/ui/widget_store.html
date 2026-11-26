@@ -1,5 +1,5 @@
 {#- Online store: the site's Shopify connection (widget "store", cms/widgets/store.py) and the how-to guide.
-    Saved per site in the site_settings table (never in git). Only admins can change it. -#}
+    Saved per site in the site_settings table (never in git). Admins and the site's owners (members.py) can change it. -#}
 {% extends "layout.html" %}
 {% block title %}Online store · {{ site.name }}{% endblock %}
 {% block heading %}Online store{% endblock %}
@@ -10,7 +10,7 @@
     <h2>Shopify connection</h2>
     <p class="small muted">Store blocks in the page builder show products from this store. Visitors pay on Shopify's own checkout.
       With no store connected (or on Demo) they show six sample products and checkout is switched off.</p>
-    {% if not can_edit %}<p class="error-box" role="note">Only admins can change the store connection. Ask an admin of this CMS.</p>{% endif %}
+    {% if not can_edit %}<p class="error-box" role="note">Only this site's owners and CMS admins can change the store connection. Ask an admin to make you an owner (Settings &amp; theme › People).</p>{% endif %}
     <form id="store-form" novalidate>
       <fieldset class="field" style="border:0;padding:0;margin:0 0 14px" {% if not can_edit %}disabled{% endif %}>
         <legend class="small" style="font-weight:700;margin-bottom:6px">Mode</legend>

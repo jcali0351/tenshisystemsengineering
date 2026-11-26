@@ -19,7 +19,7 @@ Each widget has:
                            added only to pages that contain it (see csp_for()).
     settings               optional Pydantic model for per-site settings (e.g. the store's Shopify connection), kept
                            in the site_settings table (db.py), never in git. Edited on /sites/<id>/widgets/<name>.
-    settings_admin_only    only admins may change the settings (the CMS has no per-site owners yet).
+    settings_admin_only    only admins and the site's owners (members.py) may change the settings; False = any editor.
     hint                   a line under the block's settings in the builder (e.g. where to connect the store).
 
 To add a widget: write cms/widgets/<name>.py with a Widget(...) and register(...) it, put its files in
@@ -183,8 +183,8 @@ def save_settings(site_id: int, name: str, data: dict, user: dict | None = None)
     widget = get(name)
     if not widget or not widget.settings:
         raise WidgetError("This widget has no settings.")
-    if widget.settings_admin_only and (not user or user.get("role") != "admin"):
-        raise PermissionError("Only admins can change this.")
+    if not can_edit_settings(user, name, site_id):
+        raise PermissionError("Only admins and the site's owners can change this.")
     try:
         value = widget.settings.model_validate(data or {})
     except ValidationError as error:
@@ -196,9 +196,13 @@ def save_settings(site_id: int, name: str, data: dict, user: dict | None = None)
     return value
 
 
-def can_edit_settings(user: dict | None, name: str) -> bool:
+def can_edit_settings(user: dict | None, name: str, site_id: int | None = None) -> bool:
+    """Admins always; the site's owners when site_id is given; any signed-in user if the widget allows editors."""
+    from .. import members
     widget = get(name)
-    return bool(user and widget and (not widget.settings_admin_only or user.get("role") == "admin"))
+    if not (user and widget):
+        return False
+    return not widget.settings_admin_only or members.can_manage(user, site_id)
 
 
 # ---------------------------------------------------------------------------------------------- pages

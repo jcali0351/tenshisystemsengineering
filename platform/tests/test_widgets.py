@@ -134,7 +134,7 @@ def test_settings_permissions_and_storage(setup_cms):
     # an editor can see but not change it
     with TestClient(app) as ed:
         _login(ed, "editor@example.com", "correct-horse-2")
-        assert "Only admins can change the store connection" in ed.get(f"/sites/{sid}/widgets/store").text
+        assert "Only this site's owners and CMS admins" in ed.get(f"/sites/{sid}/widgets/store").text
         r = ed.put(url, json={"mode": "demo", "button_text": "Hacked"}, headers=H)
         assert r.status_code == 403
     assert c.get(url).json()["settings"]["button_text"] == "Buy"
@@ -211,6 +211,43 @@ def test_deploy_assets_and_csp_only_with_widget(setup_cms):
     c.post(f"/api/sites/{sid}/deploy", headers=H)
     home = c.get(f"/s/{sub}/")
     assert "shopify" not in home.headers["content-security-policy"] and "widgets/store" not in home.text
+
+
+def test_site_owner_can_edit_store_settings(setup_cms):
+    c, sid = setup_cms
+    url = f"/api/sites/{sid}/widgets/store/settings"
+    ed_id = db.one("SELECT id FROM users WHERE email = 'editor@example.com'")["id"]
+    if not db.one("SELECT id FROM users WHERE email = 'client@example.com'"):
+        auth.create_user("client@example.com", "Client", "correct-horse-3", "editor")
+    client_id = db.one("SELECT id FROM users WHERE email = 'client@example.com'")["id"]
+    other = c.post("/api/sites", json={"name": "Other Shop", "template": "corporate"}, headers=H).json()["site"]["id"]
+    with TestClient(app) as cl:
+        _login(cl, "client@example.com", "correct-horse-3")
+        # not a member yet: read-only, and can't assign members
+        assert cl.put(url, json={"mode": "demo", "button_text": "Mine"}, headers=H).status_code == 403
+        assert cl.put(f"/api/sites/{sid}/members/{client_id}", json={"role": "owner"}, headers=H).status_code == 403
+        # an admin makes them the owner of this site (Settings › People)
+        r = c.put(f"/api/sites/{sid}/members/{client_id}", json={"role": "owner"}, headers=H)
+        assert r.status_code == 200 and any(m["user_id"] == client_id and m["role"] == "owner" for m in r.json()["members"])
+        assert c.put(f"/api/sites/{sid}/members/{client_id}", json={"role": "boss"}, headers=H).status_code == 400
+        page = cl.get(f"/sites/{sid}/widgets/store").text
+        assert "Only this site's owners" not in page and 'id="save"' in page
+        assert cl.put(url, json={"mode": "demo", "button_text": "Mine"}, headers=H).status_code == 200
+        # ownership is per site
+        assert cl.put(f"/api/sites/{other}/widgets/store/settings", json={"mode": "demo"}, headers=H).status_code == 403
+        # an editor member stays read-only
+        c.put(f"/api/sites/{sid}/members/{ed_id}", json={"role": "editor"}, headers=H)
+        with TestClient(app) as ed:
+            _login(ed, "editor@example.com", "correct-horse-2")
+            assert ed.put(url, json={"mode": "demo"}, headers=H).status_code == 403
+        # the People list and the Users screen show it
+        settings = c.get(f"/sites/{sid}/settings").text
+        assert 'id="people"' in settings and "client@example.com" in settings
+        assert "Other Shop" not in c.get("/users").text.split("client@example.com")[1].split("</tr>")[0]
+        # removing the membership takes the right away
+        c.delete(f"/api/sites/{sid}/members/{client_id}", headers=H)
+        assert cl.put(url, json={"mode": "demo"}, headers=H).status_code == 403
+    c.put(url, json={"mode": "demo", "button_text": "Add to cart"}, headers=H)
 
 
 def test_settings_not_in_repo():

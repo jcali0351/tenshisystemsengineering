@@ -29,7 +29,7 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from tenshi import forms as tforms, profile as prof, scanner
 
-from . import auth, blocks, config, db, media, render, sites, templates, widgets
+from . import auth, blocks, config, db, media, members, render, sites, templates, widgets
 
 VERSION = "1.0.0"
 UI_DIR = Path(__file__).parent / "ui"
@@ -157,6 +157,7 @@ def api_user(request: Request, admin=False):
 @app.exception_handler(media.MediaError)
 @app.exception_handler(templates.TemplateError)
 @app.exception_handler(widgets.WidgetError)
+@app.exception_handler(members.MemberError)
 async def friendly_errors(request, error):
     return JSONResponse({"error": str(error)}, status_code=400)
 
@@ -980,7 +981,9 @@ def settings_page(request: Request, site_id: int):
     user = page_user(request)
     site = site_or_404(site_id)
     return show("settings.html", request, user, site=site, section="settings", theme=db.j(site["theme_json"]),
-                template=templates.get(site["template_id"]), templates_list=templates.all_templates(), fonts=templates.FONTS)
+                template=templates.get(site["template_id"]), templates_list=templates.all_templates(), fonts=templates.FONTS,
+                members=members.for_site(site_id), member_roles=members.ROLES, my_role=members.role_on(user, site_id),
+                all_users=db.all("SELECT id, name, email, role FROM users ORDER BY name") if user["role"] == "admin" else [])
 
 
 # ---------------------------------------------------------------------------------------------- widget settings (per site)
@@ -1001,7 +1004,7 @@ def widget_settings_page(request: Request, site_id: int, name: str):
     used_on = [p for p in db.all("SELECT id, title, slug, blocks_json FROM pages WHERE site_id = ? ORDER BY position, id", site_id)
                if name in widgets.used_in(db.j(p["blocks_json"], []))]
     return show(f"widget_{name}.html", request, user, site=site, section=f"widget:{name}", widget=widget,
-                settings=widgets.load_settings(site_id, name).model_dump(), can_edit=widgets.can_edit_settings(user, name),
+                settings=widgets.load_settings(site_id, name).model_dump(), can_edit=widgets.can_edit_settings(user, name, site_id),
                 used_on=used_on)
 
 
@@ -1017,8 +1020,8 @@ async def api_save_widget_settings(request: Request, site_id: int, name: str):
     user = api_user(request)
     site_or_404(site_id)
     widget = widget_or_404(name)
-    if not widgets.can_edit_settings(user, name):
-        raise HTTPException(403, f"Only admins can change the {widget.label} settings.")
+    if not widgets.can_edit_settings(user, name, site_id):
+        raise HTTPException(403, f"Only admins and this site's owners can change the {widget.label} settings.")
     body = await request.json()
     value = widgets.save_settings(site_id, name, body if isinstance(body, dict) else {}, user)
     return {"ok": True, "settings": value.model_dump()}
@@ -1034,6 +1037,31 @@ def widget_asset(name: str, path: str):
     if base not in file.parents or not file.is_file():
         raise HTTPException(404)
     return FileResponse(file, media_type=mimetypes.guess_type(file.name)[0], headers={"Cache-Control": "no-cache"})
+
+
+# ---------------------------------------------------------------------------------------------- site members
+
+@app.get("/api/sites/{site_id}/members")
+def api_members(request: Request, site_id: int):
+    api_user(request)
+    site_or_404(site_id)
+    return {"members": members.for_site(site_id)}
+
+
+@app.put("/api/sites/{site_id}/members/{user_id}")
+async def api_set_member(request: Request, site_id: int, user_id: int):
+    user = api_user(request, admin=True)
+    site_or_404(site_id)
+    members.set_member(site_id, user_id, (await request.json()).get("role", "editor"), user)
+    return {"members": members.for_site(site_id)}
+
+
+@app.delete("/api/sites/{site_id}/members/{user_id}")
+def api_remove_member(request: Request, site_id: int, user_id: int):
+    user = api_user(request, admin=True)
+    site_or_404(site_id)
+    members.remove_member(site_id, user_id, user)
+    return {"members": members.for_site(site_id)}
 
 
 # ---------------------------------------------------------------------------------------------- templates
@@ -1130,7 +1158,10 @@ def api_delete_template(request: Request, template_id: str):
 @app.get("/users", response_class=HTMLResponse)
 def users_page(request: Request):
     user = page_user(request, admin=True)
-    return show("users.html", request, user, rows=db.all("SELECT id, email, name, role, created_at FROM users ORDER BY name"), roles=auth.ROLES)
+    rows = db.all("SELECT id, email, name, role, created_at FROM users ORDER BY name")
+    for r in rows:
+        r["sites"] = members.for_user(r["id"])
+    return show("users.html", request, user, rows=rows, roles=auth.ROLES)
 
 
 @app.post("/api/users")
@@ -1166,6 +1197,7 @@ def api_delete_user(request: Request, user_id: int):
     if user_id == user["id"]:
         raise sites.SiteError("You can't delete yourself.")
     db.run("DELETE FROM users WHERE id = ?", user_id)
+    db.run("DELETE FROM site_members WHERE user_id = ?", user_id)
     return {"ok": True}
 
 

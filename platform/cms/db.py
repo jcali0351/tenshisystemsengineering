@@ -125,6 +125,14 @@ CREATE TABLE IF NOT EXISTS site_settings (
   PRIMARY KEY (site_id, key)
 );
 
+-- Who belongs to which site (members.py). role: 'owner' (the client: store connection, security, brand lock) or
+-- 'editor' (content). CMS admins don't need a row: they can do everything everywhere.
+CREATE TABLE IF NOT EXISTS site_members (
+  site_id INTEGER NOT NULL, user_id INTEGER NOT NULL, role TEXT NOT NULL DEFAULT 'editor', created_at TEXT NOT NULL,
+  PRIMARY KEY (site_id, user_id)
+);
+CREATE INDEX IF NOT EXISTS site_members_user ON site_members (user_id);
+
 -- What happened, by whom (the Recent Activity list)
 CREATE TABLE IF NOT EXISTS activity (
   id INTEGER PRIMARY KEY, user_id INTEGER, site_id INTEGER, action TEXT NOT NULL, details TEXT NOT NULL DEFAULT '',
