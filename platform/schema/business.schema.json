@@ -16,6 +16,7 @@
         "name": { "type": "string", "maxLength": 80 },
         "category": { "type": "string", "description": "contractor, restaurant, medical … (the Launch list)" },
         "category_label": { "type": "string" },
+        "variant": { "type": "string", "description": "For category faith: church, mosque, buddhist-temple, hindu-temple or synagogue (\"church\" alone is read as faith/church)" },
         "type": { "enum": ["storefront", "service-area", "online", "organization", ""] },
         "tagline": { "type": "string" },
         "phone": { "type": "string" },

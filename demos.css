@@ -75,3 +75,9 @@
   :root:not(#_):not(#__):not(#___):not(#____) .demos-section .demos-card a { transition: none; }
   :root:not(#_):not(#__):not(#___):not(#____) .demos-section .demos-card a:is(:hover, :focus-visible) { transform: none; }
 }
+/* Faith communities: their own heading under the business demos (part 5) */
+:root:not(#_):not(#__):not(#___):not(#____) .demos-section .demos-subtitle {
+  margin: clamp(40px, 5vw, 60px) 0 10px;
+  color: var(--dm-ink) !important; -webkit-text-fill-color: currentColor !important;
+  font: 700 clamp(1.4rem, 2.4vw, 1.8rem)/1.25 Lato, "Segoe UI", sans-serif !important;
+}

@@ -109,7 +109,11 @@ const PHOTO_ALT_KEY = {
   "img/demos/demo-contractor.webp": "demoShot_contractor",
   "img/demos/demo-retail.webp": "demoShot_retail",
   "img/demos/demo-law.webp": "demoShot_law",
-  "img/demos/demo-nonprofit.webp": "demoShot_nonprofit",
+  "img/demos/demo-church.webp": "demoShot_church",
+  "img/demos/demo-mosque.webp": "demoShot_mosque",
+  "img/demos/demo-temple.webp": "demoShot_temple",
+  "img/demos/demo-mandir.webp": "demoShot_mandir",
+  "img/demos/demo-synagogue.webp": "demoShot_synagogue",
 };
 const photoPath = (src) => String(src || "").replace(/\?.*$/, "").replace(/^(?:\.\.\/)+/, "");
 const photoAltKey = (src) => PHOTO_ALT_KEY[photoPath(src)] || "";
@@ -1489,8 +1493,26 @@ const DEMO_SITES = [
   { id: "contractor", name: "Isthmus Roofing & Exteriors" },
   { id: "retail", name: "Atwood Print & Merch" },
   { id: "law", name: "Hartwell & Okafor Law" },
-  { id: "nonprofit", name: "Eastside Table Food Collective" },
 ];
+// Faith communities (platform/cms/demo_faith.py): their own heading under the business demos.
+const FAITH_DEMO_SITES = [
+  { id: "church", name: "Lakeview Commons Church" },
+  { id: "mosque", name: "Isthmus Islamic Center" },
+  { id: "temple", name: "Monona Bay Meditation Temple" },
+  { id: "mandir", name: "Prairie Shanti Mandir" },
+  { id: "synagogue", name: "Beth Shalom of the Isthmus" },
+];
+const demoCard = (prefix, d) => `          <li class="demos-card">
+            <a href="https://demo-${d.id}.tenshisystems.com/" target="_blank" rel="noopener">
+              <img src="${prefix}img/demos/demo-${d.id}.webp" alt="${tx(`demoShot_${d.id}`)}" data-i18n-attr="alt:demoShot_${d.id}" width="960" height="600" loading="lazy" decoding="async">
+              <span class="demos-card-body">
+                <span class="demos-type" data-i18n="demoType_${d.id}">${tx(`demoType_${d.id}`)}</span>
+                <span class="demos-name" data-still>${esc(d.name)}</span>
+                <span class="demos-mods"><b data-i18n="demosModules">${tx("demosModules")}</b>: <span data-i18n="demoMods_${d.id}">${tx(`demoMods_${d.id}`)}</span></span>
+                <span class="demos-visit"><span data-i18n="demosVisit">${tx("demosVisit")}</span> <span aria-hidden="true">↗</span></span>
+              </span>
+            </a>
+          </li>`;
 const demosSection = (prefix) => `    <section class="demos-section" id="try-the-cms" aria-labelledby="demos-try-title">
       <div class="svc-wide">
         <div class="demos-try">
@@ -1502,17 +1524,12 @@ const demosSection = (prefix) => `    <section class="demos-section" id="try-the
         <h2 id="demos-title" class="section-title" data-i18n="demosTitle">${tx("demosTitle")}</h2>
         <p class="demos-lead" data-i18n="demosLead">${tx("demosLead")}</p>
         <ul class="demos-grid" aria-labelledby="demos-title">
-${DEMO_SITES.map((d) => `          <li class="demos-card">
-            <a href="https://demo-${d.id}.tenshisystems.com/" target="_blank" rel="noopener">
-              <img src="${prefix}img/demos/demo-${d.id}.webp" alt="${tx(`demoShot_${d.id}`)}" data-i18n-attr="alt:demoShot_${d.id}" width="960" height="600" loading="lazy" decoding="async">
-              <span class="demos-card-body">
-                <span class="demos-type" data-i18n="demoType_${d.id}">${tx(`demoType_${d.id}`)}</span>
-                <span class="demos-name" data-still>${esc(d.name)}</span>
-                <span class="demos-mods"><b data-i18n="demosModules">${tx("demosModules")}</b>: <span data-i18n="demoMods_${d.id}">${tx(`demoMods_${d.id}`)}</span></span>
-                <span class="demos-visit"><span data-i18n="demosVisit">${tx("demosVisit")}</span> <span aria-hidden="true">↗</span></span>
-              </span>
-            </a>
-          </li>`).join("\n")}
+${DEMO_SITES.map((d) => demoCard(prefix, d)).join("\n")}
+        </ul>
+        <h3 id="demos-faith-title" class="demos-subtitle" data-i18n="demosFaithTitle">${tx("demosFaithTitle")}</h3>
+        <p class="demos-lead" data-i18n="demosFaithLead">${tx("demosFaithLead")}</p>
+        <ul class="demos-grid demos-grid--faith" aria-labelledby="demos-faith-title">
+${FAITH_DEMO_SITES.map((d) => demoCard(prefix, d)).join("\n")}
         </ul>
       </div>
     </section>
@@ -1826,7 +1843,9 @@ const OPT = (pairs) => pairs.map(([v, label]) => `                <option value=
 const CATEGORIES = [["contractor", "Construction &amp; contracting"], ["home", "Home services &amp; landscaping"], ["automotive", "Automotive"],
   ["restaurant", "Restaurant, café &amp; food"], ["retail", "Retail &amp; online shop"], ["realestate", "Real estate"], ["legal", "Legal &amp; financial"],
   ["medical", "Health &amp; medical"], ["consulting", "Consulting &amp; agency"], ["creative", "Photography &amp; creative"], ["freelance", "Freelancer"],
-  ["agriculture", "Farming &amp; agriculture"], ["nonprofit", "Nonprofit &amp; charity"], ["community", "Community &amp; organization"], ["other", "Something else"]];
+  ["agriculture", "Farming &amp; agriculture"], ["faith", "Place of worship"], ["nonprofit", "Nonprofit &amp; charity"], ["community", "Community &amp; organization"], ["other", "Something else"]];
+// "faith" replaced the old "church" category (platform/cms/categories.py maps old "church" profiles to faith / church).
+const FAITH_VARIANTS = [["church", "Church"], ["mosque", "Mosque / Islamic center"], ["buddhist-temple", "Buddhist temple"], ["hindu-temple", "Hindu mandir"], ["synagogue", "Synagogue"]];
 const GOALS = [["leads", "Get more customers (lead generation)"], ["services", "Show my services"], ["portfolio", "Show off my work (portfolio)"],
   ["ecommerce", "Sell products (e-commerce)"], ["directory", "List things people can browse (directory)"], ["nonprofit", "Support a cause (nonprofit)"], ["community", "Bring people together (community)"]];
 const TYPES = [["storefront", "Storefront", "Customers visit you"], ["service-area", "Service area", "You go to customers"], ["online", "Online only", "Everything happens online"], ["organization", "Organization", "Club, charity or group"]];
@@ -1879,6 +1898,12 @@ ${field("lx-category", "Business category", `<select id="lx-category" name="comp
                 <option value="">Choose one…</option>
 ${OPT(CATEGORIES)}
               </select>`, { req: true })}
+            <div class="lx-variant-wrap" hidden>
+${field("lx-variant", "Kind of place of worship", `<select id="lx-variant" name="company.variant">
+                <option value="">Choose one…</option>
+${OPT(FAITH_VARIANTS)}
+              </select>`, { req: true })}
+            </div>
 ${field("lx-goal", "Website goal", `<select id="lx-goal" name="site.goal" required>
                 <option value="">Choose one…</option>
 ${OPT(GOALS)}

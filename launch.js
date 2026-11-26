@@ -117,6 +117,7 @@
   var RULES = {
     "lx-name": function (v) { return v.trim().length >= 2 || "Please enter your business name."; },
     "lx-category": function (v) { return !!v || "Please choose a category."; },
+    "lx-variant": function (v) { return $("#lx-category").value !== "faith" || !!v || "Please choose the kind of place of worship."; },
     "lx-goal": function (v) { return !!v || "Please choose what your website is for."; },
     "lx-email": function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) || "Please enter an email address like name@example.com."; },
     "lx-phone": function (v) { return !v.trim() || /^[+()\-.\s\d]{6,}$/.test(v.trim()) || "That doesn't look like a phone number."; },
@@ -171,6 +172,13 @@
     saveDraft();
   });
   form.addEventListener("change", function (e) { if (e.target.name === "company.type") checkType(); saveDraft(); });
+  // "Place of worship" asks one more question: which kind (church, mosque, Buddhist temple, Hindu mandir, synagogue)
+  function showVariant() {
+    var wrap = $(".lx-variant-wrap", root);
+    if (wrap) wrap.hidden = $("#lx-category").value !== "faith";
+  }
+  $("#lx-category").addEventListener("change", showVariant);
+  showVariant();
 
   /* ---------- 6. The logo drop zone ---------- */
   var logo = null;                                     // { name, type, dataUrl } once chosen
@@ -286,6 +294,7 @@
         name: name,
         category: val("lx-category"),
         category_label: opt("lx-category"),
+        variant: val("lx-category") === "faith" ? val("lx-variant") : "",
         type: type ? type.value : "",
         phone: val("lx-phone"),
         email: val("lx-email"),
@@ -374,7 +383,7 @@
       "",
       "Web address: " + profile.site.domain,
       "Design: " + ((templateById(profile.site.template) || {}).name || profile.site.template),
-      "Category: " + profile.company.category_label,
+      "Category: " + profile.company.category_label + (profile.company.variant ? " (" + $("#lx-variant").options[$("#lx-variant").selectedIndex].text + ")" : ""),
       "Website goal: " + $("#lx-goal").options[$("#lx-goal").selectedIndex].text,
       "Business type: " + (typeTile ? typeTile.textContent : profile.company.type),
       "Email: " + profile.company.email,
@@ -444,6 +453,7 @@
   }
 
   loadDraft();
+  showVariant();
   // Arriving from a Portfolio card (launch.html?template=restaurant): use that design
   var asked = new URLSearchParams(location.search).get("template");
   if (asked && templateById(asked)) { templateSelect.value = asked; chosenByVisitor = true; }

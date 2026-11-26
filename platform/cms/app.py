@@ -35,7 +35,7 @@ from . import actions, auth, blocks, chrome, config, db, domains, forms as lead_
 from . import stock, stock_routes
 from . import inbox as inbox_mod, sitetime  # noqa: E402
 from . import ai_assist  # noqa: E402
-from . import demo_sites, sandbox  # noqa: E402
+from . import categories, demo_sites, sandbox  # noqa: E402
 
 VERSION = "1.0.0"
 UI_DIR = Path(__file__).parent / "ui"
@@ -66,6 +66,7 @@ def startup():
     db.setup()
     templates.seed()
     stock.setup()
+    categories.migrate()                   # old "church" sites/photos -> faith/church (categories.py)
     stock.start_seed_in_background()       # the Stock Photo Library's seed photos (stock.py), imported once
     sandbox.start_background()             # the public demo sites + "Try the CMS" sandbox (demo_sites.py), reset nightly
 

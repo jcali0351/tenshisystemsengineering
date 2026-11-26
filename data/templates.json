@@ -164,7 +164,7 @@
       "style": "clean",
       "pages": ["Home", "Our Mission", "Programs", "Volunteer", "Donate"],
       "features": ["Volunteer sign-up", "Programs pages", "Impact stories"],
-      "goals": ["nonprofit", "community"], "categories": ["nonprofit"]
+      "goals": ["nonprofit", "community"], "categories": ["nonprofit", "faith"]
     },
     {
       "id": "community", "name": "Community Portal", "group": "community",
@@ -174,7 +174,7 @@
       "style": "clean",
       "pages": ["Home", "News", "Events", "Groups", "Contact"],
       "features": ["News and events", "Group pages", "Newsletter sign-up"],
-      "goals": ["community", "nonprofit"], "categories": ["community", "nonprofit"]
+      "goals": ["community", "nonprofit"], "categories": ["community", "nonprofit", "faith"]
     },
     {
       "id": "portfolio", "name": "Creative Portfolio", "group": "creative",

@@ -32,7 +32,7 @@ from pathlib import Path
 
 from PIL import Image, ImageOps
 
-from . import config, db, media
+from . import categories as category_map, config, db, media
 
 SEED_DIR = Path(__file__).resolve().parent / "stock_seed"
 MAX_SIDE = 2400                  # longest side of a library photo
@@ -334,6 +334,9 @@ def seed(seed_dir=None):
             added = 0
             for im in todo:
                 im = {k: ("" if v is None else v) for k, v in im.items()}
+                if im.get("category") in category_map.ALIASES:     # e.g. "church" photos import as faith, tagged church
+                    cat, var = category_map.normalize(im["category"])
+                    im["category"], im["tags"] = cat, (clean_tags(im.get("tags", [])) + "," + var).strip(",")
                 src = seed_dir / im["file"]
                 try:
                     if db.one("SELECT id FROM stock_photos WHERE key = ?", im["key"]):

@@ -21,7 +21,7 @@ from pathlib import Path
 
 from tenshi import profile as prof
 
-from . import blocks, config, db, forms as lead_forms, media as media_mod, render, templates
+from . import blocks, categories, config, db, forms as lead_forms, media as media_mod, render, templates
 
 RESERVED = {"www", "admin", "api", "app", "cms", "files", "mail", "static", "assets", "tenshi", "localhost", "preview"}
 SITE_TABLES = ["pages", "media_folders", "media", "albums", "portfolio_items", "posts"]   # rows that belong to a site
@@ -65,6 +65,7 @@ def create_site(name, template_id, subdomain=None, profile=None, user=None):
     check_subdomain(subdomain)
     profile = prof.with_defaults(profile or {})
     profile["company"]["name"] = profile["company"].get("name") or name
+    categories.migrate_profile(profile)                          # "church" -> faith / church
     profile.setdefault("locations", [])
     profile["site"] = {**profile.get("site", {}), "template": template_id, "subdomain": subdomain,
                        "domain": f"{subdomain}.{config.SITES_DOMAIN}"}
@@ -94,6 +95,7 @@ def save_profile(site_id, profile, user=None):
     site = get(site_id)
     db.run("INSERT INTO profile_revisions (site_id, profile_json, user_id, created_at) VALUES (?, ?, ?, ?)",
            site_id, site["profile_json"], user["id"] if user else None, db.now())
+    categories.migrate_profile(profile)                          # "church" -> faith / church
     name = (profile.get("company") or {}).get("name") or site["name"]
     db.run("UPDATE sites SET profile_json = ?, name = ?, updated_at = ? WHERE id = ?", db.dumps(profile), name, db.now(), site_id)
     db.log("Edited business data", name, user, site_id)
