@@ -25,12 +25,12 @@
   "_arpg": "Undercity (the dungeon crawler)",
   "arpg.hero": "source/arpg.hero.glb",
   "arpg.hollow": "source/arpg.hollow.glb",
-  "arpg.skitter": "uploads/arpg.skitter-202611212103.glb",
+  "arpg.skitter": "uploads/arpg.skitter-202611252330.glb",
   "arpg.wisp": "source/arpg.wisp.glb",
   "arpg.golem": "source/arpg.golem.glb",
   "arpg.wizard": "",
   "arpg.elf": "",
   "arpg.warden": "source/arpg.warden.glb",
-  "arpg.satan": "uploads/arpg.satan-202611232301.glb",
-  "arpg.custom.emwtv6hi6": "uploads/arpg.custom.emwtv6hi6-202611232256.glb"
+  "arpg.satan": "uploads/arpg.satan-202611252330.glb",
+  "arpg.custom.emwtv6hi6": "uploads/arpg.satan-202611252330.glb"
 }
