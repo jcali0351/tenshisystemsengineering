@@ -127,3 +127,56 @@ def test_page_addresses_cannot_take_post_names(cms):
     assert db.one("SELECT slug FROM pages WHERE id = ?", r["id"])["slug"] == "page-post-office"
     r2 = c.post(f"/api/sites/{sid}/pages", json={"title": "Feed"}, headers=H).json()
     assert db.one("SELECT slug FROM pages WHERE id = ?", r2["id"])["slug"] == "page-feed"
+
+
+# ---------------------------------------------------------------------------------------------- 2. header and footer
+
+def test_header_footer_off_by_default(cms):
+    c, sid = cms
+    html = c.get(f"/sites/{sid}/preview/index").text
+    assert '<header class="top">' in html and "tc-header" not in html and "chrome.css" not in html
+
+
+def test_header_footer_on_every_page(cms):
+    from datetime import date
+    c, sid = cms
+    data = {"header": {"enabled": True, "menu": "custom", "show_name": True, "cta_text": "Book a plumber", "cta_link": "contact",
+                       "links": [{"label": "Home", "link": "index"}, {"label": "About us", "link": "about"}, {"label": "Shop", "link": "https://shop.example.com"}]},
+            "footer": {"enabled": True, "about": "Fast, tidy, insured.", "copyright": "© {year} {name}. All rights reserved.",
+                       "columns": [{"heading": "Help", "links": [{"label": "FAQ", "link": "about"}]}],
+                       "social": {"instagram": "https://instagram.com/veetwo", "facebook": ""}}}
+    r = c.put(f"/api/sites/{sid}/chrome", json=data, headers=H)
+    assert r.status_code == 200, r.text
+    assert r.json()["footer"]["social"] == {"instagram": "https://instagram.com/veetwo"}
+    for slug in ("index", "about", "post-winter-pipe-care"):
+        html = c.get(f"/sites/{sid}/preview/{slug}").text
+        assert html.count("<header") == 1 and html.count("<footer") == 1, slug
+        assert "tc-header" in html and "Book a plumber" in html and "About us" in html and "widgets/chrome/chrome.css" in html
+        assert ">Help</h2>" in html and "Fast, tidy, insured." in html and f"© {date.today().year} Vee Two Plumbing. All rights reserved." in html
+        assert 'href="https://instagram.com/veetwo"' in html and 'href="https://shop.example.com" target="_blank"' in html
+    about = c.get(f"/sites/{sid}/preview/about").text
+    assert f'href="/sites/{sid}/preview/about" aria-current="page">About us' in about
+    assert '<a href="/sites/{}/preview/services">'.format(sid) not in about.split("</header>")[0]       # custom: only the links
+    folder = _deploy(c, sid)
+    assert (folder / "widgets/chrome/chrome.css").exists() and "tc-footer" in (folder / "post-winter-pipe-care.html").read_text()
+    assert 'href="about.html" aria-current="page"' in (folder / "about.html").read_text()
+
+
+@pytest.mark.parametrize("bad", [{"header": {"links": [{"label": "x", "link": "javascript:alert(1)"}]}},
+                                 {"footer": {"social": {"x": "http://x.com/me"}}},
+                                 {"header": {"menu": "random"}}, {"footer": {"columns": [{}] * 5}}])
+def test_header_footer_refuses_bad_values(cms, bad):
+    c, sid = cms
+    assert c.put(f"/api/sites/{sid}/chrome", json=bad, headers=H).status_code == 400
+
+
+def test_header_footer_respects_brand_lock(cms):
+    c, sid = cms
+    _user("v2-ed@example.com", "correct-horse-4")
+    c.put(f"/api/sites/{sid}/brand", json={"locked": True}, headers=H)
+    with TestClient(app) as ed:
+        _login(ed, "v2-ed@example.com", "correct-horse-4")
+        assert ed.put(f"/api/sites/{sid}/chrome", json={}, headers=H).status_code == 403
+        assert "The brand is locked" in ed.get(f"/sites/{sid}/chrome").text
+    c.put(f"/api/sites/{sid}/brand", json={"locked": False}, headers=H)
+    assert 'id="hdr"' in c.get(f"/sites/{sid}/chrome").text

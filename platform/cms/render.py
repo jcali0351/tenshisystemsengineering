@@ -24,7 +24,7 @@ from markupsafe import Markup, escape
 
 from tenshi import profile as prof
 
-from . import config, db, media as media_mod, posts as posts_mod, templates, theme as theme_mod, widgets
+from . import chrome as chrome_mod, config, db, media as media_mod, posts as posts_mod, templates, theme as theme_mod, widgets
 
 
 # ---------------------------------------------------------------------------------------------- cleaning HTML
@@ -123,6 +123,7 @@ class SiteRenderer:
         self.template_id = template_id or site["template_id"]
         self.profile = prof.with_defaults(profile if profile is not None else db.j(site["profile_json"]))
         self.profile.setdefault("locations", [])
+        self.chrome = chrome_mod.load(site.get("id"))
         self.theme = templates.theme_for(self.template_id, theme if theme is not None else db.j(site["theme_json"]))
         self.media_rows = {m["id"]: m for m in db.all("SELECT * FROM media WHERE site_id = ?", site["id"])} if site.get("id") else {}
         self.used_files = set()
@@ -217,6 +218,9 @@ class SiteRenderer:
         ctx = self.context(page, menu_pages)
         html = self.env.get_template("page.html.j2").render(ctx)
         used = widgets.used_in(ctx["blocks"])
+        if chrome_mod.active(self.chrome):            # the site's own header and footer (Header & footer)
+            html = chrome_mod.apply(html, self.chrome, self, page, menu_pages)
+            used = used + ["chrome"]
         file = "index.html" if page.get("slug") == "index" else f"{page.get('slug')}.html"
         if used:
             self.used_widgets[file] = used

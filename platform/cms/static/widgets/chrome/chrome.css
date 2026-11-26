@@ -1,0 +1,14 @@
+/* chrome.css: the site's global header and footer (cms/chrome.py). Builds on the starter design's .top/.bottom. */
+.tc-brand { display: inline-flex; align-items: center; gap: 10px; }
+.tc-brand img { height: 44px; width: auto; }
+.tc-header .menu { align-items: center; }
+.tc-header .tc-cta { margin-left: 8px; padding: 10px 18px; }
+.tc-header .menu a.tc-cta, .tc-header .menu a.tc-cta:hover { color: #fff; background: var(--p); }
+.tc-footer .tc-cols { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+.tc-footer .tc-h { margin: 0 0 10px; font: 700 .8rem/1.4 var(--font-body, inherit); letter-spacing: .08em; text-transform: uppercase; color: #fff; }
+.tc-footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.tc-footer .tc-col p { margin: 0 0 8px; }
+.tc-social { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+.tc-social a { padding: 6px 14px; border-radius: 999px; border: 1px solid color-mix(in srgb, #fff 30%, transparent); text-decoration: none; font-size: .85rem; font-weight: 600; }
+.tc-social a:hover { background: color-mix(in srgb, #fff 12%, transparent); }
+@media (max-width: 760px) { .tc-header .tc-cta { margin: 8px 0 0; } }

@@ -343,3 +343,7 @@ def block_template_source(name: str) -> str | None:
 
 # The widgets. Import order is the order in the builder's "Add block" list (after the built-in blocks).
 from . import blog, booking, faq, map, pricing, store  # noqa: E402,F401
+
+# The global header and footer (cms/chrome.py) bring their CSS like a widget, so it's linked and deployed the same way.
+register(Widget(name="chrome", label="Header and footer", about="The site's own header and footer.", config=BaseModel,
+                render=lambda block, ctx: Markup(""), assets=["chrome.css"], hidden=True))

@@ -1,0 +1,106 @@
+{% extends "layout.html" %}
+{% block title %}Header & footer · {{ site.name }}{% endblock %}
+{% block heading %}Header & footer{% endblock %}
+{% block actions %}{% if can_edit %}<button class="btn btn-primary" id="save" type="button">Save</button>{% endif %}
+<button class="btn" data-deploy="{{ site.id }}" data-note="Header and footer">Publish site</button>{% endblock %}
+{% block body %}
+<p class="muted">Set the header and footer once; every page uses them. Leave one off to keep the template's own.
+  Changes show in the preview when you save, and on the live site when you publish.</p>
+{% if not can_edit %}<p class="note note-warn">The brand is locked: only this site's owners and CMS admins can change the header and footer.</p>{% endif %}
+<div class="chrome-grid">
+  <div>
+    <section class="card" id="hdr">
+      <label class="check field" style="font-size:1rem"><input type="checkbox" data-k="header.enabled"> <b>Use this header on every page</b></label>
+      <div class="field"><span>Logo (empty = the logo in Business data)</span><div class="media-field" data-site="{{ site.id }}" data-kind="image"><input type="hidden" data-k="header.logo_media"></div></div>
+      <label class="check field"><input type="checkbox" data-k="header.show_name"> Show the business name next to the logo</label>
+      <label class="field"><span>Menu</span><select data-k="header.menu"><option value="pages">Pages marked “Show in the menu”, then the links below</option><option value="custom">Only the links below</option></select></label>
+      <div class="field"><span>Menu links</span><div class="links" data-list="header.links" data-max="12"></div></div>
+      <div class="grid grid-2">
+        <label class="field"><span>Button text (empty = no button)</span><input type="text" data-k="header.cta_text" maxlength="40" placeholder="Get a quote"></label>
+        <label class="field"><span>Button goes to</span><input type="text" data-k="header.cta_link" list="page-list" placeholder="contact"></label>
+      </div>
+      <label class="check field"><input type="checkbox" data-k="header.show_phone"> Show the phone number (from Business data)</label>
+    </section>
+    <section class="card" id="ftr" style="margin-top:18px">
+      <label class="check field" style="font-size:1rem"><input type="checkbox" data-k="footer.enabled"> <b>Use this footer on every page</b></label>
+      <label class="field"><span>About (under the name; empty = the tagline)</span><textarea data-k="footer.about" rows="2" maxlength="400"></textarea></label>
+      <label class="check field"><input type="checkbox" data-k="footer.show_contact"> Show phone, email and address (from Business data)</label>
+      <div class="field"><span>Columns (up to 4)</span><div id="columns"></div><button class="btn btn-small" type="button" id="add-col">+ Add column</button></div>
+      <div class="field"><span>Social media (full https:// addresses)</span>
+        <div class="grid grid-2">{% for k, label in networks.items() %}<label class="field" style="margin:0"><span class="small">{{ label }}</span><input type="url" data-social="{{ k }}" placeholder="https://"></label>{% endfor %}</div></div>
+      <label class="field"><span>Copyright line</span><input type="text" data-k="footer.copyright" maxlength="200"><small><code>{year}</code> becomes this year, <code>{name}</code> the business name.</small></label>
+    </section>
+  </div>
+  <section class="card chrome-preview">
+    <div class="row"><h2 style="margin:0">Preview</h2><span style="flex:1"></span>
+      <select id="pv-page" style="width:auto" aria-label="Page to preview">{% for p in pages %}<option value="{{ p.slug }}">{{ p.title }}</option>{% endfor %}</select></div>
+    <iframe id="pv" title="Preview" src="/sites/{{ site.id }}/preview/index"></iframe>
+  </section>
+</div>
+<datalist id="page-list">{% for p in pages %}<option value="{{ p.slug }}">{{ p.title }}</option>{% endfor %}</datalist>
+<script id="chrome-data" type="application/json">{{ {"data": data, "logo": logo_thumb} | tojson }}</script>
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  var T = Tenshi, $ = T.$, $$ = T.$$, esc = T.esc, siteId = {{ site.id }}, canEdit = {{ 'true' if can_edit else 'false' }};
+  var D = JSON.parse($("#chrome-data").textContent).data;
+  function get(path) { return path.split(".").reduce(function (o, k) { return o == null ? o : o[k]; }, D); }
+  function set(path, v) { var ks = path.split("."), o = D; ks.slice(0, -1).forEach(function (k) { o = o[k]; }); o[ks[ks.length - 1]] = v; }
+  $$("[data-k]").forEach(function (el) {
+    var v = get(el.dataset.k);
+    if (el.type === "checkbox") el.checked = !!v; else el.value = v == null ? "" : v;
+    el.addEventListener(el.type === "checkbox" || el.tagName === "SELECT" ? "change" : "input", function () {
+      set(el.dataset.k, el.type === "checkbox" ? el.checked : (el.dataset.k === "header.logo_media" ? (el.value ? +el.value : null) : el.value));
+    });
+  });
+  $$(".media-field").forEach(function (b) { T.mediaField(b, function (v) { D.header.logo_media = v ? +v : null; }); });
+  $$("[data-social]").forEach(function (el) { el.value = D.footer.social[el.dataset.social] || ""; el.addEventListener("input", function () { D.footer.social[el.dataset.social] = el.value.trim(); }); });
+
+  /* A list of {label, link} rows */
+  function linkList(box, list, max) {
+    function draw() {
+      box.innerHTML = list.map(function (l, i) {
+        return '<div class="link-row" data-i="' + i + '"><input type="text" data-f="label" placeholder="Label" value="' + esc(l.label) + '" maxlength="60">' +
+          '<input type="text" data-f="link" list="page-list" placeholder="page or https://…" value="' + esc(l.link) + '">' +
+          '<button type="button" class="icon-btn" data-up aria-label="Move up"' + (i ? "" : " disabled") + '>↑</button><button type="button" class="icon-btn" data-del aria-label="Remove">✕</button></div>';
+      }).join("") + (list.length < max ? '<button type="button" class="btn btn-small" data-add>+ Add link</button>' : "");
+    }
+    box.addEventListener("input", function (e) { var r = e.target.closest("[data-i]"); if (r) list[+r.dataset.i][e.target.dataset.f] = e.target.value; });
+    box.addEventListener("click", function (e) {
+      var r = e.target.closest("[data-i]"), i = r ? +r.dataset.i : -1;
+      if (e.target.closest("[data-add]")) list.push({ label: "", link: "" });
+      else if (e.target.closest("[data-del]")) list.splice(i, 1);
+      else if (e.target.closest("[data-up]") && i > 0) list.splice(i - 1, 0, list.splice(i, 1)[0]);
+      else return;
+      draw();
+    });
+    draw();
+  }
+  linkList($('[data-list="header.links"]'), D.header.links, 12);
+  function drawColumns() {
+    var box = $("#columns");
+    box.innerHTML = D.footer.columns.map(function (c, i) {
+      return '<div class="col-card" data-col="' + i + '"><div class="row"><input type="text" data-cf="heading" placeholder="Column heading" value="' + esc(c.heading) + '" maxlength="60" style="flex:1">' +
+        '<button type="button" class="icon-btn" data-col-del aria-label="Remove column">✕</button></div>' +
+        '<textarea data-cf="text" rows="2" placeholder="Text (optional)" maxlength="600">' + esc(c.text) + '</textarea><div class="links"></div></div>';
+    }).join("");
+    $$("[data-col]", box).forEach(function (el) { linkList($(".links", el), D.footer.columns[+el.dataset.col].links, 10); });
+    $("#add-col").hidden = D.footer.columns.length >= 4;
+  }
+  $("#columns").addEventListener("input", function (e) { var c = e.target.closest("[data-col]"); if (c && e.target.dataset.cf) D.footer.columns[+c.dataset.col][e.target.dataset.cf] = e.target.value; });
+  $("#columns").addEventListener("click", function (e) { var c = e.target.closest("[data-col]"); if (c && e.target.closest("[data-col-del]")) { D.footer.columns.splice(+c.dataset.col, 1); drawColumns(); } });
+  $("#add-col").onclick = function () { D.footer.columns.push({ heading: "", text: "", links: [] }); drawColumns(); };
+  drawColumns();
+  if (!canEdit) $$(".chrome-grid input, .chrome-grid select, .chrome-grid textarea, .chrome-grid button").forEach(function (el) { el.disabled = true; });
+
+  var pv = $("#pv");
+  function reload() { pv.src = "/sites/" + siteId + "/preview/" + $("#pv-page").value + "?t=" + Date.now(); }
+  $("#pv-page").onchange = reload;
+  var save = $("#save");
+  if (save) save.onclick = function () {
+    T.busy(save, T.api("PUT", "/api/sites/" + siteId + "/chrome", D).then(function (res) { D = res; T.toast("Saved. Publish to put it live."); reload(); }));
+  };
+})();
+</script>
+{% endblock %}

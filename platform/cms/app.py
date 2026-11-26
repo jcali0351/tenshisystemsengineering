@@ -29,7 +29,7 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from tenshi import forms as tforms, profile as prof, scanner
 
-from . import auth, blocks, config, db, media, members, posts, ratelimit, render, revisions, sanitize, security, sites, templates, theme as theme_mod, widgets
+from . import auth, blocks, chrome, config, db, media, members, posts, ratelimit, render, revisions, sanitize, security, sites, templates, theme as theme_mod, widgets
 
 VERSION = "1.0.0"
 UI_DIR = Path(__file__).parent / "ui"
@@ -168,6 +168,7 @@ def api_user(request: Request, admin=False):
 @app.exception_handler(security.SecurityError)
 @app.exception_handler(theme_mod.ThemeError)
 @app.exception_handler(posts.PostError)
+@app.exception_handler(chrome.ChromeError)
 async def friendly_errors(request, error):
     return JSONResponse({"error": str(error)}, status_code=400)
 
@@ -975,6 +976,36 @@ def api_delete_portfolio(request: Request, item_id: int):
     api_user(request)
     db.run("DELETE FROM portfolio_items WHERE id = ?", item_id)
     return {"ok": True}
+
+
+# ---------------------------------------------------------------------------------------------- header and footer
+
+@app.get("/sites/{site_id}/chrome", response_class=HTMLResponse)
+def chrome_page(request: Request, site_id: int):
+    """Header & footer: the site's own header and footer, used on every page."""
+    user = page_user(request)
+    site = site_or_404(site_id)
+    c = chrome.load(site_id)
+    logo = db.one("SELECT * FROM media WHERE id = ?", c.header.logo_media) if c.header.logo_media else None
+    pages = db.all("SELECT slug, title FROM pages WHERE site_id = ? ORDER BY position, id", site_id)
+    return show("chrome.html", request, user, site=site, section="chrome", data=c.model_dump(), pages=pages,
+                networks=chrome.NETWORKS, can_edit=theme_mod.can_change_brand(user, site_id), logo_thumb=media_json(logo)["thumb"] if logo else "")
+
+
+@app.get("/api/sites/{site_id}/chrome")
+def api_chrome(request: Request, site_id: int):
+    api_user(request)
+    sites.get(site_id)
+    return chrome.load(site_id).model_dump()
+
+
+@app.put("/api/sites/{site_id}/chrome")
+async def api_save_chrome(request: Request, site_id: int):
+    user = api_user(request)
+    sites.get(site_id)
+    if not theme_mod.can_change_brand(user, site_id):
+        raise HTTPException(403, "The brand is locked on this site: only its owners and CMS admins can change the header and footer.")
+    return chrome.save(site_id, await request.json(), user).model_dump()
 
 
 # ---------------------------------------------------------------------------------------------- blog posts
