@@ -137,6 +137,17 @@ templates.json), `year`, `form_action`. They're listed in `PLATFORM_NAMES` in `s
   "Get directions" button; lazy-loaded. Optional per-site Google Maps API key and style at `/sites/<id>/widgets/map`
   (owners and admins; stored in `site_settings`, never in git). The key is a browser key, so restrict it in Google
   Cloud to the site's addresses (HTTP referrers) and to the Maps JavaScript + Geocoding APIs.
+- **Form builder (`cms/widgets/contact_form.py`, `cms/forms.py`):** the "Form" block. Field types text, email, phone,
+  long text, list, choose-one, tick boxes, date and file upload (pictures and/or documents, 1–10 MB, checked by their
+  first bytes); drag to reorder; required, half/full width, help text; thank-you message or redirect (own page or
+  https); per-form recipient email; optional consent box; presets Contact, Quote request, Appointment request,
+  Newsletter. Sends are checked against a snapshot of the published form (`.tenshi-forms.json` in the deployment,
+  never served), rate-limited and honeypotted like before, and land in Leads (list, detail page, CSV with formula
+  cells neutralised). Uploaded files live in `DATA_DIR/form-uploads/<site id>/`, outside every web folder, and only
+  signed-in CMS users can download them. The classic Form block still works (hidden from the Add block list).
+- **Lead emails (`cms/mail.py`):** SMTP_HOST, SMTP_PORT (465 SSL / 587 STARTTLS), SMTP_USER, SMTP_PASS and optional
+  CONTACT_FROM in `/etc/tenshi-cms.env` (`tools/server/cms-mail-setup.sh` copies them from the contact form's
+  `/etc/tenshi-contact.env`). Without them nothing is sent and the Leads screen says email is off.
 - **Store tokens:** only the PUBLIC Storefront token is accepted; anything shaped like a secret Shopify token
   (`shpat_`, `shpca_`, `shppa_`, `shpss_` …) is refused. Settings live in the `site_settings` table, never in git.
 - **API docs:** `/api/docs`, `/redoc` and `/openapi.json` are off. For local development only: `TENSHI_API_DOCS=1`.

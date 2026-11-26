@@ -24,7 +24,7 @@ from markupsafe import Markup, escape
 
 from tenshi import profile as prof
 
-from . import chrome as chrome_mod, config, db, media as media_mod, posts as posts_mod, templates, theme as theme_mod, widgets
+from . import chrome as chrome_mod, config, db, forms as forms_mod, media as media_mod, posts as posts_mod, templates, theme as theme_mod, widgets
 
 
 # ---------------------------------------------------------------------------------------------- cleaning HTML
@@ -130,6 +130,7 @@ class SiteRenderer:
         self.used_widgets = {}          # page file -> [widget names], for the deployment's CSP manifest
         self.page_sources = {}          # page file -> CSP sources from its blocks' settings (e.g. a booking embed host)
         self._widget_settings = {}
+        self.form_specs = {}            # "<page>/<block>" -> what the server checks a form send against (forms.py)
         self.env = make_env(self.template_id)
 
     # --- helpers the templates call -------------------------------------------------------------------------
@@ -216,6 +217,11 @@ class SiteRenderer:
 
     def render_page(self, page, menu_pages):
         ctx = self.context(page, menu_pages)
+        for b in ctx["blocks"]:                       # Form blocks: which page they're on, and the server's snapshot (forms.py)
+            if isinstance(b, dict) and b.get("type") == "contact_form":
+                b["_page"] = page.get("slug", "")
+                cfg = widgets.get("contact_form").config_for(b.get("data"))
+                self.form_specs[f"{page.get('slug', '')}/{widgets.block_uid(b)}"] = forms_mod.spec(cfg, page.get("slug", ""))
         html = self.env.get_template("page.html.j2").render(ctx)
         used = widgets.used_in(ctx["blocks"])
         if chrome_mod.active(self.chrome):            # the site's own header and footer (Header & footer)
@@ -292,6 +298,7 @@ def build_to(site, out_dir, mode="hosted"):
             (out / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {base_url}sitemap.xml\n", encoding="utf-8")
     if mode == "hosted":
         widgets.write_manifest(out, renderer.used_widgets, renderer.page_sources)
+        forms_mod.write_specs(out, renderer.form_specs)
     if renderer.used_files:
         (out / "media").mkdir(exist_ok=True)
         src = media_mod.site_folder(site["id"])

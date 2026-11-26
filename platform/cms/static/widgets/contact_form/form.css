@@ -1,0 +1,28 @@
+/* form.css: the Form block (cms/widgets/contact_form.py). Uses the theme's colours (--p, --i, --s, --a) and corners. */
+.tw-form { display: grid; gap: 18px; }
+.tw-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 18px; }
+.tw-field { grid-column: 1 / -1; display: grid; gap: 6px; min-width: 0; margin: 0; padding: 0; border: 0; }
+.tw-field.tw-half { grid-column: auto; }
+.tw-field > label, .tw-field > legend { font-weight: 700; padding: 0; }
+.tw-req { color: var(--p, #5b21b6); margin-left: 3px; }
+.tw-form input:not([type=checkbox]):not([type=radio]), .tw-form select, .tw-form textarea {
+  width: 100%; box-sizing: border-box; font: inherit; padding: 12px 14px; color: var(--i, #1f2937); background: var(--s, #fff);
+  border: 1px solid color-mix(in srgb, var(--i, #1f2937) 25%, transparent); border-radius: calc(var(--radius, 14px) * .7); }
+.tw-form input[type=file] { padding: 10px; background: color-mix(in srgb, var(--i, #1f2937) 4%, var(--s, #fff)); }
+.tw-form input:focus-visible, .tw-form select:focus-visible, .tw-form textarea:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--p, #5b21b6) 45%, transparent); outline-offset: 1px; border-color: var(--p, #5b21b6); }
+.tw-form textarea { resize: vertical; min-height: 120px; }
+.tw-choices { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+.tw-choice { display: inline-flex; align-items: flex-start; gap: 8px; font-weight: 500; cursor: pointer; }
+.tw-choice input { width: 18px; height: 18px; margin: 3px 0 0; accent-color: var(--p, #5b21b6); flex: none; }
+.tw-help { font-size: .85rem; opacity: .75; font-weight: 400; }
+.tw-field.tw-invalid input, .tw-field.tw-invalid select, .tw-field.tw-invalid textarea { border-color: #b42318; }
+.tw-field .tw-err { color: #b42318; font-size: .85rem; font-weight: 700; }
+.tw-form-error { margin: 0; padding: 10px 14px; border-radius: 10px; color: #7a1a12; background: #fde8e6; font-weight: 600; }
+.tw-submit { justify-self: start; }
+.tw-submit[disabled] { opacity: .65; cursor: progress; }
+.tw-form-note:empty { display: none; }
+.tw-form-note { margin: 0; padding: 14px 16px; border-radius: calc(var(--radius, 14px) * .7); font-weight: 700;
+  background: color-mix(in srgb, var(--p, #5b21b6) 10%, var(--s, #fff)); border-left: 4px solid var(--p, #5b21b6); }
+.tw-form.tw-sent .tw-fields, .tw-form.tw-sent .tw-submit { display: none; }
+@media (max-width: 620px) { .tw-fields { grid-template-columns: 1fr; } .tw-field.tw-half { grid-column: 1 / -1; } }

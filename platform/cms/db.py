@@ -168,6 +168,12 @@ CREATE TABLE IF NOT EXISTS activity (
 CREATE INDEX IF NOT EXISTS media_site ON media (site_id, folder_id);
 CREATE INDEX IF NOT EXISTS pages_site ON pages (site_id, position);
 CREATE INDEX IF NOT EXISTS leads_site ON leads (site_id, created_at);
+-- Files visitors attached to a form (forms.py); the files themselves are in DATA_DIR/form-uploads/<site id>/
+CREATE TABLE IF NOT EXISTS lead_files (
+  id INTEGER PRIMARY KEY, lead_id INTEGER NOT NULL, site_id INTEGER NOT NULL, field TEXT NOT NULL DEFAULT '',
+  name TEXT NOT NULL, stored TEXT NOT NULL, size INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS lead_files_lead ON lead_files (lead_id);
 CREATE INDEX IF NOT EXISTS activity_time ON activity (created_at);
 """
 

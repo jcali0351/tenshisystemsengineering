@@ -25,11 +25,12 @@ from pathlib import Path
 from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse, Response
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from markupsafe import escape
 from starlette.middleware.sessions import SessionMiddleware
 
 from tenshi import forms as tforms, profile as prof, scanner
 
-from . import auth, blocks, chrome, config, db, media, members, posts, ratelimit, render, revisions, sanitize, security, sites, templates, theme as theme_mod, widgets
+from . import auth, blocks, chrome, config, db, forms as lead_forms, mail, media, members, posts, ratelimit, render, revisions, sanitize, security, sites, templates, theme as theme_mod, widgets
 
 VERSION = "1.0.0"
 UI_DIR = Path(__file__).parent / "ui"
@@ -67,6 +68,41 @@ SITE_HOST = re.compile(r"^([a-z0-9-]+)\." + re.escape(config.SITES_DOMAIN) + r"(
 TRANSPARENT_GIF = bytes.fromhex("47494638396101000100800000000000ffffff21f90401000000002c00000000010001000002024401003b")
 
 
+
+def _wants_json(request: Request) -> bool:
+    return "application/json" in request.headers.get("accept", "")
+
+
+async def _form_builder_send(request: Request, site: dict, spec: dict, form):
+    """Check and keep one send of a Form builder form; email the form's recipient (forms.py, mail.py)."""
+    try:
+        data, uploads = await lead_forms.check(spec, form)
+        files = []
+        for field, up in uploads:
+            content, ext = await lead_forms.read_upload(field, up)
+            files.append((field, content, ext, up.filename or ""))
+    except lead_forms.FormProblem as problem:
+        if _wants_json(request):
+            return JSONResponse({"ok": False, "error": str(problem), "field": problem.field}, status_code=400)
+        return HTMLResponse(_form_page("That didn't send", str(problem), "./", "Back to the website"), status_code=400)
+    lead_id = lead_forms.save(site["id"], spec, data, files)
+    if spec.get("recipient"):
+        summary = lead_forms.summary(data)
+        reply = summary["email"] if lead_forms.EMAIL_RE.match(summary["email"] or "") else ""
+        mail.send_later(mail.lead_notification(site, spec.get("title", "Form"), data, spec["recipient"],
+                                               f"{config.PUBLIC_URL.rstrip('/')}/sites/{site['id']}/leads/{lead_id}",
+                                               [name for _, _, _, name in files], reply))
+    if _wants_json(request):
+        return JSONResponse({"ok": True})
+    return HTMLResponse(_form_page("Thank you", spec.get("success") or "Your message is on its way.", "./", "Back to the website"))
+
+
+def _form_page(title, text, href, link_text):
+    """The page a visitor sees after sending a form with JavaScript switched off."""
+    return (f"<!doctype html><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><title>{escape(title)}</title>"
+            f"<body style='font:18px/1.5 system-ui;display:grid;place-items:center;min-height:90vh;color:#222;margin:0 20px'>"
+            f"<div><h1>{escape(title)}</h1><p>{escape(text)}</p><p><a href='{escape(href)}'>{escape(link_text)}</a></p></div>")
+
 @app.middleware("http")
 async def serve_client_sites(request: Request, call_next):
     """
@@ -93,11 +129,23 @@ async def serve_site(request: Request, subdomain: str, path: str):
         if not ratelimit.allow_form_post(site["id"], client_ip(request)):
             return JSONResponse({"ok": False, "error": "Too many messages from here. Please try again in a few minutes, or call us."},
                                 status_code=429, headers={"Retry-After": "600"})
-        form = await request.form()
+        try:
+            size = int(request.headers.get("content-length") or 0)
+        except ValueError:
+            size = 0
+        if size > lead_forms.MAX_REQUEST_MB * 1024 * 1024:
+            return JSONResponse({"ok": False, "error": "The files are too large to send."}, status_code=413)
+        try:
+            form = await request.form(max_files=25, max_fields=200)
+        except TypeError:                                     # an older Starlette without the limits
+            form = await request.form()
         if form.get("_hp"):                                   # the hidden box only robots fill in
             return JSONResponse({"ok": True})
+        spec = lead_forms.load_spec(folder, f"{form.get('_page', '')}/{form.get('_form', '')}") if form.get("_form") else None
+        if spec:                                              # a Form builder form (forms.py)
+            return await _form_builder_send(request, site, spec, form)
         try:
-            sites.save_lead(site["id"], dict(form))
+            sites.save_lead(site["id"], {k: v for k, v in form.items() if isinstance(v, str)})
         except sites.SiteError:
             return JSONResponse({"ok": False}, status_code=400)
         return JSONResponse({"ok": True})
@@ -1074,7 +1122,48 @@ def leads_page(request: Request, site_id: int):
     user = page_user(request)
     site = site_or_404(site_id)
     rows = db.all("SELECT * FROM leads WHERE site_id = ? ORDER BY id DESC", site_id)
-    return show("leads.html", request, user, site=site, section="leads", rows=rows)
+    counts = {r["lead_id"]: r["n"] for r in db.all("SELECT lead_id, COUNT(*) AS n FROM lead_files WHERE site_id = ? GROUP BY lead_id", site_id)}
+    for r in rows:
+        r["summary"] = lead_forms.summary(db.j(r["data_json"]) or {})
+        r["files"] = counts.get(r["id"], 0)
+    return show("leads.html", request, user, site=site, section="leads", rows=rows, mail_on=mail.configured())
+
+
+def lead_or_404(site_id, lead_id):
+    lead = db.one("SELECT * FROM leads WHERE id = ? AND site_id = ?", lead_id, site_id)
+    if not lead:
+        raise HTTPException(404, "That message doesn't exist.")
+    return lead
+
+
+@app.get("/sites/{site_id}/leads/{lead_id}", response_class=HTMLResponse)
+def lead_page(request: Request, site_id: int, lead_id: int):
+    """One lead with every answer and its uploaded files."""
+    user = page_user(request)
+    site = site_or_404(site_id)
+    lead = lead_or_404(site_id, lead_id)
+    files = lead_forms.files_for(lead_id)
+    names = {f["name"] for f in files}
+    data = db.j(lead["data_json"]) or {}
+    return show("lead.html", request, user, site=site, section="leads", lead=lead, data=data, files=files, file_names=names,
+                summary=lead_forms.summary(data), mail_on=mail.configured())
+
+
+@app.get("/sites/{site_id}/leads/{lead_id}/files/{file_id}")
+def lead_file(request: Request, site_id: int, lead_id: int, file_id: int):
+    """A file a visitor attached to a form: only for signed-in CMS users, always as a download, never run as a page."""
+    page_user(request)
+    lead_or_404(site_id, lead_id)
+    row = db.one("SELECT * FROM lead_files WHERE id = ? AND lead_id = ? AND site_id = ?", file_id, lead_id, site_id)
+    path = lead_forms.file_path(row) if row else None
+    if not row or not path.is_file():
+        raise HTTPException(404, "That file isn't there any more.")
+    ext = path.suffix.lower()
+    inline = ext in (".jpg", ".jpeg", ".png", ".gif", ".webp", ".pdf") and request.query_params.get("view") == "1"
+    return FileResponse(path, media_type=lead_forms.MIME.get(ext, "application/octet-stream"), filename=row["name"],
+                        content_disposition_type="inline" if inline else "attachment",
+                        headers={"X-Content-Type-Options": "nosniff", "Content-Security-Policy": "default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; sandbox",
+                                 "Cache-Control": "private, no-store"})
 
 
 @app.patch("/api/leads/{lead_id}")
@@ -1089,6 +1178,7 @@ async def api_lead_status(request: Request, lead_id: int):
 @app.delete("/api/leads/{lead_id}")
 def api_lead_delete(request: Request, lead_id: int):
     api_user(request)
+    lead_forms.delete_files(lead_id)
     db.run("DELETE FROM leads WHERE id = ?", lead_id)
     return {"ok": True}
 
@@ -1098,13 +1188,25 @@ def leads_csv(request: Request, site_id: int):
     page_user(request)
     site = site_or_404(site_id)
     rows = db.all("SELECT * FROM leads WHERE site_id = ? ORDER BY id", site_id)
-    keys = sorted({k for r in rows for k in db.j(r["data_json"])})
+    keys = []
+    for r in rows:                                     # answers in form order, first seen first
+        for k in db.j(r["data_json"]) or {}:
+            if k not in keys:
+                keys.append(k)
+    files = {}
+    for f in db.all("SELECT lead_id, name FROM lead_files WHERE site_id = ? ORDER BY id", site_id):
+        files.setdefault(f["lead_id"], []).append(f["name"])
     out = io.StringIO()
     writer = csv.writer(out)
-    writer.writerow(["date", "status", "page"] + keys)
+    writer.writerow(["date", "status", "page"] + keys + (["files"] if files else []))
+
+    def safe(v):                                       # a cell starting with = + - @ would run as a formula in Excel
+        v = str(v if v is not None else "")
+        return "'" + v if v[:1] in ("=", "+", "-", "@", "\t", "\r") else v
     for r in rows:
-        data = db.j(r["data_json"])
-        writer.writerow([r["created_at"], r["status"], r["page"]] + [data.get(k, "") for k in keys])
+        data = db.j(r["data_json"]) or {}
+        writer.writerow([r["created_at"], r["status"], r["page"]] + [safe(data.get(k, "")) for k in keys]
+                        + ([safe("; ".join(files.get(r["id"], [])))] if files else []))
     return Response(out.getvalue(), media_type="text/csv",
                     headers={"Content-Disposition": f'attachment; filename="{site["subdomain"]}-leads.csv"'})
 

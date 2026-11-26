@@ -89,7 +89,8 @@ BLOCKS = {
                  "button_text": "Contact us", "button_link": "contact"},
     },
     "form": {
-        "label": "Form", "about": "A contact form. Messages arrive under Leads.",
+        "label": "Simple form (classic)", "about": "The original contact form (name, email, phone, message). New pages use the Form block.",
+        "hidden": True,                       # kept so existing pages keep working; not offered for new blocks
         "fields": [{"name": "heading", "label": "Heading", "type": "text"}, {"name": "intro", "label": "Intro", "type": "textarea"},
                    {"name": "fields", "label": "Boxes to show", "type": "select",
                     "options": [["name,email,phone,message", "Name, email, phone, message"], ["name,email,message", "Name, email, message"],

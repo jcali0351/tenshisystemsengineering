@@ -148,6 +148,7 @@ class Widget:
     hint: str = ""
     block_csp: Callable[[BaseModel], dict[str, list[str]]] | None = None
     hidden: bool = False           # not in the builder's list (e.g. "post": the CMS puts it on post pages itself)
+    presets: dict = field(default_factory=dict)   # {field: {value: settings}}: choosing that value in the builder fills them in
 
     # --- the builder ----------------------------------------------------------------------------------------------
     def defaults(self) -> dict:
@@ -160,7 +161,7 @@ class Widget:
     def block_type(self) -> dict:
         """This widget in the shape blocks.BLOCKS uses, so the builder lists and edits it like any block."""
         return {"label": self.label, "about": self.about, "fields": self.fields(), "data": self.defaults(),
-                "widget": True, "hint": self.hint}
+                "widget": True, "hint": self.hint, **({"presets": self.presets} if self.presets else {})}
 
     # --- saving -----------------------------------------------------------------------------------------------------
     def clean_config(self, data: dict | None) -> dict:
@@ -359,7 +360,7 @@ def block_template_source(name: str) -> str | None:
 
 
 # The widgets. Import order is the order in the builder's "Add block" list (after the built-in blocks).
-from . import blog, booking, faq, map, pricing, store  # noqa: E402,F401
+from . import blog, booking, contact_form, faq, map, pricing, store  # noqa: E402,F401
 
 # The global header and footer (cms/chrome.py) bring their CSS like a widget, so it's linked and deployed the same way.
 register(Widget(name="chrome", label="Header and footer", about="The site's own header and footer.", config=BaseModel,

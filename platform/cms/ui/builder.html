@@ -19,7 +19,7 @@
     <div id="palette" hidden style="margin-top:12px">
       <p class="small muted">Click to add after the selected block, or drag into the list.</p>
       <div class="palette">
-        {% for kind, b in block_types.items() %}<button type="button" draggable="true" data-kind="{{ kind }}"><b>{{ b.label }}</b><small>{{ b.about }}</small></button>{% endfor %}
+        {% for kind, b in block_types.items() if not b.hidden %}<button type="button" draggable="true" data-kind="{{ kind }}"><b>{{ b.label }}</b><small>{{ b.about }}</small></button>{% endfor %}
       </div>
     </div>
   </div>

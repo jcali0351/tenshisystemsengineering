@@ -3,17 +3,21 @@
 {% block heading %}Leads{% endblock %}
 {% block actions %}<a class="btn" href="/sites/{{ site.id }}/leads.csv">Download CSV</a>{% endblock %}
 {% block body %}
-<p class="muted">Messages sent through the forms on this site. Mark each one as you follow it up.</p>
+<p class="muted">Messages sent through the forms on this site. Open one to see every answer and attached file; mark each one as you follow it up.</p>
+{% if not mail_on %}<p class="notice-box small" role="note"><b>Email notifications are off.</b> The server has no mail settings yet, so new messages only arrive here.
+  {% if user.role == 'admin' %}To turn them on, run <code>tools/server/cms-mail-setup.sh</code> on the server (it reuses the website contact form's SMTP settings).{% else %}Ask a CMS admin to turn them on.{% endif %}</p>{% endif %}
 <section class="card">
   {% if rows %}
   <div class="table-wrap"><table class="table">
     <thead><tr><th>Received</th><th>From</th><th>Message</th><th>Page</th><th>Status</th><th></th></tr></thead>
     <tbody>
-    {% for l in rows %}{% set d = l.data_json | j %}
+    {% for l in rows %}{% set d = l.summary %}
     <tr data-lead="{{ l.id }}">
-      <td class="small">{{ l.created_at | when }}</td>
-      <td><b>{{ d.name }}</b>{% if d.email %}<br><a href="mailto:{{ d.email }}">{{ d.email }}</a>{% endif %}{% if d.phone %}<br><a href="tel:{{ d.phone }}">{{ d.phone }}</a>{% endif %}</td>
-      <td style="max-width:420px">{% if d.service %}<span class="badge">{{ d.service }}</span><br>{% endif %}{{ d.message }}</td>
+      <td class="small"><a href="/sites/{{ site.id }}/leads/{{ l.id }}">{{ l.created_at | when }}</a></td>
+      <td><b>{{ d.name or '—' }}</b>{% if d.email %}<br><a href="mailto:{{ d.email }}">{{ d.email }}</a>{% endif %}{% if d.phone %}<br><a href="tel:{{ d.phone }}">{{ d.phone }}</a>{% endif %}</td>
+      <td style="max-width:420px">{% if d.service %}<span class="badge">{{ d.service }}</span><br>{% endif %}{{ d.message | truncate(220) }}
+        {% if l.files %}<br><span class="badge">📎 {{ l.files }} file{{ 's' if l.files != 1 }}</span>{% endif %}
+        <br><a class="small" href="/sites/{{ site.id }}/leads/{{ l.id }}">Open</a></td>
       <td class="small">{{ l.page }}</td>
       <td><select data-status>{% for s in ['new', 'contacted', 'won', 'lost'] %}<option {% if l.status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select></td>
       <td><button class="btn btn-small btn-danger" data-delete>Delete</button></td>

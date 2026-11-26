@@ -156,6 +156,11 @@
       var update = function () {
         b.data = b.data || {};
         b.data[input.dataset.f] = input.type === "checkbox" ? input.checked : input.value;
+        var preset = type.presets && type.presets[input.dataset.f] && type.presets[input.dataset.f][input.value];
+        if (preset) {                       // a preset (e.g. the Form's "Start from"): fill in its settings and redraw
+          Object.keys(preset).forEach(function (k) { b.data[k] = JSON.parse(JSON.stringify(preset[k])); });
+          changed(); drawPanel(); return;
+        }
         changed();
       };
       input.addEventListener(input.tagName === "SELECT" || input.type === "checkbox" ? "change" : "input", update);
@@ -178,7 +183,7 @@
     function sum(item) { var first = f.fields[0] && item[f.fields[0].name]; return first ? String(first).slice(0, 48) : ""; }
     function draw(openIndex) {
       $(".items", box).innerHTML = list.map(function (item, i) {
-        return '<details class="item" data-i="' + i + '"' + (i === openIndex ? " open" : "") + "><summary><b>" + esc(label) + " " + (i + 1) + '</b><span class="item-sum">' + esc(sum(item)) + "</span>" +
+        return '<details class="item" data-i="' + i + '"' + (i === openIndex ? " open" : "") + '><summary draggable="true"><span class="grip" aria-hidden="true" title="Drag to reorder">⠿</span><b>' + esc(label) + " " + (i + 1) + '</b><span class="item-sum">' + esc(sum(item)) + "</span>" +
           '<span class="tools"><button type="button" class="icon-btn" data-item="up" aria-label="Move up"' + (i === 0 ? " disabled" : "") + ">↑</button>" +
           '<button type="button" class="icon-btn" data-item="down" aria-label="Move down"' + (i === list.length - 1 ? " disabled" : "") + ">↓</button>" +
           '<button type="button" class="icon-btn" data-item="del" aria-label="Remove">✕</button></span></summary><div class="item-body">' +
@@ -196,6 +201,29 @@
       $(".item-sum", item).textContent = sum(list[i]);
       changed();
     }
+    // Drag an item by its title to reorder (the arrows do the same from the keyboard)
+    var dragFrom = null;
+    box.addEventListener("dragstart", function (e) {
+      var it = e.target.closest && e.target.closest(".item");
+      if (!it || !box.contains(it) || e.target.tagName !== "SUMMARY") return;
+      dragFrom = +it.dataset.i; e.dataTransfer.effectAllowed = "move"; e.stopPropagation();
+      try { e.dataTransfer.setData("text/plain", "item"); } catch (err) {}
+    });
+    box.addEventListener("dragover", function (e) {
+      if (dragFrom === null) return;
+      e.preventDefault(); e.stopPropagation();
+      var over = e.target.closest(".item");
+      $$(".item", box).forEach(function (x) { x.classList.toggle("drag-over", x === over); });
+    });
+    box.addEventListener("drop", function (e) {
+      if (dragFrom === null) return;
+      e.preventDefault(); e.stopPropagation();
+      var over = e.target.closest(".item"), to = over ? +over.dataset.i : list.length - 1;
+      $$(".item", box).forEach(function (x) { x.classList.remove("drag-over"); });
+      if (to !== dragFrom) { list.splice(to, 0, list.splice(dragFrom, 1)[0]); draw(to); changed(); }
+      dragFrom = null;
+    });
+    box.addEventListener("dragend", function () { dragFrom = null; $$(".item", box).forEach(function (x) { x.classList.remove("drag-over"); }); });
     box.addEventListener("input", update);
     box.addEventListener("change", function (e) { if (e.target.tagName === "SELECT" || e.target.type === "checkbox") update(e); });
     box.addEventListener("click", function (e) {

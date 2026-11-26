@@ -1,0 +1,56 @@
+{#- One lead: every answer in the order the form asked, its files (download only for signed-in CMS users), status. -#}
+{% extends "layout.html" %}
+{% block title %}Message · {{ site.name }}{% endblock %}
+{% block heading %}Message{% endblock %}
+{% block actions %}<a class="btn" href="/sites/{{ site.id }}/leads">All leads</a>{% if summary.email %}<a class="btn btn-primary" href="mailto:{{ summary.email }}">Reply by email</a>{% endif %}{% endblock %}
+{% block body %}
+<div class="grid grid-2" style="align-items:start" data-lead="{{ lead.id }}">
+  <section class="card">
+    <h2>{{ summary.name or summary.email or 'Visitor' }}</h2>
+    <p class="small muted">Received {{ lead.created_at | when }}{% if lead.page %} on the page <b>{{ lead.page }}</b>{% endif %}.</p>
+    <dl class="lead-answers">
+      {% for k, v in data.items() %}
+      <dt>{{ k }}</dt>
+      <dd>{% if v in file_names %}📎 {{ v }}{% elif '@' in v and ' ' not in v %}<a href="mailto:{{ v }}">{{ v }}</a>{% else %}{{ v }}{% endif %}</dd>
+      {% endfor %}
+    </dl>
+  </section>
+  <section class="card">
+    <h2>Follow-up</h2>
+    <label class="field"><span>Status</span>
+      <select data-status>{% for s in ['new', 'contacted', 'won', 'lost'] %}<option {% if lead.status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select></label>
+    <h2 style="margin-top:18px">Files</h2>
+    {% if files %}
+    <ul class="lead-files">
+      {% for f in files %}
+      <li><b>{{ f.name }}</b> <span class="small muted">{{ f.field }} · {{ (f.size / 1024) | round(0) | int }} KB</span><br>
+        <a class="btn btn-small" href="/sites/{{ site.id }}/leads/{{ lead.id }}/files/{{ f.id }}">Download</a>
+        {% if f.name.lower().endswith(('.jpg', '.jpeg', '.png', '.gif', '.webp', '.pdf')) %}<a class="btn btn-small" target="_blank" rel="noopener" href="/sites/{{ site.id }}/leads/{{ lead.id }}/files/{{ f.id }}?view=1">View</a>{% endif %}</li>
+      {% endfor %}
+    </ul>
+    <p class="small muted">Files are kept privately on the server; only signed-in team members can open them.</p>
+    {% else %}<p class="small muted">No files attached.</p>{% endif %}
+    {% if not mail_on %}<p class="small muted">Email notifications are off (no mail settings on the server).</p>{% endif %}
+    <p style="margin-top:18px"><button class="btn btn-danger btn-small" data-delete>Delete this message</button></p>
+  </section>
+</div>
+<style>
+  .lead-answers { display: grid; grid-template-columns: minmax(120px, 34%) 1fr; gap: 10px 16px; margin: 0; }
+  .lead-answers dt { font-weight: 700; color: var(--muted); font-size: .9rem; }
+  .lead-answers dd { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .lead-files { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+</style>
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  var box = document.querySelector("[data-lead]"), id = box.dataset.lead;
+  document.querySelector("[data-status]").addEventListener("change", function (e) {
+    Tenshi.api("PATCH", "/api/leads/" + id, { status: e.target.value }).then(function () { Tenshi.toast("Updated"); });
+  });
+  document.querySelector("[data-delete]").addEventListener("click", function () {
+    if (confirm("Delete this message and its files?")) Tenshi.api("DELETE", "/api/leads/" + id).then(function () { location.href = "/sites/{{ site.id }}/leads"; });
+  });
+})();
+</script>
+{% endblock %}

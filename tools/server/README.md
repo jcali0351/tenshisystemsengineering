@@ -85,3 +85,18 @@ template). Only a bcrypt hash is kept, in `/etc/caddy/tenshi-editor.auth` (made 
 ```
 bash /srv/tenshi/app/tools/server/caddy-update.sh --editor-password
 ```
+
+## Lead emails from the CMS
+
+Form blocks on client sites can email each new message to the form's recipient. The CMS uses the same SMTP mailbox
+as the website contact form. To turn it on (once):
+
+```bash
+ssh -i ~/.ssh/tenshi_vps root@189.31.38.230
+bash /srv/tenshi/app/tools/server/cms-mail-setup.sh   # copies SMTP_* from /etc/tenshi-contact.env, backs up, restarts, checks
+```
+
+It writes `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` (and `CONTACT_FROM` if set) into `/etc/tenshi-cms.env`
+(mode 600), keeps `/etc/tenshi-cms.env.bak-<date>`, and restores it if the CMS doesn't come back. If the contact
+form has no SMTP login yet it asks for one (the password isn't echoed). Until then leads still arrive in the
+dashboard and the Leads screen shows "Email notifications are off".
