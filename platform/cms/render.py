@@ -127,6 +127,7 @@ class SiteRenderer:
         self.media_rows = {m["id"]: m for m in db.all("SELECT * FROM media WHERE site_id = ?", site["id"])} if site.get("id") else {}
         self.used_files = set()
         self.used_widgets = {}          # page file -> [widget names], for the deployment's CSP manifest
+        self.page_sources = {}          # page file -> CSP sources from its blocks' settings (e.g. a booking embed host)
         self._widget_settings = {}
         self.env = make_env(self.template_id)
 
@@ -215,8 +216,12 @@ class SiteRenderer:
         ctx = self.context(page, menu_pages)
         html = self.env.get_template("page.html.j2").render(ctx)
         used = widgets.used_in(ctx["blocks"])
+        file = "index.html" if page.get("slug") == "index" else f"{page.get('slug')}.html"
         if used:
-            self.used_widgets["index.html" if page.get("slug") == "index" else f"{page.get('slug')}.html"] = used
+            self.used_widgets[file] = used
+            sources = widgets.block_sources(ctx["blocks"])
+            if sources:
+                self.page_sources[file] = sources
         return widgets.inject_assets(html, used, self.mode)
 
 
@@ -255,7 +260,7 @@ def build_to(site, out_dir, mode="hosted"):
     used = sorted({n for names in renderer.used_widgets.values() for n in names})
     widgets.copy_files(used, out)
     if mode == "hosted":
-        widgets.write_manifest(out, renderer.used_widgets)
+        widgets.write_manifest(out, renderer.used_widgets, renderer.page_sources)
     if renderer.used_files:
         (out / "media").mkdir(exist_ok=True)
         src = media_mod.site_folder(site["id"])

@@ -46,6 +46,28 @@
   </section>
 </div>
 
+<section class="card" id="security" style="margin-top:18px">
+  <div class="row"><h2 style="margin:0">Security: what pages may load</h2><span style="flex:1"></span>
+    {% if can_manage %}<button class="btn" type="button" id="save-security">Save security</button>{% endif %}</div>
+  <p class="small muted">Published pages tell browsers to load scripts, styles, frames and form posts only from this site (plus what its
+    widgets need, like the store's Shopify connection). Pictures may come from any https address. If your own code loads
+    something from another address, add its hostname here. Changes apply straight away, no Publish needed.</p>
+  <div class="grid grid-2" style="align-items:start">
+    <div>
+      <label class="field"><span>Extra allowed hosts</span>
+        <textarea id="extra-hosts" rows="4" spellcheck="false" placeholder="booking.example.com&#10;*.example-cdn.com" {% if not can_manage %}disabled{% endif %}>{{ sec.extra_hosts | join('
+') }}</textarea>
+        <small>One hostname per line, like <code>widgets.example.com</code> or <code>*.example.com</code>. https only. Admins and this site's owners can change it.</small></label>
+      <label class="check field"><input type="checkbox" id="report-only" {% if sec.report_only %}checked{% endif %} {% if not can_manage %}disabled{% endif %}>
+        Report only (nothing is blocked; browsers just list what would be). Use it only while fixing a page.</label>
+    </div>
+    <div>
+      <h3 style="margin:0 0 6px;font-size:1rem">Check: what the pages load now</h3>
+      <div id="audit" class="small muted" aria-live="polite">Checking…</div>
+    </div>
+  </div>
+</section>
+
 <section class="card" id="people" style="margin-top:18px">
   <h2>People</h2>
   <p class="small muted">Owners can connect this site's store and change its security and brand settings. Editors change content. CMS admins can do everything.
@@ -97,6 +119,33 @@
     };
     T.busy(this, T.api("POST", "/api/sites/" + siteId + "/settings", body).then(function () { T.toast("Saved. Deploy to put it live."); setTimeout(function () { location.reload(); }, 700); }));
   };
+  /* Security: the audit of outside loads, and the extra hosts / report-only settings */
+  var auditBox = document.getElementById("audit"), hostsBox = document.getElementById("extra-hosts");
+  function drawAudit(res) {
+    var f = res.findings, blocked = f.filter(function (x) { return !x.allowed; });
+    if (!f.length) { auditBox.innerHTML = "Nothing is loaded from other addresses except what the policy already allows."; return; }
+    auditBox.innerHTML = "<p><b>" + blocked.length + "</b> of " + f.length + " outside loads would be blocked" + (res.settings.report_only ? " (report-only is on, so nothing is blocked now)" : "") + ".</p>" +
+      '<div class="table-wrap"><table class="table"><thead><tr><th>Page</th><th>What</th><th>Address</th><th></th></tr></thead><tbody>' +
+      f.map(function (x) {
+        return "<tr><td>" + T.esc(x.page) + "</td><td><code>" + T.esc(x.tag) + "</code></td><td style=\"word-break:break-all\">" + T.esc(x.url) + "</td><td>" +
+          (x.allowed ? '<span class="badge badge-live">allowed</span>' : '<span class="badge badge-failed">blocked</span>' +
+            ({{ 'true' if can_manage else 'false' }} ? ' <button class="btn btn-small" type="button" data-allow="' + T.esc(x.host) + '">Allow ' + T.esc(x.host) + "</button>" : "")) + "</td></tr>";
+      }).join("") + "</tbody></table></div>";
+  }
+  function loadAudit() { T.api("GET", "/api/sites/" + siteId + "/security").then(drawAudit).catch(function () { auditBox.textContent = "The check couldn't run."; }); }
+  loadAudit();
+  auditBox.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-allow]"); if (!b) return;
+    var lines = hostsBox.value.split(/\s+/).filter(Boolean);
+    if (lines.indexOf(b.dataset.allow) < 0) lines.push(b.dataset.allow);
+    hostsBox.value = lines.join("\n"); T.toast("Added " + b.dataset.allow + ". Press Save security.");
+  });
+  var saveSec = document.getElementById("save-security");
+  if (saveSec) saveSec.onclick = function () {
+    T.busy(saveSec, T.api("PUT", "/api/sites/" + siteId + "/security", { extra_hosts: hostsBox.value, report_only: document.getElementById("report-only").checked })
+      .then(function (res) { hostsBox.value = res.settings.extra_hosts.join("\n"); T.toast("Security settings saved"); loadAudit(); }));
+  };
+
   var addMember = document.getElementById("add-member");
   if (addMember) {
     addMember.addEventListener("submit", function (e) {

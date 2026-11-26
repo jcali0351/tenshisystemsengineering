@@ -29,7 +29,7 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from tenshi import forms as tforms, profile as prof, scanner
 
-from . import auth, blocks, config, db, media, members, render, sites, templates, widgets
+from . import auth, blocks, config, db, media, members, render, security, sites, templates, widgets
 
 VERSION = "1.0.0"
 UI_DIR = Path(__file__).parent / "ui"
@@ -120,7 +120,9 @@ async def serve_site(request: Request, subdomain: str, path: str):
     if file.suffix == ".html":
         # Each page's own policy: the base policy plus what the widgets on that page need (e.g. the Store widget adds
         # Shopify's hosts), read from the deployment's manifest (widgets.write_manifest). Pages without widgets get the base.
-        headers["Content-Security-Policy"] = widgets.csp_for_file(folder, file.relative_to(folder.resolve()).as_posix())
+        # The site's own extra allowed hosts and its report-only switch (Settings & theme › Security, security.py).
+        sec = security.load(site["id"])
+        headers[security.header_name(sec)] = widgets.csp_for_file(folder, file.relative_to(folder.resolve()).as_posix(), security.extra_sources(sec))
     return FileResponse(file, headers=headers)
 
 
@@ -158,6 +160,7 @@ def api_user(request: Request, admin=False):
 @app.exception_handler(templates.TemplateError)
 @app.exception_handler(widgets.WidgetError)
 @app.exception_handler(members.MemberError)
+@app.exception_handler(security.SecurityError)
 async def friendly_errors(request, error):
     return JSONResponse({"error": str(error)}, status_code=400)
 
@@ -983,6 +986,7 @@ def settings_page(request: Request, site_id: int):
     return show("settings.html", request, user, site=site, section="settings", theme=db.j(site["theme_json"]),
                 template=templates.get(site["template_id"]), templates_list=templates.all_templates(), fonts=templates.FONTS,
                 members=members.for_site(site_id), member_roles=members.ROLES, my_role=members.role_on(user, site_id),
+                can_manage=members.can_manage(user, site_id), sec=security.load(site_id).model_dump(),
                 all_users=db.all("SELECT id, name, email, role FROM users ORDER BY name") if user["role"] == "admin" else [])
 
 
@@ -1037,6 +1041,26 @@ def widget_asset(name: str, path: str):
     if base not in file.parents or not file.is_file():
         raise HTTPException(404)
     return FileResponse(file, media_type=mimetypes.guess_type(file.name)[0], headers={"Cache-Control": "no-cache"})
+
+
+# ---------------------------------------------------------------------------------------------- site security (CSP)
+
+@app.get("/api/sites/{site_id}/security")
+def api_security(request: Request, site_id: int):
+    api_user(request)
+    site = site_or_404(site_id)
+    findings = security.audit(site)
+    return {"settings": security.load(site_id).model_dump(), "findings": findings, "blocked_hosts": security.blocked_hosts(findings)}
+
+
+@app.put("/api/sites/{site_id}/security")
+async def api_save_security(request: Request, site_id: int):
+    user = api_user(request)
+    site_or_404(site_id)
+    if not members.can_manage(user, site_id):
+        raise HTTPException(403, "Only admins and this site's owners can change its security settings.")
+    body = await request.json()
+    return {"ok": True, "settings": security.save(site_id, body if isinstance(body, dict) else {}, user).model_dump()}
 
 
 # ---------------------------------------------------------------------------------------------- site members

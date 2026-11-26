@@ -17,6 +17,8 @@ Each widget has:
     files                  extra files (pictures, sample data) copied into deployments that use the widget.
     csp                    extra Content-Security-Policy sources the widget needs ({"connect-src": [...], ...}),
                            added only to pages that contain it (see csp_for()).
+    block_csp(config)      optional: sources that depend on one block's settings (e.g. the booking widget's embed
+                           host), added only to the page that has that block.
     settings               optional Pydantic model for per-site settings (e.g. the store's Shopify connection), kept
                            in the site_settings table (db.py), never in git. Edited on /sites/<id>/widgets/<name>.
     settings_admin_only    only admins and the site's owners (members.py) may change the settings; False = any editor.
@@ -88,6 +90,7 @@ class Widget:
     settings: type[BaseModel] | None = None
     settings_admin_only: bool = True
     hint: str = ""
+    block_csp: Callable[[BaseModel], dict[str, list[str]]] | None = None
 
     # --- the builder ----------------------------------------------------------------------------------------------
     def defaults(self) -> dict:
@@ -249,29 +252,48 @@ def copy_files(names, out_dir: Path) -> None:
                 shutil.copy2(src, target)
 
 
-def write_manifest(out_dir: Path, pages: dict[str, list[str]]) -> None:
-    """pages: {"index.html": ["store"], ...}. Read back by csp_for_file() when the site is served."""
-    (Path(out_dir) / MANIFEST).write_text(json.dumps({"pages": pages}), encoding="utf-8")
+def block_sources(blocks: list) -> dict[str, list[str]]:
+    """Sources that depend on the settings of the widget blocks on a page (Widget.block_csp)."""
+    out: dict[str, list[str]] = {}
+    for b in blocks or []:
+        w = REGISTRY.get((b or {}).get("type"))
+        if w and w.block_csp:
+            for directive, sources in (w.block_csp(w.config_for(b.get("data"))) or {}).items():
+                have = out.setdefault(directive, [])
+                have.extend(s for s in sources if s not in have)
+    return out
 
 
-def csp_for(names) -> str:
-    """The Content-Security-Policy for a page with these widgets: the base policy plus each widget's sources."""
+def write_manifest(out_dir: Path, pages: dict[str, list[str]], sources: dict[str, dict] | None = None) -> None:
+    """pages: {"index.html": ["store"], ...}; sources: {"book.html": {"frame-src": [...]}}. Read by csp_for_file()."""
+    (Path(out_dir) / MANIFEST).write_text(json.dumps({"pages": pages, "sources": sources or {}}), encoding="utf-8")
+
+
+def _merge(policy: dict, extra: dict | None) -> None:
+    for directive, sources in (extra or {}).items():
+        have = policy.setdefault(directive, [])
+        have.extend(s for s in sources if s not in have)
+
+
+def csp_for(names, extra: dict | None = None, block_sources: dict | None = None) -> str:
+    """The Content-Security-Policy for a page: the base policy, each widget's sources, the sources of its blocks'
+    settings, and the site's own extra allowed hosts (security.py)."""
     policy = {k: list(v) for k, v in BASE_CSP.items()}
     for n in names or []:
         w = REGISTRY.get(n)
-        for directive, sources in (w.csp if w else {}).items():
-            have = policy.setdefault(directive, [])
-            have.extend(s for s in sources if s not in have)
+        _merge(policy, w.csp if w else {})
+    _merge(policy, block_sources)
+    _merge(policy, extra)
     return "; ".join(f"{k} {' '.join(v)}" for k, v in policy.items())
 
 
-def csp_for_file(folder: Path, rel: str) -> str:
+def csp_for_file(folder: Path, rel: str, extra: dict | None = None) -> str:
     """The CSP for one page of a deployment, from its manifest (no manifest: the base policy)."""
     try:
-        pages = json.loads((Path(folder) / MANIFEST).read_text(encoding="utf-8")).get("pages", {})
+        data = json.loads((Path(folder) / MANIFEST).read_text(encoding="utf-8"))
     except (OSError, ValueError):
-        pages = {}
-    return csp_for(pages.get(rel, []))
+        data = {}
+    return csp_for(data.get("pages", {}).get(rel, []), extra=extra, block_sources=data.get("sources", {}).get(rel))
 
 
 def block_template_source(name: str) -> str | None:
