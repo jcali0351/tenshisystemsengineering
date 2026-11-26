@@ -7,7 +7,7 @@ run-name: Rebuild pages (${{ github.event.head_commit.message }})
 on:
   push:
     branches: [tenshi-cms]
-    paths: ["data/slogan.json", "data/parallax.json", "data/buttons.json", "data/share.json", "data/fx.json", "fx-data.js", "fx.js", "fx.css", "buttons.css", "custom.css", "admin/**", "fonts/fonts.json", "*.html", "services/*.html", "projects/*.html", "translations.js", "img/**", "brand/**", "tools/build-pages.mjs", "tools/stamp-assets.mjs", "tools/split-translations.mjs", "src/tailwind.css", "package.json", "package-lock.json", "styles.css", "design.css", "site-theme.css", "share.css", "vendor/shareon/**", "app.js", "design.js", "chat.js", "chat.css", "rain.js", "search.css", "search.js"]
+    paths: ["data/slogan.json", "data/seo.json", "tools/seo.mjs", "tools/team-main.html", "tools/legal-main.html", "data/parallax.json", "data/buttons.json", "data/share.json", "data/fx.json", "fx-data.js", "fx.js", "fx.css", "buttons.css", "custom.css", "admin/**", "fonts/fonts.json", "*.html", "services/*.html", "projects/*.html", "translations.js", "img/**", "brand/**", "tools/build-pages.mjs", "tools/stamp-assets.mjs", "tools/split-translations.mjs", "src/tailwind.css", "package.json", "package-lock.json", "styles.css", "design.css", "site-theme.css", "share.css", "vendor/shareon/**", "app.js", "design.js", "chat.js", "chat.css", "rain.js", "search.css", "search.js"]
   workflow_dispatch:
 
 permissions:

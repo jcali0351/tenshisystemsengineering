@@ -75,6 +75,8 @@
       <button type="button" role="tab" data-tab="share" aria-selected="false">Share buttons</button>
       <button type="button" role="tab" data-tab="fx" aria-selected="false">Image effects</button>
       <button type="button" role="tab" data-tab="css" aria-selected="false">Custom CSS</button>
+      <button type="button" role="tab" data-tab="seo" aria-selected="false">SEO</button>
+      <button type="button" role="tab" data-tab="i18n" aria-selected="false">Translations</button>
       <button type="button" role="tab" data-tab="bots" aria-selected="false">Content bots</button>
       <button type="button" role="tab" data-tab="games" aria-selected="false">Game Studio</button>
     </nav>
@@ -365,6 +367,65 @@
         <div class="bt-preview cc-preview"><iframe id="cc-frame" title="Custom CSS preview" loading="lazy"></iframe></div>
       </div>
     </section>
+    <!-- SEO: per-page search and social preview settings (data/seo.json, read by tools/seo.mjs at build time) -->
+    <section class="ed-panel ed-seo" data-panel="seo" hidden>
+      <div class="seo-wrap">
+        <p class="ed-tip">What search engines and social apps show for each page: the title and description in results, the picture on shared links, the page's official address (canonical) and whether search engines may list it. Changes save with the Save button at the top; the pages update after the site rebuilds, about a minute later. Fields left empty use the built-in defaults.</p>
+        <div class="ed-toolbar">
+          <label class="ed-inline"><span>Page</span> <select id="seo-page"></select></label>
+          <span class="seo-state" id="seo-state"></span>
+        </div>
+        <div class="seo-grid">
+          <div class="seo-form">
+            <label class="ed-field"><span>Title <small class="seo-count" id="seo-title-n"></small></span>
+              <input type="text" id="seo-title" maxlength="120" autocomplete="off"></label>
+            <label class="ed-field"><span>Description <small class="seo-count" id="seo-desc-n"></small></span>
+              <textarea id="seo-desc" rows="3" maxlength="320"></textarea></label>
+            <label class="ed-field"><span>Social preview picture (Open Graph, 1200 × 630)</span>
+              <input type="text" id="seo-og" list="seo-og-list" placeholder="Empty = the site-wide picture below" autocomplete="off" spellcheck="false"></label>
+            <datalist id="seo-og-list"></datalist>
+            <label class="ed-field"><span>Canonical address</span>
+              <input type="text" id="seo-canon" placeholder="" autocomplete="off" spellcheck="false"></label>
+            <label class="ed-check"><input type="checkbox" id="seo-noindex"> Hide this page from search engines (noindex)</label>
+            <p class="ed-msg" id="seo-msg" role="status"></p>
+          </div>
+          <div class="seo-previews">
+            <p class="seo-label">Search result</p>
+            <div class="seo-serp"><span class="seo-serp-url" id="seo-p-url"></span><span class="seo-serp-title" id="seo-p-title"></span><span class="seo-serp-desc" id="seo-p-desc"></span></div>
+            <p class="seo-label">Shared link (large picture card)</p>
+            <div class="seo-card"><img id="seo-p-img" alt=""><div><span class="seo-card-host">tenshisystems.com</span><b id="seo-p-ctitle"></b><span id="seo-p-cdesc"></span></div></div>
+          </div>
+        </div>
+        <details class="ed-help seo-defaults" open>
+          <summary>Site-wide social preview picture</summary>
+          <p>Used on every page that has no picture of its own. Make it 1200 × 630 pixels, JPG or PNG (some apps don't show WebP previews).</p>
+          <p class="seo-ph" id="seo-ph" hidden><b>Placeholder.</b> The current picture is a stand-in until Img Bot delivers the final art. To swap it, replace <code>img/og/default-1200x630.jpg</code> (Images tab, same name and size) and untick the box below, or enter the new picture's path.</p>
+          <label class="ed-field"><span>Picture</span><input type="text" id="seo-def-og" list="seo-og-list" autocomplete="off" spellcheck="false"></label>
+          <label class="ed-check"><input type="checkbox" id="seo-def-ph"> This picture is still a placeholder</label>
+        </details>
+      </div>
+    </section>
+
+    <!-- Translations: coverage of every language against English -->
+    <section class="ed-panel ed-i18n" data-panel="i18n" hidden>
+      <div class="i18n-wrap">
+        <p class="ed-tip">How complete each language is compared with English. <b>Missing</b> texts fall back to English on the site; <b>same as English</b> are usually untranslated (brand names and acronyms are fine as they are). Click a language, then a text, to edit it. Nigerian Pidgin is written by hand only (the browser translator doesn't offer it).</p>
+        <table class="i18n-table" id="i18n-table"><thead><tr><th scope="col">Language</th><th scope="col">Texts</th><th scope="col">Missing</th><th scope="col">Same as English</th><th scope="col">Coverage</th></tr></thead><tbody></tbody></table>
+        <div class="i18n-detail" id="i18n-detail" hidden>
+          <div class="ed-toolbar">
+            <h2 class="i18n-h" id="i18n-h"></h2>
+            <div class="gs-switch i18n-switch" role="tablist" aria-label="Which texts">
+              <button type="button" role="tab" data-i18n-show="missing" aria-selected="true">Missing</button>
+              <button type="button" role="tab" data-i18n-show="same" aria-selected="false">Same as English</button>
+            </div>
+            <label class="ed-inline ed-grow"><span>Search</span> <input type="search" id="i18n-q" placeholder="Text name or English words"></label>
+          </div>
+          <p class="ed-count" id="i18n-count"></p>
+          <ul class="ed-textlist" id="i18n-list"></ul>
+        </div>
+      </div>
+    </section>
+
     <!-- Content bots -->
     <section class="ed-panel ed-games" data-panel="games" hidden>
       <div class="gs-head">

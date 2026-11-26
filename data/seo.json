@@ -1,0 +1,196 @@
+{
+  "_about": "Search and social preview settings per page, edited in the Tenshi Editor (SEO tab). tools/seo.mjs reads this file when the pages are built; anything left empty falls back to the defaults in tools/seo.mjs. ogImage/canonical: a path from the site root (img/og/x.webp) or a full https:// address; empty = the default image / the page's own address.",
+  "defaults": {
+    "ogImage": "img/og/default-1200x630.jpg",
+    "ogImageWidth": 1200,
+    "ogImageHeight": 630,
+    "ogImageAlt": "Tenshi Systems Engineering",
+    "ogImagePlaceholder": true
+  },
+  "pages": {
+    "home": {
+      "page": "index.html",
+      "title": "Small Business AI Services, Web Design & Hosting in Wisconsin | Tenshi",
+      "desc": "Tenshi Systems Engineering helps Wisconsin small businesses grow with AI services, custom web design, secure web hosting and software. Based in Madison, WI.",
+      "ogImage": "",
+      "canonical": "",
+      "noindex": false
+    },
+    "aboutTitle": {
+      "page": "about.html",
+      "title": "About Tenshi | Madison, WI Web Design, Hosting & AI Company",
+      "desc": "Tenshi Systems Engineering is a Madison, Wisconsin web design, web hosting and AI services company building dependable websites and software for small businesses.",
+      "ogImage": "",
+      "canonical": "",
+      "noindex": false
+    },
+    "teamTitle": {
+      "page": "team.html",
+      "title": "Our Team | Web Designers, Developers & AI Engineers | Tenshi",
+      "desc": "Meet the web designers, developers and AI engineers behind Tenshi Systems Engineering, a Madison, Wisconsin studio for small business technology.",
+      "ogImage": "",
+      "canonical": "",
+      "noindex": false
+    },
+    "kbTitle": {
+      "page": "knowledge-base.html",
+      "title": "Knowledge Base | Web, SEO, SaaS & AI Glossary | Tenshi",
+      "desc": "A plain-English glossary of 434 terms in web development, web design, SEO, SaaS and AI, written for small and mid-size business owners.",
+      "ogImage": "",
+      "canonical": "",
+      "noindex": false
+    },
+    "legalTitle": {
+      "page": "legal.html",
+      "title": "Legal & Privacy | Tenshi Systems",
+      "desc": "Terms of Service and Privacy Policy for Tenshi Systems. We collect only the data needed to run the tool, and we never sell, rent, or trade your information.",
+      "ogImage": "",
+      "canonical": "",
+      "noindex": false
+    },
+    "navServices": {
+      "page": "services.html",
+      "title": "Small Business Web Design, Hosting & AI Services | Tenshi",
+      "desc": "Web design, web development, web hosting, AI services, branding, CMS, custom software and IT consulting for small businesses in Wisconsin and across the US.",
+      "ogImage": "",
+      "canonical": "",
+      "noindex": false
+    },
+    "techTitle": {
+      "page": "technology.html",
+      "title": "Our Technology Stack | Web, Cloud & AI Tools | Tenshi",
+      "desc": "The web, cloud hosting and AI technologies Tenshi Systems Engineering uses to design, build and run fast, secure websites and software for small businesses.",
+      "ogImage": "",
+      "canonical": "",
+      "noindex": false
+    },
+    "contactPageTitle": {
+      "page": "contact.html",
+      "title": "Contact Tenshi | Web Design, Hosting & AI Quote in Wisconsin",
+      "desc": "Ask for a free consultation on web design, web hosting or AI services for your small business. Tenshi works with clients in Madison, Wisconsin and nationwide.",
+      "ogImage": "",
+      "canonical": "",
+      "noindex": false
+    },
+    "portfolioTitle": {
+      "page": "portfolio.html",
+      "title": "Small Business Website Design Portfolio | Tenshi",
+      "desc": "Website design examples for restaurants, shops, clinics and other small businesses, each ready to launch with your own content, hosting and support.",
+      "ogImage": "",
+      "canonical": "",
+      "noindex": false
+    },
+    "launchTitle": {
+      "page": "launch.html",
+      "title": "Launch Your Small Business Website & Hosting | Tenshi",
+      "desc": "Tell us about your business and launch a professional website with web hosting, a domain and SSL set up for you by Tenshi Systems Engineering.",
+      "ogImage": "",
+      "canonical": "",
+      "noindex": false
+    },
+    "newsTitle": {
+      "page": "news.html",
+      "title": "Tech, AI & Gaming News | Tenshi Systems Engineering",
+      "desc": "The week's stories in web design, gaming, AI, technology, cybersecurity and business, each linked to the publisher that reported it.",
+      "ogImage": "",
+      "canonical": "",
+      "noindex": false
+    },
+    "blogTitle": {
+      "page": "blog.html",
+      "title": "Small Business Web Design, Hosting & AI Blog | Tenshi",
+      "desc": "Plain-English guides for small business owners on web design, web hosting, SEO, website security, accessibility and using AI in your business.",
+      "ogImage": "",
+      "canonical": "",
+      "noindex": false
+    },
+    "portalTitle": {
+      "page": "portal.html",
+      "title": "Client Portal | Tenshi Systems Engineering",
+      "desc": "Sign in to manage your Tenshi website, hosting and projects.",
+      "ogImage": "",
+      "canonical": "",
+      "noindex": true
+    },
+    "wiTitle": {
+      "page": "wisconsin.html",
+      "title": "Wisconsin Small Business Web Design, Hosting & AI Services | Tenshi",
+      "desc": "Web design, managed web hosting and AI services for Wisconsin small businesses in Madison, Milwaukee, Green Bay and statewide. Veteran-owned. Free consultation.",
+      "ogImage": "",
+      "canonical": "",
+      "noindex": false
+    },
+    "svc_ai_title": {
+      "page": "services/ai-services.html",
+      "title": "AI Services for Small Business in Wisconsin | Chatbots & Automation",
+      "desc": "Practical AI services for Wisconsin small businesses: AI chatbots, customer service assistants, workflow automation and AI integration that save time.",
+      "ogImage": "",
+      "canonical": "",
+      "noindex": false
+    },
+    "svc_hosting_title": {
+      "page": "services/hosting.html",
+      "title": "Small Business Web Hosting | Managed & Secure | Tenshi",
+      "desc": "Managed web hosting for small businesses: fast servers, SSL, domains, tested backups and uptime monitoring, looked after by real people in Madison, Wisconsin.",
+      "ogImage": "",
+      "canonical": "",
+      "noindex": false
+    },
+    "svc_webdesign_title": {
+      "page": "services/web-design.html",
+      "title": "Small Business Web Design in Wisconsin | Responsive Websites",
+      "desc": "Custom, mobile-friendly web design for Wisconsin small businesses: clean, fast websites built around your brand, your customers and search engines.",
+      "ogImage": "",
+      "canonical": "",
+      "noindex": false
+    },
+    "svc_webdev_title": {
+      "page": "services/web-development.html",
+      "title": "Web Development Services | Fast, Secure Websites & Apps | Tenshi",
+      "desc": "Web development for small businesses: fast, secure websites, online booking and ordering, and web applications built on modern, maintainable code.",
+      "ogImage": "",
+      "canonical": "",
+      "noindex": false
+    },
+    "svc_software_title": {
+      "page": "services/software-development.html",
+      "title": "Custom Software Development for Small Business | Tenshi",
+      "desc": "Custom software development for small businesses: business tools, integrations and apps built for reliability and long-term support, from prototype to launch.",
+      "ogImage": "",
+      "canonical": "",
+      "noindex": false
+    },
+    "svc_consulting_title": {
+      "page": "services/technology-consulting.html",
+      "title": "IT & Technology Consulting for Small Business | Tenshi",
+      "desc": "Technology consulting for small businesses: plain-language advice on AI adoption, cloud, websites, modernization and choosing the right tools.",
+      "ogImage": "",
+      "canonical": "",
+      "noindex": false
+    },
+    "svc_media_title": {
+      "page": "services/media-design.html",
+      "title": "Graphic, Video & Digital Media Design | Tenshi",
+      "desc": "Graphic design, video and digital media for small businesses: visuals for your website, social media and marketing that communicate clearly.",
+      "ogImage": "",
+      "canonical": "",
+      "noindex": false
+    },
+    "svc_cms_title": {
+      "page": "services/content-management.html",
+      "title": "Content Management System (CMS) Setup for Small Business | Tenshi",
+      "desc": "Easy content management for small business websites: update pages, news and photos yourself, with training, multilingual support and secure hosting.",
+      "ogImage": "",
+      "canonical": "",
+      "noindex": false
+    },
+    "svc_branding_title": {
+      "page": "services/branding.html",
+      "title": "Small Business Branding & Logo Design | Tenshi",
+      "desc": "Branding for small businesses: logo design, colors, typography and brand guidelines that give your company a clear, consistent identity online and off.",
+      "ogImage": "",
+      "canonical": "",
+      "noindex": false
+    }
+  }
+}

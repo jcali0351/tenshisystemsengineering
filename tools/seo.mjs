@@ -1,13 +1,16 @@
 // SEO for every page (used by tools/build-pages.mjs): keyword titles and descriptions in English, the canonical
 // address, social preview tags and schema.org structured data. app.js leaves these English titles alone
 // (body data-seo) and still translates titles for visitors who pick another language.
-// Edit the wording here; keep titles under about 65 characters and descriptions under about 160.
+// The wording is edited in the Tenshi Editor's SEO tab, which saves data/seo.json; this file reads it at build time.
+// The values below are the defaults (used when data/seo.json has nothing for a page or a field is left empty).
+// Keep titles under about 65 characters and descriptions under about 160.
+import { readFileSync, existsSync } from "node:fs";
 
 export const SITE = "https://tenshisystems.com/";
 export const BRAND = "Tenshi Systems Engineering";
 
 // Keyed by the page's titleKey in build-pages.mjs. The homepage uses "home".
-export const SEO = {
+const SEO_DEFAULTS = {
   home: {
     title: "Small Business AI Services, Web Design & Hosting in Wisconsin | Tenshi",
     desc: "Tenshi Systems Engineering helps Wisconsin small businesses grow with AI services, custom web design, secure web hosting and software. Based in Madison, WI.",
@@ -111,8 +114,30 @@ export const SEO = {
   },
 };
 
+// data/seo.json (Editor > SEO): { defaults: { ogImage, ... }, pages: { key: { title, desc, ogImage, canonical, noindex } } }
+const DATA = (() => {
+  try { return existsSync("data/seo.json") ? JSON.parse(readFileSync("data/seo.json", "utf8")) : {}; }
+  catch (e) { console.warn("data/seo.json could not be read, using the defaults in tools/seo.mjs:", e.message); return {}; }
+})();
+const filled = (v) => typeof v === "string" && v.trim() !== "";
+export const SEO_SITE_DEFAULTS = {
+  // Site-wide social preview picture (1200 x 630). img/og/default-1200x630.jpg is a PLACEHOLDER until Img Bot supplies
+  // the final art: replace that file (same name and size) or point defaults.ogImage in data/seo.json at the new one.
+  ogImage: "img/og/default-1200x630.jpg", ogImageWidth: 1200, ogImageHeight: 630, ogImageAlt: BRAND,
+  ...(DATA.defaults || {}),
+};
+export const SEO = {};
+for (const key of new Set([...Object.keys(SEO_DEFAULTS), ...Object.keys(DATA.pages || {})])) {
+  const base = SEO_DEFAULTS[key] || {}, over = (DATA.pages || {})[key] || {};
+  SEO[key] = { ...base };
+  for (const f of ["title", "desc", "ogImage", "canonical"]) if (filled(over[f])) SEO[key][f] = over[f].trim();
+  SEO[key].noindex = over.noindex != null ? !!over.noindex : key === "portalTitle";
+}
+// A path from the site root or a full address -> a full https address.
+const abs = (u) => (/^https?:\/\//.test(u) ? u : SITE + String(u).replace(/^\/+/, ""));
+
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-const OG_IMAGE = SITE + "brand/favicon-512.png";
+const OG_IMAGE = abs(SEO_SITE_DEFAULTS.ogImage);
 
 const ORG = {
   "@type": "ProfessionalService",
@@ -137,7 +162,11 @@ const ORG = {
 export function seoHead({ key, url, title, desc, extraSchema }) {
   const p = SEO[key] || {};
   const t = p.title || title, d = p.desc || desc;
-  const href = SITE + url;
+  const href = p.canonical ? abs(p.canonical) : SITE + url;
+  const ogImage = p.ogImage ? abs(p.ogImage) : OG_IMAGE;
+  const ogSize = p.ogImage ? "" : `  <meta property="og:image:width" content="${SEO_SITE_DEFAULTS.ogImageWidth}">
+  <meta property="og:image:height" content="${SEO_SITE_DEFAULTS.ogImageHeight}">
+`;
   const graph = [ORG, { "@type": "WebPage", "@id": href, url: href, name: t, description: d, isPartOf: { "@id": SITE + "#website" }, about: { "@id": SITE + "#business" } }];
   if (key === "home") graph.push({ "@type": "WebSite", "@id": SITE + "#website", url: SITE, name: BRAND, publisher: { "@id": SITE + "#business" } });
   if (p.service) graph.push({ "@type": "Service", name: p.service, serviceType: p.service, description: d, url: href,
@@ -145,14 +174,16 @@ export function seoHead({ key, url, title, desc, extraSchema }) {
   if (extraSchema) graph.push(extraSchema);
   return {
     title: t, desc: d,
-    tags: `  <link rel="canonical" href="${href}">
-  <meta property="og:url" content="${href}">
+    tags: `  <link rel="canonical" href="${esc(href)}">
+  <meta property="og:url" content="${esc(href)}">
   <meta property="og:site_name" content="${BRAND}">
-  <meta property="og:image" content="${OG_IMAGE}">
-  <meta name="twitter:card" content="summary">
+  <meta property="og:image" content="${esc(ogImage)}">
+${ogSize}  <meta property="og:image:alt" content="${esc(SEO_SITE_DEFAULTS.ogImageAlt || BRAND)}">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${esc(t)}">
   <meta name="twitter:description" content="${esc(d)}">
-  <meta name="robots" content="${key === "portalTitle" ? "noindex, follow" : "index, follow, max-image-preview:large"}">
+  <meta name="twitter:image" content="${esc(ogImage)}">
+  <meta name="robots" content="${p.noindex ? "noindex, follow" : "index, follow, max-image-preview:large"}">
   <script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@graph": graph })}</script>
 `,
   };

@@ -156,7 +156,7 @@
     Object.keys(pend).forEach(function (l) { Object.keys(pend[l]).forEach(function (k) { s.add(k); }); });
     return s;
   }
-  function pendingCount() { return changedKeys().size + imgEdits.size + (sloganDirty() ? 1 : 0) + (parallaxDirty() ? 1 : 0) + (buttonsDirty() ? 1 : 0) + (customDirty() ? 1 : 0) + (shareDirty() ? 1 : 0) + (fxDirty() ? 1 : 0); }
+  function pendingCount() { return changedKeys().size + imgEdits.size + (sloganDirty() ? 1 : 0) + (parallaxDirty() ? 1 : 0) + (buttonsDirty() ? 1 : 0) + (customDirty() ? 1 : 0) + (shareDirty() ? 1 : 0) + (fxDirty() ? 1 : 0) + (seoDirty() ? 1 : 0); }
   function updateBar() {
     var n = pendingCount(), p = $("#ed-pending");
     p.hidden = !n; p.textContent = n + (n === 1 ? " unsaved change" : " unsaved changes");
@@ -246,6 +246,8 @@
     if (name === "share") loadShare();
     if (name === "fx") loadFx();
     if (name === "css") loadCustom();
+    if (name === "seo") loadSeo();
+    if (name === "i18n") renderCoverage();
     if (name === "games" && window.TenshiGames) window.TenshiGames.open();
   }
 
@@ -358,7 +360,7 @@
       });
     });
   }
-  $("#ed-drawer-close").addEventListener("click", function () { $("#ed-drawer").hidden = true; renderText(); });
+  $("#ed-drawer-close").addEventListener("click", function () { $("#ed-drawer").hidden = true; renderText(); if (!$('[data-panel="i18n"]').hidden) renderCoverage(); });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !$("#ed-drawer").hidden) { $("#ed-drawer").hidden = true; renderText(); } });
 
   /* ================================================================== ALL TEXT */
@@ -573,6 +575,7 @@
       if (cc.cur != null) { cc.saved = cc.cur; ccCheck(); }
       if (sh.cur) sh.saved = JSON.parse(JSON.stringify(sh.cur));
       if (fx && fx.cur) fx.saved = JSON.parse(JSON.stringify(fx.cur));
+      if (seo && seo.cur) seo.saved = JSON.parse(JSON.stringify(seo.cur));
       imgEdits.forEach(function (r, p) { if (r.newPath !== p) { tree.delete(p); } tree.set(r.newPath, { sha: "saved" + Date.now(), size: r.blob.size }); });
       imgEdits.clear();
       updateBar(); renderImages(); renderText(); if (slg.cur && !$("[data-panel=slogan]").hidden) renderSlogan(); if (px.cur && !$("[data-panel=parallax]").hidden) renderParallax();
@@ -639,6 +642,12 @@
         changes.push({ path: "fx-data.js", text: FX.dataJs(fx.cur) });
         parts.push("image effects");
       }
+      if (seoDirty()) {
+        var badSeo = seoCheck();
+        if (badSeo) throw new Error("SEO: " + badSeo);
+        changes.push({ path: "data/seo.json", text: seoJSON() });
+        parts.push("SEO");
+      }
       return { changes: changes, summary: parts.join(", ") || "edit" };
     });
   }
@@ -652,10 +661,144 @@
     if (bt.saved) { bt.cur = JSON.parse(JSON.stringify(bt.saved)); btRender(); }
     if (cc.saved != null) { cc.cur = cc.saved; $("#cc-text").value = cc.cur; ccGutter(); ccCheck(); ccLive(); }
     if (sh.saved) { sh.cur = JSON.parse(JSON.stringify(sh.saved)); shInitOrder(sh.cur); renderShare(); }
+    if (seo.saved) { seo.cur = JSON.parse(JSON.stringify(seo.saved)); renderSeo(); }
     if (fx && fx.saved) { fx.cur = JSON.parse(JSON.stringify(fx.saved)); if (fx.sel >= fx.cur.rules.length) fx.sel = fx.cur.rules.length - 1; renderFx(); }
     imgEdits.forEach(function (r) { if (r.url) URL.revokeObjectURL(r.url); }); imgEdits.clear();
     $("#ed-drawer").hidden = true;
     updateBar(); renderText(); renderImages(); loadFrame();
+  });
+
+  /* ================================================================== SEO (data/seo.json)
+     Per-page title, description, social picture, canonical address and noindex. tools/seo.mjs reads data/seo.json
+     when the pages are built (cms-rebuild.yml), with its own values as defaults for anything left empty. */
+  var seo = { saved: null, cur: null, ready: false, loading: false, key: "" };
+  var SEO_SITE = "https://tenshisystems.com/";
+  function seoDirty() { return !!(seo && seo.cur && seo.saved && JSON.stringify(seo.cur) !== JSON.stringify(seo.saved)); }
+  function seoJSON() { return JSON.stringify(seo.cur, null, 2) + "\n"; }
+  function seoAbs(u) { return /^https?:\/\//.test(u) ? u : SEO_SITE + String(u || "").replace(/^\/+/, ""); }
+  function loadSeo() {
+    if (seo.ready) { renderSeo(); return; }
+    if (seo.loading) return;
+    seo.loading = true;
+    (tree.has("data/seo.json") ? readText("data/seo.json").then(JSON.parse) : Promise.resolve({ defaults: {}, pages: {} }))
+      .then(function (d) {
+        d.defaults = d.defaults || {}; d.pages = d.pages || {};
+        seo.saved = d; seo.cur = JSON.parse(JSON.stringify(d));
+        var keys = Object.keys(d.pages);
+        $("#seo-page").innerHTML = keys.map(function (k) {
+          var pg = d.pages[k].page || k;
+          return '<option value="' + esc(k) + '">' + esc(prettyPage(pg)) + " (" + esc(pg) + ")</option>";
+        }).join("");
+        seo.key = keys[0] || "";
+        $("#seo-og-list").innerHTML = imagePaths().filter(function (p) { return /^(img|brand)\//.test(p); })
+          .map(function (p) { return '<option value="' + esc(p) + '">'; }).join("");
+        seo.ready = true; renderSeo();
+      }).catch(function (e) { $("#seo-msg").className = "ed-msg err"; $("#seo-msg").textContent = "Couldn't load the SEO settings: " + e.message; })
+      .then(function () { seo.loading = false; });
+  }
+  function seoPage() { return (seo.cur && seo.cur.pages[seo.key]) || {}; }
+  function seoCount(id, n, max) {
+    var el = $(id); el.textContent = n + " / " + max; el.classList.toggle("over", n > max);
+  }
+  function renderSeo() {
+    if (!seo.cur) return;
+    var p = seoPage(), d = seo.cur.defaults;
+    $("#seo-page").value = seo.key;
+    $("#seo-title").value = p.title || ""; $("#seo-desc").value = p.desc || "";
+    $("#seo-og").value = p.ogImage || ""; $("#seo-canon").value = p.canonical || "";
+    $("#seo-canon").placeholder = "Empty = " + SEO_SITE + (p.page && p.page !== "index.html" ? p.page : "");
+    $("#seo-noindex").checked = !!p.noindex;
+    $("#seo-def-og").value = d.ogImage || ""; $("#seo-def-ph").checked = !!d.ogImagePlaceholder;
+    seoPreview();
+  }
+  function seoPreview() {
+    var p = seoPage(), d = seo.cur.defaults;
+    var title = p.title || "", desc = p.desc || "";
+    seoCount("#seo-title-n", title.length, 65); seoCount("#seo-desc-n", desc.length, 160);
+    var url = p.canonical ? seoAbs(p.canonical) : SEO_SITE + (p.page && p.page !== "index.html" ? p.page : "");
+    $("#seo-p-url").textContent = url.replace(/^https?:\/\//, "").replace(/\/$/, "").replace(/\//g, " › ");
+    $("#seo-p-title").textContent = title.length > 65 ? title.slice(0, 62) + "…" : title;
+    $("#seo-p-desc").textContent = desc.length > 160 ? desc.slice(0, 157) + "…" : desc;
+    $("#seo-p-ctitle").textContent = title; $("#seo-p-cdesc").textContent = desc;
+    var img = p.ogImage || d.ogImage || "";
+    $("#seo-p-img").src = img ? (/^https?:/.test(img) ? img : SITE + img.replace(/^\/+/, "")) : "";
+    $("#seo-ph").hidden = !d.ogImagePlaceholder;
+    var st = [];
+    if (p.noindex) st.push("hidden from search");
+    if (p.ogImage) st.push("own picture");
+    if (p.canonical) st.push("custom canonical");
+    $("#seo-state").textContent = st.join(" · ");
+  }
+  $("#seo-page").addEventListener("change", function () { seo.key = this.value; renderSeo(); });
+  [["#seo-title", "title"], ["#seo-desc", "desc"], ["#seo-og", "ogImage"], ["#seo-canon", "canonical"]].forEach(function (f) {
+    $(f[0]).addEventListener("input", function () {
+      if (!seo.cur) return;
+      seo.cur.pages[seo.key][f[1]] = f[1] === "title" || f[1] === "desc" ? this.value : this.value.trim();
+      seoPreview(); updateBar();
+    });
+  });
+  $("#seo-noindex").addEventListener("change", function () { if (!seo.cur) return; seo.cur.pages[seo.key].noindex = this.checked; seoPreview(); updateBar(); });
+  $("#seo-def-og").addEventListener("input", function () { if (!seo.cur) return; seo.cur.defaults.ogImage = this.value.trim(); seoPreview(); updateBar(); });
+  $("#seo-def-ph").addEventListener("change", function () { if (!seo.cur) return; seo.cur.defaults.ogImagePlaceholder = this.checked; seoPreview(); updateBar(); });
+  function seoCheck() {
+    var bad = "";
+    Object.keys(seo.cur.pages).forEach(function (k) {
+      var p = seo.cur.pages[k];
+      [p.ogImage, p.canonical].forEach(function (u) {
+        if (u && !/^(https:\/\/[^\s"<>]+|[A-Za-z0-9_][A-Za-z0-9_\/.-]*)$/.test(u)) bad = bad || ((p.page || k) + ": \"" + u + "\" isn't a path from the site root or an https:// address.");
+      });
+    });
+    return bad;
+  }
+
+  /* ================================================================== TRANSLATIONS (coverage of each language) */
+  var cov = { lang: "", show: "missing" };
+  function covStats(lang) {
+    var missing = [], same = [];
+    order.forEach(function (k) {
+      var en = cur("en", k), v = cur(lang, k);
+      var has = (pend[lang] && Object.prototype.hasOwnProperty.call(pend[lang], k)) || (T[lang] && T[lang][k] != null);
+      if (!has || v === "") missing.push(k);
+      else if (v === en && /[A-Za-z]/.test(en)) same.push(k);
+    });
+    return { total: order.length, missing: missing, same: same };
+  }
+  function renderCoverage() {
+    if (!order.length) return;
+    $("#i18n-table tbody").innerHTML = LANGS.filter(function (l) { return l !== "en"; }).map(function (l) {
+      var s = covStats(l), pct = Math.round(1000 * (s.total - s.missing.length - s.same.length) / s.total) / 10;
+      return '<tr data-lang="' + l + '"' + (cov.lang === l ? ' class="sel"' : "") + ' tabindex="0">' +
+        '<th scope="row">' + esc(LANG_NAMES[l]) + ' <small>' + l + (l === "pcm" ? " · by hand only" : "") + "</small></th>" +
+        "<td>" + (s.total - s.missing.length) + " / " + s.total + "</td>" +
+        '<td class="' + (s.missing.length ? "warn" : "ok") + '">' + s.missing.length + "</td>" +
+        '<td class="' + (s.same.length > 15 ? "warn" : "") + '">' + s.same.length + "</td>" +
+        '<td><span class="i18n-bar"><i style="width:' + pct + '%"></i></span> ' + pct + "%</td></tr>";
+    }).join("") + '<tr class="i18n-en"><th scope="row">English <small>en · source</small></th><td>' + order.length + "</td><td>–</td><td>–</td><td>100%</td></tr>";
+    renderCoverageList();
+  }
+  function renderCoverageList() {
+    var box = $("#i18n-detail");
+    if (!cov.lang) { box.hidden = true; return; }
+    box.hidden = false;
+    var s = covStats(cov.lang), list = cov.show === "same" ? s.same : s.missing, q = $("#i18n-q").value.trim().toLowerCase();
+    if (q) list = list.filter(function (k) { return k.toLowerCase().indexOf(q) >= 0 || String(cur("en", k)).toLowerCase().indexOf(q) >= 0; });
+    $("#i18n-h").textContent = LANG_NAMES[cov.lang];
+    $$(".i18n-switch button").forEach(function (b) { b.setAttribute("aria-selected", String(b.dataset.i18nShow === cov.show)); });
+    $("#i18n-count").textContent = list.length + (cov.show === "same" ? " texts the same as English" : " missing texts") + (list.length > 300 ? " (showing the first 300)" : "");
+    $("#i18n-list").innerHTML = list.slice(0, 300).map(function (k) {
+      return '<li><button type="button" data-key="' + esc(k) + '"><span class="k">' + esc(k) + '</span><span class="v">' + esc(cur("en", k)) + "</span></button></li>";
+    }).join("");
+  }
+  function covPick(row) { if (!row || !row.dataset.lang) return; cov.lang = row.dataset.lang; renderCoverage(); $("#i18n-detail").scrollIntoView({ block: "nearest" }); }
+  $("#i18n-table").addEventListener("click", function (e) { covPick(e.target.closest("tr[data-lang]")); });
+  $("#i18n-table").addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); covPick(e.target.closest("tr[data-lang]")); } });
+  $$(".i18n-switch button").forEach(function (b) { b.addEventListener("click", function () { cov.show = b.dataset.i18nShow; renderCoverageList(); }); });
+  $("#i18n-q").addEventListener("input", renderCoverageList);
+  $("#i18n-list").addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-key]"); if (!b) return;
+    openText([b.dataset.key]);
+    var box = $("#ed-drawer-body"), det = box.querySelector(".ed-langs"); if (det) det.open = true;
+    var ta = box.querySelector('textarea[data-lang="' + cov.lang + '"]'); if (ta) { ta.focus(); ta.scrollIntoView({ block: "center" }); }
   });
 
   /* ================================================================== GO */
