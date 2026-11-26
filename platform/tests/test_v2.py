@@ -347,3 +347,21 @@ def test_lead_emails_go_to_the_site_address_with_a_limit(cms, monkeypatch):
     assert notify.lead_received(site, 6, "Contact", {"name": "Gus"}) == "no-mail"
     assert len(mail.sent) == 3
 
+
+def test_backups_keep_files_attached_to_leads(cms):
+    import zipfile
+    from cms import forms as lead_forms
+    c, sid = cms
+    lead_id = db.run("INSERT INTO leads (site_id, page, data_json, created_at) VALUES (?, 'contact', '{}', ?)", sid, db.now())
+    folder = lead_forms.UPLOADS_DIR / str(sid)
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / "abc123.pdf").write_bytes(b"%PDF-1.4 quote")
+    db.run("INSERT INTO lead_files (lead_id, site_id, field, name, stored, size, created_at) VALUES (?, ?, 'file', 'quote.pdf', 'abc123.pdf', 14, ?)",
+           lead_id, sid, db.now())
+    b = sites.backup(sid, "test")
+    with zipfile.ZipFile(config.BACKUPS_DIR / b["file"]) as z:
+        assert "lead-files/abc123.pdf" in z.namelist()
+    (folder / "abc123.pdf").unlink()                                    # lost: a restore brings it back for the lead that still exists
+    sites.restore(b["id"])
+    assert (folder / "abc123.pdf").read_bytes() == b"%PDF-1.4 quote"
+    assert db.one("SELECT id FROM leads WHERE id = ?", lead_id)

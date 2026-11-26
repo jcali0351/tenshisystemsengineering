@@ -21,7 +21,7 @@ from pathlib import Path
 
 from tenshi import profile as prof
 
-from . import blocks, config, db, media as media_mod, render, templates
+from . import blocks, config, db, forms as lead_forms, media as media_mod, render, templates
 
 RESERVED = {"www", "admin", "api", "app", "cms", "files", "mail", "static", "assets", "tenshi", "localhost", "preview"}
 SITE_TABLES = ["pages", "media_folders", "media", "albums", "portfolio_items", "posts"]   # rows that belong to a site
@@ -108,6 +108,7 @@ def delete_site(site_id, user=None):
         conn.execute("DELETE FROM album_items WHERE album_id NOT IN (SELECT id FROM albums)")
         conn.execute("DELETE FROM sites WHERE id = ?", (site_id,))
     shutil.rmtree(config.MEDIA_DIR / str(site_id), ignore_errors=True)
+    shutil.rmtree(lead_forms.UPLOADS_DIR / str(int(site_id)), ignore_errors=True)
     shutil.rmtree(config.DATA_DIR / "form-uploads" / str(int(site_id)), ignore_errors=True)
     for build in config.BUILDS_DIR.glob(f"{site_id}-*"):
         shutil.rmtree(build, ignore_errors=True)
@@ -251,6 +252,7 @@ def _site_data(site_id):
         data[table] = db.all(f"SELECT * FROM {table} WHERE site_id = ?", site_id)
     data["album_items"] = db.all("SELECT ai.* FROM album_items ai JOIN albums a ON a.id = ai.album_id WHERE a.site_id = ?", site_id)
     data["leads"] = db.all("SELECT * FROM leads WHERE site_id = ?", site_id)
+    data["lead_files"] = db.all("SELECT * FROM lead_files WHERE site_id = ?", site_id)
     return data
 
 
@@ -259,12 +261,21 @@ def backup(site_id, note="", user=None):
     site = get(site_id)
     stamp = db.now().replace(":", "").replace("-", "")
     file = config.BACKUPS_DIR / f"{site['subdomain']}-{stamp}.zip"
+    n = 1
+    while file.exists():                             # two backups in one second (e.g. the one a restore takes first)
+        n += 1
+        file = config.BACKUPS_DIR / f"{site['subdomain']}-{stamp}-{n}.zip"
     with zipfile.ZipFile(file, "w", zipfile.ZIP_DEFLATED) as z:
         z.writestr("site-data.json", json.dumps(_site_data(site_id), ensure_ascii=False, indent=1))
         folder = config.MEDIA_DIR / str(site_id)
         if folder.exists():
             for f in folder.iterdir():
                 z.write(f, f"media/{f.name}")
+        uploads = lead_forms.UPLOADS_DIR / str(int(site_id))      # files visitors attached to form messages
+        if uploads.exists():
+            for f in uploads.iterdir():
+                if f.is_file():
+                    z.write(f, f"lead-files/{f.name}")
     backup_id = db.run("INSERT INTO backups (site_id, file, bytes, note, created_at) VALUES (?, ?, ?, ?, ?)",
                        site_id, file.name, file.stat().st_size, note or "Manual backup", db.now())
     db.log("Backed up", site["subdomain"], user, site_id)
@@ -299,6 +310,15 @@ def restore(backup_id, user=None):
         for name in z.namelist():
             if name.startswith("media/") and not name.endswith("/"):
                 (folder / Path(name).name).write_bytes(z.read(name))
+        # Leads aren't rolled back (newer messages would be lost), but attached files that went missing come back
+        # for the messages that still exist.
+        uploads = lead_forms.UPLOADS_DIR / str(int(site_id))
+        known = {r["stored"] for r in db.all("SELECT stored FROM lead_files WHERE site_id = ?", site_id)}
+        for name in z.namelist():
+            stored = Path(name).name
+            if name.startswith("lead-files/") and stored in known and not (uploads / stored).exists():
+                uploads.mkdir(parents=True, exist_ok=True)
+                (uploads / stored).write_bytes(z.read(name))
     db.log("Restored backup", b["file"], user, site_id)
 
 
