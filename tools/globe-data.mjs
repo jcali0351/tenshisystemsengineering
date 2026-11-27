@@ -6,9 +6,11 @@
 //   OurAirports (public domain): airports
 //   OpenFlights (ODbL): airline routes (a snapshot from 2014, no longer updated)
 //   World Bank Open Data (CC BY 4.0): population, birth rate and death rate per country (births and deaths layer)
+//   GeoNames (CC BY 4.0): every town and city of 15,000 people or more (population layer)
 //   OpenStreetMap contributors (ODbL), through the Overpass API: data centres, submarine and long-haul telecom cables
 // A source that fails keeps what the last run saved, so one bad download never empties a layer.
 import { writeFileSync, mkdirSync, existsSync, readFileSync } from "node:fs";
+import { execSync } from "node:child_process";
 
 const OUT = "data/globe/world.json";
 const UA = { "User-Agent": "TenshiWorldPulse/1.0 (https://tenshisystems.com)" };
@@ -55,7 +57,7 @@ async function step(key, fn) {
     out.status[key] = old.status?.[key] ? { ...old.status[key], stale: true } : { ok: false };
   }
 }
-const KEYS = { land: ["land"], coast: ["coast"], ports: ["ports"], rails: ["rails"], roads: ["roads"], air: ["airports", "routes"], dcs: ["dcs"], cables: ["cables"], vital: ["vital"] };
+const KEYS = { land: ["land"], coast: ["coast"], ports: ["ports"], rails: ["rails"], roads: ["roads"], air: ["airports", "routes"], dcs: ["dcs"], cables: ["cables"], vital: ["vital"], pop: ["pop"] };
 
 // Land as a 1440 x 720 bitmap (a quarter of a degree per cell); the page scatters fine particles over it.
 await step("land", async () => {
@@ -195,6 +197,25 @@ await step("vital", async () => {
   }
   if (vital.length < 150) throw new Error("births and deaths list looks too short");
   return { vital };
+});
+
+// Population: every town and city of 15,000+ people (GeoNames), added up in half-degree cells.
+// Saved per cell as [lon, lat (people-weighted centre), people in thousands].
+await step("pop", async () => {
+  const r = await fetch("https://download.geonames.org/export/dump/cities15000.zip", { headers: UA, signal: AbortSignal.timeout(120000) });
+  if (!r.ok) throw new Error("GeoNames HTTP " + r.status);
+  writeFileSync("/tmp/cities15000.zip", Buffer.from(await r.arrayBuffer()));
+  const text = execSync("unzip -p /tmp/cities15000.zip cities15000.txt", { maxBuffer: 64 << 20 }).toString("utf8");
+  const cells = new Map();
+  for (const line of text.split("\n")) {
+    const f = line.split("\t"), lat = +f[4], lon = +f[5], n = +f[14];
+    if (!(n > 0) || !Number.isFinite(lat)) continue;
+    const k = Math.floor(lon * 2) + "," + Math.floor(lat * 2), c = cells.get(k) || { n: 0, x: 0, y: 0 };
+    c.n += n; c.x += lon * n; c.y += lat * n; cells.set(k, c);
+  }
+  const pop = [...cells.values()].map((c) => [r2(c.x / c.n), r2(c.y / c.n), Math.round(c.n / 1000)]).filter((c) => c[2] >= 15);
+  if (pop.length < 2000) throw new Error("population list looks too short");
+  return { pop };
 });
 
 mkdirSync("data/globe", { recursive: true });

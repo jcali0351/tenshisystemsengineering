@@ -153,6 +153,7 @@
     { id: "rail", name: "Rail", color: C.rail, unit: "lines" },
     { id: "roads", name: "Road traffic", color: C.road, unit: "roads" },
     { id: "net", name: "Internet: cables & data centres", color: C.cable, unit: "data centres" },
+    { id: "pop", name: "Population", color: [1, 0.45, 0.75], unit: "people" },
     { id: "vital", name: "Births & deaths", color: [1, 0.85, 0.5], unit: "today" },
   ];
   const L = {};
@@ -237,6 +238,19 @@
       M.arcs = mesh(P_LINE, LINE, arcs, gl.LINES);
       M.flow = mesh(P_FLOW, [["aA", 3], ["aB", 3], ["aPhase", 1], ["aSpeed", 1], ["aColor", 4], ["aSize", 1]], flow, gl.POINTS);
       L.routes.status("static", `${(w.routes || []).length.toLocaleString("en-US")} routes · OurAirports, OpenFlights (2014)`);
+    }
+    if (w.pop) {   // a fine vertical filament per half-degree cell: the taller and whiter, the more people live there
+      const ln = [], hd = []; let total = 0;
+      for (const [x, y, k] of w.pop) {
+        total += k; const q = Math.min(1, Math.sqrt(k / 22000)), h = 0.003 + q * 0.17, a = ll(x / 100, y / 100), b = ll(x / 100, y / 100, 1 + h);
+        const c = [1, 0.4 + q * 0.6, 0.72 + q * 0.28];
+        ln.push(a[0], a[1], a[2], 1, 0.3, 0.7, 0.1 + q * 0.2, 0, b[0], b[1], b[2], c[0], c[1], c[2], 0.35 + q * 0.65, 1);
+        const n = 1 + Math.floor(q * 9);
+        for (let i = 1; i <= n; i++) { const t = i / n, p = ll(x / 100, y / 100, 1 + h * t); hd.push(p[0], p[1], p[2], c[0], c[1], c[2], 0.3 + t * 0.6, i === n ? 1.5 : 1.05, rnd()); }
+        if (k >= 1500) picks.push({ p: b, layer: "pop", kind: "Population", title: `${(k / 1000).toFixed(1)} million people`, sub: "in towns and cities of 15,000+ within this half-degree cell" });
+      }
+      M.popLines = mesh(P_LINE, LINE, ln, gl.LINES); M.popDots = mesh(P_POINT, POINT, hd, gl.POINTS);
+      L.pop.count(`${(total / 1e6).toFixed(2)} bn`); L.pop.status("static", "people in towns and cities of 15,000+ · GeoNames");
     }
     if (w.vital) setupVital(w.vital);
     if (MK) buildMarkets(MK);
@@ -469,6 +483,7 @@
     if (L.rail.on) drawOther(trains.mesh, P_MOVER, t);
     if (L.routes.on) { drawLines(M.arcs, t); drawOther(M.flow, P_FLOW, t); drawPoints(M.airports, t, { lift: 0.0025, twinkle: 0.2 }); }
     if (L.planes.on) drawOther(planes.mesh, P_MOVER, t);
+    if (L.pop.on) { drawLines(M.popLines, t); drawPoints(M.popDots, t, { twinkle: 0.55 }); }
     if (L.vital.on) drawOther(M.events, P_EVENT, t);
     if (L.markets.on) { drawLines(M.spikes, t); drawPoints(M.heads, t, { twinkle: 0.5 }); }
     gl.bindVertexArray(null);
@@ -477,7 +492,7 @@
 
   /* ---------- data ---------- */
   const getJson = async (url) => { const r = await fetch(url, { cache: "no-cache" }); if (!r.ok) throw new Error(r.status); return r.json(); };
-  getJson("../data/globe/world.json").then(buildWorld).catch(() => { reveal = 1; for (const id of ["routes", "ships", "rail", "roads", "net", "vital"]) L[id].status("off", "first data sync in progress, check back in a few minutes"); });
+  getJson("../data/globe/world.json").then(buildWorld).catch(() => { reveal = 1; for (const id of ["routes", "ships", "rail", "roads", "net", "pop", "vital"]) L[id].status("off", "first data sync in progress, check back in a few minutes"); });
   const loadMarkets = () => getJson("../data/globe/markets.json").then(buildMarkets).catch(() => { if (!MK) L.markets.status("off", "first data sync in progress"); });
   loadMarkets(); setInterval(loadMarkets, 5 * 60000);
   L.planes.status("off", "connecting to live feed");
