@@ -131,8 +131,10 @@
   #tape span i { font-style:normal; color:var(--mute); margin-right:6px; }
   @keyframes tape { to { transform:translateX(-50%); } }
 
-  #boardBtn { border:0; border-right:1px solid var(--line); font:inherit; font-size:10px; cursor:pointer; color:var(--ink); background:linear-gradient(90deg,rgba(124,58,237,.55),rgba(219,39,119,.45)); }
-  #boardBtn[hidden], #board[hidden] { display:none; }
+  #boardBtn, #surfBtn { border:0; border-right:1px solid var(--line); font:inherit; font-size:10px; cursor:pointer; color:var(--ink); background:linear-gradient(90deg,rgba(124,58,237,.55),rgba(219,39,119,.45)); }
+  #boardBtn[hidden], #surfBtn[hidden], #board[hidden] { display:none; }
+  #surfBtn { background:linear-gradient(90deg,rgba(13,148,136,.6),rgba(37,99,235,.5)); }
+  #ticker .tag { padding:0 10px; }
   #board { position:fixed; left:14px; bottom:46px; width:380px; max-height:min(64vh,620px); display:flex; flex-direction:column; z-index:4; }
   #board .bh { display:flex; justify-content:space-between; align-items:center; padding:6px 8px; border-bottom:1px solid var(--line); }
   #board .bx { background:none; border:0; color:var(--ink); font:inherit; font-weight:700; letter-spacing:.1em; text-transform:uppercase; font-size:11px; padding:6px 8px; cursor:pointer; }
@@ -151,7 +153,7 @@
   #board .sr .sy { color:var(--ink); overflow:hidden; text-overflow:ellipsis; } #board .sr .nm { color:var(--mute); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } #board .sr .pc { text-align:right; }
   .bar { position:relative; height:8px; background:linear-gradient(90deg,transparent calc(50% - .5px),rgba(255,255,255,.25) calc(50% - .5px),rgba(255,255,255,.25) calc(50% + .5px),transparent calc(50% + .5px)); }
   .bar i { position:absolute; top:0; border-radius:2px; } .bar i.u { left:50%; } .bar i.d { right:50%; background:linear-gradient(270deg,#fb7185,#e11d74); }
-  body.embed #board, body.embed #boardBtn { display:none; }
+  body.embed #board, body.embed #boardBtn, body.embed #surfBtn { display:none; }
 
   #hint { position:fixed; left:50%; bottom:46px; transform:translateX(-50%); padding:6px 12px; font-size:11px; color:var(--mute); border-radius:99px; transition:opacity .6s; white-space:nowrap; }
   #msg { position:fixed; inset:0; display:none; place-items:center; text-align:center; padding:24px; color:var(--mute); }
@@ -200,7 +202,7 @@
   <div id="layers"></div>
   <details id="src">
     <summary>Data sources</summary>
-    <p>Aircraft: <a href="https://adsb.lol" target="_blank" rel="noopener">adsb.lol</a> (ODbL), live. Ships and trains: <a href="https://www.digitraffic.fi/en/" target="_blank" rel="noopener">Fintraffic / digitraffic.fi</a> (CC BY 4.0), live for Finland and the Baltic. Data centres and cables: &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors (ODbL). Military bases: also OpenStreetMap, the sites volunteers have mapped as bases, airfields, naval bases, barracks, ranges and training areas; not a complete list. Airports: OurAirports (public domain). Routes: OpenFlights (ODbL), a 2014 snapshot. Land, ports and railways: Natural Earth (public domain). Precipitation: NASA GPM IMERG through <a href="https://earthdata.nasa.gov/gibs" target="_blank" rel="noopener">NASA GIBS</a>, a satellite estimate a few hours behind real time. Clouds: VIIRS / MODIS corrected reflectance through NASA GIBS, yesterday's passes; bright, colourless pixels are taken as cloud. Wind, jet stream and temperature: NOAA GFS weather model (public domain), a calculated picture at about 100 km resolution, refreshed every few hours. Earthquakes: USGS, live. Wildfires, storms and volcanoes: NASA EONET. Aurora: NOAA Space Weather Prediction Center. Satellites: orbital elements from <a href="https://celestrak.org" target="_blank" rel="noopener">CelesTrak</a>, moved with a simplified orbit model. Space station: wheretheiss.at. Power stations: WRI Global Power Plant Database (CC BY 4.0). Population: <a href="https://www.geonames.org" target="_blank" rel="noopener">GeoNames</a> (CC BY 4.0). Markets: Yahoo Finance, delayed; open or closed is worked out from each exchange's regular hours, without public holidays. Satellites above you and space station passes: worked out in your browser from the same orbits, as estimates. Births and deaths: modelled from World Bank Open Data rates (CC BY 4.0); each spark is a statistically expected event, not a record of a person. Road counts: Fintraffic (Finland). Day and night: worked out from the time.</p>
+    <p>Aircraft: <a href="https://adsb.lol" target="_blank" rel="noopener">adsb.lol</a> (ODbL), live. Ships and trains: <a href="https://www.digitraffic.fi/en/" target="_blank" rel="noopener">Fintraffic / digitraffic.fi</a> (CC BY 4.0), live for Finland and the Baltic. Data centres and cables: &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors (ODbL). Military bases: also OpenStreetMap, the sites volunteers have mapped as bases, airfields, naval bases, barracks, ranges and training areas; not a complete list. Airports: OurAirports (public domain). Routes: OpenFlights (ODbL), a 2014 snapshot. Land, ports and railways: Natural Earth (public domain). Precipitation: NASA GPM IMERG through <a href="https://earthdata.nasa.gov/gibs" target="_blank" rel="noopener">NASA GIBS</a>, a satellite estimate a few hours behind real time. Clouds: VIIRS / MODIS corrected reflectance through NASA GIBS, yesterday's passes; bright, colourless pixels are taken as cloud. Waves and surf reports: NOAA GFS-Wave model (the open-ocean swell beside each break, not the breaking wave) and NOAA NDBC wave buoys, observed. Ocean currents: NOAA CoastWatch geostrophic currents, worked out from satellite sea-level measurements. Tides: NOAA CO-OPS predictions for US stations; the level between high and low water is worked out in your browser. Wind, jet stream and temperature: NOAA GFS weather model (public domain), a calculated picture at about 100 km resolution, refreshed every few hours. Earthquakes: USGS, live. Wildfires, storms and volcanoes: NASA EONET. Aurora: NOAA Space Weather Prediction Center. Satellites: orbital elements from <a href="https://celestrak.org" target="_blank" rel="noopener">CelesTrak</a>, moved with a simplified orbit model. Space station: wheretheiss.at. Power stations: WRI Global Power Plant Database (CC BY 4.0). Population: <a href="https://www.geonames.org" target="_blank" rel="noopener">GeoNames</a> (CC BY 4.0). Markets: Yahoo Finance, delayed; open or closed is worked out from each exchange's regular hours, without public holidays. Satellites above you and space station passes: worked out in your browser from the same orbits, as estimates. Births and deaths: modelled from World Bank Open Data rates (CC BY 4.0); each spark is a statistically expected event, not a record of a person. Road counts: Fintraffic (Finland). Day and night: worked out from the time.</p>
     <p>Not for navigation or trading.</p>
   </details>
 </details>
@@ -219,7 +221,7 @@
     <button id="rpX" class="cx" type="button" aria-label="Back to live">&times;</button>
     <div class="rt"><span id="rpTime" class="mono"></span><span id="rpN"></span></div>
     <div class="rc"><button id="rpPlay" type="button" aria-label="Play or pause">&#10074;&#10074;</button><input id="rpRange" type="range" min="0" max="1000" value="0" aria-label="Time in the last 24 hours"></div>
-    <div class="rn">Replaying day and night, earthquakes and satellite orbits. Aircraft, ships, trains, wind and weather are live-only, so they are hidden until you return to live.</div>
+    <div class="rn">Replaying day and night, earthquakes and satellite orbits. Aircraft, ships, trains, wind, the sea and weather are live-only, so they are hidden until you return to live.</div>
   </section>
   <section id="cap" class="glass" hidden aria-live="polite">
     <div class="ck"></div><div class="ct"></div><div class="cs"></div>
@@ -232,8 +234,8 @@
 <div id="hint" class="glass">Drag to spin &middot; scroll or pinch to zoom &middot; hover or click a point for details</div>
 <a id="cta" href="world-pulse.html" target="_top">Explore full screen &rarr;</a>
 <section id="board" class="glass" hidden aria-label="Markets today"></section>
-<div id="ticker"><button id="boardBtn" class="tag" type="button" hidden><span class="dot delay"></span>Markets today &#9652;</button><div id="tape" class="mono"></div></div>
+<div id="ticker"><button id="boardBtn" class="tag" type="button" hidden><span class="dot delay"></span>Markets &#9652;</button><button id="surfBtn" class="tag" type="button" hidden>Surf report &#9652;</button><div id="tape" class="mono"></div></div>
 <div id="msg"></div>
-<script src="world-pulse.js?v=20261127d"></script>
+<script src="world-pulse.js?v=20261127e"></script>
 </body>
 </html>

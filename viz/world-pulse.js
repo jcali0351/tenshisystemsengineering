@@ -2,6 +2,7 @@
    Around the globe: a layer list with a freshness word per layer and a colour key, tap or click to select a point
    (a ring follows it), one rotating headline figure, a guided tour, "above me" (what is over the visitor's own spot),
    a replay of the last 24 hours, share links that reopen a view, and a render scale that drops if frames do.
+   The sea (ocean.json): currents, swell, a surf report for well-known breaks, wave buoys and tide stations.
    Static layers come from data/globe/world.json (tools/globe-data.mjs), markets from data/globe/markets.json
    (tools/globe-markets.mjs); aircraft, ships, trains and road counts are fetched live in the visitor's browser. */
 (() => {
@@ -275,6 +276,9 @@
     { id: "space", name: "Space station", color: [1, 1, 1], unit: "" },
     { id: "rain", name: "Weather: precipitation", color: [0.45, 0.75, 1], unit: "" },
     { id: "clouds", name: "Weather: clouds", color: [0.85, 0.92, 1], unit: "", off: true },          // off: starts switched off
+    { id: "cur", name: "Ocean currents", color: [0.25, 0.7, 1], unit: "" },
+    { id: "surf", name: "Waves & surf", color: [0.3, 0.95, 0.8], unit: "" },
+    { id: "tide", name: "Tides", color: [0.55, 1, 0.9], unit: "" },
     { id: "wind", name: "Wind & jet stream", color: [0.5, 0.92, 1], unit: "" },
     { id: "temp", name: "Temperature", color: [1, 0.62, 0.25], unit: "", off: true },
     { id: "pop", name: "Population", color: [1, 0.45, 0.75], unit: "people" },
@@ -314,6 +318,9 @@
       space: `${sw([1, 1, 1])} the International Space Station, with a long trail.`,
       rain: `${sw([0.45, 0.75, 1])} falling streaks where satellites see rain or snow; colour follows NASA's rate scale.`,
       clouds: `${sw([0.85, 0.92, 1])} a fine white haze where yesterday's satellite pictures show bright cloud tops. Snow and ice can read as cloud.`,
+      cur: `${sw([0.15, 0.35, 1])} to ${sw([1, 1, 1])} dashed lines that creep the way the surface water flows, whiter where it runs faster. Slow dashes, so they read apart from the wind.`,
+      surf: `${sw([0.2, 0.9, 0.75])} to ${sw([1, 0.3, 0.75])} lines running the way the swell travels, drawn where waves top 2 m, redder when taller · ${sw([1, 0.55, 0.45])} ringed points: surf breaks · ${sw([1, 0.95, 0.6])} points: wave buoys.`,
+      tide: `${sw([0.3, 1, 0.9])} rising · ${sw([1, 0.45, 0.8])} falling. Each station is a short filament, taller the nearer it is to high water.`,
       wind: `${sw([0.3, 0.8, 1])} to ${sw([1, 0.6, 0.9])} low streaks: wind near the ground, running the way it blows, pinker when stronger · ${sw([1, 0.85, 0.4])} to ${sw([1, 0.3, 0.6])} high streaks: the jet stream, about 10 km up, where it tops 108 km/h.`,
       temp: TRAMP.map((s) => `${sw(s[1])} ${s[0]}°`).join(" · ") + ` C, air temperature 2 m above the ground. While this layer is on, the land and sea dots take these colours.`,
       pop: `${sw([0.75, 0.25, 1])} to ${sw([1, 1, 1])} filaments: taller and whiter means more people · ${sw([1, 0.75, 0.45])} warm points on the night side: city lights.`,
@@ -508,7 +515,7 @@
   }
   /* ---------- Markets today: the day's winners and losers on every major exchange ---------- */
   const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
-  let STOCKS = null, boardOpen = null;
+  let STOCKS = null, boardOpen = null, boardMode = "markets";      // the bottom-left board shows the markets or the surf report
   // Regular trading hours in each exchange's own time (minutes after midnight), Monday to Friday. Public holidays and
   // half-days are not in here, so the labels say "regular hours".
   const HOURS = { nyse: ["America/New_York", [570, 960]], nasdaq: ["America/New_York", [570, 960]], tsx: ["America/Toronto", [570, 960]], b3: ["America/Sao_Paulo", [600, 1020]], bmv: ["America/Mexico_City", [510, 900]],
@@ -556,7 +563,9 @@
   }
   setInterval(() => { if (STOCKS && STOCKS.exchanges.some((x) => x.open !== isOpen(x.id))) { drawStocks(); renderBoard(); } else marketStatus(); }, 30000);
   function renderBoard() {
-    const box = $("#board"); if (!STOCKS || box.hidden) return; box.textContent = "";
+    const box = $("#board"); if (box.hidden) return;
+    if (boardMode === "surf") { if (OC && OC.spots && OC.spots.length) renderSurf(box); return; }
+    if (!STOCKS) return; box.textContent = "";
     const head = el("div", "bh"); const back = el("button", "bx", boardOpen ? "← All exchanges" : "Markets today"); back.type = "button"; back.disabled = !boardOpen; back.onclick = () => { boardOpen = null; renderBoard(); };
     const close = el("button", "bx", "×"); close.type = "button"; close.setAttribute("aria-label", "Close"); close.onclick = () => { box.hidden = true; };
     head.append(back, close); box.append(head);
@@ -582,7 +591,8 @@
       });
     }
   }
-  $("#boardBtn").onclick = () => { const b = $("#board"); b.hidden = !b.hidden; if (!b.hidden) { $("#panel").open = false; stopTour(); stopReplay(); closeMe(); select(null); renderBoard(); } };
+  const openBoard = (mode) => { const b = $("#board"); b.hidden = !b.hidden && boardMode === mode; boardMode = mode; if (!b.hidden) { $("#panel").open = false; stopTour(); stopReplay(); closeMe(); select(null); renderBoard(); } };
+  $("#boardBtn").onclick = () => openBoard("markets"); $("#surfBtn").onclick = () => openBoard("surf");
   const loadStocks = () => getJson("../data/globe/stocks.json").then(buildStocks).catch(() => {});
 
   function layoutLabels() {
@@ -769,24 +779,27 @@
   };
   const tempC = (lon, lat) => wxAt(WX.t, lon, lat) / 2 - 80;
   const tcol = (c) => { for (let i = 1; i < TRAMP.length; i++) if (c <= TRAMP[i][0]) return mix3(TRAMP[i - 1][1], TRAMP[i][1], Math.max(0, (c - TRAMP[i - 1][0]) / (TRAMP[i][0] - TRAMP[i - 1][0]))); return TRAMP[TRAMP.length - 1][1]; };
+  // Paths that follow a flow from random starting points: n paths of up to `steps` hops over the grids U and V (k: real
+  // units per grid unit), kept where the flow tops minSp; hop: degrees per hop at full speed. Appends line vertices to a.
+  function streamlines(a, n, steps, U, V, k, minSp, vmax, hop, lift, RAMP, alpha) {
+    for (let done = 0, tries = 0; done < n && tries < n * 40; tries++) {
+      let la = Math.asin(rnd() * 2 - 1) / DEG, lo = rnd() * 360 - 180, prev = null, pc = null; const off = rnd();
+      if (Math.hypot(wxAt(U, lo, la), wxAt(V, lo, la)) * k < minSp) continue; done++;
+      for (let s = 0; s <= steps; s++) {
+        const u = wxAt(U, lo, la) * k, v = wxAt(V, lo, la) * k, sp = Math.hypot(u, v); if (sp < minSp * 0.6 || Math.abs(la) > 86) break;
+        const p = ll(lo, la, 1 + lift), c = ramp(RAMP, (sp - minSp) / (vmax - minSp));
+        if (prev) a.push(prev[0], prev[1], prev[2], pc[0], pc[1], pc[2], alpha, off + (s - 1) / steps, p[0], p[1], p[2], c[0], c[1], c[2], alpha, off + s / steps);
+        const d = hop * (0.35 + Math.min(1, sp / vmax)); la += (v / sp) * d; lo += (u / sp) * d / Math.max(0.2, Math.cos(la * DEG)); prev = p; pc = c;
+      }
+    }
+  }
   const COMPASS = ["north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west"];
   function buildWeather(j) {
     const dec = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
     WX = { u: new Int8Array(dec(j.w10u).buffer), v: new Int8Array(dec(j.w10v).buffer), ju: new Int8Array(dec(j.ju).buffer), jv: new Int8Array(dec(j.jv).buffer), t: dec(j.t), valid: j.valid };
     const at = new Date(j.valid).toISOString().slice(11, 16), a = [];
     // n paths of up to `steps` hops; U, V: the grids; k: metres per second per grid unit; hop: degrees per hop at full speed
-    const trace = (n, steps, U, V, k, minSp, vmax, hop, lift, RAMP, alpha) => {
-      for (let done = 0, tries = 0; done < n && tries < n * 40; tries++) {
-        let la = Math.asin(rnd() * 2 - 1) / DEG, lo = rnd() * 360 - 180, prev = null, pc = null; const off = rnd();
-        if (Math.hypot(wxAt(U, lo, la), wxAt(V, lo, la)) * k < minSp) continue; done++;
-        for (let s = 0; s <= steps; s++) {
-          const u = wxAt(U, lo, la) * k, v = wxAt(V, lo, la) * k, sp = Math.hypot(u, v); if (sp < minSp * 0.6 || Math.abs(la) > 86) break;
-          const p = ll(lo, la, 1 + lift), c = ramp(RAMP, (sp - minSp) / (vmax - minSp));
-          if (prev) a.push(prev[0], prev[1], prev[2], pc[0], pc[1], pc[2], alpha, off + (s - 1) / steps, p[0], p[1], p[2], c[0], c[1], c[2], alpha, off + s / steps);
-          const d = hop * (0.35 + Math.min(1, sp / vmax)); la += (v / sp) * d; lo += (u / sp) * d / Math.max(0.2, Math.cos(la * DEG)); prev = p; pc = c;
-        }
-      }
-    };
+    const trace = (...o) => streamlines(a, ...o);
     trace(LITE ? 2200 : 5200, 12, WX.u, WX.v, 0.5, 2, 22, 0.75, 0.0045, [[0.3, 0.8, 1], [0.6, 1, 0.9], [1, 1, 1], [1, 0.6, 0.9]], 0.085);
     M.wind = mesh(P_LINE, LINE, a, gl.LINES); a.length = 0;
     trace(LITE ? 900 : 2200, 22, WX.ju, WX.jv, 1, 30, 90, 1.5, 0.03, [[1, 0.85, 0.4], [1, 0.55, 0.25], [1, 0.3, 0.6], [1, 0.9, 1]], 0.15);
@@ -809,6 +822,103 @@
     M.temp = mesh(P_POINT, POINT, b, gl.POINTS);
   }
   const loadWeather = () => getJson("../data/globe/weather.json").then(buildWeather).catch(() => { if (!WX) for (const id of ["wind", "temp"]) L[id].status("off", "first data sync in progress, check back in a few minutes"); });
+
+  /* ---------- the sea: currents, swell, surf breaks, wave buoys and tides (data/globe/ocean.json, tools/globe-ocean.mjs) ----------
+     Currents and swell are streamlines like the wind, told apart by their pace and dashes: currents creep in three
+     short dashes per line, swell runs faster in two. Tides are worked out here, minute by minute, from NOAA's predicted
+     high and low waters. A "surf report" is the open-ocean swell beside each break plus the wind there: honest about
+     being the model's sea state offshore, not the height of the breaking wave. */
+  let OC = null;
+  // Well-known surf breaks: [name, where, latitude, longitude] (positions to about a tenth of a degree).
+  const BREAKS = [["Pipeline", "Oahu, Hawaii", 21.67, -158.05], ["Waimea Bay", "Oahu, Hawaii", 21.64, -158.07], ["Jaws (Pe'ahi)", "Maui, Hawaii", 20.94, -156.3], ["Mavericks", "California", 37.49, -122.51], ["Steamer Lane", "Santa Cruz, California", 36.95, -122.03], ["Rincon", "California", 34.37, -119.48], ["Malibu", "California", 34.03, -118.68], ["Huntington Beach", "California", 33.65, -118.0], ["Trestles", "California", 33.38, -117.59], ["Tofino", "British Columbia", 49.07, -125.76],
+    ["Puerto Escondido", "Mexico", 15.86, -97.06], ["Chicama", "Peru", -7.7, -79.45], ["Punta de Lobos", "Chile", -34.43, -72.05], ["Joaquina", "Florianópolis, Brazil", -27.63, -48.45], ["Saquarema", "Brazil", -22.94, -42.49], ["Cape Hatteras", "Outer Banks, North Carolina", 35.25, -75.52], ["Montauk", "New York", 41.03, -71.94], ["Cocoa Beach", "Florida", 28.32, -80.6], ["Rincón", "Puerto Rico", 18.36, -67.27], ["Soup Bowl", "Barbados", 13.21, -59.52],
+    ["Nazaré", "Portugal", 39.6, -9.09], ["Supertubos", "Peniche, Portugal", 39.34, -9.37], ["Ericeira", "Portugal", 38.99, -9.42], ["Hossegor", "France", 43.67, -1.45], ["Mundaka", "Spain", 43.41, -2.7], ["Fistral", "Newquay, England", 50.42, -5.1], ["Thurso East", "Scotland", 58.6, -3.51], ["Bundoran", "Ireland", 54.48, -8.28], ["Anchor Point", "Taghazout, Morocco", 30.54, -9.73], ["Skeleton Bay", "Namibia", -22.9, 14.45], ["Jeffreys Bay", "South Africa", -34.03, 24.93],
+    ["Arugam Bay", "Sri Lanka", 6.84, 81.84], ["Uluwatu", "Bali", -8.82, 115.08], ["G-Land", "Java", -8.74, 114.35], ["Desert Point", "Lombok", -8.75, 115.83], ["HT's", "Mentawai Islands", -2.37, 99.86], ["Cloud 9", "Siargao, Philippines", 9.81, 126.17], ["Tsurigasaki", "Chiba, Japan", 35.37, 140.39], ["Cloudbreak", "Fiji", -17.87, 177.19], ["Teahupo'o", "Tahiti", -17.86, -149.26], ["Snapper Rocks", "Gold Coast, Australia", -28.16, 153.55], ["Bells Beach", "Victoria, Australia", -38.37, 144.28], ["Margaret River", "Western Australia", -33.98, 114.98], ["Raglan", "New Zealand", -37.82, 174.83]];
+  const from8 = (deg) => COMPASS[Math.round((((deg % 360) + 360) % 360) / 45) % 8];
+  // The swell at the sea point nearest a place (within about 2 degrees), or null inland: { m, s, from }.
+  function waveAt(lon, lat) {
+    if (!OC || !OC.hs) return null;
+    const i0 = Math.round((((lon % 360) + 360) % 360)) % 360, j0 = Math.round(90 - lat); let best = null, bd = 9;
+    for (let dj = -2; dj <= 2; dj++) for (let di = -2; di <= 2; di++) { const j = j0 + dj, i = (i0 + di + 360) % 360, d = di * di + dj * dj; if (j < 0 || j > 180 || d >= bd) continue; const n = j * 360 + i; if (OC.hs[n] < 255) { bd = d; best = n; } }
+    return best == null ? null : { m: OC.hs[best] / 10, s: OC.tp[best] / 10, from: OC.dir[best] * 2 };
+  }
+  const swellKind = (s) => (s >= 12 ? "long-period groundswell" : s >= 8 ? "mid-period swell" : "short-period wind swell");
+  // A tide station's level right now, between the predicted highs and lows on either side (a smooth cosine curve).
+  function tideNow(st, min) {
+    const e = st[3];
+    for (let k = 0; k + 5 < e.length; k += 3) if (e[k] <= min && min < e[k + 3]) {
+      const f = (min - e[k]) / (e[k + 3] - e[k]), h = e[k + 1] + (e[k + 4] - e[k + 1]) * (1 - Math.cos(Math.PI * f)) / 2, lo = Math.min(e[k + 1], e[k + 4]), hi = Math.max(e[k + 1], e[k + 4]);
+      return { h: h / 100, rising: e[k + 4] > e[k + 1], frac: hi > lo ? (h - lo) / (hi - lo) : 0.5, next: { min: e[k + 3] - min, h: e[k + 4] / 100, high: !!e[k + 5] } };
+    }
+    return null;
+  }
+  const inHM = (m) => (m >= 60 ? Math.floor(m / 60) + " h " + Math.round(m % 60) + " min" : Math.max(1, Math.round(m)) + " min");
+  const tideText = (t) => `${t.h.toFixed(2)} m and ${t.rising ? "rising" : "falling"} · ${t.next.high ? "high" : "low"} water (${t.next.h.toFixed(2)} m) in ${inHM(t.next.min)}`;
+  function buildTides() {
+    if (!OC || !OC.tides) return;
+    const ln = [], hd = [], min = Date.now() / 60000; let up = 0, down = 0;
+    dropPicks("tide");
+    for (const st of OC.tides) {
+      const t = tideNow(st, min); if (!t) continue; t.rising ? up++ : down++;
+      const c = t.rising ? [0.3, 1, 0.9] : [1, 0.45, 0.8], h = 0.004 + t.frac * 0.03, a = ll(st[0], st[1]), b = ll(st[0], st[1], 1 + h);
+      ln.push(a[0], a[1], a[2], c[0], c[1], c[2], 0.35, t.rising ? 0 : 1, b[0], b[1], b[2], c[0], c[1], c[2], 1, t.rising ? 1 : 0);   // the pulse climbs on a rising tide and sinks on a falling one
+      hd.push(b[0], b[1], b[2], c[0], c[1], c[2], 1, 1.7, (st[0] * 0.37 + 7) % 1);
+      picks.push({ p: b, layer: "tide", live: "tide", kind: "Tide station · predicted", title: st[2], sub: tideText(t) + " · NOAA" });
+    }
+    M.tideLines = mesh(P_LINE, LINE, ln, gl.LINES); M.tideHeads = mesh(P_POINT, POINT, hd, gl.POINTS);
+    L.tide.count(up + down); L.tide.status("model", `${up} rising, ${down} falling right now · NOAA tide predictions, US coasts and islands only`);
+  }
+  function buildOcean(j) {
+    const dec = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0)), a = [];
+    OC = { tides: j.tides && j.tides.stations, buoys: j.buoys && j.buoys.buoys };
+    if (j.currents) {
+      const U = new Int8Array(dec(j.currents.u).buffer), V = new Int8Array(dec(j.currents.v).buffer); let top = null;
+      streamlines(a, LITE ? 1800 : 4200, 26, U, V, 0.02, 0.12, 1.2, 0.55, 0.0012, [[0.15, 0.35, 1], [0.2, 0.75, 1], [0.5, 1, 0.95], [1, 1, 1]], 0.11);
+      M.cur = mesh(P_LINE, LINE, a, gl.LINES); a.length = 0;
+      for (let r = 8; r <= 172; r++) for (let c = 0; c < 360; c++) { const sp = Math.hypot(U[r * 360 + c], V[r * 360 + c]) * 0.02; if (!top || sp > top.sp) top = { sp, lon: c > 180 ? c - 360 : c, lat: 90 - r }; }
+      S.cur = top; const days = Math.round((Date.now() - Date.parse(j.currents.date)) / 86400000);
+      L.cur.count(`${top.sp.toFixed(1)} m/s`); L.cur.status("delay", `fastest surface current · from satellite sea-level measurements, ${days <= 1 ? "latest pass" : days + " days old"} · NOAA CoastWatch`);
+    } else L.cur.status("off", "first data sync in progress, check back in a few minutes");
+    if (j.waves) {
+      OC.hs = dec(j.waves.hs); OC.tp = dec(j.waves.tp); OC.dir = dec(j.waves.dir);
+      const U = new Float32Array(65160), V = new Float32Array(65160); let top = null;   // the way the swell travels, as long as it is tall
+      for (let n = 0; n < 65160; n++) { if (OC.hs[n] === 255) continue; const m = OC.hs[n] / 10, th = OC.dir[n] * 2 * DEG; U[n] = -Math.sin(th) * m; V[n] = -Math.cos(th) * m; if (!top || m > top.m) top = { m, s: OC.tp[n] / 10, lon: (n % 360) > 180 ? (n % 360) - 360 : n % 360, lat: 90 - Math.floor(n / 360) }; }
+      streamlines(a, LITE ? 1100 : 2600, 10, U, V, 1, 2, 9, 0.9, 0.0026, [[0.2, 0.9, 0.75], [0.9, 0.95, 0.4], [1, 0.5, 0.3], [1, 0.3, 0.75]], 0.1);
+      M.swell = mesh(P_LINE, LINE, a, gl.LINES); S.swell = top;
+    }
+    { const pt = []; dropPicks("surf"); OC.spots = [];
+      if (OC.hs) for (const [name, where, lat, lon] of BREAKS) { const w = waveAt(lon, lat); if (!w) continue; const p = ll(lon, lat);
+        let wind = ""; if (WX) { const u = wxAt(WX.u, lon, lat) * 0.5, v = wxAt(WX.v, lon, lat) * 0.5; wind = ` · wind ${Math.round(Math.hypot(u, v) * 3.6)} km/h from the ${from8(Math.atan2(-u, -v) / DEG)}`; }
+        const pick = { p, layer: "surf", live: "surf", kind: "Surf report · " + where, title: name, sub: `${w.m.toFixed(1)} m at ${Math.round(w.s)} s from the ${from8(w.from)} · ${swellKind(w.s)}${wind} · open-ocean model beside the break, not the breaking wave` };
+        picks.push(pick); OC.spots.push({ name, where, lon, lat, w, wind, pick, e: w.m * w.m * w.s });
+        pt.push(p[0], p[1], p[2], 1, 0.55, 0.45, 1, 2.1, rnd()); ring(pt, lon, lat, 0.55, 14, [1, 0.55, 0.45], 0.8, 1.0); }
+      for (const b of OC.buoys || []) { const p = ll(b[0], b[1]); pt.push(p[0], p[1], p[2], 1, 0.95, 0.6, 0.85, 1.35, rnd());
+        picks.push({ p, layer: "surf", live: "surf", kind: `Wave buoy · observed ${new Date(b[7] * 60000).toISOString().slice(11, 16)} UTC`, title: "Buoy " + b[2], sub: `${b[3].toFixed(1)} m${b[4] != null ? ` at ${Math.round(b[4])} s` : ""}${b[5] != null ? ` from the ${from8(b[5])}` : ""}${b[6] != null ? ` · water ${b[6].toFixed(1)}°C` : ""} · NOAA NDBC` }); }
+      M.surfPts = mesh(P_POINT, POINT, pt, gl.POINTS); OC.spots.sort((x, y) => y.e - x.e);
+      if (j.waves) { L.surf.count(`${S.swell.m.toFixed(1)} m`); L.surf.status("model", `tallest waves at sea now · NOAA wave model for ${new Date(j.waves.valid).toISOString().slice(11, 16)} UTC · ${OC.spots.length} surf breaks · ${(OC.buoys || []).length} buoys reporting`); }
+      else L.surf.status(OC.buoys ? "delay" : "off", OC.buoys ? `${OC.buoys.length} wave buoys reporting · NOAA NDBC · wave model not in yet` : "first data sync in progress, check back in a few minutes");
+      $("#surfBtn").hidden = !OC.spots.length; }
+    if (OC.tides) buildTides(); else L.tide.status("off", "first data sync in progress, check back in a few minutes");
+    renderBoard();
+  }
+  const loadOcean = () => getJson("../data/globe/ocean.json").then(buildOcean).catch(() => { if (!OC) for (const id of ["cur", "surf", "tide"]) L[id].status("off", "first data sync in progress, check back in a few minutes"); });
+  setInterval(() => { if (L.tide.on && !document.hidden) buildTides(); }, 60000);
+  // The surf report: every break, biggest swell first (wave height squared times period, a fair measure of its power).
+  function renderSurf(box) {
+    box.textContent = "";
+    const head = el("div", "bh"), ttl = el("button", "bx", "Surf report"), close = el("button", "bx", "×"); ttl.type = "button"; ttl.disabled = true; close.type = "button"; close.setAttribute("aria-label", "Close"); close.onclick = () => { box.hidden = true; };
+    head.append(ttl, close); box.append(head);
+    const body = el("div", "bb"), max = Math.max(1, ...OC.spots.map((s) => s.e)), g = el("div", "glob"); box.append(body);
+    g.append(el("div", "big", `${OC.spots[0].name}: ${OC.spots[0].w.m.toFixed(1)} m at ${Math.round(OC.spots[0].w.s)} s`), el("div", "sm", "Biggest swell first. Open-ocean swell beside each break from NOAA's wave model, with the wind there: a guide to what is arriving, not the height of the breaking wave.")); body.append(g);
+    for (const s of OC.spots) {
+      const row = el("button", "xr"), top = el("div", "xt"), bar = el("div", "split"), fill = el("i", "u"); row.type = "button";
+      top.append(el("b", null, s.name), el("span", "mono", `${s.w.m.toFixed(1)} m · ${Math.round(s.w.s)} s`)); bar.append(fill);
+      row.append(top, el("div", "sm", `${s.where} · from the ${from8(s.w.from)} · ${swellKind(s.w.s)}${s.wind}`), bar);
+      requestAnimationFrame(() => requestAnimationFrame(() => { fill.style.width = Math.max(2, s.e / max * 100) + "%"; }));
+      row.onclick = () => { stopTour(); flyTo(s.lon, s.lat - (SMALL ? 6 : 0), 1.7); cam.idle = -45; if (narrow()) box.hidden = true; select(s.pick, 0, 0, true); };
+      body.append(row);
+    }
+  }
 
   /* ---------- more live layers: earthquakes, natural events, aurora, the space station ---------- */
   const dyn = (key) => (M[key] = M[key] || mesh(P_POINT, POINT, null, gl.POINTS, true));
@@ -981,6 +1091,7 @@
     () => L.quakes.on && S.quakes != null ? [num(S.quakes), "earthquakes in the last 24 hours"] : null,
     () => L.rain.on && S.rain != null ? [S.rain + "%", "of the globe under rain or snow"] : null,
     () => L.ships.on && ships.map.size ? [num(ships.map.size), "ships under way in the Baltic, live"] : null,
+    () => L.surf.on && S.swell ? [S.swell.m.toFixed(1) + " m", "tallest waves on the open ocean right now (model)"] : null,
     () => L.wind.on && S.jet ? [num(S.jet.kmh) + " km/h", "fastest jet-stream wind right now (model)"] : null,
     () => L.markets.on && STOCKS ? [`${S.open} of ${STOCKS.exchanges.length}`, "stock exchanges trading right now"] : null,
     () => { if (!L.markets.on || !MK) return null; const q = MK.quotes.filter((x) => PIN[x.sym] && x.pct != null); return q.length ? [`${q.filter((x) => x.pct >= 0).length} of ${q.length}`, "indexes and commodities up (delayed)"] : null; },
@@ -1024,6 +1135,8 @@
     if (L.net.on && S.dc) add("Internet · static map", "Where the internet lives", `${num(S.dc.n)} data centres are mapped in this one cluster, the densest on the globe (OpenStreetMap).`, () => [S.dc.lon, S.dc.lat], { dist: 1.9 });
     if (L.pop.on && S.pop) add("Population · static map", "The most crowded point on the map", `About ${(S.pop.k / 1000).toFixed(1)} million people live in towns and cities inside this half-degree cell (GeoNames).`, () => [S.pop.lon, S.pop.lat], { dist: 2.0 });
     if (L.ships.on && ships.map.size > 10) add("Shipping · live in the Baltic", "Ships under way", `${num(ships.map.size)} ships are moving here right now (Fintraffic). Ports are mapped worldwide; live positions cover the Baltic only.`, () => [21, 59.3], { dist: 1.75, mark: false });
+    if (L.surf.on && S.swell) add("Waves · wave model", `The biggest swell on Earth: ${S.swell.m.toFixed(1)} m`, `Waves this tall, ${Math.round(S.swell.s)} seconds apart, are running across the open ocean here. The coloured lines follow the swell on its way to the coast (NOAA).`, () => [S.swell.lon, S.swell.lat], { dist: 2.4 });
+    if (L.cur.on && S.cur) add("Ocean currents · satellite altimetry", `A river in the sea: ${S.cur.sp.toFixed(1)} m/s`, `The fastest surface current mapped right now. The slow dashed lines trace the great currents and the eddies that spin off them (NOAA CoastWatch).`, () => [S.cur.lon, S.cur.lat], { dist: 2.2 });
     if (L.wind.on && S.jet) add("Jet stream · weather model", `The fastest wind on Earth: ${num(S.jet.kmh)} km/h`, `About 10 km up, where airliners cruise. The gold streaks trace the jet stream; the pale ones below are wind near the ground (NOAA GFS).`, () => [S.jet.lon, S.jet.lat], { dist: 2.6 });
     if (L.quakes.on && S.quake) add("Earthquakes · live", `Strongest in 24 hours: magnitude ${S.quake.m.toFixed(1)}`, `${S.quake.place || "Location not named"} · ${new Date(S.quake.time).toISOString().slice(11, 16)} UTC (USGS).`, () => [S.quake.lon, S.quake.lat], { dist: 2.1 });
     if (L.events.on && S.event) add(`${S.event.kind} · active`, S.event.title, `One of the natural events NASA is tracking right now (EONET).`, () => [S.event.lon, S.event.lat], { dist: 2.1 });
@@ -1098,6 +1211,10 @@
         rows.push(["ISS", el >= 10 ? `the space station is above you now, ${Math.round(el)}° up` : mins == null ? "no space station pass over you in the next 24 hours" : `next space station pass in about ${mins >= 60 ? Math.floor(mins / 60) + " h " + (mins % 60) + " min" : Math.max(1, mins) + " min"}, climbing to ${Math.round(ps.peak)}° (estimate)`]); } }
     if (WX) { const c = tempC(me.lon, me.lat), u = wxAt(WX.u, me.lon, me.lat) * 0.5, v = wxAt(WX.v, me.lon, me.lat) * 0.5, from = COMPASS[Math.round((((Math.atan2(-u, -v) / DEG) + 360) % 360) / 45) % 8];
       rows.push([`${Math.round(c)}°C`, `(${Math.round(c * 9 / 5 + 32)}°F) air temperature, with wind at ${Math.round(Math.hypot(u, v) * 3.6)} km/h from the ${from} (weather model, about 100 km resolution)`]); }
+    { const w = waveAt(me.lon, me.lat); if (w) rows.push([w.m.toFixed(1) + " m", `waves offshore, ${Math.round(w.s)} s apart, from the ${from8(w.from)} (${swellKind(w.s)}, wave model)`]); }
+    if (OC && OC.tides) { let st = null, bd = 0.0188;                 // the nearest tide station within about 120 km
+      for (const s of OC.tides) { const d = Math.acos(Math.min(1, dot(ll(s[0], s[1]), me.p))); if (d < bd) { bd = d; st = s; } }
+      const t = st && tideNow(st, Date.now() / 60000); if (t) rows.push(["Tide", `at ${st[2]}: ${tideText(t)} (predicted)`]); }
     if (S.quakeList) { let n = 0, top = 0; for (const k of S.quakeList) if (Math.acos(Math.min(1, dot(ll(k.lon, k.lat), me.p))) * 6371 <= 500) { n++; top = Math.max(top, k.m); }
       if (n) rows.push([num(n), `earthquake${n > 1 ? "s" : ""} within 500 km in the last 24 hours, the strongest magnitude ${top.toFixed(1)}`]); }
     if (S.auroraGrid) { const v = S.auroraGrid[(((Math.round(me.lon) % 360) + 360) % 360) * 181 + Math.round(me.lat) + 90]; if (v >= 5) rows.push([v + "%", "chance of aurora overhead in the next 30 minutes"]); }
@@ -1221,6 +1338,9 @@
     if (L.rail.on && live) drawOther(trains.mesh, P_MOVER, t);
     if (L.routes.on) { drawLines(M.arcs, t, { tint: [1, 0.55, 0.8], gradF: 3.1416, gradMix: 1 }); drawOther(M.flow, P_FLOW, t); drawPoints(M.airports, t, { lift: 0.0025, twinkle: 0.2 }); }
     if (L.planes.on && live) drawOther(planes.mesh, P_MOVER, t);
+    if (L.cur.on && live) drawLines(M.cur, t, { lift: 0, pulse: 1, freq: 3, speed: 0.2, hot: [0.85, 1, 1] });
+    if (L.surf.on && live) { drawLines(M.swell, t, { pulse: 1, freq: 2, speed: 0.5, hot: [1, 1, 0.9] }); drawPoints(M.surfPts, t, { lift: 0.003, twinkle: 0.5 }); }
+    if (L.tide.on && live) { drawLines(M.tideLines, t, { pulse: 1.3, freq: 1, speed: 0.6, hot: [1, 1, 1] }); drawPoints(M.tideHeads, t, { twinkle: 0.4 }); }
     if (L.wind.on && live) { drawLines(M.wind, t, { pulse: 1, freq: 1, speed: 0.4, hot: [1, 1, 1] }); drawLines(M.jet, t, { pulse: 1.1, freq: 1, speed: 0.55, hot: [1, 1, 0.9] }); }
     if (L.clouds.on && live) drawPoints(M.clouds, t, { sun: 1, twinkle: 0.35 });
     if (L.rain.on && live) drawOther(M.rain, P_RAIN, t);
@@ -1251,7 +1371,7 @@
   const getJson = async (url) => { const r = await fetch(url, { cache: "no-cache" }); if (!r.ok) throw new Error(r.status); return r.json(); };
   getJson("../data/globe/world.json").then(buildWorld).catch(() => { reveal = 1; for (const id of ["routes", "ships", "rail", "roads", "net", "pop", "vital", "power", "mil"]) L[id].status("off", "first data sync in progress, check back in a few minutes"); });
   const loadMarkets = () => getJson("../data/globe/markets.json").then(buildMarkets).catch(() => { if (!MK) L.markets.status("off", "first data sync in progress"); });
-  loadMarkets(); setInterval(loadMarkets, 5 * 60000); loadStocks(); setInterval(loadStocks, 5 * 60000); loadWeather(); setInterval(loadWeather, 30 * 60000);
+  loadMarkets(); setInterval(loadMarkets, 5 * 60000); loadStocks(); setInterval(loadStocks, 5 * 60000); loadWeather(); setInterval(loadWeather, 30 * 60000); setTimeout(loadOcean, 600); setInterval(loadOcean, 20 * 60000);
   if (EMBED) setTimeout(startTour, 9000);                           // the embedded preview tours by itself, on a loop
   else if (QS.has("tour")) setTimeout(startTour, 7000);              // world-pulse.html?tour starts the tour by itself
   if (/[?&]board/.test(location.search)) { $("#board").hidden = false; $("#panel").open = false; }

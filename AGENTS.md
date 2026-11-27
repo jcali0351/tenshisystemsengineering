@@ -213,6 +213,12 @@ Server facts: Hostinger KVM 2 VPS, Ubuntu 24.04, Caddy (HTML sent with `Cache-Co
   temperature starts off). A layer with `off: true` in `LAYERS` starts switched off.
 - **Military bases** layer (`mil`): `bases` in world.json, from OpenStreetMap `military=base|airfield|naval_base|barracks|
   range|training_area` (tools/globe-data.mjs, one entry per 0.05° cell); labelled as mapped sites, not a complete list.
+- **The sea** (`buildOcean` from `data/globe/ocean.json`, written by `tools/globe-ocean.mjs`, four parts that fail
+  independently): **Ocean currents** (`cur`, NOAA CoastWatch geostrophic currents through ERDDAP), **Waves & surf**
+  (`surf`: NOAA GFS-Wave swell lines, NDBC wave buoys, and `BREAKS`, a hand-kept list of surf breaks whose "surf report"
+  is the model swell beside the break plus the wind; the **Surf report** button in the bottom bar lists them, biggest
+  swell first, in the same board the markets use, `boardMode`), **Tides** (`tide`: NOAA CO-OPS high/low predictions,
+  US stations only; `tideNow` works out the level between them). `streamlines()` draws wind, jet, currents and swell.
 - Owner's rules for it: commercial-safe data only (no OpenSky, no TeleGeography), no server relay, real data with
   honest labels (live / delayed / static / modelled), fine particles, never blobby.
 
