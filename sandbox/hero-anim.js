@@ -11,6 +11,7 @@
 // (neon-display.js, html.disp-q-low): fewer lights and sparks at 30 fps. Pauses when the hero is
 // off screen or the tab is hidden. No libraries.
 (function () {
+  if (document.documentElement.classList.contains("white")) return;   // white corporate theme: no neon extras (white-theme.js)
   const host = document.querySelector(".hero > .hero-photo-placeholder");
   if (!host || !window.HTMLCanvasElement) return;
   const IW = 2352, IH = 1008;

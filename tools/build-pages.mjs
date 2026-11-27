@@ -2498,7 +2498,7 @@ ${b.how.map((h) => `            <li>${esc(h)}</li>`).join("\n")}
 
 /* ---------- the Games menu: a hub (games.html) and a page per game where it fills the screen ---------- */
 {
-  const V = "20261125au";   // cache tag for the game scripts on these pages (bump with the homepage's when they change)
+  const V = "20261127w";   // cache tag for the game scripts on these pages (bump with the homepage's when they change)
   const js = (files) => files.map((f) => `  <script src="sandbox/${f}.js?v=${V}" defer></script>`).join("\n") + "\n";
   // Deferred, so they run after game-settings.js, which tools/neon-pages.mjs adds at the end of every page.
   const crumbs = (name) => `<nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li><a href="games.html">Games</a></li><li aria-current="page">${esc(name)}</li></ol></nav>`;
@@ -2980,3 +2980,6 @@ await import("./neon-pages.mjs");
   const imgCount = urls.reduce((n, u) => n + (u.match(/<image:loc>/g) || []).length, 0);
   console.log(`sitemap.xml written: ${pages.length} pages, ${imgCount} images`);
 }
+
+// The white corporate theme next to the neon look, on every page: tools/white-theme.mjs (must stay last, so its stylesheet is the last link).
+await import("./white-theme.mjs");

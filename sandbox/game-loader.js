@@ -4,6 +4,7 @@
 // (TenshiModels.need in each game's start()).
 // The scripts to load are listed on this script's tag in index.html (data-px1 / data-px2), so bump their ?v= tags there.
 (function () {
+  if (document.documentElement.classList.contains("white")) return;   // white corporate theme: no neon extras (white-theme.js)
   const me = document.currentScript;
   if (!me || !("IntersectionObserver" in window)) return fallback();
   const loaded = {};

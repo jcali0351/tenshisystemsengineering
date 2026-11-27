@@ -9,6 +9,7 @@
 // While playing, the arcade is paused whenever the band is scrolled out of view. People who ask for reduced motion
 // get the still picture only (the game's scripts switch themselves off for them anyway).
 (function () {
+  if (document.documentElement.classList.contains("white")) return;   // white corporate theme: no neon extras (white-theme.js)
   const title = document.getElementById("parallax-px3-title");
   const band = title && title.closest("section.parallax");
   if (!band || band.querySelector(".px3-poster")) return;

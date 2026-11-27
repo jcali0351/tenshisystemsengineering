@@ -8,6 +8,7 @@
 //
 // Browsers only allow sound after a click, so it starts OFF; the 🔊 button bottom-left turns it on and off.
 (function () {
+  if (document.documentElement.classList.contains("white") && !document.querySelector(".game-page")) return;   // white corporate theme: sound only on the game pages (white-theme.js)
   const TEMPO = 112;                       // beats per minute
   const STEP = 60 / TEMPO / 4;             // one 16th note, in seconds
   // Chords, one per bar: root note for the bass and three notes for the pad (in Hz).

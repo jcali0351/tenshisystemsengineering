@@ -3,6 +3,7 @@
 // pink glow. Over the white content areas they turn black with a light gray glow. It adds or removes the class
 // "neon-light" on <html>; neon-theme.css does the rest.
 (function () {
+  if (document.documentElement.classList.contains("white")) return;   // white corporate theme: no neon extras (white-theme.js)
   const header = document.querySelector(".site-header");
   if (!header) return;
   const DARK = ".hero, .parallax, .band, .services, .feature, .contact, footer, .site-footer";   // the areas with dark backgrounds (all of them, for now)

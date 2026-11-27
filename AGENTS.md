@@ -192,3 +192,16 @@ Server facts: Hostinger KVM 2 VPS, Ubuntu 24.04, Caddy (HTML sent with `Cache-Co
   (adsb.lol), ships / trains / road counters (Fintraffic digitraffic.fi, Finland and the Baltic only).
 - Owner's rules for it: commercial-safe data only (no OpenSky, no TeleGeography), no server relay, real data with
   honest labels (live / delayed / static / modelled), fine particles, never blobby.
+
+## White corporate theme (2026-11-27)
+- The owner asked for an all-white, big-tech-style version of the whole site next to the neon one. It is the SAME pages
+  with a second look, not a copy of the files: `white-theme.js` (in `<head>`, before the stylesheets) puts class
+  `white` on `<html>` and removes `neon`, so every `html.neon ...` rule switches off; `white-theme.css` (always the last
+  stylesheet; every rule starts with `html.white`) does the rest. `tools/white-theme.mjs` links both on every page
+  (run last by build-pages.mjs); `tools/stamp-assets.mjs` stamps their `?v=` tags.
+- Addresses: `tenshisystems.com/white/` switches a device to white, `/neon/` switches back (or `?theme=white|neon` on
+  any page; remembered in localStorage). Neon is still the default: to make white the default for everyone, change
+  `DEFAULT` at the top of white-theme.js.
+- The neon extras in `sandbox/` (recolor-live, header, game-loader, quest, arcade-px3, hero-anim; neon-audio except on
+  game pages) return at once when `<html>` has class `white`. New neon scripts need the same first line.
+- New page styles: scope neon-only looks to `html.neon`, and check the page with `?theme=white` too.

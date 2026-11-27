@@ -8,6 +8,7 @@
 // Progress (XP, cleared stages, discovered pages) is kept in this browser (localStorage), so it carries across pages
 // and visits. Nothing is sent anywhere. The look comes from neon-theme.css (homepage) and neon-pages.css (other pages).
 (function () {
+  if (document.documentElement.classList.contains("white")) return;   // white corporate theme: no neon extras (white-theme.js)
   const XP = { stage: 100, area: 50, areaComplete: 150, explorer: 300, quest: 500, perLevel: 400, explorerAreas: 6 };
   if (window.TENSHI_TUNE) window.TENSHI_TUNE(XP, (window.TENSHI_GAMES || {}).quest);   // your values from game_settings.py
   // The homepage's stages, with names. Other pages find their own: every section with a heading.

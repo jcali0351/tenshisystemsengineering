@@ -1,6 +1,7 @@
 // neon-recolor-live.js: catches reds that the site's scripts add while the page runs (inline styles and <style> tags)
 // and turns them purple, the same way make-recolor.py does for the stylesheets. Neon preview only.
 (function () {
+  if (document.documentElement.classList.contains("white")) return;   // white corporate theme: no neon extras (white-theme.js)
   const PURPLE_HUE = 270;
   const COLOR = /#[0-9a-fA-F]{8}\b|#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b|rgba?\([^)]*\)/g;
 
