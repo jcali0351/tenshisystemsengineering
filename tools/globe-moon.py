@@ -15,22 +15,29 @@ except ImportError:
     from PIL import Image
 
 BASE, W, H = "https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/", 720, 360
+# A second home for the same camera mosaic: the US Geological Survey's planetary map server (public domain). NASA's
+# server answers "403 Forbidden" to GitHub's runners; that is its decision, so this asks the USGS instead.
+USGS = ("https://planetarymaps.usgs.gov/cgi-bin/mapserv?map=/maps/earth/moon_simp_cyl.map&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap"
+        "&LAYERS={layer}&STYLES=&SRS=EPSG:4326&BBOX=-180,-90,180,90&WIDTH=1440&HEIGHT=720&FORMAT=image/jpeg")
 
-def fetch(name):
-    req = urllib.request.Request(BASE + name, headers={"User-Agent": "TenshiWorldPulse/1.0 (https://tenshisystems.com)"})
+def fetch(url):
+    req = urllib.request.Request(url, headers={"User-Agent": "TenshiWorldPulse/1.0 (https://tenshisystems.com)"})
     data = urllib.request.urlopen(req, timeout=180).read()
-    print(f"fetched {name}: {len(data)} bytes")
-    return Image.open(io.BytesIO(data)).convert("L").resize((W, H), Image.LANCZOS)
+    img = Image.open(io.BytesIO(data)).convert("L").resize((W, H), Image.LANCZOS)
+    lo, hi = img.getextrema()
+    if hi - lo < 40: raise ValueError("picture is blank")
+    print(f"fetched {url[:110]}: {len(data)} bytes")
+    return img
 
-colour = None
-for name in ("lroc_color_poles_1k.jpg", "lroc_color_2k.jpg", "lroc_color_poles_2k.tif"):
-    try: colour = fetch(name); break
-    except Exception as e: print(f"{name}: {e}")
-if colour is None: sys.exit("no Moon colour map could be fetched")
+colour, source = None, ""
+for url, src in [(BASE + "lroc_color_poles_1k.jpg", "NASA SVS CGI Moon Kit (LRO camera)"),
+                 (USGS.format(layer="LROC_WAC"), "USGS Astrogeology map server (LRO wide-angle camera mosaic)"), (USGS.format(layer="LO"), "USGS Astrogeology map server (Lunar Orbiter mosaic)")]:
+    try: colour = fetch(url); source = src; break
+    except Exception as e: print(f"{url[:110]}: {e}")
+if colour is None: sys.exit("no Moon map could be fetched")
 relief = None
-for name in ("ldem_3_8bit.jpg", "ldem_4.tif"):
-    try: relief = fetch(name); break
-    except Exception as e: print(f"{name}: {e}")
+try: relief = fetch(BASE + "ldem_3_8bit.jpg")
+except Exception as e: print(f"relief map: {e}")
 
 a = list(colour.getdata())
 lo, hi = sorted(a)[len(a) // 50], sorted(a)[-len(a) // 50]          # stretch the middle 96% of the brightness range
@@ -42,6 +49,6 @@ if relief is not None:                                               # light fro
             slope = d[y * W + (x - 1) % W] - d[y * W + (x + 1) % W]
             a[y * W + x] = max(0.0, min(1.0, a[y * W + x] * (1 + slope / 28.0)))
 out = bytes(round(v * 255) for v in a)
-json.dump({"source": "NASA SVS CGI Moon Kit (LRO camera and laser altimeter), public domain", "w": W, "h": H, "relief": relief is not None,
+json.dump({"source": source + ", public domain", "w": W, "h": H, "relief": relief is not None,
            "b64": base64.b64encode(out).decode()}, open("data/globe/moon.json", "w"))
 print(f"moon.json written, relief shading: {relief is not None}")
