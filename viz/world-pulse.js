@@ -93,6 +93,14 @@
       vec3 c = aKind > 0.5 ? mix(vec3(1.0, 0.95, 0.7), vec3(1.0, 0.72, 0.2), age) : mix(vec3(0.75, 0.6, 1.0), vec3(0.35, 0.2, 0.6), age);
       vColor = vec4(c, live * (1.0 - age) * (aKind > 0.5 ? 1.0 : 0.8) * vis(aPos)); gl_PointSize = max(1.0, (aKind > 0.5 ? 2.6 - age : 2.0) * uPx); }`, DOT_FS);
 
+  // Precipitation: fine streaks that fall toward the surface wherever the satellites see rain or snow.
+  const P_RAIN = program(`in vec3 aPos; in vec4 aColor; in float aSeed;
+    uniform mat4 uMVP; uniform float uTime, uPx; ${VIS}
+    out vec4 vColor;
+    void main(){ float f = fract(uTime * (0.28 + aSeed * 0.2) + aSeed * 7.0);
+      gl_Position = uMVP * vec4(aPos * (1.0 + 0.034 * (1.0 - f) + 0.002), 1.0);
+      vColor = vec4(aColor.rgb, aColor.a * vis(aPos) * smoothstep(0.0, 0.2, f) * (0.35 + 0.65 * f)); gl_PointSize = max(1.0, (0.9 + aSeed * 0.5) * uPx); }`, DOT_FS);
+
   const P_ATMO = program(`in vec2 aUV; uniform mat4 uProj; uniform float uD, uS; out vec2 vUV;
     void main(){ vUV = aUV; gl_Position = uProj * vec4(aUV * uS * 1.6, -uD, 1.0); }`,
     `in vec2 vUV; out vec4 o;
@@ -117,7 +125,7 @@
     cam.tLat = Math.max(-78, Math.min(78, cam.tLat)); cam.tDist = Math.max(1.22, Math.min(6, cam.tDist));
     const k = Math.min(1, dt * 7);
     cam.lon += (cam.tLon - cam.lon) * k; cam.lat += (cam.tLat - cam.lat) * k; cam.dist += (cam.tDist - cam.dist) * k;
-    const asp = W / H; viewD = 1 + (cam.dist - 1) * (asp < 1 ? Math.min(2.4, 0.92 / asp) : 1);
+    const asp = W / H; viewD = 1 + (cam.dist - 1) * (asp < 1 ? Math.min(2.9, 1.12 / asp) : 1);
     EYE = ll(cam.lon, cam.lat, viewD); PROJ = persp(34 * DEG, asp, 0.05, 30); MVP = mul(PROJ, lookAt(EYE));
   }
   const project = (p) => { const x = MVP[0] * p[0] + MVP[4] * p[1] + MVP[8] * p[2] + MVP[12], y = MVP[1] * p[0] + MVP[5] * p[1] + MVP[9] * p[2] + MVP[13], w = MVP[3] * p[0] + MVP[7] * p[1] + MVP[11] * p[2] + MVP[15]; return [(x / w * 0.5 + 0.5) * W, (0.5 - y / w * 0.5) * H]; };
@@ -153,6 +161,7 @@
     { id: "rail", name: "Rail", color: C.rail, unit: "lines" },
     { id: "roads", name: "Road traffic", color: C.road, unit: "roads" },
     { id: "net", name: "Internet: cables & data centres", color: C.cable, unit: "data centres" },
+    { id: "rain", name: "Weather: precipitation", color: [0.45, 0.75, 1], unit: "" },
     { id: "pop", name: "Population", color: [1, 0.45, 0.75], unit: "people" },
     { id: "vital", name: "Births & deaths", color: [1, 0.85, 0.5], unit: "today" },
   ];
@@ -410,6 +419,33 @@
     setTimeout(pollRoads, 120000);
   }
 
+  /* ---------- weather: precipitation from NASA's GPM IMERG satellites (one world image, read pixel by pixel) ---------- */
+  function pollRain() {
+    const img = new Image(); img.crossOrigin = "anonymous";
+    img.onload = () => {
+      try {
+        const RW = 1440, RH = 720, cv = document.createElement("canvas"); cv.width = RW; cv.height = RH;
+        const cx = cv.getContext("2d", { willReadFrequently: true }); cx.drawImage(img, 0, 0, RW, RH);
+        const px = cx.getImageData(0, 0, RW, RH).data, wet = [];
+        let area = 0, all = 0;
+        for (let j = 0; j < RH; j++) { const wgt = Math.cos((90 - (j + 0.5) / 4) * DEG); for (let i = 0; i < RW; i++) { all += wgt; if (px[(j * RW + i) * 4 + 3] > 60) { wet.push(j * RW + i); area += wgt; } } }
+        if (!wet.length) throw new Error("empty image");
+        const N = Math.min(SMALL ? 45000 : 110000, wet.length * 2), a = [];
+        for (let k = 0; k < N; k++) {
+          const n = wet[(rnd() * wet.length) | 0], i = n % RW, j = (n / RW) | 0, p = ll(-180 + (i + rnd()) / 4, 90 - (j + rnd()) / 4);
+          const r = px[n * 4] / 255, g = px[n * 4 + 1] / 255, b = px[n * 4 + 2] / 255, m = Math.max(r, g, b, 0.01);
+          a.push(p[0], p[1], p[2], 0.35 + 0.65 * r / m, 0.35 + 0.65 * g / m, 0.35 + 0.65 * b / m, 0.5, rnd());
+        }
+        M.rain = M.rain || mesh(P_RAIN, [["aPos", 3], ["aColor", 4], ["aSeed", 1]], null, gl.POINTS, true); M.rain.set(a);
+        L.rain.count(`${(area / all * 100).toFixed(1)}%`);
+        L.rain.status("delay", "of the globe has rain or snow · satellite estimate, a few hours behind · NASA GPM IMERG");
+      } catch (e) { if (!M.rain) L.rain.status("off", "satellite image could not be read in this browser"); }
+    };
+    img.onerror = () => { if (!M.rain) L.rain.status("off", "satellite feed not reachable right now"); };
+    img.src = "https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=IMERG_Precipitation_Rate&STYLES=&FORMAT=image/png&TRANSPARENT=true&CRS=EPSG:4326&BBOX=-90,-180,90,180&WIDTH=1440&HEIGHT=720&_=" + Math.floor(Date.now() / 1800000);
+    setTimeout(pollRain, 30 * 60000);
+  }
+
   /* ---------- pointing at things ---------- */
   const tip = $("#tip");
   function hover(mx, my) {
@@ -483,6 +519,7 @@
     if (L.rail.on) drawOther(trains.mesh, P_MOVER, t);
     if (L.routes.on) { drawLines(M.arcs, t); drawOther(M.flow, P_FLOW, t); drawPoints(M.airports, t, { lift: 0.0025, twinkle: 0.2 }); }
     if (L.planes.on) drawOther(planes.mesh, P_MOVER, t);
+    if (L.rain.on) drawOther(M.rain, P_RAIN, t);
     if (L.pop.on) { drawLines(M.popLines, t); drawPoints(M.popDots, t, { twinkle: 0.55 }); }
     if (L.vital.on) drawOther(M.events, P_EVENT, t);
     if (L.markets.on) { drawLines(M.spikes, t); drawPoints(M.heads, t, { twinkle: 0.5 }); }
@@ -495,7 +532,7 @@
   getJson("../data/globe/world.json").then(buildWorld).catch(() => { reveal = 1; for (const id of ["routes", "ships", "rail", "roads", "net", "pop", "vital"]) L[id].status("off", "first data sync in progress, check back in a few minutes"); });
   const loadMarkets = () => getJson("../data/globe/markets.json").then(buildMarkets).catch(() => { if (!MK) L.markets.status("off", "first data sync in progress"); });
   loadMarkets(); setInterval(loadMarkets, 5 * 60000);
-  L.planes.status("off", "connecting to live feed");
-  setTimeout(pollPlanes, 1200); setTimeout(pollShips, 2500); setTimeout(pollTrains, 3500); setTimeout(pollRoads, 4500);
+  L.planes.status("off", "connecting to live feed"); L.rain.status("off", "loading the latest satellite image");
+  setTimeout(pollPlanes, 1200); setTimeout(pollShips, 2500); setTimeout(pollTrains, 3500); setTimeout(pollRoads, 4500); setTimeout(pollRain, 800);
   tick();
 })();
