@@ -225,7 +225,12 @@ Server facts: Hostinger KVM 2 VPS, Ubuntu 24.04, Caddy (HTML sent with `Cache-Co
   `data/globe/moon.json`, fetched once by `tools/globe-moon.py` in the Action (NASA's SVS server answers 403 to the
   runners, so it comes from the USGS planetary map server; no height shading for the same reason); drawn `MOON_R` wide at `MOON_D` away,
   about 15x too big and close, and the page says so; `MOONMARKS` label its seas and craters when it is large on screen;
-  a ring marks the spot on Earth under it). Mars is not built: the owner was asked whether it should be its own page.
+  a ring marks the spot on Earth under it).
+- **Mars** (the owner chose: inside World Pulse): the Mars button (`setPlanet`, `?planet=mars`) swaps the globe. `buildMars` reads
+  `data/globe/mars.jpg` (tools/globe-mars.py, USGS map server: Viking mosaic x MOLA shaded relief, fetched once in the
+  Action); `marsNow` gives sun position, clock, sol, season (Mars24) and the Earth-Mars distance; `MARSMARKS` are the
+  labelled landforms and landing sites; `marsTour` is its tour; `HEADM` its headline figures. While Mars is up the
+  Earth's panels are hidden by `body.mars` and its layers are skipped in `tick`; nothing is switched off.
 - Owner's rules for it: commercial-safe data only (no OpenSky, no TeleGeography), no server relay, real data with
   honest labels (live / delayed / static / modelled), fine particles, never blobby.
 
