@@ -24,8 +24,9 @@ async function yahoo(sym) {
   const res = (await r.json())?.chart?.result?.[0];
   const m = res?.meta;
   if (!m || typeof m.regularMarketPrice !== "number") throw new Error("Yahoo: no price");
-  const prev = m.chartPreviousClose ?? m.previousClose;
   const closes = (res.indicators?.quote?.[0]?.close || []).filter((c) => typeof c === "number").map((c) => +c.toFixed(4));
+  // The day's change is against the previous session's close (chartPreviousClose is the close before the whole 5-day range).
+  const prev = closes.length >= 2 ? closes[closes.length - 2] : (m.previousClose ?? m.chartPreviousClose);
   return { name: m.shortName || m.longName || sym, currency: m.currency || null, price: m.regularMarketPrice, prev: typeof prev === "number" ? prev : null, closes,
     time: m.regularMarketTime ? new Date(m.regularMarketTime * 1000).toISOString() : null };
 }

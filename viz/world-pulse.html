@@ -64,6 +64,28 @@
   #tape span i { font-style:normal; color:var(--mute); margin-right:6px; }
   @keyframes tape { to { transform:translateX(-50%); } }
 
+  #boardBtn { border:0; border-right:1px solid var(--line); font:inherit; font-size:10px; cursor:pointer; color:var(--ink); background:linear-gradient(90deg,rgba(124,58,237,.55),rgba(219,39,119,.45)); }
+  #boardBtn[hidden], #board[hidden] { display:none; }
+  #board { position:fixed; left:14px; bottom:46px; width:380px; max-height:min(64vh,620px); display:flex; flex-direction:column; z-index:4; }
+  #board .bh { display:flex; justify-content:space-between; align-items:center; padding:6px 8px; border-bottom:1px solid var(--line); }
+  #board .bx { background:none; border:0; color:var(--ink); font:inherit; font-weight:700; letter-spacing:.1em; text-transform:uppercase; font-size:11px; padding:6px 8px; cursor:pointer; }
+  #board .bx:disabled { cursor:default; }
+  #board .bb { overflow:auto; padding:4px 0 8px; scrollbar-width:thin; scrollbar-color:rgba(170,130,255,.4) transparent; }
+  #board .glob { padding:10px 14px 12px; border-bottom:1px solid var(--line); }
+  #board .big { font-size:18px; font-weight:700; }
+  #board .sm { color:var(--mute); font-size:10.5px; margin:1px 0 6px; }
+  .split { display:flex; justify-content:space-between; height:6px; border-radius:3px; background:rgba(255,255,255,.08); overflow:hidden; }
+  .split i, .bar i { display:block; height:100%; width:0; transition:width .9s cubic-bezier(.2,.8,.2,1); }
+  i.u { background:linear-gradient(90deg,#0ea5a0,#4ade80); box-shadow:0 0 10px rgba(74,222,128,.7); } i.d { background:linear-gradient(90deg,#fb7185,#e11d74); box-shadow:0 0 10px rgba(251,113,133,.7); }
+  #board .xr { display:block; width:100%; text-align:left; background:none; border:0; border-bottom:1px solid rgba(170,130,255,.09); color:inherit; font:inherit; padding:9px 14px; cursor:pointer; }
+  #board .xr:hover { background:rgba(167,139,250,.08); }
+  #board .xt { display:flex; justify-content:space-between; gap:10px; font-size:12.5px; }
+  #board .sr { display:grid; grid-template-columns:54px 1fr 96px 54px; gap:8px; align-items:center; padding:3px 14px; font-size:11px; }
+  #board .sr .sy { color:var(--ink); overflow:hidden; text-overflow:ellipsis; } #board .sr .nm { color:var(--mute); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } #board .sr .pc { text-align:right; }
+  .bar { position:relative; height:8px; background:linear-gradient(90deg,transparent calc(50% - .5px),rgba(255,255,255,.25) calc(50% - .5px),rgba(255,255,255,.25) calc(50% + .5px),transparent calc(50% + .5px)); }
+  .bar i { position:absolute; top:0; border-radius:2px; } .bar i.u { left:50%; } .bar i.d { right:50%; background:linear-gradient(270deg,#fb7185,#e11d74); }
+  body.embed #board, body.embed #boardBtn { display:none; }
+
   #hint { position:fixed; left:50%; bottom:46px; transform:translateX(-50%); padding:6px 12px; font-size:11px; color:var(--mute); border-radius:99px; transition:opacity .6s; white-space:nowrap; }
   #msg { position:fixed; inset:0; display:none; place-items:center; text-align:center; padding:24px; color:var(--mute); }
   #cta { display:none; position:fixed; right:12px; bottom:46px; padding:9px 16px; border-radius:99px; color:#fff; font-weight:700; letter-spacing:.06em; text-decoration:none; background:linear-gradient(90deg,#7c3aed,#db2777); box-shadow:0 0 22px rgba(219,39,119,.45); }
@@ -75,6 +97,8 @@
     #brand { padding:8px 11px; } #brand h1 { font-size:15px; } #brand p { display:none; }
     #panel { top:auto; bottom:44px; right:10px; left:10px; width:auto; max-height:56vh; }
     #hint { display:none; }
+    #board { left:8px; right:8px; width:auto; bottom:42px; max-height:52vh; }
+    #board .sr { grid-template-columns:50px 1fr 84px 52px; }
   }
   @media (prefers-reduced-motion:reduce) { #tape { animation:none; } }
 </style>
@@ -95,7 +119,7 @@
   <div id="layers"></div>
   <details id="src">
     <summary>Data sources</summary>
-    <p>Aircraft: <a href="https://adsb.lol" target="_blank" rel="noopener">adsb.lol</a> (ODbL), live. Ships and trains: <a href="https://www.digitraffic.fi/en/" target="_blank" rel="noopener">Fintraffic / digitraffic.fi</a> (CC BY 4.0), live for Finland and the Baltic. Data centres and cables: &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors (ODbL). Airports: OurAirports (public domain). Routes: OpenFlights (ODbL), a 2014 snapshot. Land, ports and railways: Natural Earth (public domain). Precipitation: NASA GPM IMERG through <a href="https://earthdata.nasa.gov/gibs" target="_blank" rel="noopener">NASA GIBS</a>, a satellite estimate a few hours behind real time. Earthquakes: USGS, live. Wildfires, storms and volcanoes: NASA EONET. Aurora: NOAA Space Weather Prediction Center. Space station: wheretheiss.at. Power stations: WRI Global Power Plant Database (CC BY 4.0). Population: <a href="https://www.geonames.org" target="_blank" rel="noopener">GeoNames</a> (CC BY 4.0). Markets: Yahoo Finance, delayed. Births and deaths: modelled from World Bank Open Data rates (CC BY 4.0); each spark is a statistically expected event, not a record of a person. Road counts: Fintraffic (Finland). Day and night: worked out from the time.</p>
+    <p>Aircraft: <a href="https://adsb.lol" target="_blank" rel="noopener">adsb.lol</a> (ODbL), live. Ships and trains: <a href="https://www.digitraffic.fi/en/" target="_blank" rel="noopener">Fintraffic / digitraffic.fi</a> (CC BY 4.0), live for Finland and the Baltic. Data centres and cables: &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors (ODbL). Airports: OurAirports (public domain). Routes: OpenFlights (ODbL), a 2014 snapshot. Land, ports and railways: Natural Earth (public domain). Precipitation: NASA GPM IMERG through <a href="https://earthdata.nasa.gov/gibs" target="_blank" rel="noopener">NASA GIBS</a>, a satellite estimate a few hours behind real time. Earthquakes: USGS, live. Wildfires, storms and volcanoes: NASA EONET. Aurora: NOAA Space Weather Prediction Center. Satellites: orbital elements from <a href="https://celestrak.org" target="_blank" rel="noopener">CelesTrak</a>, moved with a simplified orbit model. Space station: wheretheiss.at. Power stations: WRI Global Power Plant Database (CC BY 4.0). Population: <a href="https://www.geonames.org" target="_blank" rel="noopener">GeoNames</a> (CC BY 4.0). Markets: Yahoo Finance, delayed. Births and deaths: modelled from World Bank Open Data rates (CC BY 4.0); each spark is a statistically expected event, not a record of a person. Road counts: Fintraffic (Finland). Day and night: worked out from the time.</p>
     <p>Not for navigation or trading.</p>
   </details>
 </details>
@@ -103,8 +127,9 @@
 <div id="tip" class="glass"></div>
 <div id="hint" class="glass">Drag to spin &middot; scroll or pinch to zoom &middot; hover a point for details</div>
 <a id="cta" href="world-pulse.html" target="_top">Explore full screen &rarr;</a>
-<div id="ticker"><div class="tag"><span class="dot delay"></span>Markets</div><div id="tape" class="mono"></div></div>
+<section id="board" class="glass" hidden aria-label="Markets today"></section>
+<div id="ticker"><button id="boardBtn" class="tag" type="button" hidden><span class="dot delay"></span>Markets today &#9652;</button><div id="tape" class="mono"></div></div>
 <div id="msg"></div>
-<script src="world-pulse.js?v=20261126e"></script>
+<script src="world-pulse.js?v=20261126g"></script>
 </body>
 </html>

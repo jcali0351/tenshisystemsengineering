@@ -52,7 +52,7 @@
   const DOT_FS = `in vec4 vColor; out vec4 o; void main(){ float d = length(gl_PointCoord - 0.5); float a = smoothstep(0.5, 0.12, d); o = vec4(vColor.rgb, vColor.a * a); }`;
 
   const P_POINT = program(`in vec3 aPos; in vec4 aColor; in float aSize; in float aSeed;
-    uniform mat4 uMVP; uniform float uTime, uPx, uLift, uReveal, uSunMix, uTwinkle; uniform vec3 uSun; ${VIS}
+    uniform mat4 uMVP; uniform float uTime, uPx, uLift, uReveal, uSunMix, uTwinkle, uWave; uniform vec3 uSun; ${VIS}
     out vec4 vColor;
     void main(){ vec3 n = normalize(aPos); gl_Position = uMVP * vec4(aPos * (1.0 + uLift), 1.0);
       float tw = 1.0 - uTwinkle * (0.5 + 0.5 * sin(uTime * (1.0 + aSeed * 2.0) + aSeed * 60.0));
@@ -61,17 +61,18 @@
       float dusk = exp(-pow(dot(n, uSun) * 7.0, 2.0)) * min(uSunMix, 1.0);            // a warm band along the terminator
       c += vec3(1.0, 0.45, 0.25) * dusk * 0.35;
       float nightOnly = uSunMix > 1.5 ? 1.0 - smoothstep(-0.18, 0.06, dot(n, uSun)) : 1.0;
+      float wv = pow(0.5 + 0.5 * sin(dot(n, vec3(0.6, 0.3, 0.74)) * 16.0 - uTime * 1.3 + aSeed * 0.8), 10.0) * uWave;   // light sweeping across the surface
       float show = step(aSeed, uReveal * 1.02);
-      vColor = vec4(c, aColor.a * vis(n) * tw * show * nightOnly); gl_PointSize = max(1.0, aSize * uPx); }`, DOT_FS);
+      vColor = vec4(c + wv * 0.25, aColor.a * vis(n) * tw * show * nightOnly * (1.0 + wv * 2.2)); gl_PointSize = max(1.0, aSize * uPx); }`, DOT_FS);
 
   const P_LINE = program(`in vec3 aPos; in vec4 aColor; in float aDist;
     uniform mat4 uMVP; uniform float uLift; ${VIS}
     out vec4 vColor; out float vDist;
     void main(){ vec3 n = normalize(aPos); gl_Position = uMVP * vec4(aPos * (1.0 + uLift), 1.0); vColor = vec4(aColor.rgb, aColor.a * vis(n)); vDist = aDist; }`,
     `in vec4 vColor; in float vDist; uniform float uTime, uPulse, uFreq, uSpeed, uGradF, uGradMix; uniform vec3 uHot, uTint; out vec4 o;
-    void main(){ float w = pow(0.5 + 0.5 * sin(vDist * uFreq - uTime * uSpeed), 14.0) * uPulse;
+    void main(){ float w = pow(fract(vDist * uFreq - uTime * uSpeed), 7.0) * uPulse;                 // a bright head with a fading tail
       vec3 base = mix(vColor.rgb, uTint, uGradMix * (0.5 + 0.5 * sin(vDist * uGradF + uTime * 0.15)));
-      o = vec4(mix(base, uHot, clamp(w, 0.0, 1.0)), vColor.a * (1.0 + w * 3.0)); }`);
+      o = vec4(mix(base, uHot, clamp(w, 0.0, 1.0)), vColor.a * (1.0 + w * 7.0)); }`);
 
   // Particles that travel along a great-circle arc from A to B (airline routes).
   const P_FLOW = program(`in vec3 aA; in vec3 aB; in float aPhase; in float aSpeed; in vec4 aColor; in float aSize;
@@ -86,7 +87,21 @@
     uniform mat4 uMVP; uniform float uNow, uPx; ${VIS}
     out vec4 vColor;
     void main(){ float dt = clamp(uNow - aT0, 0.0, 600.0) - aLag; vec3 p = normalize(aPos + aVel * dt);
-      gl_Position = uMVP * vec4(p * (1.0 + aAlt), 1.0); vColor = vec4(aColor.rgb, aColor.a * vis(p)); gl_PointSize = max(1.0, aSize * uPx); }`, DOT_FS);
+      gl_Position = uMVP * vec4(p * (1.0 + aAlt), 1.0); vColor = vec4(aColor.rgb, aColor.a * vis(p) * (0.65 + 0.35 * sin(uNow * 5.0 - aLag * 0.08))); gl_PointSize = max(1.0, aSize * uPx); }`, DOT_FS);
+
+  // Satellites: each one is carried round its real orbit in the shader (Kepler's equation), then turned with the Earth.
+  const P_SAT = program(`in vec4 aEl1; in vec4 aEl2; in float aLag;
+    uniform mat4 uMVP; uniform float uNow, uPx, uGmst; ${VIS}
+    out vec4 vColor;
+    void main(){ float t = uNow - aLag, e = aEl1.y, M = aEl2.y + aEl2.z * t, E = M;
+      for (int k = 0; k < 4; k++) E -= (E - e * sin(E) - M) / (1.0 - e * cos(E));
+      float xv = aEl1.x * (cos(E) - e), yv = aEl1.x * sqrt(1.0 - e * e) * sin(E), cw = cos(aEl2.x), sw = sin(aEl2.x);
+      float xp = cw * xv - sw * yv, yp = sw * xv + cw * yv, ci = cos(aEl1.z), si = sin(aEl1.z), O = aEl1.w - uGmst;
+      vec3 p = vec3(sin(O) * xp + cos(O) * ci * yp, si * yp, cos(O) * xp - sin(O) * ci * yp);
+      gl_Position = uMVP * vec4(p, 1.0); float h = aEl1.x - 1.0;
+      vec3 c = h < 0.2 ? mix(vec3(0.55, 0.95, 1.0), vec3(0.9, 0.95, 1.0), aEl2.w) : h < 4.0 ? vec3(0.75, 0.55, 1.0) : vec3(1.0, 0.82, 0.45);
+      float fade = 1.0 - aLag / 30.0;
+      vColor = vec4(c, (aLag > 0.0 ? 0.4 : 0.95) * fade * mix(0.12, 1.0, smoothstep(-0.05, 0.05, dot(normalize(p), uCam) - 1.0 / length(p)))); gl_PointSize = max(1.0, (aLag > 0.0 ? 0.9 : 1.25) * uPx); }`, DOT_FS);
 
   // Births rise as a bright spark; deaths fall away as a dim one.
   const P_EVENT = program(`in vec3 aPos; in float aT0; in float aKind;
@@ -142,7 +157,7 @@
     void main(){ vec3 c = texture(uScene, vUV).rgb;
       vec3 b = texture(uB1, vUV).rgb * 0.9 + texture(uB2, vUV).rgb * 0.85 + texture(uB3, vUV).rgb * 0.8;
       c += b * 0.4;
-      c = 1.0 - exp(-c * 1.3);                                                     // filmic roll-off: bright cores stay coloured
+      c = 1.0 - exp(-c * 1.08);                                                     // filmic roll-off: bright cores stay coloured
       c = mix(vec3(dot(c, vec3(0.299, 0.587, 0.114))), c, 1.22);
       c *= 1.0 - 0.42 * pow(length(vUV - 0.5) * 1.3, 2.6);
       c += (fract(sin(dot(vUV * uRes + uTime, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) * 0.016;
@@ -189,7 +204,7 @@
   function updateCamera(dt) {
     if (!drag.on) {
       cam.idle += dt;
-      if (cam.idle > (EMBED ? 0 : 4)) cam.tLon += dt * 2.2;                    // drift when left alone
+      if (cam.idle > (EMBED ? 0 : 2.5)) cam.tLon += dt * 3.6;                    // drift when left alone
       cam.tLon += cam.vLon * dt; cam.tLat += cam.vLat * dt; cam.vLon *= Math.pow(0.04, dt); cam.vLat *= Math.pow(0.04, dt);
     }
     cam.tLat = Math.max(-78, Math.min(78, cam.tLat)); cam.tDist = Math.max(1.22, Math.min(6, cam.tDist));
@@ -236,6 +251,7 @@
     { id: "quakes", name: "Earthquakes (24 h)", color: [1, 0.35, 0.3], unit: "" },
     { id: "events", name: "Wildfires, storms & volcanoes", color: [1, 0.55, 0.15], unit: "" },
     { id: "aurora", name: "Aurora", color: [0.4, 1, 0.6], unit: "" },
+    { id: "sats", name: "Satellites in orbit", color: [0.6, 0.95, 1], unit: "" },
     { id: "space", name: "Space station", color: [1, 1, 1], unit: "" },
     { id: "rain", name: "Weather: precipitation", color: [0.45, 0.75, 1], unit: "" },
     { id: "pop", name: "Population", color: [1, 0.45, 0.75], unit: "people" },
@@ -322,7 +338,7 @@
       const ap = w.airports.map((a) => ll(a[0] / 100, a[1] / 100));
       M.airports = mesh(P_POINT, POINT, pts(w.airports.map((a) => [a[0] / 100, a[1] / 100]), [1, 1, 1], 0.9, 1.9, 0.2), gl.POINTS); L.routes.count(w.airports.length);
       w.airports.forEach((a, i) => picks.push({ p: ap[i], layer: "routes", kind: "Airport · " + a[2], title: a[3], sub: a[4] }));
-      const arcs = [], flow = [];
+      const arcs = [], flow = [], TRAIL = SMALL ? 5 : 7;
       for (const [i, j, wt] of w.routes || []) {
         const A = ap[i], B = ap[j]; if (!A || !B) continue;
         const om = Math.acos(Math.max(-1, Math.min(1, dot(A, B)))); if (om < 0.02) continue;
@@ -330,8 +346,8 @@
         for (let k = 0; k <= n; k++) { const t = k / n, s1 = Math.sin((1 - t) * om) / so, s2 = Math.sin(t * om) / so, r = 1 + (0.012 + om * 0.07) * Math.sin(Math.PI * t);
           const p = [(A[0] * s1 + B[0] * s2) * r, (A[1] * s1 + B[1] * s2) * r, (A[2] * s1 + B[2] * s2) * r];
           if (prev) arcs.push(prev[0], prev[1], prev[2], C.route[0], C.route[1], C.route[2], al, (k - 1) / n, p[0], p[1], p[2], C.route[0], C.route[1], C.route[2], al, t); prev = p; }
-        const count = Math.min(4, 1 + Math.floor(wt / 3));
-        for (let k = 0; k < count; k++) { const fwd = rnd() < 0.5, a = fwd ? A : B, b = fwd ? B : A; const fc = ramp([[0.7, 0.6, 1], [1, 0.7, 0.95], [1, 0.9, 0.7], [0.7, 0.95, 1]], rnd()); flow.push(a[0], a[1], a[2], b[0], b[1], b[2], rnd(), (0.012 + rnd() * 0.006) / om, fc[0], fc[1], fc[2], 0.95, 1.4 + rnd() * 0.6); }
+        const count = Math.min(5, 1 + Math.floor(wt / 2));
+        for (let k = 0; k < count; k++) { const fwd = rnd() < 0.5, a = fwd ? A : B, b = fwd ? B : A, ph = rnd(), sp = (0.03 + rnd() * 0.02) / om; const fc = ramp([[0.7, 0.6, 1], [1, 0.7, 0.95], [1, 0.9, 0.7], [0.7, 0.95, 1]], rnd()); for (let g2 = 0; g2 < TRAIL; g2++) flow.push(a[0], a[1], a[2], b[0], b[1], b[2], ph - g2 * sp * 0.55, sp, fc[0], fc[1], fc[2], 0.95 * (1 - g2 / TRAIL), g2 ? 1.0 : 1.7); }
       }
       M.arcs = mesh(P_LINE, LINE, arcs, gl.LINES);
       M.flow = mesh(P_FLOW, [["aA", 3], ["aB", 3], ["aPhase", 1], ["aSpeed", 1], ["aColor", 4], ["aSize", 1]], flow, gl.POINTS);
@@ -342,7 +358,7 @@
       for (const [x, y, k] of w.pop) {
         total += k; const q = Math.min(1, Math.sqrt(k / 22000)), h = 0.003 + q * 0.17, a = ll(x / 100, y / 100), b = ll(x / 100, y / 100, 1 + h);
         const c = ramp([[0.75, 0.25, 1], [1, 0.3, 0.75], [1, 0.6, 0.35], [1, 0.9, 0.6], [1, 1, 1]], q);
-        ln.push(a[0], a[1], a[2], 0.6, 0.2, 1, 0.1 + q * 0.2, 0, b[0], b[1], b[2], c[0], c[1], c[2], 0.35 + q * 0.65, 1);
+        const off = rnd(); ln.push(a[0], a[1], a[2], 0.6, 0.2, 1, 0.1 + q * 0.2, off, b[0], b[1], b[2], c[0], c[1], c[2], 0.35 + q * 0.65, off + 1);
         const n = 1 + Math.floor(q * 9);
         for (let i = 1; i <= n; i++) { const t = i / n, p = ll(x / 100, y / 100, 1 + h * t); hd.push(p[0], p[1], p[2], c[0], c[1], c[2], 0.3 + t * 0.6, i === n ? 1.5 : 1.05, rnd()); }
         if (k >= 1500) picks.push({ p: b, layer: "pop", kind: "Population", title: `${(k / 1000).toFixed(1)} million people`, sub: "in towns and cities of 15,000+ within this half-degree cell" });
@@ -350,7 +366,7 @@
       const lights = [];                                          // city lights on the night side, scattered around each populated cell
       for (const [x, y, k] of w.pop) { const n = Math.min(26, 1 + Math.round(Math.sqrt(k / 40)));
         for (let i = 0; i < n; i++) { const r = Math.sqrt(rnd()) * 0.42, th = rnd() * 6.283, p = ll(x / 100 + Math.cos(th) * r / Math.max(0.2, Math.cos(y / 100 * DEG)), y / 100 + Math.sin(th) * r), wm = rnd();
-          lights.push(p[0], p[1], p[2], 1, 0.62 + wm * 0.3, 0.25 + wm * 0.45, 0.45 + rnd() * 0.5, 0.95 + rnd() * 0.5, rnd()); } }
+          lights.push(p[0], p[1], p[2], 1, 0.62 + wm * 0.3, 0.25 + wm * 0.45, 0.22 + rnd() * 0.3, 0.95 + rnd() * 0.5, rnd()); } }
       M.lights = mesh(P_POINT, POINT, lights, gl.POINTS);
       M.popLines = mesh(P_LINE, LINE, ln, gl.LINES); M.popDots = mesh(P_POINT, POINT, hd, gl.POINTS);
       L.pop.count(`${(total / 1e6).toFixed(2)} bn`); L.pop.status("static", "people in towns and cities of 15,000+ · GeoNames");
@@ -369,7 +385,7 @@
   }
 
   /* ---------- births and deaths (modelled from real country rates) ---------- */
-  const EV_N = 900, evData = new Float32Array(EV_N * 5).fill(-99); let evI = 0, vital = null, evDirty = false;
+  const EV_N = 3600, evData = new Float32Array(EV_N * 5).fill(-99); let evI = 0, vital = null, evDirty = false;
   M.events = mesh(P_EVENT, [["aPos", 3], ["aT0", 1], ["aKind", 1]], evData, gl.POINTS, true);
   function setupVital(rows) {
     const cum = (k) => { let s = 0; const c = new Float64Array(rows.length); rows.forEach((r, i) => { s += r[k]; c[i] = s; }); return { c, total: s }; };
@@ -383,7 +399,7 @@
       for (let n = poisson(set.total / 86400 * dt); n > 0; n--) {
         const x = rnd() * set.total; let lo = 0, hi = set.c.length - 1; while (lo < hi) { const m = (lo + hi) >> 1; if (set.c[m] < x) lo = m + 1; else hi = m; }
         const p = norm([vital.pos[lo][0] + (rnd() - 0.5) * 0.02, vital.pos[lo][1] + (rnd() - 0.5) * 0.02, vital.pos[lo][2] + (rnd() - 0.5) * 0.02]);
-        evData.set([p[0], p[1], p[2], now, kind], evI * 5); evI = (evI + 1) % EV_N; evDirty = true;
+        for (let s2 = kind ? 4 : 2; s2 > 0; s2--) { const q = norm([p[0] + (rnd() - 0.5) * 0.012, p[1] + (rnd() - 0.5) * 0.012, p[2] + (rnd() - 0.5) * 0.012]); evData.set([q[0], q[1], q[2], now + rnd() * 0.5, kind], evI * 5); evI = (evI + 1) % EV_N; } evDirty = true;
       }
     }
     const day = (Date.now() % 86400000) / 86400000;   // since midnight UTC
@@ -410,7 +426,7 @@
     for (const g of Object.values(groups)) g.forEach(([q, pin], i) => {
       const fan = g.length > 1 ? 1.5 : 0, ang = (i / g.length) * Math.PI * 2, lon = pin[0] + Math.cos(ang) * fan / Math.cos(pin[1] * DEG), lat = pin[1] + Math.sin(ang) * fan;
       const up = (q.pct ?? 0) >= 0, c = up ? C.up : C.down, h = 0.025 + Math.min(Math.abs(q.pct ?? 0), 4) / 4 * 0.13, a = ll(lon, lat), b = ll(lon, lat, 1 + h);
-      lines.push(a[0], a[1], a[2], c[0], c[1], c[2], 0.25, 0, b[0], b[1], b[2], c[0], c[1], c[2], 1, 1);
+      lines.push(a[0], a[1], a[2], c[0], c[1], c[2], 0.3, up ? 0 : 1, b[0], b[1], b[2], c[0], c[1], c[2], 1, up ? 1 : 0);   // the pulse climbs on a gain and sinks on a loss
       for (let k = 0; k < 9; k++) { const t = k / 8, p = ll(lon, lat, 1 + h * t); heads.push(p[0], p[1], p[2], c[0], c[1], c[2], 0.35 + t * 0.65, k === 8 ? 3.4 : 1.3, rnd()); }
       picks.push({ p: b, layer: "markets", kind: q.sym.endsWith("=F") ? "Commodity" : "Stock index", title: pin[2], sub: `${fmt(q.price)} ${q.currency || ""} · ${pct(q.pct)}${q.stale ? " · last known" : ""}` });
       const el = document.createElement("div"); el.className = "lab mono"; el.innerHTML = `${pin[2]}<b class="${up ? "up" : "down"}">${pct(q.pct)}</b>`; $("#labels").appendChild(el);
@@ -423,6 +439,57 @@
     const tape = mk.quotes.map((q) => `<span><i>${(PIN[q.sym] || [])[2] || NAMES[q.sym] || q.sym}</i>${fmt(q.price)} <b class="${(q.pct ?? 0) >= 0 ? "up" : "down"}">${pct(q.pct)}</b></span>`).join("");
     $("#tape").innerHTML = tape + tape;
   }
+  /* ---------- Markets today: the day's winners and losers on every major exchange ---------- */
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  let STOCKS = null, boardOpen = null;
+  function buildStocks(j) {
+    STOCKS = j; const ln = [], hd = [];
+    for (let i = picks.length - 1; i >= 0; i--) if (picks[i].live === "stock") picks.splice(i, 1);
+    for (const x of j.exchanges) {
+      x.stocks.sort((a, b) => b[3] - a[3]); x.up = x.stocks.filter((q) => q[3] > 0).length; x.down = x.stocks.filter((q) => q[3] < 0).length;
+      x.avg = x.stocks.reduce((n, q) => n + q[3], 0) / x.stocks.length;
+      // a spiral skyline around the exchange: one hair-thin bar per company, best performers in the middle
+      x.stocks.forEach((q, i) => {
+        const r = 0.3 + 2.3 * Math.sqrt((i + 0.5) / x.stocks.length), th = i * 2.39996, lat = x.lat + Math.sin(th) * r, lon = x.lon + Math.cos(th) * r / Math.max(0.2, Math.cos(x.lat * DEG));
+        const m = Math.min(1, Math.abs(q[3]) / 6), h = 0.006 + m * 0.1, up = q[3] >= 0, c = up ? ramp([[0.1, 0.75, 0.55], [0.3, 1, 0.5], [0.85, 1, 0.6]], m) : ramp([[0.8, 0.25, 0.5], [1, 0.3, 0.4], [1, 0.6, 0.35]], m), a = ll(lon, lat), b = ll(lon, lat, 1 + h), off = rnd();
+        ln.push(a[0], a[1], a[2], c[0], c[1], c[2], 0.3, up ? off : off + 1, b[0], b[1], b[2], c[0], c[1], c[2], 1, up ? off + 1 : off);
+        hd.push(b[0], b[1], b[2], c[0], c[1], c[2], 1, 1.5 + m, rnd());
+        picks.push({ p: b, layer: "markets", live: "stock", kind: x.name, title: q[1], sub: `${q[0]} · ${fmt(q[2])} ${q[4]} · ${pct(q[3])}` });
+      });
+    }
+    M.stockLines = mesh(P_LINE, LINE, ln, gl.LINES); M.stockHeads = mesh(P_POINT, POINT, hd, gl.POINTS);
+    $("#boardBtn").hidden = false; renderBoard();
+  }
+  function renderBoard() {
+    const box = $("#board"); if (!STOCKS || box.hidden) return; box.textContent = "";
+    const head = el("div", "bh"); const back = el("button", "bx", boardOpen ? "← All exchanges" : "Markets today"); back.type = "button"; back.disabled = !boardOpen; back.onclick = () => { boardOpen = null; renderBoard(); };
+    const close = el("button", "bx", "×"); close.type = "button"; close.setAttribute("aria-label", "Close"); close.onclick = () => { box.hidden = true; };
+    head.append(back, close); box.append(head);
+    const body = el("div", "bb"); box.append(body);
+    const split = (up, down, flat) => { const w = el("div", "split"), a = el("i", "u"), b = el("i", "d"), t = up + down + flat || 1; w.append(a, b); requestAnimationFrame(() => requestAnimationFrame(() => { a.style.width = (up / t * 100) + "%"; b.style.width = (down / t * 100) + "%"; })); return w; };
+    if (!boardOpen) {
+      const all = STOCKS.exchanges.flatMap((x) => x.stocks), up = all.filter((q) => q[3] > 0).length, down = all.filter((q) => q[3] < 0).length;
+      const g = el("div", "glob"); g.append(el("div", "big mono", `${up} up · ${down} down`), el("div", "sm", `${all.length} companies on ${STOCKS.exchanges.length} exchanges · latest session · delayed`), split(up, down, all.length - up - down)); body.append(g);
+      for (const x of [...STOCKS.exchanges].sort((a, b) => b.avg - a.avg)) {
+        const row = el("button", "xr"); row.type = "button";
+        const top = el("div", "xt"); top.append(el("b", null, x.name), el("span", "mono " + (x.avg >= 0 ? "up" : "down"), pct(x.avg)));
+        row.append(top, el("div", "sm", `${x.city} · ${x.up} up, ${x.down} down${x.stale ? " · last known" : ""}`), split(x.up, x.down, x.stocks.length - x.up - x.down));
+        row.onclick = () => { boardOpen = x.id; cam.tLon = cam.lon + ((x.lon - cam.lon + 540) % 360 - 180); cam.tLat = x.lat - (SMALL ? 14 : 0); cam.tDist = 2.1; cam.idle = -45; cam.vLon = cam.vLat = 0; renderBoard(); };
+        body.append(row);
+      }
+    } else {
+      const x = STOCKS.exchanges.find((e) => e.id === boardOpen), max = Math.max(1, ...x.stocks.map((q) => Math.abs(q[3])));
+      const g = el("div", "glob"); g.append(el("div", "big", x.name), el("div", "sm mono", `${x.up} up · ${x.down} down · average ${pct(x.avg)}`), split(x.up, x.down, x.stocks.length - x.up - x.down)); body.append(g);
+      x.stocks.forEach((q, i) => {
+        const r = el("div", "sr"), bar = el("div", "bar"), fill = el("i", q[3] >= 0 ? "u" : "d"); bar.append(fill);
+        r.append(el("span", "sy mono", q[0].replace(/\.[A-Z]+$/, "")), el("span", "nm", q[1]), bar, el("span", "pc mono " + (q[3] >= 0 ? "up" : "down"), pct(q[3])));
+        body.append(r); setTimeout(() => { fill.style.width = (Math.abs(q[3]) / max * 50) + "%"; }, 30 + i * 14);
+      });
+    }
+  }
+  $("#boardBtn").onclick = () => { const b = $("#board"); b.hidden = !b.hidden; if (!b.hidden) { $("#panel").open = false; renderBoard(); } };
+  const loadStocks = () => getJson("../data/globe/stocks.json").then(buildStocks).catch(() => {});
+
   function layoutLabels() {
     const used = [], show = L.markets.on;
     for (const m of marketLabels) {
@@ -440,7 +507,7 @@
       rebuild() { const a = []; for (const m of s.map.values()) for (let k = 0; k < lags; k++) a.push(m.p[0], m.p[1], m.p[2], m.v[0], m.v[1], m.v[2], m.t0, k * lagStep, color[0], color[1], color[2], (k ? 0.5 : 1) * (1 - k / lags), k ? size * 0.62 : size, m.alt || 0.002); s.mesh.set(a); s.dirty = false; } };
     return s;
   }
-  const planes = moverSet(C.air, 6, 22, 2.1), ships = moverSet(C.ship, 5, 150, 1.9), trains = moverSet(C.rail, 3, 12, 2.1);
+  const planes = moverSet(C.air, SMALL ? 12 : 18, 40, 2.1), ships = moverSet(C.ship, 10, 240, 1.9), trains = moverSet(C.rail, 6, 20, 2.1);
   const moverPos = (m, t) => { const dt = Math.max(0, Math.min(600, t - m.t0)); return norm([m.p[0] + m.v[0] * dt, m.p[1] + m.v[1] * dt, m.p[2] + m.v[2] * dt]); };
 
   const HUBS = [[40.7, -74], [41.9, -87.6], [33.7, -84.4], [32.9, -97], [39.8, -104.7], [34, -118.3], [37.6, -122.3], [47.5, -122.3], [25.8, -80.3], [43.7, -79.6], [19.4, -99.1], [-23.5, -46.6], [4.7, -74.1], [51.5, -0.3], [49, 2.5], [50, 8.6], [40.5, -3.6], [41.8, 12.3], [41.2, 28.8], [25.2, 55.4], [25.3, 51.6], [28.6, 77.1], [19.1, 72.9], [1.4, 104], [13.7, 100.7], [22.3, 113.9], [31.1, 121.8], [40.1, 116.6], [35.6, 139.8], [37.5, 126.4], [-33.9, 151.2], [-26.1, 28.2], [30.1, 31.4], [52.3, 4.8], [55.6, 12.6], [59.6, 17.9]];
@@ -606,6 +673,30 @@
     setTimeout(pollAurora, 10 * 60000);
   }
 
+  // Every active satellite, moved along its real orbit (elements from CelesTrak; a simplified two-body model with J2 drift).
+  const SATS = []; const T0 = Date.now() / 1000 - now();          // the clock time when this page's timer read zero
+  const gmst = () => (((280.46061837 + 360.98564736629 * (Date.now() / 86400000 + 2440587.5 - 2451545)) % 360) * DEG);
+  function loadSats() {
+    getJson("../data/globe/sats.json").then((j) => {
+      const a = [], LAGS = SMALL ? [0, 5, 10] : [0, 4, 8, 12, 16]; SATS.length = 0;
+      for (const [name, rev, e, inc, raan, argp, M, epoch] of j.sats) {
+        const age = T0 - epoch / 1000; if (age > 21 * 86400 || e > 0.8) continue;
+        const n = rev * 2 * Math.PI / 86400, sma = Math.cbrt(398600.4418 / (n * n)) / 6371, i = inc * DEG, k = 1.5 * 1.08263e-3 / (sma * (1 - e * e)) ** 2 * n;
+        const el = [sma, e, i, raan * DEG - k * Math.cos(i) * age, argp * DEG + k * (2.5 * Math.cos(i) ** 2 - 0.5) * age, (M * DEG + n * age) % (2 * Math.PI), n, rnd()];
+        SATS.push({ el, name });
+        for (const lag of LAGS) a.push(el[0], el[1], el[2], el[3], el[4], el[5], el[6], el[7], lag);
+      }
+      M.sats = mesh(P_SAT, [["aEl1", 4], ["aEl2", 4], ["aLag", 1]], a, gl.POINTS);
+      const h = Math.round((Date.now() - Date.parse(j.updatedAt)) / 3600000);
+      L.sats.count(SATS.length); L.sats.status("live", `moving on their real orbits · elements ${h} h old · CelesTrak`);
+    }).catch(() => L.sats.status("off", "first data sync in progress, check back in a few minutes"));
+  }
+  function satPos(el, t) {
+    const [a, e, i, O0, w, M0, n] = el, Mn = M0 + n * t; let E = Mn; for (let k = 0; k < 4; k++) E -= (E - e * Math.sin(E) - Mn) / (1 - e * Math.cos(E));
+    const xv = a * (Math.cos(E) - e), yv = a * Math.sqrt(1 - e * e) * Math.sin(E), xp = Math.cos(w) * xv - Math.sin(w) * yv, yp = Math.sin(w) * xv + Math.cos(w) * yv, O = O0 - gmst();
+    return [Math.sin(O) * xp + Math.cos(O) * Math.cos(i) * yp, Math.sin(i) * yp, Math.cos(O) * xp - Math.sin(O) * Math.cos(i) * yp];
+  }
+
   const iss = moverSet([1, 1, 1], 60, 9, 2.8); let issPrev = null;
   async function pollIss() {
     if (L.space.on && !document.hidden) try {
@@ -625,6 +716,7 @@
     const test = (p, o) => { if (!L[o.layer].on || !facing(p)) return; const s = project(p), d = (s[0] - mx) ** 2 + (s[1] - my) ** 2; if (d < bd) { bd = d; best = o; } };
     for (const o of picks) test(o.p, o);
     for (const [set, layer, kind] of [[iss, "space", "Space station · live"], [planes, "planes", "Aircraft · live"], [ships, "ships", "Ship · live"], [trains, "rail", "Train · live"]]) for (const m of set.map.values()) test(moverPos(m, t), { layer, kind, title: m.title, sub: m.sub });
+    if (L.sats.on && SATS.length && !best) for (const sat of SATS) { const p = satPos(sat.el, t); if (dot(norm(p), EYE) < 1 / Math.hypot(p[0], p[1], p[2])) continue; const sc = project(p), d = (sc[0] - mx) ** 2 + (sc[1] - my) ** 2; if (d < bd) { bd = d; best = { kind: "Satellite · live orbit", title: sat.name, sub: `${Math.round((sat.el[0] - 1) * 6371).toLocaleString("en-US")} km up` }; } }
     if (!best) { tip.style.display = "none"; return; }
     tip.innerHTML = `<div class="k"></div><div class="t"></div><div class="s"></div>`; tip.children[0].textContent = best.kind; tip.children[1].textContent = best.title; tip.children[2].textContent = best.sub || "";
     tip.style.display = "block"; tip.style.left = Math.min(W - 260, mx + 14) + "px"; tip.style.top = Math.max(8, my - 10) + "px";
@@ -649,7 +741,7 @@
   }
   function drawPoints(m, t, o = {}) {
     if (!m || !m.count) return; const u = use(P_POINT, t);
-    gl.uniform1f(u.uLift, o.lift || 0); gl.uniform1f(u.uReveal, o.reveal ?? 1); gl.uniform1f(u.uSunMix, o.sun || 0); gl.uniform1f(u.uTwinkle, o.twinkle ?? 0.25); gl.uniform3fv(u.uSun, SUN);
+    gl.uniform1f(u.uLift, o.lift || 0); gl.uniform1f(u.uReveal, o.reveal ?? 1); gl.uniform1f(u.uSunMix, o.sun || 0); gl.uniform1f(u.uTwinkle, o.twinkle ?? 0.25); gl.uniform1f(u.uWave, o.wave || 0); gl.uniform3fv(u.uSun, SUN);
     gl.bindVertexArray(m.vao); gl.drawArrays(gl.POINTS, 0, m.count);
   }
   function drawLines(m, t, o = {}) {
@@ -678,7 +770,7 @@
     gl.disable(gl.BLEND);
     pass(P_BG, { fbo: RT.ms, w: RT.w, h: RT.h }, (u) => { gl.uniform2f(u.uOff, cam.lon / 50, -cam.lat / 50); gl.uniform1f(u.uAsp, W / H); });
     gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
-    { const u = use(P_POINT, t); gl.uniform3fv(u.uCam, [0, 0, 0]); gl.uniform1f(u.uLift, 0); gl.uniform1f(u.uReveal, 1); gl.uniform1f(u.uSunMix, 0); gl.uniform1f(u.uTwinkle, 0.55); gl.uniform1f(u.uPx, DPR); gl.bindVertexArray(M.stars.vao); gl.drawArrays(gl.POINTS, 0, M.stars.count); }
+    { const u = use(P_POINT, t); gl.uniform3fv(u.uCam, [0, 0, 0]); gl.uniform1f(u.uLift, 0); gl.uniform1f(u.uReveal, 1); gl.uniform1f(u.uSunMix, 0); gl.uniform1f(u.uWave, 0); gl.uniform1f(u.uTwinkle, 0.55); gl.uniform1f(u.uPx, DPR); gl.bindVertexArray(M.stars.vao); gl.drawArrays(gl.POINTS, 0, M.stars.count); }
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     { const u = P_ATMO.u; gl.useProgram(P_ATMO.p); gl.uniformMatrix4fv(u.uProj, false, PROJ); gl.uniform1f(u.uD, viewD); gl.uniform1f(u.uS, viewD / Math.sqrt(viewD * viewD - 1));
       gl.uniform3f(u.uSunV, VIEW[0] * SUN[0] + VIEW[4] * SUN[1] + VIEW[8] * SUN[2], VIEW[1] * SUN[0] + VIEW[5] * SUN[1] + VIEW[9] * SUN[2], VIEW[2] * SUN[0] + VIEW[6] * SUN[1] + VIEW[10] * SUN[2]);
@@ -686,13 +778,13 @@
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
 
     drawLines(M.grid, t, { tint: [0.2, 0.7, 1], gradF: 4, gradMix: 0.6 });
-    drawPoints(M.sea, t, { reveal, sun: 1, twinkle: 0.7 });
-    drawPoints(M.land, t, { reveal, sun: 1, twinkle: 0.3 });
-    drawLines(M.coast, t, { lift: 0.0005, tint: [0.25, 0.9, 1], gradF: 5, gradMix: 0.7 });
+    drawPoints(M.sea, t, { reveal, sun: 1, twinkle: 0.7, wave: 1.6 });
+    drawPoints(M.land, t, { reveal, sun: 1, twinkle: 0.3, wave: 1 });
+    drawLines(M.coast, t, { lift: 0.0005, tint: [0.25, 0.9, 1], gradF: 5, gradMix: 0.7, pulse: 0.5, freq: 1.5, speed: 0.12, hot: [0.8, 1, 1] });
     if (L.pop.on) drawPoints(M.lights, t, { lift: 0.0008, sun: 2, twinkle: 0.5 });
-    if (L.roads.on) { drawLines(M.roads, t, { lift: 0.001, pulse: 0.5, freq: 260, speed: 2.2, hot: [1, 0.9, 0.6], tint: [1, 0.3, 0.45], gradF: 30 }); drawPoints(M.roadLive, t, { lift: 0.002, twinkle: 0.6 }); }
-    if (L.rail.on) drawLines(M.rails, t, { lift: 0.0012, pulse: 0.35, freq: 200, speed: 1.2, hot: [0.9, 1, 0.6], tint: [0.2, 0.95, 0.75], gradF: 24 });
-    if (L.net.on) { drawLines(M.cables, t, { lift: 0.0016, pulse: 1, freq: 90, speed: 2.6, hot: [1, 1, 1], tint: [0.75, 0.3, 1], gradF: 9 }); drawPoints(M.dcs, t, { lift: 0.0022, twinkle: 0.55 }); }
+    if (L.roads.on) { drawLines(M.roads, t, { lift: 0.001, pulse: 1, freq: 28, speed: 0.55, hot: [1, 0.95, 0.7], tint: [1, 0.3, 0.45], gradF: 30 }); drawPoints(M.roadLive, t, { lift: 0.002, twinkle: 0.6 }); }
+    if (L.rail.on) drawLines(M.rails, t, { lift: 0.0012, pulse: 1, freq: 20, speed: 0.4, hot: [0.95, 1, 0.7], tint: [0.2, 0.95, 0.75], gradF: 24 });
+    if (L.net.on) { drawLines(M.cables, t, { lift: 0.0016, pulse: 1.3, freq: 7, speed: 0.6, hot: [1, 1, 1], tint: [0.75, 0.3, 1], gradF: 9 }); drawPoints(M.dcs, t, { lift: 0.0022, twinkle: 0.55 }); }
     if (L.ships.on) { drawPoints(M.ports, t, { lift: 0.0018, twinkle: 0.3 }); drawOther(ships.mesh, P_MOVER, t); }
     if (L.rail.on) drawOther(trains.mesh, P_MOVER, t);
     if (L.routes.on) { drawLines(M.arcs, t, { tint: [1, 0.55, 0.8], gradF: 3.1416, gradMix: 1 }); drawOther(M.flow, P_FLOW, t); drawPoints(M.airports, t, { lift: 0.0025, twinkle: 0.2 }); }
@@ -702,10 +794,11 @@
     if (L.quakes.on) drawPoints(M.quakes, t, { lift: 0.003, twinkle: 0.95 });
     if (L.events.on) drawPoints(M.eonet, t, { lift: 0.004, twinkle: 0.8 });
     if (L.aurora.on) drawPoints(M.aurora, t, { twinkle: 0.95 });
+    if (L.sats.on && M.sats) { const u = use(P_SAT, t); gl.uniform1f(u.uGmst, gmst()); gl.bindVertexArray(M.sats.vao); gl.drawArrays(gl.POINTS, 0, M.sats.count); }
     if (L.space.on) drawOther(iss.mesh, P_MOVER, t);
-    if (L.pop.on) { drawLines(M.popLines, t); drawPoints(M.popDots, t, { twinkle: 0.55 }); }
+    if (L.pop.on) { drawLines(M.popLines, t, { pulse: 0.9, freq: 1, speed: 0.45, hot: [1, 1, 1] }); drawPoints(M.popDots, t, { twinkle: 0.55 }); }
     if (L.vital.on) drawOther(M.events, P_EVENT, t);
-    if (L.markets.on) { drawLines(M.spikes, t); drawPoints(M.heads, t, { twinkle: 0.5 }); }
+    if (L.markets.on) { drawLines(M.stockLines, t, { pulse: 1.4, freq: 1, speed: 0.7, hot: [1, 1, 1] }); drawPoints(M.stockHeads, t, { twinkle: 0.6 }); drawLines(M.spikes, t, { pulse: 1.5, freq: 1, speed: 0.9, hot: [1, 1, 1] }); drawPoints(M.heads, t, { twinkle: 0.5 }); }
 
     // resolve the anti-aliased picture, bloom it at three sizes, then tone-map to the screen
     gl.bindFramebuffer(gl.READ_FRAMEBUFFER, RT.ms); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, RT.scene.fbo);
@@ -722,8 +815,9 @@
   const getJson = async (url) => { const r = await fetch(url, { cache: "no-cache" }); if (!r.ok) throw new Error(r.status); return r.json(); };
   getJson("../data/globe/world.json").then(buildWorld).catch(() => { reveal = 1; for (const id of ["routes", "ships", "rail", "roads", "net", "pop", "vital", "power"]) L[id].status("off", "first data sync in progress, check back in a few minutes"); });
   const loadMarkets = () => getJson("../data/globe/markets.json").then(buildMarkets).catch(() => { if (!MK) L.markets.status("off", "first data sync in progress"); });
-  loadMarkets(); setInterval(loadMarkets, 5 * 60000);
+  loadMarkets(); setInterval(loadMarkets, 5 * 60000); loadStocks(); setInterval(loadStocks, 5 * 60000);
+  if (/[?&]board/.test(location.search)) { $("#board").hidden = false; $("#panel").open = false; }
   L.planes.status("off", "connecting to live feed"); L.rain.status("off", "loading the latest satellite image");
-  setTimeout(pollPlanes, 1200); setTimeout(pollShips, 2500); setTimeout(pollTrains, 3500); setTimeout(pollRoads, 4500); setTimeout(pollRain, 800); setTimeout(pollQuakes, 1500); setTimeout(pollEvents, 2000); setTimeout(pollAurora, 3000); setTimeout(pollIss, 1000);
+  setTimeout(pollPlanes, 1200); setTimeout(pollShips, 2500); setTimeout(pollTrains, 3500); setTimeout(pollRoads, 4500); setTimeout(pollRain, 800); setTimeout(pollQuakes, 1500); setTimeout(pollEvents, 2000); setTimeout(pollAurora, 3000); setTimeout(pollIss, 1000); loadSats();
   tick();
 })();
