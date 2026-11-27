@@ -147,7 +147,7 @@
       float side = 0.5 + 0.5 * dot(d, uSunV.xy);                                   // 1 on the sunward limb
       if (q < 1.0) {
         vec3 n = vec3(d * q, sqrt(1.0 - q * q)); float lit = dot(n, uSunV); float day = smoothstep(-0.15, 0.35, lit);
-        vec3 sea = mix(mix(vec3(0.012, 0.008, 0.04), vec3(0.02, 0.07, 0.16), day), mix(vec3(0.02, 0.008, 0.012), vec3(0.13, 0.045, 0.025), day), uMars);   // Earth's sea, or Mars's bare ground
+        vec3 sea = mix(mix(vec3(0.012, 0.008, 0.04), vec3(0.02, 0.07, 0.16), day), mix(vec3(0.05, 0.02, 0.03), vec3(0.3, 0.12, 0.065), day), uMars);   // Earth's sea, or Mars's bare ground
         sea += vec3(0.25, 0.5, 0.9) * pow(max(dot(reflect(-uSunV, n), vec3(0.0, 0.0, 1.0)), 0.0), 28.0) * 0.22 * (1.0 - uMars);     // sun glint
         sea += vec3(1.0, 0.4, 0.2) * exp(-pow(lit * 6.0, 2.0)) * 0.035;                                              // dusk band
         float rim = pow(q, 10.0);
@@ -1086,13 +1086,13 @@
     ["Viking 2", 47.6, 134.3, 1, "Viking 2 landed here on 3 September 1976"], ["Ares Vallis", 19.1, -33.2, 1, "Mars Pathfinder and its rover Sojourner landed here on 4 July 1997"],
     ["Phoenix", 68.2, -125.7, 1, "Phoenix lander dug into ice-rich soil here after landing on 25 May 2008"], ["Zhurong", 25.1, 109.9, 1, "China's Zhurong rover landed here on 14 May 2021"]];
   function buildMars(img) {
-    const N = LITE ? 150000 : 330000, a = [], g = Math.PI * (3 - Math.sqrt(5)); let px = null, PW = 0, PH = 0;
+    const N = LITE ? 300000 : 600000, a = [], g = Math.PI * (3 - Math.sqrt(5)); let px = null, PW = 0, PH = 0;   // Mars is drawn alone, so it can afford a denser globe than the Earth's
     if (img) try { PW = 1440; PH = 720; const cv = document.createElement("canvas"); cv.width = PW; cv.height = PH; const cx = cv.getContext("2d", { willReadFrequently: true }); cx.drawImage(img, 0, 0, PW, PH); px = cx.getImageData(0, 0, PW, PH).data; } catch (e) { px = null; }
     const grey = !px || (MARS.meta && MARS.meta.colour === false);   // a grey map is tinted with Mars's own range of rust
     for (let i = 0; i < N; i++) { const y = 1 - (i + 0.5) / N * 2, r = Math.sqrt(1 - y * y), th = i * g, x = Math.sin(th) * r, z = Math.cos(th) * r; let c = [0.8, 0.42, 0.26];
       if (px) { const lon = Math.atan2(x, z) / DEG, lat = Math.asin(y) / DEG, o = (Math.min(PH - 1, Math.floor((90 - lat) / 180 * PH)) * PW + Math.min(PW - 1, Math.floor((lon + 180) / 360 * PW))) * 4;
-        c = grey ? ramp([[0.2, 0.1, 0.09], [0.62, 0.3, 0.2], [0.95, 0.56, 0.36], [1, 0.82, 0.66]], (px[o] + px[o + 1] + px[o + 2]) / 765) : [Math.min(1, px[o] / 255 * 1.25 + 0.03), Math.min(1, px[o + 1] / 255 * 1.2), Math.min(1, px[o + 2] / 255 * 1.15)]; }
-      a.push(x, y, z, c[0], c[1], c[2], 0.62 + rnd() * 0.3, 1.1 + rnd() * 0.55, rnd()); }
+        c = grey ? ramp([[0.2, 0.1, 0.09], [0.62, 0.3, 0.2], [0.95, 0.56, 0.36], [1, 0.82, 0.66]], (px[o] + px[o + 1] + px[o + 2]) / 765) : [Math.min(1, px[o] / 255 * 1.5 + 0.04), Math.min(1, px[o + 1] / 255 * 1.42), Math.min(1, px[o + 2] / 255 * 1.35)]; }
+      a.push(x, y, z, c[0], c[1], c[2], 0.85 + rnd() * 0.15, 2.1 + rnd() * 0.8, rnd()); }
     M.mars = mesh(P_POINT, POINT, a, gl.POINTS); MARS.map = !!px; MARS.reveal = 0;
     if (MARS.ready) return; MARS.ready = true;
     const mk = [];
@@ -1109,17 +1109,17 @@
     if (MARS.loading) return; MARS.loading = true; buildMars(null);                       // a plain rust globe until the map is in
     getJson("../data/globe/mars.json").then((j) => { MARS.meta = j; }).catch(() => {}).then(() => { const img = new Image(); img.onload = () => buildMars(img); img.src = "../data/globe/mars.jpg"; });
   }
-  function setPlanet(p) {
+  function setPlanet(p, keepView) {
     PLANET = p === "mars" ? "mars" : "earth"; document.body.classList.toggle("mars", PLANET === "mars");
     stopTour(); stopReplay(); closeMe(); select(null); $("#board").hidden = true; tip.style.display = "none";
     $("#plBtn").textContent = PLANET === "mars" ? "⊕ Earth" : "♂ Mars"; $("#brand h1").textContent = PLANET === "mars" ? "World Pulse · Mars" : "World Pulse";
-    if (PLANET === "mars") { loadMars(); MARS.reveal = 0; flyTo(-100, 5, 3.9); cam.idle = 0; } else { SUN = sunDir(); flyTo(cam.lon, 22, 3.9); }
+    if (PLANET === "mars") { loadMars(); MARS.reveal = 0; if (!keepView) { flyTo(-100, 5, 3.9); cam.idle = 0; } } else { SUN = sunDir(); flyTo(cam.lon, 22, 3.9); }
     head.t = 99; head.i = -1;
   }
   function drawMars(t, dt) {
     MARS.reveal = Math.min(1, MARS.reveal + dt / 2);
     drawLines(M.grid, t, { tint: [1, 0.5, 0.3], gradF: 4, gradMix: 0.7 });
-    drawPoints(M.mars, t, { reveal: MARS.reveal, sun: 1, twinkle: 0.18, wave: 0.5 });
+    drawPoints(M.mars, t, { reveal: MARS.reveal, sun: 0.45, twinkle: 0.1, wave: 0.25 });   // sun 0.45: the night side stays visible, so the whole planet can be explored   // sun 0.6: the night side stays dimly visible, so the whole planet can be explored
     drawPoints(M.marsMarks, t, { lift: 0.004, twinkle: 0.7 });
     // the moons and their orbit rings, leaving out whatever is behind the planet (nothing here is depth-tested)
     const a = [], put = (p, c, al, size) => { if (!hiddenByEarth(p)) a.push(p[0], p[1], p[2], c[0], c[1], c[2], al * 20, size, (p[0] * 3.1 + p[2] * 1.7 + 9) % 1); };
@@ -1636,7 +1636,7 @@
   loadMarkets(); setInterval(loadMarkets, 5 * 60000); loadStocks(); setInterval(loadStocks, 5 * 60000); loadWeather(); setInterval(loadWeather, 30 * 60000); setTimeout(loadOcean, 600); setInterval(loadOcean, 20 * 60000);
   getJson("../data/globe/sky.json").then(buildSky).catch(() => L.sky.status("off", "star catalogue could not be loaded"));
   getJson("../data/globe/moon.json").then(buildMoon).catch(() => {});
-  if (QS.get("planet") === "mars" && !EMBED) setPlanet("mars");
+  if (QS.get("planet") === "mars" && !EMBED) setPlanet("mars", QS.has("at"));   // a shared Mars view keeps its own camera
   if (EMBED) setTimeout(startTour, 9000);                           // the embedded preview tours by itself, on a loop
   else if (QS.has("tour")) setTimeout(startTour, 7000);              // world-pulse.html?tour starts the tour by itself
   if (/[?&]board/.test(location.search)) { $("#board").hidden = false; $("#panel").open = false; }
