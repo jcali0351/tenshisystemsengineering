@@ -612,15 +612,18 @@ const FORM = index.match(/        <form class="contact-form"[\s\S]*?<\/form>/)[0
 
 // The header menu's dropdowns: a page in a dropdown also marks its top-level item (on Team, About shows as current).
 // The footer menu is flat, so only the page itself is marked there. Project pages pass ["portfolio", "p-<slug>"] already.
-const NAV_PARENT = { team: "about", technology: "about", "knowledge-base": "about", legal: "about", shop: "services", blog: "news", portal: "contact", "p-storycaster": "portfolio", "p-master-baiter-pro": "portfolio" };
-const navCurrent = (current) => [].concat(current).flatMap((c) => NAV_PARENT[c] ? [c, NAV_PARENT[c]] : [c]);
+// Media holds Games, Visualization and Portfolio; a game or leaderboard page marks Games and Media, a project page Portfolio and Media.
+const NAV_PARENT = { team: "about", technology: "about", "knowledge-base": "about", legal: "about", shop: "services", blog: "news", portal: "contact", "p-storycaster": "portfolio", "p-master-baiter-pro": "portfolio",
+  games: "media", visualization: "media", portfolio: "media" };
+const navParent = (c) => NAV_PARENT[c] || (/^(game|leaderboard)-/.test(c) ? "games" : null);
+const navCurrent = (current) => [...new Set([].concat(current).flatMap(function up(c) { const p = navParent(c); return p ? [c, ...up(p)] : [c]; }))];
 // Point the copied links at the right folder and mark the current menu item.
 function chrome(html, prefix, current) {
   return markCurrent(html, current)
     .replace('href="#top"', `href="${prefix}index.html"`)
     .replace(/src="((?:brand|img)\/[\w.\/-]+(?:\?[^"]*)?)"/g, `src="${prefix}$1"`)
     .replace(/href="((?:news|blog)\.html#[^"]*)"/g, `href="${prefix}$1"`)
-    .replace(/href="((?:index|about|services|contact|team|technology|knowledge-base|legal|shop|projects|portfolio|launch|news|blog|portal|wisconsin)\.html|projects\/[a-z-]+\.html|blog\/[a-z-]+\.html)"/g, `href="${prefix}$1"`)
+    .replace(/href="((?:index|about|services|contact|team|technology|knowledge-base|legal|shop|projects|portfolio|launch|news|blog|portal|wisconsin|media|visualization)\.html|projects\/[a-z-]+\.html|blog\/[a-z-]+\.html)"/g, `href="${prefix}$1"`)
     // The Games menu and leaderboards: root-absolute on pages in services/, projects/ and blog/ (relative links there
     // pointed at e.g. /services/games.html, a 404). Pages in the main folder keep the header exactly as in index.html.
     .replace(/href="((?:games|game-[a-z-]+|leaderboard-[a-z-]+)\.html)"/g, (m, f) => (prefix ? `href="/${f}"` : m));
@@ -2591,6 +2594,55 @@ ${GAMES.map((g) => `          <li class="game-card">
             </div>
           </li>`).join("\n")}
         </ul>
+      </div>
+    </section>
+`,
+  }));
+}
+
+/* ---------- the Media menu: a hub (media.html) for Games, Visualization and Portfolio, and the Visualization page ---------- */
+{
+  const hero = (crumbs, h1, lead) => `    <section class="svc-hero">
+      <div class="svc-hero-inner">
+        <div class="svc-hero-text">
+          <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li>${crumbs}</ol></nav>
+          <h1>${h1}</h1>
+          <p class="svc-hero-lead">${lead}</p>
+        </div>
+      </div>
+    </section>
+`;
+  const MEDIA = [
+    { file: "games.html", name: "Games", text: "Free games we built to show what a website can do. They play right in your browser, with live leaderboards." },
+    { file: "visualization.html", name: "Visualization", text: "Data, ideas and systems turned into pictures you can explore." },
+    { file: "portfolio.html", name: "Portfolio", text: "Website designs and the software we've built for clients and for ourselves." },
+  ];
+  writePage("media.html", frame({
+    prefix: "", current: "media", title: "Media", description: "Games, visualization and portfolio work from Tenshi Systems Engineering.",
+    bodyClass: "page media-hub", extraHead: `  <link rel="stylesheet" href="games.css">\n`,
+    main: hero("", "Media", "Games, visualization and portfolio work from Tenshi Systems Engineering.") + `
+    <section class="page-section" aria-label="Media">
+      <div class="page-inner">
+        <ul class="games-grid">
+${MEDIA.map((m) => `          <li class="game-card">
+            <div class="game-card-body">
+              <h2><a href="${m.file}">${esc(m.name)}</a></h2>
+              <p>${esc(m.text)}</p>
+              <p class="game-links"><a class="game-btn" href="${m.file}">Open ${esc(m.name)}</a></p>
+            </div>
+          </li>`).join("\n")}
+        </ul>
+      </div>
+    </section>
+`,
+  }));
+  writePage("visualization.html", frame({
+    prefix: "", current: "visualization", title: "Visualization", description: "Data, ideas and systems turned into pictures you can explore, from Tenshi Systems Engineering.",
+    bodyClass: "page visualization-page",
+    main: hero(`<li><a href="media.html">Media</a></li><li aria-current="page">Visualization</li>`, "Visualization", "Data, ideas and systems turned into pictures you can explore. Our first pieces are on the way, so check back soon.") + `
+    <section class="page-section" aria-label="More media">
+      <div class="page-inner">
+        <p>In the meantime, try our <a href="games.html">games</a> or browse the <a href="portfolio.html">portfolio</a>.</p>
       </div>
     </section>
 `,
