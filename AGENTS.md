@@ -179,3 +179,16 @@ Server facts: Hostinger KVM 2 VPS, Ubuntu 24.04, Caddy (HTML sent with `Cache-Co
 - Menu: Portfolio is deliberately not clickable for now (`.nav-soon`, no tag); restore when the portfolio is ready.
 - Hero pink "selection boxes" were browser text selection; the hero is unselectable on purpose.
 - Technology page group headers use the transparent icons from `img/services/icons/`.
+
+## Media menu and World Pulse (2026-11-26)
+- The header's **Media** dropdown replaced Games: Games (games.html), Visualization (visualization.html), Portfolio.
+  media.html is the hub. Game and leaderboard pages mark Games + Media as current (`navParent` in build-pages.mjs).
+- **World Pulse** (`viz/world-pulse.html` + `viz/world-pulse.js`, embedded on visualization.html with `?embed=1`):
+  a plain WebGL2 globe (no three.js), fine 1-2 px particles only. `viz/` is not touched by build-pages or neon-pages.
+  Bump the `world-pulse.js?v=` tag in the html when the script changes.
+- Data: `tools/globe-data.mjs` -> `data/globe/world.json` (weekly: Natural Earth, OurAirports, OpenFlights,
+  OpenStreetMap via Overpass, World Bank) and `tools/globe-markets.mjs` -> `data/globe/markets.json` (every 30 min on
+  weekdays), both run by `.github/workflows/globe-data.yml` ("tenshi-globe-bot"). Live in the browser: aircraft
+  (adsb.lol), ships / trains / road counters (Fintraffic digitraffic.fi, Finland and the Baltic only).
+- Owner's rules for it: commercial-safe data only (no OpenSky, no TeleGeography), no server relay, real data with
+  honest labels (live / delayed / static / modelled), fine particles, never blobby.

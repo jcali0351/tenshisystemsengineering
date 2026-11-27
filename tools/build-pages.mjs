@@ -2614,7 +2614,7 @@ ${GAMES.map((g) => `          <li class="game-card">
 `;
   const MEDIA = [
     { file: "games.html", name: "Games", text: "Free games we built to show what a website can do. They play right in your browser, with live leaderboards." },
-    { file: "visualization.html", name: "Visualization", text: "Data, ideas and systems turned into pictures you can explore." },
+    { file: "visualization.html", name: "Visualization", text: "World Pulse: a live 3D globe of the networks that run the planet." },
     { file: "portfolio.html", name: "Portfolio", text: "Website designs and the software we've built for clients and for ourselves." },
   ];
   writePage("media.html", frame({
@@ -2637,12 +2637,14 @@ ${MEDIA.map((m) => `          <li class="game-card">
 `,
   }));
   writePage("visualization.html", frame({
-    prefix: "", current: "visualization", title: "Visualization", description: "Data, ideas and systems turned into pictures you can explore, from Tenshi Systems Engineering.",
+    prefix: "", current: "visualization", title: "Visualization", description: "World Pulse: a live 3D globe of aircraft, ships, trains, roads, internet cables, data centres, markets, births and deaths, from Tenshi Systems Engineering.",
     bodyClass: "page visualization-page",
-    main: hero(`<li><a href="media.html">Media</a></li><li aria-current="page">Visualization</li>`, "Visualization", "Data, ideas and systems turned into pictures you can explore. Our first pieces are on the way, so check back soon.") + `
-    <section class="page-section" aria-label="More media">
+    extraHead: `  <style>.viz-frame{position:relative;aspect-ratio:16/9;min-height:420px;width:100%;border-radius:16px;overflow:hidden;border:1px solid rgba(170,130,255,.35);box-shadow:0 0 40px rgba(124,58,237,.35);background:#05030d}.viz-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}.viz-open{display:inline-block;margin-top:18px;padding:12px 22px;border-radius:99px;font-weight:700;color:#fff;text-decoration:none;background:linear-gradient(90deg,#7c3aed,#db2777)}</style>\n`,
+    main: hero(`<li><a href="media.html">Media</a></li><li aria-current="page">Visualization</li>`, "Visualization", "World Pulse: the networks that run the planet, drawn live in fine particles. Aircraft, ships, trains, roads, internet cables, data centres, markets, births and deaths on one 3D globe.") + `
+    <section class="page-section" aria-label="World Pulse">
       <div class="page-inner">
-        <p>In the meantime, try our <a href="games.html">games</a> or browse the <a href="portfolio.html">portfolio</a>.</p>
+        <div class="viz-frame"><iframe src="viz/world-pulse.html?embed=1" title="World Pulse: live 3D globe" loading="lazy" allowfullscreen></iframe></div>
+        <p><a class="viz-open" href="viz/world-pulse.html">Open World Pulse full screen</a></p>
       </div>
     </section>
 `,

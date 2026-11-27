@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>World Pulse: a live 3D map of the networks that run the planet | Tenshi Systems Engineering</title>
+<meta name="description" content="A live 3D globe of the world's networks: aircraft, ships, trains, internet cables, data centres, airports, ports and global markets, drawn in fine particles from open data.">
+<link rel="canonical" href="https://tenshisystems.com/viz/world-pulse.html">
+<link rel="icon" href="../favicon.ico">
+<style>
+  :root { --bg:#05030d; --ink:#efeaff; --mute:#9d94c4; --line:rgba(170,130,255,.22); --glass:rgba(12,8,28,.72); --pink:#ff4fd8; --violet:#a78bfa; --cyan:#5eead4; --up:#4ade80; --down:#fb7185; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { height:100%; overflow:hidden; background:var(--bg); color:var(--ink); font:13px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; -webkit-font-smoothing:antialiased; }
+  .mono { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-variant-numeric:tabular-nums; }
+  #gl { position:fixed; inset:0; width:100%; height:100%; display:block; touch-action:none; cursor:grab; }
+  #gl.drag { cursor:grabbing; }
+  #labels { position:fixed; inset:0; pointer-events:none; overflow:hidden; }
+  .lab { position:absolute; transform:translate(-50%,-100%); white-space:nowrap; font-size:10px; letter-spacing:.04em; padding:1px 5px; border-radius:3px; background:rgba(8,5,20,.6); border:1px solid var(--line); }
+  .lab b { font-weight:600; margin-left:5px; }
+  .up { color:var(--up); } .down { color:var(--down); }
+  .glass { background:var(--glass); border:1px solid var(--line); border-radius:12px; -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); }
+
+  #brand { position:fixed; top:14px; left:14px; padding:10px 14px; max-width:min(330px,calc(100vw - 28px)); }
+  #brand a.home { display:inline-block; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--mute); text-decoration:none; }
+  #brand a.home:hover { color:var(--ink); }
+  #brand h1 { font-size:19px; letter-spacing:.14em; text-transform:uppercase; font-weight:700; background:linear-gradient(90deg,#fff,var(--violet) 55%,var(--pink)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  #brand p { color:var(--mute); font-size:11.5px; margin-top:2px; }
+  #clock { margin-top:6px; font-size:11px; color:var(--cyan); display:flex; align-items:center; gap:7px; }
+  .dot { width:7px; height:7px; border-radius:50%; background:var(--mute); flex:none; }
+  .dot.live { background:var(--up); box-shadow:0 0 8px var(--up); animation:blink 1.6s infinite; }
+  .dot.delay { background:#fbbf24; box-shadow:0 0 6px #fbbf24; }
+  .dot.static { background:var(--violet); }
+  .dot.off { background:#57507a; }
+  @keyframes blink { 50% { opacity:.35; } }
+
+  #panel { position:fixed; top:14px; right:14px; width:292px; max-height:calc(100vh - 86px); overflow:auto; }
+  #panel summary { list-style:none; cursor:pointer; padding:10px 14px; font-size:11px; letter-spacing:.14em; text-transform:uppercase; font-weight:700; display:flex; justify-content:space-between; align-items:center; }
+  #panel summary::-webkit-details-marker { display:none; }
+  #panel summary::after { content:"+"; color:var(--mute); font-size:15px; }
+  #panel[open] summary::after { content:"\2212"; }
+  #panel[open] summary { border-bottom:1px solid var(--line); }
+  .layer { display:grid; grid-template-columns:auto 1fr auto; gap:3px 9px; align-items:center; width:100%; padding:8px 14px; background:none; border:0; border-bottom:1px solid rgba(170,130,255,.09); color:inherit; text-align:left; font:inherit; cursor:pointer; }
+  .layer:hover { background:rgba(167,139,250,.08); }
+  .layer .sw { width:11px; height:11px; border-radius:3px; border:1px solid currentColor; }
+  .layer[aria-pressed="true"] .sw { background:currentColor; box-shadow:0 0 9px currentColor; }
+  .layer[aria-pressed="false"] { opacity:.45; }
+  .layer .nm { color:var(--ink); font-weight:600; font-size:12.5px; }
+  .layer .ct { color:var(--ink); font-size:12px; }
+  .layer .st { grid-column:2 / 4; color:var(--mute); font-size:10.5px; display:flex; align-items:center; gap:6px; }
+  #src { padding:9px 14px 12px; color:var(--mute); font-size:10.5px; }
+  #src summary { cursor:pointer; padding:0; border:0 !important; font-size:10.5px; letter-spacing:.1em; }
+  #src summary::after { content:none !important; }
+  #src p { margin-top:6px; }
+  #src a { color:var(--violet); }
+
+  #tip { position:fixed; pointer-events:none; padding:8px 11px; max-width:250px; font-size:11.5px; display:none; z-index:5; }
+  #tip .k { font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--pink); }
+  #tip .t { font-weight:700; font-size:13px; }
+  #tip .s { color:var(--mute); }
+
+  #ticker { position:fixed; left:0; right:0; bottom:0; height:34px; border-top:1px solid var(--line); background:rgba(6,4,16,.82); overflow:hidden; display:flex; align-items:center; }
+  #ticker .tag { flex:none; padding:0 12px; height:100%; display:flex; align-items:center; gap:7px; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--mute); border-right:1px solid var(--line); background:rgba(6,4,16,.95); z-index:1; }
+  #tape { display:flex; gap:26px; white-space:nowrap; padding-left:26px; font-size:11.5px; animation:tape 90s linear infinite; }
+  #tape span i { font-style:normal; color:var(--mute); margin-right:6px; }
+  @keyframes tape { to { transform:translateX(-50%); } }
+
+  #hint { position:fixed; left:50%; bottom:46px; transform:translateX(-50%); padding:6px 12px; font-size:11px; color:var(--mute); border-radius:99px; transition:opacity .6s; white-space:nowrap; }
+  #msg { position:fixed; inset:0; display:none; place-items:center; text-align:center; padding:24px; color:var(--mute); }
+  #cta { display:none; position:fixed; right:12px; bottom:46px; padding:9px 16px; border-radius:99px; color:#fff; font-weight:700; letter-spacing:.06em; text-decoration:none; background:linear-gradient(90deg,#7c3aed,#db2777); box-shadow:0 0 22px rgba(219,39,119,.45); }
+
+  body.embed #panel, body.embed #hint { display:none; }
+  body.embed #cta { display:block; }
+  body.embed #gl { cursor:default; }
+  @media (max-width:760px) {
+    #brand { padding:8px 11px; } #brand h1 { font-size:15px; } #brand p { display:none; }
+    #panel { top:auto; bottom:44px; right:10px; left:10px; width:auto; max-height:56vh; }
+    #hint { display:none; }
+  }
+  @media (prefers-reduced-motion:reduce) { #tape { animation:none; } }
+</style>
+</head>
+<body>
+<canvas id="gl" aria-label="Rotating 3D globe showing live aircraft, ships, trains, internet cables, data centres and markets"></canvas>
+<div id="labels"></div>
+
+<header id="brand" class="glass">
+  <a class="home" href="../visualization.html" target="_top">&larr; Tenshi Systems Engineering</a>
+  <h1>World Pulse</h1>
+  <p>The networks that run the planet, drawn live in fine particles.</p>
+  <div id="clock" class="mono"><span class="dot live"></span><span id="utc">--:--:-- UTC</span></div>
+</header>
+
+<details id="panel" class="glass" open>
+  <summary>Layers</summary>
+  <div id="layers"></div>
+  <details id="src">
+    <summary>Data sources</summary>
+    <p>Aircraft: <a href="https://adsb.lol" target="_blank" rel="noopener">adsb.lol</a> (ODbL), live. Ships and trains: <a href="https://www.digitraffic.fi/en/" target="_blank" rel="noopener">Fintraffic / digitraffic.fi</a> (CC BY 4.0), live for Finland and the Baltic. Data centres and cables: &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors (ODbL). Airports: OurAirports (public domain). Routes: OpenFlights (ODbL), a 2014 snapshot. Land, ports and railways: Natural Earth (public domain). Markets: Yahoo Finance, delayed. Births and deaths: modelled from World Bank Open Data rates (CC BY 4.0); each spark is a statistically expected event, not a record of a person. Road counts: Fintraffic (Finland). Day and night: worked out from the time.</p>
+    <p>Not for navigation or trading.</p>
+  </details>
+</details>
+
+<div id="tip" class="glass"></div>
+<div id="hint" class="glass">Drag to spin &middot; scroll or pinch to zoom &middot; hover a point for details</div>
+<a id="cta" href="world-pulse.html" target="_top">Explore full screen &rarr;</a>
+<div id="ticker"><div class="tag"><span class="dot delay"></span>Markets</div><div id="tape" class="mono"></div></div>
+<div id="msg"></div>
+<script src="world-pulse.js?v=20261126a"></script>
+</body>
+</html>
