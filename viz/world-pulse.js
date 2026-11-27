@@ -876,7 +876,7 @@
       for (let r = 86; r <= 94; r++) for (let c = 0; c < 360; c++) U[r * 360 + c] = V[r * 360 + c] = 0;   // this method breaks down within 4 degrees of the equator, so that band is left empty
       streamlines(a, LITE ? 1800 : 4200, 26, U, V, 0.02, 0.12, 1.2, 0.55, 0.0012, [[0.2, 0.5, 1], [0.25, 0.8, 1], [0.55, 1, 0.95], [1, 1, 1]], 0.2);
       M.cur = mesh(P_LINE, LINE, a, gl.LINES); a.length = 0;
-      for (let r = 8; r <= 172; r++) for (let c = 0; c < 360; c++) { const sp = Math.hypot(U[r * 360 + c], V[r * 360 + c]) * 0.02; if (Math.abs(90 - r) < 10 || Math.abs(U[r * 360 + c]) > 125 || Math.abs(V[r * 360 + c]) > 125) continue;   // skip the unreliable band near the equator if (!top || sp > top.sp) top = { sp, lon: c > 180 ? c - 360 : c, lat: 90 - r }; }
+      for (let r = 8; r <= 172; r++) for (let c = 0; c < 360; c++) { const sp = Math.hypot(U[r * 360 + c], V[r * 360 + c]) * 0.02; if (Math.abs(90 - r) < 10 || Math.abs(U[r * 360 + c]) > 125 || Math.abs(V[r * 360 + c]) > 125) continue; if (!top || sp > top.sp) top = { sp, lon: c > 180 ? c - 360 : c, lat: 90 - r }; }
       S.cur = top; const days = Math.round((Date.now() - Date.parse(j.currents.date)) / 86400000);
       L.cur.count(`${top.sp.toFixed(1)} m/s`); L.cur.status("delay", `fastest surface current · from satellite sea-level measurements, ${days <= 1 ? "latest pass" : days + " days old"} · NOAA CoastWatch`);
     } else L.cur.status("off", "first data sync in progress, check back in a few minutes");
