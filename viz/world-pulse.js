@@ -318,7 +318,7 @@
       space: `${sw([1, 1, 1])} the International Space Station, with a long trail.`,
       rain: `${sw([0.45, 0.75, 1])} falling streaks where satellites see rain or snow; colour follows NASA's rate scale.`,
       clouds: `${sw([0.85, 0.92, 1])} a fine white haze where yesterday's satellite pictures show bright cloud tops. Snow and ice can read as cloud.`,
-      cur: `${sw([0.15, 0.35, 1])} to ${sw([1, 1, 1])} dashed lines that creep the way the surface water flows, whiter where it runs faster. Slow dashes, so they read apart from the wind.`,
+      cur: `${sw([0.15, 0.35, 1])} to ${sw([1, 1, 1])} dashed lines that creep the way the surface water flows, whiter where it runs faster. Blank along the equator, where this satellite method does not work. Slow dashes, so they read apart from the wind.`,
       surf: `${sw([0.2, 0.9, 0.75])} to ${sw([1, 0.3, 0.75])} lines running the way the swell travels, drawn where waves top 2 m, redder when taller · ${sw([1, 0.55, 0.45])} ringed points: surf breaks · ${sw([1, 0.95, 0.6])} points: wave buoys.`,
       tide: `${sw([0.3, 1, 0.9])} rising · ${sw([1, 0.45, 0.8])} falling. Each station is a short filament, taller the nearer it is to high water.`,
       wind: `${sw([0.3, 0.8, 1])} to ${sw([1, 0.6, 0.9])} low streaks: wind near the ground, running the way it blows, pinker when stronger · ${sw([1, 0.85, 0.4])} to ${sw([1, 0.3, 0.6])} high streaks: the jet stream, about 10 km up, where it tops 108 km/h.`,
@@ -873,9 +873,10 @@
     OC = { tides: j.tides && j.tides.stations, buoys: j.buoys && j.buoys.buoys };
     if (j.currents) {
       const U = new Int8Array(dec(j.currents.u).buffer), V = new Int8Array(dec(j.currents.v).buffer); let top = null;
-      streamlines(a, LITE ? 1800 : 4200, 26, U, V, 0.02, 0.12, 1.2, 0.55, 0.0012, [[0.15, 0.35, 1], [0.2, 0.75, 1], [0.5, 1, 0.95], [1, 1, 1]], 0.11);
+      for (let r = 86; r <= 94; r++) for (let c = 0; c < 360; c++) U[r * 360 + c] = V[r * 360 + c] = 0;   // this method breaks down within 4 degrees of the equator, so that band is left empty
+      streamlines(a, LITE ? 1800 : 4200, 26, U, V, 0.02, 0.12, 1.2, 0.55, 0.0012, [[0.2, 0.5, 1], [0.25, 0.8, 1], [0.55, 1, 0.95], [1, 1, 1]], 0.2);
       M.cur = mesh(P_LINE, LINE, a, gl.LINES); a.length = 0;
-      for (let r = 8; r <= 172; r++) for (let c = 0; c < 360; c++) { const sp = Math.hypot(U[r * 360 + c], V[r * 360 + c]) * 0.02; if (!top || sp > top.sp) top = { sp, lon: c > 180 ? c - 360 : c, lat: 90 - r }; }
+      for (let r = 8; r <= 172; r++) for (let c = 0; c < 360; c++) { const sp = Math.hypot(U[r * 360 + c], V[r * 360 + c]) * 0.02; if (Math.abs(90 - r) < 10 || Math.abs(U[r * 360 + c]) > 125 || Math.abs(V[r * 360 + c]) > 125) continue;   // skip the unreliable band near the equator if (!top || sp > top.sp) top = { sp, lon: c > 180 ? c - 360 : c, lat: 90 - r }; }
       S.cur = top; const days = Math.round((Date.now() - Date.parse(j.currents.date)) / 86400000);
       L.cur.count(`${top.sp.toFixed(1)} m/s`); L.cur.status("delay", `fastest surface current · from satellite sea-level measurements, ${days <= 1 ? "latest pass" : days + " days old"} · NOAA CoastWatch`);
     } else L.cur.status("off", "first data sync in progress, check back in a few minutes");
