@@ -344,7 +344,7 @@
       aurora: `${sw([0.25, 1, 0.5])} to ${sw([0.85, 0.35, 1])} curtains: the denser, the higher the chance of aurora overhead.`,
       sats: `${sw([0.55, 0.95, 1])} low orbit · ${sw([0.75, 0.55, 1])} medium orbit · ${sw([1, 0.82, 0.45])} high orbit (geostationary ring).`,
       space: `${sw([1, 1, 1])} the International Space Station, with a long trail.`,
-      moon: `${sw([0.92, 0.93, 1])} the Moon in fine particles: where it stands, how much of it is lit and the face it shows are real, from NASA's maps. It is drawn about 15 times too big and too close, so that you can see it. The ring on the Earth marks the spot where it is straight overhead.`,
+      moon: `${sw([0.92, 0.93, 1])} the Moon in fine particles: where it stands, how much of it is lit and the face it shows are real, from the Lunar Reconnaissance Orbiter's pictures. It is drawn about 15 times too big and too close, so that you can see it. The ring on the Earth marks the spot where it is straight overhead.`,
       sky: `${sw([0.6, 0.66, 1])} the real stars down to the faintest the eye can see, coloured as they are, with the 88 constellation figures. The sky turns once a day, as it does overhead.`,
       rain: `${sw([0.45, 0.75, 1])} falling streaks where satellites see rain or snow; colour follows NASA's rate scale.`,
       clouds: `${sw([0.85, 0.92, 1])} a fine white haze where yesterday's satellite pictures show bright cloud tops. Snow and ice can read as cloud.`,
@@ -1008,7 +1008,7 @@
   function updateMoon(ms) {
     const m = moon.p = moonAt(ms);
     if (frame % 240 === 2) {
-      L.moon.count(`${Math.round(m.lit * 100)}%`); L.moon.status("model", `${m.name.toLowerCase()} · ${num(m.km)} km away · position and phase calculated${moon.map ? ", face from NASA's maps" : ""} · drawn much too big and too close`);
+      L.moon.count(`${Math.round(m.lit * 100)}%`); L.moon.status("model", `${m.name.toLowerCase()} · ${num(m.km)} km away · position and phase calculated${moon.map ? ", face from Lunar Reconnaissance Orbiter pictures" : ""} · drawn much too big and too close`);
       const a = [], p = ll(m.lon, m.lat); a.push(p[0], p[1], p[2], 0.92, 0.93, 1, 1, 2.2, 0.5); ring(a, m.lon, m.lat, 2.4, 70, [0.92, 0.93, 1], 0.75, 1.1, 0.2); ring(a, m.lon, m.lat, 4.2, 90, [0.92, 0.93, 1], 0.3, 0.95, 0.6);
       dyn("sublunar").set(a); dropPicks("moon");
       picks.push({ p, layer: "moon", live: "moon", kind: "Under the Moon", title: "The Moon is straight overhead here", sub: "The bulge of water it raises follows this spot round the planet, which is why the tides keep the Moon's time" });
