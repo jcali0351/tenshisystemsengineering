@@ -190,6 +190,14 @@ Server facts: Hostinger KVM 2 VPS, Ubuntu 24.04, Caddy (HTML sent with `Cache-Co
   OpenStreetMap via Overpass, World Bank) and `tools/globe-markets.mjs` -> `data/globe/markets.json` (every 30 min on
   weekdays), both run by `.github/workflows/globe-data.yml` ("tenshi-globe-bot"). Live in the browser: aircraft
   (adsb.lol), ships / trains / road counters (Fintraffic digitraffic.fi, Finland and the Baltic only).
+- Around the globe (2026-11-27): each layer row carries a freshness word (`WORD`: Live / Part live / Delayed / Static /
+  Modelled; "part" = worldwide static map + live data for one region) and the panel opens with a colour key (`KEY`);
+  tap or click selects a point (`pickAt`, `select`, a ring `#sel` follows it; on touch the details show as a bottom
+  card); one rotating headline figure under the clock (`HEAD`); a guided tour (`tourSteps`, button in the title box,
+  `world-pulse.html?tour` starts it) that flies to what is happening now using figures the feeds leave in `S`;
+  `watchPerf` lowers the render scale `Q` when the page runs under ~40 fps; feeds stop polling while their layer is off.
+  Aircraft: `HUBS` (63 named points) are swept in turn, so the count is a sample. Live ships stay Baltic-only: no
+  worldwide ship feed fits the rules below (the open ones need a key or a relay).
 - Owner's rules for it: commercial-safe data only (no OpenSky, no TeleGeography), no server relay, real data with
   honest labels (live / delayed / static / modelled), fine particles, never blobby.
 

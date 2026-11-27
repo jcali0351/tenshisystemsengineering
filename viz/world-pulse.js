@@ -1,4 +1,6 @@
 /* World Pulse: a live 3D globe of the world's networks, drawn in fine particles (plain WebGL2, no libraries).
+   Around the globe: a layer list with a freshness word per layer and a colour key, tap or click to select a point
+   (a ring follows it), one rotating headline figure, a guided tour, and a render scale that drops if frames do.
    Static layers come from data/globe/world.json (tools/globe-data.mjs), markets from data/globe/markets.json
    (tools/globe-markets.mjs); aircraft, ships, trains and road counts are fetched live in the visitor's browser. */
 (() => {
@@ -8,6 +10,8 @@
   if (EMBED) { document.body.classList.add("embed"); $("#panel").open = false; }
   const SMALL = Math.min(innerWidth, innerHeight) < 620;
   if (SMALL) $("#panel").open = false;
+  // Fewer particles on phones and on machines with little memory or few cores, so the frame rate holds.
+  const LITE = SMALL || (navigator.deviceMemory || 8) <= 4 || (navigator.hardwareConcurrency || 8) <= 4;
   const canvas = $("#gl");
   const gl = canvas.getContext("webgl2", { antialias: true, alpha: false, powerPreference: "high-performance" });
   if (!gl) { const m = $("#msg"); m.style.display = "grid"; m.textContent = "This visualization needs WebGL 2, which this browser doesn't offer."; return; }
@@ -195,10 +199,10 @@
 
   /* ---------- camera ---------- */
   const cam = { lon: -95, lat: 34, dist: 8.5, tLon: -30, tLat: 22, tDist: 3.9, vLon: 0, vLat: 0, idle: 0, intro: 0 };
-  let MVP = null, PROJ = null, VIEW = null, EYE = [0, 0, 1], W = 1, H = 1, DPR = 1, viewD = 3.9;
+  let MVP = null, PROJ = null, VIEW = null, EYE = [0, 0, 1], W = 1, H = 1, DPR = 1, viewD = 3.9, Q = 1, RS = 1;   // Q: render scale, lowered by watchPerf(); RS = DPR * Q
   function resize() {
-    DPR = Math.min(devicePixelRatio || 1, 2); W = canvas.clientWidth; H = canvas.clientHeight;
-    canvas.width = Math.round(W * DPR); canvas.height = Math.round(H * DPR); makeTargets();
+    DPR = Math.min(devicePixelRatio || 1, 2); RS = DPR * Q; W = canvas.clientWidth; H = canvas.clientHeight;
+    canvas.width = Math.round(W * RS); canvas.height = Math.round(H * RS); makeTargets();
   }
   addEventListener("resize", resize); resize();
   function updateCamera(dt) {
@@ -214,26 +218,38 @@
     const asp = W / H; viewD = 1 + (cam.dist - 1) * (asp < 1 ? Math.min(2.9, 1.12 / asp) : 1);
     EYE = ll(cam.lon, cam.lat, viewD); PROJ = persp(34 * DEG, asp, 0.05, 40); VIEW = lookAt(EYE); MVP = mul(PROJ, VIEW);
   }
+  // Keep it smooth: if the page runs below about 40 frames a second, draw at a lower resolution, one step at a time.
+  // If a step doesn't help (the browser caps the frame rate, e.g. battery saver), undo it and stop trying.
+  const perf = { n: 0, sum: 0, wait: 7, prev: 0, prevQ: 1, tried: false, lock: false };
+  function watchPerf(raw) {
+    if (perf.lock || raw > 0.25) return;
+    if (perf.wait > 0) { perf.wait -= raw; return; }
+    perf.sum += raw; if (++perf.n < 90) return;
+    const avg = perf.sum / perf.n; perf.n = 0; perf.sum = 0;
+    if (perf.tried) { perf.tried = false; if (avg > perf.prev * 0.92) { Q = perf.prevQ; perf.lock = true; resize(); return; } }
+    if (avg > 1 / 40 && Q > 0.56) { perf.prev = avg; perf.prevQ = Q; Q = Math.max(0.55, Q * 0.8); perf.tried = true; perf.wait = 1.5; resize(); }
+  }
   const project = (p) => { const x = MVP[0] * p[0] + MVP[4] * p[1] + MVP[8] * p[2] + MVP[12], y = MVP[1] * p[0] + MVP[5] * p[1] + MVP[9] * p[2] + MVP[13], w = MVP[3] * p[0] + MVP[7] * p[1] + MVP[11] * p[2] + MVP[15]; return [(x / w * 0.5 + 0.5) * W, (0.5 - y / w * 0.5) * H]; };
   const facing = (p) => dot(norm(p), EYE) > 1.02;
 
   const drag = { on: false, x: 0, y: 0, moved: 0, pts: new Map(), pinch: 0 };
   if (!EMBED) {
-    canvas.addEventListener("pointerdown", (e) => { canvas.setPointerCapture(e.pointerId); drag.pts.set(e.pointerId, [e.clientX, e.clientY]); drag.on = true; drag.x = e.clientX; drag.y = e.clientY; drag.moved = 0; drag.pinch = 0; cam.idle = 0; cam.vLon = cam.vLat = 0; canvas.classList.add("drag"); hideHint(); });
+    canvas.addEventListener("pointerdown", (e) => { canvas.setPointerCapture(e.pointerId); drag.pts.set(e.pointerId, [e.clientX, e.clientY]); drag.on = true; drag.x = e.clientX; drag.y = e.clientY; drag.moved = 0; drag.pinch = 0; cam.idle = 0; cam.vLon = cam.vLat = 0; canvas.classList.add("drag"); hideHint(); stopTour(); });
     canvas.addEventListener("pointermove", (e) => {
-      if (!drag.on) { hover(e.clientX, e.clientY); return; }
+      if (!drag.on) { if (e.pointerType === "mouse") hover(e.clientX, e.clientY); return; }
       drag.pts.set(e.pointerId, [e.clientX, e.clientY]); cam.idle = 0;
       if (drag.pts.size >= 2) { const [a, b] = [...drag.pts.values()], d = Math.hypot(a[0] - b[0], a[1] - b[1]); if (drag.pinch) cam.tDist = 1 + (cam.tDist - 1) * (drag.pinch / d); drag.pinch = d; return; }
       const dx = e.clientX - drag.x, dy = e.clientY - drag.y, s = 0.3 * (cam.dist - 0.85) / 3 * (900 / Math.max(500, H));
       drag.x = e.clientX; drag.y = e.clientY; drag.moved += Math.abs(dx) + Math.abs(dy);
       cam.tLon -= dx * s; cam.tLat += dy * s; cam.vLon = -dx * s * 30; cam.vLat = dy * s * 30;
     });
-    const up = (e) => { drag.pts.delete(e.pointerId); drag.pinch = 0; if (!drag.pts.size) { drag.on = false; canvas.classList.remove("drag"); if (drag.moved < 6) hover(e.clientX, e.clientY); } else { const [p] = [...drag.pts.values()]; drag.x = p[0]; drag.y = p[1]; } };
+    const up = (e) => { drag.pts.delete(e.pointerId); drag.pinch = 0; if (!drag.pts.size) { drag.on = false; canvas.classList.remove("drag"); if (drag.moved < 6) tap(e.clientX, e.clientY, e.pointerType); } else { const [p] = [...drag.pts.values()]; drag.x = p[0]; drag.y = p[1]; } };
     canvas.addEventListener("pointerup", up); canvas.addEventListener("pointercancel", up);
-    canvas.addEventListener("pointerleave", () => { if (!drag.on) tip.style.display = "none"; });
-    canvas.addEventListener("wheel", (e) => { e.preventDefault(); cam.tDist = 1 + (cam.tDist - 1) * Math.exp(e.deltaY * 0.0012); cam.idle = 0; hideHint(); }, { passive: false });
+    canvas.addEventListener("pointerleave", () => { if (!drag.on && !sel) tip.style.display = "none"; });
+    canvas.addEventListener("wheel", (e) => { e.preventDefault(); cam.tDist = 1 + (cam.tDist - 1) * Math.exp(e.deltaY * 0.0012); cam.idle = 0; hideHint(); stopTour(); }, { passive: false });
   }
   const hideHint = () => { $("#hint").style.opacity = "0"; };
+  if (matchMedia("(pointer: coarse)").matches) $("#hint").textContent = "Drag to spin · pinch to zoom · tap a point for details";
   setTimeout(hideHint, 9000);
 
   /* ---------- layers ---------- */
@@ -257,15 +273,42 @@
     { id: "pop", name: "Population", color: [1, 0.45, 0.75], unit: "people" },
     { id: "vital", name: "Births & deaths", color: [1, 0.85, 0.5], unit: "today" },
   ];
+  // How fresh each layer is, in a word next to its dot. "part": a worldwide static map with live data for one region.
+  const WORD = { live: "Live", part: "Part live", delay: "Delayed", static: "Static", model: "Modelled", off: "" };
+  const FUEL = [["Solar", [1, 0.85, 0.25]], ["Wind", [0.6, 1, 0.95]], ["Hydro", [0.25, 0.55, 1]], ["Nuclear", [0.6, 1, 0.4]], ["Gas", [1, 0.55, 0.2]], ["Coal", [0.95, 0.3, 0.3]], ["Oil", [0.8, 0.45, 0.25]], ["Biomass", [0.55, 0.85, 0.35]], ["Geothermal", [1, 0.4, 0.7]], ["Other", [0.7, 0.6, 1]]];
   const L = {};
   for (const l of LAYERS) {
     const b = document.createElement("button"); b.className = "layer"; b.type = "button"; b.style.color = css(l.color); b.setAttribute("aria-pressed", "true");
-    b.innerHTML = `<span class="sw"></span><span class="nm">${l.name}</span><span class="ct mono">&ndash;</span><span class="st"><span class="dot off"></span><span class="tx">waiting for data</span></span>`;
+    b.innerHTML = `<span class="sw"></span><span class="nm">${l.name}</span><span class="ct mono">&ndash;</span><span class="st"><span class="dot off"></span><b class="bd"></b><span class="tx">waiting for data</span></span>`;
     b.onclick = () => { l.on = !l.on; b.setAttribute("aria-pressed", l.on); };
     $("#layers").appendChild(b);
-    L[l.id] = Object.assign(l, { on: true, el: b, count(n) { b.querySelector(".ct").textContent = typeof n === "number" ? n.toLocaleString("en-US") : n; }, status(kind, text) { b.querySelector(".dot").className = "dot " + kind; b.querySelector(".tx").textContent = text; } });
+    L[l.id] = Object.assign(l, { on: true, el: b, count(n) { b.querySelector(".ct").textContent = typeof n === "number" ? n.toLocaleString("en-US") : n; }, status(kind, text) { l.kind = kind; b.querySelector(".dot").className = "dot " + (kind === "part" ? "live" : kind); const w = b.querySelector(".bd"); w.className = "bd " + kind; w.textContent = WORD[kind] || ""; b.querySelector(".tx").textContent = text; } });
   }
 
+  // The key: what each colour and shape on the globe stands for.
+  { const sw = (c) => `<i class="ks" style="background:${css(c)}"></i>`;
+    const KEY = {
+      markets: `${sw(C.up)} spike: up on the day · ${sw(C.down)} spike: down. Taller means a bigger move. The fine bars around each exchange are single companies.`,
+      planes: `${sw(C.air)} each point with a fading trail is one real aircraft, carried forward between updates.`,
+      routes: `${sw(C.route)} arcs: scheduled routes (a 2014 snapshot) · ${sw([1, 1, 1])} airports. The sparks riding the arcs show direction only; they are not real flights.`,
+      ships: `${sw(C.ship)} still points: ports worldwide · moving points with a trail: real ships, Baltic only.`,
+      rail: `${sw(C.rail)} lines: railways worldwide · moving points: real trains, Finland only. The pulses on the lines are decoration.`,
+      roads: `${sw(C.road)} lines: major highways · bright points: live traffic counters in Finland, brighter and larger with more vehicles.`,
+      net: `${sw(C.cable)} lines: communication cables · ${sw(C.dc)} points: data centres.`,
+      power: FUEL.map((f) => `${sw(f[1])} ${f[0]}`).join(" · ") + `. Larger points are bigger stations.`,
+      quakes: `${sw([1, 0.85, 0.4])} small → ${sw([1, 0.5, 0.2])} → ${sw([1, 0.2, 0.25])} → ${sw([1, 0.3, 0.8])} strong. Rings mark magnitude 2.5 and up.`,
+      events: `${sw([1, 0.5, 0.12])} wildfire · ${sw([0.6, 0.95, 1])} severe storm (rings) · ${sw([1, 0.2, 0.2])} volcano · ${sw([0.8, 0.9, 1])} iceberg or sea ice.`,
+      aurora: `${sw([0.25, 1, 0.5])} to ${sw([0.85, 0.35, 1])} curtains: the denser, the higher the chance of aurora overhead.`,
+      sats: `${sw([0.55, 0.95, 1])} low orbit · ${sw([0.75, 0.55, 1])} medium orbit · ${sw([1, 0.82, 0.45])} high orbit (geostationary ring).`,
+      space: `${sw([1, 1, 1])} the International Space Station, with a long trail.`,
+      rain: `${sw([0.45, 0.75, 1])} falling streaks where satellites see rain or snow; colour follows NASA's rate scale.`,
+      pop: `${sw([0.75, 0.25, 1])} to ${sw([1, 1, 1])} filaments: taller and whiter means more people · ${sw([1, 0.75, 0.45])} warm points on the night side: city lights.`,
+      vital: `${sw([1, 0.9, 0.5])} rising sparks: births · ${sw([0.6, 0.45, 0.9])} sinking sparks: deaths. Modelled from country rates, not records of people.`,
+    };
+    const box = $("#keyBody");
+    if (box) box.innerHTML = `<p class="kd"><span><span class="dot live"></span>Live: updates as it happens</span><span><span class="dot delay"></span>Delayed: minutes to hours behind</span><span><span class="dot static"></span>Static: a mapped snapshot</span><span><span class="dot model"></span>Modelled: worked out from real rates</span></p>` + LAYERS.map((l) => `<p><b style="color:${css(l.color)}">${l.name}</b><br>${KEY[l.id] || ""}</p>`).join(""); }
+
+  const S = {};           // figures the feeds leave behind for the headline number and the tour
   const M = {};           // meshes
   const picks = [];       // things a visitor can point at: { p, kind, title, sub }
   const quad = mesh(P_ATMO, [["aUV", 2]], [-1, -1, 1, -1, -1, 1, 1, 1], gl.TRIANGLE_STRIP);
@@ -309,7 +352,7 @@
     world = w;
     if (w.land) {
       const bits = Uint8Array.from(atob(w.land.b64), (c) => c.charCodeAt(0)), LW = w.land.w, LH = w.land.h;
-      const N = SMALL ? 170000 : 380000, a = [], sea = [], g = Math.PI * (3 - Math.sqrt(5));
+      const N = LITE ? 170000 : 380000, a = [], sea = [], g = Math.PI * (3 - Math.sqrt(5));
       for (let i = 0; i < N; i++) {                               // evenly spread points; keep the ones on land
         const y = 1 - (i + 0.5) / N * 2, r = Math.sqrt(1 - y * y), th = i * g, x = Math.sin(th) * r, z = Math.cos(th) * r;
         const lat = Math.asin(y) / DEG, lon = Math.atan2(x, z) / DEG;
@@ -331,6 +374,9 @@
     if (w.cables) { M.cables = mesh(P_LINE, LINE, lineVerts(w.cables.map((c) => c.p), C.cable, 0.34), gl.LINES); }
     if (w.dcs) { { const a = []; for (const d of w.dcs) { const p = ll(d[0], d[1]), c = ramp([[1, 0.2, 0.75], [1, 0.4, 0.95], [1, 0.75, 0.95], [0.75, 0.6, 1]], rnd()); a.push(p[0], p[1], p[2], c[0], c[1], c[2], 0.9, 1.4 + rnd() * 0.7, rnd()); } M.dcs = mesh(P_POINT, POINT, a, gl.POINTS); } L.net.count(w.dcs.length);
       for (const d of w.dcs) picks.push({ p: ll(d[0], d[1]), layer: "net", kind: "Data centre", title: d[2] || "Data centre", sub: d[3] || "OpenStreetMap" }); }
+    if (w.dcs) { const g = new Map(); let top = null;                 // the densest 4-degree cluster of data centres, for the tour
+      for (const d of w.dcs) { const k = Math.floor(d[0] / 4) + "," + Math.floor(d[1] / 4), c = g.get(k) || g.set(k, { n: 0, lon: 0, lat: 0 }).get(k); c.n++; c.lon += d[0]; c.lat += d[1]; if (!top || c.n > top.n) top = c; }
+      if (top) S.dc = { n: top.n, lon: top.lon / top.n, lat: top.lat / top.n }; }
     if (w.dcs || w.cables) L.net.status("static", `${(w.cables || []).length.toLocaleString("en-US")} cables · OpenStreetMap, weekly`);
     if (w.ports) { M.ports = mesh(P_POINT, POINT, pts(w.ports.map((p) => [p[0] / 100, p[1] / 100]), C.ship, 0.7, 1.5), gl.POINTS); L.ships.count(w.ports.length); L.ships.status("static", "ports: Natural Earth · live ships: connecting");
       for (const p of w.ports) picks.push({ p: ll(p[0] / 100, p[1] / 100), layer: "ships", kind: "Port", title: p[2], sub: "" }); }
@@ -338,7 +384,7 @@
       const ap = w.airports.map((a) => ll(a[0] / 100, a[1] / 100));
       M.airports = mesh(P_POINT, POINT, pts(w.airports.map((a) => [a[0] / 100, a[1] / 100]), [1, 1, 1], 0.9, 1.9, 0.2), gl.POINTS); L.routes.count(w.airports.length);
       w.airports.forEach((a, i) => picks.push({ p: ap[i], layer: "routes", kind: "Airport · " + a[2], title: a[3], sub: a[4] }));
-      const arcs = [], flow = [], TRAIL = SMALL ? 5 : 7;
+      const arcs = [], flow = [], TRAIL = LITE ? 5 : 7;
       for (const [i, j, wt] of w.routes || []) {
         const A = ap[i], B = ap[j]; if (!A || !B) continue;
         const om = Math.acos(Math.max(-1, Math.min(1, dot(A, B)))); if (om < 0.02) continue;
@@ -363,6 +409,7 @@
         for (let i = 1; i <= n; i++) { const t = i / n, p = ll(x / 100, y / 100, 1 + h * t); hd.push(p[0], p[1], p[2], c[0], c[1], c[2], 0.3 + t * 0.6, i === n ? 1.5 : 1.05, rnd()); }
         if (k >= 1500) picks.push({ p: b, layer: "pop", kind: "Population", title: `${(k / 1000).toFixed(1)} million people`, sub: "in towns and cities of 15,000+ within this half-degree cell" });
       }
+      { let top = null; for (const r of w.pop) if (!top || r[2] > top[2]) top = r; if (top) S.pop = { lon: top[0] / 100, lat: top[1] / 100, k: top[2] }; }
       const lights = [];                                          // city lights on the night side, scattered around each populated cell
       for (const [x, y, k] of w.pop) { const n = Math.min(26, 1 + Math.round(Math.sqrt(k / 40)));
         for (let i = 0; i < n; i++) { const r = Math.sqrt(rnd()) * 0.42, th = rnd() * 6.283, p = ll(x / 100 + Math.cos(th) * r / Math.max(0.2, Math.cos(y / 100 * DEG)), y / 100 + Math.sin(th) * r), wm = rnd();
@@ -372,7 +419,6 @@
       L.pop.count(`${(total / 1e6).toFixed(2)} bn`); L.pop.status("static", "people in towns and cities of 15,000+ · GeoNames");
     }
     if (w.power) {
-      const FUEL = [["Solar", [1, 0.85, 0.25]], ["Wind", [0.6, 1, 0.95]], ["Hydro", [0.25, 0.55, 1]], ["Nuclear", [0.6, 1, 0.4]], ["Gas", [1, 0.55, 0.2]], ["Coal", [0.95, 0.3, 0.3]], ["Oil", [0.8, 0.45, 0.25]], ["Biomass", [0.55, 0.85, 0.35]], ["Geothermal", [1, 0.4, 0.7]], ["Other", [0.7, 0.6, 1]]];
       const a = []; let gw = 0;
       for (const [x, y, mw, f, name] of w.power) { const p = ll(x / 100, y / 100), c = FUEL[f][1], q = Math.min(1, Math.sqrt(mw / 6000)); gw += mw / 1000;
         a.push(p[0], p[1], p[2], c[0], c[1], c[2], 0.5 + q * 0.5, 1.0 + q * 1.5, rnd());
@@ -390,7 +436,7 @@
   function setupVital(rows) {
     const cum = (k) => { let s = 0; const c = new Float64Array(rows.length); rows.forEach((r, i) => { s += r[k]; c[i] = s; }); return { c, total: s }; };
     vital = { rows, pos: rows.map((r) => ll(r[0] / 100, r[1] / 100)), b: cum(2), d: cum(3) };
-    L.vital.status("delay", "born / died today (UTC) · modelled from World Bank rates");
+    L.vital.status("model", "born / died today (UTC) · each spark is an expected event, from World Bank rates");
   }
   const poisson = (m) => { let k = 0, p = Math.exp(-m), s = p; const u = rnd(); while (u > s && k < 40) { k++; p *= m / k; s += p; } return k; };
   function spawnVital(dt, now) {
@@ -435,7 +481,7 @@
     marketLabels.sort((x, y) => y.w - x.w);
     M.spikes = mesh(P_LINE, LINE, lines, gl.LINES); M.heads = mesh(P_POINT, POINT, heads, gl.POINTS);
     const age = Math.round((Date.now() - Date.parse(mk.updatedAt)) / 60000);
-    L.markets.count(mk.quotes.length); L.markets.status("delay", `delayed · updated ${age < 90 ? age + " min" : Math.round(age / 60) + " h"} ago · Yahoo Finance`);
+    L.markets.count(mk.quotes.length); L.markets.status("delay", `updated ${age < 90 ? age + " min" : Math.round(age / 60) + " h"} ago · Yahoo Finance`);
     const tape = mk.quotes.map((q) => `<span><i>${(PIN[q.sym] || [])[2] || NAMES[q.sym] || q.sym}</i>${fmt(q.price)} <b class="${(q.pct ?? 0) >= 0 ? "up" : "down"}">${pct(q.pct)}</b></span>`).join("");
     $("#tape").innerHTML = tape + tape;
   }
@@ -474,7 +520,7 @@
         const row = el("button", "xr"); row.type = "button";
         const top = el("div", "xt"); top.append(el("b", null, x.name), el("span", "mono " + (x.avg >= 0 ? "up" : "down"), pct(x.avg)));
         row.append(top, el("div", "sm", `${x.city} · ${x.up} up, ${x.down} down${x.stale ? " · last known" : ""}`), split(x.up, x.down, x.stocks.length - x.up - x.down));
-        row.onclick = () => { boardOpen = x.id; cam.tLon = cam.lon + ((x.lon - cam.lon + 540) % 360 - 180); cam.tLat = x.lat - (SMALL ? 14 : 0); cam.tDist = 2.1; cam.idle = -45; cam.vLon = cam.vLat = 0; renderBoard(); };
+        row.onclick = () => { boardOpen = x.id; stopTour(); flyTo(x.lon, x.lat - (SMALL ? 8 : 0), 2.1); cam.idle = -45; renderBoard(); };
         body.append(row);
       }
     } else {
@@ -487,7 +533,7 @@
       });
     }
   }
-  $("#boardBtn").onclick = () => { const b = $("#board"); b.hidden = !b.hidden; if (!b.hidden) { $("#panel").open = false; renderBoard(); } };
+  $("#boardBtn").onclick = () => { const b = $("#board"); b.hidden = !b.hidden; if (!b.hidden) { $("#panel").open = false; stopTour(); select(null); renderBoard(); } };
   const loadStocks = () => getJson("../data/globe/stocks.json").then(buildStocks).catch(() => {});
 
   function layoutLabels() {
@@ -507,10 +553,13 @@
       rebuild() { const a = []; for (const m of s.map.values()) for (let k = 0; k < lags; k++) a.push(m.p[0], m.p[1], m.p[2], m.v[0], m.v[1], m.v[2], m.t0, k * lagStep, color[0], color[1], color[2], (k ? 0.5 : 1) * (1 - k / lags), k ? size * 0.62 : size, m.alt || 0.002); s.mesh.set(a); s.dirty = false; } };
     return s;
   }
-  const planes = moverSet(C.air, SMALL ? 12 : 18, 40, 2.1), ships = moverSet(C.ship, 10, 240, 1.9), trains = moverSet(C.rail, 6, 20, 2.1);
-  const moverPos = (m, t) => { const dt = Math.max(0, Math.min(600, t - m.t0)); return norm([m.p[0] + m.v[0] * dt, m.p[1] + m.v[1] * dt, m.p[2] + m.v[2] * dt]); };
+  const planes = moverSet(C.air, LITE ? 12 : 18, 40, 2.1), ships = moverSet(C.ship, 10, 240, 1.9), trains = moverSet(C.rail, 6, 20, 2.1);
+  const moverPos = (m, t) => { const dt = Math.max(0, Math.min(600, t - m.t0)); const p = norm([m.p[0] + m.v[0] * dt, m.p[1] + m.v[1] * dt, m.p[2] + m.v[2] * dt]), r = 1 + (m.alt || 0); return [p[0] * r, p[1] * r, p[2] * r]; };
 
-  const HUBS = [[40.7, -74], [41.9, -87.6], [33.7, -84.4], [32.9, -97], [39.8, -104.7], [34, -118.3], [37.6, -122.3], [47.5, -122.3], [25.8, -80.3], [43.7, -79.6], [19.4, -99.1], [-23.5, -46.6], [4.7, -74.1], [51.5, -0.3], [49, 2.5], [50, 8.6], [40.5, -3.6], [41.8, 12.3], [41.2, 28.8], [25.2, 55.4], [25.3, 51.6], [28.6, 77.1], [19.1, 72.9], [1.4, 104], [13.7, 100.7], [22.3, 113.9], [31.1, 121.8], [40.1, 116.6], [35.6, 139.8], [37.5, 126.4], [-33.9, 151.2], [-26.1, 28.2], [30.1, 31.4], [52.3, 4.8], [55.6, 12.6], [59.6, 17.9]];
+  // Where the aircraft sweep looks, in turn (each request covers about 460 km around the point).
+  const HUBS = [[40.7, -74, "New York"], [41.9, -87.6, "Chicago"], [33.7, -84.4, "Atlanta"], [32.9, -97, "Dallas"], [39.8, -104.7, "Denver"], [34, -118.3, "Los Angeles"], [37.6, -122.3, "San Francisco"], [47.5, -122.3, "Seattle"], [25.8, -80.3, "Miami"], [43.7, -79.6, "Toronto"], [19.4, -99.1, "Mexico City"], [-23.5, -46.6, "São Paulo"], [4.7, -74.1, "Bogotá"], [51.5, -0.3, "London"], [49, 2.5, "Paris"], [50, 8.6, "Frankfurt"], [40.5, -3.6, "Madrid"], [41.8, 12.3, "Rome"], [41.2, 28.8, "Istanbul"], [25.2, 55.4, "Dubai"], [25.3, 51.6, "Doha"], [28.6, 77.1, "Delhi"], [19.1, 72.9, "Mumbai"], [1.4, 104, "Singapore"], [13.7, 100.7, "Bangkok"], [22.3, 113.9, "Hong Kong"], [31.1, 121.8, "Shanghai"], [40.1, 116.6, "Beijing"], [35.6, 139.8, "Tokyo"], [37.5, 126.4, "Seoul"], [-33.9, 151.2, "Sydney"], [-26.1, 28.2, "Johannesburg"], [30.1, 31.4, "Cairo"], [52.3, 4.8, "Amsterdam"], [55.6, 12.6, "Copenhagen"], [59.6, 17.9, "Stockholm"],
+    [29.9, -95.3, "Houston"], [33.4, -112, "Phoenix"], [44.9, -93.2, "Minneapolis"], [45.5, -73.7, "Montreal"], [49.2, -123.2, "Vancouver"], [61.2, -150, "Anchorage"], [21.3, -157.9, "Honolulu"], [9, -79.4, "Panama City"], [-12, -77.1, "Lima"], [-33.4, -70.8, "Santiago"], [-34.8, -58.5, "Buenos Aires"], [53.4, -6.3, "Dublin"], [38.8, -9.1, "Lisbon"], [48.1, 16.6, "Vienna"], [52.2, 21, "Warsaw"], [37.9, 23.9, "Athens"], [24.9, 46.7, "Riyadh"], [6.6, 3.3, "Lagos"], [-1.3, 36.9, "Nairobi"], [9, 38.8, "Addis Ababa"], [13, 80.2, "Chennai"], [3.1, 101.6, "Kuala Lumpur"], [-6.1, 106.7, "Jakarta"], [14.5, 121, "Manila"], [25.1, 121.2, "Taipei"], [-37.7, 144.8, "Melbourne"], [-37, 174.8, "Auckland"]];
+  const HUBV = HUBS.map((h) => ll(h[1], h[0]));
   let hubI = 0, planeFails = 0, planeOk = false, flip = false;
   async function pollPlanes() {
     if (!L.planes.on || document.hidden) return setTimeout(pollPlanes, 3000);
@@ -527,15 +576,16 @@
       }
       planeOk = true; planeFails = 0; planes.dirty = true;
     } catch (e) { planeFails++; }
-    const t = now(); for (const [k, m] of planes.map) if (t - m.seen > 240) { planes.map.delete(k); planes.dirty = true; }
+    const t = now(); for (const [k, m] of planes.map) if (t - m.seen > 330) { planes.map.delete(k); planes.dirty = true; }
     L.planes.count(planes.map.size);
-    if (planeOk && planeFails < 4) L.planes.status("live", "live · adsb.lol · sweeping the major air hubs");
+    if (planeOk && planeFails < 4) L.planes.status("live", `adsb.lol · sweeping ${HUBS.length} air hubs in turn, so this is a sample, not every flight`);
     else if (planeFails >= 3) L.planes.status("off", "live feed not reachable from this browser right now");
     setTimeout(pollPlanes, planeFails >= 3 ? 30000 : EMBED ? 5000 : 2200);
   }
 
   async function pollShips() {
-    if (L.ships.on && !document.hidden) try {
+    if (!L.ships.on || document.hidden) return setTimeout(pollShips, 3000);
+    try {
       const j = await (await fetch("https://meri.digitraffic.fi/api/ais/v1/locations", { signal: AbortSignal.timeout(30000) })).json(), t = now(), wall = Date.now();
       ships.map.clear();
       for (const f of j.features || []) {
@@ -545,13 +595,14 @@
         ships.map.set(pr.mmsi, { p: ll(c[0], c[1]), v: [d[0] * sp, d[1] * sp, d[2] * sp], t0: t - Math.max(0, age), alt: 0.0015, title: "Vessel MMSI " + pr.mmsi, sub: `${pr.sog.toFixed(1)} kt · course ${Math.round(pr.cog || 0)}°` });
       }
       ships.dirty = true;
-      L.ships.status("live", `${ships.map.size.toLocaleString("en-US")} ships under way, live (Baltic · Fintraffic) · ports worldwide`);
+      L.ships.status("part", `${ships.map.size.toLocaleString("en-US")} ships under way, live (Baltic · Fintraffic) · ports worldwide`);
     } catch (e) { if (!ships.map.size) L.ships.status("static", "ports: Natural Earth · live ships not reachable right now"); }
     setTimeout(pollShips, 60000);
   }
 
   async function pollTrains() {
-    if (L.rail.on && !document.hidden) try {
+    if (!L.rail.on || document.hidden) return setTimeout(pollTrains, 3000);
+    try {
       const j = await (await fetch("https://rata.digitraffic.fi/api/v1/train-locations/latest", { signal: AbortSignal.timeout(20000) })).json(), t = now(), seen = new Set();
       for (const tr of j) {
         const c = tr.location?.coordinates; if (!c) continue;
@@ -561,7 +612,7 @@
       }
       for (const k of trains.map.keys()) if (!seen.has(k)) trains.map.delete(k);
       trains.dirty = true;
-      L.rail.status("live", `${trains.map.size.toLocaleString("en-US")} trains live (Finland · Fintraffic) · network worldwide`);
+      L.rail.status("part", `${trains.map.size.toLocaleString("en-US")} trains live (Finland · Fintraffic) · network worldwide`);
     } catch (e) { if (!trains.map.size && world?.rails) L.rail.status("static", "network: Natural Earth · live trains not reachable right now"); }
     setTimeout(pollTrains, 15000);
   }
@@ -569,7 +620,8 @@
   // Road traffic: live counting stations where an open feed exists (Finland): brighter and larger = more vehicles per hour.
   let roadStations = null;
   async function pollRoads() {
-    if (L.roads.on && !document.hidden) try {
+    if (!L.roads.on || document.hidden) return setTimeout(pollRoads, 3000);
+    try {
       if (!roadStations) { const g = await (await fetch("https://tie.digitraffic.fi/api/tms/v1/stations", { signal: AbortSignal.timeout(30000) })).json(); roadStations = new Map(g.features.map((f) => [f.id ?? f.properties.id, { c: f.geometry.coordinates, name: f.properties.name }])); }
       const j = await (await fetch("https://tie.digitraffic.fi/api/tms/v1/stations/data", { signal: AbortSignal.timeout(30000) })).json(), a = [];
       for (let i = picks.length - 1; i >= 0; i--) if (picks[i].live === "road") picks.splice(i, 1);
@@ -584,13 +636,14 @@
         picks.push({ p, layer: "roads", live: "road", kind: "Traffic counter", title: (st.name || "Station").replace(/_/g, " "), sub: `${Math.round(flow).toLocaleString("en-US")} vehicles/h${n ? ` · ${Math.round(speed / n)} km/h` : ""}` });
       }
       M.roadLive = M.roadLive || mesh(P_POINT, POINT, null, gl.POINTS, true); M.roadLive.set(a);
-      L.roads.status("live", `${(a.length / 9).toLocaleString("en-US")} live counters (Finland): ${Math.round(total).toLocaleString("en-US")} vehicles/h · highways worldwide`);
+      L.roads.status("part", `${(a.length / 9).toLocaleString("en-US")} live counters (Finland): ${Math.round(total).toLocaleString("en-US")} vehicles/h · highways worldwide`);
     } catch (e) { if (!M.roadLive && world?.roads) L.roads.status("static", "major highways: Natural Earth · live counts not reachable right now"); }
     setTimeout(pollRoads, 120000);
   }
 
   /* ---------- weather: precipitation from NASA's GPM IMERG satellites (one world image, read pixel by pixel) ---------- */
   function pollRain() {
+    if (!L.rain.on || document.hidden) return setTimeout(pollRain, 3000);
     const img = new Image(); img.crossOrigin = "anonymous";
     img.onload = () => {
       try {
@@ -600,14 +653,14 @@
         let area = 0, all = 0;
         for (let j = 0; j < RH; j++) { const wgt = Math.cos((90 - (j + 0.5) / 4) * DEG); for (let i = 0; i < RW; i++) { all += wgt; if (px[(j * RW + i) * 4 + 3] > 60) { wet.push(j * RW + i); area += wgt; } } }
         if (!wet.length) throw new Error("empty image");
-        const N = Math.min(SMALL ? 45000 : 110000, wet.length * 2), a = [];
+        const N = Math.min(LITE ? 45000 : 110000, wet.length * 2), a = [];
         for (let k = 0; k < N; k++) {
           const n = wet[(rnd() * wet.length) | 0], i = n % RW, j = (n / RW) | 0, p = ll(-180 + (i + rnd()) / 4, 90 - (j + rnd()) / 4);
           const r = px[n * 4] / 255, g = px[n * 4 + 1] / 255, b = px[n * 4 + 2] / 255, m = Math.max(r, g, b, 0.01);
           a.push(p[0], p[1], p[2], 0.35 + 0.65 * r / m, 0.35 + 0.65 * g / m, 0.35 + 0.65 * b / m, 0.5, rnd());
         }
         M.rain = M.rain || mesh(P_RAIN, [["aPos", 3], ["aColor", 4], ["aSeed", 1]], null, gl.POINTS, true); M.rain.set(a);
-        L.rain.count(`${(area / all * 100).toFixed(1)}%`);
+        S.rain = (area / all * 100).toFixed(1); L.rain.count(`${S.rain}%`);
         L.rain.status("delay", "of the globe has rain or snow · satellite estimate, a few hours behind · NASA GPM IMERG");
       } catch (e) { if (!M.rain) L.rain.status("off", "satellite image could not be read in this browser"); }
     };
@@ -623,8 +676,9 @@
   function ring(out, lon, lat, deg, n, c, alpha, size) { for (let i = 0; i < n; i++) { const th = (i / n) * 6.283, p = ll(lon + Math.cos(th) * deg / Math.max(0.15, Math.cos(lat * DEG)), lat + Math.sin(th) * deg); out.push(p[0], p[1], p[2], c[0], c[1], c[2], alpha, size, rnd()); } }
 
   async function pollQuakes() {
-    if (!document.hidden) try {
-      const j = await (await fetch("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson", { signal: AbortSignal.timeout(30000) })).json(), a = []; let big = 0;
+    if (!L.quakes.on || document.hidden) return setTimeout(pollQuakes, 3000);
+    try {
+      const j = await (await fetch("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson", { signal: AbortSignal.timeout(30000) })).json(), a = []; let big = 0, top = null;
       dropPicks("quake");
       for (const f of j.features || []) {
         const c = f.geometry?.coordinates, m = f.properties?.mag; if (!c || !(m > 0)) continue;
@@ -632,16 +686,18 @@
         a.push(p[0], p[1], p[2], col[0], col[1], col[2], 0.95, 1.2 + q * 2.4, rnd());
         if (m >= 2.5) { ring(a, c[0], c[1], 0.25 + q * 1.6, 10 + Math.round(q * 34), col, 0.75, 1.0); if (m >= 4.5) ring(a, c[0], c[1], 0.6 + q * 3.2, 26 + Math.round(q * 50), col, 0.45, 0.95); }
         if (m >= 4.5) big++;
+        if (!top || m > top.m) top = { m, lon: c[0], lat: c[1], place: f.properties.place || "", time: f.properties.time };
         picks.push({ p, layer: "quakes", live: "quake", kind: `Earthquake · magnitude ${m.toFixed(1)}`, title: f.properties.place || "Earthquake", sub: `${new Date(f.properties.time).toISOString().slice(11, 16)} UTC · ${Math.round(c[2])} km deep` });
       }
-      dyn("quakes").set(a); L.quakes.count((j.features || []).length); L.quakes.status("live", `live · ${big} of magnitude 4.5+ · USGS`);
+      S.quake = top; S.quakes = (j.features || []).length; dyn("quakes").set(a); L.quakes.count(S.quakes); L.quakes.status("live", `${big} of magnitude 4.5+ · USGS`);
     } catch (e) { if (!M.quakes) L.quakes.status("off", "live feed not reachable right now"); }
     setTimeout(pollQuakes, 5 * 60000);
   }
 
   async function pollEvents() {
-    if (!document.hidden) try {
-      const j = await (await fetch("https://eonet.gsfc.nasa.gov/api/v3/events?status=open&limit=800", { signal: AbortSignal.timeout(40000) })).json(), a = [], n = {};
+    if (!L.events.on || document.hidden) return setTimeout(pollEvents, 3000);
+    try {
+      const j = await (await fetch("https://eonet.gsfc.nasa.gov/api/v3/events?status=open&limit=800", { signal: AbortSignal.timeout(40000) })).json(), a = [], n = {}; let top = null;
       const KIND = { wildfires: ["Wildfire", [1, 0.5, 0.12]], severeStorms: ["Severe storm", [0.6, 0.95, 1]], volcanoes: ["Volcano", [1, 0.2, 0.2]], seaLakeIce: ["Iceberg / sea ice", [0.8, 0.9, 1]] };
       dropPicks("eonet");
       for (const e of j.events || []) {
@@ -651,9 +707,10 @@
         a.push(p[0], p[1], p[2], k[1][0], k[1][1], k[1][2], 1, storm ? 2.6 : 1.7, rnd());
         if (storm) { ring(a, lon, lat, 1.2, 30, k[1], 0.8, 1.1); ring(a, lon, lat, 2.4, 44, k[1], 0.5, 1.0); ring(a, lon, lat, 3.8, 60, k[1], 0.3, 0.95); } else ring(a, lon, lat, 0.3, 7, k[1], 0.6, 0.95);
         n[k[0]] = (n[k[0]] || 0) + 1;
+        { const rank = storm ? 3 : k[0] === "Volcano" ? 2 : k[0] === "Wildfire" ? 1 : 0; if (rank && (!top || rank > top.rank)) top = { rank, kind: k[0], lon, lat, title: e.title }; }
         picks.push({ p, layer: "events", live: "eonet", kind: k[0] + " · active", title: e.title, sub: (g.date || "").slice(0, 10) + " · NASA EONET" });
       }
-      dyn("eonet").set(a); L.events.count(Object.values(n).reduce((x, y) => x + y, 0));
+      S.event = top; dyn("eonet").set(a); L.events.count(Object.values(n).reduce((x, y) => x + y, 0));
       L.events.status("live", Object.entries(n).map(([k, v]) => `${v} ${k.toLowerCase()}${v > 1 ? "s" : ""}`).join(" · ") + " · NASA EONET");
     } catch (e) { if (!M.eonet) L.events.status("off", "live feed not reachable right now"); }
     setTimeout(pollEvents, 30 * 60000);
@@ -661,14 +718,15 @@
 
   // Aurora: NOAA's 30-minute forecast grid; each cell's chance becomes a curtain of fine particles, green low and violet high.
   async function pollAurora() {
-    if (!document.hidden) try {
-      const j = await (await fetch("https://services.swpc.noaa.gov/json/ovation_aurora_latest.json", { signal: AbortSignal.timeout(40000) })).json(), a = []; let peak = 0;
+    if (!L.aurora.on || document.hidden) return setTimeout(pollAurora, 3000);
+    try {
+      const j = await (await fetch("https://services.swpc.noaa.gov/json/ovation_aurora_latest.json", { signal: AbortSignal.timeout(40000) })).json(), a = []; let peak = 0, top = null;
       for (const [lon, lat, v] of j.coordinates || []) {
-        if (v < 6) continue; peak = Math.max(peak, v);
+        if (v < 6) continue; peak = Math.max(peak, v); if (!top || v > top.v) top = { v, lon: lon > 180 ? lon - 360 : lon, lat };
         for (let k = Math.min(9, Math.ceil(v / 9)); k > 0; k--) { const hgt = rnd(), c = ramp([[0.25, 1, 0.5], [0.3, 1, 0.8], [0.5, 0.6, 1], [0.85, 0.35, 1]], hgt), p = ll(lon + rnd(), lat + rnd() - 0.5, 1.012 + hgt * 0.035);
           a.push(p[0], p[1], p[2], c[0], c[1], c[2], Math.min(0.9, 0.12 + v / 70) * (1 - hgt * 0.5), 0.95 + rnd() * 0.5, rnd()); }
       }
-      dyn("aurora").set(a); L.aurora.count(peak + "%"); L.aurora.status("live", "peak chance overhead in the next 30 min · NOAA SWPC");
+      S.aurora = top; dyn("aurora").set(a); L.aurora.count(peak + "%"); L.aurora.status("live", "peak chance overhead in the next 30 min · NOAA SWPC");
     } catch (e) { if (!M.aurora) L.aurora.status("off", "forecast not reachable right now"); }
     setTimeout(pollAurora, 10 * 60000);
   }
@@ -678,7 +736,7 @@
   const gmst = () => (((280.46061837 + 360.98564736629 * (Date.now() / 86400000 + 2440587.5 - 2451545)) % 360) * DEG);
   function loadSats() {
     getJson("../data/globe/sats.json").then((j) => {
-      const a = [], LAGS = SMALL ? [0, 5, 10] : [0, 4, 8, 12, 16]; SATS.length = 0;
+      const a = [], LAGS = LITE ? [0, 5, 10] : [0, 4, 8, 12, 16]; SATS.length = 0;
       for (const [name, rev, e, inc, raan, argp, M, epoch] of j.sats) {
         const age = T0 - epoch / 1000; if (age > 21 * 86400 || e > 0.8) continue;
         const n = rev * 2 * Math.PI / 86400, sma = Math.cbrt(398600.4418 / (n * n)) / 6371, i = inc * DEG, k = 1.5 * 1.08263e-3 / (sma * (1 - e * e)) ** 2 * n;
@@ -699,28 +757,135 @@
 
   const iss = moverSet([1, 1, 1], 60, 9, 2.8); let issPrev = null;
   async function pollIss() {
-    if (L.space.on && !document.hidden) try {
+    if (!L.space.on || document.hidden) return setTimeout(pollIss, 3000);
+    try {
       const j = await (await fetch("https://api.wheretheiss.at/v1/satellites/25544", { signal: AbortSignal.timeout(10000) })).json(), t = now(), p = ll(j.longitude, j.latitude); let v = [0, 0, 0];
       if (issPrev && t - issPrev.t < 60) { const dt = t - issPrev.t; v = [(p[0] - issPrev.p[0]) / dt, (p[1] - issPrev.p[1]) / dt, (p[2] - issPrev.p[2]) / dt]; }
       issPrev = { p, t };
       iss.map.set("iss", { p, v, t0: t, alt: j.altitude / 6371, title: "International Space Station", sub: `${Math.round(j.altitude)} km up · ${Math.round(j.velocity).toLocaleString("en-US")} km/h` }); iss.rebuild();
-      L.space.count("ISS"); L.space.status("live", `live · ${Math.round(j.altitude)} km up, ${Math.round(j.velocity).toLocaleString("en-US")} km/h`);
+      L.space.count("ISS"); L.space.status("live", `${Math.round(j.altitude)} km up, ${Math.round(j.velocity).toLocaleString("en-US")} km/h`);
     } catch (e) { if (!issPrev) L.space.status("off", "live position not reachable right now"); }
     setTimeout(pollIss, 6000);
   }
 
-  /* ---------- pointing at things ---------- */
-  const tip = $("#tip");
-  function hover(mx, my) {
-    let best = null, bd = 15 * 15; const t = now();
-    const test = (p, o) => { if (!L[o.layer].on || !facing(p)) return; const s = project(p), d = (s[0] - mx) ** 2 + (s[1] - my) ** 2; if (d < bd) { bd = d; best = o; } };
-    for (const o of picks) test(o.p, o);
-    for (const [set, layer, kind] of [[iss, "space", "Space station · live"], [planes, "planes", "Aircraft · live"], [ships, "ships", "Ship · live"], [trains, "rail", "Train · live"]]) for (const m of set.map.values()) test(moverPos(m, t), { layer, kind, title: m.title, sub: m.sub });
-    if (L.sats.on && SATS.length && !best) for (const sat of SATS) { const p = satPos(sat.el, t); if (dot(norm(p), EYE) < 1 / Math.hypot(p[0], p[1], p[2])) continue; const sc = project(p), d = (sc[0] - mx) ** 2 + (sc[1] - my) ** 2; if (d < bd) { bd = d; best = { kind: "Satellite · live orbit", title: sat.name, sub: `${Math.round((sat.el[0] - 1) * 6371).toLocaleString("en-US")} km up` }; } }
-    if (!best) { tip.style.display = "none"; return; }
-    tip.innerHTML = `<div class="k"></div><div class="t"></div><div class="s"></div>`; tip.children[0].textContent = best.kind; tip.children[1].textContent = best.title; tip.children[2].textContent = best.sub || "";
-    tip.style.display = "block"; tip.style.left = Math.min(W - 260, mx + 14) + "px"; tip.style.top = Math.max(8, my - 10) + "px";
+  /* ---------- pointing at things: hover with a mouse, tap or click to select ---------- */
+  const tip = $("#tip"), selEl = $("#sel"), narrow = () => innerWidth <= 760;   // narrow: the Layers panel sits along the bottom
+  $("#panel").addEventListener("toggle", () => { if ($("#panel").open && narrow()) { select(null); stopTour(); } });
+  let sel = null;         // the selected thing: { kind, title, sub, layer, p | pos(t) }
+  function pickAt(mx, my, rad) {
+    let best = null, bd = rad * rad; const t = now();
+    const near = (p, layer) => { if (!L[layer].on || !facing(p)) return false; const s = project(p), d = (s[0] - mx) ** 2 + (s[1] - my) ** 2; if (d < bd) { bd = d; return true; } return false; };
+    for (const o of picks) if (near(o.p, o.layer)) best = o;
+    for (const [set, layer, kind] of [[iss, "space", "Space station · live"], [planes, "planes", "Aircraft · live"], [ships, "ships", "Ship · live"], [trains, "rail", "Train · live"]])
+      for (const [key, m] of set.map) if (near(moverPos(m, t), layer)) best = { layer, kind, title: m.title, sub: m.sub, pos: (t2) => { const x = set.map.get(key); return x ? moverPos(x, t2) : null; } };
+    if (L.sats.on && SATS.length && !best) for (const sat of SATS) { const p = satPos(sat.el, t); if (dot(norm(p), EYE) < 1 / Math.hypot(p[0], p[1], p[2])) continue; const sc = project(p), d = (sc[0] - mx) ** 2 + (sc[1] - my) ** 2;
+      if (d < bd) { bd = d; best = { layer: "sats", sat: true, kind: "Satellite · live orbit", title: sat.name, sub: `${Math.round((sat.el[0] - 1) * 6371).toLocaleString("en-US")} km up`, pos: (t2) => satPos(sat.el, t2) }; } }
+    return best;
   }
+  // card: a sheet along the bottom with a close button (touch and small screens); otherwise a tooltip beside the point.
+  function showTip(o, mx, my, card) {
+    tip.innerHTML = `<button class="x" type="button" aria-label="Close">&times;</button><div class="k"></div><div class="t"></div><div class="s"></div>`;
+    tip.children[1].textContent = o.kind; tip.children[2].textContent = o.title; tip.children[3].textContent = o.sub || "";
+    tip.children[0].onclick = () => select(null);
+    tip.classList.toggle("card", !!card); tip.style.display = "block";
+    if (card) { tip.style.left = tip.style.top = ""; } else placeTip(mx, my);
+  }
+  const placeTip = (x, y) => { tip.style.left = Math.max(8, Math.min(W - 260, x + 14)) + "px"; tip.style.top = Math.max(8, y - 10) + "px"; };
+  function hover(mx, my) {
+    if (sel) return;
+    const o = pickAt(mx, my, 15);
+    if (o) showTip(o, mx, my, false); else tip.style.display = "none";
+  }
+  function select(o, mx, my, card) {
+    sel = o || null;
+    if (!sel) { tip.style.display = "none"; tip.classList.remove("card"); selEl.style.display = "none"; return; }
+    if (card && narrow()) { $("#panel").open = false; $("#board").hidden = true; }
+    showTip(sel, mx, my, card);
+  }
+  function tap(mx, my, type) { const touch = type !== "mouse"; select(pickAt(mx, my, touch ? 30 : 16), mx, my, touch || SMALL); }
+  // The ring that marks the selection follows it as the globe turns and as aircraft, ships and satellites move.
+  function trackSel(t) {
+    if (!sel) return;
+    const p = sel.pos ? sel.pos(t) : sel.p;
+    if (!p || (sel.layer && !L[sel.layer].on)) return select(null);
+    const seen = sel.sat ? dot(norm(p), EYE) >= 1 / Math.hypot(p[0], p[1], p[2]) : facing(p);
+    if (!seen) { selEl.style.display = "none"; return; }
+    const s = project(p); selEl.style.display = "block"; selEl.style.transform = `translate(${s[0].toFixed(1)}px,${s[1].toFixed(1)}px)`;
+    if (!tip.classList.contains("card")) placeTip(s[0], s[1]);
+  }
+
+  /* ---------- the headline number: one live figure at a time, under the clock ---------- */
+  const num = (n) => Math.round(n).toLocaleString("en-US");
+  const HEAD = [
+    () => L.planes.on && planes.map.size > 20 ? [num(planes.map.size), "aircraft tracked live right now"] : null,
+    () => L.vital.on && vital ? [num(vital.b.total * ((Date.now() % 86400000) / 86400000)), "babies born so far today (modelled)"] : null,
+    () => L.sats.on && SATS.length ? [num(SATS.length), "satellites circling overhead"] : null,
+    () => L.quakes.on && S.quakes != null ? [num(S.quakes), "earthquakes in the last 24 hours"] : null,
+    () => L.rain.on && S.rain != null ? [S.rain + "%", "of the globe under rain or snow"] : null,
+    () => L.ships.on && ships.map.size ? [num(ships.map.size), "ships under way in the Baltic, live"] : null,
+    () => { if (!L.markets.on || !MK) return null; const q = MK.quotes.filter((x) => PIN[x.sym] && x.pct != null); return q.length ? [`${q.filter((x) => x.pct >= 0).length} of ${q.length}`, "indexes and commodities up (delayed)"] : null; },
+    () => L.vital.on && vital ? [num(vital.d.total * ((Date.now() % 86400000) / 86400000)), "people died so far today (modelled)"] : null,
+  ];
+  const head = { i: -1, t: 99, el: $("#stat") };
+  function paintHead() { const v = HEAD[head.i] && HEAD[head.i](); if (!v) { head.t = 99; return; } $("#statN").textContent = v[0]; $("#statL").textContent = v[1]; }
+  function updateHead(dt) {
+    if (!head.el) return;
+    head.t += dt;
+    if (head.t > 6) {                                              // move on to the next figure that has data
+      for (let k = 1; k <= HEAD.length; k++) { const i = (head.i + k + HEAD.length) % HEAD.length; if (!HEAD[i]()) continue;
+        head.t = 0; if (i === head.i) break;
+        head.i = i; head.el.classList.remove("in"); setTimeout(() => { paintHead(); head.el.classList.add("in"); }, 260); break; }
+      if (head.t > 6) head.t = 5;                                  // nothing has loaded yet: look again in a second
+      return;
+    }
+    if (head.el.classList.contains("in")) paintHead();             // keep the figure ticking while it is on show
+  }
+
+  /* ---------- the tour: the camera flies between what is happening right now, with one line about each ---------- */
+  const lonlat = (p) => { const n = norm(p); return [Math.atan2(n[0], n[2]) / DEG, Math.asin(n[1]) / DEG]; };
+  function flyTo(lon, lat, dist) { cam.tLon = cam.lon + ((((lon - cam.lon + 180) % 360) + 360) % 360 - 180); cam.tLat = lat; cam.tDist = dist; cam.vLon = cam.vLat = 0; }
+  const tour = { on: false, steps: [], i: 0, t: 0 };
+  function tourSteps() {
+    const out = [], add = (k, title, text, at, dist, dur) => out.push({ k, title, text, at, dist: dist || 2.2, dur: dur || 8 });
+    { const [sl, sd] = lonlat(SUN), H = Math.acos(Math.max(-1, Math.min(1, -Math.tan(25 * DEG) * Math.tan(sd * DEG)))) / DEG;   // where the sun is rising at 25°N
+      add("Day and night", "Dawn is breaking here", "The sun is rising along this line right now. Behind it the city lights are still on; ahead of it the day has begun.", () => [sl - H, 25], 2.7); }
+    if (L.planes.on && planes.map.size > 30) { const n = new Array(HUBS.length).fill(0), t = now();
+      for (const m of planes.map.values()) { const p = norm(moverPos(m, t)); for (let i = 0; i < HUBV.length; i++) if (dot(p, HUBV[i]) > 0.99736) n[i]++; }
+      const i = n.indexOf(Math.max(...n));
+      if (n[i] > 5) add("Air traffic · live", `Busiest sky we're tracking: ${HUBS[i][2]}`, `${num(n[i])} aircraft within 460 km of ${HUBS[i][2]} at this moment, live from adsb.lol.`, () => [HUBS[i][1], HUBS[i][0]], 1.9); }
+    if (L.markets.on && MK) { let q = null; for (const x of MK.quotes) if (PIN[x.sym] && x.pct != null && !x.stale && (!q || Math.abs(x.pct) > Math.abs(q.pct))) q = x;
+      if (q) add("Markets · delayed", `Biggest move: ${PIN[q.sym][2]}`, `${PIN[q.sym][2]} is ${q.pct >= 0 ? "up" : "down"} ${Math.abs(q.pct).toFixed(2)}% in its latest session, the largest swing on the map.`, () => [PIN[q.sym][0], PIN[q.sym][1]], 2.1); }
+    if (L.net.on && S.dc) add("Internet · static map", "Where the internet lives", `${num(S.dc.n)} data centres are mapped in this one cluster, the densest on the globe (OpenStreetMap).`, () => [S.dc.lon, S.dc.lat], 1.9);
+    if (L.pop.on && S.pop) add("Population · static map", "The most crowded point on the map", `About ${(S.pop.k / 1000).toFixed(1)} million people live in towns and cities inside this half-degree cell (GeoNames).`, () => [S.pop.lon, S.pop.lat], 2.0);
+    if (L.ships.on && ships.map.size > 10) add("Shipping · live in the Baltic", "Ships under way", `${num(ships.map.size)} ships are moving here right now (Fintraffic). Ports are mapped worldwide; live positions cover the Baltic only.`, () => [21, 59.3], 1.75);
+    if (L.quakes.on && S.quake) add("Earthquakes · live", `Strongest in 24 hours: magnitude ${S.quake.m.toFixed(1)}`, `${S.quake.place || "Location not named"} · ${new Date(S.quake.time).toISOString().slice(11, 16)} UTC (USGS).`, () => [S.quake.lon, S.quake.lat], 2.1);
+    if (L.events.on && S.event) add(`${S.event.kind} · active`, S.event.title, `One of the natural events NASA is tracking right now (EONET).`, () => [S.event.lon, S.event.lat], 2.1);
+    if (L.aurora.on && S.aurora && S.aurora.v >= 25) add("Aurora · live forecast", "Northern and southern lights", `${S.aurora.v}% chance of aurora overhead here in the next 30 minutes (NOAA).`, () => [S.aurora.lon, S.aurora.lat], 2.5);
+    if (L.space.on && iss.map.has("iss")) add("Space station · live", "The International Space Station", `${iss.map.get("iss").sub}, with a crew on board.`, () => { const m = iss.map.get("iss"); return m ? lonlat(moverPos(m, now())) : null; }, 2.6);
+    add("World Pulse", "That's the planet right now", "Drag to spin, pinch or scroll to zoom, and tap any point for details.", () => [cam.lon, 20], 3.9, 6);
+    return out;
+  }
+  function showStep() {
+    const s = tour.steps[tour.i], c = $("#cap"); tour.t = 0;
+    c.querySelector(".ck").textContent = `${s.k} · ${tour.i + 1} / ${tour.steps.length}`; c.querySelector(".ct").textContent = s.title; c.querySelector(".cs").textContent = s.text;
+    c.classList.remove("in"); requestAnimationFrame(() => requestAnimationFrame(() => c.classList.add("in")));
+    if (tour.i === tour.steps.length - 1) { const a = s.at(); s.at = () => a; }      // the last stop holds still
+  }
+  function startTour() {
+    tour.steps = tourSteps(); tour.i = 0; tour.on = true; select(null); hideHint();
+    $("#board").hidden = true; if (narrow()) $("#panel").open = false;
+    $("#cap").hidden = false; $("#tourBtn").textContent = "■ Stop the tour"; showStep();
+  }
+  function stopTour() { if (!tour.on) return; tour.on = false; $("#cap").hidden = true; $("#tourBtn").textContent = "▶ Take the tour"; cam.idle = 0; }
+  function nextStep() { if (++tour.i >= tour.steps.length) stopTour(); else showStep(); }
+  function updateTour(dt) {
+    if (!tour.on) return;
+    const s = tour.steps[tour.i]; tour.t += dt; cam.idle = -5;      // no idle drift while touring
+    const a = s.at(); if (a) flyTo(a[0], a[1] - (SMALL ? 5 : 0), s.dist);
+    $("#capBar").style.width = Math.min(100, tour.t / s.dur * 100).toFixed(1) + "%";
+    if (tour.t >= s.dur) nextStep();
+  }
+  if ($("#tourBtn")) { $("#tourBtn").onclick = () => (tour.on ? stopTour() : startTour()); $("#capNext").onclick = nextStep; $("#capStop").onclick = stopTour; }
 
   /* ---------- the sun ---------- */
   function sunDir() {
@@ -736,7 +901,7 @@
     if (u.uCam) gl.uniform3fv(u.uCam, EYE);
     if (u.uTime) gl.uniform1f(u.uTime, t);
     if (u.uNow) gl.uniform1f(u.uNow, t);
-    if (u.uPx) gl.uniform1f(u.uPx, DPR * Math.max(0.85, Math.min(2.4, 3.2 / viewD)) * (H < 420 ? 0.8 : 1));
+    if (u.uPx) gl.uniform1f(u.uPx, RS * Math.max(0.85, Math.min(2.4, 3.2 / viewD)) * (H < 420 ? 0.8 : 1));
     return u;
   }
   function drawPoints(m, t, o = {}) {
@@ -756,9 +921,9 @@
   function tick() {
     requestAnimationFrame(tick);
     if (document.hidden) { last = now(); return; }
-    const t = now(), dt = Math.min(0.1, t - last); last = t; frame++;
+    const t = now(), raw = t - last, dt = Math.min(0.1, raw); last = t; frame++; watchPerf(raw);
     if (canvas.clientWidth !== W || canvas.clientHeight !== H) resize();
-    updateCamera(dt);
+    updateTour(dt); updateCamera(dt);
     if (world) reveal = Math.min(1, reveal + dt / 2.4);
     if (frame % 120 === 1) { SUN = sunDir(); $("#utc").textContent = new Date().toISOString().slice(11, 19) + " UTC"; }
     else if (frame % 20 === 0) $("#utc").textContent = new Date().toISOString().slice(11, 19) + " UTC";
@@ -770,7 +935,7 @@
     gl.disable(gl.BLEND);
     pass(P_BG, { fbo: RT.ms, w: RT.w, h: RT.h }, (u) => { gl.uniform2f(u.uOff, cam.lon / 50, -cam.lat / 50); gl.uniform1f(u.uAsp, W / H); });
     gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
-    { const u = use(P_POINT, t); gl.uniform3fv(u.uCam, [0, 0, 0]); gl.uniform1f(u.uLift, 0); gl.uniform1f(u.uReveal, 1); gl.uniform1f(u.uSunMix, 0); gl.uniform1f(u.uWave, 0); gl.uniform1f(u.uTwinkle, 0.55); gl.uniform1f(u.uPx, DPR); gl.bindVertexArray(M.stars.vao); gl.drawArrays(gl.POINTS, 0, M.stars.count); }
+    { const u = use(P_POINT, t); gl.uniform3fv(u.uCam, [0, 0, 0]); gl.uniform1f(u.uLift, 0); gl.uniform1f(u.uReveal, 1); gl.uniform1f(u.uSunMix, 0); gl.uniform1f(u.uWave, 0); gl.uniform1f(u.uTwinkle, 0.55); gl.uniform1f(u.uPx, RS); gl.bindVertexArray(M.stars.vao); gl.drawArrays(gl.POINTS, 0, M.stars.count); }
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     { const u = P_ATMO.u; gl.useProgram(P_ATMO.p); gl.uniformMatrix4fv(u.uProj, false, PROJ); gl.uniform1f(u.uD, viewD); gl.uniform1f(u.uS, viewD / Math.sqrt(viewD * viewD - 1));
       gl.uniform3f(u.uSunV, VIEW[0] * SUN[0] + VIEW[4] * SUN[1] + VIEW[8] * SUN[2], VIEW[1] * SUN[0] + VIEW[5] * SUN[1] + VIEW[9] * SUN[2], VIEW[2] * SUN[0] + VIEW[6] * SUN[1] + VIEW[10] * SUN[2]);
@@ -809,6 +974,7 @@
     gl.enable(gl.BLEND);
     gl.bindVertexArray(null);
     if (frame % 2 === 0) layoutLabels();
+    trackSel(t); if (frame % 15 === 0) updateHead(dt * 15);
   }
 
   /* ---------- data ---------- */
@@ -816,6 +982,7 @@
   getJson("../data/globe/world.json").then(buildWorld).catch(() => { reveal = 1; for (const id of ["routes", "ships", "rail", "roads", "net", "pop", "vital", "power"]) L[id].status("off", "first data sync in progress, check back in a few minutes"); });
   const loadMarkets = () => getJson("../data/globe/markets.json").then(buildMarkets).catch(() => { if (!MK) L.markets.status("off", "first data sync in progress"); });
   loadMarkets(); setInterval(loadMarkets, 5 * 60000); loadStocks(); setInterval(loadStocks, 5 * 60000);
+  if (/[?&]tour/.test(location.search) && !EMBED) setTimeout(startTour, 7000);     // world-pulse.html?tour starts the tour by itself
   if (/[?&]board/.test(location.search)) { $("#board").hidden = false; $("#panel").open = false; }
   L.planes.status("off", "connecting to live feed"); L.rain.status("off", "loading the latest satellite image");
   setTimeout(pollPlanes, 1200); setTimeout(pollShips, 2500); setTimeout(pollTrains, 3500); setTimeout(pollRoads, 4500); setTimeout(pollRain, 800); setTimeout(pollQuakes, 1500); setTimeout(pollEvents, 2000); setTimeout(pollAurora, 3000); setTimeout(pollIss, 1000); loadSats();
