@@ -211,6 +211,8 @@ Server facts: Hostinger KVM 2 VPS, Ubuntu 24.04, Caddy (HTML sent with `Cache-Co
   default), **wind & jet stream** and **temperature** (`buildWeather` from `data/globe/weather.json`, written by
   `tools/globe-weather.mjs` from NOAA GFS 1° GRIB2 files read with ecCodes `grib_get_data` on the Action runner;
   temperature starts off). A layer with `off: true` in `LAYERS` starts switched off.
+- **Military bases** layer (`mil`): `bases` in world.json, from OpenStreetMap `military=base|airfield|naval_base|barracks|
+  range|training_area` (tools/globe-data.mjs, one entry per 0.05° cell); labelled as mapped sites, not a complete list.
 - Owner's rules for it: commercial-safe data only (no OpenSky, no TeleGeography), no server relay, real data with
   honest labels (live / delayed / static / modelled), fine particles, never blobby.
 

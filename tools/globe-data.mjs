@@ -8,7 +8,8 @@
 //   World Bank Open Data (CC BY 4.0): population, birth rate and death rate per country (births and deaths layer)
 //   WRI Global Power Plant Database (CC BY 4.0): power stations by fuel (energy layer)
 //   GeoNames (CC BY 4.0): every town and city of 15,000 people or more (population layer)
-//   OpenStreetMap contributors (ODbL), through the Overpass API: data centres, submarine and long-haul telecom cables
+//   OpenStreetMap contributors (ODbL), through the Overpass API: data centres, submarine and long-haul telecom cables,
+//     military sites (bases, airfields, naval bases, barracks, ranges and training areas, as far as volunteers have mapped them)
 // A source that fails keeps what the last run saved, so one bad download never empties a layer.
 import { writeFileSync, mkdirSync, existsSync, readFileSync } from "node:fs";
 import { execSync } from "node:child_process";
@@ -58,7 +59,7 @@ async function step(key, fn) {
     out.status[key] = old.status?.[key] ? { ...old.status[key], stale: true } : { ok: false };
   }
 }
-const KEYS = { land: ["land"], coast: ["coast"], ports: ["ports"], rails: ["rails"], roads: ["roads"], air: ["airports", "routes"], dcs: ["dcs"], cables: ["cables"], vital: ["vital"], pop: ["pop"], power: ["power"] };
+const KEYS = { land: ["land"], coast: ["coast"], ports: ["ports"], rails: ["rails"], roads: ["roads"], air: ["airports", "routes"], dcs: ["dcs"], bases: ["bases"], cables: ["cables"], vital: ["vital"], pop: ["pop"], power: ["power"] };
 
 // Land as a 1440 x 720 bitmap (a quarter of a degree per cell); the page scatters fine particles over it.
 await step("land", async () => {
@@ -163,6 +164,24 @@ await step("dcs", async () => {
   }).filter(Boolean);
   if (dcs.length < 200) throw new Error("data centre list looks too short");
   return { dcs };
+});
+
+// Military sites as OpenStreetMap has them: [lon*100, lat*100, kind, name]; kind 0 base, 1 airfield, 2 naval base,
+// 3 barracks, 4 range or training area. One site is often mapped as several nested pieces, so only one entry is kept
+// per 0.05-degree cell (about 5 km), the most important kind first. It is what volunteers have mapped, not a full list.
+await step("bases", async () => {
+  const KIND = { base: 0, airfield: 1, naval_base: 2, barracks: 3, range: 4, training_area: 4 }, RANK = [0, 0, 0, 1, 2];
+  const els = await overpass('[out:json][timeout:280];nwr["military"~"^(base|airfield|naval_base|barracks|range|training_area)$"];out center tags;');
+  const cells = new Map();
+  for (const e of els) {
+    const lat = e.lat ?? e.center?.lat, lon = e.lon ?? e.center?.lon, kind = KIND[e.tags?.military]; if (lat == null || kind == null) continue;
+    const name = String(e.tags["name:en"] || e.tags.name || "").slice(0, 44), key = Math.round(lon * 20) + "," + Math.round(lat * 20), had = cells.get(key);
+    if (!had || RANK[kind] < RANK[had[2]] || (RANK[kind] === RANK[had[2]] && name && !had[3])) cells.set(key, [Math.round(lon * 100), Math.round(lat * 100), kind, name]);
+  }
+  const bases = [...cells.values()];
+  if (bases.length < 2000) throw new Error("military site list looks too short");
+  console.log(`bases: ${bases.length} sites from ${els.length} mapped pieces`);
+  return { bases };
 });
 
 await step("cables", async () => {

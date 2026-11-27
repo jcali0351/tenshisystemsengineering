@@ -267,6 +267,7 @@
     { id: "roads", name: "Road traffic", color: C.road, unit: "roads" },
     { id: "net", name: "Internet: cables & data centres", color: C.cable, unit: "data centres" },
     { id: "power", name: "Energy: power stations", color: [1, 0.85, 0.3], unit: "" },
+    { id: "mil", name: "Military bases", color: [0.82, 0.92, 0.42], unit: "" },
     { id: "quakes", name: "Earthquakes (24 h)", color: [1, 0.35, 0.3], unit: "" },
     { id: "events", name: "Wildfires, storms & volcanoes", color: [1, 0.55, 0.15], unit: "" },
     { id: "aurora", name: "Aurora", color: [0.4, 1, 0.6], unit: "" },
@@ -282,6 +283,7 @@
   // How fresh each layer is, in a word next to its dot. "part": a worldwide static map with live data for one region.
   const WORD = { live: "Live", part: "Part live", delay: "Delayed", static: "Static", model: "Modelled", off: "" };
   const TRAMP = [[-40, [0.7, 0.3, 1]], [-20, [0.3, 0.4, 1]], [-5, [0.2, 0.8, 1]], [5, [0.3, 1, 0.7]], [15, [0.9, 1, 0.3]], [25, [1, 0.65, 0.15]], [35, [1, 0.25, 0.2]], [45, [1, 0.4, 0.8]]];   // temperature colours, °C
+  const MIL = [["Military base", [0.85, 0.95, 0.4]], ["Military airfield", [0.6, 0.88, 1]], ["Naval base", [0.35, 0.6, 1]], ["Barracks", [0.75, 0.8, 0.5]], ["Range or training area", [1, 0.62, 0.35]]];
   const FUEL = [["Solar", [1, 0.85, 0.25]], ["Wind", [0.6, 1, 0.95]], ["Hydro", [0.25, 0.55, 1]], ["Nuclear", [0.6, 1, 0.4]], ["Gas", [1, 0.55, 0.2]], ["Coal", [0.95, 0.3, 0.3]], ["Oil", [0.8, 0.45, 0.25]], ["Biomass", [0.55, 0.85, 0.35]], ["Geothermal", [1, 0.4, 0.7]], ["Other", [0.7, 0.6, 1]]];
   const L = {}, QON = new Set((QS.get("on") || "").split(",")), QOFF = new Set((QS.get("off") || "").split(","));   // ?on=a,b&off=c from a shared link
   for (const l of LAYERS) {
@@ -304,6 +306,7 @@
       roads: `${sw(C.road)} lines: major highways · bright points: live traffic counters in Finland, brighter and larger with more vehicles.`,
       net: `${sw(C.cable)} lines: communication cables · ${sw(C.dc)} points: data centres.`,
       power: FUEL.map((f) => `${sw(f[1])} ${f[0]}`).join(" · ") + `. Larger points are bigger stations.`,
+      mil: MIL.map((k) => `${sw(k[1])} ${k[0].toLowerCase()}`).join(" · ") + `. Only the sites volunteers have mapped in OpenStreetMap, so it is not a complete list.`,
       quakes: `${sw([1, 0.85, 0.4])} small → ${sw([1, 0.5, 0.2])} → ${sw([1, 0.2, 0.25])} → ${sw([1, 0.3, 0.8])} strong. Rings mark magnitude 2.5 and up.`,
       events: `${sw([1, 0.5, 0.12])} wildfire · ${sw([0.6, 0.95, 1])} severe storm (rings) · ${sw([1, 0.2, 0.2])} volcano · ${sw([0.8, 0.9, 1])} iceberg or sea ice.`,
       aurora: `${sw([0.25, 1, 0.5])} to ${sw([0.85, 0.35, 1])} curtains: the denser, the higher the chance of aurora overhead.`,
@@ -437,6 +440,13 @@
       M.power = mesh(P_POINT, POINT, a, gl.POINTS); L.power.count(w.power.length);
       L.power.status("static", `${Math.round(gw).toLocaleString("en-US")} GW mapped, coloured by fuel · WRI database`);
     }
+    if (w.bases) { const a = [], n = [0, 0, 0, 0, 0];
+      for (const [x, y, k, name] of w.bases) { const p = ll(x / 100, y / 100), c = MIL[k][1], big = k < 3; n[k]++;
+        a.push(p[0], p[1], p[2], c[0], c[1], c[2], big ? 0.9 : 0.6, big ? 1.5 + rnd() * 0.5 : 1.1 + rnd() * 0.3, rnd());
+        picks.push({ p, layer: "mil", kind: MIL[k][0], title: name || "Name not mapped", sub: "OpenStreetMap" }); }
+      M.mil = mesh(P_POINT, POINT, a, gl.POINTS); L.mil.count(w.bases.length);
+      L.mil.status("static", `${num(n[0])} bases, ${num(n[1])} airfields, ${num(n[2])} naval bases, ${num(n[3])} barracks, ${num(n[4])} ranges · as mapped in OpenStreetMap, weekly · not a complete list`);
+    } else L.mil.status("off", "first data sync in progress, check back in a few minutes");
     if (w.vital) setupVital(w.vital);
     if (MK) buildMarkets(MK);
     buildTemp();
@@ -1215,6 +1225,7 @@
     if (L.clouds.on && live) drawPoints(M.clouds, t, { sun: 1, twinkle: 0.35 });
     if (L.rain.on && live) drawOther(M.rain, P_RAIN, t);
     if (L.power.on) drawPoints(M.power, t, { lift: 0.002, twinkle: 0.45 });
+    if (L.mil.on) drawPoints(M.mil, t, { lift: 0.0024, twinkle: 0.4 });
     if (L.quakes.on) drawPoints(M.quakes, t, { lift: 0.003, twinkle: 0.95 });
     if (L.events.on) drawPoints(M.eonet, t, { lift: 0.004, twinkle: 0.8 });
     if (L.aurora.on && live) drawPoints(M.aurora, t, { twinkle: 0.95 });
@@ -1238,7 +1249,7 @@
 
   /* ---------- data ---------- */
   const getJson = async (url) => { const r = await fetch(url, { cache: "no-cache" }); if (!r.ok) throw new Error(r.status); return r.json(); };
-  getJson("../data/globe/world.json").then(buildWorld).catch(() => { reveal = 1; for (const id of ["routes", "ships", "rail", "roads", "net", "pop", "vital", "power"]) L[id].status("off", "first data sync in progress, check back in a few minutes"); });
+  getJson("../data/globe/world.json").then(buildWorld).catch(() => { reveal = 1; for (const id of ["routes", "ships", "rail", "roads", "net", "pop", "vital", "power", "mil"]) L[id].status("off", "first data sync in progress, check back in a few minutes"); });
   const loadMarkets = () => getJson("../data/globe/markets.json").then(buildMarkets).catch(() => { if (!MK) L.markets.status("off", "first data sync in progress"); });
   loadMarkets(); setInterval(loadMarkets, 5 * 60000); loadStocks(); setInterval(loadStocks, 5 * 60000); loadWeather(); setInterval(loadWeather, 30 * 60000);
   if (EMBED) setTimeout(startTour, 9000);                           // the embedded preview tours by itself, on a loop
