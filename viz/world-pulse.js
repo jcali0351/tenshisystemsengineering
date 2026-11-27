@@ -1,12 +1,13 @@
 /* World Pulse: a live 3D globe of the world's networks, drawn in fine particles (plain WebGL2, no libraries).
    Around the globe: a layer list with a freshness word per layer and a colour key, tap or click to select a point
-   (a ring follows it), one rotating headline figure, a guided tour, and a render scale that drops if frames do.
+   (a ring follows it), one rotating headline figure, a guided tour, "above me" (what is over the visitor's own spot),
+   a replay of the last 24 hours, share links that reopen a view, and a render scale that drops if frames do.
    Static layers come from data/globe/world.json (tools/globe-data.mjs), markets from data/globe/markets.json
    (tools/globe-markets.mjs); aircraft, ships, trains and road counts are fetched live in the visitor's browser. */
 (() => {
   "use strict";
   const $ = (s) => document.querySelector(s);
-  const EMBED = /[?&]embed/.test(location.search);
+  const EMBED = /[?&]embed/.test(location.search), QS = new URLSearchParams(location.search);
   if (EMBED) { document.body.classList.add("embed"); $("#panel").open = false; }
   const SMALL = Math.min(innerWidth, innerHeight) < 620;
   if (SMALL) $("#panel").open = false;
@@ -199,6 +200,8 @@
 
   /* ---------- camera ---------- */
   const cam = { lon: -95, lat: 34, dist: 8.5, tLon: -30, tLat: 22, tDist: 3.9, vLon: 0, vLat: 0, idle: 0, intro: 0 };
+  { const a = (QS.get("at") || "").split(",").map(Number);          // a shared view: ?at=longitude,latitude,distance
+    if (a.length === 3 && a.every(Number.isFinite)) { cam.lon = cam.tLon = a[0]; cam.lat = cam.tLat = Math.max(-78, Math.min(78, a[1])); cam.dist = cam.tDist = Math.max(1.22, Math.min(6, a[2])); cam.intro = 1; cam.idle = -45; } }
   let MVP = null, PROJ = null, VIEW = null, EYE = [0, 0, 1], W = 1, H = 1, DPR = 1, viewD = 3.9, Q = 1, RS = 1;   // Q: render scale, lowered by watchPerf(); RS = DPR * Q
   function resize() {
     DPR = Math.min(devicePixelRatio || 1, 2); RS = DPR * Q; W = canvas.clientWidth; H = canvas.clientHeight;
@@ -270,19 +273,24 @@
     { id: "sats", name: "Satellites in orbit", color: [0.6, 0.95, 1], unit: "" },
     { id: "space", name: "Space station", color: [1, 1, 1], unit: "" },
     { id: "rain", name: "Weather: precipitation", color: [0.45, 0.75, 1], unit: "" },
+    { id: "clouds", name: "Weather: clouds", color: [0.85, 0.92, 1], unit: "", off: true },          // off: starts switched off
+    { id: "wind", name: "Wind & jet stream", color: [0.5, 0.92, 1], unit: "" },
+    { id: "temp", name: "Temperature", color: [1, 0.62, 0.25], unit: "", off: true },
     { id: "pop", name: "Population", color: [1, 0.45, 0.75], unit: "people" },
     { id: "vital", name: "Births & deaths", color: [1, 0.85, 0.5], unit: "today" },
   ];
   // How fresh each layer is, in a word next to its dot. "part": a worldwide static map with live data for one region.
   const WORD = { live: "Live", part: "Part live", delay: "Delayed", static: "Static", model: "Modelled", off: "" };
+  const TRAMP = [[-40, [0.7, 0.3, 1]], [-20, [0.3, 0.4, 1]], [-5, [0.2, 0.8, 1]], [5, [0.3, 1, 0.7]], [15, [0.9, 1, 0.3]], [25, [1, 0.65, 0.15]], [35, [1, 0.25, 0.2]], [45, [1, 0.4, 0.8]]];   // temperature colours, °C
   const FUEL = [["Solar", [1, 0.85, 0.25]], ["Wind", [0.6, 1, 0.95]], ["Hydro", [0.25, 0.55, 1]], ["Nuclear", [0.6, 1, 0.4]], ["Gas", [1, 0.55, 0.2]], ["Coal", [0.95, 0.3, 0.3]], ["Oil", [0.8, 0.45, 0.25]], ["Biomass", [0.55, 0.85, 0.35]], ["Geothermal", [1, 0.4, 0.7]], ["Other", [0.7, 0.6, 1]]];
-  const L = {};
+  const L = {}, QON = new Set((QS.get("on") || "").split(",")), QOFF = new Set((QS.get("off") || "").split(","));   // ?on=a,b&off=c from a shared link
   for (const l of LAYERS) {
-    const b = document.createElement("button"); b.className = "layer"; b.type = "button"; b.style.color = css(l.color); b.setAttribute("aria-pressed", "true");
+    const start = QON.has(l.id) ? true : QOFF.has(l.id) ? false : !l.off;
+    const b = document.createElement("button"); b.className = "layer"; b.type = "button"; b.style.color = css(l.color); b.setAttribute("aria-pressed", start);
     b.innerHTML = `<span class="sw"></span><span class="nm">${l.name}</span><span class="ct mono">&ndash;</span><span class="st"><span class="dot off"></span><b class="bd"></b><span class="tx">waiting for data</span></span>`;
     b.onclick = () => { l.on = !l.on; b.setAttribute("aria-pressed", l.on); };
     $("#layers").appendChild(b);
-    L[l.id] = Object.assign(l, { on: true, el: b, count(n) { b.querySelector(".ct").textContent = typeof n === "number" ? n.toLocaleString("en-US") : n; }, status(kind, text) { l.kind = kind; b.querySelector(".dot").className = "dot " + (kind === "part" ? "live" : kind); const w = b.querySelector(".bd"); w.className = "bd " + kind; w.textContent = WORD[kind] || ""; b.querySelector(".tx").textContent = text; } });
+    L[l.id] = Object.assign(l, { on: start, el: b, count(n) { b.querySelector(".ct").textContent = typeof n === "number" ? n.toLocaleString("en-US") : n; }, status(kind, text) { l.kind = kind; b.querySelector(".dot").className = "dot " + (kind === "part" ? "live" : kind); const w = b.querySelector(".bd"); w.className = "bd " + kind; w.textContent = WORD[kind] || ""; b.querySelector(".tx").textContent = text; } });
   }
 
   // The key: what each colour and shape on the globe stands for.
@@ -302,11 +310,14 @@
       sats: `${sw([0.55, 0.95, 1])} low orbit · ${sw([0.75, 0.55, 1])} medium orbit · ${sw([1, 0.82, 0.45])} high orbit (geostationary ring).`,
       space: `${sw([1, 1, 1])} the International Space Station, with a long trail.`,
       rain: `${sw([0.45, 0.75, 1])} falling streaks where satellites see rain or snow; colour follows NASA's rate scale.`,
+      clouds: `${sw([0.85, 0.92, 1])} a fine white haze where yesterday's satellite pictures show bright cloud tops. Snow and ice can read as cloud.`,
+      wind: `${sw([0.3, 0.8, 1])} to ${sw([1, 0.6, 0.9])} low streaks: wind near the ground, running the way it blows, pinker when stronger · ${sw([1, 0.85, 0.4])} to ${sw([1, 0.3, 0.6])} high streaks: the jet stream, about 10 km up, where it tops 108 km/h.`,
+      temp: TRAMP.map((s) => `${sw(s[1])} ${s[0]}°`).join(" · ") + ` C, air temperature 2 m above the ground. While this layer is on, the land and sea dots take these colours.`,
       pop: `${sw([0.75, 0.25, 1])} to ${sw([1, 1, 1])} filaments: taller and whiter means more people · ${sw([1, 0.75, 0.45])} warm points on the night side: city lights.`,
       vital: `${sw([1, 0.9, 0.5])} rising sparks: births · ${sw([0.6, 0.45, 0.9])} sinking sparks: deaths. Modelled from country rates, not records of people.`,
     };
     const box = $("#keyBody");
-    if (box) box.innerHTML = `<p class="kd"><span><span class="dot live"></span>Live: updates as it happens</span><span><span class="dot delay"></span>Delayed: minutes to hours behind</span><span><span class="dot static"></span>Static: a mapped snapshot</span><span><span class="dot model"></span>Modelled: worked out from real rates</span></p>` + LAYERS.map((l) => `<p><b style="color:${css(l.color)}">${l.name}</b><br>${KEY[l.id] || ""}</p>`).join(""); }
+    if (box) box.innerHTML = `<p class="kd"><span><span class="dot live"></span>Live: updates as it happens</span><span><span class="dot delay"></span>Delayed: minutes to hours behind</span><span><span class="dot static"></span>Static: a mapped snapshot</span><span><span class="dot model"></span>Modelled: calculated from real measurements</span></p>` + LAYERS.map((l) => `<p><b style="color:${css(l.color)}">${l.name}</b><br>${KEY[l.id] || ""}</p>`).join(""); }
 
   const S = {};           // figures the feeds leave behind for the headline number and the tour
   const M = {};           // meshes
@@ -428,6 +439,7 @@
     }
     if (w.vital) setupVital(w.vital);
     if (MK) buildMarkets(MK);
+    buildTemp();
   }
 
   /* ---------- births and deaths (modelled from real country rates) ---------- */
@@ -480,32 +492,59 @@
     });
     marketLabels.sort((x, y) => y.w - x.w);
     M.spikes = mesh(P_LINE, LINE, lines, gl.LINES); M.heads = mesh(P_POINT, POINT, heads, gl.POINTS);
-    const age = Math.round((Date.now() - Date.parse(mk.updatedAt)) / 60000);
-    L.markets.count(mk.quotes.length); L.markets.status("delay", `updated ${age < 90 ? age + " min" : Math.round(age / 60) + " h"} ago · Yahoo Finance`);
+    L.markets.count(mk.quotes.length); marketStatus();
     const tape = mk.quotes.map((q) => `<span><i>${(PIN[q.sym] || [])[2] || NAMES[q.sym] || q.sym}</i>${fmt(q.price)} <b class="${(q.pct ?? 0) >= 0 ? "up" : "down"}">${pct(q.pct)}</b></span>`).join("");
     $("#tape").innerHTML = tape + tape;
   }
   /* ---------- Markets today: the day's winners and losers on every major exchange ---------- */
   const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
   let STOCKS = null, boardOpen = null;
+  // Regular trading hours in each exchange's own time (minutes after midnight), Monday to Friday. Public holidays and
+  // half-days are not in here, so the labels say "regular hours".
+  const HOURS = { nyse: ["America/New_York", [570, 960]], nasdaq: ["America/New_York", [570, 960]], tsx: ["America/Toronto", [570, 960]], b3: ["America/Sao_Paulo", [600, 1020]], bmv: ["America/Mexico_City", [510, 900]],
+    lse: ["Europe/London", [480, 990]], xetra: ["Europe/Berlin", [540, 1050]], paris: ["Europe/Paris", [540, 1050]], six: ["Europe/Zurich", [540, 1050]], ams: ["Europe/Amsterdam", [540, 1050]],
+    tse: ["Asia/Tokyo", [540, 690], [750, 930]], hkex: ["Asia/Hong_Kong", [570, 720], [780, 960]], sse: ["Asia/Shanghai", [570, 690], [780, 900]], szse: ["Asia/Shanghai", [570, 690], [780, 900]], nse: ["Asia/Kolkata", [555, 930]],
+    krx: ["Asia/Seoul", [540, 930]], twse: ["Asia/Taipei", [540, 810]], sgx: ["Asia/Singapore", [540, 720], [780, 1020]], asx: ["Australia/Sydney", [600, 960]], jse: ["Africa/Johannesburg", [540, 1020]] };
+  const zoneFmt = {};
+  function isOpen(id, ms = Date.now()) {
+    const h = HOURS[id]; if (!h) return false;
+    try {
+      const f = zoneFmt[h[0]] || (zoneFmt[h[0]] = new Intl.DateTimeFormat("en-US", { timeZone: h[0], weekday: "short", hour: "2-digit", minute: "2-digit", hourCycle: "h23" })), o = {};
+      for (const p of f.formatToParts(new Date(ms))) o[p.type] = p.value;
+      if (o.weekday === "Sat" || o.weekday === "Sun") return false;
+      const m = +o.hour * 60 + +o.minute; return h.slice(1).some(([a, b]) => m >= a && m < b);
+    } catch (e) { return false; }
+  }
+  function marketStatus() {
+    if (!MK) return;
+    const age = Math.round((Date.now() - Date.parse(MK.updatedAt)) / 60000);
+    L.markets.status("delay", `${STOCKS ? `${S.open} of ${STOCKS.exchanges.length} exchanges open now (regular hours, holidays not counted) · ` : ""}prices updated ${age < 90 ? age + " min" : Math.round(age / 60) + " h"} ago · Yahoo Finance`);
+  }
   function buildStocks(j) {
-    STOCKS = j; const ln = [], hd = [];
+    STOCKS = j;
+    for (const x of j.exchanges) { x.stocks.sort((a, b) => b[3] - a[3]); x.up = x.stocks.filter((q) => q[3] > 0).length; x.down = x.stocks.filter((q) => q[3] < 0).length; x.avg = x.stocks.reduce((n, q) => n + q[3], 0) / x.stocks.length; }
+    drawStocks(); $("#boardBtn").hidden = false; renderBoard();
+  }
+  // An exchange that is trading now gets a bright ring and full-strength bars; a closed one is dimmed.
+  function drawStocks() {
+    const ln = [], hd = [], rg = [];
     for (let i = picks.length - 1; i >= 0; i--) if (picks[i].live === "stock") picks.splice(i, 1);
-    for (const x of j.exchanges) {
-      x.stocks.sort((a, b) => b[3] - a[3]); x.up = x.stocks.filter((q) => q[3] > 0).length; x.down = x.stocks.filter((q) => q[3] < 0).length;
-      x.avg = x.stocks.reduce((n, q) => n + q[3], 0) / x.stocks.length;
+    for (const x of STOCKS.exchanges) {
+      x.open = isOpen(x.id); const dim = x.open ? 1 : 0.32;
+      if (x.open) { ring(rg, x.lon, x.lat, 2.95, 110, [0.45, 1, 0.75], 0.9, 1.15); ring(rg, x.lon, x.lat, 3.3, 80, [0.45, 1, 0.75], 0.4, 0.95); }
       // a spiral skyline around the exchange: one hair-thin bar per company, best performers in the middle
       x.stocks.forEach((q, i) => {
         const r = 0.3 + 2.3 * Math.sqrt((i + 0.5) / x.stocks.length), th = i * 2.39996, lat = x.lat + Math.sin(th) * r, lon = x.lon + Math.cos(th) * r / Math.max(0.2, Math.cos(x.lat * DEG));
         const m = Math.min(1, Math.abs(q[3]) / 6), h = 0.006 + m * 0.1, up = q[3] >= 0, c = up ? ramp([[0.1, 0.75, 0.55], [0.3, 1, 0.5], [0.85, 1, 0.6]], m) : ramp([[0.8, 0.25, 0.5], [1, 0.3, 0.4], [1, 0.6, 0.35]], m), a = ll(lon, lat), b = ll(lon, lat, 1 + h), off = rnd();
-        ln.push(a[0], a[1], a[2], c[0], c[1], c[2], 0.3, up ? off : off + 1, b[0], b[1], b[2], c[0], c[1], c[2], 1, up ? off + 1 : off);
-        hd.push(b[0], b[1], b[2], c[0], c[1], c[2], 1, 1.5 + m, rnd());
-        picks.push({ p: b, layer: "markets", live: "stock", kind: x.name, title: q[1], sub: `${q[0]} · ${fmt(q[2])} ${q[4]} · ${pct(q[3])}` });
+        ln.push(a[0], a[1], a[2], c[0], c[1], c[2], 0.3 * dim, up ? off : off + 1, b[0], b[1], b[2], c[0], c[1], c[2], dim, up ? off + 1 : off);
+        hd.push(b[0], b[1], b[2], c[0], c[1], c[2], dim, 1.5 + m, rnd());
+        picks.push({ p: b, layer: "markets", live: "stock", kind: x.name, title: q[1], sub: `${q[0]} · ${fmt(q[2])} ${q[4]} · ${pct(q[3])} · market ${x.open ? "open now" : "closed"}` });
       });
     }
-    M.stockLines = mesh(P_LINE, LINE, ln, gl.LINES); M.stockHeads = mesh(P_POINT, POINT, hd, gl.POINTS);
-    $("#boardBtn").hidden = false; renderBoard();
+    M.stockLines = mesh(P_LINE, LINE, ln, gl.LINES); M.stockHeads = mesh(P_POINT, POINT, hd, gl.POINTS); M.xRings = mesh(P_POINT, POINT, rg, gl.POINTS);
+    S.open = STOCKS.exchanges.filter((x) => x.open).length; marketStatus();
   }
+  setInterval(() => { if (STOCKS && STOCKS.exchanges.some((x) => x.open !== isOpen(x.id))) { drawStocks(); renderBoard(); } else marketStatus(); }, 30000);
   function renderBoard() {
     const box = $("#board"); if (!STOCKS || box.hidden) return; box.textContent = "";
     const head = el("div", "bh"); const back = el("button", "bx", boardOpen ? "← All exchanges" : "Markets today"); back.type = "button"; back.disabled = !boardOpen; back.onclick = () => { boardOpen = null; renderBoard(); };
@@ -515,11 +554,11 @@
     const split = (up, down, flat) => { const w = el("div", "split"), a = el("i", "u"), b = el("i", "d"), t = up + down + flat || 1; w.append(a, b); requestAnimationFrame(() => requestAnimationFrame(() => { a.style.width = (up / t * 100) + "%"; b.style.width = (down / t * 100) + "%"; })); return w; };
     if (!boardOpen) {
       const all = STOCKS.exchanges.flatMap((x) => x.stocks), up = all.filter((q) => q[3] > 0).length, down = all.filter((q) => q[3] < 0).length;
-      const g = el("div", "glob"); g.append(el("div", "big mono", `${up} up · ${down} down`), el("div", "sm", `${all.length} companies on ${STOCKS.exchanges.length} exchanges · latest session · delayed`), split(up, down, all.length - up - down)); body.append(g);
+      const g = el("div", "glob"); g.append(el("div", "big mono", `${up} up · ${down} down`), el("div", "sm", `${all.length} companies on ${STOCKS.exchanges.length} exchanges · ${S.open} open now · latest session · delayed`), split(up, down, all.length - up - down)); body.append(g);
       for (const x of [...STOCKS.exchanges].sort((a, b) => b.avg - a.avg)) {
         const row = el("button", "xr"); row.type = "button";
         const top = el("div", "xt"); top.append(el("b", null, x.name), el("span", "mono " + (x.avg >= 0 ? "up" : "down"), pct(x.avg)));
-        row.append(top, el("div", "sm", `${x.city} · ${x.up} up, ${x.down} down${x.stale ? " · last known" : ""}`), split(x.up, x.down, x.stocks.length - x.up - x.down));
+        row.append(top, el("div", "sm", `${x.city} · ${x.open ? "open now" : "closed"} · ${x.up} up, ${x.down} down${x.stale ? " · last known" : ""}`), split(x.up, x.down, x.stocks.length - x.up - x.down));
         row.onclick = () => { boardOpen = x.id; stopTour(); flyTo(x.lon, x.lat - (SMALL ? 8 : 0), 2.1); cam.idle = -45; renderBoard(); };
         body.append(row);
       }
@@ -533,7 +572,7 @@
       });
     }
   }
-  $("#boardBtn").onclick = () => { const b = $("#board"); b.hidden = !b.hidden; if (!b.hidden) { $("#panel").open = false; stopTour(); select(null); renderBoard(); } };
+  $("#boardBtn").onclick = () => { const b = $("#board"); b.hidden = !b.hidden; if (!b.hidden) { $("#panel").open = false; stopTour(); stopReplay(); closeMe(); select(null); renderBoard(); } };
   const loadStocks = () => getJson("../data/globe/stocks.json").then(buildStocks).catch(() => {});
 
   function layoutLabels() {
@@ -561,6 +600,14 @@
     [29.9, -95.3, "Houston"], [33.4, -112, "Phoenix"], [44.9, -93.2, "Minneapolis"], [45.5, -73.7, "Montreal"], [49.2, -123.2, "Vancouver"], [61.2, -150, "Anchorage"], [21.3, -157.9, "Honolulu"], [9, -79.4, "Panama City"], [-12, -77.1, "Lima"], [-33.4, -70.8, "Santiago"], [-34.8, -58.5, "Buenos Aires"], [53.4, -6.3, "Dublin"], [38.8, -9.1, "Lisbon"], [48.1, 16.6, "Vienna"], [52.2, 21, "Warsaw"], [37.9, 23.9, "Athens"], [24.9, 46.7, "Riyadh"], [6.6, 3.3, "Lagos"], [-1.3, 36.9, "Nairobi"], [9, 38.8, "Addis Ababa"], [13, 80.2, "Chennai"], [3.1, 101.6, "Kuala Lumpur"], [-6.1, 106.7, "Jakarta"], [14.5, 121, "Manila"], [25.1, 121.2, "Taipei"], [-37.7, 144.8, "Melbourne"], [-37, 174.8, "Auckland"]];
   const HUBV = HUBS.map((h) => ll(h[1], h[0]));
   let hubI = 0, planeFails = 0, planeOk = false, flip = false;
+  function takePlanes(j, t) {
+    for (const a of j.ac || []) {
+      if (a.lat == null || a.lon == null || typeof a.alt_baro !== "number") continue;
+      const sp = (a.gs || 0) * 0.5144 / EARTH, d = heading(a.lon, a.lat, a.track || 0);
+      planes.map.set(a.hex, { p: ll(a.lon, a.lat), v: [d[0] * sp, d[1] * sp, d[2] * sp], t0: t - Math.min(a.seen_pos || 0, 60), alt: 0.003 + Math.min(a.alt_baro, 45000) / 45000 * 0.011, seen: t,
+        title: (a.flight || "").trim() || a.r || a.hex, sub: `${a.t || "Aircraft"} · ${Math.round(a.alt_baro).toLocaleString("en-US")} ft · ${Math.round(a.gs || 0)} kt` });
+    }
+  }
   async function pollPlanes() {
     if (!L.planes.on || document.hidden) return setTimeout(pollPlanes, 3000);
     flip = !flip; const [lat, lon] = flip && !EMBED ? [cam.lat, ((cam.lon + 540) % 360) - 180] : HUBS[hubI++ % HUBS.length];
@@ -568,12 +615,7 @@
       const r = await fetch(`https://api.adsb.lol/v2/lat/${lat.toFixed(2)}/lon/${lon.toFixed(2)}/dist/250`, { signal: AbortSignal.timeout(12000) });
       if (!r.ok) throw new Error(r.status);
       const j = await r.json(), t = now();
-      for (const a of j.ac || []) {
-        if (a.lat == null || a.lon == null || typeof a.alt_baro !== "number") continue;
-        const sp = (a.gs || 0) * 0.5144 / EARTH, d = heading(a.lon, a.lat, a.track || 0);
-        planes.map.set(a.hex, { p: ll(a.lon, a.lat), v: [d[0] * sp, d[1] * sp, d[2] * sp], t0: t - Math.min(a.seen_pos || 0, 60), alt: 0.003 + Math.min(a.alt_baro, 45000) / 45000 * 0.011, seen: t,
-          title: (a.flight || "").trim() || a.r || a.hex, sub: `${a.t || "Aircraft"} · ${Math.round(a.alt_baro).toLocaleString("en-US")} ft · ${Math.round(a.gs || 0)} kt` });
-      }
+      takePlanes(j, t);
       planeOk = true; planeFails = 0; planes.dirty = true;
     } catch (e) { planeFails++; }
     const t = now(); for (const [k, m] of planes.map) if (t - m.seen > 330) { planes.map.delete(k); planes.dirty = true; }
@@ -669,27 +711,129 @@
     setTimeout(pollRain, 30 * 60000);
   }
 
+  /* ---------- weather: clouds, read from yesterday's true-colour satellite picture of the whole Earth (NASA GIBS) ----------
+     A pixel that is bright and nearly colourless is taken as cloud. Snow and ice look the same from above, so the poles
+     are left out and the label says so. Yesterday is used because today's picture is still being assembled. */
+  function pollClouds() {
+    if (!L.clouds.on || document.hidden) return setTimeout(pollClouds, 3000);
+    const day = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    const attempt = (names) => {
+      if (!names.length) { if (!M.clouds) L.clouds.status("off", "satellite picture not reachable or not readable right now"); return; }
+      const img = new Image(); img.crossOrigin = "anonymous";
+      img.onerror = () => attempt(names.slice(1));
+      img.onload = () => {
+        try {
+          const RW = 720, RH = 360, cv = document.createElement("canvas"); cv.width = RW; cv.height = RH;
+          const cx = cv.getContext("2d", { willReadFrequently: true }); cx.drawImage(img, 0, 0, RW, RH);
+          const px = cx.getImageData(0, 0, RW, RH).data, cells = []; let area = 0, all = 0;
+          for (let j = 0; j < RH; j++) { const lat = 90 - (j + 0.5) / 2; if (lat > 66 || lat < -60) continue; const wgt = Math.cos(lat * DEG);
+            for (let i = 0; i < RW; i++) { const o = (j * RW + i) * 4, r = px[o], g = px[o + 1], b = px[o + 2], mn = Math.min(r, g, b), mx = Math.max(r, g, b);
+              if (mx < 12) continue; all += wgt;                    // black: no picture here (gaps between passes)
+              if (mn > 150 && mx - mn < 46) { cells.push(j * RW + i); area += wgt; } } }
+          if (cells.length < 200) throw new Error("no cloud found");
+          const N = Math.min(LITE ? 45000 : 100000, cells.length * 3), a = [];
+          for (let k = 0, tries = 0; k < N && tries < N * 6; tries++) {
+            const n = cells[(rnd() * cells.length) | 0], i = n % RW, j = (n / RW) | 0, lat = 90 - (j + rnd()) / 2; if (rnd() > Math.cos(lat * DEG)) continue;   // even cover per square kilometre
+            const p = ll(-180 + (i + rnd()) / 2, lat, 1.006 + rnd() * 0.006), w = (px[n * 4] - 150) / 105;
+            a.push(p[0], p[1], p[2], 0.8 + 0.2 * w, 0.86 + 0.14 * w, 1, 0.1 + 0.2 * w * rnd(), 0.95 + rnd() * 0.5, rnd()); k++;
+          }
+          dyn("clouds").set(a); L.clouds.count(`${(area / all * 100).toFixed(0)}%`);
+          L.clouds.status("delay", `bright cloud between 60°S and 66°N on ${day} · NASA ${names[0].split("_")[0]} · snow and ice can read as cloud`);
+        } catch (e) { attempt(names.slice(1)); }
+      };
+      img.src = `https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=${names[0]}&STYLES=&FORMAT=image/jpeg&CRS=EPSG:4326&BBOX=-90,-180,90,180&WIDTH=1440&HEIGHT=720&TIME=${day}`;
+    };
+    L.clouds.status("off", "loading yesterday's satellite picture");
+    attempt(["VIIRS_SNPP_CorrectedReflectance_TrueColor", "MODIS_Terra_CorrectedReflectance_TrueColor"]);
+    setTimeout(pollClouds, 3 * 3600000);
+  }
+
+  /* ---------- weather: wind, the jet stream and temperature from NOAA's GFS model (data/globe/weather.json) ----------
+     The file holds 1-degree grids (tools/globe-weather.mjs). Wind is drawn as streamlines: short paths that follow the
+     wind from random starting points, with a bright head running along each (the same pulse the cables use), so the
+     motion costs nothing per frame. The jet stream is the same at 250 hPa, only where the wind tops 30 m/s. */
+  let WX = null;
+  const wxAt = (a, lon, lat) => {                                    // value of a grid at a place, blended between the four nearest points
+    const x = (((lon % 360) + 360) % 360), y = Math.max(0, Math.min(179.999, 90 - lat)), i = Math.floor(x), j = Math.floor(y), fx = x - i, fy = y - j, i2 = (i + 1) % 360;
+    return (a[j * 360 + i] * (1 - fx) + a[j * 360 + i2] * fx) * (1 - fy) + (a[(j + 1) * 360 + i] * (1 - fx) + a[(j + 1) * 360 + i2] * fx) * fy;
+  };
+  const tempC = (lon, lat) => wxAt(WX.t, lon, lat) / 2 - 80;
+  const tcol = (c) => { for (let i = 1; i < TRAMP.length; i++) if (c <= TRAMP[i][0]) return mix3(TRAMP[i - 1][1], TRAMP[i][1], Math.max(0, (c - TRAMP[i - 1][0]) / (TRAMP[i][0] - TRAMP[i - 1][0]))); return TRAMP[TRAMP.length - 1][1]; };
+  const COMPASS = ["north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west"];
+  function buildWeather(j) {
+    const dec = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+    WX = { u: new Int8Array(dec(j.w10u).buffer), v: new Int8Array(dec(j.w10v).buffer), ju: new Int8Array(dec(j.ju).buffer), jv: new Int8Array(dec(j.jv).buffer), t: dec(j.t), valid: j.valid };
+    const at = new Date(j.valid).toISOString().slice(11, 16), a = [];
+    // n paths of up to `steps` hops; U, V: the grids; k: metres per second per grid unit; hop: degrees per hop at full speed
+    const trace = (n, steps, U, V, k, minSp, vmax, hop, lift, RAMP, alpha) => {
+      for (let done = 0, tries = 0; done < n && tries < n * 40; tries++) {
+        let la = Math.asin(rnd() * 2 - 1) / DEG, lo = rnd() * 360 - 180, prev = null, pc = null; const off = rnd();
+        if (Math.hypot(wxAt(U, lo, la), wxAt(V, lo, la)) * k < minSp) continue; done++;
+        for (let s = 0; s <= steps; s++) {
+          const u = wxAt(U, lo, la) * k, v = wxAt(V, lo, la) * k, sp = Math.hypot(u, v); if (sp < minSp * 0.6 || Math.abs(la) > 86) break;
+          const p = ll(lo, la, 1 + lift), c = ramp(RAMP, (sp - minSp) / (vmax - minSp));
+          if (prev) a.push(prev[0], prev[1], prev[2], pc[0], pc[1], pc[2], alpha, off + (s - 1) / steps, p[0], p[1], p[2], c[0], c[1], c[2], alpha, off + s / steps);
+          const d = hop * (0.35 + Math.min(1, sp / vmax)); la += (v / sp) * d; lo += (u / sp) * d / Math.max(0.2, Math.cos(la * DEG)); prev = p; pc = c;
+        }
+      }
+    };
+    trace(LITE ? 2200 : 5200, 12, WX.u, WX.v, 0.5, 2, 22, 0.75, 0.0045, [[0.3, 0.8, 1], [0.6, 1, 0.9], [1, 1, 1], [1, 0.6, 0.9]], 0.085);
+    M.wind = mesh(P_LINE, LINE, a, gl.LINES); a.length = 0;
+    trace(LITE ? 900 : 2200, 22, WX.ju, WX.jv, 1, 30, 90, 1.5, 0.03, [[1, 0.85, 0.4], [1, 0.55, 0.25], [1, 0.3, 0.6], [1, 0.9, 1]], 0.15);
+    M.jet = mesh(P_LINE, LINE, a, gl.LINES);
+    let top = null, sum = 0, wsum = 0;                               // the fastest jet-stream wind, and the area-weighted average temperature
+    for (let r = 0; r <= 180; r++) { const w = Math.cos((90 - r) * DEG); for (let c = 0; c < 360; c++) { const i = r * 360 + c, sp = Math.hypot(WX.ju[i], WX.jv[i]); if (!top || sp > top.sp) top = { sp, lon: c > 180 ? c - 360 : c, lat: 90 - r }; sum += (WX.t[i] / 2 - 80) * w; wsum += w; } }
+    S.jet = { kmh: Math.round(top.sp * 3.6), lon: top.lon, lat: top.lat }; S.meanT = sum / wsum;
+    L.wind.count(`${num(S.jet.kmh)} km/h`); L.wind.status("model", `fastest jet-stream wind · NOAA GFS weather model for ${at} UTC, refreshed every few hours`);
+    buildTemp();
+    L.temp.count(`${S.meanT.toFixed(1)}°C`); L.temp.status("model", `average over the whole globe · air 2 m above ground · NOAA GFS weather model for ${at} UTC`);
+  }
+  // Temperature takes the place of the plain land and sea dots while it is on: the same even spread of points, each
+  // coloured by the air temperature there, land a little brighter than sea so the continents still read.
+  function buildTemp() {
+    if (!WX) return;
+    const N = LITE ? 170000 : 380000, b = [], g = Math.PI * (3 - Math.sqrt(5)), ld = world && world.land, bits = ld ? Uint8Array.from(atob(ld.b64), (c) => c.charCodeAt(0)) : null;
+    for (let i = 0; i < N; i++) { const y = 1 - (i + 0.5) / N * 2, r = Math.sqrt(1 - y * y), th = i * g, x = Math.sin(th) * r, z = Math.cos(th) * r, lat = Math.asin(y) / DEG, lon = Math.atan2(x, z) / DEG, c = tcol(tempC(lon, lat));
+      let land = false; if (bits) { const n = Math.min(ld.h - 1, Math.floor((90 - lat) / 180 * ld.h)) * ld.w + Math.min(ld.w - 1, Math.floor((lon + 180) / 360 * ld.w)); land = !!(bits[n >> 3] & (128 >> (n & 7))); }
+      b.push(x, y, z, c[0], c[1], c[2], land ? 0.75 + rnd() * 0.25 : 0.38 + rnd() * 0.2, land ? 1.7 + rnd() * 0.7 : 1.3 + rnd() * 0.5, rnd()); }
+    M.temp = mesh(P_POINT, POINT, b, gl.POINTS);
+  }
+  const loadWeather = () => getJson("../data/globe/weather.json").then(buildWeather).catch(() => { if (!WX) for (const id of ["wind", "temp"]) L[id].status("off", "first data sync in progress, check back in a few minutes"); });
+
   /* ---------- more live layers: earthquakes, natural events, aurora, the space station ---------- */
   const dyn = (key) => (M[key] = M[key] || mesh(P_POINT, POINT, null, gl.POINTS, true));
   const dropPicks = (tag) => { for (let i = picks.length - 1; i >= 0; i--) if (picks[i].live === tag) picks.splice(i, 1); };
   // A fine ring of particles around a place (radius in degrees).
-  function ring(out, lon, lat, deg, n, c, alpha, size) { for (let i = 0; i < n; i++) { const th = (i / n) * 6.283, p = ll(lon + Math.cos(th) * deg / Math.max(0.15, Math.cos(lat * DEG)), lat + Math.sin(th) * deg); out.push(p[0], p[1], p[2], c[0], c[1], c[2], alpha, size, rnd()); } }
+  function ring(out, lon, lat, deg, n, c, alpha, size, seed) { for (let i = 0; i < n; i++) { const th = (i / n) * 6.283, p = ll(lon + Math.cos(th) * deg / Math.max(0.15, Math.cos(lat * DEG)), lat + Math.sin(th) * deg); out.push(p[0], p[1], p[2], c[0], c[1], c[2], alpha, size, seed == null ? rnd() : (seed + i * 0.618) % 1); } }
 
+  const QRAMP = [[1, 0.85, 0.4], [1, 0.5, 0.2], [1, 0.2, 0.25], [1, 0.3, 0.8]];
+  // Draws the day's earthquakes. In the replay only those that have happened by `until` are drawn, and the newest flare.
+  function buildQuakes(until) {
+    const a = []; let n = 0, i = 0;
+    for (const k of S.quakeList || []) {
+      i++; if (until != null && k.time > until) continue; n++;
+      const q = Math.min(1, k.m / 7.5), col = ramp(QRAMP, q), p = ll(k.lon, k.lat), fresh = until == null ? 0 : Math.max(0, 1 - (until - k.time) / 2700000);   // flares for 45 replayed minutes
+      const g = until == null ? 1 : 0.35 + (1 - fresh) * 0.65, sd = (i * 0.37) % 1;
+      a.push(p[0], p[1], p[2], col[0], col[1], col[2], 0.95, (1.2 + q * 2.4) * (1 + fresh * 1.6), sd);
+      if (k.m >= 2.5 || fresh) { ring(a, k.lon, k.lat, (0.25 + q * 1.6) * g, 10 + Math.round(q * 34), col, 0.75 + fresh * 0.25, 1.0 + fresh * 0.6, sd);
+        if (k.m >= 4.5) ring(a, k.lon, k.lat, (0.6 + q * 3.2) * g, 26 + Math.round(q * 50), col, 0.45 + fresh * 0.4, 0.95, sd + 0.5); }
+    }
+    dyn("quakes").set(a); return n;
+  }
   async function pollQuakes() {
     if (!L.quakes.on || document.hidden) return setTimeout(pollQuakes, 3000);
     try {
-      const j = await (await fetch("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson", { signal: AbortSignal.timeout(30000) })).json(), a = []; let big = 0, top = null;
+      const j = await (await fetch("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson", { signal: AbortSignal.timeout(30000) })).json(), list = []; let big = 0, top = null;
       dropPicks("quake");
       for (const f of j.features || []) {
         const c = f.geometry?.coordinates, m = f.properties?.mag; if (!c || !(m > 0)) continue;
-        const q = Math.min(1, m / 7.5), col = ramp([[1, 0.85, 0.4], [1, 0.5, 0.2], [1, 0.2, 0.25], [1, 0.3, 0.8]], q), p = ll(c[0], c[1]);
-        a.push(p[0], p[1], p[2], col[0], col[1], col[2], 0.95, 1.2 + q * 2.4, rnd());
-        if (m >= 2.5) { ring(a, c[0], c[1], 0.25 + q * 1.6, 10 + Math.round(q * 34), col, 0.75, 1.0); if (m >= 4.5) ring(a, c[0], c[1], 0.6 + q * 3.2, 26 + Math.round(q * 50), col, 0.45, 0.95); }
+        const k = { m, lon: c[0], lat: c[1], place: f.properties.place || "", time: f.properties.time }; list.push(k);
         if (m >= 4.5) big++;
-        if (!top || m > top.m) top = { m, lon: c[0], lat: c[1], place: f.properties.place || "", time: f.properties.time };
-        picks.push({ p, layer: "quakes", live: "quake", kind: `Earthquake · magnitude ${m.toFixed(1)}`, title: f.properties.place || "Earthquake", sub: `${new Date(f.properties.time).toISOString().slice(11, 16)} UTC · ${Math.round(c[2])} km deep` });
+        if (!top || m > top.m) top = k;
+        picks.push({ p: ll(c[0], c[1]), layer: "quakes", live: "quake", time: k.time, kind: `Earthquake · magnitude ${m.toFixed(1)}`, title: k.place || "Earthquake", sub: `${new Date(k.time).toISOString().slice(11, 16)} UTC · ${Math.round(c[2])} km deep` });
       }
-      S.quake = top; S.quakes = (j.features || []).length; dyn("quakes").set(a); L.quakes.count(S.quakes); L.quakes.status("live", `${big} of magnitude 4.5+ · USGS`);
+      list.sort((x, y) => x.time - y.time);
+      S.quakeList = list; S.quake = top; S.quakes = list.length; buildQuakes(replay.on ? replayTime() : null); L.quakes.count(S.quakes); L.quakes.status("live", `${big} of magnitude 4.5+ · USGS`);
     } catch (e) { if (!M.quakes) L.quakes.status("off", "live feed not reachable right now"); }
     setTimeout(pollQuakes, 5 * 60000);
   }
@@ -720,20 +864,21 @@
   async function pollAurora() {
     if (!L.aurora.on || document.hidden) return setTimeout(pollAurora, 3000);
     try {
-      const j = await (await fetch("https://services.swpc.noaa.gov/json/ovation_aurora_latest.json", { signal: AbortSignal.timeout(40000) })).json(), a = []; let peak = 0, top = null;
+      const j = await (await fetch("https://services.swpc.noaa.gov/json/ovation_aurora_latest.json", { signal: AbortSignal.timeout(40000) })).json(), a = [], grid = new Uint8Array(360 * 181); let peak = 0, top = null;
       for (const [lon, lat, v] of j.coordinates || []) {
+        grid[(((Math.round(lon) % 360) + 360) % 360) * 181 + Math.max(0, Math.min(180, Math.round(lat) + 90))] = v;
         if (v < 6) continue; peak = Math.max(peak, v); if (!top || v > top.v) top = { v, lon: lon > 180 ? lon - 360 : lon, lat };
         for (let k = Math.min(9, Math.ceil(v / 9)); k > 0; k--) { const hgt = rnd(), c = ramp([[0.25, 1, 0.5], [0.3, 1, 0.8], [0.5, 0.6, 1], [0.85, 0.35, 1]], hgt), p = ll(lon + rnd(), lat + rnd() - 0.5, 1.012 + hgt * 0.035);
           a.push(p[0], p[1], p[2], c[0], c[1], c[2], Math.min(0.9, 0.12 + v / 70) * (1 - hgt * 0.5), 0.95 + rnd() * 0.5, rnd()); }
       }
-      S.aurora = top; dyn("aurora").set(a); L.aurora.count(peak + "%"); L.aurora.status("live", "peak chance overhead in the next 30 min · NOAA SWPC");
+      S.aurora = top; S.auroraGrid = grid; dyn("aurora").set(a); L.aurora.count(peak + "%"); L.aurora.status("live", "peak chance overhead in the next 30 min · NOAA SWPC");
     } catch (e) { if (!M.aurora) L.aurora.status("off", "forecast not reachable right now"); }
     setTimeout(pollAurora, 10 * 60000);
   }
 
   // Every active satellite, moved along its real orbit (elements from CelesTrak; a simplified two-body model with J2 drift).
   const SATS = []; const T0 = Date.now() / 1000 - now();          // the clock time when this page's timer read zero
-  const gmst = () => (((280.46061837 + 360.98564736629 * (Date.now() / 86400000 + 2440587.5 - 2451545)) % 360) * DEG);
+  const gmst = (ms = Date.now()) => (((280.46061837 + 360.98564736629 * (ms / 86400000 + 2440587.5 - 2451545)) % 360) * DEG);
   function loadSats() {
     getJson("../data/globe/sats.json").then((j) => {
       const a = [], LAGS = LITE ? [0, 5, 10] : [0, 4, 8, 12, 16]; SATS.length = 0;
@@ -749,9 +894,9 @@
       L.sats.count(SATS.length); L.sats.status("live", `moving on their real orbits · elements ${h} h old · CelesTrak`);
     }).catch(() => L.sats.status("off", "first data sync in progress, check back in a few minutes"));
   }
-  function satPos(el, t) {
+  function satPos(el, t, gm = gmst()) {
     const [a, e, i, O0, w, M0, n] = el, Mn = M0 + n * t; let E = Mn; for (let k = 0; k < 4; k++) E -= (E - e * Math.sin(E) - Mn) / (1 - e * Math.cos(E));
-    const xv = a * (Math.cos(E) - e), yv = a * Math.sqrt(1 - e * e) * Math.sin(E), xp = Math.cos(w) * xv - Math.sin(w) * yv, yp = Math.sin(w) * xv + Math.cos(w) * yv, O = O0 - gmst();
+    const xv = a * (Math.cos(E) - e), yv = a * Math.sqrt(1 - e * e) * Math.sin(E), xp = Math.cos(w) * xv - Math.sin(w) * yv, yp = Math.sin(w) * xv + Math.cos(w) * yv, O = O0 - gm;
     return [Math.sin(O) * xp + Math.cos(O) * Math.cos(i) * yp, Math.sin(i) * yp, Math.cos(O) * xp - Math.sin(O) * Math.cos(i) * yp];
   }
 
@@ -770,19 +915,21 @@
 
   /* ---------- pointing at things: hover with a mouse, tap or click to select ---------- */
   const tip = $("#tip"), selEl = $("#sel"), narrow = () => innerWidth <= 760;   // narrow: the Layers panel sits along the bottom
-  $("#panel").addEventListener("toggle", () => { if ($("#panel").open && narrow()) { select(null); stopTour(); } });
+  $("#panel").addEventListener("toggle", () => { if ($("#panel").open && narrow()) { select(null); stopTour(); stopReplay(); closeMe(); } });
   let sel = null;         // the selected thing: { kind, title, sub, layer, p | pos(t) }
+  // Satellites sit where their orbit puts them now, or at the replayed moment while the replay runs.
+  const satNow = (el, t) => replay.on ? satPos(el, t + (replayTime() - Date.now()) / 1000, gmst(replayTime())) : satPos(el, t);
   function pickAt(mx, my, rad) {
-    let best = null, bd = rad * rad; const t = now();
+    let best = null, bd = rad * rad; const t = now(), rt = replay.on ? replayTime() : Infinity;
     const near = (p, layer) => { if (!L[layer].on || !facing(p)) return false; const s = project(p), d = (s[0] - mx) ** 2 + (s[1] - my) ** 2; if (d < bd) { bd = d; return true; } return false; };
-    for (const o of picks) if (near(o.p, o.layer)) best = o;
-    for (const [set, layer, kind] of [[iss, "space", "Space station · live"], [planes, "planes", "Aircraft · live"], [ships, "ships", "Ship · live"], [trains, "rail", "Train · live"]])
+    for (const o of picks) if (!(o.time > rt) && near(o.p, o.layer)) best = o;
+    if (!replay.on) for (const [set, layer, kind] of [[iss, "space", "Space station · live"], [planes, "planes", "Aircraft · live"], [ships, "ships", "Ship · live"], [trains, "rail", "Train · live"]])
       for (const [key, m] of set.map) if (near(moverPos(m, t), layer)) best = { layer, kind, title: m.title, sub: m.sub, pos: (t2) => { const x = set.map.get(key); return x ? moverPos(x, t2) : null; } };
-    if (L.sats.on && SATS.length && !best) for (const sat of SATS) { const p = satPos(sat.el, t); if (dot(norm(p), EYE) < 1 / Math.hypot(p[0], p[1], p[2])) continue; const sc = project(p), d = (sc[0] - mx) ** 2 + (sc[1] - my) ** 2;
-      if (d < bd) { bd = d; best = { layer: "sats", sat: true, kind: "Satellite · live orbit", title: sat.name, sub: `${Math.round((sat.el[0] - 1) * 6371).toLocaleString("en-US")} km up`, pos: (t2) => satPos(sat.el, t2) }; } }
+    if (L.sats.on && SATS.length && !best) for (const sat of SATS) { const p = satNow(sat.el, t); if (dot(norm(p), EYE) < 1 / Math.hypot(p[0], p[1], p[2])) continue; const sc = project(p), d = (sc[0] - mx) ** 2 + (sc[1] - my) ** 2;
+      if (d < bd) { bd = d; best = { layer: "sats", sat: true, kind: "Satellite · live orbit", title: sat.name, sub: `${Math.round((sat.el[0] - 1) * 6371).toLocaleString("en-US")} km up`, pos: (t2) => satNow(sat.el, t2) }; } }
     return best;
   }
-  // card: a sheet along the bottom with a close button (touch and small screens); otherwise a tooltip beside the point.
+  // card: a sheet in the bottom dock with a close button (touch and small screens); otherwise a tooltip beside the point.
   function showTip(o, mx, my, card) {
     tip.innerHTML = `<button class="x" type="button" aria-label="Close">&times;</button><div class="k"></div><div class="t"></div><div class="s"></div>`;
     tip.children[1].textContent = o.kind; tip.children[2].textContent = o.title; tip.children[3].textContent = o.sub || "";
@@ -803,15 +950,16 @@
     showTip(sel, mx, my, card);
   }
   function tap(mx, my, type) { const touch = type !== "mouse"; select(pickAt(mx, my, touch ? 30 : 16), mx, my, touch || SMALL); }
-  // The ring that marks the selection follows it as the globe turns and as aircraft, ships and satellites move.
+  // The ring marks the selection, or the subject of the current tour stop, and follows it as things move.
   function trackSel(t) {
-    if (!sel) return;
-    const p = sel.pos ? sel.pos(t) : sel.p;
-    if (!p || (sel.layer && !L[sel.layer].on)) return select(null);
-    const seen = sel.sat ? dot(norm(p), EYE) >= 1 / Math.hypot(p[0], p[1], p[2]) : facing(p);
+    const mark = !sel && tour.on ? tour.steps[tour.i].mark : null;
+    if (!sel && !mark) { if (selEl.style.display !== "none") selEl.style.display = "none"; return; }
+    const p = sel ? (sel.pos ? sel.pos(t) : sel.p) : mark();
+    if (sel && (!p || (sel.layer && !L[sel.layer].on))) return select(null);
+    const seen = p && (sel && sel.sat ? dot(norm(p), EYE) >= 1 / Math.hypot(p[0], p[1], p[2]) : facing(p));
     if (!seen) { selEl.style.display = "none"; return; }
     const s = project(p); selEl.style.display = "block"; selEl.style.transform = `translate(${s[0].toFixed(1)}px,${s[1].toFixed(1)}px)`;
-    if (!tip.classList.contains("card")) placeTip(s[0], s[1]);
+    if (sel && !tip.classList.contains("card")) placeTip(s[0], s[1]);
   }
 
   /* ---------- the headline number: one live figure at a time, under the clock ---------- */
@@ -823,6 +971,8 @@
     () => L.quakes.on && S.quakes != null ? [num(S.quakes), "earthquakes in the last 24 hours"] : null,
     () => L.rain.on && S.rain != null ? [S.rain + "%", "of the globe under rain or snow"] : null,
     () => L.ships.on && ships.map.size ? [num(ships.map.size), "ships under way in the Baltic, live"] : null,
+    () => L.wind.on && S.jet ? [num(S.jet.kmh) + " km/h", "fastest jet-stream wind right now (model)"] : null,
+    () => L.markets.on && STOCKS ? [`${S.open} of ${STOCKS.exchanges.length}`, "stock exchanges trading right now"] : null,
     () => { if (!L.markets.on || !MK) return null; const q = MK.quotes.filter((x) => PIN[x.sym] && x.pct != null); return q.length ? [`${q.filter((x) => x.pct >= 0).length} of ${q.length}`, "indexes and commodities up (delayed)"] : null; },
     () => L.vital.on && vital ? [num(vital.d.total * ((Date.now() % 86400000) / 86400000)), "people died so far today (modelled)"] : null,
   ];
@@ -841,43 +991,52 @@
     if (head.el.classList.contains("in")) paintHead();             // keep the figure ticking while it is on show
   }
 
-  /* ---------- the tour: the camera flies between what is happening right now, with one line about each ---------- */
+  /* ---------- the tour: the camera flies between what is happening right now, with one line about each ----------
+     Runs from the Tour button, from world-pulse.html?tour, and by itself (looping) in the embedded preview. */
   const lonlat = (p) => { const n = norm(p); return [Math.atan2(n[0], n[2]) / DEG, Math.asin(n[1]) / DEG]; };
-  function flyTo(lon, lat, dist) { cam.tLon = cam.lon + ((((lon - cam.lon + 180) % 360) + 360) % 360 - 180); cam.tLat = lat; cam.tDist = dist; cam.vLon = cam.vLat = 0; }
+  const wrapLon = (x) => ((((x + 180) % 360) + 360) % 360) - 180;
+  function flyTo(lon, lat, dist) { cam.tLon = cam.lon + wrapLon(lon - cam.lon); cam.tLat = lat; cam.tDist = dist; cam.vLon = cam.vLat = 0; }
   const tour = { on: false, steps: [], i: 0, t: 0 };
   function tourSteps() {
-    const out = [], add = (k, title, text, at, dist, dur) => out.push({ k, title, text, at, dist: dist || 2.2, dur: dur || 8 });
+    // o: dist (camera distance), dur (seconds), mark (false, or a function giving the point to ring), link ([text, address])
+    const out = [], add = (k, title, text, at, o = {}) => out.push({ k, title, text, at, dist: o.dist || 2.2, dur: o.dur || 8, link: o.link, mark: o.mark === false ? null : o.mark || (() => { const a = at(); return a ? ll(a[0], a[1]) : null; }) });
     { const [sl, sd] = lonlat(SUN), H = Math.acos(Math.max(-1, Math.min(1, -Math.tan(25 * DEG) * Math.tan(sd * DEG)))) / DEG;   // where the sun is rising at 25°N
-      add("Day and night", "Dawn is breaking here", "The sun is rising along this line right now. Behind it the city lights are still on; ahead of it the day has begun.", () => [sl - H, 25], 2.7); }
+      add("Day and night", "Dawn is breaking here", "The sun is rising along this line right now. Behind it the city lights are still on; ahead of it the day has begun.", () => [sl - H, 25], { dist: 2.7, mark: false }); }
     if (L.planes.on && planes.map.size > 30) { const n = new Array(HUBS.length).fill(0), t = now();
       for (const m of planes.map.values()) { const p = norm(moverPos(m, t)); for (let i = 0; i < HUBV.length; i++) if (dot(p, HUBV[i]) > 0.99736) n[i]++; }
       const i = n.indexOf(Math.max(...n));
-      if (n[i] > 5) add("Air traffic · live", `Busiest sky we're tracking: ${HUBS[i][2]}`, `${num(n[i])} aircraft within 460 km of ${HUBS[i][2]} at this moment, live from adsb.lol.`, () => [HUBS[i][1], HUBS[i][0]], 1.9); }
+      if (n[i] > 5) add("Air traffic · live", `Busiest sky we're tracking: ${HUBS[i][2]}`, `${num(n[i])} aircraft within 460 km of ${HUBS[i][2]} at this moment, live from adsb.lol.`, () => [HUBS[i][1], HUBS[i][0]], { dist: 1.9, mark: false }); }
+    if (L.markets.on && STOCKS) { const open = STOCKS.exchanges.filter((x) => x.open);
+      if (open.length) { const x = open.reduce((a, b) => (Math.abs(b.avg) > Math.abs(a.avg) ? b : a));
+        add("Markets · trading now", `${x.name} is open`, `${open.length} of ${STOCKS.exchanges.length} exchanges are trading at this moment (regular hours). Here ${x.up} companies are up and ${x.down} down, on delayed prices.`, () => [x.lon, x.lat], { dist: 2.0 }); } }
     if (L.markets.on && MK) { let q = null; for (const x of MK.quotes) if (PIN[x.sym] && x.pct != null && !x.stale && (!q || Math.abs(x.pct) > Math.abs(q.pct))) q = x;
-      if (q) add("Markets · delayed", `Biggest move: ${PIN[q.sym][2]}`, `${PIN[q.sym][2]} is ${q.pct >= 0 ? "up" : "down"} ${Math.abs(q.pct).toFixed(2)}% in its latest session, the largest swing on the map.`, () => [PIN[q.sym][0], PIN[q.sym][1]], 2.1); }
-    if (L.net.on && S.dc) add("Internet · static map", "Where the internet lives", `${num(S.dc.n)} data centres are mapped in this one cluster, the densest on the globe (OpenStreetMap).`, () => [S.dc.lon, S.dc.lat], 1.9);
-    if (L.pop.on && S.pop) add("Population · static map", "The most crowded point on the map", `About ${(S.pop.k / 1000).toFixed(1)} million people live in towns and cities inside this half-degree cell (GeoNames).`, () => [S.pop.lon, S.pop.lat], 2.0);
-    if (L.ships.on && ships.map.size > 10) add("Shipping · live in the Baltic", "Ships under way", `${num(ships.map.size)} ships are moving here right now (Fintraffic). Ports are mapped worldwide; live positions cover the Baltic only.`, () => [21, 59.3], 1.75);
-    if (L.quakes.on && S.quake) add("Earthquakes · live", `Strongest in 24 hours: magnitude ${S.quake.m.toFixed(1)}`, `${S.quake.place || "Location not named"} · ${new Date(S.quake.time).toISOString().slice(11, 16)} UTC (USGS).`, () => [S.quake.lon, S.quake.lat], 2.1);
-    if (L.events.on && S.event) add(`${S.event.kind} · active`, S.event.title, `One of the natural events NASA is tracking right now (EONET).`, () => [S.event.lon, S.event.lat], 2.1);
-    if (L.aurora.on && S.aurora && S.aurora.v >= 25) add("Aurora · live forecast", "Northern and southern lights", `${S.aurora.v}% chance of aurora overhead here in the next 30 minutes (NOAA).`, () => [S.aurora.lon, S.aurora.lat], 2.5);
-    if (L.space.on && iss.map.has("iss")) add("Space station · live", "The International Space Station", `${iss.map.get("iss").sub}, with a crew on board.`, () => { const m = iss.map.get("iss"); return m ? lonlat(moverPos(m, now())) : null; }, 2.6);
-    add("World Pulse", "That's the planet right now", "Drag to spin, pinch or scroll to zoom, and tap any point for details.", () => [cam.lon, 20], 3.9, 6);
+      if (q) add("Markets · delayed", `Biggest move: ${PIN[q.sym][2]}`, `${PIN[q.sym][2]} is ${q.pct >= 0 ? "up" : "down"} ${Math.abs(q.pct).toFixed(2)}% in its latest session, the largest swing on the map.`, () => [PIN[q.sym][0], PIN[q.sym][1]], { dist: 2.1 }); }
+    if (L.net.on && S.dc) add("Internet · static map", "Where the internet lives", `${num(S.dc.n)} data centres are mapped in this one cluster, the densest on the globe (OpenStreetMap).`, () => [S.dc.lon, S.dc.lat], { dist: 1.9 });
+    if (L.pop.on && S.pop) add("Population · static map", "The most crowded point on the map", `About ${(S.pop.k / 1000).toFixed(1)} million people live in towns and cities inside this half-degree cell (GeoNames).`, () => [S.pop.lon, S.pop.lat], { dist: 2.0 });
+    if (L.ships.on && ships.map.size > 10) add("Shipping · live in the Baltic", "Ships under way", `${num(ships.map.size)} ships are moving here right now (Fintraffic). Ports are mapped worldwide; live positions cover the Baltic only.`, () => [21, 59.3], { dist: 1.75, mark: false });
+    if (L.wind.on && S.jet) add("Jet stream · weather model", `The fastest wind on Earth: ${num(S.jet.kmh)} km/h`, `About 10 km up, where airliners cruise. The gold streaks trace the jet stream; the pale ones below are wind near the ground (NOAA GFS).`, () => [S.jet.lon, S.jet.lat], { dist: 2.6 });
+    if (L.quakes.on && S.quake) add("Earthquakes · live", `Strongest in 24 hours: magnitude ${S.quake.m.toFixed(1)}`, `${S.quake.place || "Location not named"} · ${new Date(S.quake.time).toISOString().slice(11, 16)} UTC (USGS).`, () => [S.quake.lon, S.quake.lat], { dist: 2.1 });
+    if (L.events.on && S.event) add(`${S.event.kind} · active`, S.event.title, `One of the natural events NASA is tracking right now (EONET).`, () => [S.event.lon, S.event.lat], { dist: 2.1 });
+    if (L.aurora.on && S.aurora && S.aurora.v >= 25) add("Aurora · live forecast", "Northern and southern lights", `${S.aurora.v}% chance of aurora overhead here in the next 30 minutes (NOAA).`, () => [S.aurora.lon, S.aurora.lat], { dist: 2.5, mark: false });
+    if (L.space.on && iss.map.has("iss")) add("Space station · live", "The International Space Station", `${iss.map.get("iss").sub}, with a crew on board.`, () => { const m = iss.map.get("iss"); return m ? lonlat(moverPos(m, now())) : null; }, { dist: 2.6, mark: () => { const m = iss.map.get("iss"); return m ? moverPos(m, now()) : null; } });
+    add("World Pulse · by Tenshi Systems Engineering", "That's the planet right now", (EMBED ? "Open it full screen to explore." : "Drag, pinch and tap to explore.") + " Tenshi builds live maps like this for your own data.", () => [cam.lon, 20], { dist: 3.9, dur: 11, mark: false, link: ["Talk to us →", "../contact.html"] });
     return out;
   }
   function showStep() {
-    const s = tour.steps[tour.i], c = $("#cap"); tour.t = 0;
+    const s = tour.steps[tour.i], c = $("#cap"), a = $("#capLink"); tour.t = 0;
     c.querySelector(".ck").textContent = `${s.k} · ${tour.i + 1} / ${tour.steps.length}`; c.querySelector(".ct").textContent = s.title; c.querySelector(".cs").textContent = s.text;
+    if (s.link) { a.hidden = false; a.textContent = s.link[0]; a.href = s.link[1]; } else a.hidden = true;
     c.classList.remove("in"); requestAnimationFrame(() => requestAnimationFrame(() => c.classList.add("in")));
-    if (tour.i === tour.steps.length - 1) { const a = s.at(); s.at = () => a; }      // the last stop holds still
+    if (tour.i === tour.steps.length - 1) { const p = s.at(); s.at = () => p; }      // the last stop holds still
   }
   function startTour() {
-    tour.steps = tourSteps(); tour.i = 0; tour.on = true; select(null); hideHint();
+    stopReplay(); closeMe(); select(null); hideHint();
+    tour.steps = tourSteps(); tour.i = 0; tour.on = true;
     $("#board").hidden = true; if (narrow()) $("#panel").open = false;
-    $("#cap").hidden = false; $("#tourBtn").textContent = "■ Stop the tour"; showStep();
+    $("#cap").hidden = false; $("#tourBtn").textContent = "■ Stop"; showStep();
   }
-  function stopTour() { if (!tour.on) return; tour.on = false; $("#cap").hidden = true; $("#tourBtn").textContent = "▶ Take the tour"; cam.idle = 0; }
-  function nextStep() { if (++tour.i >= tour.steps.length) stopTour(); else showStep(); }
+  function stopTour() { if (!tour.on) return; tour.on = false; $("#cap").hidden = true; $("#tourBtn").textContent = "▶ Tour"; cam.idle = 0; }
+  function nextStep() { if (++tour.i < tour.steps.length) return showStep(); if (!EMBED) return stopTour(); tour.steps = tourSteps(); tour.i = 0; showStep(); }   // the preview loops, with fresh figures
   function updateTour(dt) {
     if (!tour.on) return;
     const s = tour.steps[tour.i]; tour.t += dt; cam.idle = -5;      // no idle drift while touring
@@ -885,11 +1044,108 @@
     $("#capBar").style.width = Math.min(100, tour.t / s.dur * 100).toFixed(1) + "%";
     if (tour.t >= s.dur) nextStep();
   }
-  if ($("#tourBtn")) { $("#tourBtn").onclick = () => (tour.on ? stopTour() : startTour()); $("#capNext").onclick = nextStep; $("#capStop").onclick = stopTour; }
+
+  /* ---------- what's above me: satellites, aircraft and the space station over the visitor's own spot ---------- */
+  const me = { on: false, p: null, lon: 0, lat: 0, src: "", pass: null }, meEl = $("#meDot");
+  function aboveMe() {
+    stopTour(); stopReplay(); select(null);
+    $("#me").hidden = false; $("#board").hidden = true; if (narrow()) $("#panel").open = false;
+    const go = (lon, lat, src) => { Object.assign(me, { on: true, lon, lat, p: ll(lon, lat), src, pass: null }); flyTo(lon, lat - (narrow() ? 5 : 0), 1.9); cam.idle = -90; renderMe(); nearMe(); };
+    const fallback = () => go(wrapLon(cam.lon), cam.lat, "the centre of your view, because your location wasn't shared");
+    if (!navigator.geolocation) return fallback();
+    $("#meBody").textContent = "Asking your device where you are…";
+    navigator.geolocation.getCurrentPosition((g) => go(g.coords.longitude, g.coords.latitude, "your location"), fallback, { timeout: 12000, maximumAge: 600000 });
+  }
+  function closeMe() { me.on = false; $("#me").hidden = true; meEl.style.display = "none"; }
+  // Aircraft around the spot, asked for with the position rounded to a tenth of a degree (about 10 km).
+  async function nearMe() {
+    if (!me.on) return; const at = me.p;
+    try { const r = await fetch(`https://api.adsb.lol/v2/lat/${me.lat.toFixed(1)}/lon/${me.lon.toFixed(1)}/dist/100`, { signal: AbortSignal.timeout(12000) }); if (r.ok) { takePlanes(await r.json(), now()); planes.dirty = true; } } catch (e) {}
+    if (me.on && me.p === at) setTimeout(nearMe, 20000);
+  }
+  // How high something stands above the horizon of a place (degrees), and how far away it is (km).
+  const elev = (p, o) => { const d = [p[0] - o[0], p[1] - o[1], p[2] - o[2]], r = Math.hypot(d[0], d[1], d[2]); return [Math.asin(dot(d, o) / r) / DEG, r * 6371]; };
+  // The next time the space station climbs 10° above the place: its orbit stepped forward 24 hours (simplified model, so an estimate).
+  function issPass() {
+    const s = SATS.find((x) => x.name === "ISS (ZARYA)"); if (!s) return null;
+    const t0 = now(), w0 = Date.now(); let start = null, peak = 0;
+    for (let dt = 0; dt <= 86400; dt += 20) { const el = elev(satPos(s.el, t0 + dt, gmst(w0 + dt * 1000)), me.p)[0];
+      if (el >= 10) { if (start == null) start = dt; peak = Math.max(peak, el); } else if (start != null) break; }
+    return { sat: s, start: start == null ? null : w0 + start * 1000, peak };
+  }
+  function renderMe() {
+    if (!me.on) return; const t = now(), rows = [];
+    if (SATS.length) { let n = 0, best = null;
+      for (const s of SATS) { const [el, km] = elev(satPos(s.el, t), me.p); if (el >= 10) { n++; if (!best || el > best.el) best = { el, km, name: s.name }; } }
+      rows.push([num(n), `satellites above you right now${best ? `. Highest: ${best.name}, ${Math.round(best.el)}° up, ${num(best.km)} km away` : ""}`]); }
+    { let n = 0, best = null;
+      for (const m of planes.map.values()) { const km = Math.acos(Math.min(1, dot(norm(moverPos(m, t)), me.p))) * 6371; if (km <= 150) { n++; if (!best || km < best.km) best = { km, m }; } }
+      rows.push([num(n), best ? `aircraft within 150 km. Nearest: ${best.m.title}, ${Math.round(best.km)} km away (${best.m.sub})` : "aircraft tracked within 150 km right now"]); }
+    if (SATS.length) { let ps = me.pass || (me.pass = issPass());
+      if (ps) { const el = elev(satPos(ps.sat.el, t), me.p)[0];
+        if (el < 10 && ps.start != null && Date.now() > ps.start) ps = me.pass = issPass();       // that pass is over: find the next
+        const mins = ps.start == null ? null : Math.round((ps.start - Date.now()) / 60000);
+        rows.push(["ISS", el >= 10 ? `the space station is above you now, ${Math.round(el)}° up` : mins == null ? "no space station pass over you in the next 24 hours" : `next space station pass in about ${mins >= 60 ? Math.floor(mins / 60) + " h " + (mins % 60) + " min" : Math.max(1, mins) + " min"}, climbing to ${Math.round(ps.peak)}° (estimate)`]); } }
+    if (WX) { const c = tempC(me.lon, me.lat), u = wxAt(WX.u, me.lon, me.lat) * 0.5, v = wxAt(WX.v, me.lon, me.lat) * 0.5, from = COMPASS[Math.round((((Math.atan2(-u, -v) / DEG) + 360) % 360) / 45) % 8];
+      rows.push([`${Math.round(c)}°C`, `(${Math.round(c * 9 / 5 + 32)}°F) air temperature, with wind at ${Math.round(Math.hypot(u, v) * 3.6)} km/h from the ${from} (weather model, about 100 km resolution)`]); }
+    if (S.quakeList) { let n = 0, top = 0; for (const k of S.quakeList) if (Math.acos(Math.min(1, dot(ll(k.lon, k.lat), me.p))) * 6371 <= 500) { n++; top = Math.max(top, k.m); }
+      if (n) rows.push([num(n), `earthquake${n > 1 ? "s" : ""} within 500 km in the last 24 hours, the strongest magnitude ${top.toFixed(1)}`]); }
+    if (S.auroraGrid) { const v = S.auroraGrid[(((Math.round(me.lon) % 360) + 360) % 360) * 181 + Math.round(me.lat) + 90]; if (v >= 5) rows.push([v + "%", "chance of aurora overhead in the next 30 minutes"]); }
+    const body = $("#meBody"); body.textContent = "";
+    for (const [n, text] of rows) { const r = el("div", "mr"); r.append(el("b", "mono", n), el("span", null, text)); body.append(r); }
+    body.append(el("p", "mn", `Using ${me.src}. Worked out on this device; only a rounded position goes to adsb.lol to find nearby aircraft.`));
+  }
+  function trackMe() {
+    if (!me.on || !me.p) return;
+    if (!facing(me.p)) { meEl.style.display = "none"; return; }
+    const s = project(me.p); meEl.style.display = "block"; meEl.style.transform = `translate(${s[0].toFixed(1)}px,${s[1].toFixed(1)}px)`;
+  }
+
+  /* ---------- replay: the last 24 hours in half a minute ----------
+     Only things with a time attached can replay: the day-and-night line, the earthquakes (in the order they happened)
+     and the satellites (run along their orbits). Everything live-only is hidden meanwhile, and the bar says so. */
+  const replay = { on: false, f: 0, play: true, base: 0, hold: 0, scrub: false };
+  const replayTime = () => replay.base - 86400000 * (1 - replay.f);
+  function startReplay() {
+    stopTour(); closeMe(); select(null);
+    Object.assign(replay, { on: true, f: 0, play: true, base: Date.now(), hold: 0 });
+    $("#rp").hidden = false; $("#board").hidden = true; if (narrow()) $("#panel").open = false; $("#rpPlay").textContent = "❚❚"; $("#rpBtn").textContent = "■ Live";
+  }
+  function stopReplay() { if (!replay.on) return; replay.on = false; $("#rp").hidden = true; $("#rpBtn").textContent = "↺ Replay 24 h"; SUN = sunDir(); buildQuakes(null); }
+  function updateReplay(dt) {
+    if (!replay.on) return;
+    if (replay.play && !replay.scrub) { replay.f = Math.min(1, replay.f + dt / 28); if (replay.f >= 1 && (replay.hold += dt) > 2.5) return stopReplay(); }
+    const T = replayTime(); SUN = sunDir(new Date(T));
+    if (frame % 5 === 0) { const n = buildQuakes(T);
+      $("#rpTime").textContent = new Date(T).toUTCString().slice(5, 22) + " UTC"; $("#rpN").textContent = L.quakes.on ? `${num(n)} earthquake${n === 1 ? "" : "s"} so far` : "";
+      if (!replay.scrub) $("#rpRange").value = Math.round(replay.f * 1000); }
+  }
+
+  /* ---------- share: a link that opens on this exact view (place, zoom and which layers are on) ---------- */
+  function shareUrl() {
+    const off = LAYERS.filter((l) => !l.on && !l.off).map((l) => l.id), on = LAYERS.filter((l) => l.on && l.off).map((l) => l.id);
+    return location.origin + location.pathname + `?at=${wrapLon(cam.lon).toFixed(1)},${cam.lat.toFixed(1)},${cam.dist.toFixed(2)}` + (off.length ? "&off=" + off.join(",") : "") + (on.length ? "&on=" + on.join(",") : "");
+  }
+  let toastT = 0;
+  function toast(text) { const e = $("#toast"); e.textContent = text; e.classList.add("in"); clearTimeout(toastT); toastT = setTimeout(() => e.classList.remove("in"), 3200); }
+  async function share() {
+    const url = shareUrl();
+    if (navigator.share) { try { await navigator.share({ title: "World Pulse", text: "A live 3D map of the networks that run the planet", url }); return; } catch (e) { if (e && e.name === "AbortError") return; } }
+    try { await navigator.clipboard.writeText(url); toast("Link to this view copied"); } catch (e) { history.replaceState(null, "", url); toast("The link to this view is now in the address bar"); }
+  }
+
+  if ($("#tourBtn")) {
+    $("#tourBtn").onclick = () => (tour.on ? stopTour() : startTour()); $("#capNext").onclick = nextStep; $("#capStop").onclick = stopTour;
+    $("#meBtn").onclick = aboveMe; $("#meX").onclick = closeMe; $("#shBtn").onclick = share;
+    $("#rpBtn").onclick = () => (replay.on ? stopReplay() : startReplay()); $("#rpX").onclick = stopReplay;
+    $("#rpPlay").onclick = () => { if (replay.f >= 1) { replay.f = 0; replay.hold = 0; replay.play = true; } else replay.play = !replay.play; $("#rpPlay").textContent = replay.play ? "❚❚" : "▶"; };
+    const rg = $("#rpRange"); rg.oninput = () => { replay.f = rg.value / 1000; replay.hold = 0; };
+    rg.addEventListener("pointerdown", () => { replay.scrub = true; }); for (const ev of ["pointerup", "pointercancel", "change"]) rg.addEventListener(ev, () => { replay.scrub = false; });
+  }
 
   /* ---------- the sun ---------- */
-  function sunDir() {
-    const d = new Date(), start = Date.UTC(d.getUTCFullYear(), 0, 0), doy = (d - start) / 86400000, h = d.getUTCHours() + d.getUTCMinutes() / 60 + d.getUTCSeconds() / 3600;
+  function sunDir(d = new Date()) {
+    const start = Date.UTC(d.getUTCFullYear(), 0, 0), doy = (d - start) / 86400000, h = d.getUTCHours() + d.getUTCMinutes() / 60 + d.getUTCSeconds() / 3600;
     const B = (2 * Math.PI * (doy - 81)) / 364, eot = 9.87 * Math.sin(2 * B) - 7.53 * Math.cos(B) - 1.5 * Math.sin(B);
     return ll(-15 * (h - 12 + eot / 60), -23.44 * Math.cos((2 * Math.PI * (doy + 10)) / 365));
   }
@@ -923,11 +1179,12 @@
     if (document.hidden) { last = now(); return; }
     const t = now(), raw = t - last, dt = Math.min(0.1, raw); last = t; frame++; watchPerf(raw);
     if (canvas.clientWidth !== W || canvas.clientHeight !== H) resize();
-    updateTour(dt); updateCamera(dt);
+    updateTour(dt); updateReplay(dt); updateCamera(dt);
     if (world) reveal = Math.min(1, reveal + dt / 2.4);
-    if (frame % 120 === 1) { SUN = sunDir(); $("#utc").textContent = new Date().toISOString().slice(11, 19) + " UTC"; }
+    if (frame % 120 === 1) { if (!replay.on) SUN = sunDir(); $("#utc").textContent = new Date().toISOString().slice(11, 19) + " UTC"; }
     else if (frame % 20 === 0) $("#utc").textContent = new Date().toISOString().slice(11, 19) + " UTC";
-    spawnVital(dt, t);
+    const live = !replay.on;                                       // live-only layers are hidden during the replay
+    if (live) spawnVital(dt, t);
     if (evDirty) { M.events.set(evData); evDirty = false; }
     for (const s of [planes, ships, trains]) if (s.dirty && frame % 20 === 0) s.rebuild();
 
@@ -943,27 +1200,29 @@
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
 
     drawLines(M.grid, t, { tint: [0.2, 0.7, 1], gradF: 4, gradMix: 0.6 });
-    drawPoints(M.sea, t, { reveal, sun: 1, twinkle: 0.7, wave: 1.6 });
-    drawPoints(M.land, t, { reveal, sun: 1, twinkle: 0.3, wave: 1 });
+    if (L.temp.on && live && M.temp) drawPoints(M.temp, t, { reveal, twinkle: 0.2 });      // temperature recolours the land and sea dots
+    else { drawPoints(M.sea, t, { reveal, sun: 1, twinkle: 0.7, wave: 1.6 }); drawPoints(M.land, t, { reveal, sun: 1, twinkle: 0.3, wave: 1 }); }
     drawLines(M.coast, t, { lift: 0.0005, tint: [0.25, 0.9, 1], gradF: 5, gradMix: 0.7, pulse: 0.5, freq: 1.5, speed: 0.12, hot: [0.8, 1, 1] });
     if (L.pop.on) drawPoints(M.lights, t, { lift: 0.0008, sun: 2, twinkle: 0.5 });
     if (L.roads.on) { drawLines(M.roads, t, { lift: 0.001, pulse: 1, freq: 28, speed: 0.55, hot: [1, 0.95, 0.7], tint: [1, 0.3, 0.45], gradF: 30 }); drawPoints(M.roadLive, t, { lift: 0.002, twinkle: 0.6 }); }
     if (L.rail.on) drawLines(M.rails, t, { lift: 0.0012, pulse: 1, freq: 20, speed: 0.4, hot: [0.95, 1, 0.7], tint: [0.2, 0.95, 0.75], gradF: 24 });
     if (L.net.on) { drawLines(M.cables, t, { lift: 0.0016, pulse: 1.3, freq: 7, speed: 0.6, hot: [1, 1, 1], tint: [0.75, 0.3, 1], gradF: 9 }); drawPoints(M.dcs, t, { lift: 0.0022, twinkle: 0.55 }); }
-    if (L.ships.on) { drawPoints(M.ports, t, { lift: 0.0018, twinkle: 0.3 }); drawOther(ships.mesh, P_MOVER, t); }
-    if (L.rail.on) drawOther(trains.mesh, P_MOVER, t);
+    if (L.ships.on) { drawPoints(M.ports, t, { lift: 0.0018, twinkle: 0.3 }); if (live) drawOther(ships.mesh, P_MOVER, t); }
+    if (L.rail.on && live) drawOther(trains.mesh, P_MOVER, t);
     if (L.routes.on) { drawLines(M.arcs, t, { tint: [1, 0.55, 0.8], gradF: 3.1416, gradMix: 1 }); drawOther(M.flow, P_FLOW, t); drawPoints(M.airports, t, { lift: 0.0025, twinkle: 0.2 }); }
-    if (L.planes.on) drawOther(planes.mesh, P_MOVER, t);
-    if (L.rain.on) drawOther(M.rain, P_RAIN, t);
+    if (L.planes.on && live) drawOther(planes.mesh, P_MOVER, t);
+    if (L.wind.on && live) { drawLines(M.wind, t, { pulse: 1, freq: 1, speed: 0.4, hot: [1, 1, 1] }); drawLines(M.jet, t, { pulse: 1.1, freq: 1, speed: 0.55, hot: [1, 1, 0.9] }); }
+    if (L.clouds.on && live) drawPoints(M.clouds, t, { sun: 1, twinkle: 0.35 });
+    if (L.rain.on && live) drawOther(M.rain, P_RAIN, t);
     if (L.power.on) drawPoints(M.power, t, { lift: 0.002, twinkle: 0.45 });
     if (L.quakes.on) drawPoints(M.quakes, t, { lift: 0.003, twinkle: 0.95 });
     if (L.events.on) drawPoints(M.eonet, t, { lift: 0.004, twinkle: 0.8 });
-    if (L.aurora.on) drawPoints(M.aurora, t, { twinkle: 0.95 });
-    if (L.sats.on && M.sats) { const u = use(P_SAT, t); gl.uniform1f(u.uGmst, gmst()); gl.bindVertexArray(M.sats.vao); gl.drawArrays(gl.POINTS, 0, M.sats.count); }
-    if (L.space.on) drawOther(iss.mesh, P_MOVER, t);
+    if (L.aurora.on && live) drawPoints(M.aurora, t, { twinkle: 0.95 });
+    if (L.sats.on && M.sats) { const u = use(P_SAT, t), rt = live ? Date.now() : replayTime(); if (!live) gl.uniform1f(u.uNow, t + (rt - Date.now()) / 1000); gl.uniform1f(u.uGmst, gmst(rt)); gl.bindVertexArray(M.sats.vao); gl.drawArrays(gl.POINTS, 0, M.sats.count); }
+    if (L.space.on && live) drawOther(iss.mesh, P_MOVER, t);
     if (L.pop.on) { drawLines(M.popLines, t, { pulse: 0.9, freq: 1, speed: 0.45, hot: [1, 1, 1] }); drawPoints(M.popDots, t, { twinkle: 0.55 }); }
-    if (L.vital.on) drawOther(M.events, P_EVENT, t);
-    if (L.markets.on) { drawLines(M.stockLines, t, { pulse: 1.4, freq: 1, speed: 0.7, hot: [1, 1, 1] }); drawPoints(M.stockHeads, t, { twinkle: 0.6 }); drawLines(M.spikes, t, { pulse: 1.5, freq: 1, speed: 0.9, hot: [1, 1, 1] }); drawPoints(M.heads, t, { twinkle: 0.5 }); }
+    if (L.vital.on && live) drawOther(M.events, P_EVENT, t);
+    if (L.markets.on) { drawLines(M.stockLines, t, { pulse: 1.4, freq: 1, speed: 0.7, hot: [1, 1, 1] }); drawPoints(M.stockHeads, t, { twinkle: 0.6 }); drawPoints(M.xRings, t, { lift: 0.001, twinkle: 0.9 }); drawLines(M.spikes, t, { pulse: 1.5, freq: 1, speed: 0.9, hot: [1, 1, 1] }); drawPoints(M.heads, t, { twinkle: 0.5 }); }
 
     // resolve the anti-aliased picture, bloom it at three sizes, then tone-map to the screen
     gl.bindFramebuffer(gl.READ_FRAMEBUFFER, RT.ms); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, RT.scene.fbo);
@@ -974,17 +1233,18 @@
     gl.enable(gl.BLEND);
     gl.bindVertexArray(null);
     if (frame % 2 === 0) layoutLabels();
-    trackSel(t); if (frame % 15 === 0) updateHead(dt * 15);
+    trackSel(t); trackMe(); if (frame % 15 === 0) updateHead(dt * 15); if (me.on && frame % 60 === 0) renderMe();
   }
 
   /* ---------- data ---------- */
   const getJson = async (url) => { const r = await fetch(url, { cache: "no-cache" }); if (!r.ok) throw new Error(r.status); return r.json(); };
   getJson("../data/globe/world.json").then(buildWorld).catch(() => { reveal = 1; for (const id of ["routes", "ships", "rail", "roads", "net", "pop", "vital", "power"]) L[id].status("off", "first data sync in progress, check back in a few minutes"); });
   const loadMarkets = () => getJson("../data/globe/markets.json").then(buildMarkets).catch(() => { if (!MK) L.markets.status("off", "first data sync in progress"); });
-  loadMarkets(); setInterval(loadMarkets, 5 * 60000); loadStocks(); setInterval(loadStocks, 5 * 60000);
-  if (/[?&]tour/.test(location.search) && !EMBED) setTimeout(startTour, 7000);     // world-pulse.html?tour starts the tour by itself
+  loadMarkets(); setInterval(loadMarkets, 5 * 60000); loadStocks(); setInterval(loadStocks, 5 * 60000); loadWeather(); setInterval(loadWeather, 30 * 60000);
+  if (EMBED) setTimeout(startTour, 9000);                           // the embedded preview tours by itself, on a loop
+  else if (QS.has("tour")) setTimeout(startTour, 7000);              // world-pulse.html?tour starts the tour by itself
   if (/[?&]board/.test(location.search)) { $("#board").hidden = false; $("#panel").open = false; }
   L.planes.status("off", "connecting to live feed"); L.rain.status("off", "loading the latest satellite image");
-  setTimeout(pollPlanes, 1200); setTimeout(pollShips, 2500); setTimeout(pollTrains, 3500); setTimeout(pollRoads, 4500); setTimeout(pollRain, 800); setTimeout(pollQuakes, 1500); setTimeout(pollEvents, 2000); setTimeout(pollAurora, 3000); setTimeout(pollIss, 1000); loadSats();
+  setTimeout(pollPlanes, 1200); setTimeout(pollShips, 2500); setTimeout(pollTrains, 3500); setTimeout(pollRoads, 4500); setTimeout(pollRain, 800); setTimeout(pollQuakes, 1500); setTimeout(pollEvents, 2000); setTimeout(pollAurora, 3000); setTimeout(pollIss, 1000); setTimeout(pollClouds, 1800); loadSats();
   tick();
 })();

@@ -1,6 +1,7 @@
 # World Pulse data: feeds the 3D globe at viz/world-pulse.html (Media > Visualization).
 # - Markets (data/globe/markets.json): delayed world indexes, commodities and currencies, every 30 minutes on weekdays.
 # - Satellites (data/globe/sats.json): orbits of every active satellite from CelesTrak, every 6 hours.
+# - Weather (data/globe/weather.json): wind, jet stream and temperature from NOAA's GFS model, at most every 2.5 hours.
 # - Infrastructure (data/globe/world.json): land, coast, ports, railways, airports, routes, data centres and cables
 #   from open data, once a week, and whenever the tools below change.
 name: World Pulse data
@@ -13,7 +14,7 @@ on:
     - cron: "50 */6 * * *"
   push:
     branches: [tenshi-cms]
-    paths: ["tools/globe-data.mjs", "tools/globe-markets.mjs", "tools/globe-sats.mjs", "tools/globe-stocks.mjs", ".github/workflows/globe-data.yml"]
+    paths: ["tools/globe-data.mjs", "tools/globe-markets.mjs", "tools/globe-sats.mjs", "tools/globe-stocks.mjs", "tools/globe-weather.mjs", ".github/workflows/globe-data.yml"]
   workflow_dispatch:
 
 permissions:
@@ -42,6 +43,9 @@ jobs:
         continue-on-error: true
       - name: Fetch satellite orbits (at most every 6 hours)
         run: node tools/globe-sats.mjs
+        continue-on-error: true
+      - name: Fetch wind, jet stream and temperature (at most every 2.5 hours)
+        run: node tools/globe-weather.mjs
         continue-on-error: true
       - name: Fetch infrastructure (weekly, on a tool change, or when the file is missing)
         if: github.event_name != 'schedule' || github.event.schedule == '27 5 * * 0' || hashFiles('data/globe/world.json') == ''

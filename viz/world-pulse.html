@@ -68,18 +68,25 @@
   #stat.in { opacity:1; }
   #statN { font-size:17px; font-weight:700; color:#fff; text-shadow:0 0 14px rgba(255,79,216,.55); }
   #statL { color:var(--mute); font-size:11px; }
-  #tourBtn { margin-top:8px; border:1px solid var(--line); border-radius:99px; padding:5px 12px; font:inherit; font-size:10.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#fff; cursor:pointer; background:linear-gradient(90deg,rgba(124,58,237,.6),rgba(219,39,119,.5)); }
-  #tourBtn:hover { box-shadow:0 0 16px rgba(219,39,119,.45); }
-  body.embed #tourBtn, body.embed #cap, body.embed #sel { display:none; }
+  #acts { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  #acts button { border:1px solid var(--line); border-radius:99px; padding:5px 11px; font:inherit; font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#fff; cursor:pointer; background:rgba(255,255,255,.06); white-space:nowrap; }
+  #acts #tourBtn { background:linear-gradient(90deg,rgba(124,58,237,.6),rgba(219,39,119,.5)); }
+  #acts button:hover { box-shadow:0 0 16px rgba(219,39,119,.45); }
+  body.embed #acts, body.embed #cap .cb { display:none; }
+  body.embed #dock { align-items:flex-start; left:12px; right:12px; bottom:92px; }
+  body.embed #dock > section { width:min(400px,100%); }
+  @media (min-width:700px) { body.embed #dock { bottom:46px; right:220px; } }
 
   #sel { position:fixed; left:0; top:0; width:0; height:0; pointer-events:none; display:none; z-index:3; }
   #sel::before, #sel::after { content:""; position:absolute; left:-13px; top:-13px; width:26px; height:26px; border-radius:50%; border:1.5px solid #fff; box-shadow:0 0 10px var(--pink), inset 0 0 6px rgba(255,79,216,.6); }
   #sel::after { border-color:var(--pink); box-shadow:none; animation:ping 1.6s ease-out infinite; }
   @keyframes ping { from { transform:scale(.8); opacity:.9; } to { transform:scale(2.4); opacity:0; } }
 
-  #cap { position:fixed; left:50%; bottom:46px; transform:translate(-50%,8px); width:min(460px,calc(100vw - 20px)); padding:11px 14px 13px; z-index:5; opacity:0; transition:opacity .45s, transform .45s; overflow:hidden; }
+  #cap { padding:11px 14px 13px; opacity:0; transform:translateY(8px); transition:opacity .45s, transform .45s; overflow:hidden; }
   #cap[hidden] { display:none; }
-  #cap.in { opacity:1; transform:translate(-50%,0); }
+  #cap.in { opacity:1; transform:none; }
+  #cap .ca { display:inline-block; margin-top:9px; padding:6px 14px; border-radius:99px; color:#fff; font-weight:700; font-size:12px; text-decoration:none; background:linear-gradient(90deg,#7c3aed,#db2777); box-shadow:0 0 18px rgba(219,39,119,.4); }
+  #cap .ca[hidden] { display:none; }
   #cap .ck { font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--pink); padding-right:120px; }
   #cap .ct { font-weight:700; font-size:15px; margin-top:2px; }
   #cap .cs { color:var(--mute); font-size:12px; margin-top:3px; }
@@ -90,10 +97,30 @@
 
   #tip { position:fixed; pointer-events:none; padding:8px 11px; max-width:250px; font-size:11.5px; display:none; z-index:5; }
   #tip .x { display:none; }
-  #tip.card { pointer-events:auto; left:10px; right:10px; bottom:44px; top:auto; max-width:none; padding:12px 44px 13px 14px; font-size:12.5px; z-index:6; }
-  #tip.card .x { display:block; position:absolute; top:4px; right:4px; width:38px; height:38px; background:none; border:0; color:var(--ink); font-size:22px; line-height:1; cursor:pointer; }
+  /* the dock: everything that sits along the bottom (selection card, "above me", replay bar, tour caption) stacks here */
+  #dock { position:fixed; left:10px; right:10px; bottom:46px; display:flex; flex-direction:column; align-items:center; gap:8px; pointer-events:none; z-index:5; }
+  #dock > section, #tip.card { position:relative; width:min(460px,100%); pointer-events:auto; }
+  #tip.card { max-width:none; padding:12px 44px 13px 14px; font-size:12.5px; }
+  #tip.card .x, .cx { display:block; position:absolute; top:3px; right:3px; width:38px; height:38px; background:none; border:0; color:var(--ink); font-size:22px; line-height:1; cursor:pointer; }
   #tip.card .t { font-size:15px; }
-  @media (min-width:761px) { #tip.card { left:50%; right:auto; transform:translateX(-50%); width:420px; } }
+  #me, #rp { padding:11px 14px 12px; }
+  #me[hidden], #rp[hidden] { display:none; }
+  .mk { font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--pink); padding-right:40px; }
+  #me .mr { display:grid; grid-template-columns:58px 1fr; gap:9px; align-items:baseline; margin-top:6px; font-size:12px; color:var(--mute); }
+  #me .mr b { color:#fff; font-size:15px; text-align:right; }
+  #me .mn { margin-top:8px; font-size:10.5px; color:var(--mute); }
+  #meBody { font-size:12px; color:var(--mute); margin-top:4px; }
+  #rp .rt { display:flex; justify-content:space-between; gap:10px; align-items:baseline; margin-top:3px; }
+  #rpTime { font-size:15px; font-weight:700; color:#fff; } #rpN { color:var(--mute); font-size:11.5px; }
+  #rp .rc { display:flex; gap:10px; align-items:center; margin-top:6px; }
+  #rpPlay { flex:none; width:36px; height:36px; border-radius:50%; border:1px solid var(--line); background:rgba(124,58,237,.45); color:#fff; font-size:12px; cursor:pointer; }
+  #rpRange { flex:1; min-width:0; height:30px; accent-color:#db2777; }
+  #rp .rn { margin-top:4px; font-size:10.5px; color:var(--mute); }
+  #meDot { position:fixed; left:0; top:0; width:0; height:0; pointer-events:none; display:none; z-index:3; }
+  #meDot::before, #meDot::after { content:""; position:absolute; left:-7px; top:-7px; width:14px; height:14px; border-radius:50%; background:var(--cyan); box-shadow:0 0 14px var(--cyan); }
+  #meDot::after { background:none; border:1.5px solid var(--cyan); box-shadow:none; animation:ping 1.8s ease-out infinite; }
+  #toast { position:fixed; left:50%; top:14px; transform:translateX(-50%); padding:8px 15px; border-radius:99px; font-size:12px; z-index:9; opacity:0; transition:opacity .3s; pointer-events:none; white-space:nowrap; }
+  #toast.in { opacity:1; }
   #tip .k { font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--pink); }
   #tip .t { font-weight:700; font-size:13px; }
   #tip .s { color:var(--mute); }
@@ -137,8 +164,9 @@
     #brand { padding:8px 11px; } #brand h1 { font-size:15px; } #brand p { display:none; }
     #panel { top:auto; bottom:44px; right:10px; left:10px; width:auto; max-height:56vh; }
     #hint { max-width:calc(100vw - 20px); white-space:normal; text-align:center; }
-    #stat { margin-top:5px; } #statN { font-size:15px; } #tourBtn { margin-top:6px; }
-    #tip.card, #cap, #hint { bottom:90px; }   /* clear of the closed Layers bar */
+    #stat { margin-top:5px; } #statN { font-size:15px; } #acts { margin-top:6px; }
+    #dock, #hint { bottom:90px; }   /* clear of the closed Layers bar */
+    body.embed #dock { bottom:92px; }
     #board { left:8px; right:8px; width:auto; bottom:42px; max-height:52vh; }
     #board .sr { grid-template-columns:50px 1fr 84px 52px; }
   }
@@ -146,7 +174,7 @@
 </style>
 </head>
 <body>
-<canvas id="gl" aria-label="Rotating 3D globe showing live aircraft, ships, trains, weather, earthquakes, internet cables, data centres, power stations and markets"></canvas>
+<canvas id="gl" aria-label="Rotating 3D globe showing live aircraft, ships, trains, weather, wind, temperature, earthquakes, internet cables, data centres, power stations and markets"></canvas>
 <div id="labels"></div>
 
 <header id="brand" class="glass">
@@ -155,7 +183,12 @@
   <p>The networks that run the planet, drawn live in fine particles.</p>
   <div id="clock" class="mono"><span class="dot live"></span><span id="utc">--:--:-- UTC</span></div>
   <div id="stat" aria-live="off"><b id="statN" class="mono"></b><span id="statL"></span></div>
-  <button id="tourBtn" type="button">&#9654; Take the tour</button>
+  <div id="acts">
+    <button id="tourBtn" type="button">&#9654; Tour</button>
+    <button id="meBtn" type="button">&#9678; Above me</button>
+    <button id="rpBtn" type="button">&#8634; Replay 24 h</button>
+    <button id="shBtn" type="button">&#8599; Share</button>
+  </div>
 </header>
 
 <details id="panel" class="glass" open>
@@ -167,23 +200,40 @@
   <div id="layers"></div>
   <details id="src">
     <summary>Data sources</summary>
-    <p>Aircraft: <a href="https://adsb.lol" target="_blank" rel="noopener">adsb.lol</a> (ODbL), live. Ships and trains: <a href="https://www.digitraffic.fi/en/" target="_blank" rel="noopener">Fintraffic / digitraffic.fi</a> (CC BY 4.0), live for Finland and the Baltic. Data centres and cables: &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors (ODbL). Airports: OurAirports (public domain). Routes: OpenFlights (ODbL), a 2014 snapshot. Land, ports and railways: Natural Earth (public domain). Precipitation: NASA GPM IMERG through <a href="https://earthdata.nasa.gov/gibs" target="_blank" rel="noopener">NASA GIBS</a>, a satellite estimate a few hours behind real time. Earthquakes: USGS, live. Wildfires, storms and volcanoes: NASA EONET. Aurora: NOAA Space Weather Prediction Center. Satellites: orbital elements from <a href="https://celestrak.org" target="_blank" rel="noopener">CelesTrak</a>, moved with a simplified orbit model. Space station: wheretheiss.at. Power stations: WRI Global Power Plant Database (CC BY 4.0). Population: <a href="https://www.geonames.org" target="_blank" rel="noopener">GeoNames</a> (CC BY 4.0). Markets: Yahoo Finance, delayed. Births and deaths: modelled from World Bank Open Data rates (CC BY 4.0); each spark is a statistically expected event, not a record of a person. Road counts: Fintraffic (Finland). Day and night: worked out from the time.</p>
+    <p>Aircraft: <a href="https://adsb.lol" target="_blank" rel="noopener">adsb.lol</a> (ODbL), live. Ships and trains: <a href="https://www.digitraffic.fi/en/" target="_blank" rel="noopener">Fintraffic / digitraffic.fi</a> (CC BY 4.0), live for Finland and the Baltic. Data centres and cables: &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors (ODbL). Airports: OurAirports (public domain). Routes: OpenFlights (ODbL), a 2014 snapshot. Land, ports and railways: Natural Earth (public domain). Precipitation: NASA GPM IMERG through <a href="https://earthdata.nasa.gov/gibs" target="_blank" rel="noopener">NASA GIBS</a>, a satellite estimate a few hours behind real time. Clouds: VIIRS / MODIS corrected reflectance through NASA GIBS, yesterday's passes; bright, colourless pixels are taken as cloud. Wind, jet stream and temperature: NOAA GFS weather model (public domain), a calculated picture at about 100 km resolution, refreshed every few hours. Earthquakes: USGS, live. Wildfires, storms and volcanoes: NASA EONET. Aurora: NOAA Space Weather Prediction Center. Satellites: orbital elements from <a href="https://celestrak.org" target="_blank" rel="noopener">CelesTrak</a>, moved with a simplified orbit model. Space station: wheretheiss.at. Power stations: WRI Global Power Plant Database (CC BY 4.0). Population: <a href="https://www.geonames.org" target="_blank" rel="noopener">GeoNames</a> (CC BY 4.0). Markets: Yahoo Finance, delayed; open or closed is worked out from each exchange's regular hours, without public holidays. Satellites above you and space station passes: worked out in your browser from the same orbits, as estimates. Births and deaths: modelled from World Bank Open Data rates (CC BY 4.0); each spark is a statistically expected event, not a record of a person. Road counts: Fintraffic (Finland). Day and night: worked out from the time.</p>
     <p>Not for navigation or trading.</p>
   </details>
 </details>
 
 <div id="sel" aria-hidden="true"></div>
-<div id="tip" class="glass"></div>
-<section id="cap" class="glass" hidden aria-live="polite">
-  <div class="ck"></div><div class="ct"></div><div class="cs"></div>
-  <div class="cb"><button id="capNext" type="button">Next &rsaquo;</button><button id="capStop" type="button" aria-label="Stop the tour">&times;</button></div>
-  <div class="cp"><i id="capBar"></i></div>
-</section>
+<div id="meDot" aria-hidden="true"></div>
+<div id="dock">
+  <div id="tip" class="glass"></div>
+  <section id="me" class="glass" hidden aria-live="polite">
+    <div class="mk">Above you right now</div>
+    <button id="meX" class="cx" type="button" aria-label="Close">&times;</button>
+    <div id="meBody"></div>
+  </section>
+  <section id="rp" class="glass" hidden>
+    <div class="mk">Replay &middot; the last 24 hours</div>
+    <button id="rpX" class="cx" type="button" aria-label="Back to live">&times;</button>
+    <div class="rt"><span id="rpTime" class="mono"></span><span id="rpN"></span></div>
+    <div class="rc"><button id="rpPlay" type="button" aria-label="Play or pause">&#10074;&#10074;</button><input id="rpRange" type="range" min="0" max="1000" value="0" aria-label="Time in the last 24 hours"></div>
+    <div class="rn">Replaying day and night, earthquakes and satellite orbits. Aircraft, ships, trains, wind and weather are live-only, so they are hidden until you return to live.</div>
+  </section>
+  <section id="cap" class="glass" hidden aria-live="polite">
+    <div class="ck"></div><div class="ct"></div><div class="cs"></div>
+    <a id="capLink" class="ca" href="../contact.html" target="_top" hidden></a>
+    <div class="cb"><button id="capNext" type="button">Next &rsaquo;</button><button id="capStop" type="button" aria-label="Stop the tour">&times;</button></div>
+    <div class="cp"><i id="capBar"></i></div>
+  </section>
+</div>
+<div id="toast" class="glass" role="status"></div>
 <div id="hint" class="glass">Drag to spin &middot; scroll or pinch to zoom &middot; hover or click a point for details</div>
 <a id="cta" href="world-pulse.html" target="_top">Explore full screen &rarr;</a>
 <section id="board" class="glass" hidden aria-label="Markets today"></section>
 <div id="ticker"><button id="boardBtn" class="tag" type="button" hidden><span class="dot delay"></span>Markets today &#9652;</button><div id="tape" class="mono"></div></div>
 <div id="msg"></div>
-<script src="world-pulse.js?v=20261127a"></script>
+<script src="world-pulse.js?v=20261127c"></script>
 </body>
 </html>

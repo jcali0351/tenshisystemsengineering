@@ -198,6 +198,19 @@ Server facts: Hostinger KVM 2 VPS, Ubuntu 24.04, Caddy (HTML sent with `Cache-Co
   `watchPerf` lowers the render scale `Q` when the page runs under ~40 fps; feeds stop polling while their layer is off.
   Aircraft: `HUBS` (63 named points) are swept in turn, so the count is a sample. Live ships stay Baltic-only: no
   worldwide ship feed fits the rules below (the open ones need a key or a relay).
+- More (2026-11-27, later): **Above me** (`aboveMe`, `renderMe`: satellites above the visitor's horizon, nearby aircraft,
+  the next space-station pass via `issPass`, local temperature and wind; falls back to the centre of the view when
+  location is refused; only a position rounded to 0.1° goes to adsb.lol). **Share** (`shareUrl`: `?at=lon,lat,dist`,
+  `&off=` / `&on=` layer ids; read at start-up). **Replay** (`startReplay`, `updateReplay`: day/night, earthquakes from
+  `S.quakeList` via `buildQuakes(until)`, satellites run on their orbits; live-only layers are hidden meanwhile).
+  **Tour**: each stop can ring its subject (`mark`), the embedded preview tours by itself on a loop, and the last stop
+  carries the "Talk to us" link to contact.html. **Markets**: `HOURS` + `isOpen` light the exchanges trading now
+  (regular hours, no holidays). Everything along the bottom stacks in `#dock`.
+- Weather layers: **clouds** (`pollClouds`: yesterday's NASA GIBS true-colour picture, bright colourless pixels = cloud;
+  starts off; could not be checked against real imagery from the build sandbox, so look at it before turning it on by
+  default), **wind & jet stream** and **temperature** (`buildWeather` from `data/globe/weather.json`, written by
+  `tools/globe-weather.mjs` from NOAA GFS 1° GRIB2 files read with ecCodes `grib_get_data` on the Action runner;
+  temperature starts off). A layer with `off: true` in `LAYERS` starts switched off.
 - Owner's rules for it: commercial-safe data only (no OpenSky, no TeleGeography), no server relay, real data with
   honest labels (live / delayed / static / modelled), fine particles, never blobby.
 
