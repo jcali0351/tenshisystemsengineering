@@ -33,7 +33,7 @@
   .dot.off { background:#57507a; }
   @keyframes blink { 50% { opacity:.35; } }
 
-  #panel { position:fixed; top:14px; right:14px; width:292px; max-height:calc(100vh - 86px); overflow:auto; }
+  #panel { position:fixed; top:14px; right:14px; width:292px; max-height:calc(100vh - 86px); overflow:auto; scrollbar-width:thin; scrollbar-color:rgba(170,130,255,.4) transparent; }
   #panel summary { list-style:none; cursor:pointer; padding:10px 14px; font-size:11px; letter-spacing:.14em; text-transform:uppercase; font-weight:700; display:flex; justify-content:space-between; align-items:center; }
   #panel summary::-webkit-details-marker { display:none; }
   #panel summary::after { content:"+"; color:var(--mute); font-size:15px; }
@@ -80,7 +80,7 @@
 </style>
 </head>
 <body>
-<canvas id="gl" aria-label="Rotating 3D globe showing live aircraft, ships, trains, internet cables, data centres and markets"></canvas>
+<canvas id="gl" aria-label="Rotating 3D globe showing live aircraft, ships, trains, weather, earthquakes, internet cables, data centres, power stations and markets"></canvas>
 <div id="labels"></div>
 
 <header id="brand" class="glass">
@@ -95,7 +95,7 @@
   <div id="layers"></div>
   <details id="src">
     <summary>Data sources</summary>
-    <p>Aircraft: <a href="https://adsb.lol" target="_blank" rel="noopener">adsb.lol</a> (ODbL), live. Ships and trains: <a href="https://www.digitraffic.fi/en/" target="_blank" rel="noopener">Fintraffic / digitraffic.fi</a> (CC BY 4.0), live for Finland and the Baltic. Data centres and cables: &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors (ODbL). Airports: OurAirports (public domain). Routes: OpenFlights (ODbL), a 2014 snapshot. Land, ports and railways: Natural Earth (public domain). Precipitation: NASA GPM IMERG through <a href="https://earthdata.nasa.gov/gibs" target="_blank" rel="noopener">NASA GIBS</a>, a satellite estimate a few hours behind real time. Population: <a href="https://www.geonames.org" target="_blank" rel="noopener">GeoNames</a> (CC BY 4.0). Markets: Yahoo Finance, delayed. Births and deaths: modelled from World Bank Open Data rates (CC BY 4.0); each spark is a statistically expected event, not a record of a person. Road counts: Fintraffic (Finland). Day and night: worked out from the time.</p>
+    <p>Aircraft: <a href="https://adsb.lol" target="_blank" rel="noopener">adsb.lol</a> (ODbL), live. Ships and trains: <a href="https://www.digitraffic.fi/en/" target="_blank" rel="noopener">Fintraffic / digitraffic.fi</a> (CC BY 4.0), live for Finland and the Baltic. Data centres and cables: &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors (ODbL). Airports: OurAirports (public domain). Routes: OpenFlights (ODbL), a 2014 snapshot. Land, ports and railways: Natural Earth (public domain). Precipitation: NASA GPM IMERG through <a href="https://earthdata.nasa.gov/gibs" target="_blank" rel="noopener">NASA GIBS</a>, a satellite estimate a few hours behind real time. Earthquakes: USGS, live. Wildfires, storms and volcanoes: NASA EONET. Aurora: NOAA Space Weather Prediction Center. Space station: wheretheiss.at. Power stations: WRI Global Power Plant Database (CC BY 4.0). Population: <a href="https://www.geonames.org" target="_blank" rel="noopener">GeoNames</a> (CC BY 4.0). Markets: Yahoo Finance, delayed. Births and deaths: modelled from World Bank Open Data rates (CC BY 4.0); each spark is a statistically expected event, not a record of a person. Road counts: Fintraffic (Finland). Day and night: worked out from the time.</p>
     <p>Not for navigation or trading.</p>
   </details>
 </details>
@@ -105,6 +105,6 @@
 <a id="cta" href="world-pulse.html" target="_top">Explore full screen &rarr;</a>
 <div id="ticker"><div class="tag"><span class="dot delay"></span>Markets</div><div id="tape" class="mono"></div></div>
 <div id="msg"></div>
-<script src="world-pulse.js?v=20261126c"></script>
+<script src="world-pulse.js?v=20261126e"></script>
 </body>
 </html>

@@ -6,6 +6,7 @@
 //   OurAirports (public domain): airports
 //   OpenFlights (ODbL): airline routes (a snapshot from 2014, no longer updated)
 //   World Bank Open Data (CC BY 4.0): population, birth rate and death rate per country (births and deaths layer)
+//   WRI Global Power Plant Database (CC BY 4.0): power stations by fuel (energy layer)
 //   GeoNames (CC BY 4.0): every town and city of 15,000 people or more (population layer)
 //   OpenStreetMap contributors (ODbL), through the Overpass API: data centres, submarine and long-haul telecom cables
 // A source that fails keeps what the last run saved, so one bad download never empties a layer.
@@ -57,7 +58,7 @@ async function step(key, fn) {
     out.status[key] = old.status?.[key] ? { ...old.status[key], stale: true } : { ok: false };
   }
 }
-const KEYS = { land: ["land"], coast: ["coast"], ports: ["ports"], rails: ["rails"], roads: ["roads"], air: ["airports", "routes"], dcs: ["dcs"], cables: ["cables"], vital: ["vital"], pop: ["pop"] };
+const KEYS = { land: ["land"], coast: ["coast"], ports: ["ports"], rails: ["rails"], roads: ["roads"], air: ["airports", "routes"], dcs: ["dcs"], cables: ["cables"], vital: ["vital"], pop: ["pop"], power: ["power"] };
 
 // Land as a 1440 x 720 bitmap (a quarter of a degree per cell); the page scatters fine particles over it.
 await step("land", async () => {
@@ -216,6 +217,17 @@ await step("pop", async () => {
   const pop = [...cells.values()].map((c) => [r2(c.x / c.n), r2(c.y / c.n), Math.round(c.n / 1000)]).filter((c) => c[2] >= 15);
   if (pop.length < 2000) throw new Error("population list looks too short");
   return { pop };
+});
+
+// Power stations of 30 MW and more: [lon, lat, MW, fuel number, name (only for 1,000 MW and more)].
+export const FUELS = ["Solar", "Wind", "Hydro", "Nuclear", "Gas", "Coal", "Oil", "Biomass", "Geothermal", "Other"];
+await step("power", async () => {
+  const rows = csv(await getText("https://raw.githubusercontent.com/wri/global-power-plant-database/master/output_database/global_power_plant_database.csv", 240000));
+  const h = rows[0], [N, MW, LA, LO, F] = ["name", "capacity_mw", "latitude", "longitude", "primary_fuel"].map((n) => h.indexOf(n));
+  const power = rows.slice(1).filter((r) => +r[MW] >= 30 && Number.isFinite(+r[LA]) && r[LA] !== "")
+    .map((r) => { const f = FUELS.indexOf(r[F] === "Waste" ? "Biomass" : r[F]); return [r2(+r[LO]), r2(+r[LA]), Math.round(+r[MW]), f < 0 ? 9 : f, +r[MW] >= 1000 ? r[N].slice(0, 40) : ""]; });
+  if (power.length < 3000) throw new Error("power station list looks too short");
+  return { power };
 });
 
 mkdirSync("data/globe", { recursive: true });

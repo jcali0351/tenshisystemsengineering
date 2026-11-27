@@ -12,7 +12,7 @@ export const SYMBOLS = [
   // Commodities (pinned at their benchmark hub)
   "CL=F", "BZ=F", "NG=F", "GC=F", "SI=F", "HG=F", "PL=F", "ZW=F", "ZC=F", "ZS=F",
   // Rates, volatility, the dollar and currencies (shown in the ticker strip)
-  "^TNX", "^VIX", "DX-Y.NYB", "EURUSD=X", "GBPUSD=X", "JPY=X", "CNY=X",
+  "^TNX", "^VIX", "DX-Y.NYB", "EURUSD=X", "GBPUSD=X", "JPY=X", "CNY=X", "BTC-USD", "ETH-USD", "SOL-USD",
 ];
 
 const UA = { "User-Agent": "Mozilla/5.0 (TenshiWorldPulse/1.0)" };
