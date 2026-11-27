@@ -219,6 +219,12 @@ Server facts: Hostinger KVM 2 VPS, Ubuntu 24.04, Caddy (HTML sent with `Cache-Co
   is the model swell beside the break plus the wind; the **Surf report** button in the bottom bar lists them, biggest
   swell first, in the same board the markets use, `boardMode`), **Tides** (`tide`: NOAA CO-OPS high/low predictions,
   US stations only; `tideNow` works out the level between them). `streamlines()` draws wind, jet, currents and swell.
+- **The sky**: real stars and the 88 constellations (`buildSky` from `data/globe/sky.json`, made once by hand with
+  `tools/globe-sky.py` from d3-celestial, BSD; the sky is drawn with `SKYM`, the camera's turn without its position,
+  turned by sidereal time). **The Moon** (`moonAt`: position and phase from formulas; `buildMoon` hangs NASA's map from
+  `data/globe/moon.json`, fetched once by `tools/globe-moon.py` in the Action; drawn `MOON_R` wide at `MOON_D` away,
+  about 15x too big and close, and the page says so; `MOONMARKS` label its seas and craters when it is large on screen;
+  a ring marks the spot on Earth under it). Mars is not built: the owner was asked whether it should be its own page.
 - Owner's rules for it: commercial-safe data only (no OpenSky, no TeleGeography), no server relay, real data with
   honest labels (live / delayed / static / modelled), fine particles, never blobby.
 

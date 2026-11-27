@@ -17,7 +17,7 @@ on:
     - cron: "33 * * * 0,6"
   push:
     branches: [tenshi-cms]
-    paths: ["tools/globe-data.mjs", "tools/globe-markets.mjs", "tools/globe-sats.mjs", "tools/globe-stocks.mjs", "tools/globe-weather.mjs", "tools/globe-ocean.mjs", ".github/workflows/globe-data.yml"]
+    paths: ["tools/globe-data.mjs", "tools/globe-markets.mjs", "tools/globe-sats.mjs", "tools/globe-stocks.mjs", "tools/globe-weather.mjs", "tools/globe-ocean.mjs", "tools/globe-moon.py", ".github/workflows/globe-data.yml"]
   workflow_dispatch:
 
 permissions:
@@ -52,6 +52,10 @@ jobs:
         continue-on-error: true
       - name: Fetch waves, ocean currents, tides and wave buoys
         run: node tools/globe-ocean.mjs
+        continue-on-error: true
+      - name: Fetch the Moon's map (once: only while data/globe/moon.json is missing)
+        if: hashFiles('data/globe/moon.json') == ''
+        run: python3 tools/globe-moon.py
         continue-on-error: true
       - name: Fetch infrastructure (weekly, on a tool change, or when the file is missing)
         if: github.event_name != 'schedule' || github.event.schedule == '27 5 * * 0' || hashFiles('data/globe/world.json') == ''

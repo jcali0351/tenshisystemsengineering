@@ -2,6 +2,7 @@
    Around the globe: a layer list with a freshness word per layer and a colour key, tap or click to select a point
    (a ring follows it), one rotating headline figure, a guided tour, "above me" (what is over the visitor's own spot),
    a replay of the last 24 hours, share links that reopen a view, and a render scale that drops if frames do.
+   The sky: real stars and constellations (sky.json) and the Moon at its true place and phase (moon.json).
    The sea (ocean.json): currents, swell, a surf report for well-known breaks, wave buoys and tide stations.
    Static layers come from data/globe/world.json (tools/globe-data.mjs), markets from data/globe/markets.json
    (tools/globe-markets.mjs); aircraft, ships, trains and road counts are fetched live in the visitor's browser. */
@@ -108,6 +109,15 @@
       vec3 c = h < 0.2 ? mix(vec3(0.55, 0.95, 1.0), vec3(0.9, 0.95, 1.0), aEl2.w) : h < 4.0 ? vec3(0.75, 0.55, 1.0) : vec3(1.0, 0.82, 0.45);
       float fade = 1.0 - aLag / 30.0;
       vColor = vec4(c, (aLag > 0.0 ? 0.4 : 0.95) * fade * mix(0.12, 1.0, smoothstep(-0.05, 0.05, dot(normalize(p), uCam) - 1.0 / length(p)))); gl_PointSize = max(1.0, (aLag > 0.0 ? 0.9 : 1.25) * uPx); }`, DOT_FS);
+
+  // The Moon: points on a sphere, lit by the real sun direction; the half turned away from the camera is not drawn.
+  const P_MOON = program(`in vec3 aPos; in float aAlb; in float aSeed;
+    uniform mat4 uMVP; uniform vec3 uSunL, uEyeL; uniform float uPx, uTime;
+    out vec4 vColor;
+    void main(){ gl_Position = uMVP * vec4(aPos, 1.0);
+      float lit = smoothstep(-0.04, 0.2, dot(aPos, uSunL)), face = smoothstep(0.0, 0.14, dot(aPos, normalize(uEyeL - aPos)));
+      vec3 c = mix(vec3(0.62, 0.68, 0.95), vec3(1.0, 0.97, 0.9), aAlb) * (0.22 + 1.05 * aAlb);
+      vColor = vec4(c * (0.035 + lit), face * (0.55 + 0.45 * aAlb) * (0.9 + 0.1 * sin(uTime * 1.3 + aSeed * 40.0))); gl_PointSize = max(1.0, (1.05 + aSeed * 0.5) * uPx); }`, DOT_FS);
 
   // Births rise as a bright spark; deaths fall away as a dim one.
   const P_EVENT = program(`in vec3 aPos; in float aT0; in float aKind;
@@ -233,6 +243,22 @@
     if (perf.tried) { perf.tried = false; if (avg > perf.prev * 0.92) { Q = perf.prevQ; perf.lock = true; resize(); return; } }
     if (avg > 1 / 40 && Q > 0.56) { perf.prev = avg; perf.prevQ = Q; Q = Math.max(0.55, Q * 0.8); perf.tried = true; perf.wait = 1.5; resize(); }
   }
+  // The sky is infinitely far away: it is drawn with the camera's turn but not its position, and turned by the
+  // sidereal angle so each star stands over the right spot on Earth. SKYM is that matrix, skyDeg the angle in degrees.
+  let SKYM = null, skyDeg = 0;
+  function updateSky(ms) {
+    const g = gmst(ms), c = Math.cos(-g), s = Math.sin(-g), V = VIEW.slice(); V[12] = V[13] = V[14] = 0; skyDeg = g / DEG;
+    SKYM = mul(mul(PROJ, V), [c, 0, -s, 0, 0, 1, 0, 0, s, 0, c, 0, 0, 0, 0, 1]);
+  }
+  const skyDir = (ra, dec) => ll(ra - skyDeg, dec);                 // where a star stands, as a direction from the Earth's centre
+  // Screen position of a sky direction, or null when it is behind the camera or hidden by the Earth.
+  function projectSky(v) {
+    const V = VIEW, x = V[0] * v[0] + V[4] * v[1] + V[8] * v[2], y = V[1] * v[0] + V[5] * v[1] + V[9] * v[2], z = V[2] * v[0] + V[6] * v[1] + V[10] * v[2];
+    if (z > -0.05) return null;
+    const b = dot(EYE, v); if (b < 0 && dot(EYE, EYE) - b * b < 1.02) return null;
+    return [(PROJ[0] * x / -z * 0.5 + 0.5) * W, (0.5 - PROJ[5] * y / -z * 0.5) * H];
+  }
+  const hiddenByEarth = (p) => { const d = [p[0] - EYE[0], p[1] - EYE[1], p[2] - EYE[2]], t = -dot(EYE, d) / dot(d, d); if (t <= 0 || t >= 1) return false; const q = [EYE[0] + d[0] * t, EYE[1] + d[1] * t, EYE[2] + d[2] * t]; return dot(q, q) < 1; };
   const project = (p) => { const x = MVP[0] * p[0] + MVP[4] * p[1] + MVP[8] * p[2] + MVP[12], y = MVP[1] * p[0] + MVP[5] * p[1] + MVP[9] * p[2] + MVP[13], w = MVP[3] * p[0] + MVP[7] * p[1] + MVP[11] * p[2] + MVP[15]; return [(x / w * 0.5 + 0.5) * W, (0.5 - y / w * 0.5) * H]; };
   const facing = (p) => dot(norm(p), EYE) > 1.02;
 
@@ -274,6 +300,8 @@
     { id: "aurora", name: "Aurora", color: [0.4, 1, 0.6], unit: "" },
     { id: "sats", name: "Satellites in orbit", color: [0.6, 0.95, 1], unit: "" },
     { id: "space", name: "Space station", color: [1, 1, 1], unit: "" },
+    { id: "moon", name: "The Moon", color: [0.92, 0.93, 1], unit: "" },
+    { id: "sky", name: "Constellations", color: [0.6, 0.66, 1], unit: "" },
     { id: "rain", name: "Weather: precipitation", color: [0.45, 0.75, 1], unit: "" },
     { id: "clouds", name: "Weather: clouds", color: [0.85, 0.92, 1], unit: "", off: true },          // off: starts switched off
     { id: "cur", name: "Ocean currents", color: [0.25, 0.7, 1], unit: "" },
@@ -316,6 +344,8 @@
       aurora: `${sw([0.25, 1, 0.5])} to ${sw([0.85, 0.35, 1])} curtains: the denser, the higher the chance of aurora overhead.`,
       sats: `${sw([0.55, 0.95, 1])} low orbit · ${sw([0.75, 0.55, 1])} medium orbit · ${sw([1, 0.82, 0.45])} high orbit (geostationary ring).`,
       space: `${sw([1, 1, 1])} the International Space Station, with a long trail.`,
+      moon: `${sw([0.92, 0.93, 1])} the Moon in fine particles: where it stands, how much of it is lit and the face it shows are real, from NASA's maps. It is drawn about 15 times too big and too close, so that you can see it. The ring on the Earth marks the spot where it is straight overhead.`,
+      sky: `${sw([0.6, 0.66, 1])} the real stars down to the faintest the eye can see, coloured as they are, with the 88 constellation figures. The sky turns once a day, as it does overhead.`,
       rain: `${sw([0.45, 0.75, 1])} falling streaks where satellites see rain or snow; colour follows NASA's rate scale.`,
       clouds: `${sw([0.85, 0.92, 1])} a fine white haze where yesterday's satellite pictures show bright cloud tops. Snow and ice can read as cloud.`,
       cur: `${sw([0.15, 0.35, 1])} to ${sw([1, 1, 1])} dashed lines that creep the way the surface water flows, whiter where it runs faster. Blank along the equator, where this satellite method does not work. Slow dashes, so they read apart from the wind.`,
@@ -921,6 +951,93 @@
     }
   }
 
+  /* ---------- the night sky: real stars and the 88 constellations (data/globe/sky.json, tools/globe-sky.py) ---------- */
+  let SKY = null; const conLabels = [];
+  const BV = [[-0.3, [0.62, 0.74, 1]], [0, [0.85, 0.9, 1]], [0.6, [1, 0.96, 0.86]], [1, [1, 0.84, 0.64]], [1.7, [1, 0.62, 0.42]]];   // star colour from its colour index
+  const bvCol = (b) => { for (let i = 1; i < BV.length; i++) if (b <= BV[i][0]) return mix3(BV[i - 1][1], BV[i][1], Math.max(0, (b - BV[i - 1][0]) / (BV[i][0] - BV[i - 1][0]))); return BV[BV.length - 1][1]; };
+  function buildSky(j) {
+    SKY = j; const a = [], s = j.stars;
+    for (let i = 0; i < s.length; i += 4) { const p = ll(s[i] / 100, s[i + 1] / 100), mag = s[i + 2] / 10, c = bvCol(s[i + 3] / 100), k = Math.max(0, (6.6 - mag) / 8);    // k: 0 faint .. 1 brightest
+      a.push(p[0], p[1], p[2], c[0], c[1], c[2], (0.25 + 0.75 * Math.pow(k, 1.2)) * 20, 1.0 + 3.4 * k * k, rnd()); }
+    M.stars = mesh(P_POINT, POINT, a, gl.POINTS);
+    M.conLines = mesh(P_LINE, LINE, lineVerts(j.cons.flatMap((c) => c[5]), [0.5, 0.58, 1], 4.4), gl.LINES);
+    for (const c of j.cons) { const e = document.createElement("div"); e.className = "lab sky"; e.textContent = c[1]; $("#labels").appendChild(e); conLabels.push({ el: e, ra: c[3], dec: c[4], rank: c[2] }); }
+    conLabels.sort((x, y) => x.rank - y.rank);
+    L.sky.count(j.cons.length); L.sky.status("static", `${num(s.length / 4)} real stars, turning with the sky overhead · Hipparcos catalogue`);
+  }
+  function layoutSky() {
+    const used = [], max = SMALL ? 5 : 12; let n = 0;
+    for (const c of conLabels) {
+      let s = L.sky.on && !EMBED && n < max ? projectSky(skyDir(c.ra, c.dec)) : null;
+      if (s && (s[0] < 50 || s[0] > W - 50 || s[1] < 40 || s[1] > H - 60 || used.some((u) => Math.abs(u[0] - s[0]) < 110 && Math.abs(u[1] - s[1]) < 20))) s = null;
+      if (s) { used.push(s); n++; c.el.style.display = "block"; c.el.style.left = s[0].toFixed(1) + "px"; c.el.style.top = s[1].toFixed(1) + "px"; } else c.el.style.display = "none";
+    }
+  }
+  const conName = (id) => { const c = SKY && SKY.cons.find((x) => x[0] === id || x[0].startsWith(id)); return c ? c[1] : ""; };
+
+  /* ---------- the Moon: where it really is, how much of it is lit, and its real face (data/globe/moon.json) ----------
+     Position from the standard low-precision formulas (good to about a third of a degree). The Moon keeps one face to
+     the Earth, so its map is hung with longitude 0 pointing at us and its pole square to the plane of the planets.
+     It is drawn MOON_R Earth-radii wide at MOON_D Earth-radii away: about 15 times too big and too close, said on the page. */
+  const MOON_D = 11, MOON_R = 0.75, moon = { p: null };
+  function moonAt(ms) {
+    const T = (ms / 86400000 + 2440587.5 - 2451545) / 36525, sn = (d) => Math.sin(d * DEG), cs = (d) => Math.cos(d * DEG);
+    const lam = 218.32 + 481267.881 * T + 6.29 * sn(135 + 477198.87 * T) - 1.27 * sn(259.3 - 413335.36 * T) + 0.66 * sn(235.7 + 890534.22 * T) + 0.21 * sn(269.9 + 954397.74 * T) - 0.19 * sn(357.5 + 35999.05 * T) - 0.11 * sn(186.5 + 966404.03 * T);
+    const bet = 5.13 * sn(93.3 + 483202.02 * T) + 0.28 * sn(228.2 + 960400.89 * T) - 0.28 * sn(318.3 + 6003.15 * T) - 0.17 * sn(217.6 - 407332.21 * T);
+    const par = 0.9508 + 0.0518 * cs(135 + 477198.87 * T) + 0.0095 * cs(259.3 - 413335.36 * T) + 0.0078 * cs(235.7 + 890534.22 * T) + 0.0028 * cs(269.9 + 954397.74 * T);
+    const eps = 23.439 - 0.013 * T, l = cs(bet) * cs(lam), m = cs(eps) * cs(bet) * sn(lam) - sn(eps) * sn(bet), n = sn(eps) * cs(bet) * sn(lam) + cs(eps) * sn(bet);
+    const g = gmst(ms) / DEG, lon = wrapLon(Math.atan2(m, l) / DEG - g), lat = Math.asin(n) / DEG, dir = ll(lon, lat);
+    const gs = 357.53 + 35999.05 * T, sun = 280.46 + 36000.77 * T + 1.915 * sn(gs) + 0.02 * sn(2 * gs), age = (((lam - sun) % 360) + 360) % 360;   // 0 new, 180 full
+    const Y0 = ll(270 - g, 90 - eps), d0 = dot(Y0, dir), Zm = [-dir[0], -dir[1], -dir[2]], Ym = norm([Y0[0] - d0 * dir[0], Y0[1] - d0 * dir[1], Y0[2] - d0 * dir[2]]), Xm = cross(Ym, Zm);
+    const lit = (1 - Math.cos(age * DEG)) / 2, name = lit < 0.03 ? "New Moon" : lit > 0.97 ? "Full Moon" : Math.abs(lit - 0.5) < 0.06 ? (age < 180 ? "First quarter" : "Last quarter") : (age < 180 ? "Waxing " : "Waning ") + (lit < 0.5 ? "crescent" : "gibbous");
+    return { lon, lat, dir, km: 6378.14 / sn(par), lit, name, X: Xm, Y: Ym, Z: Zm, c: [dir[0] * MOON_D, dir[1] * MOON_D, dir[2] * MOON_D] };
+  }
+  const moonPoint = (lon, lat) => { const f = ll(lon, lat), m = moon.p; return [m.c[0] + MOON_R * (f[0] * m.X[0] + f[1] * m.Y[0] + f[2] * m.Z[0]), m.c[1] + MOON_R * (f[0] * m.X[1] + f[1] * m.Y[1] + f[2] * m.Z[1]), m.c[2] + MOON_R * (f[0] * m.X[2] + f[1] * m.Y[2] + f[2] * m.Z[2])]; };
+  // Places on the Moon: [name, latitude, longitude east].
+  const MOONMARKS = [["Mare Imbrium", 32.8, -15.6], ["Mare Serenitatis", 28, 17.5], ["Mare Tranquillitatis", 8.5, 31.4], ["Mare Crisium", 17, 59.1], ["Mare Fecunditatis", -7.8, 51.3], ["Mare Nectaris", -15.2, 35.5], ["Mare Nubium", -21.3, -16.6], ["Mare Humorum", -24.4, -38.6], ["Oceanus Procellarum", 18.4, -57.4], ["Mare Frigoris", 56, 1.4],
+    ["Tycho", -43.3, -11.4], ["Copernicus", 9.6, -20.1], ["Kepler", 8.1, -38], ["Aristarchus", 23.7, -47.4], ["Plato", 51.6, -9.4], ["Clavius", -58.4, -14.4], ["Apollo 11", 0.67, 23.47], ["Mare Orientale", -19.4, -92.8], ["Tsiolkovskiy", -20.4, 129.1], ["South Pole-Aitken basin", -53, -169], ["Mare Moscoviense", 27.3, 147.9]];
+  const moonLabels = MOONMARKS.map((m) => { const e = document.createElement("div"); e.className = "lab sky moonlab"; e.textContent = m[0]; $("#labels").appendChild(e); return { el: e, lat: m[1], lon: m[2] }; });
+  function buildMoon(map) {
+    const N = LITE ? 45000 : 100000, a = [], g = Math.PI * (3 - Math.sqrt(5)), px = map ? Uint8Array.from(atob(map.b64), (c) => c.charCodeAt(0)) : null;
+    for (let i = 0; i < N; i++) { const y = 1 - (i + 0.5) / N * 2, r = Math.sqrt(1 - y * y), th = i * g, x = Math.sin(th) * r, z = Math.cos(th) * r;
+      let alb = 0.6; if (px) { const lon = Math.atan2(x, z) / DEG, lat = Math.asin(y) / DEG; alb = px[Math.min(map.h - 1, Math.floor((90 - lat) / 180 * map.h)) * map.w + Math.min(map.w - 1, Math.floor((lon + 180) / 360 * map.w))] / 255; }
+      a.push(x, y, z, alb, rnd()); }
+    M.moon = mesh(P_MOON, [["aPos", 3], ["aAlb", 1], ["aSeed", 1]], a, gl.POINTS); moon.map = !!map;
+  }
+  buildMoon(null);                                                  // a plain grey Moon until its map arrives
+  function updateMoon(ms) {
+    const m = moon.p = moonAt(ms);
+    if (frame % 240 === 2) {
+      L.moon.count(`${Math.round(m.lit * 100)}%`); L.moon.status("model", `${m.name.toLowerCase()} · ${num(m.km)} km away · position and phase calculated${moon.map ? ", face from NASA's maps" : ""} · drawn much too big and too close`);
+      const a = [], p = ll(m.lon, m.lat); a.push(p[0], p[1], p[2], 0.92, 0.93, 1, 1, 2.2, 0.5); ring(a, m.lon, m.lat, 2.4, 70, [0.92, 0.93, 1], 0.75, 1.1, 0.2); ring(a, m.lon, m.lat, 4.2, 90, [0.92, 0.93, 1], 0.3, 0.95, 0.6);
+      dyn("sublunar").set(a); dropPicks("moon");
+      picks.push({ p, layer: "moon", live: "moon", kind: "Under the Moon", title: "The Moon is straight overhead here", sub: "The bulge of water it raises follows this spot round the planet, which is why the tides keep the Moon's time" });
+    }
+  }
+  const moonCard = () => { const m = moon.p; return { layer: "moon", sat: true, kind: "The Moon · " + m.name.toLowerCase(), title: `${Math.round(m.lit * 100)}% lit · ${num(m.km)} km away`, sub: "Position, phase and face are real. Drawn about 15 times too big and too close: it is really 60 Earth-radii away and a quarter of the Earth's width.", pos: () => moon.p.c }; };
+  // Screen centre and radius of the Moon, or null when it is behind the camera.
+  function moonOnScreen() {
+    const m = moon.p; if (!m) return null; const d = [m.c[0] - EYE[0], m.c[1] - EYE[1], m.c[2] - EYE[2]], fwd = -dot(d, norm(EYE)); if (fwd < 0.5) return null;
+    return { s: project(m.c), r: MOON_R / fwd / Math.tan(17 * DEG) * (H / 2), behind: fwd > Math.hypot(EYE[0], EYE[1], EYE[2]) };
+  }
+  function drawMoon(t) {
+    const m = moon.p, u = use(P_MOON, t), R = MOON_R;
+    gl.uniformMatrix4fv(u.uMVP, false, mul(MVP, [m.X[0] * R, m.X[1] * R, m.X[2] * R, 0, m.Y[0] * R, m.Y[1] * R, m.Y[2] * R, 0, m.Z[0] * R, m.Z[1] * R, m.Z[2] * R, 0, m.c[0], m.c[1], m.c[2], 1]));
+    const e = [(EYE[0] - m.c[0]) / R, (EYE[1] - m.c[1]) / R, (EYE[2] - m.c[2]) / R];
+    gl.uniform3f(u.uSunL, dot(SUN, m.X), dot(SUN, m.Y), dot(SUN, m.Z)); gl.uniform3f(u.uEyeL, dot(e, m.X), dot(e, m.Y), dot(e, m.Z));
+    gl.bindVertexArray(M.moon.vao); gl.drawArrays(gl.POINTS, 0, M.moon.count);
+  }
+  function layoutMoon() {
+    const on = L.moon.on && !EMBED && moon.p ? moonOnScreen() : null, show = on && on.r > 38, used = [];
+    for (const f of moonLabels) {
+      let s = null;
+      if (show && used.length < (on.r < 70 ? 3 : SMALL ? 5 : 9)) { const p = moonPoint(f.lon, f.lat), n = [p[0] - moon.p.c[0], p[1] - moon.p.c[1], p[2] - moon.p.c[2]];
+        if (dot(n, [EYE[0] - p[0], EYE[1] - p[1], EYE[2] - p[2]]) > 0.25 * MOON_R * Math.hypot(EYE[0] - p[0], EYE[1] - p[1], EYE[2] - p[2]) && !hiddenByEarth(p)) s = project(p);
+        if (s && used.some((q) => Math.abs(q[0] - s[0]) < 96 && Math.abs(q[1] - s[1]) < 16)) s = null; }
+      if (s) { used.push(s); f.el.style.display = "block"; f.el.style.left = s[0].toFixed(1) + "px"; f.el.style.top = s[1].toFixed(1) + "px"; } else f.el.style.display = "none";
+    }
+  }
+
   /* ---------- more live layers: earthquakes, natural events, aurora, the space station ---------- */
   const dyn = (key) => (M[key] = M[key] || mesh(P_POINT, POINT, null, gl.POINTS, true));
   const dropPicks = (tag) => { for (let i = picks.length - 1; i >= 0; i--) if (picks[i].live === tag) picks.splice(i, 1); };
@@ -1048,6 +1165,9 @@
       for (const [key, m] of set.map) if (near(moverPos(m, t), layer)) best = { layer, kind, title: m.title, sub: m.sub, pos: (t2) => { const x = set.map.get(key); return x ? moverPos(x, t2) : null; } };
     if (L.sats.on && SATS.length && !best) for (const sat of SATS) { const p = satNow(sat.el, t); if (dot(norm(p), EYE) < 1 / Math.hypot(p[0], p[1], p[2])) continue; const sc = project(p), d = (sc[0] - mx) ** 2 + (sc[1] - my) ** 2;
       if (d < bd) { bd = d; best = { layer: "sats", sat: true, kind: "Satellite · live orbit", title: sat.name, sub: `${Math.round((sat.el[0] - 1) * 6371).toLocaleString("en-US")} km up`, pos: (t2) => satNow(sat.el, t2) }; } }
+    if (!best && L.moon.on && moon.p) { const o = moonOnScreen(); if (o && !hiddenByEarth(moon.p.c) && (o.s[0] - mx) ** 2 + (o.s[1] - my) ** 2 < Math.max(rad, o.r) ** 2) best = moonCard(); }
+    if (!best && L.sky.on && SKY) for (const s of SKY.named) { const q = projectSky(skyDir(s[0], s[1])); if (!q) continue; const d = (q[0] - mx) ** 2 + (q[1] - my) ** 2;
+      if (d < bd) { bd = d; best = { layer: "sky", sky: [s[0], s[1]], kind: "Star" + (conName(s[4]) ? " · in " + conName(s[4]) : ""), title: s[3], sub: `magnitude ${s[2].toFixed(1)}${s[2] < 1.5 ? ", one of the brightest in the sky" : ""}` }; } }
     return best;
   }
   // card: a sheet in the bottom dock with a close button (touch and small screens); otherwise a tooltip beside the point.
@@ -1075,11 +1195,14 @@
   function trackSel(t) {
     const mark = !sel && tour.on ? tour.steps[tour.i].mark : null;
     if (!sel && !mark) { if (selEl.style.display !== "none") selEl.style.display = "none"; return; }
-    const p = sel ? (sel.pos ? sel.pos(t) : sel.p) : mark();
-    if (sel && (!p || (sel.layer && !L[sel.layer].on))) return select(null);
-    const seen = p && (sel && sel.sat ? dot(norm(p), EYE) >= 1 / Math.hypot(p[0], p[1], p[2]) : facing(p));
-    if (!seen) { selEl.style.display = "none"; return; }
-    const s = project(p); selEl.style.display = "block"; selEl.style.transform = `translate(${s[0].toFixed(1)}px,${s[1].toFixed(1)}px)`;
+    if (sel && sel.layer && !L[sel.layer].on) return select(null);
+    let s = null;
+    if (sel && sel.sky) s = projectSky(skyDir(sel.sky[0], sel.sky[1]));          // a star: a direction, not a place
+    else { const p = sel ? (sel.pos ? sel.pos(t) : sel.p) : mark();
+      if (sel && !p) return select(null);
+      if (p && (sel && sel.sat ? !hiddenByEarth(p) : facing(p))) s = project(p); }
+    if (!s) { selEl.style.display = "none"; return; }
+    selEl.style.display = "block"; selEl.style.transform = `translate(${s[0].toFixed(1)}px,${s[1].toFixed(1)}px)`;
     if (sel && !tip.classList.contains("card")) placeTip(s[0], s[1]);
   }
 
@@ -1142,6 +1265,11 @@
     if (L.quakes.on && S.quake) add("Earthquakes · live", `Strongest in 24 hours: magnitude ${S.quake.m.toFixed(1)}`, `${S.quake.place || "Location not named"} · ${new Date(S.quake.time).toISOString().slice(11, 16)} UTC (USGS).`, () => [S.quake.lon, S.quake.lat], { dist: 2.1 });
     if (L.events.on && S.event) add(`${S.event.kind} · active`, S.event.title, `One of the natural events NASA is tracking right now (EONET).`, () => [S.event.lon, S.event.lat], { dist: 2.1 });
     if (L.aurora.on && S.aurora && S.aurora.v >= 25) add("Aurora · live forecast", "Northern and southern lights", `${S.aurora.v}% chance of aurora overhead here in the next 30 minutes (NOAA).`, () => [S.aurora.lon, S.aurora.lat], { dist: 2.5, mark: false });
+    if (L.moon.on && moon.p) { const m = moon.p, tall = W / H < 1, f = tall ? Math.min(2.9, 1.12 / (W / H)) : 1;
+      // Look from the far side of the Earth, a little off the line to the Moon, so it stands clear of the Earth's edge:
+      // above the Earth on a wide screen, beside a smaller Earth on a tall one (a phone has little room top and bottom).
+      add("The Moon · calculated", `${m.name}, ${Math.round(m.lit * 100)}% lit`, `${num(m.km)} km away right now, and straight overhead at the ring on the far side of the Earth. Its pull raises the tides. Drawn much bigger and closer than it is, with its real face and phase.`,
+        () => (tall ? [moon.p.lon + 193.5, -moon.p.lat + (SMALL ? 5 : 0)] : [moon.p.lon + 180, -moon.p.lat + 20.5 + (SMALL ? 5 : 0)]), { dist: tall ? Math.min(6, 1 + 11 / f) : 1 + 5 / f, mark: false, dur: 10 }); }
     if (L.space.on && iss.map.has("iss")) add("Space station · live", "The International Space Station", `${iss.map.get("iss").sub}, with a crew on board.`, () => { const m = iss.map.get("iss"); return m ? lonlat(moverPos(m, now())) : null; }, { dist: 2.6, mark: () => { const m = iss.map.get("iss"); return m ? moverPos(m, now()) : null; } });
     add("World Pulse · by Tenshi Systems Engineering", "That's the planet right now", (EMBED ? "Open it full screen to explore." : "Drag, pinch and tap to explore.") + " Tenshi builds live maps like this for your own data.", () => [cam.lon, 20], { dist: 3.9, dur: 11, mark: false, link: ["Talk to us →", "../contact.html"] });
     return out;
@@ -1218,6 +1346,8 @@
       const t = st && tideNow(st, Date.now() / 60000); if (t) rows.push(["Tide", `at ${st[2]}: ${tideText(t)} (predicted)`]); }
     if (S.quakeList) { let n = 0, top = 0; for (const k of S.quakeList) if (Math.acos(Math.min(1, dot(ll(k.lon, k.lat), me.p))) * 6371 <= 500) { n++; top = Math.max(top, k.m); }
       if (n) rows.push([num(n), `earthquake${n > 1 ? "s" : ""} within 500 km in the last 24 hours, the strongest magnitude ${top.toFixed(1)}`]); }
+    if (moon.p) { const el = Math.asin(Math.max(-1, Math.min(1, dot(me.p, moon.p.dir)))) / DEG;
+      rows.push(["Moon", `${moon.p.name.toLowerCase()}, ${Math.round(moon.p.lit * 100)}% lit, ${el > 0 ? `${Math.round(el)}° above your horizon` : "below your horizon right now"}`]); }
     if (S.auroraGrid) { const v = S.auroraGrid[(((Math.round(me.lon) % 360) + 360) % 360) * 181 + Math.round(me.lat) + 90]; if (v >= 5) rows.push([v + "%", "chance of aurora overhead in the next 30 minutes"]); }
     const body = $("#meBody"); body.textContent = "";
     for (const [n, text] of rows) { const r = el("div", "mr"); r.append(el("b", "mono", n), el("span", null, text)); body.append(r); }
@@ -1312,6 +1442,8 @@
     if (frame % 120 === 1) { if (!replay.on) SUN = sunDir(); $("#utc").textContent = new Date().toISOString().slice(11, 19) + " UTC"; }
     else if (frame % 20 === 0) $("#utc").textContent = new Date().toISOString().slice(11, 19) + " UTC";
     const live = !replay.on;                                       // live-only layers are hidden during the replay
+    { const ms = live ? Date.now() : replayTime(); updateSky(ms); updateMoon(ms); }
+    const moonView = L.moon.on ? moonOnScreen() : null;
     if (live) spawnVital(dt, t);
     if (evDirty) { M.events.set(evData); evDirty = false; }
     for (const s of [planes, ships, trains]) if (s.dirty && frame % 20 === 0) s.rebuild();
@@ -1320,7 +1452,9 @@
     gl.disable(gl.BLEND);
     pass(P_BG, { fbo: RT.ms, w: RT.w, h: RT.h }, (u) => { gl.uniform2f(u.uOff, cam.lon / 50, -cam.lat / 50); gl.uniform1f(u.uAsp, W / H); });
     gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
-    { const u = use(P_POINT, t); gl.uniform3fv(u.uCam, [0, 0, 0]); gl.uniform1f(u.uLift, 0); gl.uniform1f(u.uReveal, 1); gl.uniform1f(u.uSunMix, 0); gl.uniform1f(u.uWave, 0); gl.uniform1f(u.uTwinkle, 0.55); gl.uniform1f(u.uPx, RS); gl.bindVertexArray(M.stars.vao); gl.drawArrays(gl.POINTS, 0, M.stars.count); }
+    { const u = use(P_POINT, t); gl.uniform3fv(u.uCam, [0, 0, 0]); gl.uniform1f(u.uLift, 0); gl.uniform1f(u.uReveal, 1); gl.uniform1f(u.uSunMix, 0); gl.uniform1f(u.uWave, 0); gl.uniform1f(u.uTwinkle, 0.55); gl.uniform1f(u.uPx, RS); gl.uniformMatrix4fv(u.uMVP, false, SKYM); gl.bindVertexArray(M.stars.vao); gl.drawArrays(gl.POINTS, 0, M.stars.count); }
+    if (L.sky.on && M.conLines) { const u = use(P_LINE, t); gl.uniformMatrix4fv(u.uMVP, false, SKYM); gl.uniform3fv(u.uCam, [0, 0, 0]); gl.uniform1f(u.uLift, 0); gl.uniform1f(u.uPulse, 0.35); gl.uniform1f(u.uFreq, 6); gl.uniform1f(u.uSpeed, 0.08); gl.uniform3fv(u.uHot, [0.9, 0.95, 1]); gl.uniform3fv(u.uTint, [0.75, 0.5, 1]); gl.uniform1f(u.uGradF, 9); gl.uniform1f(u.uGradMix, 0.5); gl.bindVertexArray(M.conLines.vao); gl.drawArrays(gl.LINES, 0, M.conLines.count); }
+    if (moonView && moonView.behind) drawMoon(t);                   // the Moon beyond the Earth goes down first, so the Earth covers it
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     { const u = P_ATMO.u; gl.useProgram(P_ATMO.p); gl.uniformMatrix4fv(u.uProj, false, PROJ); gl.uniform1f(u.uD, viewD); gl.uniform1f(u.uS, viewD / Math.sqrt(viewD * viewD - 1));
       gl.uniform3f(u.uSunV, VIEW[0] * SUN[0] + VIEW[4] * SUN[1] + VIEW[8] * SUN[2], VIEW[1] * SUN[0] + VIEW[5] * SUN[1] + VIEW[9] * SUN[2], VIEW[2] * SUN[0] + VIEW[6] * SUN[1] + VIEW[10] * SUN[2]);
@@ -1354,7 +1488,10 @@
     if (L.space.on && live) drawOther(iss.mesh, P_MOVER, t);
     if (L.pop.on) { drawLines(M.popLines, t, { pulse: 0.9, freq: 1, speed: 0.45, hot: [1, 1, 1] }); drawPoints(M.popDots, t, { twinkle: 0.55 }); }
     if (L.vital.on && live) drawOther(M.events, P_EVENT, t);
+    if (L.moon.on) drawPoints(M.sublunar, t, { lift: 0.004, twinkle: 0.6 });
     if (L.markets.on) { drawLines(M.stockLines, t, { pulse: 1.4, freq: 1, speed: 0.7, hot: [1, 1, 1] }); drawPoints(M.stockHeads, t, { twinkle: 0.6 }); drawPoints(M.xRings, t, { lift: 0.001, twinkle: 0.9 }); drawLines(M.spikes, t, { pulse: 1.5, freq: 1, speed: 0.9, hot: [1, 1, 1] }); drawPoints(M.heads, t, { twinkle: 0.5 }); }
+
+    if (moonView && !moonView.behind) drawMoon(t);                  // the Moon on the camera's side of the Earth goes down last
 
     // resolve the anti-aliased picture, bloom it at three sizes, then tone-map to the screen
     gl.bindFramebuffer(gl.READ_FRAMEBUFFER, RT.ms); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, RT.scene.fbo);
@@ -1364,7 +1501,7 @@
     pass(P_COMP, null, (u) => { bindTex(0, RT.scene, u.uScene); bindTex(1, RT.b1[0], u.uB1); bindTex(2, RT.b2[0], u.uB2); bindTex(3, RT.b3[0], u.uB3); gl.uniform1f(u.uTime, t % 100); gl.uniform2f(u.uRes, RT.w, RT.h); });
     gl.enable(gl.BLEND);
     gl.bindVertexArray(null);
-    if (frame % 2 === 0) layoutLabels();
+    if (frame % 2 === 0) { layoutLabels(); layoutSky(); layoutMoon(); }
     trackSel(t); trackMe(); if (frame % 15 === 0) updateHead(dt * 15); if (me.on && frame % 60 === 0) renderMe();
   }
 
@@ -1373,6 +1510,8 @@
   getJson("../data/globe/world.json").then(buildWorld).catch(() => { reveal = 1; for (const id of ["routes", "ships", "rail", "roads", "net", "pop", "vital", "power", "mil"]) L[id].status("off", "first data sync in progress, check back in a few minutes"); });
   const loadMarkets = () => getJson("../data/globe/markets.json").then(buildMarkets).catch(() => { if (!MK) L.markets.status("off", "first data sync in progress"); });
   loadMarkets(); setInterval(loadMarkets, 5 * 60000); loadStocks(); setInterval(loadStocks, 5 * 60000); loadWeather(); setInterval(loadWeather, 30 * 60000); setTimeout(loadOcean, 600); setInterval(loadOcean, 20 * 60000);
+  getJson("../data/globe/sky.json").then(buildSky).catch(() => L.sky.status("off", "star catalogue could not be loaded"));
+  getJson("../data/globe/moon.json").then(buildMoon).catch(() => {});
   if (EMBED) setTimeout(startTour, 9000);                           // the embedded preview tours by itself, on a loop
   else if (QS.has("tour")) setTimeout(startTour, 7000);              // world-pulse.html?tour starts the tour by itself
   if (/[?&]board/.test(location.search)) { $("#board").hidden = false; $("#panel").open = false; }
