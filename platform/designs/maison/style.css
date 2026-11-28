@@ -215,6 +215,7 @@ h3 { font-size: 1.35rem; }
 /* hero: centred, serif, arched picture */
 .ma-hero { background: var(--s); color: var(--i); padding: clamp(60px, 9vw, 120px) 0 clamp(50px, 7vw, 100px); }
 .ma-hero h1, .ma-hero .lead { color: var(--i); }
+.ma-hero .kicker { color: var(--p); }
 .ma-hero .hero-in { grid-template-columns: 1fr; text-align: center; gap: clamp(36px, 6vw, 70px); }
 .ma-hero .hero-text { max-width: 860px; margin-inline: auto; }
 .ma-hero .lead { margin-inline: auto; color: var(--ma-muted); font-size: clamp(1.05rem, 1.8vw, 1.22rem); }
