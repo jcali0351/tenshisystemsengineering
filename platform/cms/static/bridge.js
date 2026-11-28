@@ -69,6 +69,7 @@
     });
     el.addEventListener("keydown", function (e) {
       if (e.key === "Enter" && !rich) { e.preventDefault(); el.blur(); }   // one line only
+      if (e.key === "Escape") { e.preventDefault(); el.blur(); }
       if (rich && (e.ctrlKey || e.metaKey) && /^[biu]$/i.test(e.key)) {
         e.preventDefault(); document.execCommand({ b: "bold", i: "italic", u: "underline" }[e.key.toLowerCase()]);
         el.dispatchEvent(new Event("input", { bubbles: true }));
