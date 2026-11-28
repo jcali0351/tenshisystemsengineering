@@ -261,3 +261,12 @@ Server facts: Hostinger KVM 2 VPS, Ubuntu 24.04, Caddy (HTML sent with `Cache-Co
 - 2026-11-28, later the same night: the owner changed the buttons and nav to white and grey (white fill, grey edge, dark grey text; grey nav links, light grey for the current page and the Launch pill). The logo stays lime. These rules sit at the end of white-theme.css, after the lime ones.
 
 - 2026-11-28: land dots take their true colour (green forest, tan and brown desert, white ice) from `data/globe/earth.jpg`, NASA Blue Marble via GIBS, fetched once by `tools/globe-earth.py`. Without the file the old teal-to-violet ramp shows. The scheduled copies of `globe-data.yml` and `globe-live.yml` live on `main` (merged by the owner, PR #2); the copy on `tenshi-cms` runs on pushes. When a workflow step changes, `main` needs the same change through a pull request for the owner to merge. The aircraft tool asks adsb.lol one request a second (faster gets HTTP 429).
+
+## Only Farms (2026-11-28)
+- `only-farms/` (tenshisystems.com/only-farms/): a tractors-and-farms site the owner asked for, built from every tractor photo in
+  the CMS stock library (`platform/cms/stock_seed/tractors` + farm-equipment tractors; `/platform*` is private on the server, so
+  `tools/only-farms.py` copies them into `only-farms/photos/`, makes 560 px previews in `only-farms/thumbs/` and writes
+  `only-farms/photos.json` with title, kinds, year, make and credit). Static: `index.html`, `farm.css`, `farm.js` (bump `?v=`).
+  Not touched by build-pages, neon or white themes. Credits show in the photo viewer and the footer list (CC BY photos).
+- The owner also has an "only-farms" site in the client CMS (cms.tenshisystems.com) and wants it at only-farms.tenshisystems.co;
+  that site was not reachable from a phone session. This static copy can be moved in when the owner is at a computer.

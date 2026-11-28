@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Only Farms · Tractors, fields and farm life</title>
+<meta name="description" content="Only Farms: a working gallery of tractors and farm life, from 1920s oil-pull giants to today's vario tractors. Ploughing, haying, harvest and winter work.">
+<meta name="theme-color" content="#2f4a22">
+<meta property="og:title" content="Only Farms · Tractors, fields and farm life">
+<meta property="og:description" content="Hundreds of tractor and farm photos, sorted by era and by the work they do.">
+<meta property="og:image" content="https://tenshisystems.com/only-farms/photos/silage-windrows-and-tractor-1-4e24621e.webp">
+<link rel="icon" href="tractor.svg" type="image/svg+xml">
+<link rel="stylesheet" href="farm.css?v=1">
+<link rel="preload" as="image" href="photos/silage-windrows-and-tractor-1-4e24621e.webp">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top" id="top">
+  <a class="brand" href="#top" aria-label="Only Farms, home">
+    <img src="tractor.svg" alt="" width="38" height="38">
+    <span>Only <b>Farms</b></span>
+  </a>
+  <button class="menu-btn" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span><em>Menu</em></button>
+  <nav id="nav" class="nav">
+    <a href="#kinds">The work</a>
+    <a href="#decades">Through the decades</a>
+    <a href="#seasons">Seasons</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#about">About</a>
+    <a class="nav-cta" href="#contact">Contact</a>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <img class="hero-img" src="photos/silage-windrows-and-tractor-1-4e24621e.webp" alt="A tractor working rows of cut grass across a wide green field" fetchpriority="high">
+    <div class="hero-shade"></div>
+    <div class="hero-text">
+      <p class="eyebrow">Tractors · Fields · Farm life</p>
+      <h1>The machines that work the land.</h1>
+      <p class="lede">A working gallery of farm tractors, from 1920s steel-wheeled giants to today's GPS-guided field machines, out ploughing, haying, harvesting and clearing snow.</p>
+      <div class="hero-btns">
+        <a class="btn btn-primary" href="#gallery">Explore the gallery</a>
+        <a class="btn btn-ghost" href="#decades">Browse by era</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="facts" aria-label="The collection in numbers">
+    <div><b data-count="photos">378</b><span>tractor photos</span></div>
+    <div><b data-count="makes">42</b><span>makes, Allis to Zetor</span></div>
+    <div><b data-count="span">1920–2024</b><span>a century of machines</span></div>
+    <div><b>6</b><span>kinds of farm work</span></div>
+  </section>
+
+  <section class="band" id="kinds">
+    <div class="wrap">
+      <p class="eyebrow">The work</p>
+      <h2>What tractors do all year</h2>
+      <p class="sub">Tap a kind of work to see every photo of it.</p>
+      <div class="kinds" id="kindCards"></div>
+    </div>
+  </section>
+
+  <section class="band band-soil" id="decades">
+    <div class="wrap">
+      <p class="eyebrow">Through the decades</p>
+      <h2>A hundred years on four wheels</h2>
+      <p class="sub">From steel lugs and kerosene to cabs, tracks and computers. Swipe through time.</p>
+    </div>
+    <div class="timeline" id="timeline" tabindex="0" aria-label="Tractors by year"></div>
+  </section>
+
+  <section class="band" id="seasons">
+    <div class="wrap">
+      <p class="eyebrow">The farm year</p>
+      <h2>Every season has its job</h2>
+      <div class="seasons" id="seasonCards"></div>
+    </div>
+  </section>
+
+  <section class="band band-wheat" id="gallery">
+    <div class="wrap">
+      <p class="eyebrow">The gallery</p>
+      <h2>Every tractor in the barn</h2>
+      <div class="tools">
+        <div class="chips" id="chips" role="toolbar" aria-label="Filter photos"></div>
+        <label class="search"><span class="sr">Search tractors</span>
+          <input id="q" type="search" placeholder="Search: John Deere, Farmall, snow…" autocomplete="off">
+        </label>
+      </div>
+      <p class="count" id="count" aria-live="polite"></p>
+      <div class="grid" id="grid"></div>
+      <div class="more-wrap"><button class="btn btn-primary" id="more" hidden>Show more tractors</button></div>
+    </div>
+  </section>
+
+  <section class="band" id="about">
+    <div class="wrap about">
+      <div>
+        <p class="eyebrow">About</p>
+        <h2>Only farms. Only tractors.</h2>
+        <p>Only Farms celebrates the machines and the people that keep the land working: the restored Farmall at the county show, the Fendt pulling a cultivator at dawn, the old Massey that still clears the lane after the first snow.</p>
+        <p>Every photo here comes from open collections such as Wikimedia Commons. Open any picture to see who took it and under which licence.</p>
+      </div>
+      <img src="photos/tractor-moving-a-hay-bale-past-cattle-d16806ae.webp" alt="A tractor carrying a round hay bale past cattle in a pasture" loading="lazy">
+    </div>
+  </section>
+
+  <section class="band band-green" id="contact">
+    <div class="wrap contact">
+      <h2>Got a tractor story?</h2>
+      <p>A restoration, a family machine or a photo from the field. We'd love to hear about it.</p>
+      <a class="btn btn-wheat" href="https://tenshisystems.com/contact.html">Get in touch</a>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="tractor.svg" alt="" width="30" height="30"><span>Only <b>Farms</b></span></a>
+    <p>Photos from Wikimedia Commons and other open collections. Each photo's creator and licence show when you open it.</p>
+    <details class="credits"><summary>Photo credits</summary><ol id="credits"></ol></details>
+    <p class="small">Site by <a href="https://tenshisystems.com/">Tenshi Systems Engineering</a> · Madison, Wisconsin</p>
+  </div>
+</footer>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <button class="lb-x" id="lbX" aria-label="Close">×</button>
+  <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous photo">‹</button>
+  <figure>
+    <img id="lbImg" alt="">
+    <figcaption><b id="lbTitle"></b><span id="lbCredit"></span></figcaption>
+  </figure>
+  <button class="lb-nav lb-next" id="lbNext" aria-label="Next photo">›</button>
+</div>
+
+<script src="farm.js?v=2" defer></script>
+</body>
+</html>
