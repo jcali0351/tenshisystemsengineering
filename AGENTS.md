@@ -270,3 +270,13 @@ Server facts: Hostinger KVM 2 VPS, Ubuntu 24.04, Caddy (HTML sent with `Cache-Co
   Not touched by build-pages, neon or white themes. Credits show in the photo viewer and the footer list (CC BY photos).
 - The owner also has an "only-farms" site in the client CMS (cms.tenshisystems.com) and wants it at only-farms.tenshisystems.co;
   that site was not reachable from a phone session. This static copy can be moved in when the owner is at a computer.
+
+## Client CMS upgrade (2026-11-28)
+- The owner asked for the client CMS to match WordPress/Joomla/Drupal and for a full WYSIWYG editor. Built on branch
+  `cms-features`, tested in CI (`.github/workflows/cms-tests.yml`: the platform test suite runs on every push touching
+  `platform/`), then merged into `tenshi-cms`. The sandbox here has no FastAPI, so CI is where the CMS tests run.
+- What was added (details in `platform/README.md`, last section): on-page visual editor (block bar, formatting bar,
+  drag-and-drop blocks and photos, Photos tab, undo/redo), Columns block, Trash, Redirects + Not found list, two-step
+  sign-in + forgotten passwords + My account, Author/Contributor roles + per-site access middleware, custom content
+  types + Collection block + entry pages, WordPress import, Site search, moderated comments, multilingual pages,
+  publish-on-time for posts and pages. New Python dependency: `segno` (QR codes).

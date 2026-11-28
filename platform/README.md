@@ -286,3 +286,37 @@ friendly range control).
   Settings, module/store settings (keys), export, domains, stock uploads or AI. Writes, uploads (6 MB) and publishes are
   rate-limited. Publishing works, but the sandbox is never served publicly (its address shows a note), and its uploads
   need a session. The demo user can't sign in with a password.
+
+## WordPress / Joomla / Drupal-style features (2026-11-28)
+
+- **Visual editor** (`static/builder.js`, `static/bridge.js`): edit on the page itself. Each block has a bar on the page
+  (drag, up, down, copy, delete); formatted text gets a formatting bar (bold, italic, underline, H2/H3, lists, quote,
+  links; pasting keeps only the words); drag blocks from the list, photos from the **Photos** tab, or photos from the
+  computer onto the page (a line shows where they land; dropping on a picture replaces it); click a picture to choose
+  another; undo and redo (Ctrl+Z / Ctrl+Shift+Z). Inline edits may use dotted field paths (`areas.1.heading`).
+- **Columns** block (`widgets/columns.py`): 1-4 content areas side by side (picture, heading, formatted text, button).
+- **Trash** (`trash.py`, Trash screen): deleted pages, posts, files and content entries are kept 30 days; Restore.
+- **Redirects** (`redirects.py`): old address → page, path or URL (301/302, `/blog/*` wildcards), applied in
+  `serve_site` before the file lookup; a page whose address changes gets one automatically; "Not found" list (robots
+  probing for WordPress files left out). The WordPress import adds one per old post/page address.
+- **Two-step sign-in and passwords** (`account.py`, My account): TOTP codes (RFC 6238) + 8 one-use backup codes; QR code
+  when `segno` is installed; `/login/code` is the second step; `/forgot` emails a one-use link valid an hour (needs the
+  SMTP settings); admins can reset someone's two-step sign-in on Users.
+- **Roles and access** (`members.py`, `access.py`): site roles owner, editor, **author** (own posts, publish, Media
+  Center), **contributor** (own posts, "Ready for review"; an editor publishes). A middleware checks every CMS request:
+  people who belong to sites only open those sites; editors who belong to no site keep the old all-sites access.
+- **Custom content types** (`content_types.py`, `widgets/collection.py`, Content types screen): your own types with
+  fields (text, long text, formatted text, number, price, date, picture, link, email, one of a list, yes/no), entries,
+  the **Collection** block (cards, list or table, filter chips, search) and a page per entry (`<type>-<entry>.html`).
+- **WordPress import** (`wp_import.py`, Import screen): a WXR export → posts, pages, tags, redirects, and (background)
+  featured pictures downloaded as covers, only from public internet addresses.
+- **Site search** (`widgets/search.py`): `search.json` in deployments that have a Search block; searched in the browser.
+- **Comments** (`widgets/comments.py`): switched on under Blog posts; moderated in Modules & inbox › Comments; approved
+  comments appear live without publishing.
+- **Languages** (`languages.py`, Languages screen, builder Page settings › Translations): extra languages per site;
+  translated pages `es-<page>.html` (home: `es.html`), per-language menus, a switcher, `<html lang>` and hreflang.
+- **Publish on time** (`scheduler.py`): scheduled posts and pages ("Go live at" in Page settings) go live by themselves;
+  a background thread checks every minute (`TENSHI_SCHEDULER=0` turns it off; the tests do).
+- New tables and columns are created by `db.setup()` (`SCHEMA_EXTRA`, `COLUMNS`), so existing databases upgrade on start.
+- Tests: `tests/test_editor.py`, `tests/test_cms_features.py`; CI: `.github/workflows/cms-tests.yml` on every push that
+  touches `platform/`; browser screenshots: `.github/workflows/cms-screens.yml` (`tools/cms_screens.py`).
