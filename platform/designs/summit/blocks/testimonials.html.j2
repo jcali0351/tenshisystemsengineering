@@ -1,0 +1,18 @@
+{#- TESTIMONIALS: from the profile's testimonials list. -#}
+{% set b = block.data %}
+<section class="band quotes-block">
+  <div class="wrap">
+    <h2 data-edit="heading">{{ b.heading or 'What customers say' }}</h2>
+    <div class="quotes">
+      {%- for review in testimonials %}
+      <blockquote class="quote">
+        {% if review.rating %}<p class="stars" aria-label="{{ review.rating }} out of 5">{{ "★" * (review.rating | int) }}{{ "☆" * (5 - (review.rating | int)) }}</p>{% endif %}
+        <p>“{{ review.quote }}”</p>
+        <footer>{{ review.author }}</footer>
+      </blockquote>
+      {%- else %}
+      <p class="empty-note">Add testimonials under Business data and they appear here.</p>
+      {%- endfor %}
+    </div>
+  </div>
+</section>

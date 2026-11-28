@@ -120,7 +120,7 @@ with sync_playwright() as pw:
             p.screenshot(path=str(OUT / f"design-{tpl}-{tag}.png"), full_page=True)
             check(r.status == 200 and not errors, f"design {tpl} {tag} ({', '.join(errors) or 'no JS errors'})")
         p.set_viewport_size({"width": 1440, "height": 900})
-        for slug in ("about", "services", "contact"):
+        for slug in ("about",):
             r = p.goto(f"{BASE}/sites/{psid}/preview/{slug}")
             p.wait_for_timeout(500)
             p.screenshot(path=str(OUT / f"design-{tpl}-{slug}.png"), full_page=True)

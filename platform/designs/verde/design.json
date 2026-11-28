@@ -1,0 +1,20 @@
+{
+ "id": "verde",
+ "name": "Verde",
+ "group": "premium",
+ "style": "clean",
+ "for": "Farms, farm shops, gardens, landscapers, organic food, wellness",
+ "description": "Natural and organic: a sage hero with the photo in a soft organic shape, a hand-drawn underline, leaf badges, rounded pill photos, warm cream sections and a deep green footer. In the spirit of Flatsome, Botiga organic.",
+ "inspired_by": "Flatsome, Botiga organic",
+ "colors": {
+  "primary": "#3f6b3a",
+  "accent": "#d99a3d",
+  "surface": "#fbf8f1",
+  "ink": "#24311f"
+ },
+ "fonts": {
+  "heading": "bitter",
+  "body": "figtree"
+ },
+ "headline": "Grown with care, close to home"
+}

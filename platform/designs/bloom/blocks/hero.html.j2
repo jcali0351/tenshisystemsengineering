@@ -1,0 +1,20 @@
+{#- BLOOM HERO: a colourful gradient opening with centred words, and the photo raised on a big floating card that overlaps the
+    section below. Same settings as every hero (heading, text, kicker, buttons, image, layout). -#}
+{% set b = block.data %}
+<section class="hero bl-hero hero-{{ b.layout or 'split' }}{% if b.image and b.layout != 'background' %} bl-has-pic{% endif %}"{% if b.layout == 'background' and b.image %} style="--hero-img: url('{{ media(b.image, 1600) }}')"{% endif %}>
+  <span class="bl-bubble bl-b1" aria-hidden="true"></span><span class="bl-bubble bl-b2" aria-hidden="true"></span><span class="bl-bubble bl-b3" aria-hidden="true"></span>
+  <div class="wrap hero-in">
+    <div class="hero-text">
+      <p class="kicker" data-edit="kicker">{{ b.kicker or company.name }}</p>
+      <h1 data-edit="heading">{{ b.heading or company.tagline or company.name }}</h1>
+      <p class="lead" data-edit="text">{{ b.text or company.description }}</p>
+      <div class="actions">
+        {% if b.button_text %}<a class="btn" href="{{ link(b.button_link or 'contact') }}" data-edit="button_text">{{ b.button_text }}</a>{% endif %}
+        {% if b.call_button and company.phone %}<a class="btn btn-line" href="tel:{{ company.phone | tel }}">Call {{ company.phone }}</a>{% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% if b.image and b.layout != 'background' %}
+<div class="wrap bl-raise"><figure class="bl-card"><img src="{{ media(b.image, 1600) }}" alt="{{ media_alt(b.image) }}"></figure></div>
+{% endif %}

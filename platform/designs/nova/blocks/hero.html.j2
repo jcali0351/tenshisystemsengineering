@@ -1,0 +1,25 @@
+{#- NOVA HERO: dark, centred, a huge gradient headline on a faint grid with a glowing orb, the photo in a glowing frame and a
+    scrolling ticker of the services. Same settings as every hero (heading, text, kicker, buttons, image, layout). -#}
+{% set b = block.data %}
+<section class="hero no-hero hero-{{ b.layout or 'split' }}"{% if b.layout == 'background' and b.image %} style="--hero-img: url('{{ media(b.image, 1600) }}')"{% endif %}>
+  <div class="no-grid" aria-hidden="true"></div><div class="no-orb" aria-hidden="true"></div>
+  <div class="wrap hero-in">
+    <div class="hero-text">
+      <p class="no-chip"><span data-edit="kicker">{{ b.kicker or company.name }}</span></p>
+      <h1 data-edit="heading">{{ b.heading or company.tagline or company.name }}</h1>
+      <p class="lead" data-edit="text">{{ b.text or company.description }}</p>
+      <div class="actions">
+        {% if b.button_text %}<a class="btn" href="{{ link(b.button_link or 'contact') }}" data-edit="button_text">{{ b.button_text }}</a>{% endif %}
+        {% if b.call_button and company.phone %}<a class="btn btn-line" href="tel:{{ company.phone | tel }}">Call {{ company.phone }}</a>{% endif %}
+      </div>
+    </div>
+    {% if b.image and b.layout != 'background' %}
+    <figure class="hero-pic no-shot"><img src="{{ media(b.image, 1600) }}" alt="{{ media_alt(b.image) }}"></figure>
+    {% endif %}
+  </div>
+  {% if services %}
+  <div class="no-ticker" aria-hidden="true"><div class="no-track">
+    {%- for _ in range(4) %}{% for s in services %}<span>{{ s.name }}</span><i>✦</i>{% endfor %}{% endfor -%}
+  </div></div>
+  {% endif %}
+</section>

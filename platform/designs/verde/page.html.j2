@@ -1,0 +1,13 @@
+{#- A page is just its blocks, one after another. Each block draws itself from blocks/<type>.html.j2.
+    In the page builder's preview each block is wrapped in a frame you can click (data-block). -#}
+{% extends "layout.html.j2" %}
+{% block content %}
+{%- for block in blocks %}
+  {%- if editing %}<div class="tb-block" data-block="{{ block.id }}" data-type="{{ block.type }}">{% endif %}
+  {%- include "blocks/" ~ block.type ~ ".html.j2" ignore missing %}
+  {%- if editing %}</div>{% endif %}
+{%- endfor %}
+{%- if not blocks and editing %}
+  <section class="band"><div class="wrap"><p class="empty-note">This page has no blocks yet. Add one from the panel on the left.</p></div></section>
+{%- endif %}
+{% endblock %}

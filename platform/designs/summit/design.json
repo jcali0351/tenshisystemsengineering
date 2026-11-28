@@ -1,0 +1,20 @@
+{
+ "id": "summit",
+ "name": "Summit",
+ "group": "premium",
+ "style": "clean",
+ "for": "Consultants, lawyers, writers, architects, studios that like it minimal",
+ "description": "Minimal and typographic: lots of white, a giant left-aligned headline, a hairline row of facts, a full-width photo, numbered services in a ruled list, quiet black buttons. Fast and timeless. In the spirit of GeneratePress, Twenty Twenty-Four.",
+ "inspired_by": "GeneratePress, Twenty Twenty-Four",
+ "colors": {
+  "primary": "#111111",
+  "accent": "#e4572e",
+  "surface": "#ffffff",
+  "ink": "#111111"
+ },
+ "fonts": {
+  "heading": "inter",
+  "body": "newsreader"
+ },
+ "headline": "Clear thinking, quietly done"
+}
