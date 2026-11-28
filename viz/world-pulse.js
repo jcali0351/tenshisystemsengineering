@@ -454,26 +454,51 @@
   const LANDRAMP = [[0.2, 0.95, 0.8], [0.3, 0.75, 1.0], [0.58, 0.5, 1.0], [0.85, 0.45, 1.0], [1.0, 0.55, 0.85], [0.8, 0.9, 1.0]];
   const SEARAMP = [[0.1, 0.45, 0.9], [0.2, 0.3, 0.9], [0.4, 0.3, 0.85], [0.3, 0.6, 0.9]];
   let reveal = 0, world = null;
+  // The land and sea dots. With the true-colour picture (data/globe/earth.jpg, NASA Blue Marble) each land dot takes
+  // the colour of the ground under it: green forest, tan and brown desert and mountain, white ice. The picture is dark
+  // (it is a photograph), so the colour is lifted and deepened to glow on the black. Until it arrives, and if it never
+  // does, the dots use the old drifting ramp.
+  let EARTHPX = null;
+  function landColour(lon, lat) {
+    const x = Math.min(1439, Math.max(0, Math.floor((lon + 180) * 4))), y = Math.min(719, Math.max(0, Math.floor((90 - lat) * 4))), i = (y * 1440 + x) * 4;
+    let r = EARTHPX[i] / 255, g = EARTHPX[i + 1] / 255, b = EARTHPX[i + 2] / 255;
+    const mx = Math.max(r, g, b), mn = Math.min(r, g, b);
+    if (b > r * 1.25 && b > g * 1.05 && mx < 0.45) return null;         // the picture shows water here (a lake, or the coast a pixel off)
+    const k = mx > 0.02 ? Math.min(2.6, (0.5 + mx * 0.55) / mx) : 1, grey = (r + g + b) / 3, sat = mx - mn < 0.06 ? 1 : 1.55;
+    r = grey + (r - grey) * sat; g = grey + (g - grey) * sat; b = grey + (b - grey) * sat;
+    return [Math.min(1, Math.max(0, r * k)), Math.min(1, Math.max(0, g * k)), Math.min(1, Math.max(0, b * k))];
+  }
+  function buildLand() {
+    const w = world, bits = Uint8Array.from(atob(w.land.b64), (c) => c.charCodeAt(0)), LW = w.land.w, LH = w.land.h;
+    const N = LITE ? 170000 : 380000, a = [], sea = [], g = Math.PI * (3 - Math.sqrt(5));
+    const SEA = EARTHPX ? [[0.05, 0.4, 0.75], [0.06, 0.28, 0.72], [0.1, 0.25, 0.65], [0.2, 0.5, 0.75]] : SEARAMP;
+    for (let i = 0; i < N; i++) {                                 // evenly spread points; keep the ones on land
+      const y = 1 - (i + 0.5) / N * 2, r = Math.sqrt(1 - y * y), th = i * g, x = Math.sin(th) * r, z = Math.cos(th) * r;
+      const lat = Math.asin(y) / DEG, lon = Math.atan2(x, z) / DEG;
+      const n = Math.min(LH - 1, Math.floor((90 - lat) / 180 * LH)) * LW + Math.min(LW - 1, Math.floor((lon + 180) / 360 * LW));
+      if (bits[n >> 3] & (128 >> (n & 7))) {
+        let c = EARTHPX ? landColour(lon, lat) : null;
+        if (c) { const j = 0.9 + rnd() * 0.2; a.push(x, y, z, c[0] * j, c[1] * j, c[2] * j, 0.78 + rnd() * 0.22, 1.6 + rnd() * 0.7, rnd()); continue; }
+        if (EARTHPX) c = [0.12, 0.4, 0.7];                           // a lake or a shoreline: water blue
+        // without the picture, colour drifts with latitude and longitude: teal tropics, violet mid-latitudes, rose and ice toward the poles
+        else c = ramp(LANDRAMP, Math.abs(lat) / 90 + 0.12 * Math.sin(lon * 0.07 + lat * 0.11) + (rnd() - 0.5) * 0.12);
+        a.push(x, y, z, c[0], c[1], c[2], 0.36 + rnd() * 0.34, 1.0 + rnd() * 0.55, rnd());
+      } else if (i % 5 === 0) {
+        const c = ramp(SEA, Math.abs(lat) / 90 + (rnd() - 0.5) * 0.2);
+        sea.push(x, y, z, c[0], c[1], c[2], 0.1 + rnd() * 0.12, 0.9 + rnd() * 0.3, rnd());
+      }
+    }
+    for (const k of ["land", "sea"]) if (M[k]) { gl.deleteBuffer(M[k].buf); gl.deleteVertexArray(M[k].vao); }
+    M.land = mesh(P_POINT, POINT, a, gl.POINTS); M.sea = mesh(P_POINT, POINT, sea, gl.POINTS);
+  }
+  function loadEarthColours() {
+    const im = new Image();
+    im.onload = () => { try { const cv = document.createElement("canvas"); cv.width = 1440; cv.height = 720; const cx = cv.getContext("2d", { willReadFrequently: true }); cx.drawImage(im, 0, 0, 1440, 720); EARTHPX = cx.getImageData(0, 0, 1440, 720).data; buildLand(); } catch (e) { EARTHPX = null; } };
+    im.src = "../data/globe/earth.jpg";
+  }
   function buildWorld(w) {
     world = w;
-    if (w.land) {
-      const bits = Uint8Array.from(atob(w.land.b64), (c) => c.charCodeAt(0)), LW = w.land.w, LH = w.land.h;
-      const N = LITE ? 170000 : 380000, a = [], sea = [], g = Math.PI * (3 - Math.sqrt(5));
-      for (let i = 0; i < N; i++) {                               // evenly spread points; keep the ones on land
-        const y = 1 - (i + 0.5) / N * 2, r = Math.sqrt(1 - y * y), th = i * g, x = Math.sin(th) * r, z = Math.cos(th) * r;
-        const lat = Math.asin(y) / DEG, lon = Math.atan2(x, z) / DEG;
-        const n = Math.min(LH - 1, Math.floor((90 - lat) / 180 * LH)) * LW + Math.min(LW - 1, Math.floor((lon + 180) / 360 * LW));
-        if (bits[n >> 3] & (128 >> (n & 7))) {
-          // colour drifts with latitude and longitude: teal tropics, violet mid-latitudes, rose and ice toward the poles
-          const band = Math.abs(lat) / 90 + 0.12 * Math.sin(lon * 0.07 + lat * 0.11) + (rnd() - 0.5) * 0.12, c = ramp(LANDRAMP, band);
-          a.push(x, y, z, c[0], c[1], c[2], 0.36 + rnd() * 0.34, 1.0 + rnd() * 0.55, rnd());
-        } else if (i % 5 === 0) {
-          const c = ramp(SEARAMP, Math.abs(lat) / 90 + (rnd() - 0.5) * 0.2);
-          sea.push(x, y, z, c[0], c[1], c[2], 0.1 + rnd() * 0.12, 0.9 + rnd() * 0.3, rnd());
-        }
-      }
-      M.land = mesh(P_POINT, POINT, a, gl.POINTS); M.sea = mesh(P_POINT, POINT, sea, gl.POINTS);
-    }
+    if (w.land) { buildLand(); if (!EARTHPX) loadEarthColours(); }
     if (w.coast) M.coast = mesh(P_LINE, LINE, lineVerts(w.coast, C.coast, 0.42), gl.LINES);
     if (w.rails) { M.rails = mesh(P_LINE, LINE, lineVerts(w.rails, C.rail, 0.2), gl.LINES); L.rail.count(w.rails.length); L.rail.status("static", "network: Natural Earth · live trains: connecting"); }
     if (w.roads) { M.roads = mesh(P_LINE, LINE, lineVerts(w.roads, C.road, 0.16), gl.LINES); L.roads.count(w.roads.length); L.roads.status("static", "major highways: Natural Earth · live counts: connecting"); }

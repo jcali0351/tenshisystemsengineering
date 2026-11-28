@@ -257,3 +257,5 @@ Server facts: Hostinger KVM 2 VPS, Ubuntu 24.04, Caddy (HTML sent with `Cache-Co
 - The neon extras in `sandbox/` (recolor-live, header, game-loader, quest, arcade-px3, hero-anim; neon-audio except on
   game pages) return at once when `<html>` has class `white`. New neon scripts need the same first line.
 - New page styles: scope neon-only looks to `html.neon`, and check the page with `?theme=white` too.
+
+- 2026-11-28: land dots take their true colour (green forest, tan and brown desert, white ice) from `data/globe/earth.jpg`, NASA Blue Marble via GIBS, fetched once by `tools/globe-earth.py`. Without the file the old teal-to-violet ramp shows. The scheduled copies of `globe-data.yml` and `globe-live.yml` live on `main` (merged by the owner, PR #2); the copy on `tenshi-cms` runs on pushes. When a workflow step changes, `main` needs the same change through a pull request for the owner to merge. The aircraft tool asks adsb.lol one request a second (faster gets HTTP 429).
