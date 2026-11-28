@@ -464,7 +464,7 @@
     let r = EARTHPX[i] / 255, g = EARTHPX[i + 1] / 255, b = EARTHPX[i + 2] / 255;
     const mx = Math.max(r, g, b), mn = Math.min(r, g, b);
     if (b > r * 1.25 && b > g * 1.05 && mx < 0.45) return null;         // the picture shows water here (a lake, or the coast a pixel off)
-    const k = mx > 0.02 ? Math.min(2.6, (0.5 + mx * 0.55) / mx) : 1, grey = (r + g + b) / 3, sat = mx - mn < 0.06 ? 1 : 1.55;
+    const k = mx > 0.02 ? Math.min(3.2, (0.36 + mx * 0.5) / mx) : 1, grey = (r + g + b) / 3, sat = mx - mn < 0.06 ? 1 : 1.8;
     r = grey + (r - grey) * sat; g = grey + (g - grey) * sat; b = grey + (b - grey) * sat;
     return [Math.min(1, Math.max(0, r * k)), Math.min(1, Math.max(0, g * k)), Math.min(1, Math.max(0, b * k))];
   }
