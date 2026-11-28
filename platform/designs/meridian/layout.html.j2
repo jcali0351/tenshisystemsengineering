@@ -1,0 +1,82 @@
+{#- ==================================================================================================================
+    THE FRAME OF EVERY PAGE: head, menu, footer. page.html.j2 fills in the middle with the page's blocks.
+
+    What you can use here (the CMS provides it; see platform/cms/render.py):
+      company, services, staff, testimonials, locations, social, seo …   the business profile
+      site      name, subdomain, url               theme   colors, fonts, style
+      pages     the pages that are in the menu      page    the page being drawn
+      link(slug)    the address of another page     media(id, 800)   the address of a picture
+    ================================================================================================================== -#}
+<!DOCTYPE html>
+<html lang="{{ theme.lang or 'en' }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page.seo_title or (page.title ~ ' | ' ~ company.name if page.slug != 'index' else (seo.title or company.name)) }}</title>
+  <meta name="description" content="{{ page.seo_description or seo.description or company.description | truncate(155) }}">
+  <meta property="og:title" content="{{ page.seo_title or page.title }} | {{ company.name }}">
+  <meta property="og:description" content="{{ page.seo_description or seo.description or company.description | truncate(155) }}">
+  {% if company.logo_media %}<link rel="icon" href="{{ media(company.logo_media, 320) }}">{% endif %}
+  <link rel="stylesheet" href="{{ asset('style.css') }}">
+  <style>
+    :root {
+      --p: {{ theme.colors.primary }}; --a: {{ theme.colors.accent }}; --s: {{ theme.colors.surface }}; --i: {{ theme.colors.ink }};
+      --font-head: {{ theme.fonts.heading | safe }}; --font-body: {{ theme.fonts.body | safe }};
+    }
+  </style>
+</head>
+<body class="style-{{ theme.style or 'clean' }}">
+  <a class="skip" href="#main">Skip to content</a>
+  {%- if company.phone or company.email or company.hours or social %}
+  <div class="me-bar">
+    <div class="wrap me-bar-in">
+      {% if company.phone %}<a href="tel:{{ company.phone | tel }}"><span aria-hidden="true">☎</span> {{ company.phone }}</a>{% endif %}
+      {% if company.email %}<a href="mailto:{{ company.email }}"><span aria-hidden="true">✉</span> {{ company.email }}</a>{% endif %}
+      {% if company.hours %}<span class="me-hours"><span aria-hidden="true">◷</span> {{ company.hours[0].days }} {{ company.hours[0].time }}</span>{% endif %}
+      {% if social %}<span class="me-social">{% for network, address in social.items() if address %}<a href="{{ address }}" rel="noopener">{{ network | title }}</a>{% endfor %}</span>{% endif %}
+    </div>
+  </div>
+  {%- endif %}
+  <header class="top">
+    <div class="wrap top-in">
+      <a class="brand" href="{{ link('index') }}">
+        {%- if company.logo_media %}<img src="{{ media(company.logo_media, 320) }}" alt="{{ company.name }}" height="44">{% else %}{{ company.name }}{% endif -%}
+      </a>
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+      <nav id="menu" class="menu" aria-label="Main menu">
+        {%- for p in pages %}
+        <a href="{{ link(p.slug) }}"{% if p.slug == page.slug %} aria-current="page"{% endif %}>{{ p.title }}</a>
+        {%- endfor %}
+        {% if company.phone %}<a class="menu-call" href="{{ link('contact') }}">Get a quote</a>{% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+{% block content %}{% endblock %}
+  </main>
+
+  <footer class="bottom">
+    <div class="wrap bottom-in">
+      <div>
+        <strong class="bottom-name">{{ company.name }}</strong>
+        {% if company.tagline %}<p>{{ company.tagline }}</p>{% endif %}
+        {% if company.service_areas %}<p>Serving {{ company.service_areas | join(", ") }}</p>{% endif %}
+      </div>
+      <div>
+        {% if company.phone %}<p><a href="tel:{{ company.phone | tel }}">{{ company.phone }}</a></p>{% endif %}
+        {% if company.email %}<p><a href="mailto:{{ company.email }}">{{ company.email }}</a></p>{% endif %}
+        {% if company.address %}<p>{{ company.address }}</p>{% endif %}
+      </div>
+      {% if social %}
+      <div class="social">
+        {%- for network, address in social.items() if address %}<a href="{{ address }}" rel="noopener">{{ network | title }}</a>{% endfor -%}
+      </div>
+      {% endif %}
+    </div>
+    <p class="wrap made">© {{ year }} {{ company.name }} · Built with Tenshi</p>
+  </footer>
+  <script src="{{ asset('site.js') }}" defer></script>
+  {{ tracking | safe }}
+</body>
+</html>

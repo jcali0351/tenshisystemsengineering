@@ -94,11 +94,31 @@ def seed():
         _create_files(meta, config.STARTER_DESIGN)
 
 
-def _create_files(meta, source_dir):
+def seed_premium():
+    """Add the premium designs (platform/designs/<id>/ with a design.json: Aurora, Meridian, Maison) to the gallery once each.
+    Runs at every start-up, so a server that already has templates gets new designs too; a design already in the
+    gallery (or deleted by its id afterwards and re-made) is left alone."""
+    config.ensure_folders()
+    added = []
+    for spec in sorted(config.STARTER_DESIGN.parent.glob("*/design.json")):
+        d = json.loads(spec.read_text(encoding="utf-8"))
+        if folder(d["id"]).exists():
+            continue
+        meta = {"id": d["id"], "name": d["name"], "group": d.get("group", "premium"), "for": d.get("for", ""),
+                "description": d.get("description", ""), "colors": d["colors"], "style": d.get("style", "clean"),
+                "fonts": d.get("fonts") or dict(zip(("heading", "body"), STYLE_FONTS.get(d.get("style"), STYLE_FONTS["clean"]))),
+                "sample": d.get("sample", ""), "headline": d.get("headline", ""), "inspired_by": d.get("inspired_by", ""), "premium": True,
+                "version": 1, "versions": [], "created_at": db.now(), "source": "Tenshi premium design"}
+        _create_files(meta, spec.parent, skip=("design.json",))
+        added.append(d["id"])
+    return added
+
+
+def _create_files(meta, source_dir, skip=()):
     target = folder(meta["id"])
     if target.exists():
         raise TemplateError(f"A template called {meta['id']} already exists.")
-    shutil.copytree(source_dir, target / "current")
+    shutil.copytree(source_dir, target / "current", ignore=shutil.ignore_patterns(*skip) if skip else None)
     (target / "versions").mkdir()
     _write_meta(meta)
     save_version(meta["id"], "First version")
@@ -111,7 +131,7 @@ def all_templates():
         meta = json.loads(f.read_text(encoding="utf-8"))
         meta["used_by"] = db.one("SELECT COUNT(*) AS n FROM sites WHERE template_id = ?", meta["id"])["n"]
         items.append(meta)
-    return sorted(items, key=lambda m: (m.get("group", ""), m["name"]))
+    return sorted(items, key=lambda m: (not m.get("premium"), m.get("group", ""), m["name"]))    # premium designs first
 
 
 def get(template_id):

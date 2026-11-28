@@ -1,0 +1,26 @@
+{#- AURORA HERO: a light opening with soft colour glows, a badge, the headline, buttons, a trust line and a framed photo.
+    Same settings as every hero (heading, text, kicker, buttons, image, layout); data-edit words are typed over in the builder. -#}
+{% set b = block.data %}
+<section class="hero au-hero hero-{{ b.layout or 'split' }}"{% if b.layout == 'background' and b.image %} style="--hero-img: url('{{ media(b.image, 1600) }}')"{% endif %}>
+  <div class="au-glow" aria-hidden="true"></div>
+  <div class="wrap hero-in">
+    <div class="hero-text">
+      <p class="au-badge"><span class="au-dot" aria-hidden="true"></span><span data-edit="kicker">{{ b.kicker or (company.service_areas and ('Serving ' ~ company.service_areas[:2] | join(' & '))) or company.name }}</span></p>
+      <h1 data-edit="heading">{{ b.heading or company.tagline or company.name }}</h1>
+      <p class="lead" data-edit="text">{{ b.text or company.description }}</p>
+      <div class="actions">
+        {% if b.button_text %}<a class="btn" href="{{ link(b.button_link or 'contact') }}" data-edit="button_text">{{ b.button_text }}</a>{% endif %}
+        {% if b.call_button and company.phone %}<a class="btn btn-line" href="tel:{{ company.phone | tel }}">Call {{ company.phone }}</a>{% elif services %}<a class="btn btn-line" href="{{ link('services') }}">Our services</a>{% endif %}
+      </div>
+      {% if testimonials %}
+      <p class="au-trust"><span class="stars" aria-hidden="true">★★★★★</span> Loved by {{ testimonials | length }}{{ '+' if testimonials | length > 1 else '' }} happy customer{{ 's' if testimonials | length != 1 else '' }}</p>
+      {% endif %}
+    </div>
+    {% if b.image and b.layout != 'background' %}
+    <figure class="hero-pic au-frame">
+      <img src="{{ media(b.image, 1600) }}" alt="{{ media_alt(b.image) }}">
+      {% if testimonials %}<figcaption class="au-float"><b>“{{ testimonials[0].quote | truncate(64) }}”</b><span>{{ testimonials[0].author }}</span></figcaption>{% endif %}
+    </figure>
+    {% endif %}
+  </div>
+</section>

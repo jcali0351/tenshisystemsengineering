@@ -1,0 +1,7 @@
+{"id": "maison", "name": "Maison", "group": "premium", "style": "elegant",
+ "for": "Restaurants, salons, boutiques, interiors, weddings, estates and wineries",
+ "description": "Editorial and calm: a centred logo with a letter-spaced menu, a large serif headline over an arched photo, thin gold rules, airy cream sections, italic serif testimonials. In the spirit of Blocksy and Kadence's boutique starter sites.",
+ "inspired_by": "Blocksy, Kadence boutique",
+ "colors": {"primary": "#7a5c43", "accent": "#c9a96e", "surface": "#faf7f2", "ink": "#211c18"},
+ "fonts": {"heading": "fraunces", "body": "dm-sans"},
+ "headline": "Crafted with care"}

@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
   push:
     branches: [cms-features]
-    paths: ["platform/cms/ui/**", "platform/cms/static/**", "platform/tools/cms_screens.py", ".github/workflows/cms-screens.yml"]
+    paths: ["platform/cms/ui/**", "platform/cms/static/**", "platform/designs/**", "platform/tools/premium_demo.py", "platform/tools/cms_screens.py", ".github/workflows/cms-screens.yml"]
 permissions:
   contents: write
 jobs:
@@ -32,6 +32,7 @@ jobs:
           TENSHI_STOCK_SEED: "0"
         run: |
           python -c "from cms import db, auth; db.setup(); auth.create_user('shots@example.com', 'Shots', 'shots-pass-123', 'admin')"
+          python tools/premium_demo.py | tee premium.txt
           python run_cms.py > /tmp/cms.log 2>&1 &
           for i in $(seq 1 40); do curl -sf http://localhost:8000/login >/dev/null && break; sleep 1; done
           python tools/cms_screens.py || (tail -40 /tmp/cms.log; exit 1)

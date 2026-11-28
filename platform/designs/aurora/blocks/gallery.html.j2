@@ -1,0 +1,20 @@
+{#- GALLERY: the pictures of one album, as masonry or a grid, opening in a lightbox (site.js). -#}
+{% set b = block.data %}
+{% set pics = album(b.album) %}
+<section class="band gallery-block">
+  <div class="wrap">
+    {% if b.heading %}<h2 data-edit="heading">{{ b.heading }}</h2>{% endif %}
+    {% if pics %}
+    <div class="gallery gallery-{{ b.layout or album_layout(b.album) or 'masonry' }}"{% if b.lightbox != false %} data-lightbox{% endif %}>
+      {%- for pic in pics %}
+      <a class="gallery-item" href="{{ pic.full }}" data-caption="{{ pic.caption }}">
+        <img src="{{ pic.thumb }}" alt="{{ pic.alt }}"{% if pic.width %} width="{{ pic.width }}" height="{{ pic.height }}"{% endif %} loading="lazy">
+        {% if pic.caption %}<span class="gallery-cap">{{ pic.caption }}</span>{% endif %}
+      </a>
+      {%- endfor %}
+    </div>
+    {% else %}
+    <p class="empty-note">Choose an album in this block's settings (albums are made under Galleries).</p>
+    {% endif %}
+  </div>
+</section>

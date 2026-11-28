@@ -1,0 +1,23 @@
+{#- MERIDIAN HERO: a dark, angled opening with a big uppercase headline, an accent rule, ticks for the first services and a
+    framed photo. Same settings as every hero (heading, text, kicker, buttons, image, layout). -#}
+{% set b = block.data %}
+<section class="hero me-hero hero-{{ b.layout or 'split' }}"{% if b.image %} style="--hero-img: url('{{ media(b.image, 1600) }}')"{% endif %}>
+  <div class="wrap hero-in">
+    <div class="hero-text">
+      <p class="kicker" data-edit="kicker">{{ b.kicker or company.name }}</p>
+      <h1 data-edit="heading">{{ b.heading or company.tagline or company.name }}</h1>
+      <span class="me-rule" aria-hidden="true"></span>
+      <p class="lead" data-edit="text">{{ b.text or company.description }}</p>
+      {% if services %}<ul class="me-ticks">{% for s in services[:3] %}<li>{{ s.name }}</li>{% endfor %}</ul>{% endif %}
+      <div class="actions">
+        {% if b.button_text %}<a class="btn" href="{{ link(b.button_link or 'contact') }}" data-edit="button_text">{{ b.button_text }}</a>{% endif %}
+        {% if company.phone %}<a class="btn btn-line" href="tel:{{ company.phone | tel }}">Call {{ company.phone }}</a>{% endif %}
+      </div>
+    </div>
+    {% if b.image and b.layout not in ('background', 'centered') %}
+    <figure class="hero-pic me-frame"><img src="{{ media(b.image, 1600) }}" alt="{{ media_alt(b.image) }}">
+      {% if testimonials %}<figcaption class="me-badge"><b>{{ "★" * (testimonials[0].rating | int or 5) }}</b><span>{{ testimonials | length }} review{{ 's' if testimonials | length != 1 else '' }}</span></figcaption>{% endif %}
+    </figure>
+    {% endif %}
+  </div>
+</section>

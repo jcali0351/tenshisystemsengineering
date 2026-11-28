@@ -67,6 +67,7 @@ def startup():
     config.ensure_folders()
     db.setup()
     templates.seed()
+    templates.seed_premium()               # the premium designs (Aurora, Meridian, Maison) join an existing gallery too
     stock.setup()
     categories.migrate()                   # old "church" sites/photos -> faith/church (categories.py)
     stock.start_seed_in_background()       # the Stock Photo Library's seed photos (stock.py), imported once

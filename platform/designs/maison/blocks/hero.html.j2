@@ -1,0 +1,20 @@
+{#- MAISON HERO: a calm, centred opening: a small italic line, a large serif headline, a thin gold rule, and the photo in
+    an arch. Same settings as every hero (heading, text, kicker, buttons, image, layout). -#}
+{% set b = block.data %}
+<section class="hero ma-hero hero-{{ b.layout or 'split' }}"{% if b.layout == 'background' and b.image %} style="--hero-img: url('{{ media(b.image, 1600) }}')"{% endif %}>
+  <div class="wrap hero-in">
+    <div class="hero-text">
+      <p class="kicker" data-edit="kicker">{{ b.kicker or ('Est. ' ~ company.founded if company.founded else company.name) }}</p>
+      <h1 data-edit="heading">{{ b.heading or company.tagline or company.name }}</h1>
+      <span class="ma-rule" aria-hidden="true"><i></i></span>
+      <p class="lead" data-edit="text">{{ b.text or company.description }}</p>
+      <div class="actions">
+        {% if b.button_text %}<a class="btn" href="{{ link(b.button_link or 'contact') }}" data-edit="button_text">{{ b.button_text }}</a>{% endif %}
+        {% if b.call_button and company.phone %}<a class="btn btn-line" href="tel:{{ company.phone | tel }}">Call {{ company.phone }}</a>{% endif %}
+      </div>
+    </div>
+    {% if b.image and b.layout != 'background' %}
+    <figure class="hero-pic ma-arch"><img src="{{ media(b.image, 1600) }}" alt="{{ media_alt(b.image) }}"></figure>
+    {% endif %}
+  </div>
+</section>

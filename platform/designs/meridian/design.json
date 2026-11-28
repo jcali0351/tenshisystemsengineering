@@ -1,0 +1,7 @@
+{"id": "meridian", "name": "Meridian", "group": "premium", "style": "bold",
+ "for": "Contractors, farms and equipment dealers, trades, logistics, gyms",
+ "description": "Bold and image-led: a contact bar above an uppercase menu, a dark hero with a framed photo and service ticks, angled section edges, square cards with zooming photos, a striped call-to-action band. In the spirit of Divi and Avada.",
+ "inspired_by": "Divi, Avada",
+ "colors": {"primary": "#e85d04", "accent": "#ffba08", "surface": "#ffffff", "ink": "#121417"},
+ "fonts": {"heading": "montserrat", "body": "dm-sans"},
+ "headline": "Hard work, done right"}

@@ -12,8 +12,9 @@
       <span class="sw-nav"></span><span class="sw-hero">{{ t.headline or t.name }}</span><span class="sw-foot"><i></i><i></i><i></i></span>
     </div>
     <div class="tbody">
-      <div class="row"><b>{{ t.name }}</b><span class="badge" style="margin-left:auto">v{{ t.version }}</span></div>
+      <div class="row"><b>{{ t.name }}</b>{% if t.premium %}<span class="badge badge-live">Premium</span>{% endif %}<span class="badge" style="margin-left:auto">v{{ t.version }}</span></div>
       <span class="small muted">{{ t.for or t.description or t.source }}</span>
+      {% if t.inspired_by %}<span class="small muted">In the spirit of {{ t.inspired_by }}</span>{% endif %}
       <span class="small muted">{{ t.style | title }}{% if t.group %} · {{ t.group | title }}{% endif %} · used by {{ t.used_by }} site{{ '' if t.used_by == 1 else 's' }}</span>
       <div class="row">
         <a class="btn btn-small" href="/templates/{{ t.id }}/preview" target="_blank" rel="noopener">Preview</a>
