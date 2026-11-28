@@ -26,8 +26,42 @@
   /* ---------- 1. State and saving ----------
      Every change marks the page "unsaved" and saves 0.6 s after the last change, so typing doesn't send a request per key. */
   var saveTimer, saving = Promise.resolve();
+  /* Undo and redo (Ctrl+Z, Ctrl+Shift+Z or Ctrl+Y, and the ↶ ↷ buttons): a copy of the blocks before each change,
+     typing grouped into one step per pause. */
+  var past = [], future = [], lastSnap = JSON.stringify(blocks), typingAt = 0;
+  function remember(typing) {
+    var now = Date.now();
+    if (typing && now - typingAt < 1500) { typingAt = now; return; }
+    typingAt = typing ? now : 0;
+    past.push(lastSnap); if (past.length > 100) past.shift();
+    future.length = 0; drawUndo();
+  }
+  function restore(snap) {
+    blocks.length = 0; Array.prototype.push.apply(blocks, JSON.parse(snap));
+    lastSnap = snap; if (indexOf(selected) < 0) selected = null;
+    changed({ history: false }); drawPanel();
+  }
+  function undo() { if (!past.length) return; future.push(JSON.stringify(blocks)); restore(past.pop()); drawUndo(); T.toast("Undone"); }
+  function redo() { if (!future.length) return; past.push(JSON.stringify(blocks)); restore(future.pop()); drawUndo(); T.toast("Redone"); }
+  function drawUndo() { var u = $("#undo"), r = $("#redo"); if (u) u.disabled = !past.length; if (r) r.disabled = !future.length; }
+  document.addEventListener("keydown", function (e) {
+    if (!(e.ctrlKey || e.metaKey) || /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) || e.target.isContentEditable) return;
+    if (e.key.toLowerCase() === "z" && !e.shiftKey) { e.preventDefault(); undo(); }
+    else if (e.key.toLowerCase() === "y" || (e.key.toLowerCase() === "z" && e.shiftKey)) { e.preventDefault(); redo(); }
+  });
+  function getPath(obj, path) { return String(path).split(".").reduce(function (o, k) { return o == null ? undefined : o[k]; }, obj); }
+  function setPath(obj, path, value) {      // "areas.1.heading" writes into nested lists and objects
+    var keys = String(path).split("."), o = obj;
+    for (var i = 0; i < keys.length - 1; i++) {
+      if (o[keys[i]] == null || typeof o[keys[i]] !== "object") o[keys[i]] = /^\d+$/.test(keys[i + 1]) ? [] : {};
+      o = o[keys[i]];
+    }
+    o[keys[keys.length - 1]] = value;
+  }
   function changed(opts) {
     opts = opts || {};
+    if (opts.history !== false) remember(opts.typing);
+    lastSnap = JSON.stringify(blocks);
     $("#save-state").textContent = "Saving…";
     clearTimeout(saveTimer);
     saveTimer = setTimeout(function () {
@@ -67,19 +101,22 @@
   function indexOf(id) { for (var i = 0; i < blocks.length; i++) if (blocks[i].id === id) return i; return -1; }
   function newId() { return Math.random().toString(16).slice(2, 10); }
 
+  /* Move, copy or delete a block: from the list here or from the bar on the block in the preview. Deleting can be undone. */
+  function blockAction(act, id) {
+    var i = indexOf(id); if (i < 0) return;
+    if (act === "up" && i > 0) { blocks.splice(i - 1, 0, blocks.splice(i, 1)[0]); changed(); }
+    else if (act === "down" && i < blocks.length - 1) { blocks.splice(i + 1, 0, blocks.splice(i, 1)[0]); changed(); }
+    else if (act === "dup") { var copy = JSON.parse(JSON.stringify(blocks[i])); copy.id = newId(); blocks.splice(i + 1, 0, copy); selected = copy.id; changed(); drawPanel(); }
+    else if (act === "del") {
+      var name = TYPES[blocks[i].type].label;
+      blocks.splice(i, 1); if (selected === id) selected = null; changed(); drawPanel();
+      T.toast(name + " block deleted. Press Ctrl+Z (or ↶) to bring it back.");
+    }
+  }
   $("#blocks").addEventListener("click", function (e) {
     var li = e.target.closest("li[data-id]"); if (!li) return;
-    var i = indexOf(li.dataset.id);
-    if (e.target.closest("[data-up]") && i > 0) { blocks.splice(i - 1, 0, blocks.splice(i, 1)[0]); changed(); return; }
-    if (e.target.closest("[data-down]") && i < blocks.length - 1) { blocks.splice(i + 1, 0, blocks.splice(i, 1)[0]); changed(); return; }
-    if (e.target.closest("[data-dup]")) {
-      var copy = JSON.parse(JSON.stringify(blocks[i])); copy.id = newId();
-      blocks.splice(i + 1, 0, copy); select(copy.id); changed(); return;
-    }
-    if (e.target.closest("[data-del]")) {
-      if (!confirm("Delete this " + TYPES[blocks[i].type].label + " block?")) return;
-      blocks.splice(i, 1); if (selected === li.dataset.id) select(null); changed(); return;
-    }
+    var act = e.target.closest("[data-up]") ? "up" : e.target.closest("[data-down]") ? "down" : e.target.closest("[data-dup]") ? "dup" : e.target.closest("[data-del]") ? "del" : "";
+    if (act) { blockAction(act, li.dataset.id); return; }
     select(li.dataset.id);
   });
   var dragId = null, dragKind = null;
@@ -355,9 +392,20 @@
       var b = blocks[indexOf(msg.block)];
       if (!b) return;
       b.data = b.data || {};
-      b.data[msg.field] = msg.value;
+      if (getPath(b.data, msg.field) === msg.value) return;
+      setPath(b.data, msg.field, msg.value);
       if (selected === b.id) { var input = $('#panel [data-f="' + msg.field + '"]'); if (input && document.activeElement !== input) input.value = msg.value; }
-      changed({ noReload: true });            // the preview already shows the new words
+      changed({ noReload: true, typing: true });            // the preview already shows the new words
+    }
+    if (msg.tenshi === "ready") {
+      var labels = {}; Object.keys(TYPES).forEach(function (k) { labels[k] = TYPES[k].label; });
+      e.source.postMessage({ tenshi: "labels", labels: labels }, location.origin);
+      if (selected) e.source.postMessage({ tenshi: "highlight", block: selected, scroll: false }, location.origin);
+    }
+    if (msg.tenshi === "block") blockAction(msg.act, msg.block);
+    if (msg.tenshi === "drop") onDrop(msg);
+    if (msg.tenshi === "pick-media") {
+      T.pickMedia(siteId, { kind: "image" }).then(function (items) { if (items.length) applyMedia(msg, items[0].id); });
     }
   });
   $$("[data-device]").forEach(function (b) {
@@ -369,8 +417,8 @@
   $("#page-jump").addEventListener("change", function () { location.href = "/sites/" + siteId + "/builder/" + this.value; });
 
   /* ---------- 5. Adding blocks ---------- */
-  function insertBlock(kind, at) {
-    var block = { id: newId(), type: kind, data: JSON.parse(JSON.stringify(TYPES[kind].data || {})) };
+  function insertBlock(kind, at, data) {
+    var block = { id: newId(), type: kind, data: Object.assign(JSON.parse(JSON.stringify(TYPES[kind].data || {})), data || {}) };
     if (at == null) { var i = indexOf(selected); at = i >= 0 ? i + 1 : blocks.length; }
     blocks.splice(at, 0, block);
     select(block.id);
@@ -379,11 +427,93 @@
   $("#add-block").addEventListener("click", function () { $("#palette").hidden = !$("#palette").hidden; });
   $$("#palette [data-kind]").forEach(function (b) {
     b.addEventListener("click", function () { insertBlock(b.dataset.kind); });
-    b.addEventListener("dragstart", function (e) { dragKind = b.dataset.kind; e.dataTransfer.effectAllowed = "copy"; });
+    b.addEventListener("dragstart", function (e) {
+      dragKind = b.dataset.kind; e.dataTransfer.effectAllowed = "copy";
+      try { e.dataTransfer.setData("application/x-tenshi-block", b.dataset.kind); } catch (err) { /* old browsers: the list still works */ }
+    });
     b.addEventListener("dragend", function () { setTimeout(function () { dragKind = null; }, 50); });
   });
 
-  /* ---------- 6. Start ---------- */
+  /* ---------- 6. Pictures and drag and drop onto the page ----------
+     A photo dropped (or chosen) on a block goes into that block's picture: the exact slot when the design marks it
+     (data-media="areas.0.image"), else the Nth picture field for the Nth picture in the block, else its first one.
+     A block with no picture field gets a new Image block under it. */
+  function mediaFields(type) { return (TYPES[type] && TYPES[type].fields || []).filter(function (f) { return f.type === "media"; }).map(function (f) { return f.name; }); }
+  function applyMedia(where, mediaId, at) {
+    var b = where.block ? blocks[indexOf(where.block)] : null;
+    if (b) {
+      var field = where.field, names = mediaFields(b.type);
+      if (!field && names.length) field = names[Math.min(Math.max(where.index || 0, 0), names.length - 1)];
+      if (field) {
+        b.data = b.data || {};
+        setPath(b.data, field, TYPES[b.type].widget ? String(mediaId) : +mediaId);
+        selected = b.id; changed({ now: true }); drawPanel(); T.toast("Picture changed"); return;
+      }
+      at = indexOf(b.id) + 1;
+    }
+    insertBlock("image", at == null ? undefined : at, { image: +mediaId });
+    T.toast("Image block added");
+  }
+  function uploadFiles(files) {
+    var fd = new FormData(); files.forEach(function (f) { fd.append("files", f, f.name || "photo.jpg"); });
+    T.toast("Uploading " + files.length + " photo" + (files.length === 1 ? "" : "s") + "…");
+    return T.api("POST", "/api/sites/" + siteId + "/media", fd).then(function (res) {
+      (res.errors || []).forEach(function (m) { T.toast(m, true); });
+      loadPhotos(); return res.items || [];
+    });
+  }
+  function onDrop(msg) {
+    if (msg.what === "block" && TYPES[msg.value]) { insertBlock(msg.value, msg.at); return; }
+    if (msg.what === "move") {
+      var from = indexOf(msg.value); if (from < 0) return;
+      var to = msg.at > from ? msg.at - 1 : msg.at; if (to === from) return;
+      blocks.splice(to, 0, blocks.splice(from, 1)[0]); changed(); return;
+    }
+    if (msg.what === "media" && msg.value) { applyMedia(msg, msg.value, msg.at); return; }
+    if (msg.what === "files" && msg.files && msg.files.length) {
+      uploadFiles(msg.files).then(function (items) {
+        if (!items.length) return;
+        if (msg.block) { applyMedia(msg, items[0].id); items = items.slice(1); }
+        var at = msg.block ? indexOf(msg.block) + 1 : msg.at;
+        items.forEach(function (m, k) { insertBlock("image", at + k, { image: m.id }); });
+      });
+    }
+  }
+
+  /* The Photos tab: this site's pictures, to drag onto the page (or click to put in the selected block) */
+  var photos = [];
+  function loadPhotos() {
+    var q = $("#photo-q") ? $("#photo-q").value : "";
+    return T.api("GET", "/api/sites/" + siteId + "/media?kind=image&q=" + encodeURIComponent(q)).then(function (res) {
+      photos = res.items || [];
+      $("#photo-grid").innerHTML = photos.length ? photos.map(function (m) {
+        return '<button type="button" class="ph" draggable="true" data-media="' + m.id + '" title="' + esc(m.title || m.filename) + '"><img src="' + esc(m.thumb) + '" alt="' + esc(m.alt || "") + '" loading="lazy"></button>';
+      }).join("") : '<p class="small muted">No photos yet. Upload some, pick from stock, or drag photos from your computer onto the page.</p>';
+    });
+  }
+  function setTab(name) {
+    $$("[data-tab]").forEach(function (t) { t.setAttribute("aria-selected", String(t.dataset.tab === name)); });
+    $("#tab-blocks").hidden = name !== "blocks"; $("#tab-photos").hidden = name !== "photos";
+    if (name === "photos" && !photos.length) loadPhotos();
+  }
+  if ($("#photo-grid")) {
+    $$("[data-tab]").forEach(function (t) { t.addEventListener("click", function () { setTab(t.dataset.tab); }); });
+    $("#photo-q").addEventListener("input", function () { clearTimeout(this.t); this.t = setTimeout(loadPhotos, 250); });
+    $("#photo-up").addEventListener("change", function () { if (this.files.length) uploadFiles(Array.prototype.slice.call(this.files)); this.value = ""; });
+    $("#photo-stock").addEventListener("click", function () { if (window.TenshiStock) window.TenshiStock.pick(siteId).then(function (m) { if (m) loadPhotos(); }); });
+    $("#photo-grid").addEventListener("dragstart", function (e) {
+      var p = e.target.closest("[data-media]"); if (!p) return;
+      e.dataTransfer.setData("application/x-tenshi-media", p.dataset.media); e.dataTransfer.effectAllowed = "copy";
+    });
+    $("#photo-grid").addEventListener("click", function (e) {
+      var p = e.target.closest("[data-media]"); if (!p) return;
+      if (selected) applyMedia({ block: selected }, p.dataset.media);
+      else applyMedia({}, p.dataset.media);
+    });
+  }
+  if ($("#undo")) { $("#undo").addEventListener("click", undo); $("#redo").addEventListener("click", redo); drawUndo(); }
+
+  /* ---------- 7. Start ---------- */
   drawList();
   drawPanel();
 })();
