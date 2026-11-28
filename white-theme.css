@@ -5,11 +5,11 @@
 
 /* ---------- colours, type and spacing ---------- */
 html.white:root:not(#_) {
-  --w-bg: #ffffff; --w-alt: #f5f5f7; --w-ink: #1d1d1f; --w-text: #424245; --w-mute: #6e6e73; --w-line: #d2d2d7; --w-blue: #0071e3; --w-blue-ink: #0066cc;
+  --w-bg: #ffffff; --w-alt: #f5f5f7; --w-ink: #1d1d1f; --w-text: #424245; --w-mute: #6e6e73; --w-line: #d2d2d7; --w-blue: #84cc16; --w-blue-ink: #3f7a00; --w-on: #0f1a00;
   --w-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", "Segoe UI", Roboto, Arial, "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif;
   --font: var(--w-font); --font-heading: var(--w-font); --font-ja: var(--w-font);
   --ink: var(--w-ink); --heading: var(--w-ink); --text: var(--w-text); --muted: var(--w-mute);
-  --red: var(--w-blue); --shu: var(--w-blue); --red-deep: var(--w-blue-ink); --red-dark: #004f9e;
+  --red: var(--w-blue); --shu: var(--w-blue); --red-deep: var(--w-blue-ink); --red-dark: #2f5c00;
   --line: var(--w-line); --pale: var(--w-alt); --mist: var(--w-alt); --white: #fff;
   --radius: 18px; --shadow: 0 4px 24px rgba(0, 0, 0, .06);
   color-scheme: light;
@@ -30,7 +30,7 @@ html.white :is(h4, h5, h6):not(#_):not(#__):not(#___) { letter-spacing: -.01em !
 html.white :is(.hero-lead, .feature-lead, .page-lead, .pitch-lead, .svc-intro, .svc-hero-lead, .section-intro, .svc-for p, .svc-other span, .contact-form label, .field label):not(#_):not(#__) { color: var(--w-mute) !important; }
 html.white a:not(#_) { color: var(--w-blue-ink); text-decoration-color: transparent; }
 html.white a:not(#_):hover { text-decoration-color: currentColor; }
-html.white ::selection { background: rgba(0, 113, 227, .2); }
+html.white ::selection { background: rgba(132, 204, 22, .32); }
 
 /* ---------- calm: no opening curtain, no letter-by-letter effects; everything is simply there ---------- */
 html.white body::after { display: none !important; }
@@ -60,7 +60,7 @@ html.white .ticker :is(.ticker-label, .ticker-time, li, span, b, small):not(#_) 
 html.white .ticker::before, html.white .ticker::after, html.white .ticker-window::before, html.white .ticker-window::after { display: none !important; }
 
 /* ---------- homepage hero: big quiet headline on white ---------- */
-html.white .hero:not(#_):not(#__) { background: radial-gradient(1200px 520px at 50% 118%, #e8f1ff 0%, rgba(232, 241, 255, 0) 70%), linear-gradient(#fff, #fbfbfd) !important; min-height: min(86vh, 860px); display: grid; place-items: center; padding: clamp(70px, 11vh, 130px) 22px clamp(60px, 9vh, 110px) !important; border: 0 !important; }
+html.white .hero:not(#_):not(#__) { background: radial-gradient(1200px 520px at 50% 118%, #eefbd5 0%, rgba(238, 251, 213, 0) 70%), linear-gradient(#fff, #fbfbfd) !important; min-height: min(86vh, 860px); display: grid; place-items: center; padding: clamp(70px, 11vh, 130px) 22px clamp(60px, 9vh, 110px) !important; border: 0 !important; }
 html.white .hero :is(.hero-media, .hero-slides, .hero-wash, .hero-stripes, canvas):not(#_) { display: none !important; }
 html.white .hero::before, html.white .hero::after { display: none !important; }
 html.white .hero .hero-card:not(#_):not(#__) { background: none !important; border: 0 !important; box-shadow: none !important; -webkit-backdrop-filter: none; backdrop-filter: none; max-width: 980px; margin: 0 auto !important; padding: 0 !important; text-align: center; animation: none !important; position: static; transform: none !important; }
@@ -76,7 +76,7 @@ html.white :is(.btn, .btn-primary, .btn-more, .hg-btn, .game-btn, .viz-open, but
   font-family: var(--w-font) !important; font-size: 1rem !important; font-weight: 400 !important; letter-spacing: -.01em !important; text-transform: none !important;
   padding: .7em 1.35em !important; min-height: 0 !important; animation: none !important; filter: none !important; -webkit-backdrop-filter: none; backdrop-filter: none; clip-path: none !important; text-decoration: none !important; display: inline-flex; align-items: center; gap: .4em; transition: background .2s !important; transform: none !important;
 }
-html.white :is(.btn, .btn-primary, .btn-more, .hg-btn, .game-btn, .viz-open, button[type="submit"]):not(#_):not(#__):not(#___):hover { background: #0077ed !important; }
+html.white :is(.btn, .btn-primary, .btn-more, .hg-btn, .game-btn, .viz-open, button[type="submit"]):not(#_):not(#__):not(#___):hover { background: #94dc22 !important; }
 html.white :is(.btn, .btn-primary, .btn-more, .hg-btn, .game-btn):not(#_)::before, html.white :is(.btn, .btn-primary, .btn-more, .hg-btn, .game-btn):not(#_)::after, html.white .hg-btn :is(.hg-ring, .hg-icon):not(#_) { display: none !important; }
 html.white .hg-btn .hg-text:not(#_):not(#__) { color: #fff !important; background: none !important; -webkit-text-fill-color: #fff; text-shadow: none !important; font: inherit !important; letter-spacing: inherit !important; text-transform: none !important; padding: 0 !important; }
 html.white .hero-cta-glass:not(#_) { margin: 0 !important; display: flex; justify-content: center; }
@@ -150,7 +150,7 @@ html.white :is(code, pre, kbd):not(#_):not(#__) { background: var(--w-alt) !impo
 
 /* ---------- forms ---------- */
 html.white :is(input, textarea, select):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not(#_):not(#__):not(#___) { background: #fff !important; color: var(--w-ink) !important; border: 1px solid var(--w-line) !important; border-radius: 12px !important; box-shadow: none !important; font-family: var(--w-font) !important; padding: .8em 1em !important; }
-html.white :is(input, textarea, select):not(#_):not(#__):not(#___):focus { outline: 0 !important; border-color: var(--w-blue) !important; box-shadow: 0 0 0 4px rgba(0, 113, 227, .16) !important; }
+html.white :is(input, textarea, select):not(#_):not(#__):not(#___):focus { outline: 0 !important; border-color: var(--w-blue) !important; box-shadow: 0 0 0 4px rgba(132, 204, 22, .28) !important; }
 html.white ::placeholder { color: #86868b !important; }
 html.white .contact .contact-inner:not(#_):not(#__) { max-width: 1040px; margin-inline: auto; }
 html.white .contact :is(.contact-form, .contact-intro):not(#_):not(#__):not(#___) { background: none !important; border: 0 !important; box-shadow: none !important; -webkit-backdrop-filter: none; backdrop-filter: none; }
@@ -251,3 +251,18 @@ html.white .svc-hero:not(.contact-map-hero) .crumbs:not(#a):not(#b):not(#c):not(
 /* phone: the homepage hero keeps inside the screen */
 html.white .hero .hero-card:not(#_):not(#__):not(#___) { width: 100%; max-width: min(980px, 100%) !important; box-sizing: border-box; }
 html.white .hero .hero-lead:not(#_):not(#__):not(#___):not(#____) { max-width: min(46ch, 100%) !important; width: auto !important; }
+
+/* ---------- lime green: every button and the logo (2026-11-28) ----------
+   --w-blue is now the lime (#84cc16) and --w-blue-ink a dark green for text links, which must stay readable on white.
+   White text cannot be read on lime, so buttons carry near-black text (--w-on). The logo images are swapped for lime
+   copies (brand/*-lime.png, made from the red ones; addresses here are relative to this file, at the site root). */
+html.white :is(.btn, .btn-primary, .hg-btn, .game-btn, .viz-open, button[type="submit"], .svc-cta a, .cta-btn):not(#_):not(#__):not(#___):not(#____) { background: var(--w-blue) !important; color: var(--w-on) !important; -webkit-text-fill-color: var(--w-on) !important; font-weight: 600 !important; }
+html.white :is(.btn, .btn-primary, .hg-btn, .game-btn, .viz-open, button[type="submit"], .svc-cta a, .cta-btn):not(#_):not(#__):not(#___):not(#____) :is(span, b, small, svg) { color: var(--w-on) !important; -webkit-text-fill-color: var(--w-on) !important; fill: currentColor; }
+html.white :is(.btn, .btn-primary, .hg-btn, .game-btn, .viz-open, button[type="submit"], .svc-cta a, .cta-btn):not(#_):not(#__):not(#___):not(#____):hover { background: #94dc22 !important; }
+html.white :is(.btn, .btn-primary, .hg-btn, .game-btn, .viz-open, button[type="submit"], .svc-cta a, .cta-btn):not(#_):focus-visible { outline: 3px solid #3f7a00 !important; outline-offset: 2px; }
+html.white .site-header .site-nav > ul > li > a.nav-launch:not(#_):not(#__):not(#___):not(#____) { background: var(--w-blue) !important; color: var(--w-on) !important; font-weight: 600 !important; }
+html.white :is(.chat-launcher, .chat-fab, #tenshi-chat-toggle, .tc-launch, .tk-launch):not(#_):not(#__):not(#___):not(#____) { background: var(--w-blue) !important; color: var(--w-on) !important; box-shadow: 0 8px 28px rgba(63, 122, 0, .28) !important; }
+html.white :is(.chat-launcher, .chat-fab, #tenshi-chat-toggle, .tc-launch, .tk-launch):not(#_):not(#__) *:not(#_):not(#__):not(#___) { color: var(--w-on) !important; -webkit-text-fill-color: var(--w-on) !important; }
+html.white .skip-link:not(#_):not(#__) { background: var(--w-blue) !important; color: var(--w-on) !important; }
+html.white img.hero-logo:not(#_) { content: url("brand/tenshi-logo-lime.png"); box-shadow: 0 6px 20px rgba(63, 122, 0, .22) !important; }
+html.white img:is(.brand-logo, .footer-logo):not(#_) { content: url("brand/tenshi-horizontal-lime.png"); }
