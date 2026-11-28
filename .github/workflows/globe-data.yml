@@ -4,6 +4,9 @@
 # - Weather (data/globe/weather.json): wind, jet stream and temperature from NOAA's GFS model, at most every 2.5 hours.
 # - The sea (data/globe/ocean.json): wave model, ocean currents and tide predictions at most every 5.5 hours, wave
 #   buoys on every run (hourly at weekends, when the markets schedule rests).
+# - Clouds (data/globe/clouds.png): once a day. Sharp maps of Mars and the Moon: once.
+# This file must also be on the repository's default branch (main): GitHub runs schedules only from there. The copy on
+# main checks out tenshi-cms, runs the tools from it and commits the data back to it.
 # - Infrastructure (data/globe/world.json): land, coast, ports, railways, airports, routes, data centres and cables
 #   from open data, once a week, and whenever the tools below change.
 name: World Pulse data
@@ -17,7 +20,7 @@ on:
     - cron: "33 * * * 0,6"
   push:
     branches: [tenshi-cms]
-    paths: ["tools/globe-data.mjs", "tools/globe-markets.mjs", "tools/globe-sats.mjs", "tools/globe-stocks.mjs", "tools/globe-weather.mjs", "tools/globe-ocean.mjs", "tools/globe-moon.py", "tools/globe-mars.py", ".github/workflows/globe-data.yml"]
+    paths: ["tools/globe-data.mjs", "tools/globe-markets.mjs", "tools/globe-sats.mjs", "tools/globe-stocks.mjs", "tools/globe-weather.mjs", "tools/globe-ocean.mjs", "tools/globe-moon.py", "tools/globe-mars.py", "tools/globe-clouds.py", "tools/globe-bodies.py", ".github/workflows/globe-data.yml"]
   workflow_dispatch:
 
 permissions:
@@ -30,7 +33,7 @@ concurrency:
 jobs:
   globe:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
         with:
@@ -61,8 +64,15 @@ jobs:
         if: hashFiles('data/globe/mars.jpg') == ''
         run: python3 tools/globe-mars.py
         continue-on-error: true
-      - name: Fetch infrastructure (weekly, on a tool change, or when the file is missing)
-        if: github.event_name != 'schedule' || github.event.schedule == '27 5 * * 0' || hashFiles('data/globe/world.json') == ''
+      - name: Fetch where the clouds were yesterday (once a day)
+        run: python3 tools/globe-clouds.py
+        continue-on-error: true
+      - name: Fetch sharp maps of Mars and the Moon once, while they are missing
+        if: hashFiles('data/globe/mars-4k.jpg') == '' || hashFiles('data/globe/moon-4k.jpg') == ''
+        run: python3 tools/globe-bodies.py
+        continue-on-error: true
+      - name: Fetch infrastructure (weekly, when run by hand, or when the file is missing)
+        if: github.event_name == 'workflow_dispatch' || github.event.schedule == '27 5 * * 0' || hashFiles('data/globe/world.json') == ''
         run: node tools/globe-data.mjs
         continue-on-error: true
       - name: Commit

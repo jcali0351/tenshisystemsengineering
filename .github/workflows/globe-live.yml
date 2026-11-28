@@ -1,0 +1,44 @@
+# World Pulse: a fresh snapshot of air traffic every five minutes.
+# The aircraft feed (adsb.lol) does not answer web pages directly, so this job asks for them and publishes the answer
+# as planes.json on the `globe-live` branch. That branch holds a single commit that is replaced each time (a forced
+# push), so the snapshots never pile up in the repository's history, and nothing on it is deployed to the website:
+# the page reads the file straight from raw.githubusercontent.com.
+# Like every scheduled workflow, this file must be on the repository's default branch (main) to run on its schedule;
+# the tool it runs lives on tenshi-cms.
+name: World Pulse live snapshot
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: globe-live
+  cancel-in-progress: true
+
+jobs:
+  planes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: tenshi-cms
+          sparse-checkout: tools
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Ask for the aircraft in the air
+        run: node tools/globe-planes.mjs /tmp/live
+      - name: Publish on the globe-live branch
+        run: |
+          cd /tmp/live
+          git init -q -b globe-live
+          git config user.name "tenshi-globe-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "World Pulse: live snapshot"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" globe-live
