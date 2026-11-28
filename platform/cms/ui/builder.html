@@ -2,6 +2,7 @@
 {% block title %}{{ page.title }} · Page builder{% endblock %}
 {% block heading %}{{ page.title }}{% endblock %}
 {% block actions %}
+<span class="row" role="group" aria-label="Undo and redo" style="gap:4px"><button type="button" class="btn btn-small" id="undo" title="Undo (Ctrl+Z)" aria-label="Undo" disabled>↶</button><button type="button" class="btn btn-small" id="redo" title="Redo (Ctrl+Shift+Z)" aria-label="Redo" disabled>↷</button></span>
 <span class="save-state" id="save-state">All changes saved</span>
 <select id="page-jump" aria-label="Edit another page" style="width:auto">
   {% for p in all_pages %}<option value="{{ p.id }}" {% if p.id == page.id %}selected{% endif %}>{{ p.title }}</option>{% endfor %}
@@ -13,14 +14,28 @@
 <div class="builder" id="builder" data-site="{{ site.id }}" data-page="{{ page.id }}" data-slug="{{ page.slug }}">
   <!-- Left: the page's blocks (drag to reorder) and the "Add block" list -->
   <div class="b-left">
-    <h2>Blocks</h2>
-    <ul class="blist" id="blocks"></ul>
-    <button class="btn" id="add-block" style="width:100%">+ Add block</button>
-    <div id="palette" hidden style="margin-top:12px">
-      <p class="small muted">Click to add after the selected block, or drag into the list.</p>
-      <div class="palette">
-        {% for kind, b in block_types.items() if not b.hidden %}<button type="button" draggable="true" data-kind="{{ kind }}"><b>{{ b.label }}</b><small>{{ b.about }}</small></button>{% endfor %}
+    <div class="b-tabs" role="tablist" aria-label="Builder panels">
+      <button type="button" role="tab" data-tab="blocks" aria-selected="true">Blocks</button>
+      <button type="button" role="tab" data-tab="photos" aria-selected="false">Photos</button>
+    </div>
+    <div id="tab-blocks">
+      <ul class="blist" id="blocks"></ul>
+      <button class="btn" id="add-block" style="width:100%">+ Add block</button>
+      <div id="palette" hidden style="margin-top:12px">
+        <p class="small muted">Drag a block onto the page (a line shows where it lands), or click to add it after the selected block.</p>
+        <div class="palette">
+          {% for kind, b in block_types.items() if not b.hidden %}<button type="button" draggable="true" data-kind="{{ kind }}"><b>{{ b.label }}</b><small>{{ b.about }}</small></button>{% endfor %}
+        </div>
       </div>
+    </div>
+    <div id="tab-photos" hidden>
+      <p class="small muted">Drag a photo onto a picture on the page to swap it, or between blocks to add it. Click a photo to put it in the selected block. You can also drag photos straight from your computer onto the page.</p>
+      <div class="row" style="gap:6px;margin-bottom:8px">
+        <label class="btn btn-small btn-primary">Upload<input type="file" id="photo-up" accept="image/*" multiple hidden></label>
+        <button type="button" class="btn btn-small" id="photo-stock">From stock</button>
+      </div>
+      <input type="search" id="photo-q" placeholder="Search photos" aria-label="Search photos" style="margin-bottom:8px">
+      <div class="photo-grid" id="photo-grid"></div>
     </div>
   </div>
 
@@ -33,7 +48,7 @@
         <button class="btn btn-small" data-device="phone" aria-pressed="false">Phone</button>
       </div>
       <span class="spacer" style="flex:1"></span>
-      <span class="small muted">Tip: click any text in the preview and type.</span>
+      <span class="small muted">Click any text on the page and type. Drag blocks and photos onto the page.</span>
       <button class="btn btn-small" id="theme-btn" type="button" aria-pressed="false">Theme</button>
     </div>
     <div class="b-stage" id="stage"><iframe id="frame" title="Page preview" src="/sites/{{ site.id }}/preview/{{ page.slug }}?edit=1"></iframe></div>

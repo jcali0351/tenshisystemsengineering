@@ -1,11 +1,32 @@
-/* The page builder's marks inside the preview: a frame around the block under the mouse, a solid one around the
-   selected block, its name in a tab, and a dotted line under words you can type over. */
+/* The page builder's marks inside the preview (bridge.js): a frame around the block under the mouse, a solid one around
+   the selected block, the block bar (drag, up, down, copy, delete), the formatting bar for text, the line that shows
+   where a dragged block or photo will land, and a highlight on a picture a photo is about to replace. */
 .tb-block { position: relative; cursor: pointer; }
-.tb-block::after { content: attr(data-type); position: absolute; inset: 0; pointer-events: none; outline: 2px dashed transparent; outline-offset: -2px;
-  font: 700 11px/1 system-ui, sans-serif; text-transform: uppercase; letter-spacing: .08em; color: transparent; padding: 6px 8px; z-index: 30; }
-.tb-block:hover::after { outline-color: rgba(255, 140, 26, .55); color: #ff8c1a; }
-.tb-block.tb-on::after { outline: 3px solid #ff8c1a; color: #1a0b2e; background: linear-gradient(#ff8c1a, #ff8c1a) top left / auto 22px no-repeat; }
+.tb-block::after { content: ""; position: absolute; inset: 0; pointer-events: none; outline: 2px dashed transparent; outline-offset: -2px; z-index: 30; }
+.tb-block:hover::after { outline-color: rgba(255, 140, 26, .55); }
+.tb-block.tb-on::after { outline: 3px solid #ff8c1a; }
 .tb-block [data-edit] { cursor: text; border-radius: 3px; }
 .tb-block [data-edit]:hover { box-shadow: 0 2px 0 0 rgba(255, 140, 26, .6); }
 .tb-block [data-edit]:focus { outline: 2px solid #ff8c1a; outline-offset: 3px; box-shadow: none; }
-.tb-block[data-type="contact_form"]::after { content: "form"; }
+.tb-block [data-edit]:empty::before { content: "Type here…"; opacity: .45; }
+.tb-block img, .tb-block [data-media] { cursor: copy; }
+.tb-block img:hover, .tb-block [data-media]:hover { outline: 2px dashed rgba(255, 140, 26, .7); outline-offset: -2px; }
+.tb-hot { outline: 4px solid #ff8c1a !important; outline-offset: -4px !important; filter: brightness(.85); }
+
+.tb-tools, .tb-fmt { position: absolute; z-index: 2147483000; display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: 10px;
+  background: #1a0b2e; color: #fff; box-shadow: 0 6px 22px rgba(0, 0, 0, .3); font: 600 12px/1 system-ui, -apple-system, "Segoe UI", sans-serif; }
+.tb-tools[hidden], .tb-fmt[hidden], .tb-line[hidden] { display: none; }
+.tb-tools button, .tb-fmt button { all: unset; box-sizing: border-box; min-width: 28px; height: 28px; padding: 0 6px; display: grid; place-items: center;
+  border-radius: 7px; cursor: pointer; color: #fff; font: 600 13px/1 system-ui, -apple-system, "Segoe UI", sans-serif; }
+.tb-tools button:hover, .tb-fmt button:hover { background: rgba(255, 255, 255, .16); }
+.tb-tools button:focus-visible, .tb-fmt button:focus-visible { outline: 2px solid #ff8c1a; }
+.tb-tools button[disabled] { opacity: .35; cursor: default; }
+.tb-tools .tb-drag { cursor: grab; font-size: 16px; }
+.tb-tools .tb-name { padding: 0 8px 0 6px; text-transform: uppercase; letter-spacing: .08em; font-size: 10.5px; color: #ffb066; }
+.tb-tools [data-act="del"]:hover { background: #b42318; }
+.tb-fmt .tb-sep { width: 1px; height: 18px; background: rgba(255, 255, 255, .2); margin: 0 3px; }
+.tb-line { position: absolute; left: 12px; right: 12px; height: 6px; z-index: 2147483000; border-radius: 6px; background: #ff8c1a; pointer-events: none;
+  box-shadow: 0 0 0 4px rgba(255, 140, 26, .25); }
+.tb-line { color: #1a0b2e; font: 700 11px/1 system-ui, sans-serif; }
+.tb-line:not(:empty) { height: 22px; display: grid; place-items: center; }
+.tb-block[data-type="contact_form"] { min-height: 20px; }
