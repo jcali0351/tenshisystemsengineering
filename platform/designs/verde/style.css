@@ -256,3 +256,5 @@ h1 { font-size: clamp(2.5rem, 5.8vw, 4.4rem); }
   .ve-badge { width: 90px; height: 90px; right: 0; }
   .menu { top: 76px; }
 }
+.ve-hero .kicker { color: var(--p); }
+.hero-background.ve-hero .kicker { color: #fff; }

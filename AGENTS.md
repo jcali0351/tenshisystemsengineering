@@ -280,5 +280,5 @@ Server facts: Hostinger KVM 2 VPS, Ubuntu 24.04, Caddy (HTML sent with `Cache-Co
   sign-in + forgotten passwords + My account, Author/Contributor roles + per-site access middleware, custom content
   types + Collection block + entry pages, WordPress import, Site search, moderated comments, multilingual pages,
   publish-on-time for posts and pages. New Python dependency: `segno` (QR codes).
-- 2026-11-28: three premium CMS designs, Aurora, Meridian and Maison (`platform/designs/`, details in platform/README.md).
+- 2026-11-28: nine premium CMS designs, Aurora, Meridian, Maison, Nova, Harbor, Summit, Bloom, Atlas, Verde (`platform/designs/`, details in platform/README.md).
   Original designs inspired by Astra/Kadence, Divi/Avada and Blocksy; no theme code or assets were copied.

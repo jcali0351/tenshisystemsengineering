@@ -279,3 +279,4 @@ a { color: var(--i); text-decoration-color: var(--a); text-underline-offset: 3px
   .services-block .card p, .services-block .card .price { grid-column: 2; }
   .quote { border-right: 0; border-bottom: 1px solid var(--su-line); }
 }
+.su-hero .kicker { color: var(--a); }
