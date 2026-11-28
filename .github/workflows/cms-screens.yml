@@ -7,7 +7,7 @@ on:
     branches: [cms-features]
     paths: ["platform/cms/ui/**", "platform/cms/static/**", "platform/tools/cms_screens.py", ".github/workflows/cms-screens.yml"]
 permissions:
-  contents: read
+  contents: write
 jobs:
   shots:
     runs-on: ubuntu-latest
@@ -41,3 +41,10 @@ jobs:
           name: cms-screens
           path: platform/shots/
           retention-days: 7
+      - name: Keep the pictures on the cms-shots branch (one commit, replaced each run)
+        if: always()
+        working-directory: platform/shots
+        run: |
+          git init -q -b cms-shots && git add -A
+          git -c user.name=tenshi-cms-bot -c user.email=bot@tenshisystems.com commit -qm "CMS screenshots" || exit 0
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" cms-shots
