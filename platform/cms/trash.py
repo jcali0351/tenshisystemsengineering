@@ -23,7 +23,7 @@ class TrashError(ValueError):
 
 
 def put(kind: str, row: dict, user=None, extra: dict | None = None) -> int:
-    title = row.get("title") or row.get("filename") or row.get("slug") or kind
+    title = (row.get("filename") if kind == "media" else None) or row.get("title") or row.get("slug") or kind
     return db.run("INSERT INTO trash (site_id, kind, title, data_json, user_id, created_at) VALUES (?, ?, ?, ?, ?, ?)",
                   row["site_id"], kind, str(title)[:200], db.dumps({"row": row, "extra": extra or {}}),
                   (user or {}).get("id"), db.now())
