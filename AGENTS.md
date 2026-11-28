@@ -231,6 +231,17 @@ Server facts: Hostinger KVM 2 VPS, Ubuntu 24.04, Caddy (HTML sent with `Cache-Co
   Action); `marsNow` gives sun position, clock, sol, season (Mars24) and the Earth-Mars distance; `MARSMARKS` are the
   labelled landforms and landing sites; `marsTour` is its tour; `HEADM` its headline figures. While Mars is up the
   Earth's panels are hidden by `body.mars` and its layers are skipped in `tick`; nothing is switched off.
+- 2026-11-28: **Mars and the Moon are textured spheres** (`P_BODY`, `drawSphere`, `loadInto`): 4096 x 2048 maps
+  (`data/globe/mars-4k.jpg`, `moon-4k.jpg`, `moon-1k.jpg`, tools/globe-bodies.py), a ray cast per pixel so they stay
+  sharp when zoomed; the particle Mars is gone. The **Moon is a third world** (`BODIES`, `LUNA`, `LUNAMARKS`,
+  `moonTour`, `HEADL`; `?planet=moon`), with the Earth as a small globe in its sky. `setPlanet` takes earth/moon/mars.
+- **All stars**: `data/globe/stars.bin` (tools/globe-stars.py): the rest of Hipparcos (109k stars) and Milky Way points,
+  drawn by `buildFaint` after the bright sky. **Clouds** now come from `data/globe/clouds.png` (tools/globe-clouds.py in
+  the Action; the browser-side read failed because the SNPP satellite layer returns an empty picture).
+- **Aircraft**: adsb.lol sends no cross-origin header, so the page never could read it. `pollPlanes` still tries, then
+  switches to `pollSnapshot`: `planes.json` on the `globe-live` branch, written every 5 minutes by
+  `.github/workflows/globe-live.yml` (tools/globe-planes.mjs). **Both globe workflows must be on `main`** (the default
+  branch) for their schedules to run; until the owner allows that, they run only when a tool file is pushed.
 - Owner's rules for it: commercial-safe data only (no OpenSky, no TeleGeography), no server relay, real data with
   honest labels (live / delayed / static / modelled), fine particles, never blobby.
 

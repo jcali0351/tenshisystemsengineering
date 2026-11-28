@@ -2,7 +2,8 @@
    Around the globe: a layer list with a freshness word per layer and a colour key, tap or click to select a point
    (a ring follows it), one rotating headline figure, a guided tour, "above me" (what is over the visitor's own spot),
    a replay of the last 24 hours, share links that reopen a view, and a render scale that drops if frames do.
-   Mars: a second planet to switch to, with its real face, clock, seasons, landing sites and moons (mars.jpg).
+   Mars and the Moon: other worlds to switch to, each a sharp textured sphere with its real face, lighting, labelled
+   places and landing sites, and its own tour (mars-4k.jpg, moon-4k.jpg).
    The sky: real stars and constellations (sky.json) and the Moon at its true place and phase (moon.json).
    The sea (ocean.json): currents, swell, a surf report for well-known breaks, wave buoys and tide stations.
    Static layers come from data/globe/world.json (tools/globe-data.mjs), markets from data/globe/markets.json
@@ -120,6 +121,29 @@
       float lit = smoothstep(-0.04, 0.2, dot(aPos, uSunL)), face = smoothstep(0.0, 0.14, dot(aPos, normalize(uEyeL - aPos)));
       vec3 c = mix(vec3(0.62, 0.68, 0.95), vec3(1.0, 0.97, 0.9), aAlb) * (0.22 + 1.05 * aAlb);
       vColor = vec4(c * (0.035 + lit), face * (0.55 + 0.45 * aAlb) * (0.9 + 0.1 * sin(uTime * 1.3 + aSeed * 40.0))); gl_PointSize = max(1.0, (1.05 + aSeed * 0.5) * uPx); }`, DOT_FS);
+
+  // A planet or moon as a real sphere with its map wrapped round it: every pixel casts a ray from the camera, finds where
+  // it meets the sphere, and looks that spot up in the map, so the picture stays sharp however far you zoom in.
+  // uKind 1: Mars (dusty air at the edge, warm dusk); 0: the Moon (airless, hard light).
+  const P_BODY = program(`in vec2 aUV; out vec2 vN; void main(){ vN = aUV; gl_Position = vec4(aUV, 0.0, 1.0); }`,
+    `in vec2 vN; uniform sampler2D uTex; uniform vec3 uEye, uC, uSun; uniform mat3 uCamRot, uBody; uniform float uR, uKind, uNight; uniform vec2 uTan; out vec4 o;
+    void main(){
+      vec3 d = uCamRot * normalize(vec3(vN * uTan, -1.0)), oc = uEye - uC;
+      float b = dot(oc, d), h = b * b - (dot(oc, oc) - uR * uR);
+      if (h < 0.0 || b > 0.0) discard;
+      vec3 n = (oc + d * (-b - sqrt(h))) / uR, l = uBody * n;
+      float u = atan(l.x, l.z) / 6.2831853 + 0.5, v = 0.5 - asin(clamp(l.y, -1.0, 1.0)) / 3.14159265;
+      vec2 uv = vec2(u, v), ua = vec2(fract(u + 0.5) - 0.5, v), gx = dFdx(uv), gy = dFdy(uv), ax = dFdx(ua), ay = dFdy(ua);
+      if (dot(ax, ax) + dot(ay, ay) < dot(gx, gx) + dot(gy, gy)) { gx = ax; gy = ay; }       // no blurred seam where the map's two ends meet
+      vec3 c = textureGrad(uTex, uv, gx, gy).rgb;
+      float lit = dot(n, uSun), face = max(dot(n, -d), 0.0), rim = pow(1.0 - face, 3.0);
+      if (uKind > 0.5) { float day = smoothstep(-0.08, 0.24, lit);
+        c = pow(c, vec3(0.98)) * 1.02 * mix(uNight, 1.0, day) * (0.86 + 0.26 * max(lit, 0.0));
+        c += vec3(1.0, 0.42, 0.22) * smoothstep(-0.02, 0.14, lit) * (1.0 - smoothstep(0.14, 0.45, lit)) * 0.07;
+        c = mix(c, vec3(0.96, 0.62, 0.44), rim * 0.5 * (0.2 + 0.8 * day));
+      } else { c = pow(c, vec3(1.08)) * vec3(1.0, 0.98, 0.94) * 1.2 * mix(uNight, 1.0, smoothstep(-0.015, 0.09, lit)) * (0.72 + 0.42 * max(lit, 0.0)); }
+      o = vec4(c, clamp(h / max(fwidth(h), 1e-7), 0.0, 1.0));
+    }`);
 
   // Births rise as a bright spark; deaths fall away as a dim one.
   const P_EVENT = program(`in vec3 aPos; in float aT0; in float aKind;
@@ -348,9 +372,9 @@
       sats: `${sw([0.55, 0.95, 1])} low orbit · ${sw([0.75, 0.55, 1])} medium orbit · ${sw([1, 0.82, 0.45])} high orbit (geostationary ring).`,
       space: `${sw([1, 1, 1])} the International Space Station, with a long trail.`,
       moon: `${sw([0.92, 0.93, 1])} the Moon in fine particles: where it stands, how much of it is lit and the face it shows are real, from the Lunar Reconnaissance Orbiter's pictures. It is drawn about 15 times too big and too close, so that you can see it. The ring on the Earth marks the spot where it is straight overhead.`,
-      sky: `${sw([0.6, 0.66, 1])} the real stars down to the faintest the eye can see, coloured as they are, with the 88 constellation figures. The sky turns once a day, as it does overhead.`,
+      sky: `${sw([0.6, 0.66, 1])} every star in the Hipparcos catalogue, about 118,000, coloured as they are, with the Milky Way's glow and the 88 constellation figures. The galaxy holds a few hundred billion more that no map this size can show. The sky turns once a day, as it does overhead.`,
       rain: `${sw([0.45, 0.75, 1])} falling streaks where satellites see rain or snow; colour follows NASA's rate scale.`,
-      clouds: `${sw([0.85, 0.92, 1])} a fine white haze where yesterday's satellite pictures show bright cloud tops. Snow and ice can read as cloud.`,
+      clouds: `${sw([0.85, 0.92, 1])} a fine white haze where yesterday's satellite picture shows bright cloud tops. Snow and ice can read as cloud.`,
       cur: `${sw([0.15, 0.35, 1])} to ${sw([1, 1, 1])} dashed lines that creep the way the surface water flows, whiter where it runs faster. Blank along the equator, where this satellite method does not work. Slow dashes, so they read apart from the wind.`,
       surf: `${sw([0.2, 0.9, 0.75])} to ${sw([1, 0.3, 0.75])} lines running the way the swell travels, drawn where waves top 2 m, redder when taller · ${sw([1, 0.55, 0.45])} ringed points: surf breaks · ${sw([1, 0.95, 0.6])} points: wave buoys.`,
       tide: `${sw([0.3, 1, 0.9])} rising · ${sw([1, 0.45, 0.8])} falling. Each station is a short filament, taller the nearer it is to high water.`,
@@ -366,6 +390,34 @@
   const M = {};           // meshes
   const picks = [];       // things a visitor can point at: { p, kind, title, sub }
   const quad = mesh(P_ATMO, [["aUV", 2]], [-1, -1, 1, -1, -1, 1, 1, 1], gl.TRIANGLE_STRIP);
+  const bodyQuad = mesh(P_BODY, [["aUV", 2]], [-1, -1, 1, -1, -1, 1, 1, 1], gl.TRIANGLE_STRIP);
+  // A map for a sphere. loadInto() can be called again with a sharper picture; the old one shows until it arrives.
+  const newTex = () => ({ tex: gl.createTexture(), ready: false, width: 0 });
+  function loadInto(T, url, then) {
+    const img = new Image();
+    img.onload = () => {
+      let src = img; const max = Math.min(gl.getParameter(gl.MAX_TEXTURE_SIZE), 4096);
+      if (img.width > max) { src = document.createElement("canvas"); src.width = max; src.height = max / 2; src.getContext("2d").drawImage(img, 0, 0, max, max / 2); }
+      gl.bindTexture(gl.TEXTURE_2D, T.tex); gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, src); gl.generateMipmap(gl.TEXTURE_2D);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      const ext = gl.getExtension("EXT_texture_filter_anisotropic"); if (ext) gl.texParameterf(gl.TEXTURE_2D, ext.TEXTURE_MAX_ANISOTROPY_EXT, Math.min(8, gl.getParameter(ext.MAX_TEXTURE_MAX_ANISOTROPY_EXT)));
+      T.ready = true; T.width = img.width; if (then) then(true);
+    };
+    img.onerror = () => { if (then) then(false); };
+    img.src = url;
+  }
+  const IDENT = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+  // Draws the sphere: centre c, radius r, axes [east, north, toward longitude 0] in the scene's coordinates, lit from sun.
+  function drawSphere(T, c, r, ax, sun, kind, night) {
+    const u = P_BODY.u; gl.useProgram(P_BODY.p); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, T.tex); gl.uniform1i(u.uTex, 0);
+    gl.uniform3fv(u.uEye, EYE); gl.uniform3fv(u.uC, c); gl.uniform3fv(u.uSun, sun); gl.uniform1f(u.uR, r); gl.uniform1f(u.uKind, kind); gl.uniform1f(u.uNight, night);
+    gl.uniform2f(u.uTan, Math.tan(17 * DEG) * W / H, Math.tan(17 * DEG));
+    gl.uniformMatrix3fv(u.uCamRot, false, [VIEW[0], VIEW[4], VIEW[8], VIEW[1], VIEW[5], VIEW[9], VIEW[2], VIEW[6], VIEW[10]]);
+    gl.uniformMatrix3fv(u.uBody, false, [ax[0][0], ax[1][0], ax[2][0], ax[0][1], ax[1][1], ax[2][1], ax[0][2], ax[1][2], ax[2][2]]);
+    gl.bindVertexArray(bodyQuad.vao); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+  }
 
   // Stars and the graticule need no data.
   const mix3 = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
@@ -652,7 +704,28 @@
   const HUBS = [[40.7, -74, "New York"], [41.9, -87.6, "Chicago"], [33.7, -84.4, "Atlanta"], [32.9, -97, "Dallas"], [39.8, -104.7, "Denver"], [34, -118.3, "Los Angeles"], [37.6, -122.3, "San Francisco"], [47.5, -122.3, "Seattle"], [25.8, -80.3, "Miami"], [43.7, -79.6, "Toronto"], [19.4, -99.1, "Mexico City"], [-23.5, -46.6, "São Paulo"], [4.7, -74.1, "Bogotá"], [51.5, -0.3, "London"], [49, 2.5, "Paris"], [50, 8.6, "Frankfurt"], [40.5, -3.6, "Madrid"], [41.8, 12.3, "Rome"], [41.2, 28.8, "Istanbul"], [25.2, 55.4, "Dubai"], [25.3, 51.6, "Doha"], [28.6, 77.1, "Delhi"], [19.1, 72.9, "Mumbai"], [1.4, 104, "Singapore"], [13.7, 100.7, "Bangkok"], [22.3, 113.9, "Hong Kong"], [31.1, 121.8, "Shanghai"], [40.1, 116.6, "Beijing"], [35.6, 139.8, "Tokyo"], [37.5, 126.4, "Seoul"], [-33.9, 151.2, "Sydney"], [-26.1, 28.2, "Johannesburg"], [30.1, 31.4, "Cairo"], [52.3, 4.8, "Amsterdam"], [55.6, 12.6, "Copenhagen"], [59.6, 17.9, "Stockholm"],
     [29.9, -95.3, "Houston"], [33.4, -112, "Phoenix"], [44.9, -93.2, "Minneapolis"], [45.5, -73.7, "Montreal"], [49.2, -123.2, "Vancouver"], [61.2, -150, "Anchorage"], [21.3, -157.9, "Honolulu"], [9, -79.4, "Panama City"], [-12, -77.1, "Lima"], [-33.4, -70.8, "Santiago"], [-34.8, -58.5, "Buenos Aires"], [53.4, -6.3, "Dublin"], [38.8, -9.1, "Lisbon"], [48.1, 16.6, "Vienna"], [52.2, 21, "Warsaw"], [37.9, 23.9, "Athens"], [24.9, 46.7, "Riyadh"], [6.6, 3.3, "Lagos"], [-1.3, 36.9, "Nairobi"], [9, 38.8, "Addis Ababa"], [13, 80.2, "Chennai"], [3.1, 101.6, "Kuala Lumpur"], [-6.1, 106.7, "Jakarta"], [14.5, 121, "Manila"], [25.1, 121.2, "Taipei"], [-37.7, 144.8, "Melbourne"], [-37, 174.8, "Auckland"]];
   const HUBV = HUBS.map((h) => ll(h[1], h[0]));
-  let hubI = 0, planeFails = 0, planeOk = false, flip = false;
+  let hubI = 0, planeFails = 0, planeOk = false, flip = false, planeSnap = false;
+  // adsb.lol does not answer web pages (no cross-origin header), so the direct way below normally fails at once. The
+  // page then reads the snapshot a GitHub workflow publishes every five minutes (tools/globe-planes.mjs) and carries
+  // each aircraft forward along its course from the moment it was seen. Honest label: delayed, with the time.
+  const SNAP = "https://raw.githubusercontent.com/jcali0351/tenshisystemsengineering/globe-live/planes.json";
+  async function pollSnapshot() {
+    if (!L.planes.on || document.hidden) return setTimeout(pollSnapshot, 3000);
+    try {
+      const r = await fetch(SNAP + "?_=" + Math.floor(Date.now() / 120000), { signal: AbortSignal.timeout(25000) }); if (!r.ok) throw new Error(r.status);
+      const j = await r.json(), t = now(), age0 = (Date.now() - Date.parse(j.at)) / 1000;
+      if (!(age0 < 1800)) throw new Error("old");
+      planes.map.clear(); let n = 0;
+      for (const [lon, lat, trk, gs, alt, flight, type, dt] of j.ac) {
+        const age = age0 + dt; if (alt < 6000 && age > 240) continue;            // a low aircraft has probably landed or turned by now
+        const sp = gs * 0.5144 / EARTH, d = heading(lon, lat, trk), p0 = ll(lon, lat), p = norm([p0[0] + d[0] * sp * age, p0[1] + d[1] * sp * age, p0[2] + d[2] * sp * age]);
+        planes.map.set("s" + n++, { p, v: [d[0] * sp, d[1] * sp, d[2] * sp], t0: t, alt: 0.003 + Math.min(alt, 45000) / 45000 * 0.011, seen: t, title: flight || "Aircraft", sub: `${type || "Aircraft"} · ${alt.toLocaleString("en-US")} ft · ${gs} kt` });
+      }
+      planes.dirty = true; L.planes.count(planes.map.size);
+      L.planes.status("delay", `seen at ${j.at.slice(11, 16)} UTC and carried forward along each course · adsb.lol · ${j.points} busy airspaces, so a large sample, not every flight`);
+    } catch (e) { if (!planes.map.size) L.planes.status("off", "the aircraft snapshot is not being published yet, or is more than 30 minutes old"); }
+    setTimeout(pollSnapshot, 100000);
+  }
   function takePlanes(j, t) {
     for (const a of j.ac || []) {
       if (a.lat == null || a.lon == null || typeof a.alt_baro !== "number") continue;
@@ -671,6 +744,7 @@
       takePlanes(j, t);
       planeOk = true; planeFails = 0; planes.dirty = true;
     } catch (e) { planeFails++; }
+    if (!planeOk && planeFails >= 2) { planeSnap = true; return pollSnapshot(); }      // no answer for a web page: use the snapshot from here on
     const t = now(); for (const [k, m] of planes.map) if (t - m.seen > 330) { planes.map.delete(k); planes.dirty = true; }
     L.planes.count(planes.map.size);
     if (planeOk && planeFails < 4) L.planes.status("live", `adsb.lol · sweeping ${HUBS.length} air hubs in turn, so this is a sample, not every flight`);
@@ -764,40 +838,31 @@
     setTimeout(pollRain, 30 * 60000);
   }
 
-  /* ---------- weather: clouds, read from yesterday's true-colour satellite picture of the whole Earth (NASA GIBS) ----------
-     A pixel that is bright and nearly colourless is taken as cloud. Snow and ice look the same from above, so the poles
-     are left out and the label says so. Yesterday is used because today's picture is still being assembled. */
+  /* ---------- weather: clouds (data/globe/clouds.png + clouds.json, tools/globe-clouds.py) ----------
+     The data workflow reads yesterday's true-colour satellite picture of the whole Earth (NASA GIBS) and keeps the
+     bright, colourless pixels as cloud; the page scatters fine points over them. Doing it there, not here, means the
+     log shows which satellite answered. Snow and ice look like cloud from above, so the poles are left out. */
   function pollClouds() {
     if (!L.clouds.on || document.hidden) return setTimeout(pollClouds, 3000);
-    const day = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
-    const attempt = (names) => {
-      if (!names.length) { if (!M.clouds) L.clouds.status("off", "satellite picture not reachable or not readable right now"); return; }
-      const img = new Image(); img.crossOrigin = "anonymous";
-      img.onerror = () => attempt(names.slice(1));
+    getJson("../data/globe/clouds.json").then((meta) => { const img = new Image();
       img.onload = () => {
-        try {
-          const RW = 720, RH = 360, cv = document.createElement("canvas"); cv.width = RW; cv.height = RH;
-          const cx = cv.getContext("2d", { willReadFrequently: true }); cx.drawImage(img, 0, 0, RW, RH);
-          const px = cx.getImageData(0, 0, RW, RH).data, cells = []; let area = 0, all = 0;
-          for (let j = 0; j < RH; j++) { const lat = 90 - (j + 0.5) / 2; if (lat > 66 || lat < -60) continue; const wgt = Math.cos(lat * DEG);
-            for (let i = 0; i < RW; i++) { const o = (j * RW + i) * 4, r = px[o], g = px[o + 1], b = px[o + 2], mn = Math.min(r, g, b), mx = Math.max(r, g, b);
-              if (mx < 12) continue; all += wgt;                    // black: no picture here (gaps between passes)
-              if (mn > 150 && mx - mn < 46) { cells.push(j * RW + i); area += wgt; } } }
-          if (cells.length < 200) throw new Error("no cloud found");
-          const N = Math.min(LITE ? 45000 : 100000, cells.length * 3), a = [];
-          for (let k = 0, tries = 0; k < N && tries < N * 6; tries++) {
-            const n = cells[(rnd() * cells.length) | 0], i = n % RW, j = (n / RW) | 0, lat = 90 - (j + rnd()) / 2; if (rnd() > Math.cos(lat * DEG)) continue;   // even cover per square kilometre
-            const p = ll(-180 + (i + rnd()) / 2, lat, 1.006 + rnd() * 0.006), w = (px[n * 4] - 150) / 105;
-            a.push(p[0], p[1], p[2], 0.8 + 0.2 * w, 0.86 + 0.14 * w, 1, 0.1 + 0.2 * w * rnd(), 0.95 + rnd() * 0.5, rnd()); k++;
-          }
-          dyn("clouds").set(a); L.clouds.count(`${(area / all * 100).toFixed(0)}%`);
-          L.clouds.status("delay", `bright cloud between 60°S and 66°N on ${day} · NASA ${names[0].split("_")[0]} · snow and ice can read as cloud`);
-        } catch (e) { attempt(names.slice(1)); }
+        const RW = 720, RH = 360, cv = document.createElement("canvas"); cv.width = RW; cv.height = RH;
+        const cx = cv.getContext("2d", { willReadFrequently: true }); cx.drawImage(img, 0, 0, RW, RH);
+        const px = cx.getImageData(0, 0, RW, RH).data, cells = [];
+        for (let n = 0; n < RW * RH; n++) if (px[n * 4] > 40) cells.push(n);
+        if (cells.length < 200) return L.clouds.status("off", "no cloud picture for yesterday");
+        const N = Math.min(LITE ? 170000 : 340000, cells.length * 4), a = [];
+        for (let k = 0, tries = 0; k < N && tries < N * 6; tries++) {
+          const n = cells[(rnd() * cells.length) | 0], i = n % RW, j = (n / RW) | 0, lat = 90 - (j + rnd()) / 2; if (rnd() > Math.cos(lat * DEG)) continue;   // even cover per square kilometre
+          const p = ll(-180 + (i + rnd()) / 2, lat, 1.006 + rnd() * 0.006), w = (px[n * 4] - 60) / 195;
+          a.push(p[0], p[1], p[2], 0.82 + 0.18 * w, 0.88 + 0.12 * w, 1, 0.22 + 0.3 * w, 1.5 + rnd() * 1.1 + w * 0.6, rnd()); k++;
+        }
+        dyn("clouds").set(a); L.clouds.count(`${meta.pct}%`);
+        L.clouds.status("delay", `bright cloud between 60°S and 66°N on ${meta.day} · NASA ${meta.satellite} · snow and ice can read as cloud`);
       };
-      img.src = `https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=${names[0]}&STYLES=&FORMAT=image/jpeg&CRS=EPSG:4326&BBOX=-90,-180,90,180&WIDTH=1440&HEIGHT=720&TIME=${day}`;
-    };
-    L.clouds.status("off", "loading yesterday's satellite picture");
-    attempt(["VIIRS_SNPP_CorrectedReflectance_TrueColor", "MODIS_Terra_CorrectedReflectance_TrueColor"]);
+      img.onerror = () => L.clouds.status("off", "cloud picture could not be loaded");
+      img.src = "../data/globe/clouds.png?d=" + meta.day;
+    }).catch(() => { if (!M.clouds) L.clouds.status("off", "first data sync in progress, check back in a few minutes"); });
     setTimeout(pollClouds, 3 * 3600000);
   }
 
@@ -961,12 +1026,26 @@
   function buildSky(j) {
     SKY = j; const a = [], s = j.stars;
     for (let i = 0; i < s.length; i += 4) { const p = ll(s[i] / 100, s[i + 1] / 100), mag = s[i + 2] / 10, c = bvCol(s[i + 3] / 100), k = Math.max(0, (6.6 - mag) / 8);    // k: 0 faint .. 1 brightest
-      a.push(p[0], p[1], p[2], c[0], c[1], c[2], (0.25 + 0.75 * Math.pow(k, 1.2)) * 20, 1.0 + 3.4 * k * k, rnd()); }
+      a.push(p[0], p[1], p[2], c[0], c[1], c[2], (0.45 + 0.55 * Math.pow(k, 1.1)) * 20, 1.35 + 4.2 * k * k, rnd()); }
     M.stars = mesh(P_POINT, POINT, a, gl.POINTS);
     M.conLines = mesh(P_LINE, LINE, lineVerts(j.cons.flatMap((c) => c[5]), [0.5, 0.58, 1], 4.4), gl.LINES);
     for (const c of j.cons) { const e = document.createElement("div"); e.className = "lab sky"; e.textContent = c[1]; $("#labels").appendChild(e); conLabels.push({ el: e, ra: c[3], dec: c[4], rank: c[2] }); }
     conLabels.sort((x, y) => x.rank - y.rank);
     L.sky.count(j.cons.length); L.sky.status("static", `${num(s.length / 4)} real stars, turning with the sky overhead · Hipparcos catalogue`);
+  }
+  // The rest of the sky (data/globe/stars.bin, tools/globe-stars.py): every fainter star of the Hipparcos catalogue, and
+  // the Milky Way as a haze of fine points, thicker where its band is brighter. Loaded after the bright sky is up.
+  function buildFaint(buf) {
+    const dv = new DataView(buf), nS = dv.getUint32(0, true), nM = dv.getUint32(4, true), a = [], keep = LITE ? 9.2 : 99; let o = 8, shown = 0;
+    for (let i = 0; i < nS; i++, o += 6) { const mag = dv.getUint8(o + 4) / 10; if (mag > keep) continue; shown++;
+      const p = ll(dv.getUint16(o, true) / 100, dv.getInt16(o + 2, true) / 100), c = bvCol(dv.getInt8(o + 5) / 50), k = Math.max(0, (12.5 - mag) / 6);    // k: about 1 at the edge of sight, 0 at the faintest
+      a.push(p[0], p[1], p[2], c[0], c[1], c[2], (0.16 + 0.34 * k) * 20, 1.0 + 0.5 * k, rnd()); }
+    M.faint = mesh(P_POINT, POINT, a, gl.POINTS); a.length = 0; o = 8 + nS * 6;
+    const step = LITE ? 2 : 1;
+    for (let i = 0; i < nM; i += step, o += 5 * step) { const lv = dv.getUint8(o + 4), p = ll(dv.getUint16(o, true) / 100 + (rnd() - 0.5) * 0.6, dv.getInt16(o + 2, true) / 100 + (rnd() - 0.5) * 0.6), w = lv / 5;
+      a.push(p[0], p[1], p[2], 0.62 + 0.3 * w, 0.68 + 0.24 * w, 1, (0.07 + 0.16 * w) * 20 * step, 2.0 + 3.0 * w * rnd(), rnd()); }
+    M.mw = mesh(P_POINT, POINT, a, gl.POINTS);
+    if (SKY) L.sky.status("static", `${num(SKY.stars.length / 4 + shown)} real stars, the whole Hipparcos catalogue${shown < nS ? " down to magnitude 9" : ""}, and the Milky Way · turning with the sky overhead`);
   }
   function layoutSky() {
     const used = [], max = SMALL ? 5 : 12; let n = 0;
@@ -1024,6 +1103,7 @@
     return { s: project(m.c), r: MOON_R / fwd / Math.tan(17 * DEG) * (H / 2), behind: fwd > Math.hypot(EYE[0], EYE[1], EYE[2]) };
   }
   function drawMoon(t) {
+    if (LUNA.tex.ready) return drawSphere(LUNA.tex, moon.p.c, MOON_R, [moon.p.X, moon.p.Y, moon.p.Z], SUN, 0, 0.035);
     const m = moon.p, u = use(P_MOON, t), R = MOON_R;
     gl.uniformMatrix4fv(u.uMVP, false, mul(MVP, [m.X[0] * R, m.X[1] * R, m.X[2] * R, 0, m.Y[0] * R, m.Y[1] * R, m.Y[2] * R, 0, m.Z[0] * R, m.Z[1] * R, m.Z[2] * R, 0, m.c[0], m.c[1], m.c[2], 1]));
     const e = [(EYE[0] - m.c[0]) / R, (EYE[1] - m.c[1]) / R, (EYE[2] - m.c[2]) / R];
@@ -1041,11 +1121,12 @@
     }
   }
 
-  /* ---------- Mars: a second planet to switch to (the Mars button; world-pulse.html?planet=mars) ----------
-     The face is a real map (data/globe/mars.jpg, tools/globe-mars.py). Day and night, the season and the clock are
+  /* ---------- Mars and the Moon: other worlds to switch to (the Moon and Mars buttons; ?planet=mars, ?planet=moon) ----------
+     Each is a sharp textured sphere (P_BODY, drawSphere) wearing a real 4096 x 2048 map (tools/globe-bodies.py); a
+     smaller map shows first while the big one downloads. Mars: Day and night, the season and the clock are
      worked out with the Mars24 method (Allison and McEwen, 2000); the distance from Earth from the planets' orbits.
      While Mars is up, the Earth's layers, panels and feeds are simply not drawn; nothing about them is switched off. */
-  const MARS = { ready: false, reveal: 0, picks: [], labels: [], now: null, sun: [1, 0, 0] };
+  const MARS = { name: "Mars", kind: 1, night: 0.4, tex: newTex(), maps: ["../data/globe/mars.jpg", "../data/globe/mars-4k.jpg"], picks: [], labels: [], now: null };
   function marsNow(ms) {
     const jd = ms / 86400000 + 2440587.5 + 69.184 / 86400, d = jd - 2451545, sn = (x) => Math.sin(x * DEG), cs = (x) => Math.cos(x * DEG);
     const Mn = 19.3871 + 0.52402073 * d, al = 270.3871 + 0.524038496 * d; let pbs = 0;
@@ -1085,58 +1166,107 @@
     ["Chryse Planitia", 22.3, -48, 1, "Viking 1 made the first successful American landing here on 20 July 1976"],
     ["Viking 2", 47.6, 134.3, 1, "Viking 2 landed here on 3 September 1976"], ["Ares Vallis", 19.1, -33.2, 1, "Mars Pathfinder and its rover Sojourner landed here on 4 July 1997"],
     ["Phoenix", 68.2, -125.7, 1, "Phoenix lander dug into ice-rich soil here after landing on 25 May 2008"], ["Zhurong", 25.1, 109.9, 1, "China's Zhurong rover landed here on 14 May 2021"]];
-  function buildMars(img) {
-    const N = LITE ? 300000 : 600000, a = [], g = Math.PI * (3 - Math.sqrt(5)); let px = null, PW = 0, PH = 0;   // Mars is drawn alone, so it can afford a denser globe than the Earth's
-    if (img) try { PW = 1440; PH = 720; const cv = document.createElement("canvas"); cv.width = PW; cv.height = PH; const cx = cv.getContext("2d", { willReadFrequently: true }); cx.drawImage(img, 0, 0, PW, PH); px = cx.getImageData(0, 0, PW, PH).data; } catch (e) { px = null; }
-    const grey = !px || (MARS.meta && MARS.meta.colour === false);   // a grey map is tinted with Mars's own range of rust
-    for (let i = 0; i < N; i++) { const y = 1 - (i + 0.5) / N * 2, r = Math.sqrt(1 - y * y), th = i * g, x = Math.sin(th) * r, z = Math.cos(th) * r; let c = [0.8, 0.42, 0.26];
-      if (px) { const lon = Math.atan2(x, z) / DEG, lat = Math.asin(y) / DEG, o = (Math.min(PH - 1, Math.floor((90 - lat) / 180 * PH)) * PW + Math.min(PW - 1, Math.floor((lon + 180) / 360 * PW))) * 4;
-        c = grey ? ramp([[0.2, 0.1, 0.09], [0.62, 0.3, 0.2], [0.95, 0.56, 0.36], [1, 0.82, 0.66]], (px[o] + px[o + 1] + px[o + 2]) / 765) : [Math.min(1, px[o] / 255 * 1.5 + 0.04), Math.min(1, px[o + 1] / 255 * 1.42), Math.min(1, px[o + 2] / 255 * 1.35)]; }
-      a.push(x, y, z, c[0], c[1], c[2], 0.85 + rnd() * 0.15, 2.1 + rnd() * 0.8, rnd()); }
-    M.mars = mesh(P_POINT, POINT, a, gl.POINTS); MARS.map = !!px; MARS.reveal = 0;
-    if (MARS.ready) return; MARS.ready = true;
-    const mk = [];
-    for (const [name, lat, lon, kind, text] of MARSMARKS) { const p = ll(lon, lat), c = kind ? [1, 0.45, 0.85] : [0.7, 0.95, 1];
+  /* ---------- the Moon as a place: its seas, craters and landing sites, the real phase, the Earth in its sky ---------- */
+  const LUNA = { name: "the Moon", kind: 0, night: 0.085, tex: newTex(), maps: ["../data/globe/moon-1k.jpg", "../data/globe/moon-4k.jpg"], picks: [], labels: [] };
+  // [name, latitude, longitude east, kind (0 landform, 1 landing site), a line about it]
+  const LUNAMARKS = [
+    ["Mare Imbrium", 32.8, -15.6, 0, "The Sea of Showers: a lava plain about 1,100 km across, filling a giant impact basin"],
+    ["Mare Serenitatis", 28, 17.5, 0, "The Sea of Serenity, about 700 km across"], ["Mare Tranquillitatis", 8.5, 31.4, 0, "The Sea of Tranquillity, where people first walked on the Moon"],
+    ["Mare Crisium", 17, 59.1, 0, "The Sea of Crises: a dark oval about 550 km across, easy to spot near the edge"], ["Mare Fecunditatis", -7.8, 51.3, 0, "The Sea of Fertility"], ["Mare Nectaris", -15.2, 35.5, 0, "The Sea of Nectar"],
+    ["Mare Nubium", -21.3, -16.6, 0, "The Sea of Clouds"], ["Mare Humorum", -24.4, -38.6, 0, "The Sea of Moisture"], ["Oceanus Procellarum", 18.4, -57.4, 0, "The Ocean of Storms: the largest of the dark plains, over 2,500 km from north to south"], ["Mare Frigoris", 56, 1.4, 0, "The Sea of Cold, a long dark band in the north"],
+    ["Tycho", -43.3, -11.4, 0, "A young crater 85 km wide whose bright rays cross much of the near side"], ["Copernicus", 9.6, -20.1, 0, "A terraced crater 93 km wide"], ["Kepler", 8.1, -38, 0, "A bright rayed crater about 30 km wide"],
+    ["Aristarchus", 23.7, -47.4, 0, "The brightest large crater on the near side, 40 km wide"], ["Plato", 51.6, -9.4, 0, "A dark-floored crater about 100 km wide"], ["Clavius", -58.4, -14.4, 0, "One of the largest craters, about 230 km wide"],
+    ["Mare Orientale", -19.4, -92.8, 0, "A bullseye of mountain rings about 930 km across, on the edge of the far side"], ["Tsiolkovskiy", -20.4, 129.1, 0, "A far-side crater 185 km wide with a dark lava floor"],
+    ["South Pole-Aitken basin", -53, -169, 0, "One of the largest impact basins known, about 2,500 km across"], ["Mare Moscoviense", 27.3, 147.9, 0, "The Sea of Moscow, one of the few dark plains on the far side"],
+    ["Apollo 11", 0.67, 23.47, 1, "The first crewed landing: Neil Armstrong and Buzz Aldrin, 20 July 1969"], ["Apollo 12", -3.01, -23.42, 1, "Landed 19 November 1969, within walking distance of the Surveyor 3 probe"], ["Apollo 14", -3.65, -17.47, 1, "Landed 5 February 1971"],
+    ["Apollo 15", 26.13, 3.63, 1, "Landed 30 July 1971 with the first car driven on the Moon"], ["Apollo 16", -8.97, 15.5, 1, "Landed 21 April 1972 in the central highlands"], ["Apollo 17", 20.19, 30.77, 1, "Landed 11 December 1972: the last of the Apollo landings"],
+    ["Luna 9", 7.08, -64.37, 1, "The first soft landing on the Moon, by the Soviet Union, 3 February 1966"], ["Chang'e 4", -45.5, 177.6, 1, "The first landing on the far side, by China, 3 January 2019"], ["Chandrayaan-3", -69.37, 32.32, 1, "India's lander touched down here, near the south pole, on 23 August 2023"]];
+  const BODIES = { mars: MARS, moon: LUNA };
+  // The first visit to a world: its rings, tap targets and labels, and its maps (small first, then sharp).
+  function initBody(B, marks, note) {
+    if (B.ready) return; B.ready = true; const mk = [];
+    for (const [name, lat, lon, kind, text] of marks) { const p = ll(lon, lat), c = kind ? [1, 0.45, 0.85] : [0.7, 0.95, 1];
       mk.push(p[0], p[1], p[2], c[0], c[1], c[2], 1, 2.2, rnd()); ring(mk, lon, lat, kind ? 0.9 : 1.6, kind ? 16 : 26, c, 0.75, 1.0);
-      const pick = { p, lon, lat, kind: kind ? "Landing site on Mars" : "Mars", title: name, get sub() { return `${text} · ${hhmm(MARS.now.mtc + lon / 15)} local time there now`; } }; MARS.picks.push(pick);
-      const e = document.createElement("div"); e.className = "lab sky moonlab" + (kind ? " site" : ""); e.textContent = name; $("#labels").appendChild(e); MARS.labels.push({ el: e, p, kind }); }
-    M.marsMarks = mesh(P_POINT, POINT, mk, gl.POINTS);
-    for (const n of ["Phobos", "Deimos"]) { const e = document.createElement("div"); e.className = "lab sky moonlab"; e.textContent = n; $("#labels").appendChild(e); MARS.labels.push({ el: e, moon: n }); }
+      B.picks.push({ p, lon, lat, kind: (kind ? "Landing site on " : "On ") + B.name, title: name, get sub() { return text + note(lon); } });
+      const e = document.createElement("div"); e.className = "lab sky moonlab" + (kind ? " site" : ""); e.textContent = name; $("#labels").appendChild(e); B.labels.push({ el: e, p, kind }); }
+    B.marks = mesh(P_POINT, POINT, mk, gl.POINTS);
+    loadInto(B.tex, B.maps[0], () => loadInto(B.tex, B.maps[1]));
   }
   // Phobos laps Mars in 7 h 39 min, faster than Mars turns, so it rises in the west; Deimos takes 30 h 18 min.
   const marsMoon = (name, ms) => { const d = ms / 86400000, [r, P, off] = name === "Phobos" ? [2.766, 0.31891, 1.1] : [6.922, 1.26244, 4.2], th = 6.283185 * (d / P - d / 1.02595676) + off; return [Math.sin(th) * r, 0, Math.cos(th) * r]; };
-  function loadMars() {
-    if (MARS.loading) return; MARS.loading = true; buildMars(null);                       // a plain rust globe until the map is in
-    getJson("../data/globe/mars.json").then((j) => { MARS.meta = j; }).catch(() => {}).then(() => { const img = new Image(); img.onload = () => buildMars(img); img.src = "../data/globe/mars.jpg"; });
-  }
   function setPlanet(p, keepView) {
-    PLANET = p === "mars" ? "mars" : "earth"; document.body.classList.toggle("mars", PLANET === "mars");
+    PLANET = BODIES[p] ? p : "earth"; document.body.classList.toggle("away", PLANET !== "earth");
     stopTour(); stopReplay(); closeMe(); select(null); $("#board").hidden = true; tip.style.display = "none";
-    $("#plBtn").textContent = PLANET === "mars" ? "⊕ Earth" : "♂ Mars"; $("#brand h1").textContent = PLANET === "mars" ? "World Pulse · Mars" : "World Pulse";
-    if (PLANET === "mars") { loadMars(); MARS.reveal = 0; if (!keepView) { flyTo(-100, 5, 3.9); cam.idle = 0; } } else { SUN = sunDir(); flyTo(cam.lon, 22, 3.9); }
+    const NAMES = { earth: "⊕ Earth", moon: "☾ Moon", mars: "♂ Mars" }, others = Object.keys(NAMES).filter((k) => k !== PLANET);
+    for (const [id, k] of [["#plBtn", others[0]], ["#plBtn2", others[1]]]) { $(id).textContent = NAMES[k]; $(id).dataset.p = k; }
+    $("#brand h1").textContent = "World Pulse" + (PLANET === "mars" ? " · Mars" : PLANET === "moon" ? " · the Moon" : "");
+    if (PLANET === "mars") { initBody(MARS, MARSMARKS, (lon) => ` · ${hhmm(MARS.now.mtc + lon / 15)} local time there now`);
+      for (const n of ["Phobos", "Deimos"]) if (!MARS.labels.some((f) => f.moon === n)) { const e = document.createElement("div"); e.className = "lab sky moonlab"; e.textContent = n; $("#labels").appendChild(e); MARS.labels.push({ el: e, moon: n }); }
+      if (!keepView) { const n = marsNow(Date.now()); flyTo(n.sunLon + 25, 8, 3.9); cam.idle = 0; } }                 // open on the sunlit side
+    else if (PLANET === "moon") { const first = !LUNA.ready; initBody(LUNA, LUNAMARKS, () => ""); if (first && LUNA.tex.ready) loadInto(LUNA.tex, LUNA.maps[1]);
+      if (!LUNA.labels.some((f) => f.earth)) { const e = document.createElement("div"); e.className = "lab sky moonlab"; e.textContent = "Earth"; $("#labels").appendChild(e); LUNA.labels.push({ el: e, earth: true }); }
+      if (!keepView) { flyTo(10, 8, 3.9); cam.idle = 0; } }
+    else { SUN = sunDir(); flyTo(cam.lon, 22, 3.9); }
     head.t = 99; head.i = -1;
   }
-  function drawMars(t, dt) {
-    MARS.reveal = Math.min(1, MARS.reveal + dt / 2);
-    drawLines(M.grid, t, { tint: [1, 0.5, 0.3], gradF: 4, gradMix: 0.7 });
-    drawPoints(M.mars, t, { reveal: MARS.reveal, sun: 0.45, twinkle: 0.1, wave: 0.25 });   // sun 0.45: the night side stays visible, so the whole planet can be explored   // sun 0.6: the night side stays dimly visible, so the whole planet can be explored
-    drawPoints(M.marsMarks, t, { lift: 0.004, twinkle: 0.7 });
-    // the moons and their orbit rings, leaving out whatever is behind the planet (nothing here is depth-tested)
-    const a = [], put = (p, c, al, size) => { if (!hiddenByEarth(p)) a.push(p[0], p[1], p[2], c[0], c[1], c[2], al * 20, size, (p[0] * 3.1 + p[2] * 1.7 + 9) % 1); };
-    for (const [r, c] of [[2.766, [0.8, 0.7, 0.6]], [6.922, [0.6, 0.65, 0.8]]]) for (let k = 0; k < 220; k++) { const th = k / 220 * 6.2832; put([Math.sin(th) * r, 0, Math.cos(th) * r], c, 0.22, 0.9); }
-    for (const n of ["Phobos", "Deimos"]) { const p = marsMoon(n, Date.now()); for (let k = 0; k < 26; k++) put([p[0] + Math.sin(k * 2.4) * 0.03 * (k / 26), p[1] + Math.cos(k * 1.7) * 0.022 * (k / 26), p[2] + Math.cos(k * 2.4) * 0.03 * (k / 26)], [1, 0.9, 0.8], 0.9, 1.3); }
-    dyn("marsMoons").set(a); { const u = use(P_POINT, t); gl.uniform3fv(u.uCam, [0, 0, 0]); gl.uniform1f(u.uLift, 0); gl.uniform1f(u.uReveal, 1); gl.uniform1f(u.uSunMix, 0); gl.uniform1f(u.uWave, 0); gl.uniform1f(u.uTwinkle, 0.2); gl.bindVertexArray(M.marsMoons.vao); gl.drawArrays(gl.POINTS, 0, M.marsMoons.count); }
+  // Where the Earth hangs in the Moon's sky: always over the middle of the near side. Drawn 24 Moon-radii away and 1.6
+  // wide (really 221 away and 3.7 wide), as a small globe of fine points coloured by land and sea and lit by the sun.
+  const EARTH_AT = [0, 0, 24];
+  function earthFromMoon(a, sun) {
+    const m = moon.p, ld = world && world.land; if (!m || !ld) return;
+    if (!LUNA.bits) LUNA.bits = Uint8Array.from(atob(ld.b64), (c) => c.charCodeAt(0));
+    const N = 5000, g = Math.PI * (3 - Math.sqrt(5));
+    for (let i = 0; i < N; i++) { const y = 1 - (i + 0.5) / N * 2, r = Math.sqrt(1 - y * y), th = i * g, e = [Math.sin(th) * r, y, Math.cos(th) * r];        // a spot on the Earth, in the Earth's own coordinates
+      const n = [dot(e, m.X), dot(e, m.Y), dot(e, m.Z)], p = [EARTH_AT[0] + n[0] * 1.6, EARTH_AT[1] + n[1] * 1.6, EARTH_AT[2] + n[2] * 1.6];
+      if (dot(n, [EYE[0] - p[0], EYE[1] - p[1], EYE[2] - p[2]]) < 0 || hiddenByEarth(p)) continue;                 // turned away, or behind the Moon
+      const lat = Math.asin(y) / DEG, lon = Math.atan2(e[0], e[2]) / DEG, k = Math.min(ld.h - 1, Math.floor((90 - lat) / 180 * ld.h)) * ld.w + Math.min(ld.w - 1, Math.floor((lon + 180) / 360 * ld.w)), land = LUNA.bits[k >> 3] & (128 >> (k & 7));
+      const day = Math.max(0.06, Math.min(1, dot(n, sun) * 2.2 + 0.25)), c = land ? [0.45, 0.95, 0.55] : [0.25, 0.55, 1];
+      a.push(p[0], p[1], p[2], c[0] * day, c[1] * day, c[2] * day, 0.9 * 20, 1.5, (i * 0.618) % 1); }
   }
-  function layoutMars() {
-    const on = PLANET === "mars" && !EMBED, used = [], max = SMALL ? 6 : 12;
-    for (const f of MARS.labels) {
-      let s = null;
-      if (on && used.length < max) { const p = f.moon ? marsMoon(f.moon, Date.now()) : f.p; if (f.moon ? !hiddenByEarth(p) : facing(p)) s = project(p);
-        if (s && (s[0] < 40 || s[0] > W - 40 || s[1] < 40 || s[1] > H - 50 || used.some((q) => Math.abs(q[0] - s[0]) < 104 && Math.abs(q[1] - s[1]) < 17))) s = null; }
-      if (s) { used.push(s); f.el.style.display = "block"; f.el.style.left = s[0].toFixed(1) + "px"; f.el.style.top = (s[1] - 12).toFixed(1) + "px"; } else f.el.style.display = "none";
-    }
+  function drawBody(t) {
+    const B = BODIES[PLANET], a = [], put = (p, c, al, size) => { if (!hiddenByEarth(p)) a.push(p[0], p[1], p[2], c[0], c[1], c[2], al * 20, size, (p[0] * 3.1 + p[2] * 1.7 + 9) % 1); };
+    if (B.tex.ready) drawSphere(B.tex, [0, 0, 0], 1, IDENT, SUN, B.kind, B.night);
+    drawLines(M.grid, t, { tint: B.kind ? [1, 0.5, 0.3] : [0.7, 0.8, 1], gradF: 4, gradMix: 0.7 });
+    drawPoints(B.marks, t, { lift: 0.004, twinkle: 0.7 });
+    if (PLANET === "mars") {                                          // the two moons and their orbit rings
+      for (const [r, c] of [[2.766, [0.8, 0.7, 0.6]], [6.922, [0.6, 0.65, 0.8]]]) for (let k = 0; k < 220; k++) { const th = k / 220 * 6.2832; put([Math.sin(th) * r, 0, Math.cos(th) * r], c, 0.22, 0.9); }
+      for (const n of ["Phobos", "Deimos"]) { const p = marsMoon(n, Date.now()); for (let k = 0; k < 26; k++) put([p[0] + Math.sin(k * 2.4) * 0.03 * (k / 26), p[1] + Math.cos(k * 1.7) * 0.022 * (k / 26), p[2] + Math.cos(k * 2.4) * 0.03 * (k / 26)], [1, 0.9, 0.8], 0.9, 1.3); }
+    } else earthFromMoon(a, SUN);
+    dyn("bodyExtras").set(a); { const u = use(P_POINT, t); gl.uniform3fv(u.uCam, [0, 0, 0]); gl.uniform1f(u.uLift, 0); gl.uniform1f(u.uReveal, 1); gl.uniform1f(u.uSunMix, 0); gl.uniform1f(u.uWave, 0); gl.uniform1f(u.uTwinkle, 0.2); gl.bindVertexArray(M.bodyExtras.vao); gl.drawArrays(gl.POINTS, 0, M.bodyExtras.count); }
   }
-  function pickMars(mx, my, rad) { let best = null, bd = rad * rad * 1.6; for (const o of MARS.picks) { if (!facing(o.p)) continue; const s = project(o.p), d = (s[0] - mx) ** 2 + (s[1] - my) ** 2; if (d < bd) { bd = d; best = o; } } return best; }
+  function layoutBody() {
+    const on = PLANET !== "earth" && !EMBED, max = SMALL ? 6 : 12;
+    for (const k in BODIES) { const used = [];
+      for (const f of BODIES[k].labels) {
+        let s = null;
+        if (on && k === PLANET && used.length < max) { const p = f.moon ? marsMoon(f.moon, Date.now()) : f.earth ? EARTH_AT : f.p; if (f.moon || f.earth ? !hiddenByEarth(p) : facing(p)) s = project(p);
+          if (s && (s[0] < 40 || s[0] > W - 40 || s[1] < 40 || s[1] > H - 50 || used.some((q) => Math.abs(q[0] - s[0]) < 104 && Math.abs(q[1] - s[1]) < 17))) s = null; }
+        if (s) { used.push(s); f.el.style.display = "block"; f.el.style.left = s[0].toFixed(1) + "px"; f.el.style.top = (s[1] - 12).toFixed(1) + "px"; } else f.el.style.display = "none";
+      } }
+  }
+  function pickBody(mx, my, rad) { let best = null, bd = rad * rad * 1.6; for (const o of BODIES[PLANET].picks) { if (!facing(o.p)) continue; const s = project(o.p), d = (s[0] - mx) ** 2 + (s[1] - my) ** 2; if (d < bd) { bd = d; best = o; } } return best; }
+  // Each frame away from the Earth: the clock and the direction of the sun, in that world's own coordinates.
+  function bodyTick() {
+    if (PLANET === "mars") { MARS.now = marsNow(Date.now()); SUN = ll(MARS.now.sunLon, MARS.now.sunLat); }
+    else { const m = moon.p, s = sunDir(); if (m) SUN = norm([dot(s, m.X), dot(s, m.Y), dot(s, m.Z)]); }
+  }
+  const HEADL = [
+    () => [`${Math.round(moon.p.lit * 100)}% lit`, `${moon.p.name.toLowerCase()}, as seen from Earth right now`],
+    () => [num(moon.p.km) + " km", "from the Earth to the Moon right now"],
+    () => [(moon.p.km / 299792.458).toFixed(2) + " s", "for light to cross that gap"],
+    () => ["27.3 days", "for the Moon to go once round the Earth, and to turn once"],
+  ];
+  function moonTour() {
+    const out = [], add = (k, name, text, dist) => { const m = LUNAMARKS.find((x) => x[0] === name); out.push({ k, title: name, text, at: () => [m[2], m[1]], dist: dist || 2.0, dur: 9, mark: () => ll(m[2], m[1]) }); };
+    add("The Moon · landing site", "Apollo 11", "On 20 July 1969 two people stepped out here, on the Sea of Tranquillity. Their footprints are still there: nothing on the Moon blows them away.", 1.8);
+    add("The Moon · crater", "Tycho", "A crater 85 km wide and only about 100 million years old. The bright streaks are rock it threw across the Moon.", 2.1);
+    add("The Moon · lava plain", "Mare Imbrium", "A sea of frozen lava about 1,100 km across, poured into the scar of a giant impact nearly four billion years ago.", 2.3);
+    add("The Moon · crater", "Copernicus", "A crater 93 km wide with terraced walls and central peaks, a favourite in any small telescope.", 1.9);
+    add("The Moon · far side", "Mare Orientale", "A bullseye of mountain rings about 930 km across, right on the edge, almost hidden from the Earth.", 2.3);
+    add("The Moon · far side", "South Pole-Aitken basin", "The side we never see from home. This basin, about 2,500 km across, is one of the largest impact scars known.", 2.5);
+    out.push({ k: "World Pulse · by Tenshi Systems Engineering", title: `${num(moon.p.km)} km from home`, text: `${Math.round(moon.p.lit * 100)}% of the near side is in sunlight right now. Tap any ring for more, or press Earth to go back. Tenshi builds live maps like this for your own data.`, at: () => [cam.lon, 10], dist: 3.9, dur: 11, mark: null, link: ["Talk to us →", "../contact.html"] });
+    return out;
+  }
   const HEADM = [
     () => [num(MARS.now.km / 1e6) + " million km", "from Earth to Mars right now"],
     () => [MARS.now.lightMin.toFixed(1) + " min", "for a radio signal to cross that gap"],
@@ -1276,11 +1406,11 @@
   // Satellites sit where their orbit puts them now, or at the replayed moment while the replay runs.
   const satNow = (el, t) => replay.on ? satPos(el, t + (replayTime() - Date.now()) / 1000, gmst(replayTime())) : satPos(el, t);
   function pickAt(mx, my, rad) {
-    if (PLANET === "mars") return pickMars(mx, my, rad);
+    if (PLANET !== "earth") return pickBody(mx, my, rad);
     let best = null, bd = rad * rad; const t = now(), rt = replay.on ? replayTime() : Infinity;
     const near = (p, layer) => { if (!L[layer].on || !facing(p)) return false; const s = project(p), d = (s[0] - mx) ** 2 + (s[1] - my) ** 2; if (d < bd) { bd = d; return true; } return false; };
     for (const o of picks) if (!(o.time > rt) && near(o.p, o.layer)) best = o;
-    if (!replay.on) for (const [set, layer, kind] of [[iss, "space", "Space station · live"], [planes, "planes", "Aircraft · live"], [ships, "ships", "Ship · live"], [trains, "rail", "Train · live"]])
+    if (!replay.on) for (const [set, layer, kind] of [[iss, "space", "Space station · live"], [planes, "planes", planeSnap ? "Aircraft · a few minutes ago" : "Aircraft · live"], [ships, "ships", "Ship · live"], [trains, "rail", "Train · live"]])
       for (const [key, m] of set.map) if (near(moverPos(m, t), layer)) best = { layer, kind, title: m.title, sub: m.sub, pos: (t2) => { const x = set.map.get(key); return x ? moverPos(x, t2) : null; } };
     if (L.sats.on && SATS.length && !best) for (const sat of SATS) { const p = satNow(sat.el, t); if (dot(norm(p), EYE) < 1 / Math.hypot(p[0], p[1], p[2])) continue; const sc = project(p), d = (sc[0] - mx) ** 2 + (sc[1] - my) ** 2;
       if (d < bd) { bd = d; best = { layer: "sats", sat: true, kind: "Satellite · live orbit", title: sat.name, sub: `${Math.round((sat.el[0] - 1) * 6371).toLocaleString("en-US")} km up`, pos: (t2) => satNow(sat.el, t2) }; } }
@@ -1328,7 +1458,7 @@
   /* ---------- the headline number: one live figure at a time, under the clock ---------- */
   const num = (n) => Math.round(n).toLocaleString("en-US");
   const HEAD = [
-    () => L.planes.on && planes.map.size > 20 ? [num(planes.map.size), "aircraft tracked live right now"] : null,
+    () => L.planes.on && planes.map.size > 20 ? [num(planes.map.size), planeSnap ? "aircraft in the air a few minutes ago" : "aircraft tracked live right now"] : null,
     () => L.vital.on && vital ? [num(vital.b.total * ((Date.now() % 86400000) / 86400000)), "babies born so far today (modelled)"] : null,
     () => L.sats.on && SATS.length ? [num(SATS.length), "satellites circling overhead"] : null,
     () => L.quakes.on && S.quakes != null ? [num(S.quakes), "earthquakes in the last 24 hours"] : null,
@@ -1341,7 +1471,7 @@
     () => L.vital.on && vital ? [num(vital.d.total * ((Date.now() % 86400000) / 86400000)), "people died so far today (modelled)"] : null,
   ];
   const head = { i: -1, t: 99, el: $("#stat") };
-  const headList = () => (PLANET === "mars" ? (MARS.now ? HEADM : []) : HEAD);
+  const headList = () => (PLANET === "mars" ? (MARS.now ? HEADM : []) : PLANET === "moon" ? (moon.p ? HEADL : []) : HEAD);
   function paintHead() { const HEAD = headList(), v = HEAD[head.i] && HEAD[head.i](); if (!v) { head.t = 99; return; } $("#statN").textContent = v[0]; $("#statL").textContent = v[1]; }
   function updateHead(dt) {
     if (!head.el) return; const HEAD = headList();
@@ -1370,7 +1500,7 @@
     if (L.planes.on && planes.map.size > 30) { const n = new Array(HUBS.length).fill(0), t = now();
       for (const m of planes.map.values()) { const p = norm(moverPos(m, t)); for (let i = 0; i < HUBV.length; i++) if (dot(p, HUBV[i]) > 0.99736) n[i]++; }
       const i = n.indexOf(Math.max(...n));
-      if (n[i] > 5) add("Air traffic · live", `Busiest sky we're tracking: ${HUBS[i][2]}`, `${num(n[i])} aircraft within 460 km of ${HUBS[i][2]} at this moment, live from adsb.lol.`, () => [HUBS[i][1], HUBS[i][0]], { dist: 1.9, mark: false }); }
+      if (n[i] > 5) add("Air traffic · live", `Busiest sky we're tracking: ${HUBS[i][2]}`, `${num(n[i])} aircraft within 460 km of ${HUBS[i][2]}${planeSnap ? ", from the latest snapshot" : " at this moment, live"} (adsb.lol).`, () => [HUBS[i][1], HUBS[i][0]], { dist: 1.9, mark: false }); }
     if (L.markets.on && STOCKS) { const open = STOCKS.exchanges.filter((x) => x.open);
       if (open.length) { const x = open.reduce((a, b) => (Math.abs(b.avg) > Math.abs(a.avg) ? b : a));
         add("Markets · trading now", `${x.name} is open`, `${open.length} of ${STOCKS.exchanges.length} exchanges are trading at this moment (regular hours). Here ${x.up} companies are up and ${x.down} down, on delayed prices.`, () => [x.lon, x.lat], { dist: 2.0 }); } }
@@ -1403,7 +1533,7 @@
   }
   function startTour() {
     stopReplay(); closeMe(); select(null); hideHint();
-    tour.steps = PLANET === "mars" ? marsTour() : tourSteps(); tour.i = 0; tour.on = true;
+    tour.steps = PLANET === "mars" ? marsTour() : PLANET === "moon" ? moonTour() : tourSteps(); tour.i = 0; tour.on = true;
     $("#board").hidden = true; if (narrow()) $("#panel").open = false;
     $("#cap").hidden = false; $("#tourBtn").textContent = "■ Stop"; showStep();
   }
@@ -1431,7 +1561,7 @@
   function closeMe() { me.on = false; $("#me").hidden = true; meEl.style.display = "none"; }
   // Aircraft around the spot, asked for with the position rounded to a tenth of a degree (about 10 km).
   async function nearMe() {
-    if (!me.on) return; const at = me.p;
+    if (!me.on || planeSnap) return; const at = me.p;                  // with the snapshot there is nothing to ask for, so no position is sent anywhere
     try { const r = await fetch(`https://api.adsb.lol/v2/lat/${me.lat.toFixed(1)}/lon/${me.lon.toFixed(1)}/dist/100`, { signal: AbortSignal.timeout(12000) }); if (r.ok) { takePlanes(await r.json(), now()); planes.dirty = true; } } catch (e) {}
     if (me.on && me.p === at) setTimeout(nearMe, 20000);
   }
@@ -1471,7 +1601,7 @@
     if (S.auroraGrid) { const v = S.auroraGrid[(((Math.round(me.lon) % 360) + 360) % 360) * 181 + Math.round(me.lat) + 90]; if (v >= 5) rows.push([v + "%", "chance of aurora overhead in the next 30 minutes"]); }
     const body = $("#meBody"); body.textContent = "";
     for (const [n, text] of rows) { const r = el("div", "mr"); r.append(el("b", "mono", n), el("span", null, text)); body.append(r); }
-    body.append(el("p", "mn", `Using ${me.src}. Worked out on this device; only a rounded position goes to adsb.lol to find nearby aircraft.`));
+    body.append(el("p", "mn", `Using ${me.src}. Worked out on this device; ${planeSnap ? "nothing about your position leaves it" : "only a rounded position goes to adsb.lol to find nearby aircraft"}.`));
   }
   function trackMe() {
     if (!me.on || !me.p) return;
@@ -1502,7 +1632,7 @@
   /* ---------- share: a link that opens on this exact view (place, zoom and which layers are on) ---------- */
   function shareUrl() {
     const off = LAYERS.filter((l) => !l.on && !l.off).map((l) => l.id), on = LAYERS.filter((l) => l.on && l.off).map((l) => l.id);
-    return location.origin + location.pathname + `?at=${wrapLon(cam.lon).toFixed(1)},${cam.lat.toFixed(1)},${cam.dist.toFixed(2)}` + (off.length ? "&off=" + off.join(",") : "") + (on.length ? "&on=" + on.join(",") : "") + (PLANET === "mars" ? "&planet=mars" : "");
+    return location.origin + location.pathname + `?at=${wrapLon(cam.lon).toFixed(1)},${cam.lat.toFixed(1)},${cam.dist.toFixed(2)}` + (off.length ? "&off=" + off.join(",") : "") + (on.length ? "&on=" + on.join(",") : "") + (PLANET !== "earth" ? "&planet=" + PLANET : "");
   }
   let toastT = 0;
   function toast(text) { const e = $("#toast"); e.textContent = text; e.classList.add("in"); clearTimeout(toastT); toastT = setTimeout(() => e.classList.remove("in"), 3200); }
@@ -1514,7 +1644,7 @@
 
   if ($("#tourBtn")) {
     $("#tourBtn").onclick = () => (tour.on ? stopTour() : startTour()); $("#capNext").onclick = nextStep; $("#capStop").onclick = stopTour;
-    $("#plBtn").onclick = () => setPlanet(PLANET === "mars" ? "earth" : "mars");
+    for (const id of ["#plBtn", "#plBtn2"]) $(id).onclick = () => setPlanet($(id).dataset.p);
     $("#meBtn").onclick = aboveMe; $("#meX").onclick = closeMe; $("#shBtn").onclick = share;
     $("#rpBtn").onclick = () => (replay.on ? stopReplay() : startReplay()); $("#rpX").onclick = stopReplay;
     $("#rpPlay").onclick = () => { if (replay.f >= 1) { replay.f = 0; replay.hold = 0; replay.play = true; } else replay.play = !replay.play; $("#rpPlay").textContent = replay.play ? "❚❚" : "▶"; };
@@ -1565,7 +1695,7 @@
     const live = !replay.on;                                       // live-only layers are hidden during the replay
     { const ms = live ? Date.now() : replayTime(); updateSky(ms); updateMoon(ms); }
     const moonView = L.moon.on && PLANET === "earth" ? moonOnScreen() : null;
-    if (PLANET === "mars") { MARS.now = marsNow(Date.now()); SUN = ll(MARS.now.sunLon, MARS.now.sunLat); }
+    if (PLANET !== "earth") bodyTick();
     if (live) spawnVital(dt, t);
     if (evDirty) { M.events.set(evData); evDirty = false; }
     for (const s of [planes, ships, trains]) if (s.dirty && frame % 20 === 0) s.rebuild();
@@ -1574,16 +1704,17 @@
     gl.disable(gl.BLEND);
     pass(P_BG, { fbo: RT.ms, w: RT.w, h: RT.h }, (u) => { gl.uniform2f(u.uOff, cam.lon / 50, -cam.lat / 50); gl.uniform1f(u.uAsp, W / H); });
     gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
-    { const u = use(P_POINT, t); gl.uniform3fv(u.uCam, [0, 0, 0]); gl.uniform1f(u.uLift, 0); gl.uniform1f(u.uReveal, 1); gl.uniform1f(u.uSunMix, 0); gl.uniform1f(u.uWave, 0); gl.uniform1f(u.uTwinkle, 0.55); gl.uniform1f(u.uPx, RS); gl.uniformMatrix4fv(u.uMVP, false, SKYM); gl.bindVertexArray(M.stars.vao); gl.drawArrays(gl.POINTS, 0, M.stars.count); }
+    { const u = use(P_POINT, t); gl.uniform3fv(u.uCam, [0, 0, 0]); gl.uniform1f(u.uLift, 0); gl.uniform1f(u.uReveal, 1); gl.uniform1f(u.uSunMix, 0); gl.uniform1f(u.uWave, 0); gl.uniform1f(u.uTwinkle, 0.55); gl.uniform1f(u.uPx, RS); gl.uniformMatrix4fv(u.uMVP, false, SKYM);
+      for (const m of [M.mw, M.faint, M.stars]) if (m && m.count) { gl.bindVertexArray(m.vao); gl.drawArrays(gl.POINTS, 0, m.count); } }
     if (L.sky.on && M.conLines) { const u = use(P_LINE, t); gl.uniformMatrix4fv(u.uMVP, false, SKYM); gl.uniform3fv(u.uCam, [0, 0, 0]); gl.uniform1f(u.uLift, 0); gl.uniform1f(u.uPulse, 0.35); gl.uniform1f(u.uFreq, 6); gl.uniform1f(u.uSpeed, 0.08); gl.uniform3fv(u.uHot, [0.9, 0.95, 1]); gl.uniform3fv(u.uTint, [0.75, 0.5, 1]); gl.uniform1f(u.uGradF, 9); gl.uniform1f(u.uGradMix, 0.5); gl.bindVertexArray(M.conLines.vao); gl.drawArrays(gl.LINES, 0, M.conLines.count); }
     if (moonView && moonView.behind) drawMoon(t);                   // the Moon beyond the Earth goes down first, so the Earth covers it
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-    { const u = P_ATMO.u; gl.useProgram(P_ATMO.p); gl.uniform1f(u.uMars, PLANET === "mars" ? 1 : 0); gl.uniformMatrix4fv(u.uProj, false, PROJ); gl.uniform1f(u.uD, viewD); gl.uniform1f(u.uS, viewD / Math.sqrt(viewD * viewD - 1));
+    if (PLANET !== "moon") { const u = P_ATMO.u; gl.useProgram(P_ATMO.p); gl.uniform1f(u.uMars, PLANET === "mars" ? 1 : 0); gl.uniformMatrix4fv(u.uProj, false, PROJ); gl.uniform1f(u.uD, viewD); gl.uniform1f(u.uS, viewD / Math.sqrt(viewD * viewD - 1));
       gl.uniform3f(u.uSunV, VIEW[0] * SUN[0] + VIEW[4] * SUN[1] + VIEW[8] * SUN[2], VIEW[1] * SUN[0] + VIEW[5] * SUN[1] + VIEW[9] * SUN[2], VIEW[2] * SUN[0] + VIEW[6] * SUN[1] + VIEW[10] * SUN[2]);
       gl.bindVertexArray(quad.vao); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); }
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
 
-    if (PLANET === "mars") drawMars(t, dt); else {
+    if (PLANET !== "earth") drawBody(t); else {
     drawLines(M.grid, t, { tint: [0.2, 0.7, 1], gradF: 4, gradMix: 0.6 });
     if (L.temp.on && live && M.temp) drawPoints(M.temp, t, { reveal, twinkle: 0.2 });      // temperature recolours the land and sea dots
     else { drawPoints(M.sea, t, { reveal, sun: 1, twinkle: 0.7, wave: 1.6 }); drawPoints(M.land, t, { reveal, sun: 1, twinkle: 0.3, wave: 1 }); }
@@ -1625,7 +1756,7 @@
     pass(P_COMP, null, (u) => { bindTex(0, RT.scene, u.uScene); bindTex(1, RT.b1[0], u.uB1); bindTex(2, RT.b2[0], u.uB2); bindTex(3, RT.b3[0], u.uB3); gl.uniform1f(u.uTime, t % 100); gl.uniform2f(u.uRes, RT.w, RT.h); });
     gl.enable(gl.BLEND);
     gl.bindVertexArray(null);
-    if (frame % 2 === 0) { layoutLabels(); layoutSky(); layoutMoon(); layoutMars(); }
+    if (frame % 2 === 0) { layoutLabels(); layoutSky(); layoutMoon(); layoutBody(); }
     trackSel(t); trackMe(); if (frame % 15 === 0) updateHead(dt * 15); if (me.on && frame % 60 === 0) renderMe();
   }
 
@@ -1634,9 +1765,11 @@
   getJson("../data/globe/world.json").then(buildWorld).catch(() => { reveal = 1; for (const id of ["routes", "ships", "rail", "roads", "net", "pop", "vital", "power", "mil"]) L[id].status("off", "first data sync in progress, check back in a few minutes"); });
   const loadMarkets = () => getJson("../data/globe/markets.json").then(buildMarkets).catch(() => { if (!MK) L.markets.status("off", "first data sync in progress"); });
   loadMarkets(); setInterval(loadMarkets, 5 * 60000); loadStocks(); setInterval(loadStocks, 5 * 60000); loadWeather(); setInterval(loadWeather, 30 * 60000); setTimeout(loadOcean, 600); setInterval(loadOcean, 20 * 60000);
-  getJson("../data/globe/sky.json").then(buildSky).catch(() => L.sky.status("off", "star catalogue could not be loaded"));
+  getJson("../data/globe/sky.json").then(buildSky).catch(() => L.sky.status("off", "star catalogue could not be loaded"))
+    .then(() => fetch("../data/globe/stars.bin")).then((r) => (r.ok ? r.arrayBuffer() : Promise.reject())).then(buildFaint).catch(() => {});
   getJson("../data/globe/moon.json").then(buildMoon).catch(() => {});
-  if (QS.get("planet") === "mars" && !EMBED) setPlanet("mars", QS.has("at"));   // a shared Mars view keeps its own camera
+  setTimeout(() => loadInto(LUNA.tex, "../data/globe/moon-1k.jpg"), 2500);                 // the small Moon map, for the Moon beside the Earth
+  if (BODIES[QS.get("planet")] && !EMBED) setPlanet(QS.get("planet"), QS.has("at"));   // a shared view of Mars or the Moon keeps its own camera
   if (EMBED) setTimeout(startTour, 9000);                           // the embedded preview tours by itself, on a loop
   else if (QS.has("tour")) setTimeout(startTour, 7000);              // world-pulse.html?tour starts the tour by itself
   if (/[?&]board/.test(location.search)) { $("#board").hidden = false; $("#panel").open = false; }
