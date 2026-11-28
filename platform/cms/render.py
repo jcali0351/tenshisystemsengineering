@@ -26,6 +26,7 @@ from tenshi import profile as prof
 
 from . import chrome as chrome_mod, config, db, forms as forms_mod, media as media_mod, posts as posts_mod, templates, theme as theme_mod, widgets
 from . import actions as actions_mod  # noqa: E402 (after widgets: import order matters for blocks.BLOCKS)
+from . import languages as languages_mod  # noqa: E402
 
 
 # ---------------------------------------------------------------------------------------------- cleaning HTML
@@ -219,7 +220,15 @@ class SiteRenderer:
             "portfolio": self.portfolio, "link": self.link, "asset": self.asset, "widget": self.widget,
         }
 
+    def all_pages(self):
+        if not hasattr(self, "_all_pages"):
+            self._all_pages = db.all("SELECT * FROM pages WHERE site_id = ? ORDER BY position, id", self.site["id"]) if self.site.get("id") else []
+        return self._all_pages
+
     def render_page(self, page, menu_pages):
+        multi = languages_mod.active(self.site)
+        if multi:                                     # several languages (languages.py): each page's menu in its own language
+            menu_pages = languages_mod.menu_for(page, menu_pages, self.site)
         ctx = self.context(page, menu_pages)
         for b in ctx["blocks"]:                       # Form blocks: which page they're on, and the server's snapshot (forms.py)
             if isinstance(b, dict) and b.get("type") == "contact_form":
@@ -255,6 +264,9 @@ class SiteRenderer:
         if sources:
             self.page_sources[file] = sources
         html = theme_mod.inject(html, self.theme, "/static/fonts/" if self.mode == "preview" else "fonts/")
+        if multi:
+            base = config.site_url(self.site["subdomain"]) if self.mode == "hosted" else ""
+            html = languages_mod.apply(html, page, self.all_pages(), self.site, self.link, base)
         if self.is_demo():                            # demo sites (demo_sites.py): the ribbon, and kept out of search engines
             from .widgets.demo_ribbon import HTML as ribbon
             html = html.replace("</head>", '<meta name="robots" content="noindex">\n</head>', 1)
@@ -311,8 +323,12 @@ class SiteRenderer:
         return self.render_page(posts_mod.page_for(post), menu_pages)
 
 
-def site_pages(site_id):
+def site_pages(site_id, live=False):
+    """A site's pages and the ones in its menu. live=True (deployments): scheduled pages whose time hasn't come are left out."""
     pages = db.all("SELECT * FROM pages WHERE site_id = ? ORDER BY position, id", site_id)
+    if live:
+        now = db.now()
+        pages = [p for p in pages if not p.get("publish_at") or p["publish_at"] <= now]
     menu = [p for p in pages if p["in_menu"]]
     return pages, menu
 
@@ -342,7 +358,8 @@ def build_to(site, out_dir, mode="hosted"):
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     renderer = SiteRenderer(site, mode)
-    pages, menu = site_pages(site["id"])
+    pages, menu = site_pages(site["id"], live=True)
+    renderer._all_pages = pages
     for page in pages:
         html = renderer.render_page(page, menu)
         (out / ("index.html" if page["slug"] == "index" else f"{page['slug']}.html")).write_text(html, encoding="utf-8")

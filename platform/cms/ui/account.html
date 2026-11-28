@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+{% block title %}My account{% endblock %}
+{% block heading %}My account{% endblock %}
+{% block body %}
+<div class="grid2" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px">
+<section class="card">
+  <h2>Password</h2>
+  <form id="pw">
+    <label class="field"><span>Current password</span><input type="password" name="current" autocomplete="current-password" required></label>
+    <label class="field"><span>New password (8+ characters)</span><input type="password" name="new" autocomplete="new-password" minlength="8" required></label>
+    <button class="btn btn-primary" type="submit">Change password</button>
+  </form>
+</section>
+<section class="card" id="tfa">
+  <h2>Two-step sign-in</h2>
+  {% if tfa_on %}
+  <p><span class="badge badge-live">On</span> After your password you type a code from your phone. {{ backup_left }} backup code{{ '' if backup_left == 1 else 's' }} left.</p>
+  <form id="tfa-off"><label class="field"><span>Your password, to switch it off</span><input type="password" name="password" autocomplete="current-password" required></label>
+    <button class="btn btn-danger" type="submit">Switch off two-step sign-in</button></form>
+  {% else %}
+  <p class="muted">Protect your account even if someone learns your password: after it, you'll type a 6-digit code from an
+    authenticator app on your phone (Google Authenticator, Microsoft Authenticator, 1Password, Authy …).</p>
+  <button class="btn btn-primary" id="tfa-start" type="button">Set up two-step sign-in</button>
+  <div id="tfa-setup" hidden>
+    <ol class="small">
+      <li>In your authenticator app, add an account: scan this code, or type the key.</li>
+      <li>Type the 6-digit code the app shows.</li>
+    </ol>
+    <div id="qr" style="max-width:220px;background:#fff;border-radius:8px;padding:6px"></div>
+    <p class="small">Key: <code id="secret" style="user-select:all;word-break:break-all"></code></p>
+    <form id="tfa-confirm" class="row" style="gap:8px;align-items:center"><label class="field" style="margin:0;max-width:160px"><span class="sr-only">6-digit code</span><input name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456" required></label>
+      <button class="btn btn-primary" type="submit">Turn it on</button></form>
+  </div>
+  <div id="codes" hidden><p><b>Your backup codes.</b> Each works once if you lose your phone. Save them somewhere safe now: they won't be shown again.</p>
+    <pre id="code-list" style="font-size:1rem;line-height:1.7"></pre><button class="btn" type="button" onclick="location.reload()">I've saved them</button></div>
+  {% endif %}
+</section>
+</div>
+{% endblock %}
+{% block scripts %}<script>
+(function () {
+  var T = window.Tenshi, $ = function (s) { return document.querySelector(s); };
+  $("#pw").addEventListener("submit", function (e) {
+    e.preventDefault(); var f = e.target;
+    T.busy(f.querySelector("button"), T.api("POST", "/api/account/password", { current: f.current.value, new: f.new.value }).then(function () { f.reset(); T.toast("Password changed"); }));
+  });
+  var off = $("#tfa-off");
+  if (off) off.addEventListener("submit", function (e) {
+    e.preventDefault();
+    T.api("POST", "/api/account/2fa/off", { password: e.target.password.value }).then(function () { location.reload(); });
+  });
+  var secret = "";
+  var start = $("#tfa-start");
+  if (start) start.onclick = function () {
+    T.busy(start, T.api("POST", "/api/account/2fa/start").then(function (r) {
+      secret = r.secret; $("#secret").textContent = r.secret.replace(/(.{4})/g, "$1 ").trim();
+      $("#qr").innerHTML = r.qr || '<p class="small" style="color:#333;padding:8px">Type the key below into the app.</p>';
+      $("#tfa-setup").hidden = false; start.hidden = true; $("#tfa-confirm").code.focus();
+    }));
+  };
+  var conf = $("#tfa-confirm");
+  if (conf) conf.addEventListener("submit", function (e) {
+    e.preventDefault();
+    T.api("POST", "/api/account/2fa/confirm", { secret: secret, code: conf.code.value }).then(function (r) {
+      $("#tfa-setup").hidden = true; $("#codes").hidden = false; $("#code-list").textContent = r.backup_codes.join("\n");
+    });
+  });
+})();
+</script>{% endblock %}

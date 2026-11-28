@@ -59,7 +59,9 @@
 </div>
 <script id="builder-data" type="application/json">{{ {
   "blocks": page.blocks_json | j([]), "types": block_types, "pages": all_pages, "albums": albums, "categories": categories,
-  "page": {"id": page.id, "title": page.title, "slug": page.slug, "in_menu": page.in_menu, "seo_title": page.seo_title, "seo_description": page.seo_description}
+  "langs": langs, "collections": collections,
+  "page": {"id": page.id, "title": page.title, "slug": page.slug, "in_menu": page.in_menu, "seo_title": page.seo_title, "seo_description": page.seo_description,
+           "publish_at": page.publish_at or "", "lang": page.lang or ""}
 } | tojson }}</script>
 {% endblock %}
 {% block scripts %}<script id="theme-data" type="application/json">{{ theme_editor | tojson }}</script>

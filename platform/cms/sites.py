@@ -24,7 +24,8 @@ from tenshi import profile as prof
 from . import blocks, categories, config, db, forms as lead_forms, media as media_mod, render, templates
 
 RESERVED = {"www", "admin", "api", "app", "cms", "files", "mail", "static", "assets", "tenshi", "localhost", "preview"}
-SITE_TABLES = ["pages", "media_folders", "media", "albums", "portfolio_items", "posts"]   # rows that belong to a site
+SITE_TABLES = ["pages", "media_folders", "media", "albums", "portfolio_items", "posts",   # rows that belong to a site
+               "content_types", "entries", "redirects"]
 
 
 class SiteError(ValueError):
@@ -106,7 +107,8 @@ def delete_site(site_id, user=None):
     with db.transaction() as conn:
         for table in SITE_TABLES + ["builds", "backups", "leads", "visits", "profile_revisions", "site_settings", "site_members",
                                                                   "page_revisions", "form_posts", "lead_files",
-                                                                  "lead_emails", "site_domains", "widget_cache", "rsvps", "bookings", "reviews", "social_posts"]:
+                                                                  "lead_emails", "site_domains", "widget_cache", "rsvps", "bookings", "reviews", "social_posts",
+                                                                  "trash", "redirects", "not_found", "content_types", "entries", "comments"]:
             conn.execute(f"DELETE FROM {table} WHERE site_id = ?", (site_id,))
         conn.execute("DELETE FROM album_items WHERE album_id NOT IN (SELECT id FROM albums)")
         conn.execute("DELETE FROM sites WHERE id = ?", (site_id,))
@@ -236,14 +238,32 @@ def _copy_content(from_id, to_id, media_map):
         db.run("INSERT INTO posts (site_id, title, slug, excerpt, body, cover_media_id, tags, author, status, published_at, created_at, updated_at) "
                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", to_id, p["title"], p["slug"], p["excerpt"], p["body"],
                media_map.get(p["cover_media_id"]), p["tags"], p["author"], p["status"], p["published_at"], db.now(), db.now())
+    type_map = {}
+    for t in db.all("SELECT * FROM content_types WHERE site_id = ?", from_id):          # custom content types (content_types.py)
+        type_map[t["id"]] = db.run("INSERT INTO content_types (site_id, slug, name, singular, fields_json, detail_pages, created_at) "
+                                   "VALUES (?, ?, ?, ?, ?, ?, ?)", to_id, t["slug"], t["name"], t["singular"], t["fields_json"], t["detail_pages"], db.now())
+    for e in db.all("SELECT * FROM entries WHERE site_id = ?", from_id):
+        if e["type_id"] in type_map:
+            db.run("INSERT INTO entries (site_id, type_id, slug, title, data_json, status, position, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                   to_id, type_map[e["type_id"]], e["slug"], e["title"], db.dumps(_remap_media_ids(db.j(e["data_json"]), media_map)),
+                   e["status"], e["position"], db.now(), db.now())
+    for r in db.all("SELECT * FROM redirects WHERE site_id = ?", from_id):
+        db.run("INSERT INTO redirects (site_id, from_path, to_url, code, note, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+               to_id, r["from_path"], r["to_url"], r["code"], r["note"], db.now())
+    page_map = {}
     for page in db.all("SELECT * FROM pages WHERE site_id = ?", from_id):
         page_blocks = _remap_media_ids(db.j(page["blocks_json"], []), media_map)
         for b in page_blocks:
             if b.get("type") == "gallery" and str(b.get("data", {}).get("album", "")).isdigit():
                 b["data"]["album"] = album_map.get(int(b["data"]["album"]), "")
-        db.run("INSERT INTO pages (site_id, slug, title, position, in_menu, seo_title, seo_description, blocks_json, updated_at) "
-               "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", to_id, page["slug"], page["title"], page["position"], page["in_menu"],
-               page["seo_title"], page["seo_description"], db.dumps(page_blocks), db.now())
+            if b.get("type") == "collection" and str(b.get("data", {}).get("type_id", "")).isdigit():
+                b["data"]["type_id"] = type_map.get(int(b["data"]["type_id"]), 0)
+        page_map[page["id"]] = db.run("INSERT INTO pages (site_id, slug, title, position, in_menu, seo_title, seo_description, blocks_json, updated_at, lang, publish_at) "
+               "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", to_id, page["slug"], page["title"], page["position"], page["in_menu"],
+               page["seo_title"], page["seo_description"], db.dumps(page_blocks), db.now(), page.get("lang") or "", page.get("publish_at") or "")
+    for page in db.all("SELECT id, translation_of FROM pages WHERE site_id = ? AND translation_of IS NOT NULL", from_id):
+        if page["id"] in page_map:
+            db.run("UPDATE pages SET translation_of = ? WHERE id = ?", page_map.get(page["translation_of"]), page_map[page["id"]])
     site = get(to_id)
     db.run("UPDATE sites SET profile_json = ? WHERE id = ?", db.dumps(_remap_media_ids(db.j(site["profile_json"]), media_map)), to_id)
 
@@ -419,7 +439,7 @@ def _sqlite_copy(data):
     """A small SQLite database holding just this site's rows (same tables as the CMS)."""
     path = config.EXPORTS_DIR / f"_tmp-{int(time.time() * 1000)}.sqlite"
     conn = sqlite3.connect(path)
-    conn.executescript(db.SCHEMA)
+    db.apply_schema(conn)
     for table, rows in [("sites", [data["site"]])] + [(t, data.get(t, [])) for t in SITE_TABLES + ["album_items", "leads"]]:
         for row in rows:
             cols = list(row)

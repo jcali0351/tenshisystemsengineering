@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+{% block title %}{{ ctype.name }} · {{ site.name }}{% endblock %}
+{% block heading %}{{ ctype.name }}{% endblock %}
+{% block actions %}<a class="btn" href="/sites/{{ site.id }}/content">All content types</a><button class="btn btn-primary" id="new-entry">+ New {{ ctype.singular | lower }}</button>{% endblock %}
+{% block body %}
+<p class="muted">Drag to change the order. Show these on a page with a <b>Collection</b> block (Pages &amp; builder › Add block › Collection).
+  Changes go live when you <b>Publish</b> the site.</p>
+<section class="card" style="margin-top:14px">
+  {% if rows %}
+  <div class="table-wrap"><table class="table" id="entries"><thead><tr><th></th><th>Title</th>{% for f in list_fields %}<th>{{ f.label }}</th>{% endfor %}<th>Status</th><th></th></tr></thead><tbody>
+  {% for e in rows %}<tr data-id="{{ e.id }}" draggable="true"><td class="grip" style="cursor:grab">⠿</td><td><b>{{ e.title }}</b></td>
+    {% for f in list_fields %}<td class="small">{% set v = e.data.get(f.name) %}{% if f.type == 'checkbox' %}{{ 'Yes' if v else '' }}{% else %}{{ v if v is not none else '' }}{% endif %}</td>{% endfor %}
+    <td>{% if e.status == 'draft' %}<span class="badge badge-draft">Draft</span>{% else %}<span class="badge badge-live">Published</span>{% endif %}</td>
+    <td style="white-space:nowrap"><button class="btn btn-small" data-edit>Edit</button>{% if ctype.detail_pages %}
+      <a class="btn btn-small" href="/sites/{{ site.id }}/preview/{{ ctype.slug }}-{{ e.slug }}" target="_blank" rel="noopener">Preview</a>{% endif %}
+      <button class="btn btn-small btn-danger" data-del>Delete</button></td></tr>{% endfor %}
+  </tbody></table></div>
+  {% else %}<div class="empty">No {{ ctype.name | lower }} yet.</div>{% endif %}
+</section>
+<dialog id="entry-dlg" class="wide"><form class="dlg" id="entry-form">
+  <h2 id="entry-title">{{ ctype.singular }}</h2>
+  <label class="field"><span>Title</span><input name="title" required></label>
+  <div id="entry-fields"></div>
+  <label class="check field"><input type="checkbox" name="draft"> Draft (keep it off the site for now)</label>
+  <div class="dlg-foot"><span style="flex:1"></span><button type="button" class="btn" data-close>Cancel</button><button type="submit" class="btn btn-primary">Save</button></div>
+</form></dialog>
+<script id="en-data" type="application/json">{{ {"type": ctype, "entries": rows} | tojson }}</script>
+{% endblock %}
+{% block scripts %}<script>
+(function () {
+  var T = window.Tenshi, esc = T.esc, sid = {{ site.id }}, D = JSON.parse(document.getElementById("en-data").textContent), t = D.type;
+  var dlg = document.getElementById("entry-dlg"), f = document.getElementById("entry-form"), box = document.getElementById("entry-fields"), editing = null;
+  function input(fl, v) {
+    v = v == null ? "" : v; var id = "e-" + fl.name, req = fl.required ? " required" : "";
+    switch (fl.type) {
+      case "textarea": return '<textarea id="' + id + '" data-n="' + fl.name + '" rows="4"' + req + ">" + esc(v) + "</textarea>";
+      case "rich": return '<textarea id="' + id + '" data-n="' + fl.name + '" rows="7"' + req + ">" + esc(v) + '</textarea><small>Simple HTML is fine: &lt;p&gt;, &lt;b&gt;, &lt;a href=…&gt;, lists.</small>';
+      case "number": return '<input type="text" inputmode="decimal" id="' + id + '" data-n="' + fl.name + '" value="' + esc(v) + '"' + req + ">";
+      case "date": return '<input type="date" id="' + id + '" data-n="' + fl.name + '" value="' + esc(v) + '"' + req + ">";
+      case "email": return '<input type="email" id="' + id + '" data-n="' + fl.name + '" value="' + esc(v) + '"' + req + ">";
+      case "checkbox": return '<input type="checkbox" id="' + id + '" data-n="' + fl.name + '"' + (v ? " checked" : "") + ">";
+      case "select": return '<select id="' + id + '" data-n="' + fl.name + '"' + req + '><option value="">—</option>' + (fl.options || []).map(function (o) { return "<option" + (o === v ? " selected" : "") + ">" + esc(o) + "</option>"; }).join("") + "</select>";
+      case "media": return '<div class="media-field" data-site="' + sid + '" data-kind="image" data-name="' + fl.name + '"><input type="hidden" data-n="' + fl.name + '" value="' + esc(v) + '"></div>';
+      default: return '<input type="text" id="' + id + '" data-n="' + fl.name + '" value="' + esc(v) + '"' + req + (fl.type === "link" ? ' placeholder="https://… or a page like contact"' : "") + ">";
+    }
+  }
+  function open(e) {
+    editing = e ? e.id : null; f.title.value = e ? e.title : ""; f.draft.checked = !!(e && e.status === "draft");
+    box.innerHTML = t.fields.map(function (fl) {
+      var v = e ? e.data[fl.name] : (fl.type === "checkbox" ? false : "");
+      return fl.type === "checkbox" ? '<label class="check field">' + input(fl, v) + " " + esc(fl.label) + "</label>" : '<label class="field"><span>' + esc(fl.label) + (fl.required ? " *" : "") + "</span>" + input(fl, v) + "</label>";
+    }).join("");
+    box.querySelectorAll(".media-field").forEach(function (mf) { T.mediaField(mf); });
+    dlg.showModal(); f.title.focus();
+  }
+  document.getElementById("new-entry").onclick = function () { open(null); };
+  dlg.querySelector("[data-close]").onclick = function () { dlg.close(); };
+  f.addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var data = {}; box.querySelectorAll("[data-n]").forEach(function (i) { data[i.dataset.n] = i.type === "checkbox" ? i.checked : i.value; });
+    T.api(editing ? "PUT" : "POST", editing ? "/api/entries/" + editing : "/api/content-types/" + t.id + "/entries",
+      { title: f.title.value, status: f.draft.checked ? "draft" : "published", data: data }).then(function () { location.reload(); });
+  });
+  var table = document.getElementById("entries");
+  if (table) {
+    table.addEventListener("click", function (e) {
+      var r = e.target.closest("tr[data-id]"); if (!r) return;
+      var entry = D.entries.filter(function (x) { return String(x.id) === r.dataset.id; })[0];
+      if (e.target.closest("[data-edit]")) open(entry);
+      if (e.target.closest("[data-del]") && confirm("Delete “" + entry.title + "”? It goes to the Trash for 30 days."))
+        T.api("DELETE", "/api/entries/" + entry.id).then(function () { r.remove(); });
+    });
+    var drag = null, tb = table.tBodies[0];
+    tb.addEventListener("dragstart", function (e) { drag = e.target.closest("tr"); e.dataTransfer.effectAllowed = "move"; });
+    tb.addEventListener("dragover", function (e) { e.preventDefault(); var over = e.target.closest("tr"); if (drag && over && over !== drag) tb.insertBefore(drag, over.rowIndex > drag.rowIndex ? over.nextSibling : over); });
+    tb.addEventListener("drop", function (e) {
+      e.preventDefault(); drag = null;
+      T.api("POST", "/api/content-types/" + t.id + "/order", { ids: Array.prototype.map.call(tb.rows, function (r) { return r.dataset.id; }) }).then(function () { T.toast("Order saved"); });
+    });
+  }
+})();
+</script>{% endblock %}

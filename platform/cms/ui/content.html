@@ -1,0 +1,91 @@
+{% extends "layout.html" %}
+{% block title %}Content types · {{ site.name }}{% endblock %}
+{% block heading %}Content types{% endblock %}
+{% block body %}
+<p class="muted">Your own kinds of content with your own fields, like Drupal's content types or WordPress's custom post types:
+  tractors for sale, listings, menu items, people. Add entries, then show them on any page with a <b>Collection</b> block.
+  Each entry can also get its own page.</p>
+<section class="card" style="margin-top:14px">
+  {% if types %}
+  <div class="table-wrap"><table class="table"><thead><tr><th>Type</th><th>Fields</th><th>Entries</th><th>Own pages</th><th></th></tr></thead><tbody>
+  {% for t in types %}<tr><td><a href="/sites/{{ site.id }}/content/{{ t.id }}"><b>{{ t.name }}</b></a><br><small class="muted">{{ t.slug }}-….html</small></td>
+    <td class="small">{{ t.fields | map(attribute='label') | join(', ') }}</td><td>{{ t.n }}</td><td>{{ 'Yes' if t.detail_pages else 'No' }}</td>
+    <td style="white-space:nowrap"><a class="btn btn-small btn-primary" href="/sites/{{ site.id }}/content/{{ t.id }}">Entries</a>
+      <button class="btn btn-small" data-edit-type="{{ t.id }}">Fields</button></td></tr>{% endfor %}
+  </tbody></table></div>
+  {% else %}<div class="empty">No content types yet. Start from one of these, or make your own.</div>{% endif %}
+  <div class="row" style="gap:8px;flex-wrap:wrap;margin-top:12px">
+    <button class="btn btn-primary" data-new-type="">+ New content type</button>
+    {% for key, s in starters.items() %}<button class="btn" data-new-type="{{ key }}">+ {{ s.name }}</button>{% endfor %}
+  </div>
+</section>
+<dialog id="type-dlg" class="wide"><form class="dlg" id="type-form" method="dialog">
+  <h2 id="type-title">Content type</h2>
+  <div class="row" style="gap:10px;flex-wrap:wrap">
+    <label class="field" style="flex:1 1 200px"><span>Name (plural)</span><input name="name" placeholder="Tractors for sale" required></label>
+    <label class="field" style="flex:1 1 160px"><span>One of them is a…</span><input name="singular" placeholder="Tractor"></label>
+    <label class="field" style="flex:1 1 140px"><span>Address</span><input name="slug" placeholder="tractors"></label>
+  </div>
+  <label class="check field"><input type="checkbox" name="detail_pages" checked> Each entry gets its own page</label>
+  <h3 style="margin:14px 0 6px">Fields <small class="muted">(every entry also has a title)</small></h3>
+  <div id="fields"></div>
+  <button type="button" class="btn btn-small" id="add-field">+ Add a field</button>
+  <div class="dlg-foot" style="margin-top:16px"><button type="button" class="btn btn-danger" id="del-type" hidden>Delete type</button><span style="flex:1"></span>
+    <button type="button" class="btn" data-close>Cancel</button><button type="submit" class="btn btn-primary">Save</button></div>
+</form></dialog>
+<script id="ct-data" type="application/json">{{ {"types": types, "starters": starters, "field_types": field_types} | tojson }}</script>
+{% endblock %}
+{% block scripts %}<script>
+(function () {
+  var T = window.Tenshi, esc = T.esc, sid = {{ site.id }}, D = JSON.parse(document.getElementById("ct-data").textContent);
+  var dlg = document.getElementById("type-dlg"), f = document.getElementById("type-form"), box = document.getElementById("fields"), editing = null;
+  function row(fl) {
+    fl = fl || { label: "", type: "text", show: true };
+    var opts = Object.keys(D.field_types).map(function (k) { return '<option value="' + k + '"' + (fl.type === k ? " selected" : "") + ">" + esc(D.field_types[k]) + "</option>"; }).join("");
+    var div = document.createElement("div"); div.className = "row ct-field"; div.style.cssText = "gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px;padding:6px;border:1px solid var(--line);border-radius:8px";
+    div.innerHTML = '<input data-k="label" placeholder="Label, e.g. Price" value="' + esc(fl.label) + '" style="flex:1 1 160px"><select data-k="type" style="width:auto">' + opts + "</select>" +
+      '<input data-k="options" placeholder="Choices, comma separated" value="' + esc(Array.isArray(fl.options) ? fl.options.join(", ") : (fl.options || "")) + '" style="flex:1 1 180px"' + (fl.type === "select" ? "" : " hidden") + ">" +
+      '<label class="check small"><input type="checkbox" data-k="required"' + (fl.required ? " checked" : "") + "> needed</label>" +
+      '<label class="check small"><input type="checkbox" data-k="show"' + (fl.show !== false ? " checked" : "") + "> in lists</label>" +
+      '<label class="check small"><input type="checkbox" data-k="filter"' + (fl.filter ? " checked" : "") + "> filter</label>" +
+      '<input type="hidden" data-k="name" value="' + esc(fl.name || "") + '">' +
+      '<button type="button" class="icon-btn" data-up aria-label="Move up">↑</button><button type="button" class="icon-btn" data-rm aria-label="Remove">✕</button>';
+    div.querySelector("[data-k=type]").onchange = function () { div.querySelector("[data-k=options]").hidden = this.value !== "select"; };
+    box.appendChild(div);
+  }
+  box.addEventListener("click", function (e) {
+    var r = e.target.closest(".ct-field"); if (!r) return;
+    if (e.target.closest("[data-rm]")) r.remove();
+    if (e.target.closest("[data-up]") && r.previousElementSibling) box.insertBefore(r, r.previousElementSibling);
+  });
+  function open(t, title) {
+    editing = t && t.id ? t.id : null; box.innerHTML = "";
+    document.getElementById("type-title").textContent = title;
+    f.name.value = (t && t.name) || ""; f.singular.value = (t && t.singular) || ""; f.slug.value = (t && t.slug) || "";
+    f.detail_pages.checked = !t || t.detail_pages === undefined || !!t.detail_pages;
+    ((t && t.fields) || [{ label: "Photo", type: "media" }, { label: "Description", type: "rich", show: false }]).forEach(row);
+    document.getElementById("del-type").hidden = !editing; dlg.showModal();
+  }
+  document.getElementById("add-field").onclick = function () { row(); };
+  dlg.querySelector("[data-close]").onclick = function () { dlg.close(); };
+  document.querySelectorAll("[data-new-type]").forEach(function (b) {
+    b.onclick = function () { var s = D.starters[b.dataset.newType]; open(s ? JSON.parse(JSON.stringify(s)) : null, s ? s.name : "New content type"); };
+  });
+  document.querySelectorAll("[data-edit-type]").forEach(function (b) {
+    b.onclick = function () { open(D.types.filter(function (t) { return String(t.id) === b.dataset.editType; })[0], "Fields"); };
+  });
+  document.getElementById("del-type").onclick = function () {
+    if (confirm("Delete this content type and ALL its entries? This can't be undone.")) T.api("DELETE", "/api/content-types/" + editing).then(function () { location.reload(); });
+  };
+  f.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var fields = Array.prototype.map.call(box.querySelectorAll(".ct-field"), function (r) {
+      var o = {}; r.querySelectorAll("[data-k]").forEach(function (i) { o[i.dataset.k] = i.type === "checkbox" ? i.checked : i.value; }); return o;
+    });
+    var body = { name: f.name.value, singular: f.singular.value, slug: f.slug.value, detail_pages: f.detail_pages.checked, fields: fields };
+    T.api(editing ? "PUT" : "POST", editing ? "/api/content-types/" + editing : "/api/sites/" + sid + "/content-types", body).then(function (t) {
+      location.href = "/sites/" + sid + "/content/" + t.id;
+    });
+  });
+})();
+</script>{% endblock %}

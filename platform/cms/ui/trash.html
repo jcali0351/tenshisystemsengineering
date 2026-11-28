@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block title %}Trash · {{ site.name }}{% endblock %}
+{% block heading %}Trash{% endblock %}
+{% block actions %}{% if items %}<button class="btn btn-danger" id="empty">Empty the Trash</button>{% endif %}{% endblock %}
+{% block body %}
+<p class="muted">Deleted pages, blog posts, files and content entries wait here for {{ days }} days, then they're gone for good. Restore puts one back exactly as it was.</p>
+<section class="card" style="margin-top:14px">
+  {% if items %}
+  <div class="table-wrap"><table class="table" id="trash">
+    <thead><tr><th>What</th><th>Name</th><th>Deleted</th><th>By</th><th>Kept</th><th></th></tr></thead>
+    <tbody>{% for t in items %}
+    <tr data-id="{{ t.id }}"><td><span class="badge">{{ t.kind_label }}</span></td><td><b>{{ t.title }}</b></td>
+      <td class="small" data-utc="{{ t.created_at }}">{{ t.created_at | when }}</td><td class="small">{{ t.user_name }}</td>
+      <td class="small">{{ t.days_left }} more day{{ '' if t.days_left == 1 else 's' }}</td>
+      <td style="white-space:nowrap"><button class="btn btn-small btn-primary" data-restore>Restore</button>
+        <button class="btn btn-small btn-danger" data-purge>Delete forever</button></td></tr>
+    {% endfor %}</tbody></table></div>
+  {% else %}<div class="empty">The Trash is empty.</div>{% endif %}
+</section>
+{% endblock %}
+{% block scripts %}<script>
+(function () {
+  var T = window.Tenshi, sid = {{ site.id }};
+  var box = document.getElementById("trash");
+  if (box) box.addEventListener("click", function (e) {
+    var row = e.target.closest("tr[data-id]"); if (!row) return;
+    if (e.target.closest("[data-restore]")) T.busy(e.target, T.api("POST", "/api/sites/" + sid + "/trash/" + row.dataset.id + "/restore").then(function (r) {
+      T.toast("Restored: " + r.title + (r.kind === "page" || r.kind === "post" ? ". Publish to put it live." : "")); row.remove();
+    }));
+    if (e.target.closest("[data-purge]") && confirm("Delete this forever? This can't be undone."))
+      T.api("DELETE", "/api/sites/" + sid + "/trash/" + row.dataset.id).then(function () { row.remove(); });
+  });
+  var empty = document.getElementById("empty");
+  if (empty) empty.onclick = function () {
+    if (confirm("Delete everything in the Trash forever? This can't be undone.")) T.api("DELETE", "/api/sites/" + sid + "/trash").then(function () { location.reload(); });
+  };
+})();
+</script>{% endblock %}

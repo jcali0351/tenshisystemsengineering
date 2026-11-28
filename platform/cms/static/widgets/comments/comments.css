@@ -1,0 +1,8 @@
+/* Comments (widgets/comments.py) */
+.tw-comments h2 .tw-cm-n { color: var(--m-muted); font-weight: 400; }
+.tw-cm-list { list-style: none; margin: 0 0 24px; padding: 0; }
+.tw-cm-item { padding: 14px 0; border-bottom: 1px solid var(--m-line); }
+.tw-cm-who { margin: 0 0 4px; } .tw-cm-who time { color: var(--m-muted); font-size: .88rem; margin-left: 6px; }
+.tw-cm-item p:last-child { margin-bottom: 0; }
+.tw-cm-none { color: var(--m-muted); }
+.tw-cm-form textarea { min-height: 110px; }

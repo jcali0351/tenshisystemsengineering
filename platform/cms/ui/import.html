@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %}Import · {{ site.name }}{% endblock %}
+{% block heading %}Import from WordPress{% endblock %}
+{% block body %}
+<p class="muted">Moving a client from WordPress? In their WordPress dashboard choose <b>Tools › Export › All content › Download Export File</b>,
+  then upload that .xml file here. Posts become blog posts, pages become pages (not in the menu until you add them), and every old
+  WordPress address is redirected to its new page so Google and old links keep working. Nothing goes live until you Publish.</p>
+{% if status.state %}<section class="card" style="margin-top:14px" id="status">
+  <h2>Last import</h2>
+  <p>{{ status.posts or 0 }} posts, {{ status.pages or 0 }} pages, {{ status.redirects or 0 }} redirects{% if status.skipped %}, {{ status.skipped }} skipped{% endif %}.
+  {% if status.covers %}Featured pictures: {{ status.covers_done or 0 }} of {{ status.covers }} downloaded{% if status.state == 'images' %} (still going: reload to see){% endif %}.{% endif %}
+  {% if status.inline_images %}<br><small class="muted">{{ status.inline_images }} picture(s) inside the text still load from the old WordPress site. Re-upload them before it goes away.</small>{% endif %}</p>
+  <p><a class="btn btn-small" href="/sites/{{ site.id }}/posts">See the posts</a> <a class="btn btn-small" href="/sites/{{ site.id }}/pages">See the pages</a>
+    <a class="btn btn-small" href="/sites/{{ site.id }}/redirects">See the redirects</a></p>
+</section>{% endif %}
+<section class="card" style="margin-top:14px">
+  <form id="wp">
+    <label class="field"><span>WordPress export file (.xml)</span><input type="file" name="file" accept=".xml,text/xml,application/xml" required></label>
+    <div id="peek" class="small muted"></div>
+    <label class="check field"><input type="checkbox" name="pages" checked> Pages too (not just posts)</label>
+    <label class="check field"><input type="checkbox" name="drafts" checked> Drafts too (they stay drafts)</label>
+    <label class="check field"><input type="checkbox" name="redirects" checked> Redirect the old WordPress addresses to the new pages</label>
+    <label class="check field"><input type="checkbox" name="images" checked> Download featured pictures into the Media Center</label>
+    <button class="btn btn-primary" type="submit">Import</button>
+  </form>
+</section>
+{% endblock %}
+{% block scripts %}<script>
+(function () {
+  var T = window.Tenshi, sid = {{ site.id }}, f = document.getElementById("wp");
+  f.file.addEventListener("change", function () {
+    if (!f.file.files.length) return;
+    var fd = new FormData(); fd.append("file", f.file.files[0]);
+    T.api("POST", "/api/sites/" + sid + "/import/wordpress/check", fd).then(function (s) {
+      document.getElementById("peek").textContent = "“" + (s.title || "WordPress site") + "”: " + s.posts + " posts and " + s.pages + " pages" + (s.images ? ", " + s.images + " featured pictures" : "") + ".";
+    }).catch(function () { f.file.value = ""; });
+  });
+  f.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var fd = new FormData(); fd.append("file", f.file.files[0]);
+    ["pages", "drafts", "redirects", "images"].forEach(function (k) { fd.append(k, f[k].checked ? "1" : "0"); });
+    T.busy(f.querySelector("button"), T.api("POST", "/api/sites/" + sid + "/import/wordpress", fd).then(function (r) {
+      T.toast("Imported " + r.posts + " posts and " + r.pages + " pages"); setTimeout(function () { location.reload(); }, 900);
+    }));
+  });
+})();
+</script>{% endblock %}

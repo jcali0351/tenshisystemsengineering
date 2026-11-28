@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block title %}Languages · {{ site.name }}{% endblock %}
+{% block heading %}Languages{% endblock %}
+{% block body %}
+<p class="muted">Offer the site in more than one language. The main language is <b>{{ names[main] }}</b> (change it under Settings &amp; theme).
+  Switch on more languages here, then open a page in the builder and choose <b>Page settings › Translate</b>: you get a copy of the page to translate.
+  Visitors see a language switcher on every translated page, and each language has its own menu.</p>
+<section class="card" style="margin-top:14px">
+  <h2>Extra languages</h2>
+  <form id="langs">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:6px">
+      {% for code, name in names.items() if code != main %}<label class="check"><input type="checkbox" name="lang" value="{{ code }}" {% if code in extra %}checked{% endif %}> {{ name }} <small class="muted">({{ code }})</small></label>{% endfor %}
+    </div>
+    <button class="btn btn-primary" type="submit" style="margin-top:12px">Save languages</button>
+  </form>
+</section>
+{% if extra %}
+<section class="card" style="margin-top:14px">
+  <h2>Pages and their translations</h2>
+  <div class="table-wrap"><table class="table" id="tr"><thead><tr><th>Page ({{ names[main] }})</th>{% for c in extra %}<th>{{ names[c] }}</th>{% endfor %}</tr></thead><tbody>
+  {% for p in main_pages %}<tr><td><a href="/sites/{{ site.id }}/builder/{{ p.id }}">{{ p.title }}</a></td>
+    {% for c in extra %}<td>{% set t = translations.get((p.id, c)) %}{% if t %}<a class="btn btn-small" href="/sites/{{ site.id }}/builder/{{ t.id }}">Edit</a>{% else %}<button class="btn btn-small" data-translate="{{ p.id }}" data-lang="{{ c }}">Translate</button>{% endif %}</td>{% endfor %}</tr>{% endfor %}
+  </tbody></table></div>
+</section>
+{% endif %}
+{% endblock %}
+{% block scripts %}<script>
+(function () {
+  var T = window.Tenshi, sid = {{ site.id }};
+  document.getElementById("langs").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var codes = Array.prototype.slice.call(e.target.querySelectorAll("input[name=lang]:checked")).map(function (i) { return i.value; });
+    T.busy(e.target.querySelector("button"), T.api("PUT", "/api/sites/" + sid + "/languages", { extra: codes }).then(function () { location.reload(); }));
+  });
+  var tr = document.getElementById("tr");
+  if (tr) tr.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-translate]"); if (!b) return;
+    T.busy(b, T.api("POST", "/api/pages/" + b.dataset.translate + "/translate", { lang: b.dataset.lang }).then(function (r) { location.href = r.url; }));
+  });
+})();
+</script>{% endblock %}

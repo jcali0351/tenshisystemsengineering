@@ -35,7 +35,8 @@
   <aside class="card">
     <label class="field"><span>Status</span><select id="status">
       <option value="draft" {% if not post or post.status == 'draft' %}selected{% endif %}>Draft (only you see it)</option>
-      <option value="published" {% if post and post.status == 'published' %}selected{% endif %}>Published</option></select></label>
+      <option value="review" {% if post and post.status == 'review' %}selected{% endif %}>Ready for review (an editor publishes it)</option>
+      {% if site_role != 'contributor' %}<option value="published" {% if post and post.status == 'published' %}selected{% endif %}>Published</option>{% endif %}</select></label>
     <label class="field"><span>Publish date</span><input type="datetime-local" id="published_at" data-utc="{{ post.published_at if post else '' }}">
       <small>Empty = now. A future date waits: the post goes live on the first Publish after it.</small></label>
     <label class="field"><span>Short summary (excerpt)</span><textarea id="excerpt" rows="3" maxlength="500">{{ post.excerpt if post else '' }}</textarea><small>Shown on the blog list, in Google and in the feed.</small></label>
@@ -84,7 +85,7 @@
       body.innerHTML = p.body; if (!html.hidden) html.value = p.body;
       $("#slug").value = p.slug; $("#slug-note").textContent = p.file;
       $("#preview").href = "/sites/" + siteId + "/preview/" + p.file.slice(0, -5); $("#preview").hidden = false;
-      state.textContent = p.status === "draft" ? "Saved as a draft" : (p.live ? "Saved. Publish the site to put it live." : "Saved. Scheduled for " + new Date(p.published_at).toLocaleString());
+      state.textContent = p.status === "draft" ? "Saved as a draft" : p.status === "review" ? "Sent for review: an editor will publish it" : (p.live ? "Saved. Publish the site to put it live." : "Saved. Scheduled for " + new Date(p.published_at).toLocaleString());
       T.toast("Post saved");
     }));
   };

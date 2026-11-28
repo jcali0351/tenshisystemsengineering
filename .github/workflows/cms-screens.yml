@@ -1,0 +1,50 @@
+name: CMS screenshots
+# Starts the client CMS with a throw-away database and takes screenshots of its screens in Chromium
+# (platform/tools/cms_screens.py). Run by hand from the Actions tab; the pictures are attached to the run.
+on:
+  workflow_dispatch:
+  push:
+    branches: [cms-features]
+    paths: ["platform/cms/ui/**", "platform/cms/static/**", "platform/tools/cms_screens.py", ".github/workflows/cms-screens.yml"]
+permissions:
+  contents: write
+jobs:
+  shots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: platform/requirements.txt
+      - name: Install
+        run: |
+          python -m pip install -r platform/requirements.txt playwright
+          python -m playwright install --with-deps chromium
+      - name: Start the CMS and take screenshots
+        working-directory: platform
+        env:
+          TENSHI_DATA: /tmp/tenshi-shots
+          TENSHI_DEMO_SITES: "0"
+          TENSHI_SCHEDULER: "0"
+          TENSHI_STOCK_SEED: "0"
+        run: |
+          python -c "from cms import db, auth; db.setup(); auth.create_user('shots@example.com', 'Shots', 'shots-pass-123', 'admin')"
+          python run_cms.py > /tmp/cms.log 2>&1 &
+          for i in $(seq 1 40); do curl -sf http://localhost:8000/login >/dev/null && break; sleep 1; done
+          python tools/cms_screens.py || (tail -40 /tmp/cms.log; exit 1)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cms-screens
+          path: platform/shots/
+          retention-days: 7
+      - name: Keep the pictures on the cms-shots branch (one commit, replaced each run)
+        if: always()
+        working-directory: platform/shots
+        run: |
+          git init -q -b cms-shots && git add -A
+          git -c user.name=tenshi-cms-bot -c user.email=bot@tenshisystems.com commit -qm "CMS screenshots" || exit 0
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" cms-shots
