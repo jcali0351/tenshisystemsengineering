@@ -266,3 +266,27 @@ html.white :is(.chat-launcher, .chat-fab, #tenshi-chat-toggle, .tc-launch, .tk-l
 html.white .skip-link:not(#_):not(#__) { background: var(--w-blue) !important; color: var(--w-on) !important; }
 html.white img.hero-logo:not(#_) { content: url("brand/tenshi-logo-lime.png"); box-shadow: 0 6px 20px rgba(63, 122, 0, .22) !important; }
 html.white img:is(.brand-logo, .footer-logo):not(#_) { content: url("brand/tenshi-horizontal-lime.png"); }
+
+/* ---------- white and grey buttons and nav (2026-11-28, owner's request; the logo stays lime) ----------
+   Buttons: white with a grey edge and dark grey text, a soft shadow, light grey when pressed. Nav: a white bar with grey
+   links; the current page and the Launch pill sit on light grey. These rules come last so they win over the lime ones. */
+html.white:root:not(#_) { --w-btn: #ffffff; --w-btn-edge: #d2d2d7; --w-btn-ink: #1d1d1f; --w-btn-hover: #f2f2f4; --w-nav-ink: #6e6e73; }
+html.white :is(.btn, .btn-primary, .hg-btn, .game-btn, .viz-open, button[type="submit"], .svc-cta a, .cta-btn):not(#_):not(#__):not(#___):not(#____):not(#_____) {
+  background: var(--w-btn) !important; color: var(--w-btn-ink) !important; -webkit-text-fill-color: var(--w-btn-ink) !important;
+  border: 1px solid var(--w-btn-edge) !important; box-shadow: 0 1px 2px rgba(0, 0, 0, .05), 0 4px 14px rgba(0, 0, 0, .05) !important; font-weight: 500 !important; }
+html.white :is(.btn, .btn-primary, .hg-btn, .game-btn, .viz-open, button[type="submit"], .svc-cta a, .cta-btn):not(#_):not(#__):not(#___):not(#____):not(#_____) :is(span, b, small, svg) { color: var(--w-btn-ink) !important; -webkit-text-fill-color: var(--w-btn-ink) !important; }
+html.white :is(.btn, .btn-primary, .hg-btn, .game-btn, .viz-open, button[type="submit"], .svc-cta a, .cta-btn):not(#_):not(#__):not(#___):not(#____):not(#_____):is(:hover, :active) { background: var(--w-btn-hover) !important; border-color: #b8b8bf !important; }
+html.white :is(.btn, .btn-primary, .hg-btn, .game-btn, .viz-open, button[type="submit"], .svc-cta a, .cta-btn):not(#_):not(#__):focus-visible { outline: 3px solid #a1a1a8 !important; outline-offset: 2px; }
+html.white .btn-more:not(#_):not(#__):not(#___):not(#____):not(#_____) { color: var(--w-btn-ink) !important; }
+
+html.white .site-header:not(#_):not(#__):not(#___) { background: rgba(255, 255, 255, .92) !important; border-bottom: 1px solid #e5e5ea !important; }
+html.white .site-header .site-nav a:not(#_):not(#__):not(#___) { color: var(--w-nav-ink) !important; border-radius: 980px !important; padding: 5px 11px !important; transition: background .15s, color .15s; }
+html.white .site-header .site-nav a:not(#_):not(#__):not(#___):is(:hover, [aria-current="page"]) { color: var(--w-btn-ink) !important; background: var(--w-btn-hover) !important; }
+html.white .site-header .site-nav > ul > li > a.nav-launch:not(#_):not(#__):not(#___):not(#____):not(#_____) { background: #fff !important; color: var(--w-btn-ink) !important; -webkit-text-fill-color: var(--w-btn-ink) !important; border: 1px solid var(--w-btn-edge) !important; font-weight: 500 !important; }
+html.white .site-header .site-nav > ul > li > a.nav-launch:not(#_):not(#__):not(#___):not(#____):not(#_____):hover { background: var(--w-btn-hover) !important; }
+html.white .site-header :is(.lang-current, .nav-toggle):not(#_):not(#__):not(#___) { background: #fff !important; border: 1px solid var(--w-btn-edge) !important; color: var(--w-btn-ink) !important; }
+html.white .site-header :is(.lang-current, .nav-toggle):not(#_):not(#__):not(#___):hover { background: var(--w-btn-hover) !important; }
+html.white .site-header.nav-mobile .site-nav a:not(#_):not(#__):not(#___) { color: var(--w-btn-ink) !important; }
+html.white :is(.chat-launcher, .chat-fab, #tenshi-chat-toggle, .tc-launch, .tk-launch):not(#_):not(#__):not(#___):not(#____):not(#_____) { background: #fff !important; color: var(--w-btn-ink) !important; border: 1px solid var(--w-btn-edge) !important; box-shadow: 0 8px 28px rgba(0, 0, 0, .12) !important; }
+html.white :is(.chat-launcher, .chat-fab, #tenshi-chat-toggle, .tc-launch, .tk-launch):not(#_):not(#__) *:not(#_):not(#__):not(#___):not(#____) { color: var(--w-btn-ink) !important; -webkit-text-fill-color: var(--w-btn-ink) !important; }
+html.white .skip-link:not(#_):not(#__):not(#___) { background: #fff !important; color: var(--w-btn-ink) !important; border: 1px solid var(--w-btn-edge) !important; }
