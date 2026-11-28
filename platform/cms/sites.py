@@ -439,7 +439,7 @@ def _sqlite_copy(data):
     """A small SQLite database holding just this site's rows (same tables as the CMS)."""
     path = config.EXPORTS_DIR / f"_tmp-{int(time.time() * 1000)}.sqlite"
     conn = sqlite3.connect(path)
-    conn.executescript(db.SCHEMA)
+    db.apply_schema(conn)
     for table, rows in [("sites", [data["site"]])] + [(t, data.get(t, [])) for t in SITE_TABLES + ["album_items", "leads"]]:
         for row in rows:
             cols = list(row)

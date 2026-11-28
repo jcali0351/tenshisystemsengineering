@@ -76,7 +76,8 @@ def test_trash_pages_posts_media(admin):
     items = trash.items(sid)
     assert {i["kind"] for i in items} >= {"page", "post", "media"}
     html = c.get(f"/sites/{sid}/trash").text
-    assert "Old Barn" in html and "Harvest news" in html and "field.png" in html
+    body = html[html.find('<main'):html.find('</main>')]
+    assert "Old Barn" in body and "Harvest news" in body and "field.png" in body, (len(items), body[:1500])
     for i in items:
         assert c.post(f"/api/sites/{sid}/trash/{i['id']}/restore", headers=H).status_code == 200
     assert db.one("SELECT 1 AS x FROM pages WHERE site_id = ? AND title = 'Old Barn'", sid)
@@ -283,7 +284,7 @@ def test_wordpress_import(admin):
     evil = b'<?xml version="1.0"?><!DOCTYPE r [<!ENTITY a "aaaa">]><rss><channel></channel></rss>'
     assert c.post(f"/api/sites/{sid}/import/wordpress", files={"file": ("x.xml", evil, "text/xml")}, headers=H).status_code == 400
     r = c.post(f"/api/sites/{sid}/import/wordpress", files={"file": ("export.xml", WXR, "text/xml")}, data={"images": "0"}, headers=H).json()
-    assert r["posts"] == 2 and r["pages"] == 1 and r["skipped"] == 1 and r["redirects"] >= 2
+    assert r["posts"] == 2 and r["pages"] == 1 and r["skipped"] == 1 and r["redirects"] == 1   # the page keeps its address
     post = db.one("SELECT * FROM posts WHERE site_id = ? AND slug = 'spring-planting'", sid)
     assert post["status"] == "published" and post["published_at"] == "2019-04-02T10:00:00Z"
     assert "<p>We planted corn.</p>" in post["body"] and "script" not in post["body"] and "gallery" not in post["body"]

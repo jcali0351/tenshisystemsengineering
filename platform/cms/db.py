@@ -291,7 +291,11 @@ def connect():
 
 def setup():
     """Create the tables if they don't exist yet. Safe to run every time the CMS starts."""
-    conn = connect()
+    apply_schema(connect())
+
+
+def apply_schema(conn):
+    """Every table and column on one SQLite connection (the CMS database, or a site's export copy)."""
     conn.executescript(SCHEMA)
     conn.executescript(SCHEMA_EXTRA)
     for table, column, decl in COLUMNS:
