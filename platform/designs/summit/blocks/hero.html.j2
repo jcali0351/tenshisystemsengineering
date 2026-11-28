@@ -1,0 +1,25 @@
+{#- SUMMIT HERO: minimal and typographic: a giant left-aligned headline, a hairline row of facts, buttons, then the photo full
+    width. Same settings as every hero (heading, text, kicker, buttons, image, layout). -#}
+{% set b = block.data %}
+<section class="hero su-hero hero-{{ b.layout or 'split' }}"{% if b.layout == 'background' and b.image %} style="--hero-img: url('{{ media(b.image, 1600) }}')"{% endif %}>
+  <div class="wrap">
+    <p class="kicker" data-edit="kicker">{{ b.kicker or company.name }}</p>
+    <h1 data-edit="heading">{{ b.heading or company.tagline or company.name }}</h1>
+    <div class="su-row">
+      <p class="lead" data-edit="text">{{ b.text or company.description }}</p>
+      <div class="actions">
+        {% if b.button_text %}<a class="btn" href="{{ link(b.button_link or 'contact') }}" data-edit="button_text">{{ b.button_text }}</a>{% endif %}
+        {% if b.call_button and company.phone %}<a class="btn btn-line" href="tel:{{ company.phone | tel }}">Call {{ company.phone }}</a>{% endif %}
+      </div>
+    </div>
+    <dl class="su-facts">
+      {% if company.service_areas %}<div><dt>Serving</dt><dd>{{ company.service_areas[:3] | join(", ") }}</dd></div>{% endif %}
+      {% if company.hours %}<div><dt>Open</dt><dd>{{ company.hours[0].days }} {{ company.hours[0].time }}</dd></div>{% endif %}
+      {% if company.phone %}<div><dt>Call</dt><dd><a href="tel:{{ company.phone | tel }}">{{ company.phone }}</a></dd></div>{% endif %}
+      {% if testimonials %}<div><dt>Rated</dt><dd>★ {{ '%.1f' | format((testimonials | map(attribute='rating') | map('int') | sum) / (testimonials | length)) if testimonials[0].rating else '5.0' }} by customers</dd></div>{% endif %}
+    </dl>
+  </div>
+  {% if b.image and b.layout != 'background' %}
+  <figure class="su-pic wrap"><img src="{{ media(b.image, 1600) }}" alt="{{ media_alt(b.image) }}"></figure>
+  {% endif %}
+</section>

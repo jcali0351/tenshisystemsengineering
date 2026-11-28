@@ -1,0 +1,22 @@
+{#- VERDE HERO: natural and warm: a sage wash, the photo in a soft organic shape, a hand-drawn underline and a leaf badge.
+    Same settings as every hero (heading, text, kicker, buttons, image, layout). -#}
+{% set b = block.data %}
+<section class="hero ve-hero hero-{{ b.layout or 'split' }}"{% if b.layout == 'background' and b.image %} style="--hero-img: url('{{ media(b.image, 1600) }}')"{% endif %}>
+  <div class="wrap hero-in">
+    <div class="hero-text">
+      <p class="kicker"><span class="ve-leaf" aria-hidden="true">❦</span> <span data-edit="kicker">{{ b.kicker or company.name }}</span></p>
+      <h1 data-edit="heading">{{ b.heading or company.tagline or company.name }}</h1>
+      <span class="ve-swash" aria-hidden="true"></span>
+      <p class="lead" data-edit="text">{{ b.text or company.description }}</p>
+      <div class="actions">
+        {% if b.button_text %}<a class="btn" href="{{ link(b.button_link or 'contact') }}" data-edit="button_text">{{ b.button_text }}</a>{% endif %}
+        {% if b.call_button and company.phone %}<a class="btn btn-line" href="tel:{{ company.phone | tel }}">Call {{ company.phone }}</a>{% endif %}
+      </div>
+    </div>
+    {% if b.image and b.layout != 'background' %}
+    <figure class="hero-pic ve-shape"><img src="{{ media(b.image, 1600) }}" alt="{{ media_alt(b.image) }}">
+      {% if company.service_areas %}<figcaption class="ve-badge"><b>Local</b><span>{{ company.service_areas[0] }}</span></figcaption>{% endif %}
+    </figure>
+    {% endif %}
+  </div>
+</section>

@@ -1,0 +1,20 @@
+{
+ "id": "bloom",
+ "name": "Bloom",
+ "group": "premium",
+ "style": "clean",
+ "for": "Bakeries, florists, kids' activities, events, coaches, shops",
+ "description": "Bright and cheerful: a colourful gradient hero with the photo raised on a big floating card that overlaps the next section, soft rounded cards with deep shadows, pill buttons and playful colour. In the spirit of Hestia, Sydney.",
+ "inspired_by": "Hestia, Sydney",
+ "colors": {
+  "primary": "#e11d74",
+  "accent": "#7c3aed",
+  "surface": "#fff9fb",
+  "ink": "#2a1830"
+ },
+ "fonts": {
+  "heading": "figtree",
+  "body": "figtree"
+ },
+ "headline": "Little moments, big smiles"
+}

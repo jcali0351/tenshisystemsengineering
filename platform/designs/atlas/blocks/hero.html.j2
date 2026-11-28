@@ -1,0 +1,27 @@
+{#- ATLAS HERO: a navy split opening, and a white figures bar that overlaps it: services, rating, areas served, years.
+    Same settings as every hero (heading, text, kicker, buttons, image, layout). -#}
+{% set b = block.data %}
+<section class="hero at-hero hero-{{ b.layout or 'split' }}"{% if b.layout == 'background' and b.image %} style="--hero-img: url('{{ media(b.image, 1600) }}')"{% endif %}>
+  <div class="wrap hero-in">
+    <div class="hero-text">
+      <p class="kicker" data-edit="kicker">{{ b.kicker or company.name }}</p>
+      <h1 data-edit="heading">{{ b.heading or company.tagline or company.name }}</h1>
+      <p class="lead" data-edit="text">{{ b.text or company.description }}</p>
+      <div class="actions">
+        {% if b.button_text %}<a class="btn" href="{{ link(b.button_link or 'contact') }}" data-edit="button_text">{{ b.button_text }}</a>{% endif %}
+        {% if b.call_button and company.phone %}<a class="btn btn-line" href="tel:{{ company.phone | tel }}">Call {{ company.phone }}</a>{% endif %}
+      </div>
+    </div>
+    {% if b.image and b.layout != 'background' %}
+    <figure class="hero-pic at-pic"><img src="{{ media(b.image, 1600) }}" alt="{{ media_alt(b.image) }}"></figure>
+    {% endif %}
+  </div>
+</section>
+{% set figures = [] %}
+{% if services %}{% set _ = figures.append((services | length, 'services we offer')) %}{% endif %}
+{% if testimonials %}{% set _ = figures.append(('★ ' ~ ('%.1f' | format((testimonials | map(attribute='rating') | map('int') | sum) / (testimonials | length)) if testimonials[0].rating else '5.0'), (testimonials | length) ~ ' customer reviews')) %}{% endif %}
+{% if company.service_areas %}{% set _ = figures.append((company.service_areas | length, 'areas we serve')) %}{% endif %}
+{% if staff %}{% set _ = figures.append((staff | length, 'people on the team')) %}{% endif %}
+{% if figures | length >= 2 %}
+<div class="wrap at-figs"><dl>{% for n, label in figures[:4] %}<div><dt>{{ n }}</dt><dd>{{ label }}</dd></div>{% endfor %}</dl></div>
+{% endif %}

@@ -1,0 +1,20 @@
+{#- FORM: a lead form. On Tenshi hosting it sends to the CMS (a lead under Leads); in an export it falls back to email. -#}
+{% set b = block.data %}
+{% set fields = (b.fields or 'name,email,phone,message').split(',') %}
+<section class="band form-block">
+  <div class="wrap narrow">
+    <h2 data-edit="heading">{{ b.heading or 'Send us a message' }}</h2>
+    {% if b.intro %}<p class="intro" data-edit="intro">{{ b.intro }}</p>{% endif %}
+    <form class="lead" method="post" action="{{ form_action }}"{% if form_is_mail %} enctype="text/plain"{% endif %}>
+      <input type="hidden" name="_page" value="{{ page.slug }}">
+      <p class="hp" aria-hidden="true"><label>Leave this empty <input name="_hp" tabindex="-1" autocomplete="off"></label></p>
+      {% if 'name' in fields %}<label>Your name <input name="name" autocomplete="name" required></label>{% endif %}
+      {% if 'email' in fields %}<label>Email <input name="email" type="email" autocomplete="email" required></label>{% endif %}
+      {% if 'phone' in fields %}<label>Phone <input name="phone" type="tel" autocomplete="tel"></label>{% endif %}
+      {% if 'service' in fields and services %}<label>Service <select name="service"><option value="">Choose…</option>{% for s in services %}<option>{{ s.name }}</option>{% endfor %}</select></label>{% endif %}
+      {% if 'message' in fields %}<label>Message <textarea name="message" rows="5" required></textarea></label>{% endif %}
+      <button class="btn" type="submit" data-edit="button_text">{{ b.button_text or 'Send' }}</button>
+      <p class="form-note" role="status"></p>
+    </form>
+  </div>
+</section>

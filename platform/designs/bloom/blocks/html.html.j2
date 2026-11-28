@@ -1,0 +1,3 @@
+{#- CUSTOM HTML: for advanced users. Scripts and event handlers are removed by the CMS for safety. -#}
+{% set b = block.data %}
+<section class="band html-block"><div class="wrap">{{ b.html | clean_html(advanced=true) }}</div></section>

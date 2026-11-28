@@ -323,8 +323,9 @@ friendly range control).
 
 ## Premium designs (2026-11-28)
 
-`platform/designs/aurora`, `meridian`, `maison`: original designs in the spirit of leading WordPress themes (Aurora: Astra
-and Kadence; Meridian: Divi and Avada; Maison: Blocksy and Kadence's boutique sites). Each is the starter design plus its
+`platform/designs/aurora`, `meridian`, `maison` (and since the same day `nova`, `harbor`, `summit`, `bloom`, `atlas`, `verde`): original designs in the spirit of leading WordPress themes (Aurora: Astra
+and Kadence; Meridian: Divi and Avada; Maison: Blocksy and Kadence's boutique sites; Nova: Salient and Jupiter; Harbor: OceanWP and Neve; Summit: GeneratePress and
+Twenty Twenty-Four; Bloom: Hestia and Sydney; Atlas: Enfold and The7; Verde: Flatsome and Botiga's organic shops). Each is the starter design plus its
 own `layout.html.j2`, `blocks/hero.html.j2` and a skin at the end of `style.css`; same block settings, so sites can switch
 freely. `design.json` describes each; `templates.seed_premium()` adds any design not yet in the gallery at start-up,
 first in the list and marked Premium. Sample sites for screenshots: `tools/premium_demo.py`; tests: `tests/test_designs.py`.

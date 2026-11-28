@@ -1,0 +1,18 @@
+{#- BEFORE & AFTER: one comparison slider from two pictures. -#}
+{% set b = block.data %}
+<section class="band ba-block">
+  <div class="wrap narrow">
+    {% if b.heading %}<h2 data-edit="heading">{{ b.heading }}</h2>{% endif %}
+    {% if b.before and b.after %}
+    <div class="ba" style="--pos: 50%">
+      <img src="{{ media(b.after, 1600) }}" alt="After">
+      <div class="ba-before"><img src="{{ media(b.before, 1600) }}" alt="Before"></div>
+      <input class="ba-range" type="range" min="0" max="100" value="50" aria-label="Slide to compare before and after">
+      <span class="ba-tag ba-tag-b">Before</span><span class="ba-tag ba-tag-a">After</span>
+    </div>
+    {% if b.caption %}<p class="caption" data-edit="caption">{{ b.caption }}</p>{% endif %}
+    {% else %}
+    <p class="empty-note">Pick a "before" and an "after" picture in this block's settings.</p>
+    {% endif %}
+  </div>
+</section>

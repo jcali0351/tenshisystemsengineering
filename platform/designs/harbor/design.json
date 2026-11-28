@@ -1,0 +1,20 @@
+{
+ "id": "harbor",
+ "name": "Harbor",
+ "group": "premium",
+ "style": "clean",
+ "for": "Local services, cleaners, plumbers, pools, dentists, family businesses",
+ "description": "Friendly and fresh: a bright hero with a soft sky wash and a wave edge, the photo in a rounded blob with a call-us card, rounded cards with icon dots, wave dividers and a calm blue footer. In the spirit of OceanWP, Neve.",
+ "inspired_by": "OceanWP, Neve",
+ "colors": {
+  "primary": "#0e7490",
+  "accent": "#f59e0b",
+  "surface": "#ffffff",
+  "ink": "#12303a"
+ },
+ "fonts": {
+  "heading": "nunito",
+  "body": "nunito"
+ },
+ "headline": "Friendly service, right next door"
+}

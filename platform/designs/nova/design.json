@@ -1,0 +1,20 @@
+{
+ "id": "nova",
+ "name": "Nova",
+ "group": "premium",
+ "style": "bold",
+ "for": "Creative studios, tech start-ups, gaming, music, nightlife",
+ "description": "Dark and electric: a glassy header over a near-black page, a huge gradient headline on a faint grid with a glowing orb, the photo in a glowing frame, a scrolling ticker of your services, neon-edged cards. In the spirit of Salient, Jupiter.",
+ "inspired_by": "Salient, Jupiter",
+ "colors": {
+  "primary": "#a855f7",
+  "accent": "#22d3ee",
+  "surface": "#0b0b12",
+  "ink": "#ecebf5"
+ },
+ "fonts": {
+  "heading": "montserrat",
+  "body": "inter"
+ },
+ "headline": "Make something unforgettable"
+}

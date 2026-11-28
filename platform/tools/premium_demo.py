@@ -38,7 +38,7 @@ profile = {
     "seo": {"description": "Green Acres Equipment: tractors, hay equipment and repairs in south-west Wisconsin."},
 }
 
-for tpl in ("aurora", "meridian", "maison"):
+for tpl in sorted(f.parent.name for f in (HERE / "designs").glob("*/design.json")):
     sub = f"green-acres-{tpl}"
     row = db.one("SELECT id FROM sites WHERE subdomain = ?", sub)
     site = sites.get(row["id"]) if row else sites.create_site(f"Green Acres ({tpl.title()})", tpl, sub, profile)

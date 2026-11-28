@@ -1,0 +1,20 @@
+{
+ "id": "atlas",
+ "name": "Atlas",
+ "group": "premium",
+ "style": "clean",
+ "for": "Firms, insurers, accountants, manufacturers, B2B and corporate sites",
+ "description": "Corporate and confident: a navy split hero, a white figures bar that overlaps it (services, rating, areas served), structured cards with top rules, small uppercase labels and a two-tone footer. In the spirit of Enfold, The7.",
+ "inspired_by": "Enfold, The7",
+ "colors": {
+  "primary": "#1e3a8a",
+  "accent": "#10b981",
+  "surface": "#ffffff",
+  "ink": "#0f1b33"
+ },
+ "fonts": {
+  "heading": "oswald",
+  "body": "inter"
+ },
+ "headline": "Results you can count on"
+}

@@ -1,0 +1,22 @@
+{#- HARBOR HERO: bright and friendly: a soft sky wash, the photo in a rounded blob with a "call us" card, and a wave along the
+    bottom edge. Same settings as every hero (heading, text, kicker, buttons, image, layout). -#}
+{% set b = block.data %}
+<section class="hero ha-hero hero-{{ b.layout or 'split' }}"{% if b.layout == 'background' and b.image %} style="--hero-img: url('{{ media(b.image, 1600) }}')"{% endif %}>
+  <div class="wrap hero-in">
+    <div class="hero-text">
+      <p class="kicker" data-edit="kicker">{{ b.kicker or ('Proudly serving ' ~ company.service_areas[0] if company.service_areas else company.name) }}</p>
+      <h1 data-edit="heading">{{ b.heading or company.tagline or company.name }}</h1>
+      <p class="lead" data-edit="text">{{ b.text or company.description }}</p>
+      <div class="actions">
+        {% if b.button_text %}<a class="btn" href="{{ link(b.button_link or 'contact') }}" data-edit="button_text">{{ b.button_text }}</a>{% endif %}
+        {% if b.call_button and company.phone %}<a class="btn btn-line" href="tel:{{ company.phone | tel }}">Call {{ company.phone }}</a>{% endif %}
+      </div>
+    </div>
+    {% if b.image and b.layout != 'background' %}
+    <figure class="hero-pic ha-blob"><img src="{{ media(b.image, 1600) }}" alt="{{ media_alt(b.image) }}">
+      {% if company.phone %}<figcaption class="ha-call"><span class="ha-ico" aria-hidden="true">☎</span><span><small>Call us today</small><a href="tel:{{ company.phone | tel }}">{{ company.phone }}</a></span></figcaption>{% endif %}
+    </figure>
+    {% endif %}
+  </div>
+  <svg class="ha-wave" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 C 240 90 480 0 720 34 C 960 68 1200 10 1440 44 L1440 90 L0 90 Z"/></svg>
+</section>

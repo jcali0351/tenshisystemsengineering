@@ -1,0 +1,11 @@
+{#- CALL TO ACTION: a coloured band with one button. -#}
+{% set b = block.data %}
+<section class="cta">
+  <div class="wrap cta-in">
+    <div>
+      <h2 data-edit="heading">{{ b.heading or 'Ready when you are' }}</h2>
+      {% if b.text %}<p data-edit="text">{{ b.text }}</p>{% endif %}
+    </div>
+    <a class="btn btn-light" href="{{ link(b.button_link or 'contact') }}" data-edit="button_text">{{ b.button_text or 'Get in touch' }}</a>
+  </div>
+</section>
