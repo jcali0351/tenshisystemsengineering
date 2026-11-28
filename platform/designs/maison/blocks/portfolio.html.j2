@@ -1,0 +1,39 @@
+{#- PORTFOLIO: projects from the Portfolio module, with category filters, and a before/after slider when a project has both pictures. -#}
+{% set b = block.data %}
+{% set items = portfolio(b.category, b.limit) %}
+<section class="band portfolio-block">
+  <div class="wrap">
+    <h2 data-edit="heading">{{ b.heading or 'Our work' }}</h2>
+    {% if b.intro %}<p class="intro" data-edit="intro">{{ b.intro }}</p>{% endif %}
+    {% set cats = items | map(attribute='category') | select | unique | list %}
+    {% if b.filters != false and cats | length > 1 %}
+    <div class="filters" role="group" aria-label="Filter projects">
+      <button type="button" data-filter="*" aria-pressed="true">All</button>
+      {%- for c in cats %}<button type="button" data-filter="{{ c }}" aria-pressed="false">{{ c }}</button>{% endfor -%}
+    </div>
+    {% endif %}
+    <div class="portfolio portfolio-{{ b.layout or 'grid' }}" data-lightbox>
+      {%- for item in items %}
+      <article class="work" data-category="{{ item.category }}">
+        {% if item.before and item.after %}
+        <div class="ba" style="--pos: 50%">
+          <img src="{{ item.after }}" alt="After: {{ item.title }}" loading="lazy">
+          <div class="ba-before"><img src="{{ item.before }}" alt="Before: {{ item.title }}" loading="lazy"></div>
+          <input class="ba-range" type="range" min="0" max="100" value="50" aria-label="Slide to compare before and after">
+          <span class="ba-tag ba-tag-b">Before</span><span class="ba-tag ba-tag-a">After</span>
+        </div>
+        {% elif item.cover %}
+        <a class="work-pic" href="{{ item.cover_full }}" data-caption="{{ item.title }}"><img src="{{ item.cover }}" alt="{{ item.title }}" loading="lazy"></a>
+        {% endif %}
+        <div class="work-text">
+          {% if item.category %}<span class="work-cat">{{ item.category }}</span>{% endif %}
+          <h3>{{ item.title }}</h3>
+          {% if item.summary %}<p>{{ item.summary }}</p>{% endif %}
+        </div>
+      </article>
+      {%- else %}
+      <p class="empty-note">Add projects under Portfolio and they appear here.</p>
+      {%- endfor %}
+    </div>
+  </div>
+</section>

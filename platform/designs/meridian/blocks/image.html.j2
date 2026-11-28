@@ -1,0 +1,8 @@
+{#- IMAGE: one picture with an optional caption. width: full, wide or narrow. -#}
+{% set b = block.data %}
+<section class="band image-block">
+  <figure class="wrap {{ b.width or 'wide' }}">
+    {% if b.image %}<img src="{{ media(b.image, 1600) }}" alt="{{ media_alt(b.image) }}" loading="lazy">{% else %}<p class="empty-note">Pick a picture in this block's settings.</p>{% endif %}
+    {% if b.caption %}<figcaption data-edit="caption">{{ b.caption }}</figcaption>{% endif %}
+  </figure>
+</section>

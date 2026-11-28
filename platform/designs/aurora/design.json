@@ -1,0 +1,7 @@
+{"id": "aurora", "name": "Aurora", "group": "premium", "style": "clean",
+ "for": "Agencies, consultants, clinics, tech and modern service businesses",
+ "description": "Clean, fast and modern: a floating pill menu, a light hero with soft colour glows and a framed photo, bordered cards that lift on hover, a rounded gradient call-to-action panel. In the spirit of Astra and Kadence.",
+ "inspired_by": "Astra, Kadence",
+ "colors": {"primary": "#4f46e5", "accent": "#06b6d4", "surface": "#ffffff", "ink": "#0f172a"},
+ "fonts": {"heading": "inter", "body": "inter"},
+ "headline": "Modern work for modern customers"}

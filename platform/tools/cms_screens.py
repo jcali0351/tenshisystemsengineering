@@ -106,6 +106,25 @@ with sync_playwright() as pw:
     shot(f"/sites/{sid}/preview/tractors-for-sale-john-deere-4020", "preview-entry", 800)
     p.set_viewport_size({"width": 390, "height": 844})
     shot(f"/sites/{sid}/builder/{page_id}", "builder-phone", 2000)
+    # the premium designs, with sample sites made by tools/premium_demo.py (ids in premium.txt)
+    shot("/templates", "templates", 600)
+    for line in Path("premium.txt").read_text().split("\n") if Path("premium.txt").exists() else []:
+        if not line.strip():
+            continue
+        tpl, psid = line.split()
+        for w, h, tag in ((1440, 900, "desk"), (390, 844, "phone")):
+            p.set_viewport_size({"width": w, "height": h})
+            errors.clear()
+            r = p.goto(f"{BASE}/sites/{psid}/preview/index")
+            p.wait_for_timeout(1200)
+            p.screenshot(path=str(OUT / f"design-{tpl}-{tag}.png"), full_page=True)
+            check(r.status == 200 and not errors, f"design {tpl} {tag} ({', '.join(errors) or 'no JS errors'})")
+        p.set_viewport_size({"width": 1440, "height": 900})
+        for slug in ("about", "services", "contact"):
+            r = p.goto(f"{BASE}/sites/{psid}/preview/{slug}")
+            p.wait_for_timeout(500)
+            p.screenshot(path=str(OUT / f"design-{tpl}-{slug}.png"), full_page=True)
+            check(r.status == 200, f"design {tpl} {slug}")
     b.close()
 
 print(f"{len(problems)} problem(s)")
