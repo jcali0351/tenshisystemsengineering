@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+{% block title %}Redirects · {{ site.name }}{% endblock %}
+{% block heading %}Redirects{% endblock %}
+{% block body %}
+<p class="muted">Send an old address to a new one, so links people saved (and Google's results) keep working. Vital when a site moves here from
+  WordPress or another builder. Changing a page's address in the builder adds one for you. Redirects work as soon as you save them: no Publish needed.</p>
+<section class="card" style="margin-top:14px">
+  <h2>Add a redirect</h2>
+  <form id="add" class="row" style="flex-wrap:wrap;gap:10px;align-items:end">
+    <label class="field" style="flex:1 1 220px;margin:0"><span>From (an old address)</span><input name="from" placeholder="/old-page  or  /blog/*" required></label>
+    <label class="field" style="flex:1 1 220px;margin:0"><span>To</span><input name="to" list="pagelist" placeholder="about  or  /about.html  or  https://…" required>
+      <datalist id="pagelist">{% for p in pages %}<option value="{{ p.slug }}">{{ p.title }}</option>{% endfor %}</datalist></label>
+    <label class="field" style="width:auto;margin:0"><span>Type</span><select name="code"><option value="301">Moved for good (301)</option><option value="302">For now (302)</option></select></label>
+    <button class="btn btn-primary" type="submit">Add</button>
+  </form>
+  <p class="small muted" style="margin-top:8px">A star at the end matches everything after it: <code>/blog/*</code> → <code>/news/*</code> sends /blog/my-post to /news/my-post.</p>
+</section>
+<section class="card" style="margin-top:14px">
+  <h2>Redirects ({{ rules | length }})</h2>
+  {% if rules %}<div class="table-wrap"><table class="table" id="rules"><thead><tr><th>From</th><th>To</th><th>Type</th><th>Used</th><th></th></tr></thead><tbody>
+  {% for r in rules %}<tr data-id="{{ r.id }}"><td><code>{{ r.from_path }}</code>{% if r.note %}<br><small class="muted">{{ r.note }}</small>{% endif %}</td><td><code>{{ r.to_url }}</code></td>
+    <td>{{ r.code }}</td><td>{{ r.hits }}×</td><td><button class="btn btn-small btn-danger" data-del>Remove</button></td></tr>{% endfor %}
+  </tbody></table></div>{% else %}<div class="empty">No redirects yet.</div>{% endif %}
+</section>
+<section class="card" style="margin-top:14px">
+  <div class="row"><h2 style="margin:0">Not found</h2><span style="flex:1"></span>{% if missing %}<button class="btn btn-small" id="clear404">Clear the list</button>{% endif %}</div>
+  <p class="small muted">Addresses visitors asked for that aren't on the site (robots probing for WordPress files are left out). Redirect the ones that matter.</p>
+  {% if missing %}<div class="table-wrap"><table class="table" id="missing"><thead><tr><th>Address</th><th>Asked for</th><th>Last time</th><th>Came from</th><th></th></tr></thead><tbody>
+  {% for m in missing %}<tr data-path="{{ m.path }}"><td><code>{{ m.path }}</code></td><td>{{ m.hits }}×</td><td class="small" data-utc="{{ m.last_at }}">{{ m.last_at | when }}</td>
+    <td class="small">{{ m.referrer[:60] }}</td><td><button class="btn btn-small" data-fix>Redirect it</button></td></tr>{% endfor %}
+  </tbody></table></div>{% else %}<div class="empty">Nothing missing so far.</div>{% endif %}
+</section>
+{% endblock %}
+{% block scripts %}<script>
+(function () {
+  var T = window.Tenshi, sid = {{ site.id }}, f = document.getElementById("add");
+  f.addEventListener("submit", function (e) {
+    e.preventDefault();
+    T.busy(f.querySelector("button"), T.api("POST", "/api/sites/" + sid + "/redirects", { from_path: f.from.value, to_url: f.to.value, code: +f.code.value })
+      .then(function () { location.reload(); }));
+  });
+  var rules = document.getElementById("rules");
+  if (rules) rules.addEventListener("click", function (e) {
+    var row = e.target.closest("tr[data-id]");
+    if (row && e.target.closest("[data-del]")) T.api("DELETE", "/api/sites/" + sid + "/redirects/" + row.dataset.id).then(function () { row.remove(); });
+  });
+  var miss = document.getElementById("missing");
+  if (miss) miss.addEventListener("click", function (e) {
+    var row = e.target.closest("tr[data-path]");
+    if (row && e.target.closest("[data-fix]")) { f.from.value = row.dataset.path; f.to.focus(); f.scrollIntoView({ behavior: "smooth" }); }
+  });
+  var clear = document.getElementById("clear404");
+  if (clear) clear.onclick = function () { T.api("DELETE", "/api/sites/" + sid + "/not-found").then(function () { location.reload(); }); };
+})();
+</script>{% endblock %}

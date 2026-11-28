@@ -302,6 +302,8 @@
       case "album": return wrap(f, select_(id, f.name, [["", "Choose an album…"]].concat(DATA.albums.map(function (a) { return [String(a.id), a.name]; })), String(v)) +
                                 '<small><a href="/sites/' + siteId + '/galleries" target="_blank">Make or fill albums under Galleries</a></small>');
       case "category": return wrap(f, select_(id, f.name, [["", "All categories"]].concat(DATA.categories.map(function (c) { return [c, c]; })), v));
+      case "collection": return wrap(f, select_(id, f.name, [["0", "Choose a content type…"]].concat((DATA.collections || []).map(function (c) { return [String(c.id), c.name]; })), String(v)) +
+                                     '<small><a href="/sites/' + siteId + '/content" target="_blank">Make content types and add entries under Content types</a></small>');
       case "items": return '<div class="field items-field" data-items="' + f.name + '"><span>' + esc(f.label) + '</span><div class="items"></div>' +
                              '<button type="button" class="btn btn-small" data-add-item>+ Add ' + esc((f.item_label || "item").toLowerCase()) + "</button></div>";
       case "media": case "video":
@@ -334,17 +336,39 @@
       '<h2 style="margin-top:16px">Search engines</h2>' +
       '<label class="field"><span>Title in Google</span><input type="text" id="p-seo-title" value="' + esc(page.seo_title) + '" placeholder="' + esc(page.title) + '"></label>' +
       '<label class="field"><span>Description in Google</span><textarea id="p-seo-desc" rows="3" maxlength="300">' + esc(page.seo_description) + '</textarea><small id="p-seo-n"></small></label>' +
-      '<button class="btn btn-primary" id="p-save">Save page settings</button>' +
+      (page.slug === "index" ? "" : '<label class="field"><span>Go live at (optional)</span><input type="datetime-local" id="p-pub"><small>Leave empty to go live on the next Publish. With a time, the page goes live by itself then.</small></label>') +
+      '<button class="btn btn-primary" id="p-save">Save page settings</button>' + langHtml() +
       '<h2 style="margin-top:22px">Earlier versions</h2><p class="small muted">A copy is kept each time you start editing (at most every 5 minutes; the newest 50).</p>' +
       '<div id="p-revs"><button class="btn btn-small" id="p-revs-load" type="button">Show earlier versions</button></div>';
     var count = function () { var n = $("#p-seo-desc").value.length; $("#p-seo-n").textContent = n + " characters" + (n > 160 ? " (Google shows about 155)" : ""); };
     $("#p-seo-desc").addEventListener("input", count); count();
     $("#p-revs-load").onclick = function () { loadRevisions(); };
+    var pub = $("#p-pub");
+    if (pub && page.publish_at) { var d = new Date(page.publish_at); pub.value = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16); }
+    $$("[data-translate]", panel).forEach(function (b) {
+      b.onclick = function () {
+        T.busy(b, T.api("POST", "/api/pages/" + pageId + "/translate", { lang: b.dataset.translate }).then(function (r) { location.href = r.url; }));
+      };
+    });
     $("#p-save").onclick = function () {
       var changes = { title: $("#p-title").value, in_menu: $("#p-menu").checked, seo_title: $("#p-seo-title").value, seo_description: $("#p-seo-desc").value };
       if ($("#p-slug")) changes.slug = $("#p-slug").value;
+      if (pub) changes.publish_at = pub.value ? new Date(pub.value).toISOString() : "";
       T.busy(this, savePage(changes));
     };
+  }
+
+  function langHtml() {      // Languages (languages.py): this page in other languages
+    var L = DATA.langs || {}; if (!L.extra || !L.extra.length) return "";
+    var have = {}; (L.versions || []).forEach(function (v) { have[v.lang] = v; });
+    var all = [L.main].concat(L.extra);
+    return '<h2 style="margin-top:22px">Translations</h2><p class="small muted">This page in other languages. Visitors get a language switcher.</p><ul class="revs">' +
+      all.map(function (code) {
+        var v = have[code], name = (L.names || {})[code] || code;
+        if (v && String(v.id) === String(pageId)) return "<li><span><b>" + esc(name) + "</b><small>this page</small></span></li>";
+        if (v) return '<li><span><b>' + esc(name) + '</b><small>' + esc(v.title) + '</small></span><a class="btn btn-small" href="/sites/' + siteId + "/builder/" + v.id + '">Edit</a></li>';
+        return '<li><span><b>' + esc(name) + '</b><small>not translated yet</small></span><button class="btn btn-small" type="button" data-translate="' + esc(code) + '">Translate</button></li>';
+      }).join("") + "</ul>";
   }
 
   function loadRevisions() {

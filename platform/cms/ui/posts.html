@@ -6,6 +6,11 @@
 <p class="muted">Posts show on any page with a <b>Blog</b> block, each on its own page. The site also gets an RSS feed
   (<code>feed.xml</code>) and the posts go into its sitemap. New and changed posts go live when you <b>Publish</b> the site.</p>
 {% if not blog_on %}<p class="note">No page has a Blog block yet. In <a href="/sites/{{ site.id }}/pages">Pages &amp; builder</a>, add a page (e.g. “Blog”) and a <b>Blog</b> block to it.</p>{% endif %}
+<section class="card row" style="margin-top:14px;gap:14px;flex-wrap:wrap;align-items:center" id="cm-card">
+  <label class="check" style="margin:0"><input type="checkbox" id="cm-on"> <b>Comments</b> under posts</label>
+  <label class="check small" style="margin:0"><input type="checkbox" id="cm-known"> Approve people whose comments you approved before</label>
+  <span style="flex:1"></span><a class="btn btn-small" href="/sites/{{ site.id }}/inbox/comments">Comments to approve</a>
+</section>
 <section class="card" style="margin-top:14px">
   {% if rows %}
   <div class="table-wrap"><table class="table" id="posts">
@@ -15,7 +20,7 @@
     <tr data-post="{{ p.id }}">
       <td style="width:76px">{% if p.cover_thumb %}<img src="{{ p.cover_thumb }}" alt="" style="width:64px;height:44px;object-fit:cover;border-radius:6px">{% endif %}</td>
       <td><a href="/sites/{{ site.id }}/posts/{{ p.id }}"><b>{{ p.title }}</b></a><br><small class="muted">{{ p.excerpt[:90] }}</small></td>
-      <td>{% if p.status == 'draft' %}<span class="badge badge-draft">Draft</span>{% elif p.live %}<span class="badge badge-live">Published</span>{% else %}<span class="badge badge-new">Scheduled</span>{% endif %}</td>
+      <td>{% if p.status == 'draft' %}<span class="badge badge-draft">Draft</span>{% elif p.status == 'review' %}<span class="badge badge-new">Waiting for review</span>{% elif p.live %}<span class="badge badge-live">Published</span>{% else %}<span class="badge badge-new">Scheduled</span>{% endif %}</td>
       <td class="small" data-utc="{{ p.published_at }}">{{ p.date }}</td>
       <td class="small">{{ p.tags }}</td>
       <td style="white-space:nowrap"><a class="btn btn-small" href="/sites/{{ site.id }}/preview/{{ p.file[:-5] }}" target="_blank" rel="noopener">Preview</a>
@@ -30,3 +35,15 @@
   {% endif %}
 </section>
 {% endblock %}
+{% block scripts %}<script>
+(function () {
+  var T = window.Tenshi, sid = {{ site.id }}, on = document.getElementById("cm-on"), known = document.getElementById("cm-known");
+  T.api("GET", "/api/sites/" + sid + "/comments").then(function (c) { on.checked = c.on; known.checked = c.auto_approve_known; known.disabled = !c.on; });
+  function save() {
+    known.disabled = !on.checked;
+    T.api("PUT", "/api/sites/" + sid + "/comments", { on: on.checked, auto_approve_known: known.checked })
+      .then(function () { T.toast(on.checked ? "Comments are on. Publish to show the form on post pages." : "Comments are off. Publish to remove them."); });
+  }
+  on.addEventListener("change", save); known.addEventListener("change", save);
+})();
+</script>{% endblock %}

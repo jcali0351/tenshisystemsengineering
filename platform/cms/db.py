@@ -214,6 +214,65 @@ CREATE TABLE IF NOT EXISTS widget_cache (
 );
 """
 
+SCHEMA_EXTRA = """
+-- Trash (trash.py): deleted pages, posts and media, kept 30 days so they can be restored. data_json is the deleted row
+-- (and for media its gallery places); a media file stays on disk until the trash entry is purged.
+CREATE TABLE IF NOT EXISTS trash (
+  id INTEGER PRIMARY KEY, site_id INTEGER NOT NULL, kind TEXT NOT NULL, title TEXT NOT NULL DEFAULT '', data_json TEXT NOT NULL,
+  user_id INTEGER, created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS trash_site ON trash (site_id, created_at);
+
+-- Redirects (redirects.py): an old address on a live site sends visitors to a new one. from_path is like /old-page or
+-- /blog/* (a trailing * matches the rest); to is a page, a path or an https:// address. code: 301 (moved) or 302.
+CREATE TABLE IF NOT EXISTS redirects (
+  id INTEGER PRIMARY KEY, site_id INTEGER NOT NULL, from_path TEXT NOT NULL, to_url TEXT NOT NULL, code INTEGER NOT NULL DEFAULT 301,
+  hits INTEGER NOT NULL DEFAULT 0, note TEXT NOT NULL DEFAULT '', created_at TEXT NOT NULL, UNIQUE (site_id, from_path)
+);
+-- Addresses visitors asked for that weren't there (for the Redirects screen's "Not found" list); at most 300 per site.
+CREATE TABLE IF NOT EXISTS not_found (
+  site_id INTEGER NOT NULL, path TEXT NOT NULL, hits INTEGER NOT NULL DEFAULT 0, last_at TEXT NOT NULL, referrer TEXT NOT NULL DEFAULT '',
+  PRIMARY KEY (site_id, path)
+);
+
+-- Forgotten passwords (account.py): a one-use link, stored as a hash, valid for an hour.
+CREATE TABLE IF NOT EXISTS password_resets (
+  id INTEGER PRIMARY KEY, user_id INTEGER NOT NULL, token_hash TEXT NOT NULL UNIQUE, expires REAL NOT NULL, used INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL
+);
+
+-- Custom content types (content_types.py): a site's own kinds of content (Listings, Tractors, Menu items) with their
+-- own fields (fields_json: [{name, label, type, options, required}]), and the entries of each.
+CREATE TABLE IF NOT EXISTS content_types (
+  id INTEGER PRIMARY KEY, site_id INTEGER NOT NULL, slug TEXT NOT NULL, name TEXT NOT NULL, singular TEXT NOT NULL,
+  fields_json TEXT NOT NULL DEFAULT '[]', detail_pages INTEGER NOT NULL DEFAULT 1, created_at TEXT NOT NULL, UNIQUE (site_id, slug)
+);
+CREATE TABLE IF NOT EXISTS entries (
+  id INTEGER PRIMARY KEY, site_id INTEGER NOT NULL, type_id INTEGER NOT NULL, slug TEXT NOT NULL, title TEXT NOT NULL,
+  data_json TEXT NOT NULL DEFAULT '{}', status TEXT NOT NULL DEFAULT 'published', position INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL, updated_at TEXT NOT NULL, UNIQUE (type_id, slug)
+);
+CREATE INDEX IF NOT EXISTS entries_type ON entries (type_id, status, position);
+
+-- Blog comments (comments.py): wait for approval; ip_hash, not the address itself.
+CREATE TABLE IF NOT EXISTS comments (
+  id INTEGER PRIMARY KEY, site_id INTEGER NOT NULL, post_slug TEXT NOT NULL, name TEXT NOT NULL, email TEXT NOT NULL DEFAULT '',
+  body TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'pending', ip_hash TEXT NOT NULL DEFAULT '', created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS comments_post ON comments (site_id, post_slug, status);
+"""
+
+# Columns added after the first release. setup() adds any that an older database lacks (SQLite: ALTER TABLE ADD COLUMN).
+COLUMNS = [
+    ("users", "totp_secret", "TEXT NOT NULL DEFAULT ''"),        # two-step sign-in (account.py); '' = off
+    ("users", "totp_backup", "TEXT NOT NULL DEFAULT ''"),        # hashes of the unused backup codes, comma separated
+    ("posts", "user_id", "INTEGER"),                             # who wrote it (authors and contributors edit their own)
+    ("posts", "lang", "TEXT NOT NULL DEFAULT ''"),
+    ("pages", "lang", "TEXT NOT NULL DEFAULT ''"),               # '' = the site's main language (languages.py)
+    ("pages", "translation_of", "INTEGER"),                      # the main-language page this one translates
+    ("pages", "publish_at", "TEXT NOT NULL DEFAULT ''"),         # scheduled: left out of deployments until then (UTC)
+]
+
 _local = threading.local()
 
 
@@ -232,7 +291,14 @@ def connect():
 
 def setup():
     """Create the tables if they don't exist yet. Safe to run every time the CMS starts."""
-    connect().executescript(SCHEMA)
+    conn = connect()
+    conn.executescript(SCHEMA)
+    conn.executescript(SCHEMA_EXTRA)
+    for table, column, decl in COLUMNS:
+        have = {r[1] for r in conn.execute(f"PRAGMA table_info({table})").fetchall()}
+        if column not in have:
+            conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {decl}")
+    conn.commit()
 
 
 def now():

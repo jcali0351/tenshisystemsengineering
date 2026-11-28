@@ -1,7 +1,9 @@
 """
 members.py: who belongs to which site (the site_members table, db.py).
 
-Roles on a site:
+Roles on a site (like WordPress's roles):
+    author       writes and publishes their own blog posts; Media Center
+    contributor  writes their own posts and submits them for review; an editor, owner or admin publishes them
     owner    the client who owns the site: may change the site's own connections and safety settings (the Store's
              Shopify connection, extra allowed hosts for the page security policy, the brand lock), on top of
              everything an editor can do
@@ -13,7 +15,10 @@ CMS admins can do everything on every site whether or not they are members. Only
 from . import db
 
 ROLES = {"owner": "Owner: the site's store connection, security and brand settings, plus content",
-         "editor": "Editor: content only"}
+         "editor": "Editor: content only",
+         "author": "Author: writes and publishes their own blog posts, uploads pictures (like WordPress's Author)",
+         "contributor": "Contributor: writes their own posts and sends them for review; an editor publishes them"}
+WRITERS = ("author", "contributor")          # roles limited to their own posts and the Media Center (access.py)
 
 
 class MemberError(ValueError):
@@ -47,7 +52,7 @@ def for_user(user_id):
 
 def set_member(site_id, user_id, role, by=None):
     if role not in ROLES:
-        raise MemberError("A member is an owner or an editor.")
+        raise MemberError("A member is an owner, editor, author or contributor.")
     if not db.one("SELECT id FROM users WHERE id = ?", user_id):
         raise MemberError("That user doesn't exist.")
     db.run("INSERT INTO site_members (site_id, user_id, role, created_at) VALUES (?, ?, ?, ?) "

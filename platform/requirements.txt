@@ -8,6 +8,7 @@ python-multipart>=0.0.9   # file uploads
 itsdangerous>=2.2         # signed login cookies
 pydantic>=2.5             # widget settings (cms/widgets/); also installed by fastapi
 nh3>=0.2.17               # cleans Custom HTML and rich text on save (cms/sanitize.py; falls back to the built-in cleaner)
+segno>=1.5               # QR code for setting up two-step sign-in (cms/account.py); without it the key is shown as text
 
 # Only for running the tests (tests/test_cms.py)
 httpx>=0.27

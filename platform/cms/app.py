@@ -20,6 +20,7 @@ import json
 import mimetypes
 import re
 import threading
+import time
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
@@ -36,6 +37,7 @@ from . import stock, stock_routes
 from . import inbox as inbox_mod, sitetime  # noqa: E402
 from . import ai_assist  # noqa: E402
 from . import categories, demo_sites, sandbox  # noqa: E402
+from . import trash, redirects, scheduler, languages, account, access  # noqa: E402
 
 VERSION = "1.0.0"
 UI_DIR = Path(__file__).parent / "ui"
@@ -69,6 +71,8 @@ def startup():
     categories.migrate()                   # old "church" sites/photos -> faith/church (categories.py)
     stock.start_seed_in_background()       # the Stock Photo Library's seed photos (stock.py), imported once
     sandbox.start_background()             # the public demo sites + "Try the CMS" sandbox (demo_sites.py), reset nightly
+    scheduler.start()                      # publish scheduled posts and pages on time (scheduler.py)
+    trash.purge_old()                      # Trash entries older than 30 days (trash.py)
 
 
 # ---------------------------------------------------------------------------------------------- client sites
@@ -189,6 +193,13 @@ async def serve_site(request: Request, subdomain: str, path: str):
         return HTMLResponse(f"<!doctype html><meta charset=utf-8><title>{title}</title><body style='font:18px system-ui;"
                             f"display:grid;place-items:center;min-height:90vh;color:#444'><div><h1>{title}</h1>"
                             "<p>This address belongs to a Tenshi website that isn't published.</p></div>", status_code=404)
+    looks_like_page = not re.search(r"\.[a-z0-9]{1,5}$", path.lower()) or path.lower().endswith((".html", ".htm", ".php", ".asp", ".aspx"))
+    moved = redirects.match(site["id"], path) if path not in ("/", "") and looks_like_page else None     # Redirects (redirects.py)
+    if moved:
+        where, code = moved
+        if where.startswith("/") and request.url.path.startswith("/s/"):            # the site under the CMS's address
+            where = f"/s/{subdomain}{where}"
+        return RedirectResponse(where, code)
     rel = path.lstrip("/") or "index.html"
     if rel.endswith("/"):
         rel += "index.html"
@@ -196,8 +207,9 @@ async def serve_site(request: Request, subdomain: str, path: str):
     if not file.suffix and (folder / f"{rel}.html").exists():
         file = (folder / f"{rel}.html").resolve()
     if folder.resolve() not in file.parents or not file.is_file() or any(part.startswith(".") for part in file.relative_to(folder.resolve()).parts):
+        redirects.note_missing(site["id"], path, request.headers.get("referer", ""))
         not_found = folder / "404.html"
-        return FileResponse(not_found) if not_found.exists() else HTMLResponse("<h1>Page not found</h1>", status_code=404)
+        return FileResponse(not_found, status_code=404) if not_found.exists() else HTMLResponse("<h1>Page not found</h1>", status_code=404)
     headers = {"Cache-Control": "public, max-age=60"}
     if file.suffix == ".html":
         # Each page's own policy: the base policy plus what the widgets on that page need (e.g. the Store widget adds
@@ -259,6 +271,9 @@ def show(name, request, user, **ctx):
         all_sites = [s for s in all_sites if s["id"] == demo_sites.sandbox_id()]
         ctx["demo_session"] = True
     ctx.setdefault("site", None)          # the site chosen in the sidebar (None on Dashboard, Templates …)
+    if user and user.get("role") not in ("admin", "demo"):          # people only see the sites they may open (access.py)
+        all_sites = [s for s in all_sites if access.allowed(user, f"/sites/{s['id']}")]
+    ctx["site_role"] = members.role_on(user, ctx["site"]["id"]) if ctx["site"] and user else None
     html = ui.get_template(name).render(user=user, request=request, sites_menu=all_sites, version=VERSION,
                                         sites_domain=config.SITES_DOMAIN, site_url=config.site_url, **ctx)
     return HTMLResponse(html)
@@ -326,8 +341,13 @@ def login_submit(request: Request, email: str = Form(...), password: str = Form(
         auth.note_failure(ip, email)
         return HTMLResponse(ui.get_template("login.html").render(error="That email and password don't match.", next=next), status_code=401)
     auth.clear_failures(ip, email)
+    target = next if next.startswith("/") and not next.startswith("//") else "/"
+    if account.enabled(user):                  # two-step sign-in (account.py): the code from their phone comes next
+        request.session.clear()
+        request.session.update({"pending_uid": user["id"], "pending_at": int(time.time()), "pending_next": target})
+        return RedirectResponse("/login/code", 303)
     request.session["uid"] = user["id"]
-    return RedirectResponse(next if next.startswith("/") and not next.startswith("//") else "/", 303)
+    return RedirectResponse(target, 303)
 
 
 @app.post("/logout")
@@ -650,9 +670,14 @@ def builder_page(request: Request, site_id: int, page_id: int):
     all_pages = db.all("SELECT id, slug, title FROM pages WHERE site_id = ? ORDER BY position, id", site_id)
     albums = db.all("SELECT id, name FROM albums WHERE site_id = ? ORDER BY name", site_id)
     cats = [r["category"] for r in db.all("SELECT DISTINCT category FROM portfolio_items WHERE site_id = ? AND category != ''", site_id)]
+    root = page.get("translation_of") or page["id"]
+    versions = [{"id": p["id"], "lang": p["lang"] or languages.main(site), "title": p["title"]}
+                for p in db.all("SELECT id, lang, title FROM pages WHERE site_id = ? AND (id = ? OR translation_of = ?)", site_id, root, root)]
+    langs = {"main": languages.main(site), "extra": languages.extra(site_id), "names": languages.NAMES, "versions": versions}
+    collections = db.all("SELECT id, name FROM content_types WHERE site_id = ? ORDER BY name", site_id)
     return show("builder.html", request, user, site=site, section="pages", page=page, all_pages=all_pages,
                 block_types=blocks.BLOCKS, albums=albums, categories=cats, theme_editor=theme_editor_data(user, site),
-                ai_assist=ai_assist.available(site_id))
+                ai_assist=ai_assist.available(site_id), langs=langs, collections=collections)
 
 
 @app.post("/api/sites/{site_id}/ai/write")
@@ -799,11 +824,20 @@ async def api_save_page(request: Request, page_id: int):
         if not slug or db.one("SELECT id FROM pages WHERE site_id = ? AND slug = ? AND id != ?", page["site_id"], slug, page_id):
             raise sites.SiteError("That page address is empty or already used.")
         changes["slug"] = slug
+    if "publish_at" in body:                    # scheduled page (scheduler.py): left out of deployments until then
+        try:
+            changes["publish_at"] = posts._iso(body["publish_at"])
+        except ValueError as error:
+            raise sites.SiteError(str(error))
+        if page["slug"] == "index" and changes["publish_at"]:
+            raise sites.SiteError("The home page is always published.")
     if changes:
         revisions.snapshot(page, user)          # the page as it was, once per editing session (revisions.py)
         changes["updated_at"] = db.now()
         db.run(f"UPDATE pages SET {', '.join(k + ' = ?' for k in changes)} WHERE id = ?", *changes.values(), page_id)
         db.run("UPDATE sites SET updated_at = ? WHERE id = ?", db.now(), page["site_id"])
+        if changes.get("slug") and changes["slug"] != page["slug"]:
+            redirects.page_moved(page["site_id"], page["slug"], changes["slug"], user)   # old links keep working
         if "blocks_json" not in changes or len(changes) > 2:
             db.log("Edited page", page["title"], user, page["site_id"])
     return {"ok": True, "slug": changes.get("slug", page["slug"])}
@@ -848,9 +882,10 @@ def api_delete_page(request: Request, page_id: int):
     if page and page["slug"] == "index":
         raise sites.SiteError("The home page can't be deleted.")
     if page:
+        tid = trash.put("page", page, user)            # kept in the Trash for 30 days (trash.py); its versions stay
         db.run("DELETE FROM pages WHERE id = ?", page_id)
-        db.run("DELETE FROM page_revisions WHERE page_id = ?", page_id)
-        db.log("Deleted page", page["title"], user, page["site_id"])
+        db.log("Deleted page", page["title"] + " (in the Trash)", user, page["site_id"])
+        return {"ok": True, "trash_id": tid}
     return {"ok": True}
 
 
@@ -974,7 +1009,7 @@ async def api_media_bulk(request: Request, site_id: int):
     action = body.get("action")
     for m in rows:
         if action == "delete":
-            media.delete(m["id"])
+            to_trash(m, user)
         elif action == "move":
             db.run("UPDATE media SET folder_id = ? WHERE id = ?", int(body["folder_id"]) if str(body.get("folder_id")).isdigit() else None, m["id"])
         elif action == "tag":
@@ -991,9 +1026,18 @@ def api_media_delete(request: Request, media_id: int):
     user = api_user(request)
     m = db.one("SELECT * FROM media WHERE id = ?", media_id)
     if m:
-        media.delete(media_id)
-        db.log("Deleted file", m["filename"], user, m["site_id"])
+        to_trash(m, user)
+        db.log("Deleted file", m["filename"] + " (in the Trash)", user, m["site_id"])
     return {"ok": True}
+
+
+def to_trash(m, user):
+    """A Media Center file into the Trash (trash.py): its rows go, the file stays on disk until the Trash is emptied."""
+    places = db.all("SELECT * FROM album_items WHERE media_id = ?", m["id"])
+    trash.put("media", m, user, {"album_items": places})
+    with db.transaction() as conn:
+        conn.execute("DELETE FROM album_items WHERE media_id = ?", (m["id"],))
+        conn.execute("DELETE FROM media WHERE id = ?", (m["id"],))
 
 
 @app.post("/api/sites/{site_id}/folders")
@@ -1652,7 +1696,7 @@ def api_delete_template(request: Request, template_id: str):
 @app.get("/users", response_class=HTMLResponse)
 def users_page(request: Request):
     user = page_user(request, admin=True)
-    rows = db.all("SELECT id, email, name, role, created_at FROM users ORDER BY name")
+    rows = db.all("SELECT id, email, name, role, created_at, totp_secret != '' AS totp_secret FROM users ORDER BY name")
     for r in rows:
         r["sites"] = members.for_user(r["id"])
     return show("users.html", request, user, rows=rows, roles={k: v for k, v in auth.ROLES.items() if k != "demo"})
@@ -1731,6 +1775,11 @@ def _cors(request):
 # ---------------------------------------------------------------------------------------------- stock photo library
 
 stock_routes.install(app, page_user=page_user, api_user=api_user, show=show, current_user=current_user, media_json=media_json)
+from . import extras_routes  # noqa: E402
+extras_routes.install(app, ui=ui, page_user=page_user, api_user=api_user, show=show, current_user=current_user,
+                      site_or_404=site_or_404, client_ip=client_ip)
+from . import content_routes  # noqa: E402
+content_routes.install(app, page_user=page_user, api_user=api_user, show=show, site_or_404=site_or_404)
 
 
 # ---------------------------------------------------------------------------------------------- static files

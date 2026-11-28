@@ -426,7 +426,7 @@ def block_template_source(name: str) -> str | None:
 
 
 # The widgets. Import order is the order in the builder's "Add block" list (after the built-in blocks).
-from . import columns  # noqa: E402,F401  (layout: content areas side by side, first in the list)
+from . import columns, collection, search, comments  # noqa: E402,F401  (layout, content types, site search, comments)
 from . import blog, booking, contact_form, faq, map, pricing, store  # noqa: E402,F401
 from . import modkit, lightbox, gallery, video_gallery, before_after  # noqa: E402,F401  (modules: galleries)
 from . import events, hours, appointments  # noqa: E402,F401  (modules: calendars and booking)

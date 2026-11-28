@@ -60,14 +60,19 @@
         ('portfolio', 'Portfolio', 'work', base ~ '/portfolio'), ('galleries', 'Galleries', 'gal', base ~ '/galleries'),
         ('widget:store', 'Online store', 'store', base ~ '/widgets/store'),
         ('modules', 'Modules & inbox', 'tpl', base ~ '/modules'),
+        ('content', 'Content types', 'pages', base ~ '/content'),
         ('leads', 'Leads', 'leads', base ~ '/leads'), ('deployments', 'Deployments', 'deploy', base ~ '/deployments'),
+        ('redirects', 'Redirects', 'export', base ~ '/redirects'), ('languages', 'Languages', 'biz', base ~ '/languages'),
+        ('import', 'Import', 'export', base ~ '/import'), ('trash', 'Trash', 'media', base ~ '/trash'),
         ('export', 'Export', 'export', base ~ '/export'), ('settings', 'Settings & theme', 'settings', base ~ '/settings')] %}
-      {% if not (demo and key in ('widget:store', 'export', 'settings')) %}<a href="{{ href }}" {% if section == key %}aria-current="page"{% endif %}><svg class="ico"><use href="#i-{{ icon }}"/></svg>{{ label }}</a>{% endif %}
+      {% set writer = site_role in ('author', 'contributor') %}
+      {% if not (demo and key in ('widget:store', 'export', 'settings', 'redirects', 'languages', 'import', 'trash', 'content')) and not (writer and key not in ('overview', 'posts', 'media')) %}<a href="{{ href }}" {% if section == key %}aria-current="page"{% endif %}><svg class="ico"><use href="#i-{{ icon }}"/></svg>{{ label }}</a>{% endif %}
       {% endfor %}
     </nav>
     {% endif %}
     <div class="side-foot">
-      <div>{{ user.name }} · {{ 'sandbox' if demo else user.role }}</div>
+      <div>{{ user.name }} · {{ 'sandbox' if demo else (site_role if site_role and site_role != user.role and user.role != 'admin' else user.role) }}</div>
+      {% if not demo %}<a href="/account" class="small" {% if section == 'account' %}aria-current="page"{% endif %}>My account &amp; two-step sign-in</a>{% endif %}
       <form method="post" action="/logout"><button type="submit">Sign out</button></form>
       <div class="muted" style="margin-top:6px">Tenshi CMS {{ version }}</div>
     </div>

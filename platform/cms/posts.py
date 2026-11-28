@@ -69,8 +69,8 @@ class PostIn(BaseModel):
     @field_validator("status")
     @classmethod
     def _status(cls, v):
-        if v not in ("draft", "published"):
-            raise ValueError("status is draft or published")
+        if v not in ("draft", "review", "published"):
+            raise ValueError("status is draft, review or published")
         return v
 
     @field_validator("published_at", mode="before")
@@ -110,6 +110,15 @@ def save(site_id, data: dict, user=None, post_id=None) -> dict:
     old = get(post_id, site_id) if post_id else None
     if post_id and not old:
         raise PostError("That post isn't there any more.")
+    from . import members
+    role = members.role_on(user, site_id) if user else None
+    if role in members.WRITERS:                      # authors and contributors: their own posts only (members.py)
+        if old and old.get("user_id") != user["id"]:
+            raise PostError("You can only change your own posts.")
+        if role == "contributor" and p.status == "published":
+            p.status = "review"                      # an editor publishes it (Blog posts › Waiting for review)
+        if role == "contributor" and old and old["status"] == "published":
+            raise PostError("This post is published. Ask an editor to change it.")
     slug = unique_slug(site_id, slugify(p.slug or p.title), post_id)
     published_at = p.published_at or (old["published_at"] if old and old["published_at"] else "")
     if p.status == "published" and not published_at:
@@ -121,6 +130,7 @@ def save(site_id, data: dict, user=None, post_id=None) -> dict:
         db.run(f"UPDATE posts SET {', '.join(k + ' = ?' for k in values)} WHERE id = ?", *values.values(), post_id)
         db.log("Edited post", p.title, user, site_id)
     else:
+        values["user_id"] = (user or {}).get("id")
         cols = list(values) + ["site_id", "created_at"]
         post_id = db.run(f"INSERT INTO posts ({', '.join(cols)}) VALUES ({', '.join('?' * len(cols))})", *values.values(), site_id, db.now())
         db.log("Wrote post", p.title, user, site_id)
@@ -130,9 +140,15 @@ def save(site_id, data: dict, user=None, post_id=None) -> dict:
 
 def delete(post_id, site_id, user=None):
     row = get(post_id, site_id)
+    from . import members
+    role = members.role_on(user, site_id) if user else None
+    if row and role in members.WRITERS and (row.get("user_id") != user["id"] or (role == "contributor" and row["status"] == "published")):
+        raise PostError("You can only delete your own posts that aren't published yet." if role == "contributor" else "You can only delete your own posts.")
     if row:
+        from . import trash
+        trash.put("post", row, user)                     # 30 days in the Trash (trash.py)
         db.run("DELETE FROM posts WHERE id = ?", post_id)
-        db.log("Deleted post", row["title"], user, site_id)
+        db.log("Deleted post", row["title"] + " (in the Trash)", user, site_id)
 
 
 def all_for(site_id) -> list[dict]:
@@ -161,8 +177,12 @@ def file_name(row) -> str:
 
 def page_for(row) -> dict:
     """A post as a page for the renderer: the template's frame with one hidden "post" block in the middle."""
+    blocks = [{"id": "post", "type": "post", "data": {"post_id": row["id"]}}]
+    from .widgets import comments
+    if comments.settings(row.get("site_id"))["on"]:          # comments under the post (widgets/comments.py)
+        blocks.append({"id": "comments", "type": "comments", "data": {"post_slug": PREFIX + row["slug"]}})
     return {"id": None, "slug": PREFIX + row["slug"], "title": row["title"], "seo_title": "", "in_menu": 0,
-            "seo_description": row["excerpt"][:300], "blocks": [{"id": "post", "type": "post", "data": {"post_id": row["id"]}}]}
+            "seo_description": row["excerpt"][:300], "blocks": blocks}
 
 
 def nice_date(iso) -> str:
